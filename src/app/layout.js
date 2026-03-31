@@ -16,19 +16,47 @@ const montserrat = Montserrat({
   display: "swap",
 });
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.gr";
+
 export const metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "StudentX — Student Housing in Thessaloniki",
+    default: "StudentX — Φοιτητικές Κατοικίες Θεσσαλονίκη",
     template: "%s — StudentX",
   },
   description:
-    "Find student housing near your university in Thessaloniki. Curated listings by price, location, and distance to campus.",
+    "Βρες φοιτητική κατοικία κοντά στο πανεπιστήμιό σου στη Θεσσαλονίκη. Επιλεγμένες αγγελίες με τιμή, τοποθεσία και απόσταση από σχολή. | Find student housing near your university in Thessaloniki.",
+  keywords: [
+    "φοιτητικά σπίτια Θεσσαλονίκη",
+    "φοιτητική κατοικία ΑΠΘ",
+    "ενοικίαση φοιτητές Θεσσαλονίκη",
+    "student housing Thessaloniki",
+    "student accommodation AUTH",
+    "rent near university Thessaloniki",
+    "φοιτητικά ενοίκια",
+  ],
+  alternates: {
+    canonical: SITE_URL,
+  },
   openGraph: {
+    title: "StudentX — Φοιτητικές Κατοικίες Θεσσαλονίκη",
+    description:
+      "Βρες φοιτητική κατοικία κοντά στο πανεπιστήμιό σου στη Θεσσαλονίκη. | Find student housing near your university in Thessaloniki.",
+    siteName: "StudentX",
+    type: "website",
+    url: SITE_URL,
+    locale: "el_GR",
+  },
+  twitter: {
+    card: "summary_large_image",
     title: "StudentX — Student Housing in Thessaloniki",
     description:
       "Find student housing near your university in Thessaloniki. Curated listings by price, location, and distance to campus.",
-    siteName: "StudentX",
-    type: "website",
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true },
   },
 };
 
