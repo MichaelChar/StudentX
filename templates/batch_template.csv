@@ -1,0 +1,3 @@
+listing_id,landlord_id,landlord_name,contact_info,address,neighborhood,lat,lng,monthly_price,currency,bills_included,deposit,property_type,amenities,description
+,0006,Dimitra Vlachou,+30 2310 555123,Mitropoleos 30,Kentro,40.6335,22.9445,290,EUR,false,290,Studio,"AC,Furnished,Heating",Renovated studio near Aristotelous Square with city views.
+,0006,Dimitra Vlachou,+30 2310 555123,Konstantinoupoleos 18,Triandria,40.6400,22.9580,420,EUR,false,420,2-Bedroom,"AC,Furnished,Balcony,Elevator,Washing machine",Bright 2-bedroom close to UoM campus. Ideal for two students sharing.

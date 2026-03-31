@@ -1,0 +1,34 @@
+[{
+  "image_url": "https://static.wixstatic.com/media/253972_0c85502821404f4fbc7cf8c633a6ac9b~mv2.jpg/v1/crop/x_18,y_0,w_4606,h_3472/fill/w_516,h_389,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_0c85502821404f4fbc7cf8c633a6ac9b~mv2.jpg",
+  "input_url": "https://theuppertown.wixsite.com/anopoli/photos",
+  "filename": "https://static.wixstatic.com/media/253972_0c85502821404f4fbc7cf8c633a6ac9b~mv2.jpg/v1/crop/x_18,y_0,w_4606,h_3472/fill/w_516,h_389,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_0c85502821404f4fbc7cf8c633a6ac9b~mv2.jpg"
+},
+{
+  "image_url": "https://static.wixstatic.com/media/d37a3f_ffe14679646a4dada93bea0652d27839~mv2.jpg/v1/fill/w_372,h_495,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_20210725_142530.jpg",
+  "input_url": "https://theuppertown.wixsite.com/anopoli/photos",
+  "filename": "https://static.wixstatic.com/media/d37a3f_ffe14679646a4dada93bea0652d27839~mv2.jpg/v1/fill/w_372,h_495,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_20210725_142530.jpg"
+},
+{
+  "image_url": "https://static.wixstatic.com/media/d37a3f_b9b57d3e93c448bca103d962c1ac6570~mv2.jpg/v1/fill/w_515,h_387,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_20210725_142750.jpg",
+  "input_url": "https://theuppertown.wixsite.com/anopoli/photos",
+  "filename": "https://static.wixstatic.com/media/d37a3f_b9b57d3e93c448bca103d962c1ac6570~mv2.jpg/v1/fill/w_515,h_387,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_20210725_142750.jpg"
+},
+{
+  "image_url": "https://static.wixstatic.com/media/253972_e5e32ac6b7c24f0bb87b9c76bd6222b8~mv2.jpg/v1/fill/w_373,h_497,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_e5e32ac6b7c24f0bb87b9c76bd6222b8~mv2.jpg",
+  "input_url": "https://theuppertown.wixsite.com/anopoli/photos",
+  "filename": "https://static.wixstatic.com/media/253972_e5e32ac6b7c24f0bb87b9c76bd6222b8~mv2.jpg/v1/fill/w_373,h_497,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_e5e32ac6b7c24f0bb87b9c76bd6222b8~mv2.jpg"
+},
+{
+  "image_url": "https://static.wixstatic.com/media/253972_6075044d097348699595e87c4bb820bf~mv2.jpg/v1/fill/w_508,h_382,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_6075044d097348699595e87c4bb820bf~mv2.jpg",
+  "input_url": "https://theuppertown.wixsite.com/anopoli/photos",
+  "filename": "https://static.wixstatic.com/media/253972_6075044d097348699595e87c4bb820bf~mv2.jpg/v1/fill/w_508,h_382,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_6075044d097348699595e87c4bb820bf~mv2.jpg"
+},
+{
+  "image_url": "https://static.wixstatic.com/media/253972_e3a30bb7eaa946bd836413cd826cc92f~mv2.jpg/v1/fill/w_508,h_382,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_e3a30bb7eaa946bd836413cd826cc92f~mv2.jpg",
+  "input_url": "https://theuppertown.wixsite.com/anopoli/photos",
+  "filename": "https://static.wixstatic.com/media/253972_e3a30bb7eaa946bd836413cd826cc92f~mv2.jpg/v1/fill/w_508,h_382,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_e3a30bb7eaa946bd836413cd826cc92f~mv2.jpg"
+},
+{
+  "download": "https://api.apify.com/v2/key-value-stores/JsHgKwzeub3PHxPU1/records/images_theuppertown_wixsite_com.zip",
+  "inputurl": "https://theuppertown.wixsite.com/anopoli/photos"
+}]

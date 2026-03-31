@@ -1,0 +1,965 @@
+[{
+  "url": "https://www.5doors-thessaloniki.com/en",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en",
+    "loadedTime": "2026-03-29T06:14:56.691Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 0,
+    "contentLengthBytes": 109414,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en",
+    "title": "Modern Student Houses Thessaloniki | 5Doors",
+    "description": "5Doors - student houses for rent without a broker in the center of Thessaloniki - for long term rentals ",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Modern Student Houses Thessaloniki | 5Doors"
+      },
+      {
+        "property": "og:description",
+        "content": "5Doors - student houses for rent without a broker in the center of Thessaloniki - for long term rentals "
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "etag": "W/\"67362aa8dde4147903cacf9b02ea2fcd\"",
+      "content-language": "pt-BR",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "379754",
+      "date": "Sun, 29 Mar 2026 06:14:55 GMT",
+      "x-served-by": "cache-den-kden1300062-DEN",
+      "x-cache": "HIT",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_hit, dc;desc=fastly_g",
+      "set-cookie": "ssr-caching=cache#desc=miss#varnish=miss_hit#dc#desc=fastly_g; max-age=20\nclient-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;",
+      "x-wix-request-id": "1774764895.061057457891057671",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, 9WD8GAcpJgs/Ng1WkD2i0h9slopJdhD+WySraMrpIY8=, xIKq3IotbbLp4+7DTTMx8R9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb44kIKZTVo4jMcuvGmEy8Wk, 2d58ifebGbosy5xc+FRalhEWGmccc75peOQJz4yO1sD2w6FFrrWlN8SDEuOd10RwGtw3vMtn6p2dVrJUN4FMnQ==, 2UNV7KOq4oGjA5+PKsX47ECQPVwlNvMJ3BpySO/DZXM=, 2UNV7KOq4oGjA5+PKsX47HqjR+6CNmn/ng3r7CWVjR4=, R8nVwPJv9QJL1m78OROO+KZdEaP4aSFlgPboNr7PdKA=, UCXqFoU+MbsWXjA74cRbHUmwslgb6CjsPc4P4qOBqd4SO5XmrrCSQNDehIjmfew34qsc0HYDOHr0PsX7+DlSvA==, R8nVwPJv9QJL1m78OROO+Mrs233Fko+PDhHQhj1J99A=, LoUK8/saGAmOxZWtpubo2kD4pg0+gDMifLeRlJYA1goUWbcosMGVTacCtYmJgfF6k8E3G0AdEf17ZfsDkZwlemNHxR9oe72+dO+nN9/VzoRvsVjov5fF+C/TklfZKGIr, R8nVwPJv9QJL1m78OROO+BUS41lFKj2HpYEMFEo6LZI=, RyPGOLsHDe7v/GTf4wBGupR5qoytdHw4HTz5gWd9esLa55q7d+s4dogTTMbqCy5zpvsiVFjXvWRKjvH9C19vyY7n+aDrUr2dcLjiXso923aPcP/ZJp0TtiPnW620Leml",
+      "content-length": "109414",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Modern Student Houses Thessaloniki | 5Doors\nYour modern student house in Thessaloniki\nAll of our houses are located just a 5-minute walk from the universities.\nIn the heart of welcoming Thessaloniki, 5doors’ modern and functional studios invite you to experience the uniqueness of student life in an environment that combines comfort, aesthetics, and practicality.\nWith six distinct locations catering to various accommodation preferences, our studios are conveniently located near Aristotle University of Thessaloniki, allowing you to save valuable time on your daily commute.\nAll our student homes are fully equipped, thoughtfully renovated, and designed with a modern, stylish touch, creating a warm and pleasant space perfect for enjoying your student living experience.\nWithout a broker\nDirect service\nFully furnished\nWi-Fi\nCentral point\nKaraoli\nEvangelistria\nIn Evangelistria, near Aristotle University of Thessaloniki, our fully renovated student apartments offer comfort, safety, and modern design.\nMakrygianni\nKamara\nOn Iasonidou Street, our new student homes combine a vibrant neighborhood with just a 5-minute walk to Aristotle University.\nMelenikou\nNext to the university\nOn Melenikou Street, opposite Aristotle University of Thessaloniki, our apartments offer a unique view and an exceptional location.\nAnaktoriou\n40 Ekklisies\nOn Iasonidou Street, our new student homes combine a vibrant neighborhood with just a 5-minute walk to Aristotle University.\nAgapinou\nKamara\nOur luxurious two-room apartments, located next to Kamara, offer comfort and unmatched proximity to Aristotle University of Thessaloniki.\nTitanon\nEuaggelistria\nIn Evangelistria, our seven renovated, modern student apartments provide direct access to Aristotle University of Thessaloniki.\nStudent houses in Thessaloniki without a broker\nYou are a student in Thessaloniki and you are looking for the perfect apartment for your studies?\nJohn\nFantastic apartment with all the amenities and exactly what a student needs.\nMarianna\nModern Studio, next to the university, in a safe neighborhood with all amenities!\nKostas\n​Comfortable bed, fully furnished kitchen, quiet and the best? Next to the school and the city center.",
+  "markdown": "# Modern Student Houses Thessaloniki | 5Doors\n\n## Your modern student house in Thessaloniki\n\nAll of our houses are located just a 5-minute walk from the universities.\n\nIn the heart of welcoming Thessaloniki, 5doors’ modern and functional studios invite you to experience the uniqueness of student life in an environment that combines comfort, aesthetics, and practicality.\n\nWith six distinct locations catering to various accommodation preferences, our studios are conveniently located near Aristotle University of Thessaloniki, allowing you to save valuable time on your daily commute.\n\nAll our student homes are fully equipped, thoughtfully renovated, and designed with a modern, stylish touch, creating a warm and pleasant space perfect for enjoying your student living experience.\n\n![employee.png](https://static.wixstatic.com/media/eaf600_475ece1d96354fec8490960c2102dac5~mv2.png/v1/fill/w_55,h_38,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/employee.png)\n\nWithout a broker\n\n![customer-service.png](https://static.wixstatic.com/media/eaf600_9102877c57184cd8bd59c4cad51ea309~mv2.png/v1/fill/w_43,h_43,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/customer-service.png)\n\nDirect service\n\n![](https://static.wixstatic.com/media/9c608a_3c58fe1f4ad24cac8823dbfb3445a4e6.png/v1/fill/w_29,h_38,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/9c608a_3c58fe1f4ad24cac8823dbfb3445a4e6.png)\n\nFully furnished\n\n![](https://static.wixstatic.com/media/9c608a_b504533992514b198819a54f27520449.png/v1/fill/w_47,h_35,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/9c608a_b504533992514b198819a54f27520449.png)\n\nWi-Fi\n\n![map-pin.png](https://static.wixstatic.com/media/eaf600_e2bdba8635da4ae285068930c6aa283f~mv2.png/v1/fill/w_35,h_35,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/map-pin.png)\n\nCentral point\n\n### Karaoli  \nEvangelistria\n\nIn Evangelistria, near Aristotle University of Thessaloniki, our fully renovated student apartments offer comfort, safety, and modern design.\n\n### Makrygianni  \nKamara\n\nOn Iasonidou Street, our new student homes combine a vibrant neighborhood with just a 5-minute walk to Aristotle University.\n\n### Melenikou  \nNext to the university\n\nOn Melenikou Street, opposite Aristotle University of Thessaloniki, our apartments offer a unique view and an exceptional location.\n\n### Anaktoriou  \n40 Ekklisies\n\nOn Iasonidou Street, our new student homes combine a vibrant neighborhood with just a 5-minute walk to Aristotle University.\n\n### Agapinou  \nKamara\n\nOur luxurious two-room apartments, located next to Kamara, offer comfort and unmatched proximity to Aristotle University of Thessaloniki.\n\n### Titanon  \nEuaggelistria\n\nIn Evangelistria, our seven renovated, modern student apartments provide direct access to Aristotle University of Thessaloniki.\n\n### Student houses in Thessaloniki without a broker\n\nYou are a student in Thessaloniki and you are looking for the perfect apartment for your studies?\n\n## John\n\nFantastic apartment with all the amenities and exactly what a student needs.\n\n## Marianna\n\nModern Studio, next to the university, in a safe neighborhood with all amenities!\n\n## Kostas\n\n​Comfortable bed, fully furnished kitchen, quiet and the best? Next to the school and the city center.",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/40-ekklisies",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/40-ekklisies",
+    "loadedTime": "2026-03-29T06:15:07.827Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/40-ekklisies",
+    "title": "Student houses Thessaloniki - 40 Ekklisies | 5Doors",
+    "description": "Modern student houses in the center of Thessaloniki, in the area of Saranta Ekklisies, for short term rent. Ask us!",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Student houses Thessaloniki - 40 Ekklisies | 5Doors"
+      },
+      {
+        "property": "og:description",
+        "content": "Modern student houses in the center of Thessaloniki, in the area of Saranta Ekklisies, for short term rent. Ask us!"
+      },
+      {
+        "property": "og:image",
+        "content": "https://static.wixstatic.com/media/eaf600_872852ca0bdd4812ae26b191c36f8495~mv2.jpg/v1/fill/w_2000,h_2000,al_c/eaf600_872852ca0bdd4812ae26b191c36f8495~mv2.jpg"
+      },
+      {
+        "property": "og:image:width",
+        "content": "2000"
+      },
+      {
+        "property": "og:image:height",
+        "content": "2000"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/40-ekklisies"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764903.205283767224611435002",
+      "etag": "W/\"46a9bae78c4515a7b1c05ce771947c7a\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:04 GMT",
+      "x-served-by": "cache-den-kden1300020-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, dwc60INy8NFddnU/0WdlOB9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb44kIKZTVo4jMcuvGmEy8Wk, 2d58ifebGbosy5xc+FRalmKdfndM3Dkh2oGyoPlNxGS8nMcnTjFOFXQfUvaW/NXRllHQEZ/GszsKIwXOOdfNOw==, 2UNV7KOq4oGjA5+PKsX47ECQPVwlNvMJ3BpySO/DZXM=, 2UNV7KOq4oGjA5+PKsX47EcNVZxMrnxWFErTxnFN3IM=, R8nVwPJv9QJL1m78OROO+FFxPn6kwxnAVgUqDZWyDI0=, UCXqFoU+MbsWXjA74cRbHasmO4H7xeWX0xPm+M4JDmgSO5XmrrCSQNDehIjmfew3iFBEajGJ7V+VrCWcKfUwxQ==, R8nVwPJv9QJL1m78OROO+ECgS6h+XVs6IJ1huoI1yL4=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqxGOp0Vbh1LU3GemaBW6HfwjZAtp3F1i/PN+y29PwlOrMFD/8N4S0uyMQnr7AEF7Q0=, R8nVwPJv9QJL1m78OROO+FIYHKKSYsnwwcvHOxDkem8=, RyPGOLsHDe7v/GTf4wBGum7nABw8l9EpFiNGYOQ4hx2DvzNYAjY5T75b1+oiLt6FsX2lkkx3qOXCkc1FE3nzHNMG7BDfZetr96H3his7lsAepohbKBtevibR/wMi6+a+",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Student houses Thessaloniki - 40 Ekklisies\nStudent houses in Anaktoriou\nIn the heart of Thessaloniki, in the Saranta Ekklisies neighborhood, you will find our new standalone apartment building. It features 22 fully furnished studio apartments, specially designed to meet the needs of students.\nIn 2025, the entire building and all studios underwent a complete renovation, offering a modern and functional living space. The building is located in a safe area, right next to the Universities and within walking distance of the Aristotle University of Thessaloniki (AUTH).\nCondition\n\nAll apartments were renovated in 2025. Building with students only.\nArea\n\nSafe area in the city centre near the universities.\nLocation\n\n7 minutes from the Aristotle University of Thessaloniki.\nTransportation\n\nBus stop near the building.\nFurnishing\n\nFully furnished with smart design and full equipment.\nHeating\n\nAdjustable AC heating.\nYour new apartment?\nAre you interested in this studio? Do you need more information?\n​We are here to answer any questions you may have and to help you settle in our city!",
+  "markdown": "# Student houses Thessaloniki - 40 Ekklisies\n\n## Student houses in Anaktoriou\n\nIn the heart of Thessaloniki, in the [Saranta Ekklisies](https://en.wikipedia.org/wiki/Saranta_Ekklisies) neighborhood, you will find our new standalone apartment building. It features 22 fully furnished studio apartments, specially designed to meet the needs of students.\n\nIn 2025, the entire building and all studios underwent a complete renovation, offering a modern and functional living space. The building is located in a safe area, right next to the Universities and within walking distance of the Aristotle University of Thessaloniki (AUTH).\n\n### Condition\n\n  \nAll apartments were renovated in 2025. Building with students only.\n\n### Area\n\n  \nSafe area in the city centre near the universities.\n\n### Location\n\n  \n7 minutes from the Aristotle University of Thessaloniki.\n\n### Transportation\n\n  \nBus stop near the building.\n\n### Furnishing\n\n  \nFully furnished with smart design and full equipment.\n\n### Heating\n\n  \nAdjustable AC heating.\n\n## Your new apartment?\n\nAre you interested in this studio? Do you need more information?\n\n​We are here to answer any questions you may have and to help you settle in our city!",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/melenikou",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/melenikou",
+    "loadedTime": "2026-03-29T06:15:09.310Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/melenikou",
+    "title": "Student houses Thessaloniki - Melenikou | 5Doors",
+    "description": "Modern student houses in the center of Thessaloniki, in Evangelistria Street, for short term rent. Ask us!",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Student houses Thessaloniki - Melenikou | 5Doors"
+      },
+      {
+        "property": "og:description",
+        "content": "Modern student houses in the center of Thessaloniki, in Evangelistria Street, for short term rent. Ask us!"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/melenikou"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-envoy-upstream-service-time": "2046",
+      "x-wix-request-id": "1774764902.89828373039681763477",
+      "etag": "W/\"fa641c9c0d09f0d8e3573a29f00c962a\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:05 GMT",
+      "x-served-by": "cache-den-kden1300065-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, dwc60INy8NFddnU/0WdlOB9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb7yYbBHukYW+hwKR+ke0yLG, 2d58ifebGbosy5xc+FRalsL7RTShPP1tgPLQgOYHc5coWI/n3FaACHb76VgYAYY2H5CahN25DLfTcoHDYg14jQ==, 2UNV7KOq4oGjA5+PKsX47EcNVZxMrnxWFErTxnFN3IM=, 2UNV7KOq4oGjA5+PKsX47HqjR+6CNmn/ng3r7CWVjR4=, R8nVwPJv9QJL1m78OROO+BGuXfK9xxw4baSBf6XjOck=, UCXqFoU+MbsWXjA74cRbHeUAOM+9bRelGZr2QiJzv8YSO5XmrrCSQNDehIjmfew36L7ObPfmcBookt2XOq4Rbg==, R8nVwPJv9QJL1m78OROO+BWKIjTAKXtnKLZMHGwO0Vk=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqzBP54o19lHblDChLVFcwjTA2oA0bkF2xbShLIIUj+5WRUmLrkm0M1prSnOEaO1yYA=, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, RyPGOLsHDe7v/GTf4wBGum7nABw8l9EpFiNGYOQ4hx0+Y4PbllcpR4vcXXAJ3K7G96RmkeFl8htP4JKPyxiv0o7n+aDrUr2dcLjiXso923bHJ3oApLESy2otxgl7uigF",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Student houses Thessaloniki - Melenikou\nMelenikou-Kamara\n​Our three ultra-luxurious one-room furnished apartments are located on Melenikou Street, directly across from the historic building of the Philosophical School of the AUTH. \n​\nThe view, which starts from the castles and extends to the sea, is mesmerizing. These apartments are the perfect combination of luxury and location.\n​\nCondition\nRadically renovated in 2020. Block of flats in very good condition with elevator.\nArea​​\nBuilding on a pedestrian street, in a safe area for students.\nLocation\n​\nIn the city center, with bus stop in front of the house.\nTransportation\n\nBus stop in front of the building.\nFurnishing\n​\nSuper luxurious and furnished with modern equipment.\nHeating\n​\nAdjustable gas heating and air conditioning.\nYour new apartment?\nAre you interested in this studio? Do you need more information?\n​We are here to answer any questions you may have and to help you settle in our city!",
+  "markdown": "# Student houses Thessaloniki - Melenikou\n\n## Melenikou-Kamara\n\n​Our three ultra-luxurious one-room furnished apartments are located on Melenikou Street, directly across from the historic building of the Philosophical School of the  AUTH. \n\n​\n\nThe view, which starts from the castles and extends to the sea, is mesmerizing. These apartments are the perfect combination of luxury and location.\n\n​\n\n### Condition\n\nRadically renovated in 2020. Block of flats in very good condition with elevator.\n\n### Area​​\n\nBuilding on a pedestrian street, in a safe area for students.\n\n### Location\n\n​\n\nIn the city center, with bus stop in front of the house.\n\n### Transportation\n\n  \nBus stop in front of the building.\n\n### Furnishing\n\n​\n\nSuper luxurious and furnished with modern equipment.\n\n### Heating\n\n​\n\nAdjustable gas heating and air conditioning.\n\n## Your new apartment?\n\nAre you interested in this studio? Do you need more information?\n\n​We are here to answer any questions you may have and to help you settle in our city!",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/euaggelistria",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/euaggelistria",
+    "loadedTime": "2026-03-29T06:15:10.843Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/euaggelistria",
+    "title": "Student houses Thessaloniki - Evangelistria | 5Doors",
+    "description": "Modern student houses in the center of Thessaloniki, in the area of Evangelistria, for short term rent. Ask us!",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Student houses Thessaloniki - Evangelistria | 5Doors"
+      },
+      {
+        "property": "og:description",
+        "content": "Modern student houses in the center of Thessaloniki, in the area of Evangelistria, for short term rent. Ask us!"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/euaggelistria"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764903.30728376446781645293, 1774764903.30728376446781645293, 1774764903.30728376446781645293",
+      "etag": "W/\"fa5d64316eefb1dcdf81a7d4a148ee63\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:04 GMT",
+      "x-served-by": "cache-den-kden1300029-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, xIKq3IotbbLp4+7DTTMx8R9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb53lvnR+9EFwQ0RwJvs1JkS, 2d58ifebGbosy5xc+FRaltSLw+IdMpX2MuFVDIfNxMWJ7eSxkd8tWD2XPx94PuqnllHQEZ/GszsKIwXOOdfNOw==, 2UNV7KOq4oGjA5+PKsX47EcNVZxMrnxWFErTxnFN3IM=, 2UNV7KOq4oGjA5+PKsX47G9tHIFRFgqngjSWmAXGcLU=, R8nVwPJv9QJL1m78OROO+CrxA5MB4e5YY0dFJemL3LQ=, UCXqFoU+MbsWXjA74cRbHasmO4H7xeWX0xPm+M4JDmgSO5XmrrCSQNDehIjmfew3iFBEajGJ7V+VrCWcKfUwxQ==, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqwnU84arrUnD9lYH72s16Xu5faVIos1MZ/fNwWccmsd7riQroYdy3murE06NgqxX9Q=, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, /a5ccLSK1HEmwPNg/x6OupGSmfyCBucd7stu2KslvoXUzvTt1r+WQ7Bh27s8n7JHxabM28M5EhskBMT7Jx6tGqve2s7dhfheY+DBOKzXs14qMJYpql10WU4QQPFwajBr",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Student houses Thessaloniki - Evangelistria\n​In the heart of Thessaloniki, in the area of Evangelistria, our ten furnished studios are located in an independent apartment building. In 2019, the building and the studios underwent a radical renovation.\nThe apartments are all 25 square meters and are placed in pairs in the basement (with light), on the ground floor and also in pairs on the first, second and third floors.\nThe building is located in a safe area, next to the Universities in AUTH.",
+  "markdown": "# Student houses Thessaloniki - Evangelistria\n\n​In the heart of Thessaloniki, in the area of Evangelistria, our ten furnished studios are located in an independent apartment building. In 2019, the building and the studios underwent a radical renovation.\n\nThe apartments are all 25 square meters and are placed in pairs in the basement (with light), on the ground floor and also in pairs on the first, second and third floors.\n\nThe building is located in a safe area, next to the Universities in AUTH.",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/iasonidou",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/iasonidou",
+    "loadedTime": "2026-03-29T06:15:22.124Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/iasonidou",
+    "title": "Student houses Thessaloniki - Iasonidou | 5Doors",
+    "description": "Modern student houses in the center of Thessaloniki, in Iasonidou Street, for short term rent. Ask us!",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Student houses Thessaloniki - Iasonidou | 5Doors"
+      },
+      {
+        "property": "og:description",
+        "content": "Modern student houses in the center of Thessaloniki, in Iasonidou Street, for short term rent. Ask us!"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/iasonidou"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764915.27228376889861434995",
+      "etag": "W/\"872389824181a57a616ffbe288fcf0e6\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:16 GMT",
+      "x-served-by": "cache-den-kden1300089-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, xIKq3IotbbLp4+7DTTMx8R9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb44kIKZTVo4jMcuvGmEy8Wk, 2d58ifebGbosy5xc+FRalvTKBFPPwx6LRKVv45ILIvBlOTvSp8LZWGai1PSWFCHpGtw3vMtn6p2dVrJUN4FMnQ==, 2UNV7KOq4oGjA5+PKsX47G9tHIFRFgqngjSWmAXGcLU=, 2UNV7KOq4oGjA5+PKsX47KtUTHQeecWkgrb9IlLu/OM=, R8nVwPJv9QJL1m78OROO+DQ8uBndQiemkTq7+s1tWJQ=, UCXqFoU+MbsWXjA74cRbHasmO4H7xeWX0xPm+M4JDmgSO5XmrrCSQNDehIjmfew3iFBEajGJ7V+VrCWcKfUwxQ==, R8nVwPJv9QJL1m78OROO+Ii0ELzpGEMtGUF7ps8tyjg=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqzBP54o19lHblDChLVFcwjTA2oA0bkF2xbShLIIUj+5WRUmLrkm0M1prSnOEaO1yYA=, R8nVwPJv9QJL1m78OROO+Ii0ELzpGEMtGUF7ps8tyjg=, /a5ccLSK1HEmwPNg/x6OujUW8bnP8817nTj/oZHByJJ32P58KSPHL49IedqcrTt+DiL/NbImRRYPGYNPrYte40ZFgDigRBrNgIlSmkU8gIA=",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Student houses Thessaloniki - Iasonidou\nMakrigianni-Kamara\nApartments in Kamara\nDiscover the ideal student retreat in the heart of Thessaloniki! Two ultra-luxurious furnished apartments—one two-room and the other one-room—located right in the center of the city, just parallel to the historic landmark, the Kamara.\nThey offer the ultimate proximity to every student activity.\nBoth apartments are only a 5-minute walk from the Aristotle University of Thessaloniki (A.U.Th.).\nCondition\nAll apartments were renovated in 2023. Safe building with families and students.\nArea​​\nSafe area on a central transport axis of Thessaloniki.\nLocation\n​5 minutes from the Aristotle University of Thessaloniki.\nTransportation\n\nBus stop in front of the building.\nFurnishing\n​Fully furnished with smart design and full equipment.\nHeating\n​Adjustable heating with natural gas.\nYour new apartment?\nAre you interested in this studio? Do you need more information?\n​We are here to answer any questions you may have and to help you settle in our city!",
+  "markdown": "# Student houses Thessaloniki - Iasonidou\n\n## Makrigianni-Kamara\n\n## Apartments in Kamara\n\nDiscover the ideal student retreat in the heart of Thessaloniki! Two ultra-luxurious furnished apartments—one two-room and the other one-room—located right in the center of the city, just parallel to the historic landmark, the Kamara.\n\nThey offer the ultimate proximity to every student activity.\n\nBoth apartments are only a 5-minute walk from the Aristotle University of Thessaloniki (A.U.Th.).\n\n### Condition\n\nAll apartments were renovated in 2023. Safe building with families and students.\n\n### Area​​\n\nSafe area on a central transport axis of Thessaloniki.\n\n### Location\n\n​5 minutes from the Aristotle University of Thessaloniki.\n\n### Transportation\n\n  \nBus stop in front of the building.\n\n### Furnishing\n\n​Fully furnished with smart design and full equipment.\n\n### Heating\n\n​Adjustable heating with natural gas.\n\n## Your new apartment?\n\nAre you interested in this studio? Do you need more information?\n\n​We are here to answer any questions you may have and to help you settle in our city!",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/agapinou",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/agapinou",
+    "loadedTime": "2026-03-29T06:15:21.434Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/agapinou",
+    "title": "Student houses Thessaloniki - Kamara | 5Doors",
+    "description": "Modern student houses in the center of Thessaloniki, in Agapinou Street, for short term rent. Ask us!",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Student houses Thessaloniki - Kamara | 5Doors"
+      },
+      {
+        "property": "og:description",
+        "content": "Modern student houses in the center of Thessaloniki, in Agapinou Street, for short term rent. Ask us!"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/agapinou"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764915.15528376558641645298, 1774764915.15528376558641645298, 1774764915.15528376558641645298",
+      "etag": "W/\"3a5710f5c5b98cb8b8220e8aa357db0a\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:16 GMT",
+      "x-served-by": "cache-den-kden1300037-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, 9WD8GAcpJgs/Ng1WkD2i0h9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb53lvnR+9EFwQ0RwJvs1JkS, 2d58ifebGbosy5xc+FRalssxxnKcSIOOMCugOFZWOz8Y90EsMGcTQRIEOrg9y32sH5CahN25DLfTcoHDYg14jQ==, 2UNV7KOq4oGjA5+PKsX47EzpsDHuH75rNqOhkG1qhKU=, 2UNV7KOq4oGjA5+PKsX47G9tHIFRFgqngjSWmAXGcLU=, R8nVwPJv9QJL1m78OROO+KWbJCOTidMTzHiP7k4dXWU=, UCXqFoU+MbsWXjA74cRbHasmO4H7xeWX0xPm+M4JDmgSO5XmrrCSQNDehIjmfew3iFBEajGJ7V+VrCWcKfUwxQ==, R8nVwPJv9QJL1m78OROO+ECgS6h+XVs6IJ1huoI1yL4=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqzmnU/p1YCM9ukbiOfL7GPJnbs841NS2X6dzkwBxUzQDSKD96a2GJOfwyFuj7g9G/g=, R8nVwPJv9QJL1m78OROO+ECgS6h+XVs6IJ1huoI1yL4=, /a5ccLSK1HEmwPNg/x6OujUW8bnP8817nTj/oZHByJLq5y/XHQvJtNr+Wg8BfrTwDiL/NbImRRYPGYNPrYte40ZFgDigRBrNgIlSmkU8gIA=",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Student houses Thessaloniki - Kamara\nAgapinou-Kamara\n​Our two ultra-luxurious two-room unfurnished apartments are located in the heart of Thessaloniki, right across from the historical landmark Kamara, providing the ultimate proximity for every activity of a student.\nFrom 55 square meters, the studios are 5 minutes from AUTH.\nCondition\nAll apartments were renovated in 2019. Safe building with families and students.\nArea​​\nSafe area on a central transport axis of Thessaloniki.\nLocation\n​\n5 minutes from the Aristotle University of Thessaloniki.\nTransportation\n\nBus stop in front of the building.\nFurnishing\n​\nFully furnished with smart design and full equipment.\nHeating\n​\nAdjustable heating with natural gas.\nYour new apartment?\nAre you interested in this studio? Do you need more information?\n​We are here to answer any questions you may have and to help you settle in our city!",
+  "markdown": "# Student houses Thessaloniki - Kamara\n\n## Agapinou-Kamara\n\n​Our two ultra-luxurious two-room unfurnished apartments are located in the heart of Thessaloniki, right across from the historical landmark Kamara, providing the ultimate proximity for every activity of a student.\n\nFrom 55 square meters, the studios are 5 minutes from AUTH.\n\n### Condition\n\nAll apartments were renovated in 2019. Safe building with families and students.\n\n### Area​​\n\nSafe area on a central transport axis of Thessaloniki.\n\n### Location\n\n​\n\n5 minutes from the Aristotle University of Thessaloniki.\n\n### Transportation\n\n  \nBus stop in front of the building.\n\n### Furnishing\n\n​\n\nFully furnished with smart design and full equipment.\n\n### Heating\n\n​\n\nAdjustable heating with natural gas.\n\n## Your new apartment?\n\nAre you interested in this studio? Do you need more information?\n\n​We are here to answer any questions you may have and to help you settle in our city!",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/who-we-are",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/who-we-are",
+    "loadedTime": "2026-03-29T06:15:32.302Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/who-we-are",
+    "title": "Student houses Thessaloniki - Who we are | 5Doors",
+    "description": "The company 5 doors IKE is a family business which is active in the field of short term rental of exclusively student apartments in central locations of Thessaloniki.",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Student houses Thessaloniki - Who we are | 5Doors "
+      },
+      {
+        "property": "og:description",
+        "content": "The company 5 doors IKE is a family business which is active in the field of short term rental of exclusively student apartments in central locations of Thessaloniki."
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/who-we-are"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764929.19928379500446217412",
+      "etag": "W/\"93f3d36230a19e90fda4a311c22384b3\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:30 GMT",
+      "x-served-by": "cache-den-kden1300023-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, 2d58ifebGbosy5xc+FRalqc9bKk7OK49TyWFqHuywCV5Lim0M5oTwxB1o2bijKty+KYsMhWIYbDzf9BxD44lVQ==, 2UNV7KOq4oGjA5+PKsX47KtUTHQeecWkgrb9IlLu/OM=, R8nVwPJv9QJL1m78OROO+CrxA5MB4e5YY0dFJemL3LQ=, UCXqFoU+MbsWXjA74cRbHasmO4H7xeWX0xPm+M4JDmgSO5XmrrCSQNDehIjmfew3iFBEajGJ7V+VrCWcKfUwxQ==, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqwy2TzWambpSpyxvfZw13PTnbs841NS2X6dzkwBxUzQDXlFOCkaQ2SqwhY6FHzm4Tw=, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, /a5ccLSK1HEmwPNg/x6OupGSmfyCBucd7stu2KslvoXUzvTt1r+WQ7Bh27s8n7JHmdpResWV8598tkmfB1/aGKftkMsnvkOxUZp6CHdcnOCLL1EM3nTI0Ni4xGOkWCVG",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Student houses Thessaloniki - Who we are\nThe company 5 doors IKE is a family business which is active in the field of short-term renting exclusively student apartments in central parts of Thessaloniki. Aimed at meeting student needs, our studios combine quality equipment, local proximity to universities, aesthetics, smart design and security.\nOur goal, in addition to a pleasant stay, is to contact and communicate with our student at any time for any issue that may arise throughout his studies in his new city.",
+  "markdown": "# Student houses Thessaloniki - Who we are\n\nThe company 5 doors IKE is a family business which is active in the field of short-term renting exclusively student apartments in central parts of Thessaloniki. Aimed at meeting student needs, our studios combine quality equipment, local proximity to universities, aesthetics, smart design and security.\n\nOur goal, in addition to a pleasant stay, is to contact and communicate with our student at any time for any issue that may arise throughout his studies in his new city.",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/thessaloniki",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/thessaloniki",
+    "loadedTime": "2026-03-29T06:15:32.919Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/thessaloniki",
+    "title": "Student houses Thessaloniki | 5Doors",
+    "description": "The perfect student city: Thessaloniki - Our student houses are located in the ideal locations in the city centre",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Student houses Thessaloniki | 5Doors"
+      },
+      {
+        "property": "og:description",
+        "content": "The perfect student city: Thessaloniki - Our student houses are located in the ideal locations in the city centre"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/thessaloniki"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764928.957283788159834126775",
+      "etag": "W/\"8a195b423a3760e257c714b191114c31\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:30 GMT",
+      "x-served-by": "cache-den-kden1300024-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, T7xPrjRFKDMHVv938PYVfx9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb6JxSuEU9PIuIbre7VUIJiy, 2d58ifebGbosy5xc+FRalm07+Rk/MKhyqTRRMJLaclIuLxXDld6cQCQUy6+sdaLpfeAbz7irAzw4HT/q6/DkoQ==, 2UNV7KOq4oGjA5+PKsX47EzpsDHuH75rNqOhkG1qhKU=, 2UNV7KOq4oGjA5+PKsX47HqjR+6CNmn/ng3r7CWVjR4=, R8nVwPJv9QJL1m78OROO+CrxA5MB4e5YY0dFJemL3LQ=, UCXqFoU+MbsWXjA74cRbHYucd52WFLJlnRJH5E1I2DASO5XmrrCSQNDehIjmfew30gf5cKp3QiDcbqiCFx1oxw==, R8nVwPJv9QJL1m78OROO+FIYHKKSYsnwwcvHOxDkem8=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqx/NM/PDjxrckQgT0QSPJqvtSAMgxrQ7dfaz4f1GWhc/rxkNjrXdwdgtu6E0yACibU=, R8nVwPJv9QJL1m78OROO+Nh+WEDJJRYs+It/c+QWM1k=, bamBRVWSlN/v1ZTIwXGEoKqeezX6aZdfgFHia7o650nbD4rFyUgmOLmIy2731aasC0juiJg7ZNurEU7Nu2sd9w==",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Student houses Thessaloniki | 5Doors\n1/1\nThessaloniki, you are beautiful in all your neighborhoods\nZampetas Giorgos \nOur city",
+  "markdown": "# Student houses Thessaloniki | 5Doors\n\n![](https://static.wixstatic.com/media/eaf600_bd89643b6ea249b380f37b4fc845e8d0~mv2.jpg/v1/fill/w_2560,h_613,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/eaf600_bd89643b6ea249b380f37b4fc845e8d0~mv2.jpg)\n\n![](https://static.wixstatic.com/media/eaf600_bd89643b6ea249b380f37b4fc845e8d0~mv2.jpg/v1/fill/w_2560,h_613,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/eaf600_bd89643b6ea249b380f37b4fc845e8d0~mv2.jpg)\n\n1/1\n\nThessaloniki, you are beautiful in all your neighborhoods\n\nZampetas Giorgos \n\n## Our city",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/titanon",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/titanon",
+    "loadedTime": "2026-03-29T06:15:34.323Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/titanon",
+    "title": "Student houses Thessaloniki - Evangelistria | 5Doors",
+    "description": "Modern student houses in the center of Thessaloniki, in the area of Evangelistria, for short term rent. Ask us!",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Student houses Thessaloniki - Evangelistria | 5Doors"
+      },
+      {
+        "property": "og:description",
+        "content": "Modern student houses in the center of Thessaloniki, in the area of Evangelistria, for short term rent. Ask us!"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/titanon"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764929.357283788053164126770",
+      "etag": "W/\"3af9ba36f8969e2e630468ef4e1fe036\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:31 GMT",
+      "x-served-by": "cache-den-kden1300096-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, ui2Pjuc3zC1HEw7V2qXeyh9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb6JxSuEU9PIuIbre7VUIJiy, 2d58ifebGbosy5xc+FRaliSU1g21T+VmE4Byc6jF/SNJaMEK/w9c7BdfZ6HQkF7kTWncunec0OqrkViSdRFxBQ==, 2UNV7KOq4oGjA5+PKsX47KtUTHQeecWkgrb9IlLu/OM=, 2UNV7KOq4oGjA5+PKsX47ECQPVwlNvMJ3BpySO/DZXM=, R8nVwPJv9QJL1m78OROO+BGuXfK9xxw4baSBf6XjOck=, UCXqFoU+MbsWXjA74cRbHTEZFm5A8Lt1ZB16lj9zwSsSO5XmrrCSQNDehIjmfew3Utjl0TAG0rgyzGNsPLr/kw==, R8nVwPJv9QJL1m78OROO+BWKIjTAKXtnKLZMHGwO0Vk=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqxMvAdGxIosJeRms6s/NzTCA2oA0bkF2xbShLIIUj+5WRUmLrkm0M1prSnOEaO1yYA=, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, RyPGOLsHDe7v/GTf4wBGum7nABw8l9EpFiNGYOQ4hx3VzHu+i1Qsm6xlInoPa3HrYxap99YQWKQVI5SBbaR1rtMG7BDfZetr96H3his7lsCor462sPMaAFP2MtISthjV",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Student houses Thessaloniki - Evangelistria\n​In the heart of Thessaloniki, in the area of Evangelistria, our seven furnished studios are located in an independent apartment building.\nIn 2024, the building underwent a radical renovation.\nThe apartments are 36 and 27 square meters and are located two each on the ground floor and two each on the first, second and one on the third floor. The building is located in a safe area, next to the Universities in AUTH.\n​",
+  "markdown": "# Student houses Thessaloniki - Evangelistria\n\n​In the heart of Thessaloniki, in the area of Evangelistria, our seven furnished studios are located in an independent apartment building.\n\nIn 2024, the building underwent a radical renovation.\n\nThe apartments are 36 and 27 square meters and are located two each on the ground floor and two each on the first, second and one on the third floor. The building is located in a safe area, next to the Universities in AUTH.\n\n​",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/politiki-aporitou",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/politiki-aporitou",
+    "loadedTime": "2026-03-29T06:15:44.006Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/politiki-aporitou",
+    "title": "Privacy Policy | 5doors",
+    "description": null,
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Privacy Policy  | 5doors"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/politiki-aporitou"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764941.276283789257210783041, 1774764941.276283789257210783041, 1774764941.276283789257210783041",
+      "etag": "W/\"7309b2c57a7a98eae77e593a611f85d7\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:41 GMT",
+      "x-served-by": "cache-den-kden1300067-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, 2d58ifebGbosy5xc+FRalnwSsRjW+M5gBCLdCUzq+dpyMOKeCtLIR+6EAm2HhVU/blnGFNpuy6e29bpNDhblIg==, 2UNV7KOq4oGjA5+PKsX47G9tHIFRFgqngjSWmAXGcLU=, 2UNV7KOq4oGjA5+PKsX47EcNVZxMrnxWFErTxnFN3IM=, R8nVwPJv9QJL1m78OROO+Ou8aX7XJLiKVIf5zK8i9wM=, UCXqFoU+MbsWXjA74cRbHWQUxkUyMXUuQJ9/ewUWUcASO5XmrrCSQNDehIjmfew332sbYoR76FaW0pznHEHkkQ==, R8nVwPJv9QJL1m78OROO+EUlUM6FkkLgEeMfO1Iuc2c=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqyrRD81OBQeG936x9oFIZsVAlq87ZdFxxqJWQc4g4wclFcEcBZn8jspHL8z69ZFPYs=, R8nVwPJv9QJL1m78OROO+EUlUM6FkkLgEeMfO1Iuc2c=, RyPGOLsHDe7v/GTf4wBGusRwxNEIzj4PvmMwlv4P+4dlolCZFP3SXE+cTdA1hPeiEjuV5q6wkkDQ3oSI5n3sN7usvnehgMcM7DIEfRoIK90=",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Privacy Policy | 5doors\nFIVE DOORS I.K.E. (hereinafter referred to as the \"Company\" or \"we\") makes every effort to offer an experience that meets the needs of the visitors to our Website by responsibly using the information collected through it. We are committed to respecting your privacy and complying with the applicable data protection and privacy legislation.\n​\nThe processing of your personal data is governed by these terms, by the relevant provisions of the Greek and European legal framework on data protection, including the General Data Protection Regulation (2016/679), and by related decisions, guidelines, and regulations issued by the Hellenic Data Protection Authority.\n​\nThis Website Privacy Policy (hereinafter referred to as the \"Policy\") may be subject to amendments. We advise you to regularly check the Policy to stay informed about any changes. By visiting and browsing our Website, you accept the Policy as in effect. If significant amendments are made, we will ensure the publication of a relevant notice to the visitors of our Website.\n​\nThis Policy explains how we collect, process, and/or use the data we receive through our Website, as applicable from time to time. This Policy also describes how we collect, process, use, and share your personal data that you provide to us. It also outlines your options regarding the use, access, transfer, correction, and deletion of your personal data.\n​\n1. Definitions\nFor the purpose of applying this policy, the following terms must be clarified:\n- \"Personal Data\" refers to information concerning a living natural person who can be identified, directly or indirectly, particularly through reference to an identifying element such as a name, identification number, location data, online identifiers, or one or more factors specific to the physical, physiological, economic, cultural, or social identity of that natural person.\n- \"Data Processing,\" in relation to information or data, means the collection, recording, or possession of information or data, or the execution of any operation or series of operations on the information or data, including: (a) the organization, adaptation, or alteration of the information or data, (b) the retrieval, consultation, or use of the information or data, (c) the disclosure of the information or data by transmission, dissemination, or any other form of making available, or (d) the correlation, combination, restriction, deletion, or destruction of the information or data.\n- \"Data Subject\" is the natural person who is the subject of personal data.\n- \"Data Controller\" means a person who (either alone, jointly, or together with others) determines the purposes for which and the manner in which personal data are or are to be processed.\n- \"Data Processor,\" in relation to personal data, means any natural or legal person other than the data controller who processes data on behalf of the Data Controller.\n- \"Third Party,\" in relation to personal data, means any person other than: (a) the data subject, (b) the data controller, or (c) any processor or any other person authorized to process data on behalf of the data controller or processor.\n​\n2. Principles Governing the Processing of Personal Data\nWe ensure full compliance with the applicable Data Protection Legal Framework, including the General Data Protection Regulation (GDPR), and process personal data in accordance with the following key principles. In this context, we ensure that personal data:\n​\na) Are processed lawfully and fairly, with transparency regarding the data subjects.\nThe lawful bases for processing are outlined below. We ensure that one of these bases applies when processing personal data:\nConsent: The individual has given clear and unambiguous consent, allowing us to process personal data for a specific purpose.\nContract: Processing is necessary for the performance of a contract between us and the individual or for steps requested by the data subject prior to entering into a contract.\nLegal Obligation: Processing is necessary for compliance with a legal obligation (not including contractual obligations).\nVital Interests: Processing is necessary to protect someone's life or other vital interests.\nPublic Interest: Processing is necessary for the performance of a task carried out in the public interest.\nLegitimate Interests: Processing is necessary for the legitimate interests pursued by the controller or a third party, unless those interests are overridden by the data subject's interests.\n​\nb) Are collected for specific, explicit, and legitimate purposes and are not processed further in ways incompatible with those purposes. Further processing for archiving purposes in the public interest, scientific or historical research, or statistical purposes is not considered incompatible with the initial purposes.\n​\nc) Are adequate, relevant, and limited to what is necessary for the purposes for which they are processed. Personal data must be sufficient, relevant, and not excessive in relation to the purpose(s) for which they are processed.\n​\nd) Are accurate and, where necessary, kept up to date. Every reasonable step must be taken to ensure that inaccurate data, in relation to the purposes for which they are processed, are erased or rectified without delay.\n​\ne) Are kept in a form that permits identification of data subjects only for as long as necessary for the purposes for which personal data are processed. Personal data may be stored for longer periods if they are processed solely for archiving purposes in the public interest, for scientific or historical research, or for statistical purposes, provided that appropriate technical and organizational measures are applied, as required by the applicable regulatory data protection framework, to safeguard the rights and freedoms of individuals.\n​\nf) Are processed in a manner that ensures appropriate security of personal data, including protection against unauthorized or unlawful processing, and accidental loss, destruction, or damage, through the implementation of appropriate technical and organizational measures. Appropriate technical and organizational measures will be taken against unauthorized or unlawful processing of personal data and accidental loss or destruction.\n​\ng) Are not transferred to a country or territory outside the European Economic Area unless that country or territory ensures an adequate level of protection for the rights and freedoms of data subjects in relation to the processing of personal data.\n​\n3. Data We Collect\n​\nWe collect information about you in order to provide our services. To offer our services to you in the best possible way, and to communicate with you and respond to your requests, it is necessary for us to collect and use data as described in this Policy.\n​\n3.1 Data We Collect Through the Contact Form\nWhen you provide your personal data by entering them in specific fields on the XENOS Packaging A.E. Website, we collect and retain your data exclusively for the purposes outlined below. In this context, we collect the data you voluntarily provide, such as your first name, last name, phone number, email address, physical address, and the content of your communication.\n​\n3.2 Data We Collect Through Automated Means\nWhen you use our website, your device automatically provides us with data, allowing us to serve you and tailor our response to your needs. The type of information we collect through automated means generally includes technical information about your computer, such as your IP address or other device identifiers, the type of device you are using, and the version of the operating system. The data we collect may also include usage information and statistics regarding your interaction with the Website. This can include information such as the URLs of the pages you visited on our website, referring and exit pages' URLs, page views, time spent on a page, the number of clicks, platform type, location data (if location services are enabled), and other details about how you used the platform.\nThis information is collected using Cookies. We recommend reviewing our Cookies Policy (find it here) to learn more about what cookies are, how we use them, and how you can control their use.\n​\n4. Purpose and Legal Basis for Processing\n​\n4.1. We process your data exclusively for the following purposes:\n​\n(a) Communication in the context of service provision:\nWhen you communicate with us through our Website, you are required to provide your personal data. We collect your personal data to serve our pre-contractual or contractual relationship, enabling us to meet your needs when using our services, provide you with personalized information, give you access to your personal documents, and respond to your requests or contact you upon your request.\n​\n(b) Access to downloadable material:\nIf you provide your consent by requesting access to downloadable material, we will register your data in order to deliver the item(s) you requested.\n​\n(c) Exercise of legal claims:\nYour data may be processed to establish any legal claims or defend the Company against fraud attempts, potential cyberattacks, or other illegal activities.\n​\n(d) Improvement of services:\nWe retain your data and your service usage history to derive statistical data that help us better evaluate user visits and navigation through our Website, thus improving its content and structure.\n​\n4.2. Legal Bases for Processing\nThe processing of your personal data is necessary to fulfill the aforementioned purposes. Unless otherwise specified at the time of data collection, the legal basis for processing your personal data is one of the following:\n​\n(a) The processing is necessary for the performance of the contractual relationship with you (Article 6§1(b) of the General Regulation).\n\n(b) The processing is necessary for the purposes of the legitimate interests pursued by the Company (Article 6§1(f) of the General\nRegulation).\n\n(c) You have given your explicit consent to the processing of personal data (Article 6§1(a) of the General Regulation).\n​\n5. Recipients of Your Data\nAccess to your data is limited to appropriately authorized employees or external partners acting on our behalf for the above-mentioned processing purposes. These parties provide IT services for recording and storing your data and for the operation of our Website.\n​\n6. Duration of Processing / Data Retention Period\nThe retention period may vary significantly depending on the type of data and how it is used. The determination of the data retention period is based on criteria such as legal retention deadlines, ongoing or potential disputes, intellectual property or ownership rights, contractual requirements, business directives or needs, and historical archiving.\n​\n7. Organizational Measures\nAppropriate physical, electronic, and organizational measures have been taken to prevent unauthorized access to your personal data, maintain data integrity, and ensure data availability.\n​\n8. Your Rights\nOur Company ensures your rights regarding the processing of personal data and their exercise:\nRight to Information: You have the right to be informed about the collection and use of your personal data.\nRight to Access: You can request confirmation from the Company about whether your personal data is being processed and, if so, gain access to the data in a concise, clear, transparent, and easily accessible format.\nRight to Rectification: You can request the correction of inaccurate or incomplete personal data, and the Company will ensure this is done without undue delay.\nRight to Erasure: You have the right to request the deletion of your personal data without undue delay, and the Company is obligated to proceed under the conditions defined by law.\nRight to Restriction of Processing: You can request that the Company limits processing activities to specific purposes, under the conditions defined by law.\nRight to Object: You have the right to object at any time, on grounds related to your particular situation, to the processing of personal data. The Company will no longer process the data unless it demonstrates compelling legal grounds that override your interests or for the establishment, exercise, or defense of legal claims.\nRight to Data Portability: You have the right to receive your personal data in a structured, commonly used, and machine-readable format, and the right to transfer it to another controller without objection from the Company.\nRight to Obtain Human Intervention: You have the right not to be subject to a decision based solely on automated processing, including profiling, which produces legal effects or similarly significantly affects you.\nRight to Withdraw Consent: If you have given consent for the processing of certain personal data, you can withdraw your consent at any time, with future effect. The withdrawal does not affect the lawfulness of processing carried out before it was withdrawn. The Company may continue to process your personal data if another legal reason for processing exists.\n​\nTo exercise any of these rights, you can send an email to 5doorsdpo@gmail.com or a written request using the contact details below.\nIf you believe your data protection rights have been violated, you have the right to file a complaint with the Hellenic Data Protection Authority (www.dpa.gr).\n​\nContact Information\nFIVE DOORS Ι.Κ.Ε.\nStraitsa 2,\nP.C.: 57001\nEmail: 5doorscontact@gmail.com\nLast updated: September 2024",
+  "markdown": "# Privacy Policy | 5doors\n\nFIVE DOORS I.K.E. (hereinafter referred to as the \"Company\" or \"we\") makes every effort to offer an experience that meets the needs of the visitors to our Website by responsibly using the information collected through it. We are committed to respecting your privacy and complying with the applicable data protection and privacy legislation.\n\n​\n\nThe processing of your personal data is governed by these terms, by the relevant provisions of the Greek and European legal framework on data protection, including the General Data Protection Regulation (2016/679), and by related decisions, guidelines, and regulations issued by the Hellenic Data Protection Authority.\n\n​\n\nThis Website Privacy Policy (hereinafter referred to as the \"Policy\") may be subject to amendments. We advise you to regularly check the Policy to stay informed about any changes. By visiting and browsing our Website, you accept the Policy as in effect. If significant amendments are made, we will ensure the publication of a relevant notice to the visitors of our Website.\n\n​\n\nThis Policy explains how we collect, process, and/or use the data we receive through our Website, as applicable from time to time. This Policy also describes how we collect, process, use, and share your personal data that you provide to us. It also outlines your options regarding the use, access, transfer, correction, and deletion of your personal data.\n\n​\n\n1\\. Definitions\n\nFor the purpose of applying this policy, the following terms must be clarified:\n\n\\- \"Personal Data\" refers to information concerning a living natural person who can be identified, directly or indirectly, particularly through reference to an identifying element such as a name, identification number, location data, online identifiers, or one or more factors specific to the physical, physiological, economic, cultural, or social identity of that natural person.\n\n\\- \"Data Processing,\" in relation to information or data, means the collection, recording, or possession of information or data, or the execution of any operation or series of operations on the information or data, including: (a) the organization, adaptation, or alteration of the information or data, (b) the retrieval, consultation, or use of the information or data, (c) the disclosure of the information or data by transmission, dissemination, or any other form of making available, or (d) the correlation, combination, restriction, deletion, or destruction of the information or data.\n\n\\- \"Data Subject\" is the natural person who is the subject of personal data.\n\n\\- \"Data Controller\" means a person who (either alone, jointly, or together with others) determines the purposes for which and the manner in which personal data are or are to be processed.\n\n\\- \"Data Processor,\" in relation to personal data, means any natural or legal person other than the data controller who processes data on behalf of the Data Controller.\n\n\\- \"Third Party,\" in relation to personal data, means any person other than: (a) the data subject, (b) the data controller, or (c) any processor or any other person authorized to process data on behalf of the data controller or processor.\n\n​\n\n2\\. Principles Governing the Processing of Personal Data\n\nWe ensure full compliance with the applicable Data Protection Legal Framework, including the General Data Protection Regulation (GDPR), and process personal data in accordance with the following key principles. In this context, we ensure that personal data:\n\n​\n\na) Are processed lawfully and fairly, with transparency regarding the data subjects.  \nThe lawful bases for processing are outlined below. We ensure that one of these bases applies when processing personal data:\n\n*   Consent: The individual has given clear and unambiguous consent, allowing us to process personal data for a specific purpose.\n    \n*   Contract: Processing is necessary for the performance of a contract between us and the individual or for steps requested by the data subject prior to entering into a contract.\n    \n*   Legal Obligation: Processing is necessary for compliance with a legal obligation (not including contractual obligations).\n    \n*   Vital Interests: Processing is necessary to protect someone's life or other vital interests.\n    \n*   Public Interest: Processing is necessary for the performance of a task carried out in the public interest.\n    \n*   Legitimate Interests: Processing is necessary for the legitimate interests pursued by the controller or a third party, unless those interests are overridden by the data subject's interests.\n    \n\n​\n\nb) Are collected for specific, explicit, and legitimate purposes and are not processed further in ways incompatible with those purposes. Further processing for archiving purposes in the public interest, scientific or historical research, or statistical purposes is not considered incompatible with the initial purposes.\n\n​\n\nc) Are adequate, relevant, and limited to what is necessary for the purposes for which they are processed. Personal data must be sufficient, relevant, and not excessive in relation to the purpose(s) for which they are processed.\n\n​\n\nd) Are accurate and, where necessary, kept up to date. Every reasonable step must be taken to ensure that inaccurate data, in relation to the purposes for which they are processed, are erased or rectified without delay.\n\n​\n\ne) Are kept in a form that permits identification of data subjects only for as long as necessary for the purposes for which personal data are processed. Personal data may be stored for longer periods if they are processed solely for archiving purposes in the public interest, for scientific or historical research, or for statistical purposes, provided that appropriate technical and organizational measures are applied, as required by the applicable regulatory data protection framework, to safeguard the rights and freedoms of individuals.\n\n​\n\nf) Are processed in a manner that ensures appropriate security of personal data, including protection against unauthorized or unlawful processing, and accidental loss, destruction, or damage, through the implementation of appropriate technical and organizational measures. Appropriate technical and organizational measures will be taken against unauthorized or unlawful processing of personal data and accidental loss or destruction.\n\n​\n\ng) Are not transferred to a country or territory outside the European Economic Area unless that country or territory ensures an adequate level of protection for the rights and freedoms of data subjects in relation to the processing of personal data.\n\n​\n\n3\\. Data We Collect\n\n​\n\nWe collect information about you in order to provide our services. To offer our services to you in the best possible way, and to communicate with you and respond to your requests, it is necessary for us to collect and use data as described in this Policy.\n\n​\n\n3.1 Data We Collect Through the Contact Form  \nWhen you provide your personal data by entering them in specific fields on the XENOS Packaging A.E. Website, we collect and retain your data exclusively for the purposes outlined below. In this context, we collect the data you voluntarily provide, such as your first name, last name, phone number, email address, physical address, and the content of your communication.\n\n​\n\n3.2 Data We Collect Through Automated Means  \nWhen you use our website, your device automatically provides us with data, allowing us to serve you and tailor our response to your needs. The type of information we collect through automated means generally includes technical information about your computer, such as your IP address or other device identifiers, the type of device you are using, and the version of the operating system. The data we collect may also include usage information and statistics regarding your interaction with the Website. This can include information such as the URLs of the pages you visited on our website, referring and exit pages' URLs, page views, time spent on a page, the number of clicks, platform type, location data (if location services are enabled), and other details about how you used the platform.\n\nThis information is collected using Cookies. We recommend reviewing our Cookies Policy (find it here) to learn more about what cookies are, how we use them, and how you can control their use.\n\n​\n\n4\\. Purpose and Legal Basis for Processing\n\n​\n\n4.1. We process your data exclusively for the following purposes:\n\n​\n\n(a) Communication in the context of service provision:  \nWhen you communicate with us through our Website, you are required to provide your personal data. We collect your personal data to serve our pre-contractual or contractual relationship, enabling us to meet your needs when using our services, provide you with personalized information, give you access to your personal documents, and respond to your requests or contact you upon your request.\n\n​\n\n(b) Access to downloadable material:  \nIf you provide your consent by requesting access to downloadable material, we will register your data in order to deliver the item(s) you requested.\n\n​\n\n(c) Exercise of legal claims:  \nYour data may be processed to establish any legal claims or defend the Company against fraud attempts, potential cyberattacks, or other illegal activities.\n\n​\n\n(d) Improvement of services:  \nWe retain your data and your service usage history to derive statistical data that help us better evaluate user visits and navigation through our Website, thus improving its content and structure.\n\n​\n\n4.2. Legal Bases for Processing  \nThe processing of your personal data is necessary to fulfill the aforementioned purposes. Unless otherwise specified at the time of data collection, the legal basis for processing your personal data is one of the following:\n\n​\n\n(a) The processing is necessary for the performance of the contractual relationship with you (Article 6§1(b) of the General Regulation).\n\n  \n(b) The processing is necessary for the purposes of the legitimate interests pursued by the Company (Article 6§1(f) of the General\n\nRegulation).\n\n  \n(c) You have given your explicit consent to the processing of personal data (Article 6§1(a) of the General Regulation).\n\n​\n\n5\\. Recipients of Your Data\n\nAccess to your data is limited to appropriately authorized employees or external partners acting on our behalf for the above-mentioned processing purposes. These parties provide IT services for recording and storing your data and for the operation of our Website.\n\n​\n\n6\\. Duration of Processing / Data Retention Period\n\nThe retention period may vary significantly depending on the type of data and how it is used. The determination of the data retention period is based on criteria such as legal retention deadlines, ongoing or potential disputes, intellectual property or ownership rights, contractual requirements, business directives or needs, and historical archiving.\n\n​\n\n7\\. Organizational Measures\n\nAppropriate physical, electronic, and organizational measures have been taken to prevent unauthorized access to your personal data, maintain data integrity, and ensure data availability.\n\n​\n\n8\\. Your Rights\n\nOur Company ensures your rights regarding the processing of personal data and their exercise:\n\n*   Right to Information: You have the right to be informed about the collection and use of your personal data.\n    \n*   Right to Access: You can request confirmation from the Company about whether your personal data is being processed and, if so, gain access to the data in a concise, clear, transparent, and easily accessible format.\n    \n*   Right to Rectification: You can request the correction of inaccurate or incomplete personal data, and the Company will ensure this is done without undue delay.\n    \n*   Right to Erasure: You have the right to request the deletion of your personal data without undue delay, and the Company is obligated to proceed under the conditions defined by law.\n    \n*   Right to Restriction of Processing: You can request that the Company limits processing activities to specific purposes, under the conditions defined by law.\n    \n*   Right to Object: You have the right to object at any time, on grounds related to your particular situation, to the processing of personal data. The Company will no longer process the data unless it demonstrates compelling legal grounds that override your interests or for the establishment, exercise, or defense of legal claims.\n    \n*   Right to Data Portability: You have the right to receive your personal data in a structured, commonly used, and machine-readable format, and the right to transfer it to another controller without objection from the Company.\n    \n*   Right to Obtain Human Intervention: You have the right not to be subject to a decision based solely on automated processing, including profiling, which produces legal effects or similarly significantly affects you.\n    \n*   Right to Withdraw Consent: If you have given consent for the processing of certain personal data, you can withdraw your consent at any time, with future effect. The withdrawal does not affect the lawfulness of processing carried out before it was withdrawn. The Company may continue to process your personal data if another legal reason for processing exists.\n    \n\n​\n\nTo exercise any of these rights, you can send an email to [5doorsdpo@gmail.com](mailto:5doorsdpo@gmail.com) or a written request using the contact details below.\n\nIf you believe your data protection rights have been violated, you have the right to file a complaint with the Hellenic Data Protection Authority ([](http://www.dpa.gr/)[www.dpa.gr](http://www.dpa.gr/)).\n\n​\n\nContact Information  \nFIVE DOORS Ι.Κ.Ε.  \nStraitsa 2,  \nP.C.: 57001  \nEmail: 5doorscontact@gmail.com\n\nLast updated: September 2024",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/oroi-xrisis",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/oroi-xrisis",
+    "loadedTime": "2026-03-29T06:15:43.310Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/oroi-xrisis",
+    "title": "Terms of use | 5doors",
+    "description": null,
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Terms of use  | 5doors"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/oroi-xrisis"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764940.893283805529184039817, 1774764940.893283805529184039817, 1774764940.893283805529184039817",
+      "etag": "W/\"d2af35e61c85c65c0dc6fa5bece1f783\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:41 GMT",
+      "x-served-by": "cache-den-kden1300061-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, ui2Pjuc3zC1HEw7V2qXeyh9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb48KorX+iAN4GM460clpzUs, 2d58ifebGbosy5xc+FRaljpvUwkSTaMTM8rZD56qUDgCgSAhAPUIvVvxyckksncQUtJ5CtLU+V6xGP7hmvcP/g==, 2UNV7KOq4oGjA5+PKsX47ECQPVwlNvMJ3BpySO/DZXM=, R8nVwPJv9QJL1m78OROO+KWbJCOTidMTzHiP7k4dXWU=, UCXqFoU+MbsWXjA74cRbHasmO4H7xeWX0xPm+M4JDmgSO5XmrrCSQNDehIjmfew3iFBEajGJ7V+VrCWcKfUwxQ==, R8nVwPJv9QJL1m78OROO+BWKIjTAKXtnKLZMHGwO0Vk=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqxMvAdGxIosJeRms6s/NzTCA2oA0bkF2xbShLIIUj+5WRUmLrkm0M1prSnOEaO1yYA=, R8nVwPJv9QJL1m78OROO+BWKIjTAKXtnKLZMHGwO0Vk=, /a5ccLSK1HEmwPNg/x6OupykYuC/6y8mRkZ/1rERhfYd+uD+ZTM05SSCQa6Z0IXa+A9jxUYQuRwOM65bc5+C0wIsBR0BKEzHvU9fdlmOzuQ=",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Terms of use | 5doors\n1. General\n​\n1.1. The website https://www.5doors-thessaloniki.com serves as the online platform for the promotion and marketing of the services provided by the company FIVE DOORS I.K.E., with VAT number 801323882 and G.E.MI. number 154409504000, under the jurisdiction of the Z’ Tax Office of Thessaloniki, located at Straits Street 2, Postal Code 57001, with email: 5doorscontact@gmail.com (hereinafter referred to as the 'Company'.\n​\n1.2. Your information regarding our activities and services, the presentation and promotion of our provided services, as well as the protection of your personal data and the security of your transactions are governed by these terms, conditions, and policies which form a unified whole. You are required to read them carefully before browsing https://www.5doors- thessaloniki.com and before conducting any transactions with us. Your browsing of https://www.5doors-thessaloniki.com, as well as any transaction or communication through https://www.5doors-thessaloniki.com, automatically implies your unconditional acceptance of these terms of use and our policies, and your consent to them, as they may apply from time to time. If you do not agree with these terms, you must refrain from using https://www.5doors-thessaloniki.com and conducting any transactions through it. This applies to the entire content, pages, graphics, images, photos, and files contained in https://www.5doors-thessaloniki.com.\n​\n1.3. You must be at least 18 years old to use https://www.5doors-thessaloniki.com. By browsing, conducting transactions through https://www.5doors-thessaloniki.com, and accepting the terms and conditions, you guarantee and confirm that you are at least 18 years old. If minors use https://www.5doors-thessaloniki.com, the Company bears no responsibility.\n​\n1.4. The Company reserves the right at its sole discretion to modify these terms, conditions of use, and policies, as well as to update or upgrade them without prior notice to the user/consumer/visitor of https://www.5doors-thessaloniki.com.\n​\n1.5. Any invalidity of certain terms does not affect the validity of the remaining terms. The Company’s failure to exercise its rights under these terms does not imply a waiver of those rights. The Company is not responsible for any violation of these terms due to reasons of force majeure.\n​\n1.6. The Company reserves the right at any time, without justification and without prior notice to the user/consumer/visitor of https://www.5doors-thessaloniki.com, to cancel, suspend, or terminate the operation of https://www.5doors-thessaloniki.com. The user/consumer/visitor of https://www.5doors-thessaloniki.com unconditionally acknowledges and accepts all the above merely by browsing or using the services of https://www.5doors-thessaloniki.com.\n​\n1.7. Contracts are concluded in Greek for customers residing in Greece and in English for customers residing in other countries.\n​\n1.8. These terms and conditions, as well as all contracts concluded through the online store, are governed by Greek law. For any disputes that may arise, the courts of Thessaloniki are exclusively competent.​\n​\n​\n2. Content – Responsibility\n​\n2.1. The presentation of the services provided by https://www.5doors-thessaloniki.com constitutes an invitation to the visitor/user/consumer to submit a proposal for the formation of a contract. The presentation in no way constitutes a binding commitment by the Company for the availability and sufficiency of the advertised services (Article 127 of the Civil Code).\n​\n2.2. The Company collects, processes, and distributes the content, but does not guarantee its completeness, sufficiency, or suitability, or the absence of inaccuracies. In any case, the users/visitors of https://www.5doors-thessaloniki.com are responsible for verifying or confirming the provided content with its sources.\n​\n2.3. https://www.5doors-thessaloniki.com may in many cases refer to other websites via \"links,\" hyperlinks, or advertising banners, where the providers of these are fully responsible (civilly, criminally, etc.) for the security, legality, and validity of the content, data protection policy, quality, and adequacy of the services or products on the other websites, links, or advertising banners. Therefore, the user/visitor/consumer must comply with their terms and contact the corresponding provider for any issues they may encounter.\n​\n3. Intellectual & Industrial Property Rights\n​\n3.1. All content on https://www.5doors-thessaloniki.com, which includes all images, graphics, photos, designs, texts, trademarks of provided services and products (hereinafter referred to as \"Content\"), lawfully belongs to the Company and is protected by relevant provisions of Greek law, European law, and international conventions regarding intellectual property protection. Any action deemed, under the above legal framework and relevant case law, as a violation of the intellectual property rights of the owner is prohibited. Therefore, among other things, copying, analog/digital recording, and mechanical reproduction, distribution, transfer, downloading, modification, resale, creation of derivative work, or misleading the public about the actual provider and owner of the Content of https://www.5doors-thessaloniki.com is prohibited. Any reproduction, republication, uploading, announcement, dissemination, or transmission or any other use of the Content in any way or by any means for commercial or other purposes is only permitted with prior written permission from the Company.\n​\n3.2. The names, images, graphic designs, logos, and the domain name 5doors-thessaloniki.com used in general transactions to represent the Company https://www.5doors-thessaloniki.com are trademarks and distinctive features of the Company and are protected by Greek, community, and international trademark, industrial, and intellectual property laws.\n​​​​\n4. User Obligations\n​\n4.1. Users/visitors/consumers of the website https://www.5doors-thessaloniki.com agree not to use https://www.5doors-thessaloniki.com to send, publish, email, or transmit in any other way any content that is illegal, harmful, threatening, offensive, annoying, defamatory, vulgar, obscene, libelous, violates someone's privacy, shows hostility, or expresses racial, ethnic, or other discrimination, can harm minors in any way, is unauthorized for transmission under law or contractual obligations, violates any intellectual or industrial property rights (such as patents, trademarks, trade secrets, copyrights, or other proprietary rights of third parties), contains software viruses or any other codes, files, or programs designed to interrupt, damage, destroy, or limit the functionality of any software or hardware, intentionally or unintentionally violates the applicable Greek and community law and its provisions, may harass third parties in any way, or uses any content for the collection or storage of personal data about other users.\n​\n4.2. In the event of illegal or contrary-to-terms use of https://www.5doors-thessaloniki.com, users/visitors/consumers are obliged to compensate the Company for any direct and consequential damages. The Company's failure to exercise its rights under these terms does not imply a waiver of such rights.​\n​\n5. Confidentiality of Communications & Protection of Personal Data\n​\n5.1. Users/visitors/consumers can browse https://www.5doors-thessaloniki.com without providing any personal information. Any information provided to the Company via https://www.5doors-thessaloniki.com during communication is confidential, and the Company has taken all necessary measures to ensure its use only to the extent deemed necessary within the scope of provided services. Some of the measures taken are the following: (a) The Company does not disclose or process customer details and their transactions, except with written authorization from them or if required by a court order or decision from another public authority with enforceable power. (b) In cases where third parties are used to support the Company's electronic systems, the Company ensures the confidentiality of this information. Users/visitors/consumers have access to this information and may request its correction if any errors are found.\n​\n5.2. Users/visitors/consumers may request to receive newsletters and printed material during their registration and maintain the right to opt-out of this service at any time.\n​\n5.3. The Company, with the above reservation, does not disclose or publish the personal data of users/visitors/consumers of https://www.5doors-thessaloniki.com to third parties. All information is encrypted and stored with absolute security.​\n​\n6. Communication Methods\n​\n6.1. By email to 5doorscontact@gmail.com or through the electronic contact form posted on our website, to which the Company will respond on the next business day.\n​\n6.2. By phone at (+30) 6955444745.\n​\n7. Modification/Removal of the Present Terms and Website Content\n​\nThe website https://www.5doors-thessaloniki.com reserves the right to expand, update, and improve its website, as well as the related products and services, and to renew and modify this policy, as well as the terms and conditions of transactions, at its discretion through the relevant amendment of the present terms. We recommend that you review this process periodically in order to stay informed about any changes to the content of this document, as well as to the applicable personal data protection policy. This policy will be modified from time to time without prior individual notice to users.\n​\nThe Company, in the context of good faith, is not liable or bound by any errors in the features, photos, and prices of products listed on the website https://www.5doors-thessaloniki.com and cannot guarantee that errors will not occur for any reason during the entry or updating of product features or prices.\n​\nLast update of Terms of Use: September 2024.",
+  "markdown": "# Terms of use | 5doors\n\n1\\. General\n\n​\n\n1.1. The website [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) serves as the online platform for the promotion and marketing of the services provided by the company FIVE DOORS I.K.E., with VAT number 801323882 and G.E.MI. number 154409504000, under the jurisdiction of the Z’ Tax Office of Thessaloniki, located at Straits Street 2, Postal Code 57001, with email: [5doorscontact@gmail.com](mailto:5doorscontact@gmail.com) (hereinafter referred to as the 'Company'.\n\n​\n\n1.2. Your information regarding our activities and services, the presentation and promotion of our provided services, as well as the protection of your personal data and the security of your transactions are governed by these terms, conditions, and policies which form a unified whole. You are required to read them carefully before browsing [https://www.5doors-](https://www.5doors-/) thessaloniki.com and before conducting any transactions with us. Your browsing of [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/), as well as any transaction or communication through [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/), automatically implies your unconditional acceptance of these terms of use and our policies, and your consent to them, as they may apply from time to time. If you do not agree with these terms, you must refrain from using [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) and conducting any transactions through it. This applies to the entire content, pages, graphics, images, photos, and files contained in [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/).\n\n​\n\n1.3. You must be at least 18 years old to use [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/). By browsing, conducting transactions through [](https://www.5doors-thessaloniki.com/)[https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/), and accepting the terms and conditions, you guarantee and confirm that you are at least 18 years old. If minors use [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/), the Company bears no responsibility.\n\n​\n\n1.4. The Company reserves the right at its sole discretion to modify these terms, conditions of use, and policies, as well as to update or upgrade them without prior notice to the user/consumer/visitor of [](https://www.5doors-thessaloniki.com/)[https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/).\n\n​\n\n1.5. Any invalidity of certain terms does not affect the validity of the remaining terms. The Company’s failure to exercise its rights under these terms does not imply a waiver of those rights. The Company is not responsible for any violation of these terms due to reasons of force majeure.\n\n​\n\n1.6. The Company reserves the right at any time, without justification and without prior notice to the user/consumer/visitor of [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/), to cancel, suspend, or terminate the operation of [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/). The user/consumer/visitor of [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) unconditionally acknowledges and accepts all the above merely by browsing or using the services of [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/).\n\n​\n\n1.7. Contracts are concluded in Greek for customers residing in Greece and in English for customers residing in other countries.\n\n​\n\n1.8. These terms and conditions, as well as all contracts concluded through the online store, are governed by Greek law. For any disputes that may arise, the courts of Thessaloniki are exclusively competent.​\n\n​\n\n​\n\n2\\. Content – Responsibility\n\n​\n\n2.1. The presentation of the services provided by [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) constitutes an invitation to the visitor/user/consumer to submit a proposal for the formation of a contract. The presentation in no way constitutes a binding commitment by the Company for the availability and sufficiency of the advertised services (Article 127 of the Civil Code).\n\n​\n\n2.2. The Company collects, processes, and distributes the content, but does not guarantee its completeness, sufficiency, or suitability, or the absence of inaccuracies. In any case, the users/visitors of [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) are responsible for verifying or confirming the provided content with its sources.\n\n​\n\n2.3. [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) may in many cases refer to other websites via \"links,\" hyperlinks, or advertising banners, where the providers of these are fully responsible (civilly, criminally, etc.) for the security, legality, and validity of the content, data protection policy, quality, and adequacy of the services or products on the other websites, links, or advertising banners. Therefore, the user/visitor/consumer must comply with their terms and contact the corresponding provider for any issues they may encounter.\n\n​\n\n3\\. Intellectual & Industrial Property Rights\n\n​\n\n3.1. All content on [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/), which includes all images, graphics, photos, designs, texts, trademarks of provided services and products (hereinafter referred to as \"Content\"), lawfully belongs to the Company and is protected by relevant provisions of Greek law, European law, and international conventions regarding intellectual property protection. Any action deemed, under the above legal framework and relevant case law, as a violation of the intellectual property rights of the owner is prohibited. Therefore, among other things, copying, analog/digital recording, and mechanical reproduction, distribution, transfer, downloading, modification, resale, creation of derivative work, or misleading the public about the actual provider and owner of the Content of [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) is prohibited. Any reproduction, republication, uploading, announcement, dissemination, or transmission or any other use of the Content in any way or by any means for commercial or other purposes is only permitted with prior written permission from the Company.\n\n​\n\n3.2. The names, images, graphic designs, logos, and the domain name 5doors-thessaloniki.com used in general transactions to represent the Company [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) are trademarks and distinctive features of the Company and are protected by Greek, community, and international trademark, industrial, and intellectual property laws.\n\n​​​​\n\n4\\. User Obligations\n\n​\n\n4.1. Users/visitors/consumers of the website [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) agree not to use [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) to send, publish, email, or transmit in any other way any content that is illegal, harmful, threatening, offensive, annoying, defamatory, vulgar, obscene, libelous, violates someone's privacy, shows hostility, or expresses racial, ethnic, or other discrimination, can harm minors in any way, is unauthorized for transmission under law or contractual obligations, violates any intellectual or industrial property rights (such as patents, trademarks, trade secrets, copyrights, or other proprietary rights of third parties), contains software viruses or any other codes, files, or programs designed to interrupt, damage, destroy, or limit the functionality of any software or hardware, intentionally or unintentionally violates the applicable Greek and community law and its provisions, may harass third parties in any way, or uses any content for the collection or storage of personal data about other users.\n\n​\n\n4.2. In the event of illegal or contrary-to-terms use of [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/), users/visitors/consumers are obliged to compensate the Company for any direct and consequential damages. The Company's failure to exercise its rights under these terms does not imply a waiver of such rights.​\n\n​\n\n5\\. Confidentiality of Communications & Protection of Personal Data\n\n​\n\n5.1. Users/visitors/consumers can browse [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) without providing any personal information. Any information provided to the Company via [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) during communication is confidential, and the Company has taken all necessary measures to ensure its use only to the extent deemed necessary within the scope of provided services. Some of the measures taken are the following: (a) The Company does not disclose or process customer details and their transactions, except with written authorization from them or if required by a court order or decision from another public authority with enforceable power. (b) In cases where third parties are used to support the Company's electronic systems, the Company ensures the confidentiality of this information. Users/visitors/consumers have access to this information and may request its correction if any errors are found.\n\n​\n\n5.2. Users/visitors/consumers may request to receive newsletters and printed material during their registration and maintain the right to opt-out of this service at any time.\n\n​\n\n5.3. The Company, with the above reservation, does not disclose or publish the personal data of users/visitors/consumers of [https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) to third parties. All information is encrypted and stored with absolute security.​\n\n​\n\n6\\. Communication Methods\n\n​\n\n6.1. By email to [5doorscontact@gmail.com](mailto:5doorscontact@gmail.com) or through the electronic contact form posted on our website, to which the Company will respond on the next business day.\n\n​\n\n6.2. By phone at (+30) 6955444745.\n\n​\n\n7\\. Modification/Removal of the Present Terms and Website Content\n\n​\n\nThe website [](https://www.5doors-thessaloniki.com/)[https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) reserves the right to expand, update, and improve its website, as well as the related products and services, and to renew and modify this policy, as well as the terms and conditions of transactions, at its discretion through the relevant amendment of the present terms. We recommend that you review this process periodically in order to stay informed about any changes to the content of this document, as well as to the applicable personal data protection policy. This policy will be modified from time to time without prior individual notice to users.\n\n​\n\nThe Company, in the context of good faith, is not liable or bound by any errors in the features, photos, and prices of products listed on the website [](https://www.5doors-thessaloniki.com/)[https://www.5doors-thessaloniki.com](https://www.5doors-thessaloniki.com/) and cannot guarantee that errors will not occur for any reason during the entry or updating of product features or prices.\n\n​\n\nLast update of Terms of Use: September 2024.",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/cctv",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/cctv",
+    "loadedTime": "2026-03-29T06:15:46.735Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/cctv",
+    "title": "CCTV | 5doors",
+    "description": null,
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "CCTV | 5doors"
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/cctv"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764941.95728383697665182545",
+      "etag": "W/\"eec43d770fca451b03a3c2dee81322ec\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:42 GMT",
+      "x-served-by": "cache-den-kden1300067-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, dwc60INy8NFddnU/0WdlOB9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb6csGI9IvW/JOPxiO56Q8Y5, 2d58ifebGbosy5xc+FRaloWhROX6SQfuaetG/JXvrY9Nt/xu66JXsaxPJqYA26mATWncunec0OqrkViSdRFxBQ==, 2UNV7KOq4oGjA5+PKsX47HqjR+6CNmn/ng3r7CWVjR4=, 2UNV7KOq4oGjA5+PKsX47KtUTHQeecWkgrb9IlLu/OM=, R8nVwPJv9QJL1m78OROO+DQ8uBndQiemkTq7+s1tWJQ=, UCXqFoU+MbsWXjA74cRbHf+LFTSld2AxR32wM9gQT+wSO5XmrrCSQNDehIjmfew37AZGM0jumzQ8FsdkRswOPA==, R8nVwPJv9QJL1m78OROO+Jzs9ItISYudS7iBNocyZP8=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqzX4mSYPsKg6X3Vc5gLYSlAWQovjSAw/WeMsflNGOVE2OYzODd/TWayCnbpn1KADvM=, R8nVwPJv9QJL1m78OROO+EUlUM6FkkLgEeMfO1Iuc2c=, /a5ccLSK1HEmwPNg/x6OupykYuC/6y8mRkZ/1rERhfZZnLHvD+aNJOsRx7cAusnt+A9jxUYQuRwOM65bc5+C0/cvtRUTHCmj4EYfwLzMuyE=",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "CCTV | 5doors\n1. Details of the Data Controller\nThe company under the name \"FIVE DOORS I.K.E.\", which has a VAT number 801323882 and a G.E.M.I. number 154409504000, is registered with the Tax Office Z' of Thessaloniki and is located at 2 Straitsa Street (P.O.: 57001), with email: 5doorscontact@gmail.com.\n2. Purpose of Processing and Legal Basis\nWe use a surveillance system for the purpose of protecting persons and property. The processing is necessary for the purposes of legitimate interests that we pursue as Data Controller (Article 6(1)(f) GDPR).\n3. Interest analysis\n​\n3.1 Our legitimate interest consists in the need to protect our premises and the goods on them from unlawful acts, such as, but not limited to, damage to other people's property and theft. The same applies to the safety of the life, physical integrity, health and property of our occupants, as well as third-party visitors, who are lawfully present in the premises under surveillance. \n​\n3.2 The recording system operates 24 hours/24 hours a day, 7 days a week.\n​\n3.3 We collect only image data, with recording and storage for a specific period of time. The video surveillance system operates in each apartment building in which we provide apartment rental services to you, only if we have posted warning signs of video surveillance system operation. Please note that we have limited the recording exclusively to the area where we have assessed that there is an increased likelihood of illegal acts (e.g. theft) being committed. In particular, the recording starts to take place before the entrance door to the building, without focusing on areas where the privacy of the persons whose image is taken may be unduly restricted, including their right to respect for personal data. The indoor camera shall record exclusively the common interior space of the entrance of the building, the common area of the basement (if the building has one), as well as the ground floor terrace (if the building has one). The exact location of the cameras is indicated by the location of the warning signs.\n​\n3.4 Closed circuit television (CCTV) cameras do not have a focus (zoom) capability and do not collect audio data.\n4. Access - Transmission\n​\n4.1 Access to the Closed Circuit Television (CCTV) system recorder is granted to a specific group of persons. The material held is accessible only by the Management of the Controller, and any external contractors contracted by us and bound by us under processing agreements under Article 28 of the GDPR, who are (or may be in the future) charged with the custody and security of the site. \n​\n4.2 The transmission of data collected by CCTV to third parties is generally only permitted with your prior notification and only if the requirements of European and Greek legislation on personal data protection, as applicable, are met. This material is transmitted to third parties in the following cases: a) to the competent judicial, prosecutorial and police authorities when it contains data necessary for the investigation of a criminal offence involving persons or property of the controller; b) to the competent judicial, prosecutorial and police authorities when they lawfully request data in the exercise of their duties; and c) to the victim or perpetrator of a criminal offence when it concerns data which may constitute evidence of the offence.\n\n5. Lead time\nWe keep the data, to which this Notification (CCTV) refers, for twelve (12) days, after which it is automatically deleted. In the event that during this period we detect an incident, we will isolate part of the video and keep it for up to one (1) month more, in order to investigate the incident and initiate legal proceedings to defend our legal interests, while if the incident involves a third party we will keep the video for up to three (3) months more.\n6. Rights of Data Subjects\nThe Data Subjects have the following rights in relation to the processing to which this Communication (CCTV) relates:\nRight of access: you have the right to know whether we are processing your image and, if so, to receive a copy of it. \nRight to restriction: you have the right to ask us to restrict processing, such as not deleting data that you consider necessary for the establishment, exercise or maintenance of legal claims. \nRight to object: you have the right to object to processing. \nRight to erasure: you have the right to request that we erase your data. \nYou can exercise your rights by sending an e-mail to 5doorsdpo@gmail.com or a letter to our postal address or by submitting your request to us yourself at our offices. In order for us to consider a request relating to your image, you will need to identify approximately when you were in range of the cameras and provide us with an image of you to assist us in identifying your own data and in masking the data of third party subjects. Alternatively, we give you the option of coming to our premises to show you the images in which you appear. We also point out that exercising the right to object or erasure does not imply the immediate deletion of data or the modification of processing. In any case, we will reply to you in detail as soon as possible, within the time limits set by the GDPR.\n7. CCTV archive: \nThe \"Processing Manager\" shall keep a record of requests for the processing of CCTV data relating to you at its offices. The \"Controller\" shall also keep a file in which the following are described and included: (a) the technical characteristics of the cameras; (b) a diagrammatic representation of the location of the cameras; (c) the place where the data collected by the closed circuit television (CCTV) is kept. \n8. Changes to this Update: \nThe Company reserves the right to amend and update this Update at any time and without notice. In any such case, you will be notified of the changes as soon as practicable. In case you have any questions or queries regarding this Update or more generally regarding the protection of your personal data, you may contact the Data Protection Officer (dpo) at e-mail: 5doorsdpo@gmail.com.\n\n9. Right to lodge a complaint:\nIf you believe that the processing of your data is in breach of Regulation (EU) 2016/679, you have the right to lodge a complaint with a supervisory authority. The competent supervisory authority for Greece is the Hellenic Data Protection Authority, Kifissias 1-3, 115 23, Athens, Greece, https://www.dpa.gr, tel. 2106475600.",
+  "markdown": "# CCTV | 5doors\n\n1\\. Details of the Data Controller\n\nThe company under the name \"FIVE DOORS I.K.E.\", which has a VAT number 801323882 and a G.E.M.I. number 154409504000, is registered with the Tax Office Z' of Thessaloniki and is located at 2 Straitsa Street (P.O.: 57001), with email: [5doorscontact@gmail.com](mailto:5doorscontact@gmail.com).\n\n2\\. Purpose of Processing and Legal Basis\n\nWe use a surveillance system for the purpose of protecting persons and property. The processing is necessary for the purposes of legitimate interests that we pursue as Data Controller (Article 6(1)(f) GDPR).\n\n3\\. Interest analysis\n\n​\n\n3.1 Our legitimate interest consists in the need to protect our premises and the goods on them from unlawful acts, such as, but not limited to, damage to other people's property and theft. The same applies to the safety of the life, physical integrity, health and property of our occupants, as well as third-party visitors, who are lawfully present in the premises under surveillance. \n\n​\n\n3.2 The recording system operates 24 hours/24 hours a day, 7 days a week.\n\n​\n\n3.3 We collect only image data, with recording and storage for a specific period of time. The video surveillance system operates in each apartment building in which we provide apartment rental services to you, only if we have posted warning signs of video surveillance system operation. Please note that we have limited the recording exclusively to the area where we have assessed that there is an increased likelihood of illegal acts (e.g. theft) being committed. In particular, the recording starts to take place before the entrance door to the building, without focusing on areas where the privacy of the persons whose image is taken may be unduly restricted, including their right to respect for personal data. The indoor camera shall record exclusively the common interior space of the entrance of the building, the common area of the basement (if the building has one), as well as the ground floor terrace (if the building has one). The exact location of the cameras is indicated by the location of the warning signs.\n\n​\n\n3.4 Closed circuit television (CCTV) cameras do not have a focus (zoom) capability and do not collect audio data.\n\n4\\. Access - Transmission\n\n​\n\n4.1 Access to the Closed Circuit Television (CCTV) system recorder is granted to a specific group of persons. The material held is accessible only by the Management of the Controller, and any external contractors contracted by us and bound by us under processing agreements under Article 28 of the GDPR, who are (or may be in the future) charged with the custody and security of the site. \n\n​\n\n4.2 The transmission of data collected by CCTV to third parties is generally only permitted with your prior notification and only if the requirements of European and Greek legislation on personal data protection, as applicable, are met. This material is transmitted to third parties in the following cases: a) to the competent judicial, prosecutorial and police authorities when it contains data necessary for the investigation of a criminal offence involving persons or property of the controller; b) to the competent judicial, prosecutorial and police authorities when they lawfully request data in the exercise of their duties; and c) to the victim or perpetrator of a criminal offence when it concerns data which may constitute evidence of the offence.\n\n  \n5\\. Lead time\n\nWe keep the data, to which this Notification (CCTV) refers, for twelve (12) days, after which it is automatically deleted. In the event that during this period we detect an incident, we will isolate part of the video and keep it for up to one (1) month more, in order to investigate the incident and initiate legal proceedings to defend our legal interests, while if the incident involves a third party we will keep the video for up to three (3) months more.\n\n6\\. Rights of Data Subjects\n\nThe Data Subjects have the following rights in relation to the processing to which this Communication (CCTV) relates:\n\n*   Right of access: you have the right to know whether we are processing your image and, if so, to receive a copy of it. \n    \n*   Right to restriction: you have the right to ask us to restrict processing, such as not deleting data that you consider necessary for the establishment, exercise or maintenance of legal claims. \n    \n*   Right to object: you have the right to object to processing. \n    \n*   Right to erasure: you have the right to request that we erase your data. \n    \n\nYou can exercise your rights by sending an e-mail to [5doorsdpo@gmail.com](mailto:5doorsdpo@gmail.com) or a letter to our postal address or by submitting your request to us yourself at our offices. In order for us to consider a request relating to your image, you will need to identify approximately when you were in range of the cameras and provide us with an image of you to assist us in identifying your own data and in masking the data of third party subjects. Alternatively, we give you the option of coming to our premises to show you the images in which you appear. We also point out that exercising the right to object or erasure does not imply the immediate deletion of data or the modification of processing. In any case, we will reply to you in detail as soon as possible, within the time limits set by the GDPR.  \n \n\n7\\. CCTV archive: \n\nThe \"Processing Manager\" shall keep a record of requests for the processing of CCTV data relating to you at its offices. The \"Controller\" shall also keep a file in which the following are described and included: (a) the technical characteristics of the cameras; (b) a diagrammatic representation of the location of the cameras; (c) the place where the data collected by the closed circuit television (CCTV) is kept.   \n \n\n8\\. Changes to this Update: \n\nThe Company reserves the right to amend and update this Update at any time and without notice. In any such case, you will be notified of the changes as soon as practicable. In case you have any questions or queries regarding this Update or more generally regarding the protection of your personal data, you may contact the Data Protection Officer (dpo) at e-mail: [5doorsdpo@gmail.com](mailto:5doorsdpo@gmail.com).\n\n  \n9\\. Right to lodge a complaint:\n\nIf you believe that the processing of your data is in breach of Regulation (EU) 2016/679, you have the right to lodge a complaint with a supervisory authority.  The competent supervisory authority for Greece is the Hellenic Data Protection Authority, Kifissias 1-3, 115 23, Athens, Greece, [https://www.dpa.gr](https://www.dpa.gr/), tel. 2106475600.",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://www.5doors-thessaloniki.com/en/contact",
+  "crawl": {
+    "loadedUrl": "https://www.5doors-thessaloniki.com/en/contact",
+    "loadedTime": "2026-03-29T06:15:46.019Z",
+    "referrerUrl": "https://www.5doors-thessaloniki.com/en",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://www.5doors-thessaloniki.com/en/contact",
+    "title": "Student houses Thessaloniki - Eikononia | 5Doors",
+    "description": "Contact us - Everything you need to know about your new student apartment in the centre of Thessaloniki.",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Student houses Thessaloniki - Eikononia | 5Doors"
+      },
+      {
+        "property": "og:description",
+        "content": "Contact us - Everything you need to know about your new student apartment in the centre of Thessaloniki."
+      },
+      {
+        "property": "og:url",
+        "content": "https://www.5doors-thessaloniki.com/en/contact"
+      },
+      {
+        "property": "og:site_name",
+        "content": "5doors"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774764941.56628382346801327011",
+      "etag": "W/\"acd2a690252f7a9bc714d6d05de0d3d2\"",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "x-cache-status": "MISS",
+      "cache-control": "public, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "accept-ranges": "bytes",
+      "age": "0",
+      "date": "Sun, 29 Mar 2026 06:15:42 GMT",
+      "x-served-by": "cache-den-kden1300087-DEN",
+      "x-cache": "MISS",
+      "vary": "Accept-Encoding",
+      "server-timing": "cache;desc=miss, varnish;desc=miss_miss, dc;desc=fastly_sea1_g",
+      "set-cookie": "client-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax;\nserver-session-bind=26e5384f-b04a-4fc0-a578-086cae1c9fe9; Path=/; Secure; SameSite=Lax; HttpOnly;\nssr-caching=cache#desc=miss#varnish=miss_miss#dc#desc=fastly_sea1_g; max-age=20",
+      "x-seen-by": "yvSunuo/8ld62ehjr5B7kA==, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, 1ev8u3tblITHmgXkyGXE9h9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb70x2q9inp4H9e1otyJHGJh, 2d58ifebGbosy5xc+FRalmC0tTfVR+paDn9BvqvMV/LGrJN8OVNC6EZpJnFuoqDbH5CahN25DLfTcoHDYg14jQ==, 2UNV7KOq4oGjA5+PKsX47EzpsDHuH75rNqOhkG1qhKU=, 2UNV7KOq4oGjA5+PKsX47EcNVZxMrnxWFErTxnFN3IM=, R8nVwPJv9QJL1m78OROO+DQ8uBndQiemkTq7+s1tWJQ=, UCXqFoU+MbsWXjA74cRbHaZLigNiWar/Ei985tPaVfgSO5XmrrCSQNDehIjmfew33LquZ8/fK/m/Yx80HC0RCQ==, R8nVwPJv9QJL1m78OROO+Nh+WEDJJRYs+It/c+QWM1k=, LoUK8/saGAmOxZWtpubo2ulUxbWCJbzFyKo7kHuBAqxGOp0Vbh1LU3GemaBW6HfwjZAtp3F1i/PN+y29PwlOrMFD/8N4S0uyMQnr7AEF7Q0=, R8nVwPJv9QJL1m78OROO+FIYHKKSYsnwwcvHOxDkem8=, RyPGOLsHDe7v/GTf4wBGusRwxNEIzj4PvmMwlv4P+4eXXs9XIycfx8IssWEf8OgwEjuV5q6wkkDQ3oSI5n3sN4p6pIt1tzbKkGkh/fo+8+0=",
+      "via": "1.1 google",
+      "glb-x-seen-by": "bS8wRlGzu0Hc+WrYuHB8QIg44yfcdCMJRkBoQ1h6Vjc=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Student houses Thessaloniki - Eikononia\n1/1\nContact\nAll apartments are currently rented.\nWe would be happy to hear from you again in May!\nSending successful",
+  "markdown": "# Student houses Thessaloniki - Eikononia\n\n![](https://static.wixstatic.com/media/eaf600_76b8d251ba3b41d2938ecfe54e5aa842~mv2.jpg/v1/fill/w_2560,h_642,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/eaf600_76b8d251ba3b41d2938ecfe54e5aa842~mv2.jpg)\n\n![](https://static.wixstatic.com/media/eaf600_76b8d251ba3b41d2938ecfe54e5aa842~mv2.jpg/v1/fill/w_2560,h_642,al_c,q_85,usm_0.66_1.00_0.01,enc_avif,quality_auto/eaf600_76b8d251ba3b41d2938ecfe54e5aa842~mv2.jpg)\n\n1/1\n\n## Contact\n\nAll apartments are currently rented.  \nWe would be happy to hear from you again in May!\n\nSending successful",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+}]

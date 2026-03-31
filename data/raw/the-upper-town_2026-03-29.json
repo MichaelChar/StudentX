@@ -1,0 +1,336 @@
+[{
+  "url": "https://theuppertown.wixsite.com/anopoli",
+  "crawl": {
+    "loadedUrl": "https://theuppertown.wixsite.com/anopoli",
+    "loadedTime": "2026-03-29T05:48:35.996Z",
+    "referrerUrl": "https://theuppertown.wixsite.com/anopoli",
+    "httpStatusCode": 200,
+    "depth": 0,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://theuppertown.wixsite.com/anopoli",
+    "title": "Thessaloniki Student Housing | Thessaloniki students' accommodation in Ano Poli",
+    "description": "Explore luxurious thessaloniki student housing in Ano Poli with Thessaloniki students' accommodation, offering all-inclusive packages.",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "HOME | The upper town Thessaloniki studios for students"
+      },
+      {
+        "property": "og:description",
+        "content": "Studios and rooms in the upper town Ano Poli in Thessaloniki exclusively for students accomodation"
+      },
+      {
+        "property": "og:image",
+        "content": "https://static.wixstatic.com/media/253972_0c85502821404f4fbc7cf8c633a6ac9b%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/253972_0c85502821404f4fbc7cf8c633a6ac9b%7Emv2.jpg"
+      },
+      {
+        "property": "og:image:width",
+        "content": "2500"
+      },
+      {
+        "property": "og:image:height",
+        "content": "1330"
+      },
+      {
+        "property": "og:url",
+        "content": "https://theuppertown.wixsite.com/anopoli"
+      },
+      {
+        "property": "og:site_name",
+        "content": "Thessaloniki students' accommodation"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "date": "Sun, 29 Mar 2026 05:48:32 GMT",
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774763312.14228361368031645295, 1774763312.14228361368031645295, 1774763312.14228361368031645295",
+      "etag": "W/\"406eec389079aa631e1e5498ef61c7a8\"",
+      "x-meta-site-id": "867fb746-ab20-4e67-8104-ddc24e6924ce",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "age": "0",
+      "x-cache-status": "MISS",
+      "x-seen-by": "ui2Pjuc3zC1HEw7V2qXeyh9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb53lvnR+9EFwQ0RwJvs1JkS, 2d58ifebGbosy5xc+FRaln1WSRxClJxKgzTnTFDgVaTnOxCk70lUgIfbDK98L3v8Gtw3vMtn6p2dVrJUN4FMnQ==, 2UNV7KOq4oGjA5+PKsX47G9tHIFRFgqngjSWmAXGcLU=, R8nVwPJv9QJL1m78OROO+CrxA5MB4e5YY0dFJemL3LQ=, UCXqFoU+MbsWXjA74cRbHasmO4H7xeWX0xPm+M4JDmgSO5XmrrCSQNDehIjmfew3iFBEajGJ7V+VrCWcKfUwxQ==, R8nVwPJv9QJL1m78OROO+EUlUM6FkkLgEeMfO1Iuc2c=, LoUK8/saGAmOxZWtpubo2q801N6eSqDGLJo5g7pVYXCrE4MPKT6o1h5V8cNNkp8x7bpF7ssL8tetgbcudoqXwdD08raZNxBSzxECpGmhtaY=, R8nVwPJv9QJL1m78OROO+Jzs9ItISYudS7iBNocyZP8=, bamBRVWSlN/v1ZTIwXGEoNNtEx74Y/9U1cq+q+eFY3fbD4rFyUgmOLmIy2731aasvvTZiOL/OVOlfqumcmiFrw==",
+      "vary": "Accept-Encoding",
+      "set-cookie": "client-session-bind=0cec3716-5459-4343-9516-134cde11214b; Path=/; Secure; SameSite=Lax\nserver-session-bind=0cec3716-5459-4343-9516-134cde11214b; Path=/; Secure; HTTPOnly; SameSite=Lax\nssr-caching=cache#desc=miss#varnish=miss#dc#desc=sea1_g; Max-Age=20; Expires=Sun, 29 Mar 2026 05:48:52 GMT\nXSRF-TOKEN=1774763312|ZEcoGW0WYHVe; Path=/; Domain=theuppertown.wixsite.com; Secure; SameSite=None",
+      "server-timing": "cache;desc=miss, varnish;desc=miss, dc;desc=sea1_g",
+      "cache-control": "private, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "via": "1.1 google",
+      "glb-x-seen-by": "zj+a2E71qOCweet+2KoAwKsDXK9Yj1hJlUA0MXxzy6E=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Thessaloniki Student Housing | Thessaloniki students' accommodation in Ano Poli\nAvailabilities from September 2026!!\nHello Dear students!\n​\n​Welcome! Here, you will find detailed information about the building we offer exclusively for student accommodation in Thessaloniki. The building houses only young foreign students, providing a friendly and student-focused environment.\n​\nTHE BUILDING\nOur newly constructed building (completed in 2021) consists of 4 fully furnished and equipped luxury studios (each studio accommodates 1 student) and 1 fully furnished, 2-room luxury apartment (accommodating up to 2 students). In total, the building can host up to 6 students.\n​\n​THE LOCATION\nThe building is located in the traditional and picturesque area of Thessaloniki known as “Ano Poli” (“Upper Town”). You can find its exact location here. \n​​It is only 450 meters on foot from the University campus and 950 meters from the Medical School, approximately a 14-minute walk (see suggested walking route here). No need for public transportation or a car.\n​\nThe neighborhood is quiet yet vibrant, with a traditional charm. It is close to supermarkets, pharmacies, hospitals, coffee shops, restaurants, parks, and tourist attractions. All city center destinations and the seafront are within walking distance. The area is a popular choice for students and young people, creating a lively and diverse community. Additionally, there is very little car traffic, making it a peaceful and safe environment.\n​\nBUILDING FEATURES\n​\nThe building is new (2021), with a traditional design and high energy efficiency (external insulation). It has three levels:\n​\nGround Floor (55sqm 2-room flat): This flat features a small private yard with its own entrance. Each room has a separate entrance from the yard, and both rooms share a common area with a kitchen, bathroom, and corridor. The flat can accommodate up to 2 students.\nSecond and Third Levels: These levels have a separate entrance and include 2 studios on each floor (4 in total, each 30sqm). Each studio has a private kitchen and bathroom and can accommodate 1 student.\n​​\nAll floors are tiled, and the windows are double-glazed for energy efficiency and come with insect screens.\n​\n​THE EQUIPMENT\n​\nAll rooms and studios are luxuriously furnished and fully equipped:\n​\nStudio:\nLarge bed (140x200cm) with storage underneath\nConvertible sofa bed for visitors with storage\nDesk with a chair\nWardrobe, drawers, and nightstand\nShoe racks\nModern kitchen with cabinets, fridge, sink, and 2 ceramic hot plates\nBathroom with shower, sink, mirror, and shelves\nHot water boiler\nDAIKIN 12000 BTU air conditioner (heating and cooling)\n32” LG FHD Smart TV\nShared washing machine, iron, ironing board, and vacuum cleaner (shared among 4 studios, free of charge)\n​​\n2-Room Flat:\nOne room with a large bed (140x200cm) and one with a single bed (90x200cm), both with storage underneath\nSofa and armchair (convertible to beds for visitors)\nDesk with a chair, wardrobe, drawers, and nightstand in each room\nDAIKIN 12000 BTU air conditioner in each room\n32” LG FHD Smart TV in each room\nModern kitchen with a fridge, sink, cabinets, microwave oven and electric stove with an oven\nBathroom with shower, sink, mirror, and shelves\nShared washing machine, iron, ironing board, and vacuum cleaner (shared among 2 flatmates, free of charge)\nPrivate yard with an automated watering system, table, and chairs\n​\nGENERAL CONDITIONS -RESTRICTIONS\n​\nSmoking, vaping, drugs, parties, alcohol misuse, conflicts, and pets are prohibited\nRespect quiet hours, neighbors, and fellow housemates\nTake care of the building, equipment, and furniture\nYou may host visitors for a few days\nMaintain cleanliness, safety, and security\nReport any issues to the owner promptly\n​​\nRENTAL – OTHER FEES\n​\nWe offer an all-inclusive package: rental, utilities, and weekly cleaning fees (!) are bundled together. There are no hidden costs – you will always know exactly what to pay each month.\n​\nUtilities: Εlectricity, water, heating, cooling, hot water, 500 Mbps fiber internet via cable and Wi-Fi. Prepayment of utility costs is required for 4-month periods (3 payments per year).\nCleaning: Weekly cleaning of floors, windows, dusting, kitchen, and bathroom (does not include dishwashing). Prepayment of cleaning fees is also required for 4-month periods (3 payments per year).\nWHAT TO BUY – BRING WITH YOU\n​\nYou will need to bring towels, pillows, bed sheets, blankets, dishware, personal hygiene products, detergents, etc. We can assist you by providing some essentials upon request for a few days before your arrival, based on availability.",
+  "markdown": "# Thessaloniki Student Housing | Thessaloniki students' accommodation in Ano Poli\n\n###### Availabilities from September 2026!!\n\nHello Dear students!\n\n​\n\n​Welcome! Here, you will find detailed information about the building we offer exclusively for student accommodation in Thessaloniki. The building houses only young foreign students, providing a friendly and student-focused environment.\n\n​\n\nTHE BUILDING\n\nOur newly constructed building (completed in 2021) consists of 4 fully furnished and equipped luxury studios (each studio accommodates 1 student) and 1 fully furnished, 2-room luxury apartment (accommodating up to 2 students). In total, the building can host up to 6 students.\n\n​\n\n​THE LOCATION\n\nThe building is located in the traditional and picturesque area of Thessaloniki known as “Ano Poli” (“Upper Town”). You can find its exact location [here](https://maps.app.goo.gl/WDeLRXSrj3G2oBfv8). \n\n​​It is only 450 meters on foot from the University campus and 950 meters from the Medical School, approximately a 14-minute walk (see suggested walking route [here](https://goo.gl/maps/LuzciLcK2Jz3LmbB7)). No need for public transportation or a car.\n\n​\n\nThe neighborhood is quiet yet vibrant, with a traditional charm. It is close to supermarkets, pharmacies, hospitals, coffee shops, restaurants, parks, and tourist attractions. All city center destinations and the seafront are within walking distance. The area is a popular choice for students and young people, creating a lively and diverse community. Additionally, there is very little car traffic, making it a peaceful and safe environment.\n\n​\n\nBUILDING FEATURES\n\n​\n\nThe building is new (2021), with a traditional design and high energy efficiency (external insulation). It has three levels:\n\n​\n\n*   Ground Floor (55sqm 2-room flat): This flat features a small private yard with its own entrance. Each room has a separate entrance from the yard, and both rooms share a common area with a kitchen, bathroom, and corridor. The flat can accommodate up to 2 students.\n    \n*   Second and Third Levels: These levels have a separate entrance and include 2 studios on each floor (4 in total, each 30sqm). Each studio has a private kitchen and bathroom and can accommodate 1 student.\n    \n\n​​\n\nAll floors are tiled, and the windows are double-glazed for energy efficiency and come with insect screens.\n\n​\n\n​THE EQUIPMENT\n\n​\n\nAll rooms and studios are luxuriously furnished and fully equipped:\n\n​\n\nStudio:\n\n*   Large bed (140x200cm) with storage underneath\n    \n*   Convertible sofa bed for visitors with storage\n    \n*   Desk with a chair\n    \n*   Wardrobe, drawers, and nightstand\n    \n*   Shoe racks\n    \n*   Modern kitchen with cabinets, fridge, sink, and 2 ceramic hot plates\n    \n*   Bathroom with shower, sink, mirror, and shelves\n    \n*   Hot water boiler\n    \n*   DAIKIN 12000 BTU air conditioner (heating and cooling)\n    \n*   32” LG FHD Smart TV\n    \n*   Shared washing machine, iron, ironing board, and vacuum cleaner (shared among 4 studios, free of charge)\n    \n\n​​\n\n2-Room Flat:\n\n*   One room with a large bed (140x200cm) and one with a single bed (90x200cm), both with storage underneath\n    \n*   Sofa and armchair (convertible to beds for visitors)\n    \n*   Desk with a chair, wardrobe, drawers, and nightstand in each room\n    \n*   DAIKIN 12000 BTU air conditioner in each room\n    \n*   32” LG FHD Smart TV in each room\n    \n*   Modern kitchen with a fridge, sink, cabinets, microwave oven and electric stove with an oven\n    \n*   Bathroom with shower, sink, mirror, and shelves\n    \n*   Shared washing machine, iron, ironing board, and vacuum cleaner (shared among 2 flatmates, free of charge)\n    \n*   Private yard with an automated watering system, table, and chairs\n    \n\n​\n\nGENERAL CONDITIONS -RESTRICTIONS\n\n​\n\n*   Smoking, vaping, drugs, parties, alcohol misuse, conflicts, and pets are prohibited\n    \n*   Respect quiet hours, neighbors, and fellow housemates\n    \n*   Take care of the building, equipment, and furniture\n    \n*   You may host visitors for a few days\n    \n*   Maintain cleanliness, safety, and security\n    \n*   Report any issues to the owner promptly\n    \n\n​​\n\nRENTAL – OTHER FEES\n\n​\n\nWe offer an all-inclusive package: rental, utilities, and weekly cleaning fees (!) are bundled together. There are no hidden costs – you will always know exactly what to pay each month.\n\n​\n\n*   Utilities: Εlectricity, water, heating, cooling, hot water, 500 Mbps fiber internet via cable and Wi-Fi. Prepayment of utility costs is required for 4-month periods (3 payments per year).\n    \n*   Cleaning: Weekly cleaning of floors, windows, dusting, kitchen, and bathroom (does not include dishwashing). Prepayment of cleaning fees is also required for 4-month periods (3 payments per year).\n    \n\nWHAT TO BUY – BRING WITH YOU\n\n​\n\nYou will need to bring towels, pillows, bed sheets, blankets, dishware, personal hygiene products, detergents, etc. We can assist you by providing some essentials upon request for a few days before your arrival, based on availability.",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://theuppertown.wixsite.com/anopoli/photos",
+  "crawl": {
+    "loadedUrl": "https://theuppertown.wixsite.com/anopoli/photos",
+    "loadedTime": "2026-03-29T05:48:47.088Z",
+    "referrerUrl": "https://theuppertown.wixsite.com/anopoli",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://theuppertown.wixsite.com/anopoli/photos",
+    "title": "Exterior Photos | Foreign students accommodation in the upper town Thessaloniki",
+    "description": "Exterior Photos | Foreign students accommodation in the upper town Thessaloniki\n",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Exterior Photos | The upper town Thessaloniki studios for students"
+      },
+      {
+        "property": "og:description",
+        "content": "Exterior Photos | Foreign students accommodation in the upper town Thessaloniki\n"
+      },
+      {
+        "property": "og:image",
+        "content": "https://static.wixstatic.com/media/253972_0c85502821404f4fbc7cf8c633a6ac9b%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/253972_0c85502821404f4fbc7cf8c633a6ac9b%7Emv2.jpg"
+      },
+      {
+        "property": "og:image:width",
+        "content": "2500"
+      },
+      {
+        "property": "og:image:height",
+        "content": "1330"
+      },
+      {
+        "property": "og:url",
+        "content": "https://theuppertown.wixsite.com/anopoli/photos"
+      },
+      {
+        "property": "og:site_name",
+        "content": "Thessaloniki students' accommodation"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "date": "Sun, 29 Mar 2026 05:48:41 GMT",
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774763321.256283635138310783037, 1774763321.256283635138310783037, 1774763321.256283635138310783037",
+      "etag": "W/\"4f26686d3467b2f534c725ec24db88b5\"",
+      "x-meta-site-id": "867fb746-ab20-4e67-8104-ddc24e6924ce",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "age": "0",
+      "x-cache-status": "MISS",
+      "x-seen-by": "2d58ifebGbosy5xc+FRall9DEDQ+z4ZHTGrDrdh1XnsvHs32utuZhCzGxmFLAXQsblnGFNpuy6e29bpNDhblIg==, 2UNV7KOq4oGjA5+PKsX47EzpsDHuH75rNqOhkG1qhKU=, 2UNV7KOq4oGjA5+PKsX47G9tHIFRFgqngjSWmAXGcLU=, R8nVwPJv9QJL1m78OROO+CrxA5MB4e5YY0dFJemL3LQ=, UCXqFoU+MbsWXjA74cRbHWQUxkUyMXUuQJ9/ewUWUcASO5XmrrCSQNDehIjmfew332sbYoR76FaW0pznHEHkkQ==, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, LoUK8/saGAmOxZWtpubo2q801N6eSqDGLJo5g7pVYXAbKW5IOvQuOQrHhgHZ4qtRuu7Cpa4GAEUtYrxnauPlAAu8Uc3GryzM9ndsOKUYUd4=, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, bamBRVWSlN/v1ZTIwXGEoO2+2NmWoHcpKMYVjs5IC0vbD4rFyUgmOLmIy2731aastM5EGs8BnhofzD+/FoSyaQ==, ui2Pjuc3zC1HEw7V2qXeyh9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb4hUPrc0LfzYa7nrBfmSXG0, 2d58ifebGbosy5xc+FRall9DEDQ+z4ZHTGrDrdh1XnsvHs32utuZhCzGxmFLAXQsblnGFNpuy6e29bpNDhblIg==, 2UNV7KOq4oGjA5+PKsX47EzpsDHuH75rNqOhkG1qhKU=, 2UNV7KOq4oGjA5+PKsX47G9tHIFRFgqngjSWmAXGcLU=, R8nVwPJv9QJL1m78OROO+CrxA5MB4e5YY0dFJemL3LQ=, UCXqFoU+MbsWXjA74cRbHWQUxkUyMXUuQJ9/ewUWUcASO5XmrrCSQNDehIjmfew332sbYoR76FaW0pznHEHkkQ==, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, LoUK8/saGAmOxZWtpubo2q801N6eSqDGLJo5g7pVYXAbKW5IOvQuOQrHhgHZ4qtRuu7Cpa4GAEUtYrxnauPlAAu8Uc3GryzM9ndsOKUYUd4=, R8nVwPJv9QJL1m78OROO+EJIew1u+eEWoXEs+yp8F3U=, bamBRVWSlN/v1ZTIwXGEoO2+2NmWoHcpKMYVjs5IC0vbD4rFyUgmOLmIy2731aastM5EGs8BnhofzD+/FoSyaQ==",
+      "vary": "Accept-Encoding",
+      "set-cookie": "client-session-bind=0cec3716-5459-4343-9516-134cde11214b; Path=/; Secure; SameSite=Lax\nserver-session-bind=0cec3716-5459-4343-9516-134cde11214b; Path=/; Secure; HTTPOnly; SameSite=Lax\nssr-caching=cache#desc=miss#varnish=miss#dc#desc=sea1_g; Max-Age=20; Expires=Sun, 29 Mar 2026 05:49:01 GMT",
+      "server-timing": "cache;desc=miss, varnish;desc=miss, dc;desc=sea1_g",
+      "cache-control": "private, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "via": "1.1 google",
+      "glb-x-seen-by": "zj+a2E71qOCweet+2KoAwKsDXK9Yj1hJlUA0MXxzy6E=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Exterior Photos | Foreign students accommodation in the upper town Thessaloniki\ntop of page\nEXTERIOR PHOTOS\nFront side, building entrance of 4 studios\nThe neighborhood\nOther side of the building\nOther side of the building - Yard entrance of flat\nFlat yard\nbottom of page",
+  "markdown": "# Exterior Photos | Foreign students accommodation in the upper town Thessaloniki\n\ntop of page\n\n###### EXTERIOR PHOTOS\n\n![     ](https://static.wixstatic.com/media/253972_0c85502821404f4fbc7cf8c633a6ac9b~mv2.jpg/v1/crop/x_18,y_0,w_4606,h_3472/fill/w_516,h_389,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_0c85502821404f4fbc7cf8c633a6ac9b~mv2.jpg)\n\nFront side, building entrance of 4 studios\n\n![](https://static.wixstatic.com/media/d37a3f_ffe14679646a4dada93bea0652d27839~mv2.jpg/v1/fill/w_372,h_495,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_20210725_142530.jpg)\n\nThe neighborhood\n\n![](https://static.wixstatic.com/media/d37a3f_b9b57d3e93c448bca103d962c1ac6570~mv2.jpg/v1/fill/w_515,h_387,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/IMG_20210725_142750.jpg)\n\nOther side of the building\n\n![](https://static.wixstatic.com/media/253972_e5e32ac6b7c24f0bb87b9c76bd6222b8~mv2.jpg/v1/fill/w_373,h_497,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_e5e32ac6b7c24f0bb87b9c76bd6222b8~mv2.jpg)\n\nOther side of the building - Yard entrance of flat\n\n![](https://static.wixstatic.com/media/253972_6075044d097348699595e87c4bb820bf~mv2.jpg/v1/fill/w_508,h_382,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_6075044d097348699595e87c4bb820bf~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_e3a30bb7eaa946bd836413cd826cc92f~mv2.jpg/v1/fill/w_508,h_382,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_e3a30bb7eaa946bd836413cd826cc92f~mv2.jpg)\n\nFlat yard\n\nbottom of page",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://theuppertown.wixsite.com/anopoli/floor-plans",
+  "crawl": {
+    "loadedUrl": "https://theuppertown.wixsite.com/anopoli/floor-plans",
+    "loadedTime": "2026-03-29T05:48:47.386Z",
+    "referrerUrl": "https://theuppertown.wixsite.com/anopoli",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://theuppertown.wixsite.com/anopoli/floor-plans",
+    "title": "Floor Plans | Foreign students accommodation in the upper town Thessaloniki",
+    "description": "Floor Plans | Foreign students accommodation in the upper town Thessaloniki",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Floor Plans | The upper town Thessaloniki studios for students"
+      },
+      {
+        "property": "og:description",
+        "content": "Floor Plans | Foreign students accommodation in the upper town Thessaloniki"
+      },
+      {
+        "property": "og:image",
+        "content": "https://static.wixstatic.com/media/253972_0c85502821404f4fbc7cf8c633a6ac9b%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/253972_0c85502821404f4fbc7cf8c633a6ac9b%7Emv2.jpg"
+      },
+      {
+        "property": "og:image:width",
+        "content": "2500"
+      },
+      {
+        "property": "og:image:height",
+        "content": "1330"
+      },
+      {
+        "property": "og:url",
+        "content": "https://theuppertown.wixsite.com/anopoli/floor-plans"
+      },
+      {
+        "property": "og:site_name",
+        "content": "Thessaloniki students' accommodation"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "date": "Sun, 29 Mar 2026 05:48:41 GMT",
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774763321.64628366991933327014",
+      "etag": "W/\"4866f2d47f3e6752d3b600af03d06f86\"",
+      "x-meta-site-id": "867fb746-ab20-4e67-8104-ddc24e6924ce",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "age": "0",
+      "x-cache-status": "MISS",
+      "x-seen-by": "ui2Pjuc3zC1HEw7V2qXeyh9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb70x2q9inp4H9e1otyJHGJh, 2d58ifebGbosy5xc+FRall6t5XNXhzUxI+OUhRP8pnlLfJHlnatVfpNmzDt1qcL+llHQEZ/GszsKIwXOOdfNOw==, 2UNV7KOq4oGjA5+PKsX47EcNVZxMrnxWFErTxnFN3IM=, R8nVwPJv9QJL1m78OROO+KWbJCOTidMTzHiP7k4dXWU=, UCXqFoU+MbsWXjA74cRbHaZLigNiWar/Ei985tPaVfgSO5XmrrCSQNDehIjmfew33LquZ8/fK/m/Yx80HC0RCQ==, R8nVwPJv9QJL1m78OROO+Jzs9ItISYudS7iBNocyZP8=, LoUK8/saGAmOxZWtpubo2q801N6eSqDGLJo5g7pVYXDXgCgWmTDHMewRTr3R31+EEBq9G9qt3vZGN/HQWkcARFiB5QmpRe2J37zq9nDD6cs=, R8nVwPJv9QJL1m78OROO+ECgS6h+XVs6IJ1huoI1yL4=, bamBRVWSlN/v1ZTIwXGEoNatGE1PSt9HxuUOydQcjKbbD4rFyUgmOLmIy2731aasNPyfUmIKgDsfh8MS0Zv/7A==",
+      "vary": "Accept-Encoding",
+      "set-cookie": "client-session-bind=0cec3716-5459-4343-9516-134cde11214b; Path=/; Secure; SameSite=Lax\nserver-session-bind=0cec3716-5459-4343-9516-134cde11214b; Path=/; Secure; HTTPOnly; SameSite=Lax\nssr-caching=cache#desc=miss#varnish=miss#dc#desc=sea1_g; Max-Age=20; Expires=Sun, 29 Mar 2026 05:49:01 GMT",
+      "server-timing": "cache;desc=miss, varnish;desc=miss, dc;desc=sea1_g",
+      "cache-control": "private, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "via": "1.1 google",
+      "glb-x-seen-by": "zj+a2E71qOCweet+2KoAwKsDXK9Yj1hJlUA0MXxzy6E=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Floor Plans | Foreign students accommodation in the upper town Thessaloniki\ntop of page\nFLOOR PLANS WITH FURNITURE \nGround floor 2-room apartment\n1st floor studios\n2nd floor studios\nbottom of page",
+  "markdown": "# Floor Plans | Foreign students accommodation in the upper town Thessaloniki\n\ntop of page\n\nFLOOR PLANS WITH FURNITURE \n\n![](https://static.wixstatic.com/media/253972_0a54979399764d85b834dd4e23ab7f24~mv2.jpg/v1/fill/w_645,h_456,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_0a54979399764d85b834dd4e23ab7f24~mv2.jpg)\n\nGround floor 2-room apartment\n\n![](https://static.wixstatic.com/media/253972_abaff9a344104167b40c37c63ec3c1d5~mv2.jpg/v1/fill/w_480,h_401,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_abaff9a344104167b40c37c63ec3c1d5~mv2.jpg)\n\n1st floor studios\n\n![](https://static.wixstatic.com/media/253972_5ef77ee2163f4b5c824783054b501876~mv2.jpg/v1/fill/w_483,h_453,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_5ef77ee2163f4b5c824783054b501876~mv2.jpg)\n\n2nd floor studios\n\nbottom of page",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+},
+{
+  "url": "https://theuppertown.wixsite.com/anopoli/interior-photos",
+  "crawl": {
+    "loadedUrl": "https://theuppertown.wixsite.com/anopoli/interior-photos",
+    "loadedTime": "2026-03-29T05:48:47.680Z",
+    "referrerUrl": "https://theuppertown.wixsite.com/anopoli",
+    "httpStatusCode": 200,
+    "depth": 1,
+    "contentType": "text/html; charset=UTF-8"
+  },
+  "metadata": {
+    "canonicalUrl": "https://theuppertown.wixsite.com/anopoli/interior-photos",
+    "title": "Discover Cozy Foreign Student Accommodations in Thessaloniki | Explore Our Spaces & Student Support Services",
+    "description": "Explore our comfortable foreign student accommodations in Thessaloniki's upper town. Exceptional spaces with student support services.",
+    "author": null,
+    "keywords": null,
+    "languageCode": "en",
+    "openGraph": [
+      {
+        "property": "og:title",
+        "content": "Interior Photos | The upper town Thessaloniki studios for students"
+      },
+      {
+        "property": "og:description",
+        "content": "Explore our comfortable foreign student accommodations in Thessaloniki's upper town. Exceptional spaces with student support services."
+      },
+      {
+        "property": "og:image",
+        "content": "https://static.wixstatic.com/media/253972_0c85502821404f4fbc7cf8c633a6ac9b%7Emv2.jpg/v1/fit/w_2500,h_1330,al_c/253972_0c85502821404f4fbc7cf8c633a6ac9b%7Emv2.jpg"
+      },
+      {
+        "property": "og:image:width",
+        "content": "2500"
+      },
+      {
+        "property": "og:image:height",
+        "content": "1330"
+      },
+      {
+        "property": "og:url",
+        "content": "https://theuppertown.wixsite.com/anopoli/interior-photos"
+      },
+      {
+        "property": "og:site_name",
+        "content": "Thessaloniki students' accommodation"
+      },
+      {
+        "property": "og:type",
+        "content": "website"
+      }
+    ],
+    "jsonLd": null,
+    "headers": {
+      "date": "Sun, 29 Mar 2026 05:48:42 GMT",
+      "content-type": "text/html; charset=UTF-8",
+      "link": "<https://static.parastorage.com/>; rel=preconnect; crossorigin;, <https://static.parastorage.com/>; rel=preconnect;, <https://static.wixstatic.com/>; rel=preconnect; crossorigin;, <https://static.wixstatic.com/>; rel=preconnect;, <https://siteassets.parastorage.com>; rel=preconnect; crossorigin;, ",
+      "x-wix-request-id": "1774763321.79428364270574217414",
+      "etag": "W/\"dc1ab109461b8525d6fa7953f1aa064f\"",
+      "x-meta-site-id": "867fb746-ab20-4e67-8104-ddc24e6924ce",
+      "content-language": "en-US",
+      "strict-transport-security": "max-age=31556952",
+      "age": "0",
+      "x-cache-status": "MISS",
+      "x-seen-by": "2d58ifebGbosy5xc+FRalpspXLugXmcKzZzMw6cPunDlj2fAf/EGp+3n6Ea2d6hGUtJ5CtLU+V6xGP7hmvcP/g==, 2UNV7KOq4oGjA5+PKsX47KtUTHQeecWkgrb9IlLu/OM=, 2UNV7KOq4oGjA5+PKsX47HqjR+6CNmn/ng3r7CWVjR4=, R8nVwPJv9QJL1m78OROO+IRwW/6Xec4MTUVWNMxK7ZY=, UCXqFoU+MbsWXjA74cRbHTEZFm5A8Lt1ZB16lj9zwSsSO5XmrrCSQNDehIjmfew3Utjl0TAG0rgyzGNsPLr/kw==, R8nVwPJv9QJL1m78OROO+Ii0ELzpGEMtGUF7ps8tyjg=, LoUK8/saGAmOxZWtpubo2q801N6eSqDGLJo5g7pVYXD08BmvV11lNTYdFBPucm4n6LA23lCliGgtyUeIAIgGSH2JzErJ8ZPrQMNW10je6Sg=, R8nVwPJv9QJL1m78OROO+EUlUM6FkkLgEeMfO1Iuc2c=, RyPGOLsHDe7v/GTf4wBGusRwxNEIzj4PvmMwlv4P+4cGOu8xXAkc0AC5H0jxYmzpEjuV5q6wkkDQ3oSI5n3sN9O88cfAyWBgVW1q1Ct9hMc=, ui2Pjuc3zC1HEw7V2qXeyh9slopJdhD+WySraMrpIY8=, m0j2EEknGIVUW/liY8BLLqPXpcX6IEGf7sG3D7kVVb5B0iNLcsCAtoNZ+BWe2liS, 2d58ifebGbosy5xc+FRalpspXLugXmcKzZzMw6cPunDlj2fAf/EGp+3n6Ea2d6hGUtJ5CtLU+V6xGP7hmvcP/g==, 2UNV7KOq4oGjA5+PKsX47KtUTHQeecWkgrb9IlLu/OM=, 2UNV7KOq4oGjA5+PKsX47HqjR+6CNmn/ng3r7CWVjR4=, R8nVwPJv9QJL1m78OROO+IRwW/6Xec4MTUVWNMxK7ZY=, UCXqFoU+MbsWXjA74cRbHTEZFm5A8Lt1ZB16lj9zwSsSO5XmrrCSQNDehIjmfew3Utjl0TAG0rgyzGNsPLr/kw==, R8nVwPJv9QJL1m78OROO+Ii0ELzpGEMtGUF7ps8tyjg=, LoUK8/saGAmOxZWtpubo2q801N6eSqDGLJo5g7pVYXD08BmvV11lNTYdFBPucm4n6LA23lCliGgtyUeIAIgGSH2JzErJ8ZPrQMNW10je6Sg=, R8nVwPJv9QJL1m78OROO+EUlUM6FkkLgEeMfO1Iuc2c=, RyPGOLsHDe7v/GTf4wBGusRwxNEIzj4PvmMwlv4P+4cGOu8xXAkc0AC5H0jxYmzpEjuV5q6wkkDQ3oSI5n3sN9O88cfAyWBgVW1q1Ct9hMc=",
+      "vary": "Accept-Encoding",
+      "set-cookie": "client-session-bind=0cec3716-5459-4343-9516-134cde11214b; Path=/; Secure; SameSite=Lax\nserver-session-bind=0cec3716-5459-4343-9516-134cde11214b; Path=/; Secure; HTTPOnly; SameSite=Lax\nssr-caching=cache#desc=miss#varnish=miss#dc#desc=sea1_g; Max-Age=20; Expires=Sun, 29 Mar 2026 05:49:02 GMT",
+      "server-timing": "cache;desc=miss, varnish;desc=miss, dc;desc=sea1_g",
+      "cache-control": "private, max-age=0, must-revalidate",
+      "server": "Pepyaka",
+      "x-content-type-options": "nosniff",
+      "content-encoding": "br",
+      "via": "1.1 google",
+      "glb-x-seen-by": "zj+a2E71qOCweet+2KoAwKsDXK9Yj1hJlUA0MXxzy6E=",
+      "alt-svc": "h3=\":443\"; ma=2592000, h3-29=\":443\"; ma=2592000",
+      "x-firefox-spdy": "h2"
+    }
+  },
+  "screenshotUrl": null,
+  "text": "Discover Cozy Foreign Student Accommodations in Thessaloniki\ntop of page\nINTERIOR PHOTOS\n\"ORANGE\" STUDIO Δ2\n\"GREEN\" STUDIO Δ3\n\"BLUE\" STUDIO Δ4\n\"RED\" STUDIO Δ5\nFLAT - ROOM Δ1A\nDETAILS & COMMON AREA\nFLAT - ROOM Δ1Β\nFLAT - KITCHEN & TOILET\nCOMMON AREAS & DETAILS\nbottom of page",
+  "markdown": "# Discover Cozy Foreign Student Accommodations in Thessaloniki\n\ntop of page\n\n###### INTERIOR PHOTOS\n\n###### \"ORANGE\" STUDIO Δ2\n\n![](https://static.wixstatic.com/media/253972_905fa2100b8f4e0688dba0db33e822a8~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_905fa2100b8f4e0688dba0db33e822a8~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_bb2674cb93a748ae8591610b21d8dc6e~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_bb2674cb93a748ae8591610b21d8dc6e~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_6487c908b4d74217a436da5cb07a2502~mv2.jpg/v1/fill/w_350,h_467,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_6487c908b4d74217a436da5cb07a2502~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_c8ac9ad2eacb4c06826c156a74e16605~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_c8ac9ad2eacb4c06826c156a74e16605~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_e97f61620c414205af339bfbebb11217~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_e97f61620c414205af339bfbebb11217~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_4219ed617b0741f5854c82d32b1a1951~mv2.jpg/v1/fill/w_350,h_467,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_4219ed617b0741f5854c82d32b1a1951~mv2.jpg)\n\n###### \"GREEN\" STUDIO Δ3\n\n![](https://static.wixstatic.com/media/253972_24b475b1313d4bd68f7c22e6ce0e4d3c~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_24b475b1313d4bd68f7c22e6ce0e4d3c~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_908ac1584b91428fb22620b899f256d8~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_908ac1584b91428fb22620b899f256d8~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_b215c971cb734f0d99b1182b2a9fb1cd~mv2.jpg/v1/fill/w_350,h_467,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_b215c971cb734f0d99b1182b2a9fb1cd~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_373691f594364b8983afc9f99a6db883~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_373691f594364b8983afc9f99a6db883~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_69cf6bf1969240e0a3a065510d15ecb8~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_69cf6bf1969240e0a3a065510d15ecb8~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_8b45152ceaa04786a4bdf0627b61c55c~mv2.jpg/v1/fill/w_350,h_467,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_8b45152ceaa04786a4bdf0627b61c55c~mv2.jpg)\n\n###### \"BLUE\" STUDIO Δ4\n\n![](https://static.wixstatic.com/media/253972_2a500cc03ee745e498f87395a11b4f4d~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_2a500cc03ee745e498f87395a11b4f4d~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_fd3e41e645584e0ea465f14184945e36~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_fd3e41e645584e0ea465f14184945e36~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_155456814a834d13bf53f3da990afdb1~mv2.jpg/v1/fill/w_344,h_459,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_155456814a834d13bf53f3da990afdb1~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_37d0b98297444026ba104214b42611e7~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_37d0b98297444026ba104214b42611e7~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_5db69099f376457788745dc902161735~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_5db69099f376457788745dc902161735~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_7df81a6e18844ad6a19d13dfceaf343f~mv2.jpg/v1/fill/w_344,h_459,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_7df81a6e18844ad6a19d13dfceaf343f~mv2.jpg)\n\n###### \"RED\" STUDIO Δ5\n\n![](https://static.wixstatic.com/media/253972_dc9536b2b1914146bf6a4ebceee8f221~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_dc9536b2b1914146bf6a4ebceee8f221~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_e207c013a5eb4bd4ad0db3e75bda75c0~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_e207c013a5eb4bd4ad0db3e75bda75c0~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_10be6c4121c44c0b9df3fb916b6b9225~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_10be6c4121c44c0b9df3fb916b6b9225~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_048346b9353741bc96e04ff82db8365b~mv2.jpg/v1/fill/w_339,h_452,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_048346b9353741bc96e04ff82db8365b~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_c173aa1092dd4deb8966bfb0f5d66878~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_c173aa1092dd4deb8966bfb0f5d66878~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_dacd11b0e8e1487ba143b59759e60907~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_dacd11b0e8e1487ba143b59759e60907~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_7a3af0fb752f406ab676bcf7c2f674ea~mv2.jpg/v1/fill/w_339,h_452,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_7a3af0fb752f406ab676bcf7c2f674ea~mv2.jpg)\n\n###### FLAT - ROOM Δ1A\n\n![](https://static.wixstatic.com/media/253972_0157a64c8f8c4b19bfa312dd365c6bd0~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_0157a64c8f8c4b19bfa312dd365c6bd0~mv2.jpg)\n\n###### DETAILS & COMMON AREA\n\n![](https://static.wixstatic.com/media/253972_ab4b1c2cc5954e9b94bd0de21e23afe4~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_ab4b1c2cc5954e9b94bd0de21e23afe4~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_baa10daccd91401b9814dcfb73f40725~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_baa10daccd91401b9814dcfb73f40725~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_8802a0d1dbd64519b741bd9513863c46~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_8802a0d1dbd64519b741bd9513863c46~mv2.jpg)\n\n###### FLAT - ROOM Δ1Β\n\n![](https://static.wixstatic.com/media/253972_557b492c4c2546c1adb20e5baff73f50~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_557b492c4c2546c1adb20e5baff73f50~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_c1c173f950a4449c992f633ce8a47a8e~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_c1c173f950a4449c992f633ce8a47a8e~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_d877ed2bdd8d4568810ec9a3ebe14f54~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_d877ed2bdd8d4568810ec9a3ebe14f54~mv2.jpg)\n\n###### FLAT - KITCHEN & TOILET\n\n![](https://static.wixstatic.com/media/253972_89d2aac762624aee9bffa45420b76cc6~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_89d2aac762624aee9bffa45420b76cc6~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_00165832e8f44181916da9c7e50efcc0~mv2.jpg/v1/fill/w_339,h_452,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_00165832e8f44181916da9c7e50efcc0~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_430d7a1f47424cf690ae9007a207c289~mv2.jpg/v1/fill/w_457,h_343,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_430d7a1f47424cf690ae9007a207c289~mv2.jpg)\n\n###### COMMON AREAS & DETAILS\n\n![](https://static.wixstatic.com/media/253972_a93e3bcb0ac34a4b94b10c490b5d1140~mv2.jpg/v1/fill/w_340,h_453,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_a93e3bcb0ac34a4b94b10c490b5d1140~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_3f3041e1583446a9825dbbdf93e55752~mv2.jpg/v1/fill/w_339,h_452,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_3f3041e1583446a9825dbbdf93e55752~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_c0fd1b90e01a44a69af138836982cb6f~mv2.jpg/v1/fill/w_340,h_453,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_c0fd1b90e01a44a69af138836982cb6f~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_51ce6f2de77345049394b110d25bb52a~mv2.jpg/v1/fill/w_340,h_453,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_51ce6f2de77345049394b110d25bb52a~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_f791b58f19b54420aad8fed7cb8f5e39~mv2.jpg/v1/fill/w_340,h_453,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_f791b58f19b54420aad8fed7cb8f5e39~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_935e0c3dec38444fb203de37813961c8~mv2.jpg/v1/fill/w_340,h_453,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_935e0c3dec38444fb203de37813961c8~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_7f72923c2d864b11a114300226cd30ba~mv2.jpg/v1/fill/w_340,h_453,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_7f72923c2d864b11a114300226cd30ba~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_077604aa9ce54d549a61f17c1f587647~mv2.jpg/v1/fill/w_340,h_453,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_077604aa9ce54d549a61f17c1f587647~mv2.jpg)\n\n![](https://static.wixstatic.com/media/253972_b98e5f1bab414d0d8116511f8a4801b9~mv2.jpg/v1/fill/w_464,h_348,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_b98e5f1bab414d0d8116511f8a4801b9~mv2.jpg)\n\nbottom of page",
+  "debug": {
+    "requestHandlerMode": "browser"
+  }
+}]
