@@ -170,3 +170,49 @@ SELECT setval('rent_rent_id_seq', 10);
 SELECT setval('location_location_id_seq', 10);
 SELECT setval('property_types_property_type_id_seq', 4);
 SELECT setval('amenities_amenity_id_seq', 10);
+
+-- ----------------------------------------
+-- Landlord emails (for account records)
+-- auth_user_id left NULL — set on real signup
+-- ----------------------------------------
+UPDATE landlords SET email = 'kostas.papadopoulos@email.gr' WHERE landlord_id = '0001';
+UPDATE landlords SET email = 'maria.georgiou@email.gr'       WHERE landlord_id = '0002';
+UPDATE landlords SET email = 'nikos.dimitriou@email.gr'      WHERE landlord_id = '0003';
+UPDATE landlords SET email = 'elena.katsarou@email.gr'       WHERE landlord_id = '0004';
+UPDATE landlords SET email = 'a.tsimikas@email.gr'           WHERE landlord_id = '0005';
+
+-- ----------------------------------------
+-- Sample student inquiries (8 rows)
+-- ----------------------------------------
+INSERT INTO inquiries (listing_id, student_name, student_email, student_phone, message, faculty_id, status) VALUES
+  ('0001001', 'Dimitris Alexiou',   'dim.alex@auth.gr',        '+30 69 1111 2222',
+   'Hi, I am a first-year Engineering student at AUTH. Is the studio still available from September? I would love to arrange a viewing.',
+   'auth-main', 'pending'),
+
+  ('0001002', 'Sofia Papageorgiou', 'sofia.p@uom.edu.gr',      NULL,
+   'Hello, I study Business at UoM and I am looking for a 1-bedroom near the city center. Could you tell me if utilities are included?',
+   'uom-main', 'replied'),
+
+  ('0002001', 'Nikos Stavrakis',    'n.stavrakis@students.ihu.gr', '+30 69 3333 4444',
+   'I am looking for a 2-bedroom apartment to share with a classmate. We both attend IHU Thermi. Is a 12-month lease possible?',
+   'ihu-thermi', 'pending'),
+
+  ('0003002', 'Anna Christodoulou', 'anna.chris@auth.gr',       NULL,
+   'Dear landlord, I am a Medical School student and I found your studio close to my campus. Is it available in October? What is the deposit?',
+   'auth-medical', 'pending'),
+
+  ('0004001', 'Petros Makris',      'p.makris@uom.edu.gr',     '+30 69 5555 6666',
+   'Good morning, I am interested in the 2-bedroom apartment. I have a friend who studies at UoM as well. Can we visit this weekend?',
+   'uom-main', 'replied'),
+
+  ('0004002', 'Eleni Vasileiou',    'e.vasi@students.auth.gr',  NULL,
+   'Hello! I am looking for a studio close to AUTH. Your listing on Ethnikis Amynis looks perfect. Is it pet-friendly?',
+   'auth-main', 'pending'),
+
+  ('0005001', 'Kostas Georgas',     'k.georgas@ihu.gr',         '+30 69 7777 8888',
+   'Hi there, I attend IHU Thermi and I am searching for a ground-floor apartment. Is the 1-bedroom still free for September?',
+   'ihu-thermi', 'closed'),
+
+  ('0005002', 'Maria Tsalikidou',   'mtsalik@auth.gr',          NULL,
+   'Hi, I am a Veterinary student at AUTH Agriculture campus. The Stavroupoli room fits my budget. What bus line goes to campus?',
+   'auth-agriculture', 'pending');
