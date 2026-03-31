@@ -7,6 +7,8 @@ export function transformListing(row) {
     listing_id: row.listing_id,
     address: row.location?.address ?? null,
     neighborhood: row.location?.neighborhood ?? null,
+    lat: row.location?.lat ?? null,
+    lng: row.location?.lng ?? null,
     monthly_price: row.rent?.monthly_price ?? null,
     currency: row.rent?.currency ?? "EUR",
     bills_included: row.rent?.bills_included ?? false,

@@ -60,7 +60,13 @@
       "Bash(ls -la /Users/mcg/Documents/Claude/Projects/StudentDirectory/*.md)",
       "Bash(gh auth:*)",
       "Bash(git init:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(gh repo:*)",
+      "Bash(vercel --yes --prod)",
+      "Bash(vercel --yes --prod --name studentx)",
+      "Bash(vercel env:*)",
+      "Bash(git push:*)"
     ]
   }
 }

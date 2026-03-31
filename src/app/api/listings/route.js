@@ -7,7 +7,7 @@ const LISTING_SELECT = `
   description,
   photos,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
-  location!inner ( address, neighborhood ),
+  location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
   landlords!inner ( name, contact_info ),
   listing_amenities ( amenities ( amenity_id, name ) ),
@@ -20,7 +20,10 @@ export async function GET(request) {
 
     const faculty = searchParams.get("faculty");
     const maxBudget = searchParams.get("max_budget");
+    const minBudget = searchParams.get("min_budget");
     const types = searchParams.get("types");
+    const neighborhoods = searchParams.get("neighborhoods");
+    const amenities = searchParams.get("amenities");
     const excludeAmenities = searchParams.get("exclude_amenities");
     const sortBy = searchParams.get("sort_by") || "price";
     const sortOrder = searchParams.get("sort_order") || "asc";
@@ -75,6 +78,18 @@ export async function GET(request) {
     // Build query
     let query = getSupabase().from("listings").select(LISTING_SELECT);
 
+    // Filter: min budget
+    if (minBudget) {
+      const budget = Number(minBudget);
+      if (isNaN(budget) || budget <= 0) {
+        return NextResponse.json(
+          { error: "min_budget must be a positive number" },
+          { status: 400 }
+        );
+      }
+      query = query.gte("rent.monthly_price", budget);
+    }
+
     // Filter: max budget
     if (maxBudget) {
       const budget = Number(maxBudget);
@@ -85,6 +100,14 @@ export async function GET(request) {
         );
       }
       query = query.lte("rent.monthly_price", budget);
+    }
+
+    // Filter: neighborhoods (comma-separated)
+    if (neighborhoods) {
+      const neighborhoodList = neighborhoods.split(",").map((n) => n.trim()).filter(Boolean);
+      if (neighborhoodList.length > 0) {
+        query = query.in("location.neighborhood", neighborhoodList);
+      }
     }
 
     // Filter: property types (comma-separated)
