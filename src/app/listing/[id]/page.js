@@ -5,6 +5,7 @@ import { useParams, useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { isEstimatedPrice } from '@/lib/estimatedListings';
+import InquiryForm from '@/components/InquiryForm';
 
 export default function ListingPage() {
   const { id } = useParams();
@@ -209,20 +210,8 @@ export default function ListingPage() {
             </div>
           )}
 
-          {/* Contact button */}
-          <div>
-            <button
-              disabled
-              aria-disabled="true"
-              aria-label="Contact landlord — coming soon"
-              className="w-full bg-navy/40 text-white font-heading font-semibold px-6 py-3.5 rounded-lg cursor-not-allowed tracking-wide"
-            >
-              Contact landlord
-            </button>
-            <p className="text-center text-xs text-gray-dark/50 mt-2">
-              Coming soon
-            </p>
-          </div>
+          {/* Contact form */}
+          <InquiryForm listingId={listing.listing_id} />
         </div>
       </div>
     </div>
