@@ -183,7 +183,12 @@ export default function ListingPage() {
               <h2 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-3">
                 Distance to faculties
               </h2>
-              <table className="w-full text-sm">
+              <table className="w-full text-sm table-fixed">
+                <colgroup>
+                  <col />
+                  <col className="w-16" />
+                  <col className="w-16" />
+                </colgroup>
                 <thead>
                   <tr className="text-xs text-gray-dark/50">
                     <th className="text-left pb-2 font-normal">Faculty</th>
@@ -195,8 +200,8 @@ export default function ListingPage() {
                   {listing.faculty_distances.map((fd) => (
                     <tr key={fd.faculty_name}>
                       <td className="py-2 text-gray-dark/80 pr-2">{fd.faculty_name}</td>
-                      <td className="py-2 text-right text-gray-dark/70">{fd.walk_minutes} min</td>
-                      <td className="py-2 text-right text-gray-dark/70">{fd.transit_minutes} min</td>
+                      <td className="py-2 text-right text-gray-dark/70 whitespace-nowrap">{fd.walk_minutes} min</td>
+                      <td className="py-2 text-right text-gray-dark/70 whitespace-nowrap">{fd.transit_minutes} min</td>
                     </tr>
                   ))}
                 </tbody>

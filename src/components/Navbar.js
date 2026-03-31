@@ -25,7 +25,7 @@ export default function Navbar() {
   }, [drawerOpen]);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white/95 backdrop-blur-sm border-b border-gray-200/60">
+    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200/60">
       <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
         <Link href="/" className="font-heading text-xl font-bold text-navy tracking-tight">
           StudentX
@@ -69,7 +69,7 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-label="Navigation menu"
-        className={`fixed right-0 top-0 h-full w-64 bg-white z-50 shadow-lg transform transition-transform duration-300 md:hidden ${
+        className={`fixed right-0 top-0 h-full w-full bg-white z-50 shadow-lg transform transition-transform duration-300 md:hidden ${
           drawerOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
