@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { canCreateListing } from '@/lib/stripe';
 
 const LANDLORD_LISTING_SELECT = `
   listing_id,
@@ -65,6 +66,15 @@ export async function POST(request) {
 
   const landlordId = await getLandlordId(user.id);
   if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+
+  // Check subscription listing limits
+  const limitCheck = await canCreateListing(getSupabase(), landlordId);
+  if (!limitCheck.allowed) {
+    return NextResponse.json(
+      { error: limitCheck.reason, upgrade: true, planId: limitCheck.planId },
+      { status: 403 }
+    );
+  }
 
   const body = await request.json();
 

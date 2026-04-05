@@ -1,0 +1,72 @@
+import { NextResponse } from 'next/server';
+import { getSupabase } from '@/lib/supabase';
+import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
+import { getStripe, getOrCreateCustomer } from '@/lib/stripe';
+
+async function getLandlord(userId) {
+  const { data } = await getSupabase()
+    .from('landlords')
+    .select('landlord_id, name, email')
+    .eq('auth_user_id', userId)
+    .single();
+  return data;
+}
+
+export async function POST(request) {
+  const token = extractToken(request);
+  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const user = await getUserFromToken(token);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const landlord = await getLandlord(user.id);
+  if (!landlord) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+
+  const body = await request.json();
+  const { planId, interval = 'monthly' } = body;
+
+  if (!planId || planId === 'free') {
+    return NextResponse.json({ error: 'Cannot checkout for free plan' }, { status: 400 });
+  }
+
+  const supabase = getSupabase();
+
+  // Get the plan and its Stripe price ID
+  const { data: plan } = await supabase
+    .from('subscription_plans')
+    .select('*')
+    .eq('plan_id', planId)
+    .eq('is_active', true)
+    .single();
+
+  if (!plan) {
+    return NextResponse.json({ error: 'Plan not found' }, { status: 404 });
+  }
+
+  const stripePriceId = interval === 'annual'
+    ? plan.stripe_annual_price_id
+    : plan.stripe_monthly_price_id;
+
+  if (!stripePriceId) {
+    return NextResponse.json({ error: 'Plan not configured for Stripe billing' }, { status: 400 });
+  }
+
+  const customerId = await getOrCreateCustomer(supabase, landlord.landlord_id, landlord.email, landlord.name);
+  const stripe = getStripe();
+
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+
+  const session = await stripe.checkout.sessions.create({
+    customer: customerId,
+    mode: 'subscription',
+    line_items: [{ price: stripePriceId, quantity: 1 }],
+    success_url: `${siteUrl}/landlord/dashboard?billing=success`,
+    cancel_url: `${siteUrl}/landlord/dashboard?billing=cancelled`,
+    metadata: {
+      landlord_id: landlord.landlord_id,
+      plan_id: planId,
+    },
+  });
+
+  return NextResponse.json({ url: session.url });
+}

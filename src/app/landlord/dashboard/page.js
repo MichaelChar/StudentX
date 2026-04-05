@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import BillingSection from '@/components/BillingSection';
 
 export default function LandlordDashboardPage() {
   const router = useRouter();
@@ -102,6 +103,12 @@ export default function LandlordDashboardPage() {
             Sign out
           </button>
         </div>
+      </div>
+
+      {/* Billing & Subscription */}
+      <div className="mb-8">
+        <h2 className="font-heading text-lg font-bold text-navy mb-4">Billing & Subscription</h2>
+        <BillingSection />
       </div>
 
       {error && (
