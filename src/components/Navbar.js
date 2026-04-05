@@ -7,6 +7,7 @@ const navLinks = [
   { href: '/', label: 'Home' },
   { href: '/results', label: 'Browse' },
   { href: '#', label: 'About' },
+  { href: '/landlord/login', label: 'Landlords' },
 ];
 
 export default function Navbar() {
