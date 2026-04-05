@@ -143,7 +143,11 @@ export default async function ListingLayout({ children, params }) {
       {jsonLd && (
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify(jsonLd)
+              .replace(/</g, "\\u003c")
+              .replace(/>/g, "\\u003e"),
+          }}
         />
       )}
       {children}
