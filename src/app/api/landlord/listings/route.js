@@ -6,6 +6,7 @@ import { canCreateListing } from '@/lib/stripe';
 const LANDLORD_LISTING_SELECT = `
   listing_id,
   landlord_id,
+  is_featured,
   rent_id,
   location_id,
   property_type_id,

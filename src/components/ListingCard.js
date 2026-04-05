@@ -13,10 +13,15 @@ export default function ListingCard({ listing, faculty }) {
   return (
     <Link
       href={`/listing/${listing.listing_id}`}
-      className="group block rounded-xl border border-gray-200 bg-white overflow-hidden hover:shadow-md transition-shadow focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2"
+      className={`group block rounded-xl border bg-white overflow-hidden hover:shadow-md transition-shadow focus-visible:ring-2 focus-visible:ring-gold focus-visible:ring-offset-2 ${listing.is_featured ? 'border-gold/40 shadow-sm' : 'border-gray-200'}`}
     >
       {/* Thumbnail */}
       <div className="relative aspect-[4/3] bg-gray-light">
+        {listing.is_featured && (
+          <span className="absolute top-2 left-2 z-10 bg-gold text-white text-[11px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
+            Featured
+          </span>
+        )}
         {photo ? (
           <Image
             src={photo}

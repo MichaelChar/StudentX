@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { canFeatureListing } from '@/lib/stripe';
 
 async function getLandlordId(userId) {
   const { data } = await getSupabase()
@@ -119,8 +120,22 @@ export async function PATCH(request, { params }) {
     propertyTypeId = propType.property_type_id;
   }
 
+  // Check featured toggle permission
+  if (body.is_featured !== undefined) {
+    if (body.is_featured) {
+      const featureCheck = await canFeatureListing(getSupabase(), landlordId);
+      if (!featureCheck.allowed) {
+        return NextResponse.json(
+          { error: featureCheck.reason, upgrade: true, planId: featureCheck.planId },
+          { status: 403 }
+        );
+      }
+    }
+  }
+
   // Update listing row
   const listingUpdate = {};
+  if (body.is_featured !== undefined) listingUpdate.is_featured = !!body.is_featured;
   if (body.description !== undefined) listingUpdate.description = body.description || null;
   if (body.photos !== undefined) listingUpdate.photos = body.photos;
   if (body.sqm !== undefined) listingUpdate.sqm = body.sqm || null;

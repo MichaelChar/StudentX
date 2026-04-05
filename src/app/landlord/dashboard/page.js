@@ -12,6 +12,7 @@ export default function LandlordDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(null);
+  const [togglingFeatured, setTogglingFeatured] = useState(null);
 
   useEffect(() => {
     async function init() {
@@ -65,6 +66,35 @@ export default function LandlordDashboardPage() {
       alert('Failed to delete listing. Please try again.');
     }
     setDeleting(null);
+  }
+
+  async function handleToggleFeatured(listingId, currentlyFeatured) {
+    setTogglingFeatured(listingId);
+
+    const supabase = getSupabaseBrowser();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) { router.replace('/landlord/login'); return; }
+
+    const res = await fetch(`/api/landlord/listings/${listingId}`, {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ is_featured: !currentlyFeatured }),
+    });
+
+    if (res.ok) {
+      setListings((prev) =>
+        prev.map((l) =>
+          l.listing_id === listingId ? { ...l, is_featured: !currentlyFeatured } : l
+        )
+      );
+    } else {
+      const data = await res.json().catch(() => ({}));
+      alert(data.error || 'Failed to update featured status.');
+    }
+    setTogglingFeatured(null);
   }
 
   async function handleSignOut() {
@@ -140,6 +170,11 @@ export default function LandlordDashboardPage() {
                     {listing.location?.address || 'No address'}
                   </span>
                   <span className="text-xs text-gray-dark/40 shrink-0">#{listing.listing_id}</span>
+                  {listing.is_featured && (
+                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-gold/10 text-gold shrink-0">
+                      Featured
+                    </span>
+                  )}
                 </div>
                 <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-dark/60">
                   <span>{listing.property_types?.name || '—'}</span>
@@ -153,6 +188,17 @@ export default function LandlordDashboardPage() {
               </div>
 
               <div className="flex items-center gap-2 shrink-0">
+                <button
+                  onClick={() => handleToggleFeatured(listing.listing_id, listing.is_featured)}
+                  disabled={togglingFeatured === listing.listing_id}
+                  className={`text-sm px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-50 ${
+                    listing.is_featured
+                      ? 'border-gold/40 text-gold hover:bg-gold/5'
+                      : 'border-gray-200 text-gray-dark/70 hover:border-gold hover:text-gold'
+                  }`}
+                >
+                  {togglingFeatured === listing.listing_id ? '...' : listing.is_featured ? 'Unfeature' : 'Feature'}
+                </button>
                 <Link
                   href={`/listing/${listing.listing_id}`}
                   target="_blank"

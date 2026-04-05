@@ -5,6 +5,7 @@
 export function transformListing(row) {
   return {
     listing_id: row.listing_id,
+    is_featured: row.is_featured ?? false,
     address: row.location?.address ?? null,
     neighborhood: row.location?.neighborhood ?? null,
     lat: row.location?.lat ?? null,

@@ -4,6 +4,7 @@ import { transformListing } from "@/lib/transformListing";
 
 const LISTING_SELECT = `
   listing_id,
+  is_featured,
   description,
   photos,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
@@ -144,8 +145,12 @@ export async function GET(request) {
       });
     }
 
-    // Sort (nulls always last regardless of sort direction)
+    // Sort: featured listings first, then by chosen sort field (nulls always last)
     results.sort((a, b) => {
+      // Featured listings always come first
+      if (a.is_featured && !b.is_featured) return -1;
+      if (!a.is_featured && b.is_featured) return 1;
+
       let valA, valB;
 
       if (sortBy === "price") {

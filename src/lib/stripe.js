@@ -96,3 +96,22 @@ export async function canCreateListing(supabase, landlordId) {
 
   return { allowed: true, currentCount: count, maxListings: plan.max_listings, planId: plan.plan_id };
 }
+
+/**
+ * Check if a landlord's plan allows featured listings.
+ */
+export async function canFeatureListing(supabase, landlordId) {
+  const plan = await getEffectivePlan(supabase, landlordId);
+  if (!plan) return { allowed: false, reason: 'No plan found' };
+
+  const features = plan.features || {};
+  if (!features.featured_listings) {
+    return {
+      allowed: false,
+      reason: `Your ${plan.name} plan does not include featured listings. Upgrade to Pro or Business.`,
+      planId: plan.plan_id,
+    };
+  }
+
+  return { allowed: true, planId: plan.plan_id };
+}
