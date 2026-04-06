@@ -14,7 +14,7 @@ export async function GET(request, { params }) {
       );
     }
 
-    const { data, error } = await getSupabase()
+    let { data, error } = await getSupabase()
       .from("listings")
       .select(
         `
@@ -31,6 +31,29 @@ export async function GET(request, { params }) {
       )
       .eq("listing_id", id)
       .single();
+
+    // Retry without verified_tier if column doesn't exist yet
+    if (error && error.code !== "PGRST116") {
+      const fallback = await getSupabase()
+        .from("listings")
+        .select(
+          `
+          listing_id,
+          description,
+          photos,
+          rent ( monthly_price, currency, bills_included, deposit ),
+          location ( address, neighborhood ),
+          property_types ( name ),
+          landlords ( name, contact_info ),
+          listing_amenities ( amenities ( amenity_id, name ) ),
+          faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
+        `
+        )
+        .eq("listing_id", id)
+        .single();
+      data = fallback.data;
+      error = fallback.error;
+    }
 
     if (error) {
       if (error.code === "PGRST116") {

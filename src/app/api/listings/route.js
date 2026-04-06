@@ -15,6 +15,20 @@ const LISTING_SELECT = `
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
 
+// Fallback SELECT without verified_tier for pre-migration compatibility
+const LISTING_SELECT_FALLBACK = `
+  listing_id,
+  is_featured,
+  description,
+  photos,
+  rent!inner ( monthly_price, currency, bills_included, deposit ),
+  location!inner ( address, neighborhood, lat, lng ),
+  property_types!inner ( name ),
+  landlords!inner ( name, contact_info ),
+  listing_amenities ( amenities ( amenity_id, name ) ),
+  faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
+`;
+
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
@@ -122,14 +136,31 @@ export async function GET(request) {
       query = query.eq("faculty_distances.faculty_id", faculty);
     }
 
-    const { data, error } = await query;
+    let { data, error } = await query;
 
+    // If query fails (e.g. verified_tier column not yet migrated), retry without it
     if (error) {
-      console.error("Supabase query error:", error);
-      return NextResponse.json(
-        { error: "Failed to fetch listings" },
-        { status: 500 }
-      );
+      console.warn("Listings query failed, retrying without verified_tier:", error.message);
+      let fallbackQuery = getSupabase().from("listings").select(LISTING_SELECT_FALLBACK);
+
+      if (minBudget) fallbackQuery = fallbackQuery.gte("rent.monthly_price", Number(minBudget));
+      if (maxBudget) fallbackQuery = fallbackQuery.lte("rent.monthly_price", Number(maxBudget));
+      if (neighborhoods) {
+        const neighborhoodList = neighborhoods.split(",").map((n) => n.trim()).filter(Boolean);
+        if (neighborhoodList.length > 0) fallbackQuery = fallbackQuery.in("location.neighborhood", neighborhoodList);
+      }
+      if (types) fallbackQuery = fallbackQuery.in("property_types.name", types.split(",").map((t) => t.trim()));
+      if (faculty) fallbackQuery = fallbackQuery.eq("faculty_distances.faculty_id", faculty);
+
+      const fallbackResult = await fallbackQuery;
+      if (fallbackResult.error) {
+        console.error("Supabase fallback query error:", fallbackResult.error);
+        return NextResponse.json(
+          { error: "Failed to fetch listings" },
+          { status: 500 }
+        );
+      }
+      data = fallbackResult.data;
     }
 
     // Transform rows to API shape
