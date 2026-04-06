@@ -138,6 +138,25 @@
     "transitMin": "min transit",
     "to": "to"
   },
+  "about": {
+    "metaTitle": "About StudentX",
+    "metaDescription": "StudentX helps students find housing near their university in Thessaloniki, Greece. Free for students, free for landlords.",
+    "title": "About StudentX",
+    "intro": "StudentX is a student housing directory built for Thessaloniki. We connect students with landlords to make finding a place near campus simple, fast, and stress-free.",
+    "missionTitle": "Our mission",
+    "missionBody": "Every year, thousands of students arrive in Thessaloniki looking for housing. They scroll through Facebook groups, outdated listings, and word-of-mouth leads. Landlords, on the other hand, struggle to reach the right tenants. StudentX bridges that gap with a purpose-built platform that puts proximity to campus at the center of every search.",
+    "howItWorksTitle": "How it works",
+    "step1Title": "Search by campus",
+    "step1Body": "Pick your faculty, set your budget and preferences, and see listings ranked by distance to your classes.",
+    "step2Title": "Contact landlords",
+    "step2Body": "Send an inquiry directly through the platform. No middlemen, no fees for students.",
+    "step3Title": "Move in",
+    "step3Body": "Find your place, sign your lease, and focus on what matters — your studies.",
+    "forLandlordsTitle": "For landlords",
+    "forLandlordsBody": "Listing your property on StudentX is free. Create an account, add your property details, and start receiving inquiries from verified students. Landlords who want extra visibility can upgrade to Verified for a search boost and trust badge.",
+    "contactTitle": "Contact us",
+    "contactBody": "Have a question or want to partner with us? Reach out at hello@studentx.gr."
+  },
   "landlord": {
     "login": {
       "title": "Landlord Login",
