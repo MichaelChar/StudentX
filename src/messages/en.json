@@ -101,7 +101,9 @@
     "transitMin": "min transit",
     "listingNotFound": "Listing not found",
     "listingNotFoundDesc": "The listing you're looking for may have been removed or doesn't exist.",
-    "backToSearchBtn": "Back to search"
+    "backToSearchBtn": "Back to search",
+    "somethingWentWrong": "Something went wrong",
+    "failedToLoad": "Failed to load listing"
   },
   "inquiry": {
     "contactLandlord": "Contact landlord",
@@ -173,6 +175,24 @@
       "inquiries": "Inquiries",
       "conversionRate": "Conversion rate",
       "logout": "Log out"
+    },
+    "billing": {
+      "currentPlan": "Current plan",
+      "planBadgeFree": "Free",
+      "planBadgeActive": "Active",
+      "billingAnnual": "Annual",
+      "billingMonthly": "Monthly",
+      "cancelAtPeriodEnd": "cancels at period end",
+      "renews": "Renews",
+      "manageBilling": "Manage billing",
+      "listingsUsed": "Listings used",
+      "upgradePlan": "Upgrade your plan",
+      "availablePlans": "Available plans",
+      "perYear": "/year",
+      "upToListings": "Up to {count} listings",
+      "overagePrice": "+€{price}/mo per extra listing",
+      "currentPlanBadge": "Current plan",
+      "upgradeButton": "Upgrade — €{price}/year"
     }
   }
 }

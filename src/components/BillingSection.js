@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 const PLAN_COLORS = {
@@ -10,6 +11,7 @@ const PLAN_COLORS = {
 };
 
 export default function BillingSection() {
+  const t = useTranslations('landlord.billing');
   const [billing, setBilling] = useState(null);
   const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -120,15 +122,15 @@ export default function BillingSection() {
                 {billing?.plan?.name || 'Free'} Plan
               </h3>
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${PLAN_COLORS[currentPlanId] || PLAN_COLORS.free}`}>
-                {currentPlanId === 'free' ? 'Free' : 'Active'}
+                {currentPlanId === 'free' ? t('planBadgeFree') : t('planBadgeActive')}
               </span>
             </div>
             {sub && (
               <p className="text-sm text-gray-dark/60 mt-1">
-                {sub.billingInterval === 'annual' ? 'Annual' : 'Monthly'} billing
-                {sub.cancelAtPeriodEnd && ' — cancels at period end'}
+                {sub.billingInterval === 'annual' ? t('billingAnnual') : t('billingMonthly')} billing
+                {sub.cancelAtPeriodEnd && ` — ${t('cancelAtPeriodEnd')}`}
                 {sub.currentPeriodEnd && (
-                  <> · Renews {new Date(sub.currentPeriodEnd).toLocaleDateString()}</>
+                  <> · {t('renews')} {new Date(sub.currentPeriodEnd).toLocaleDateString()}</>
                 )}
               </p>
             )}
@@ -139,7 +141,7 @@ export default function BillingSection() {
               disabled={actionLoading}
               className="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-dark/70 hover:border-navy hover:text-navy transition-colors disabled:opacity-50"
             >
-              Manage billing
+              {t('manageBilling')}
             </button>
           )}
         </div>
@@ -148,7 +150,7 @@ export default function BillingSection() {
         {usage && (
           <div>
             <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-dark/60">Listings used</span>
+              <span className="text-gray-dark/60">{t('listingsUsed')}</span>
               <span className="font-medium text-navy">
                 {usage.listingsUsed} / {usage.listingsMax}
               </span>
@@ -167,7 +169,7 @@ export default function BillingSection() {
       {plans.length > 0 && (
         <div>
           <h3 className="font-heading font-semibold text-navy text-base mb-3">
-            {currentPlanId === 'free' ? 'Upgrade your plan' : 'Available plans'}
+            {currentPlanId === 'free' ? t('upgradePlan') : t('availablePlans')}
           </h3>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {plans
@@ -185,20 +187,20 @@ export default function BillingSection() {
                     <p className="text-sm text-gray-dark/60 mt-1">{plan.description}</p>
                     <div className="mt-3">
                       <span className="text-2xl font-bold text-navy">€{annualPrice}</span>
-                      <span className="text-sm text-gray-dark/60">/year</span>
+                      <span className="text-sm text-gray-dark/60">{t('perYear')}</span>
                     </div>
                     <p className="text-sm text-gray-dark/60 mt-1">
-                      Up to {plan.max_listings} listings
+                      {t('upToListings', { count: plan.max_listings })}
                     </p>
                     {hasOverage && (
                       <p className="text-xs text-gray-dark/50 mt-0.5">
-                        +€{(plan.overage_price_cents / 100).toFixed(0)}/mo per extra listing
+                        {t('overagePrice', { price: (plan.overage_price_cents / 100).toFixed(0) })}
                       </p>
                     )}
 
                     {isCurrent ? (
                       <div className="mt-4 text-center text-sm font-medium text-gold">
-                        Current plan
+                        {t('currentPlanBadge')}
                       </div>
                     ) : (
                       <div className="mt-4">
@@ -207,7 +209,7 @@ export default function BillingSection() {
                           disabled={actionLoading}
                           className="w-full text-sm px-3 py-2 rounded-lg bg-navy text-white font-medium hover:bg-navy/90 transition-colors disabled:opacity-50"
                         >
-                          Upgrade — €{annualPrice}/year
+                          {t('upgradeButton', { price: annualPrice })}
                         </button>
                       </div>
                     )}

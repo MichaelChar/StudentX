@@ -93,7 +93,9 @@
     "transitMin": "λεπτά με ΜΜΜ",
     "listingNotFound": "Η αγγελία δεν βρέθηκε",
     "listingNotFoundDesc": "Η αγγελία που αναζητάς ενδέχεται να έχει αφαιρεθεί ή δεν υπάρχει.",
-    "backToSearchBtn": "Πίσω στην αναζήτηση"
+    "backToSearchBtn": "Πίσω στην αναζήτηση",
+    "somethingWentWrong": "Κάτι πήγε στραβά",
+    "failedToLoad": "Αποτυχία φόρτωσης αγγελίας"
   },
   "inquiry": {
     "contactLandlord": "Επικοινωνία με ιδιοκτήτη",
@@ -165,6 +167,24 @@
       "inquiries": "Ερωτήματα",
       "conversionRate": "Ποσοστό μετατροπής",
       "logout": "Αποσύνδεση"
+    },
+    "billing": {
+      "currentPlan": "Τρέχον πλάνο",
+      "planBadgeFree": "Δωρεάν",
+      "planBadgeActive": "Ενεργό",
+      "billingAnnual": "Ετήσια",
+      "billingMonthly": "Μηνιαία",
+      "cancelAtPeriodEnd": "ακυρώνεται στο τέλος της περιόδου",
+      "renews": "Ανανέωση",
+      "manageBilling": "Διαχείριση χρέωσης",
+      "listingsUsed": "Αγγελίες σε χρήση",
+      "upgradePlan": "Αναβαθμίστε το πλάνο σας",
+      "availablePlans": "Διαθέσιμα πλάνα",
+      "perYear": "/έτος",
+      "upToListings": "Έως {count} αγγελίες",
+      "overagePrice": "+€{price}/μήνα ανά επιπλέον αγγελία",
+      "currentPlanBadge": "Τρέχον πλάνο",
+      "upgradeButton": "Αναβάθμιση — €{price}/έτος"
     }
   }
 }
