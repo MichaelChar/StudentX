@@ -1,25 +1,23 @@
 'use client';
 
 import { useEffect, useState, useCallback, Suspense, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
-import { useRouter, Link } from '@/i18n/navigation';
+import { useSearchParams, useRouter } from 'next/navigation';
 import dynamic from 'next/dynamic';
+import Link from 'next/link';
 import ListingCard from '@/components/ListingCard';
-import { useTranslations } from 'next-intl';
-
-function MapLoadingFallback() {
-  const t = useTranslations('results');
-  return (
-    <div className="h-full w-full rounded-xl bg-gray-light animate-pulse flex items-center justify-center">
-      <span className="text-gray-dark/40 text-sm">{t('loadingMap')}</span>
-    </div>
-  );
-}
 
 const ListingsMap = dynamic(() => import('@/components/ListingsMap'), {
   ssr: false,
-  loading: () => <MapLoadingFallback />,
+  loading: () => (
+    <div className="h-full w-full rounded-xl bg-gray-light animate-pulse flex items-center justify-center">
+      <span className="text-gray-dark/40 text-sm">Loading map…</span>
+    </div>
+  ),
 });
+
+const SORT_OPTIONS = [
+  { value: 'price', label: 'Price' },
+];
 
 const PROPERTY_TYPES = ['Studio', '1-Bedroom', '2-Bedroom', 'Room in shared apartment'];
 
@@ -51,12 +49,7 @@ function SkeletonCard() {
   );
 }
 
-const SORT_OPTIONS_KEYS = [
-  { value: 'price', key: 'sortPrice' },
-];
-
 function ResultsContent() {
-  const t = useTranslations('results');
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -193,11 +186,11 @@ function ResultsContent() {
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
         <div>
           <h1 className="font-heading text-2xl md:text-3xl font-bold text-navy tracking-tight">
-            {t('title')}
+            Available listings
           </h1>
           {!loading && (
             <p className="uppercase tracking-wider text-xs text-gray-dark/50 mt-1 font-heading">
-              {t('resultsCount', { count: listings.length })}
+              {listings.length} {listings.length === 1 ? 'result' : 'results'} found
             </p>
           )}
         </div>
@@ -233,7 +226,7 @@ function ResultsContent() {
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2a1 1 0 01-.293.707l-6.414 6.414A1 1 0 0014 13.828V20l-4-2v-4.172a1 1 0 00-.293-.707L3.293 6.707A1 1 0 013 6V4z" />
             </svg>
-            {t('filters')}
+            Filters
             {hasActiveFilters && (
               <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gold text-white text-[10px] font-bold">
                 {[filters.selectedTypes, filters.selectedNeighborhoods, filters.selectedAmenities].reduce((n, a) => n + a.length, 0) + (filters.minBudget ? 1 : 0) + (filters.maxBudget ? 1 : 0)}
@@ -243,8 +236,8 @@ function ResultsContent() {
 
           {/* Sort controls */}
           <span className="hidden sm:inline text-gray-dark/40 text-xs">|</span>
-          <span className="text-gray-dark/50 text-sm hidden sm:inline">{t('sort')}</span>
-          {SORT_OPTIONS_KEYS.map((opt) => {
+          <span className="text-gray-dark/50 text-sm hidden sm:inline">Sort:</span>
+          {SORT_OPTIONS.map((opt) => {
             const isActive = sortBy === opt.value;
             return (
               <button
@@ -252,7 +245,7 @@ function ResultsContent() {
                 onClick={() => handleSort(opt.value)}
                 className={`px-3 py-1.5 rounded-lg text-sm transition-colors cursor-pointer ${isActive ? 'bg-navy text-white' : 'text-gray-dark/60 hover:bg-gray-light'}`}
               >
-                {t(opt.key)}{isActive && <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>}
+                {opt.label}{isActive && <span className="ml-1">{sortOrder === 'asc' ? '↑' : '↓'}</span>}
               </button>
             );
           })}
@@ -265,12 +258,12 @@ function ResultsContent() {
           {/* Budget range */}
           <div>
             <h3 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-2">
-              {t('priceRange')}
+              Price range
             </h3>
             <div className="flex items-center gap-2">
               <input
                 type="number"
-                placeholder={t('minPlaceholder')}
+                placeholder="Min €"
                 value={filters.minBudget}
                 onChange={(e) => setFilters((p) => ({ ...p, minBudget: e.target.value }))}
                 min={BUDGET_MIN}
@@ -278,10 +271,10 @@ function ResultsContent() {
                 step={BUDGET_STEP}
                 className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
               />
-              <span className="text-gray-dark/40 text-xs shrink-0">{t('to')}</span>
+              <span className="text-gray-dark/40 text-xs shrink-0">to</span>
               <input
                 type="number"
-                placeholder={t('maxPlaceholder')}
+                placeholder="Max €"
                 value={filters.maxBudget}
                 onChange={(e) => setFilters((p) => ({ ...p, maxBudget: e.target.value }))}
                 min={BUDGET_MIN}
@@ -295,7 +288,7 @@ function ResultsContent() {
           {/* Property type */}
           <div>
             <h3 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-2">
-              {t('propertyType')}
+              Property type
             </h3>
             <div className="flex flex-wrap gap-1.5">
               {PROPERTY_TYPES.map((type) => (
@@ -313,7 +306,7 @@ function ResultsContent() {
           {/* Neighborhoods */}
           <div>
             <h3 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-2">
-              {t('neighborhood')}
+              Neighborhood
             </h3>
             <div className="flex flex-wrap gap-1.5">
               {neighborhoods.map((n) => (
@@ -331,7 +324,7 @@ function ResultsContent() {
           {/* Amenities */}
           <div>
             <h3 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-2">
-              {t('amenities')}
+              Amenities
             </h3>
             <div className="flex flex-wrap gap-1.5">
               {AMENITY_OPTIONS.map((a) => (
@@ -353,7 +346,7 @@ function ResultsContent() {
                 onClick={clearFilters}
                 className="text-sm text-gray-dark/50 hover:text-navy underline cursor-pointer"
               >
-                {t('clearAllFilters')}
+                Clear all filters
               </button>
             </div>
           )}
@@ -382,13 +375,13 @@ function ResultsContent() {
           <svg className="w-16 h-16 mx-auto text-red-300 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z" />
           </svg>
-          <h2 className="font-heading text-xl font-semibold text-navy mb-2">{t('error')}</h2>
-          <p className="text-gray-dark/60 mb-6">{t('errorDesc')}</p>
+          <h2 className="font-heading text-xl font-semibold text-navy mb-2">Something went wrong</h2>
+          <p className="text-gray-dark/60 mb-6">Please try again.</p>
           <button
             onClick={fetchListings}
             className="inline-block bg-gold text-white font-heading font-semibold px-6 py-3 rounded-lg hover:bg-gold/90 transition-colors cursor-pointer"
           >
-            {t('tryAgain')}
+            Try again
           </button>
         </div>
       )}
@@ -408,19 +401,19 @@ function ResultsContent() {
           <svg className="w-16 h-16 mx-auto text-gray-dark/20 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
           </svg>
-          <h2 className="font-heading text-xl font-semibold text-navy mb-2">{t('noResults')}</h2>
-          <p className="text-gray-dark/60 mb-6">{t('noResultsHint')}</p>
+          <h2 className="font-heading text-xl font-semibold text-navy mb-2">No listings match your criteria</h2>
+          <p className="text-gray-dark/60 mb-6">Try adjusting your filters.</p>
           <div className="flex flex-wrap items-center justify-center gap-3">
             {hasActiveFilters && (
               <button
                 onClick={clearFilters}
                 className="inline-block bg-gold text-white font-heading font-semibold px-6 py-3 rounded-lg hover:bg-gold/90 transition-colors cursor-pointer"
               >
-                {t('clearFilters')}
+                Clear filters
               </button>
             )}
             <Link href="/" className="inline-block bg-white border border-gray-200 text-navy font-heading font-semibold px-6 py-3 rounded-lg hover:border-gold/40 transition-colors">
-              {t('backToSearch')}
+              Back to search
             </Link>
           </div>
         </div>
