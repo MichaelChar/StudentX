@@ -21,7 +21,7 @@ export default function ListingPage() {
       try {
         const res = await fetch(`/api/listings/${id}`);
         if (!res.ok) {
-          setError(res.status === 404 ? 'Listing not found' : 'Something went wrong');
+          setError(res.status === 404 ? t('listingNotFound') : t('somethingWentWrong'));
           return;
         }
         const data = await res.json();
@@ -29,7 +29,7 @@ export default function ListingPage() {
         // Track view (fire-and-forget)
         fetch(`/api/listings/${id}/view`, { method: 'POST' }).catch(() => {});
       } catch {
-        setError('Failed to load listing');
+        setError(t('failedToLoad'));
       } finally {
         setLoading(false);
       }
