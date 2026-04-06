@@ -9,6 +9,7 @@ import BillingSection from '@/components/BillingSection';
 export default function LandlordDashboardPage() {
   const router = useRouter();
   const [listings, setListings] = useState([]);
+  const [analytics, setAnalytics] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(null);
@@ -22,7 +23,10 @@ export default function LandlordDashboardPage() {
         router.replace('/landlord/login');
         return;
       }
-      await fetchListings(session.access_token);
+      await Promise.all([
+        fetchListings(session.access_token),
+        fetchAnalytics(session.access_token),
+      ]);
     }
     init();
   }, [router]);
@@ -44,6 +48,20 @@ export default function LandlordDashboardPage() {
       setError('Failed to load listings');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchAnalytics(token) {
+    try {
+      const res = await fetch('/api/landlord/analytics', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const { analytics: data } = await res.json();
+        setAnalytics(data);
+      }
+    } catch {
+      // analytics are non-critical
     }
   }
 
@@ -141,6 +159,48 @@ export default function LandlordDashboardPage() {
         <BillingSection />
       </div>
 
+      {/* Analytics Overview */}
+      {analytics && (listings.length > 0 || analytics.total_views > 0) && (
+        <div className="mb-8">
+          <h2 className="font-heading text-lg font-bold text-navy mb-4">Analytics</h2>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+            <StatCard label="Views (30d)" value={analytics.views_last_30_days} />
+            <StatCard label="Inquiries (30d)" value={analytics.inquiries_last_30_days} />
+            <StatCard label="Total Views" value={analytics.total_views} />
+            <StatCard label="Conversion" value={`${analytics.conversion_rate}%`} />
+          </div>
+          {analytics.per_listing.length > 0 && (
+            <div className="border border-gray-200 rounded-xl overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="bg-gray-light text-gray-dark/60 text-xs">
+                    <th className="text-left px-4 py-2 font-medium">Listing</th>
+                    <th className="text-right px-4 py-2 font-medium">Views</th>
+                    <th className="text-right px-4 py-2 font-medium">Inquiries</th>
+                    <th className="text-right px-4 py-2 font-medium">Conv.</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-100">
+                  {analytics.per_listing.map((pl) => {
+                    const listing = listings.find((l) => l.listing_id === pl.listing_id);
+                    return (
+                      <tr key={pl.listing_id}>
+                        <td className="px-4 py-2.5 truncate max-w-[200px]">
+                          {listing?.location?.address || `#${pl.listing_id}`}
+                        </td>
+                        <td className="px-4 py-2.5 text-right text-gray-dark/70">{pl.views}</td>
+                        <td className="px-4 py-2.5 text-right text-gray-dark/70">{pl.inquiries}</td>
+                        <td className="px-4 py-2.5 text-right text-gray-dark/70">{Math.round(pl.conversion * 10) / 10}%</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      )}
+
       {error && (
         <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3 mb-6">
           {error}
@@ -224,6 +284,15 @@ export default function LandlordDashboardPage() {
           ))}
         </div>
       )}
+    </div>
+  );
+}
+
+function StatCard({ label, value }) {
+  return (
+    <div className="bg-gray-light rounded-xl p-4">
+      <p className="text-xs text-gray-dark/50 mb-1">{label}</p>
+      <p className="font-heading text-xl font-bold text-navy">{value}</p>
     </div>
   );
 }

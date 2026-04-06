@@ -24,6 +24,8 @@ export default function ListingPage() {
         }
         const data = await res.json();
         setListing(data.listing);
+        // Track view (fire-and-forget)
+        fetch(`/api/listings/${id}/view`, { method: 'POST' }).catch(() => {});
       } catch {
         setError('Failed to load listing');
       } finally {
