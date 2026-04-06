@@ -50,7 +50,7 @@ export default function NewListingPage() {
 
     if (!res.ok) {
       const { error } = await res.json();
-      throw new Error(error || 'Failed to create listing');
+      throw new Error(error || t('failedToCreate'));
     }
 
     router.push('/landlord/dashboard');

@@ -80,7 +80,7 @@ export default function EditListingPage() {
 
     if (!res.ok) {
       const { error: e } = await res.json();
-      throw new Error(e || 'Failed to update listing');
+      throw new Error(e || t('failedToUpdate'));
     }
 
     router.push('/landlord/dashboard');

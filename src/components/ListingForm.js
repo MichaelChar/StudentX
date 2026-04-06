@@ -71,7 +71,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     try {
       await onSubmit(form);
     } catch (err) {
-      setError(err.message || 'Something went wrong');
+      setError(err.message || t('errorGeneric'));
     } finally {
       setLoading(false);
     }

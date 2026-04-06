@@ -218,16 +218,19 @@
       "rentalDurationPlaceholder": "π.χ. 12 μήνες, ευέλικτο",
       "amenitiesSection": "Παροχές",
       "saving": "Αποθήκευση…",
-      "saveListing": "Αποθήκευση αγγελίας"
+      "saveListing": "Αποθήκευση αγγελίας",
+      "errorGeneric": "Κάτι πήγε στραβά"
     },
     "newListing": {
       "backToDashboard": "Πίσω στον πίνακα",
-      "title": "Προσθήκη νέας αγγελίας"
+      "title": "Προσθήκη νέας αγγελίας",
+      "failedToCreate": "Αποτυχία δημιουργίας αγγελίας"
     },
     "editListing": {
       "backToDashboard": "Πίσω στον πίνακα",
       "title": "Επεξεργασία αγγελίας",
-      "notFoundError": "Η αγγελία δεν βρέθηκε ή δεν έχεις δικαίωμα επεξεργασίας."
+      "notFoundError": "Η αγγελία δεν βρέθηκε ή δεν έχεις δικαίωμα επεξεργασίας.",
+      "failedToUpdate": "Αποτυχία ενημέρωσης αγγελίας"
     },
     "billing": {
       "currentPlan": "Τρέχον πλάνο",
@@ -245,7 +248,11 @@
       "upToListings": "Έως {count} αγγελίες",
       "overagePrice": "+€{price}/μήνα ανά επιπλέον αγγελία",
       "currentPlanBadge": "Τρέχον πλάνο",
-      "upgradeButton": "Αναβάθμιση — €{price}/έτος"
+      "upgradeButton": "Αναβάθμιση — €{price}/έτος",
+      "planSuffix": "πλάνο",
+      "billingSuffix": "χρέωση",
+      "checkoutError": "Αποτυχία ολοκλήρωσης πληρωμής",
+      "portalError": "Αποτυχία ανοίγματος διαχείρισης χρέωσης"
     }
   }
 }

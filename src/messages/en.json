@@ -226,16 +226,19 @@
       "rentalDurationPlaceholder": "e.g. 12 months, flexible",
       "amenitiesSection": "Amenities",
       "saving": "Saving…",
-      "saveListing": "Save listing"
+      "saveListing": "Save listing",
+      "errorGeneric": "Something went wrong"
     },
     "newListing": {
       "backToDashboard": "Back to dashboard",
-      "title": "Add new listing"
+      "title": "Add new listing",
+      "failedToCreate": "Failed to create listing"
     },
     "editListing": {
       "backToDashboard": "Back to dashboard",
       "title": "Edit listing",
-      "notFoundError": "Listing not found or you do not have permission to edit it."
+      "notFoundError": "Listing not found or you do not have permission to edit it.",
+      "failedToUpdate": "Failed to update listing"
     },
     "billing": {
       "currentPlan": "Current plan",
@@ -253,7 +256,11 @@
       "upToListings": "Up to {count} listings",
       "overagePrice": "+€{price}/mo per extra listing",
       "currentPlanBadge": "Current plan",
-      "upgradeButton": "Upgrade — €{price}/year"
+      "upgradeButton": "Upgrade — €{price}/year",
+      "planSuffix": "Plan",
+      "billingSuffix": "billing",
+      "checkoutError": "Failed to start checkout",
+      "portalError": "Failed to open billing portal"
     }
   }
 }

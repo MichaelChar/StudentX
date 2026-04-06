@@ -70,7 +70,7 @@ export default function BillingSection() {
         window.location.href = url;
       } else {
         const { error } = await res.json();
-        alert(error || 'Failed to start checkout');
+        alert(error || t('checkoutError'));
       }
     } finally {
       setActionLoading(false);
@@ -91,7 +91,7 @@ export default function BillingSection() {
         window.location.href = url;
       } else {
         const { error } = await res.json();
-        alert(error || 'Failed to open billing portal');
+        alert(error || t('portalError'));
       }
     } finally {
       setActionLoading(false);
@@ -119,7 +119,7 @@ export default function BillingSection() {
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-heading font-semibold text-navy text-lg">
-                {billing?.plan?.name || 'Free'} Plan
+                {billing?.plan?.name || t('planBadgeFree')} {t('planSuffix')}
               </h3>
               <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${PLAN_COLORS[currentPlanId] || PLAN_COLORS.free}`}>
                 {currentPlanId === 'free' ? t('planBadgeFree') : t('planBadgeActive')}
@@ -127,7 +127,7 @@ export default function BillingSection() {
             </div>
             {sub && (
               <p className="text-sm text-gray-dark/60 mt-1">
-                {sub.billingInterval === 'annual' ? t('billingAnnual') : t('billingMonthly')} billing
+                {sub.billingInterval === 'annual' ? t('billingAnnual') : t('billingMonthly')} {t('billingSuffix')}
                 {sub.cancelAtPeriodEnd && ` — ${t('cancelAtPeriodEnd')}`}
                 {sub.currentPeriodEnd && (
                   <> · {t('renews')} {new Date(sub.currentPeriodEnd).toLocaleDateString()}</>
