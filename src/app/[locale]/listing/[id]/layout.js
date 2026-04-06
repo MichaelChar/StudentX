@@ -27,7 +27,7 @@ async function fetchListingForMeta(id) {
 }
 
 export async function generateMetadata({ params }) {
-  const { id } = await params;
+  const { id, locale } = await params;
   const data = await fetchListingForMeta(id);
 
   if (!data) {
@@ -62,13 +62,20 @@ export async function generateMetadata({ params }) {
       : `${propertyType} available in ${neighborhood}, Thessaloniki${facultyHint}.`) +
     (data.description && data.description.length > 140 ? "…" : "");
 
-  const url = `${SITE_URL}/listing/${id}`;
+  const enUrl = `${SITE_URL}/listing/${id}`;
+  const elUrl = `${SITE_URL}/el/listing/${id}`;
+  const url = locale === 'el' ? elUrl : enUrl;
 
   return {
     title,
     description,
     alternates: {
       canonical: url,
+      languages: {
+        en: enUrl,
+        el: elUrl,
+        'x-default': enUrl,
+      },
     },
     openGraph: {
       title: `${title} — StudentX`,
@@ -79,7 +86,7 @@ export async function generateMetadata({ params }) {
       images: photo
         ? [{ url: photo, alt: `${propertyType} at ${address}` }]
         : [],
-      locale: "el_GR",
+      locale: locale === 'el' ? "el_GR" : "en_US",
     },
     twitter: {
       card: "summary_large_image",

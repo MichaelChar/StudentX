@@ -1,5 +1,6 @@
-import Link from 'next/link';
 import Image from 'next/image';
+import { useTranslations } from 'next-intl';
+import { Link } from '@/i18n/navigation';
 import { isEstimatedPrice } from '@/lib/estimatedListings';
 
 function isValidPhotoUrl(url) {
@@ -7,6 +8,7 @@ function isValidPhotoUrl(url) {
 }
 
 export default function ListingCard({ listing, faculty }) {
+  const t = useTranslations('listingCard');
   const photo = listing.photos?.find(isValidPhotoUrl);
   const distance = listing.faculty_distances?.[0];
 
@@ -19,7 +21,7 @@ export default function ListingCard({ listing, faculty }) {
       <div className="relative aspect-[4/3] bg-gray-light">
         {listing.is_featured && (
           <span className="absolute top-2 left-2 z-10 bg-gold text-white text-[11px] font-semibold px-2 py-0.5 rounded-full shadow-sm">
-            Featured
+            {t('featured')}
           </span>
         )}
         {photo ? (
@@ -45,9 +47,9 @@ export default function ListingCard({ listing, faculty }) {
         <div className="flex items-baseline justify-between mb-2">
           <span className="font-heading text-xl font-bold text-navy">
             {listing.monthly_price != null ? (
-              <>{isEstimatedPrice(listing.listing_id) && <span className="text-sm font-normal text-gray-dark/50">est </span>}&euro;{listing.monthly_price}<span className="text-sm font-normal text-gray-dark/50">/mo</span></>
+              <>{isEstimatedPrice(listing.listing_id) && <span className="text-sm font-normal text-gray-dark/50">{t('estimated')}</span>}&euro;{listing.monthly_price}<span className="text-sm font-normal text-gray-dark/50">{t('perMonth')}</span></>
             ) : (
-              <span className="text-sm font-normal text-gray-dark/50">Price on request</span>
+              <span className="text-sm font-normal text-gray-dark/50">{t('priceOnRequest')}</span>
             )}
           </span>
           <span className="text-xs text-gray-dark/60 capitalize truncate max-w-[50%] text-right">
@@ -70,13 +72,13 @@ export default function ListingCard({ listing, faculty }) {
               <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
               </svg>
-              {distance.walk_minutes} min walk
+              {distance.walk_minutes} {t('walkMin')}
             </span>
             <span className="mx-1.5 text-gray-dark/30">|</span>
-            <span>{distance.transit_minutes} min transit</span>
+            <span>{distance.transit_minutes} {t('transitMin')}</span>
             {faculty && (
               <span className="block mt-0.5 text-gray-dark/40">
-                to {distance.faculty_name}
+                {t('to')} {distance.faculty_name}
               </span>
             )}
           </p>

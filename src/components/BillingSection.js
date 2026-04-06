@@ -5,9 +5,8 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 const PLAN_COLORS = {
   free: 'bg-gray-100 text-gray-700',
-  starter: 'bg-blue-100 text-blue-700',
   pro: 'bg-gold/20 text-gold',
-  business: 'bg-navy/10 text-navy',
+  super_pro: 'bg-navy/10 text-navy',
 };
 
 export default function BillingSection() {
@@ -51,7 +50,7 @@ export default function BillingSection() {
     }
   }
 
-  async function handleCheckout(planId, interval) {
+  async function handleCheckout(planId) {
     setActionLoading(true);
     try {
       const token = await getToken();
@@ -61,7 +60,7 @@ export default function BillingSection() {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ planId, interval }),
+        body: JSON.stringify({ planId }),
       });
 
       if (res.ok) {
@@ -175,6 +174,8 @@ export default function BillingSection() {
               .filter((p) => p.plan_id !== 'free')
               .map((plan) => {
                 const isCurrent = plan.plan_id === currentPlanId;
+                const annualPrice = (plan.annual_price_cents / 100).toFixed(0);
+                const hasOverage = plan.overage_price_cents > 0;
                 return (
                   <div
                     key={plan.plan_id}
@@ -183,34 +184,30 @@ export default function BillingSection() {
                     <h4 className="font-heading font-semibold text-navy">{plan.name}</h4>
                     <p className="text-sm text-gray-dark/60 mt-1">{plan.description}</p>
                     <div className="mt-3">
-                      <span className="text-2xl font-bold text-navy">
-                        €{(plan.monthly_price_cents / 100).toFixed(0)}
-                      </span>
-                      <span className="text-sm text-gray-dark/60">/mo</span>
+                      <span className="text-2xl font-bold text-navy">€{annualPrice}</span>
+                      <span className="text-sm text-gray-dark/60">/year</span>
                     </div>
                     <p className="text-sm text-gray-dark/60 mt-1">
                       Up to {plan.max_listings} listings
                     </p>
+                    {hasOverage && (
+                      <p className="text-xs text-gray-dark/50 mt-0.5">
+                        +€{(plan.overage_price_cents / 100).toFixed(0)}/mo per extra listing
+                      </p>
+                    )}
 
                     {isCurrent ? (
                       <div className="mt-4 text-center text-sm font-medium text-gold">
                         Current plan
                       </div>
                     ) : (
-                      <div className="mt-4 flex gap-2">
+                      <div className="mt-4">
                         <button
-                          onClick={() => handleCheckout(plan.plan_id, 'monthly')}
+                          onClick={() => handleCheckout(plan.plan_id)}
                           disabled={actionLoading}
-                          className="flex-1 text-sm px-3 py-2 rounded-lg bg-navy text-white font-medium hover:bg-navy/90 transition-colors disabled:opacity-50"
+                          className="w-full text-sm px-3 py-2 rounded-lg bg-navy text-white font-medium hover:bg-navy/90 transition-colors disabled:opacity-50"
                         >
-                          Monthly
-                        </button>
-                        <button
-                          onClick={() => handleCheckout(plan.plan_id, 'annual')}
-                          disabled={actionLoading}
-                          className="flex-1 text-sm px-3 py-2 rounded-lg border border-navy text-navy font-medium hover:bg-navy/5 transition-colors disabled:opacity-50"
-                        >
-                          Annual
+                          Upgrade — €{annualPrice}/year
                         </button>
                       </div>
                     )}

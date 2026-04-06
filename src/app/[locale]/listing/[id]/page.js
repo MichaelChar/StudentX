@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
+import { useRouter, Link } from '@/i18n/navigation';
 import Image from 'next/image';
-import Link from 'next/link';
 import { isEstimatedPrice } from '@/lib/estimatedListings';
 import InquiryForm from '@/components/InquiryForm';
+import { useTranslations } from 'next-intl';
 
 export default function ListingPage() {
+  const t = useTranslations('listing');
   const { id } = useParams();
   const router = useRouter();
   const [listing, setListing] = useState(null);
@@ -40,15 +42,15 @@ export default function ListingPage() {
   if (error) {
     return (
       <div className="mx-auto max-w-3xl px-4 py-20 text-center">
-        <h1 className="font-heading text-2xl font-bold text-navy mb-3">{error}</h1>
+        <h1 className="font-heading text-2xl font-bold text-navy mb-3">{t('listingNotFound')}</h1>
         <p className="text-gray-dark/60 mb-6">
-          The listing you&#39;re looking for may have been removed or doesn&#39;t exist.
+          {t('listingNotFoundDesc')}
         </p>
         <Link
           href="/"
           className="inline-block bg-gold text-white font-heading font-semibold px-6 py-3 rounded-lg hover:bg-gold/90 transition-colors"
         >
-          Back to search
+          {t('backToSearchBtn')}
         </Link>
       </div>
     );
@@ -69,7 +71,7 @@ export default function ListingPage() {
         <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
         </svg>
-        Back to results
+        {t('backToResults')}
       </button>
 
       {/* Photo gallery */}
@@ -110,9 +112,9 @@ export default function ListingPage() {
             <div className="flex items-baseline gap-3 mb-1">
               <h1 className="font-heading text-3xl font-bold text-navy">
                 {listing.monthly_price != null ? (
-                  <>{isEstimatedPrice(listing.listing_id) && <span className="text-base font-normal text-gray-dark/50">est </span>}&euro;{listing.monthly_price}<span className="text-base font-normal text-gray-dark/50">/month</span></>
+                  <>{isEstimatedPrice(listing.listing_id) && <span className="text-base font-normal text-gray-dark/50">{t('estimated')}</span>}&euro;{listing.monthly_price}<span className="text-base font-normal text-gray-dark/50">{t('perMonth')}</span></>
                 ) : (
-                  <span className="text-lg font-normal text-gray-dark/50">Price on request</span>
+                  <span className="text-lg font-normal text-gray-dark/50">{t('priceOnRequest')}</span>
                 )}
               </h1>
               <span
@@ -122,12 +124,12 @@ export default function ListingPage() {
                     : 'bg-amber-100 text-amber-700'
                 }`}
               >
-                {listing.bills_included ? 'Bills included' : 'Bills not included'}
+                {listing.bills_included ? t('billsIncluded') : t('billsNotIncluded')}
               </span>
             </div>
             {listing.deposit > 0 && (
               <p className="text-sm text-gray-dark/50">
-                Deposit: &euro;{listing.deposit}
+                {t('deposit', { amount: listing.deposit })}
               </p>
             )}
           </div>
@@ -136,17 +138,17 @@ export default function ListingPage() {
           <div className="bg-gray-light rounded-xl p-5 space-y-3">
             <div className="grid grid-cols-2 gap-3 text-sm">
               <div>
-                <span className="text-gray-dark/50 block text-xs mb-0.5">Type</span>
+                <span className="text-gray-dark/50 block text-xs mb-0.5">{t('type')}</span>
                 <span className="text-gray-dark font-medium capitalize">
                   {listing.property_type?.replace(/-/g, ' ')}
                 </span>
               </div>
               <div>
-                <span className="text-gray-dark/50 block text-xs mb-0.5">Neighborhood</span>
+                <span className="text-gray-dark/50 block text-xs mb-0.5">{t('neighborhood')}</span>
                 <span className="text-gray-dark font-medium">{listing.neighborhood}</span>
               </div>
               <div className="col-span-2">
-                <span className="text-gray-dark/50 block text-xs mb-0.5">Address</span>
+                <span className="text-gray-dark/50 block text-xs mb-0.5">{t('address')}</span>
                 <span className="text-gray-dark font-medium">{listing.address}</span>
               </div>
             </div>
@@ -155,7 +157,7 @@ export default function ListingPage() {
           {/* Amenities */}
           {listing.amenities?.length > 0 && (
             <div>
-              <h2 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-3">Amenities</h2>
+              <h2 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-3">{t('amenities')}</h2>
               <div className="flex flex-wrap gap-2">
                 {listing.amenities.map((amenity) => (
                   <span
@@ -172,7 +174,7 @@ export default function ListingPage() {
           {/* Description */}
           {listing.description && (
             <div>
-              <h2 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-3">Description</h2>
+              <h2 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-3">{t('description')}</h2>
               <p className="text-gray-dark/80 leading-relaxed">{listing.description}</p>
             </div>
           )}
@@ -184,7 +186,7 @@ export default function ListingPage() {
           {listing.faculty_distances?.length > 0 && (
             <div className="bg-gray-light rounded-xl p-5">
               <h2 className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-3">
-                Distance to faculties
+                {t('distanceToFaculties')}
               </h2>
               <table className="w-full text-sm table-fixed">
                 <colgroup>
@@ -194,17 +196,17 @@ export default function ListingPage() {
                 </colgroup>
                 <thead>
                   <tr className="text-xs text-gray-dark/50">
-                    <th className="text-left pb-2 font-normal">Faculty</th>
-                    <th className="text-right pb-2 font-normal">Walk</th>
-                    <th className="text-right pb-2 font-normal">Transit</th>
+                    <th className="text-left pb-2 font-normal">{t('faculty')}</th>
+                    <th className="text-right pb-2 font-normal">{t('walk')}</th>
+                    <th className="text-right pb-2 font-normal">{t('transit')}</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-200">
                   {listing.faculty_distances.map((fd) => (
                     <tr key={fd.faculty_name}>
                       <td className="py-2 text-gray-dark/80 pr-2">{fd.faculty_name}</td>
-                      <td className="py-2 text-right text-gray-dark/70 whitespace-nowrap">{fd.walk_minutes} min</td>
-                      <td className="py-2 text-right text-gray-dark/70 whitespace-nowrap">{fd.transit_minutes} min</td>
+                      <td className="py-2 text-right text-gray-dark/70 whitespace-nowrap">{t('minutes', { n: fd.walk_minutes })}</td>
+                      <td className="py-2 text-right text-gray-dark/70 whitespace-nowrap">{t('minutes', { n: fd.transit_minutes })}</td>
                     </tr>
                   ))}
                 </tbody>
