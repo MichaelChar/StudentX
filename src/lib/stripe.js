@@ -57,103 +57,30 @@ export async function getActiveSubscription(supabase, landlordId) {
 }
 
 /**
- * Get the landlord's effective plan (defaults to free).
+ * Get the landlord's verified tier ('none', 'verified', or 'verified_pro').
  */
-export async function getEffectivePlan(supabase, landlordId) {
-  const sub = await getActiveSubscription(supabase, landlordId);
-  if (sub) return sub.subscription_plans;
-
-  const { data: freePlan } = await supabase
-    .from('subscription_plans')
-    .select('*')
-    .eq('plan_id', 'free')
+export async function getVerifiedTier(supabase, landlordId) {
+  const { data } = await supabase
+    .from('landlords')
+    .select('verified_tier')
+    .eq('landlord_id', landlordId)
     .single();
 
-  return freePlan;
+  return data?.verified_tier || 'none';
 }
 
 /**
- * Check if a landlord can create another listing under their plan.
- * Super Pro allows listings beyond max_listings (overage billing applies).
+ * Check if a landlord can create another listing.
+ * Under the free model, all landlords can create unlimited listings.
  */
 export async function canCreateListing(supabase, landlordId) {
-  const plan = await getEffectivePlan(supabase, landlordId);
-  if (!plan) return { allowed: false, reason: 'No plan found' };
-
   const { count } = await supabase
     .from('listings')
     .select('listing_id', { count: 'exact', head: true })
     .eq('landlord_id', landlordId);
-
-  // Super Pro: allow beyond max_listings (overage billing applies)
-  const hasOverage = plan.overage_price_cents > 0;
-  if (count >= plan.max_listings && !hasOverage) {
-    return {
-      allowed: false,
-      reason: `Your ${plan.name} plan allows up to ${plan.max_listings} listing${plan.max_listings === 1 ? '' : 's'}. Upgrade to add more.`,
-      currentCount: count,
-      maxListings: plan.max_listings,
-      planId: plan.plan_id,
-    };
-  }
 
   return {
     allowed: true,
-    currentCount: count,
-    maxListings: plan.max_listings,
-    planId: plan.plan_id,
-    overage: hasOverage && count >= plan.max_listings,
+    currentCount: count || 0,
   };
-}
-
-/**
- * Report the current overage listing count to Stripe for Super Pro metered billing.
- * Uses action:'set' to replace the current usage with the actual count.
- * No-ops silently if the landlord has no active overage subscription item.
- */
-export async function reportOverageUsage(supabase, landlordId) {
-  const { data: sub } = await supabase
-    .from('subscriptions')
-    .select('stripe_overage_item_id')
-    .eq('landlord_id', landlordId)
-    .in('status', ['active', 'past_due', 'trialing'])
-    .single();
-
-  if (!sub?.stripe_overage_item_id) return;
-
-  const plan = await getEffectivePlan(supabase, landlordId);
-  if (!plan) return;
-
-  const { count } = await supabase
-    .from('listings')
-    .select('listing_id', { count: 'exact', head: true })
-    .eq('landlord_id', landlordId);
-
-  const overageCount = Math.max(0, (count ?? 0) - plan.max_listings);
-
-  const stripe = getStripe();
-  await stripe.subscriptionItems.createUsageRecord(sub.stripe_overage_item_id, {
-    quantity: overageCount,
-    timestamp: 'now',
-    action: 'set',
-  });
-}
-
-/**
- * Check if a landlord's plan allows featured listings.
- */
-export async function canFeatureListing(supabase, landlordId) {
-  const plan = await getEffectivePlan(supabase, landlordId);
-  if (!plan) return { allowed: false, reason: 'No plan found' };
-
-  const features = plan.features || {};
-  if (!features.featured_listings) {
-    return {
-      allowed: false,
-      reason: `Your ${plan.name} plan does not include featured listings. Upgrade to Pro or Super Pro.`,
-      planId: plan.plan_id,
-    };
-  }
-
-  return { allowed: true, planId: plan.plan_id };
 }

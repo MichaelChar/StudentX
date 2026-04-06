@@ -4,16 +4,15 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
-const PLAN_COLORS = {
-  free: 'bg-gray-100 text-gray-700',
-  pro: 'bg-gold/20 text-gold',
-  super_pro: 'bg-navy/10 text-navy',
+const TIER_STYLES = {
+  none: 'bg-gray-100 text-gray-700',
+  verified: 'bg-emerald-100 text-emerald-700',
+  verified_pro: 'bg-navy/10 text-navy',
 };
 
 export default function BillingSection() {
   const t = useTranslations('landlord.billing');
   const [billing, setBilling] = useState(null);
-  const [plans, setPlans] = useState([]);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
 
@@ -33,18 +32,11 @@ export default function BillingSection() {
       const token = await getToken();
       if (!token) return;
 
-      const [subRes, plansRes] = await Promise.all([
-        fetch('/api/landlord/billing/subscription', {
-          headers: { Authorization: `Bearer ${token}` },
-        }),
-        fetch('/api/landlord/billing/plans'),
-      ]);
+      const res = await fetch('/api/landlord/billing/subscription', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
-      if (subRes.ok) setBilling(await subRes.json());
-      if (plansRes.ok) {
-        const { plans: p } = await plansRes.json();
-        setPlans(p || []);
-      }
+      if (res.ok) setBilling(await res.json());
     } catch {
       // Billing info unavailable
     } finally {
@@ -52,7 +44,7 @@ export default function BillingSection() {
     }
   }
 
-  async function handleCheckout(planId) {
+  async function handleCheckout(tier) {
     setActionLoading(true);
     try {
       const token = await getToken();
@@ -62,7 +54,7 @@ export default function BillingSection() {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ planId }),
+        body: JSON.stringify({ tier }),
       });
 
       if (res.ok) {
@@ -107,27 +99,30 @@ export default function BillingSection() {
     );
   }
 
-  const currentPlanId = billing?.plan?.planId || 'free';
-  const usage = billing?.usage;
+  const currentTier = billing?.verifiedTier || 'none';
   const sub = billing?.subscription;
+  const listingsCount = billing?.usage?.listingsCount || 0;
 
   return (
     <div className="space-y-6">
-      {/* Current plan & usage */}
+      {/* Current status */}
       <div className="border border-gray-200 rounded-xl p-5 bg-white">
         <div className="flex items-center justify-between mb-4">
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-heading font-semibold text-navy text-lg">
-                {billing?.plan?.name || t('planBadgeFree')} {t('planSuffix')}
+                {t('freeListings')}
               </h3>
-              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${PLAN_COLORS[currentPlanId] || PLAN_COLORS.free}`}>
-                {currentPlanId === 'free' ? t('planBadgeFree') : t('planBadgeActive')}
+              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${TIER_STYLES[currentTier]}`}>
+                {currentTier === 'none' ? t('tierFree') : currentTier === 'verified_pro' ? t('tierVerifiedPro') : t('tierVerified')}
               </span>
             </div>
+            <p className="text-sm text-gray-dark/60 mt-1">
+              {t('listingsCount', { count: listingsCount })}
+            </p>
             {sub && (
               <p className="text-sm text-gray-dark/60 mt-1">
-                {sub.billingInterval === 'annual' ? t('billingAnnual') : t('billingMonthly')} {t('billingSuffix')}
+                {t('billingAnnual')} {t('billingSuffix')}
                 {sub.cancelAtPeriodEnd && ` — ${t('cancelAtPeriodEnd')}`}
                 {sub.currentPeriodEnd && (
                   <> · {t('renews')} {new Date(sub.currentPeriodEnd).toLocaleDateString()}</>
@@ -145,78 +140,90 @@ export default function BillingSection() {
             </button>
           )}
         </div>
-
-        {/* Usage bar */}
-        {usage && (
-          <div>
-            <div className="flex justify-between text-sm mb-1">
-              <span className="text-gray-dark/60">{t('listingsUsed')}</span>
-              <span className="font-medium text-navy">
-                {usage.listingsUsed} / {usage.listingsMax}
-              </span>
-            </div>
-            <div className="w-full bg-gray-100 rounded-full h-2">
-              <div
-                className="bg-gold rounded-full h-2 transition-all"
-                style={{ width: `${Math.min(100, (usage.listingsUsed / usage.listingsMax) * 100)}%` }}
-              />
-            </div>
-          </div>
-        )}
       </div>
 
-      {/* Upgrade plans */}
-      {plans.length > 0 && (
+      {/* Verification tiers — shown to non-verified landlords */}
+      {currentTier === 'none' && (
         <div>
           <h3 className="font-heading font-semibold text-navy text-base mb-3">
-            {currentPlanId === 'free' ? t('upgradePlan') : t('availablePlans')}
+            {t('boostListings')}
           </h3>
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            {plans
-              .filter((p) => p.plan_id !== 'free')
-              .map((plan) => {
-                const isCurrent = plan.plan_id === currentPlanId;
-                const annualPrice = (plan.annual_price_cents / 100).toFixed(0);
-                const hasOverage = plan.overage_price_cents > 0;
-                return (
-                  <div
-                    key={plan.plan_id}
-                    className={`border rounded-xl p-4 ${isCurrent ? 'border-gold bg-gold/5' : 'border-gray-200 bg-white'}`}
-                  >
-                    <h4 className="font-heading font-semibold text-navy">{plan.name}</h4>
-                    <p className="text-sm text-gray-dark/60 mt-1">{plan.description}</p>
-                    <div className="mt-3">
-                      <span className="text-2xl font-bold text-navy">€{annualPrice}</span>
-                      <span className="text-sm text-gray-dark/60">{t('perYear')}</span>
-                    </div>
-                    <p className="text-sm text-gray-dark/60 mt-1">
-                      {t('upToListings', { count: plan.max_listings })}
-                    </p>
-                    {hasOverage && (
-                      <p className="text-xs text-gray-dark/50 mt-0.5">
-                        {t('overagePrice', { price: (plan.overage_price_cents / 100).toFixed(0) })}
-                      </p>
-                    )}
+          <p className="text-sm text-gray-dark/60 mb-4">
+            {t('verifiedDescription')}
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {/* Verified */}
+            <div className="border border-gray-200 rounded-xl p-5 bg-white">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500 text-white">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  {t('tierVerified')}
+                </span>
+              </div>
+              <div className="mt-2">
+                <span className="text-2xl font-bold text-navy">&euro;49</span>
+                <span className="text-sm text-gray-dark/60">{t('perYear')}</span>
+              </div>
+              <ul className="mt-3 space-y-1.5 text-sm text-gray-dark/70">
+                <li>{t('benefitBadge')}</li>
+                <li>{t('benefitSearchBoost')}</li>
+              </ul>
+              <button
+                onClick={() => handleCheckout('verified')}
+                disabled={actionLoading}
+                className="mt-4 w-full text-sm px-3 py-2 rounded-lg bg-emerald-500 text-white font-medium hover:bg-emerald-600 transition-colors disabled:opacity-50"
+              >
+                {t('getVerified')}
+              </button>
+            </div>
 
-                    {isCurrent ? (
-                      <div className="mt-4 text-center text-sm font-medium text-gold">
-                        {t('currentPlanBadge')}
-                      </div>
-                    ) : (
-                      <div className="mt-4">
-                        <button
-                          onClick={() => handleCheckout(plan.plan_id)}
-                          disabled={actionLoading}
-                          className="w-full text-sm px-3 py-2 rounded-lg bg-navy text-white font-medium hover:bg-navy/90 transition-colors disabled:opacity-50"
-                        >
-                          {t('upgradeButton', { price: annualPrice })}
-                        </button>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
+            {/* Verified Pro */}
+            <div className="border-2 border-navy rounded-xl p-5 bg-navy/5">
+              <div className="flex items-center gap-2 mb-2">
+                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-navy text-white">
+                  <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
+                  {t('tierVerifiedPro')}
+                </span>
+              </div>
+              <div className="mt-2">
+                <span className="text-2xl font-bold text-navy">&euro;99</span>
+                <span className="text-sm text-gray-dark/60">{t('perYear')}</span>
+              </div>
+              <ul className="mt-3 space-y-1.5 text-sm text-gray-dark/70">
+                <li>{t('benefitBadge')}</li>
+                <li>{t('benefitPriorityPlacement')}</li>
+                <li>{t('benefitAnalytics')}</li>
+              </ul>
+              <button
+                onClick={() => handleCheckout('verified_pro')}
+                disabled={actionLoading}
+                className="mt-4 w-full text-sm px-3 py-2 rounded-lg bg-navy text-white font-medium hover:bg-navy/90 transition-colors disabled:opacity-50"
+              >
+                {t('getVerifiedPro')}
+              </button>
+            </div>
           </div>
+        </div>
+      )}
+
+      {/* Upgrade option for Verified → Verified Pro */}
+      {currentTier === 'verified' && (
+        <div className="border-2 border-navy rounded-xl p-5 bg-navy/5">
+          <h3 className="font-heading font-semibold text-navy text-base mb-2">
+            {t('upgradeToVerifiedPro')}
+          </h3>
+          <p className="text-sm text-gray-dark/60 mb-3">{t('upgradeProDescription')}</p>
+          <ul className="mb-4 space-y-1.5 text-sm text-gray-dark/70">
+            <li>{t('benefitPriorityPlacement')}</li>
+            <li>{t('benefitAnalytics')}</li>
+          </ul>
+          <button
+            onClick={() => handleCheckout('verified_pro')}
+            disabled={actionLoading}
+            className="text-sm px-4 py-2 rounded-lg bg-navy text-white font-medium hover:bg-navy/90 transition-colors disabled:opacity-50"
+          >
+            {t('upgradeButton99')}
+          </button>
         </div>
       )}
     </div>

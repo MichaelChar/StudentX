@@ -23,12 +23,10 @@ export async function POST(request) {
   if (!landlord) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
   const body = await request.json();
-  const { planId } = body;
-  // Pro and Super Pro are annual-only; ignore any interval from client
-  const interval = 'annual';
+  const { tier } = body;
 
-  if (!planId || planId === 'free') {
-    return NextResponse.json({ error: 'Cannot checkout for free plan' }, { status: 400 });
+  if (!tier || !['verified', 'verified_pro'].includes(tier)) {
+    return NextResponse.json({ error: 'Invalid tier. Must be "verified" or "verified_pro".' }, { status: 400 });
   }
 
   const supabase = getSupabase();
@@ -37,7 +35,7 @@ export async function POST(request) {
   const { data: plan } = await supabase
     .from('subscription_plans')
     .select('*')
-    .eq('plan_id', planId)
+    .eq('plan_id', tier)
     .eq('is_active', true)
     .single();
 
@@ -45,10 +43,7 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Plan not found' }, { status: 404 });
   }
 
-  const stripePriceId = interval === 'annual'
-    ? plan.stripe_annual_price_id
-    : plan.stripe_monthly_price_id;
-
+  const stripePriceId = plan.stripe_annual_price_id;
   if (!stripePriceId) {
     return NextResponse.json({ error: 'Plan not configured for Stripe billing' }, { status: 400 });
   }
@@ -58,23 +53,16 @@ export async function POST(request) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-  // Base line item (annual price)
-  const lineItems = [{ price: stripePriceId, quantity: 1 }];
-
-  // Super Pro: add metered overage line item if configured
-  if (plan.stripe_overage_price_id) {
-    lineItems.push({ price: plan.stripe_overage_price_id });
-  }
-
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
     mode: 'subscription',
-    line_items: lineItems,
+    line_items: [{ price: stripePriceId, quantity: 1 }],
     success_url: `${siteUrl}/landlord/dashboard?billing=success`,
     cancel_url: `${siteUrl}/landlord/dashboard?billing=cancelled`,
     metadata: {
       landlord_id: landlord.landlord_id,
-      plan_id: planId,
+      plan_id: tier,
+      verified_tier: tier,
     },
   });
 

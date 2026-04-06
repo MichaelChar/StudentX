@@ -10,7 +10,7 @@ const LISTING_SELECT = `
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
-  landlords!inner ( name, contact_info ),
+  landlords!inner ( name, contact_info, verified_tier ),
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
@@ -145,9 +145,15 @@ export async function GET(request) {
       });
     }
 
-    // Sort: featured listings first, then by chosen sort field (nulls always last)
+    // Sort: verified_pro first, then verified, then free; within each tier by chosen sort field
+    const tierRank = { verified_pro: 0, verified: 1, none: 2 };
     results.sort((a, b) => {
-      // Featured listings always come first
+      // Verified tier takes priority
+      const rankA = tierRank[a.verified_tier] ?? 2;
+      const rankB = tierRank[b.verified_tier] ?? 2;
+      if (rankA !== rankB) return rankA - rankB;
+
+      // Featured listings next
       if (a.is_featured && !b.is_featured) return -1;
       if (!a.is_featured && b.is_featured) return 1;
 

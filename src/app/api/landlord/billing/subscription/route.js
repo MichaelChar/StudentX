@@ -1,15 +1,15 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
-import { getActiveSubscription, getEffectivePlan } from '@/lib/stripe';
+import { getActiveSubscription } from '@/lib/stripe';
 
-async function getLandlordId(userId) {
+async function getLandlord(userId) {
   const { data } = await getSupabase()
     .from('landlords')
-    .select('landlord_id')
+    .select('landlord_id, verified_tier')
     .eq('auth_user_id', userId)
     .single();
-  return data?.landlord_id ?? null;
+  return data;
 }
 
 export async function GET(request) {
@@ -19,17 +19,16 @@ export async function GET(request) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const landlordId = await getLandlordId(user.id);
-  if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  const landlord = await getLandlord(user.id);
+  if (!landlord) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
   const supabase = getSupabase();
-  const subscription = await getActiveSubscription(supabase, landlordId);
-  const plan = await getEffectivePlan(supabase, landlordId);
+  const subscription = await getActiveSubscription(supabase, landlord.landlord_id);
 
   const { count } = await supabase
     .from('listings')
     .select('listing_id', { count: 'exact', head: true })
-    .eq('landlord_id', landlordId);
+    .eq('landlord_id', landlord.landlord_id);
 
   return NextResponse.json({
     subscription: subscription ? {
@@ -39,15 +38,9 @@ export async function GET(request) {
       currentPeriodEnd: subscription.current_period_end,
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     } : null,
-    plan: {
-      planId: plan.plan_id,
-      name: plan.name,
-      maxListings: plan.max_listings,
-      features: plan.features,
-    },
+    verifiedTier: landlord.verified_tier || 'none',
     usage: {
-      listingsUsed: count || 0,
-      listingsMax: plan.max_listings,
+      listingsCount: count || 0,
     },
   });
 }

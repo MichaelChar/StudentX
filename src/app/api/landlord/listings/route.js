@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
-import { canCreateListing, reportOverageUsage } from '@/lib/stripe';
+import { canCreateListing } from '@/lib/stripe';
 
 const LANDLORD_LISTING_SELECT = `
   listing_id,
@@ -182,13 +182,6 @@ export async function POST(request) {
     if (amenityError) {
       console.error('Failed to insert amenities:', amenityError);
     }
-  }
-
-  // Report updated overage count to Stripe for Super Pro metered billing
-  if (limitCheck.overage) {
-    reportOverageUsage(getSupabase(), landlordId).catch((err) => {
-      console.error('Failed to report overage usage to Stripe:', err);
-    });
   }
 
   return NextResponse.json({ listing_id: listingId }, { status: 201 });

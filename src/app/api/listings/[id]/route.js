@@ -24,7 +24,7 @@ export async function GET(request, { params }) {
         rent ( monthly_price, currency, bills_included, deposit ),
         location ( address, neighborhood ),
         property_types ( name ),
-        landlords ( name, contact_info ),
+        landlords ( name, contact_info, verified_tier ),
         listing_amenities ( amenities ( amenity_id, name ) ),
         faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
       `
