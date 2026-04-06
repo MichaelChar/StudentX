@@ -74,6 +74,7 @@ export async function getEffectivePlan(supabase, landlordId) {
 
 /**
  * Check if a landlord can create another listing under their plan.
+ * Super Pro allows listings beyond max_listings (overage billing applies).
  */
 export async function canCreateListing(supabase, landlordId) {
   const plan = await getEffectivePlan(supabase, landlordId);
@@ -84,7 +85,9 @@ export async function canCreateListing(supabase, landlordId) {
     .select('listing_id', { count: 'exact', head: true })
     .eq('landlord_id', landlordId);
 
-  if (count >= plan.max_listings) {
+  // Super Pro: allow beyond max_listings (overage billing applies)
+  const hasOverage = plan.overage_price_cents > 0;
+  if (count >= plan.max_listings && !hasOverage) {
     return {
       allowed: false,
       reason: `Your ${plan.name} plan allows up to ${plan.max_listings} listing${plan.max_listings === 1 ? '' : 's'}. Upgrade to add more.`,
@@ -94,7 +97,46 @@ export async function canCreateListing(supabase, landlordId) {
     };
   }
 
-  return { allowed: true, currentCount: count, maxListings: plan.max_listings, planId: plan.plan_id };
+  return {
+    allowed: true,
+    currentCount: count,
+    maxListings: plan.max_listings,
+    planId: plan.plan_id,
+    overage: hasOverage && count >= plan.max_listings,
+  };
+}
+
+/**
+ * Report the current overage listing count to Stripe for Super Pro metered billing.
+ * Uses action:'set' to replace the current usage with the actual count.
+ * No-ops silently if the landlord has no active overage subscription item.
+ */
+export async function reportOverageUsage(supabase, landlordId) {
+  const { data: sub } = await supabase
+    .from('subscriptions')
+    .select('stripe_overage_item_id')
+    .eq('landlord_id', landlordId)
+    .in('status', ['active', 'past_due', 'trialing'])
+    .single();
+
+  if (!sub?.stripe_overage_item_id) return;
+
+  const plan = await getEffectivePlan(supabase, landlordId);
+  if (!plan) return;
+
+  const { count } = await supabase
+    .from('listings')
+    .select('listing_id', { count: 'exact', head: true })
+    .eq('landlord_id', landlordId);
+
+  const overageCount = Math.max(0, (count ?? 0) - plan.max_listings);
+
+  const stripe = getStripe();
+  await stripe.subscriptionItems.createUsageRecord(sub.stripe_overage_item_id, {
+    quantity: overageCount,
+    timestamp: 'now',
+    action: 'set',
+  });
 }
 
 /**
@@ -108,7 +150,7 @@ export async function canFeatureListing(supabase, landlordId) {
   if (!features.featured_listings) {
     return {
       allowed: false,
-      reason: `Your ${plan.name} plan does not include featured listings. Upgrade to Pro or Business.`,
+      reason: `Your ${plan.name} plan does not include featured listings. Upgrade to Pro or Super Pro.`,
       planId: plan.plan_id,
     };
   }

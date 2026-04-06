@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
-import { canFeatureListing } from '@/lib/stripe';
+import { canFeatureListing, reportOverageUsage } from '@/lib/stripe';
 
 async function getLandlordId(userId) {
   const { data } = await getSupabase()
@@ -192,6 +192,11 @@ export async function DELETE(request, { params }) {
     console.error('Failed to delete listing:', error);
     return NextResponse.json({ error: 'Failed to delete listing' }, { status: 500 });
   }
+
+  // Sync overage count with Stripe — no-ops if landlord is not on Super Pro
+  reportOverageUsage(getSupabase(), landlordId).catch((err) => {
+    console.error('Failed to sync overage usage after deletion:', err);
+  });
 
   return NextResponse.json({ deleted: id });
 }

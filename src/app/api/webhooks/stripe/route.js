@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { getStripe } from '@/lib/stripe';
+import { getStripe, reportOverageUsage } from '@/lib/stripe';
 import { createClient } from '@supabase/supabase-js';
 
 // Use service role for webhook handling (bypasses RLS)
@@ -58,6 +58,12 @@ export async function POST(request) {
       await handlePaymentFailed(supabase, invoice);
       break;
     }
+
+    case 'invoice.upcoming': {
+      const invoice = event.data.object;
+      await handleInvoiceUpcoming(supabase, invoice);
+      break;
+    }
   }
 
   return NextResponse.json({ received: true });
@@ -70,6 +76,17 @@ async function handleSubscriptionCreated(supabase, session) {
 
   const stripe = getStripe();
   const subscription = await stripe.subscriptions.retrieve(session.subscription);
+
+  // Look up the plan's overage price ID to find the metered subscription item
+  const { data: planData } = await supabase
+    .from('subscription_plans')
+    .select('stripe_overage_price_id')
+    .eq('plan_id', planId)
+    .single();
+
+  const overageItem = subscription.items.data.find(
+    (item) => item.price.id === planData?.stripe_overage_price_id
+  );
 
   // Cancel any existing active subscriptions for this landlord
   await supabase
@@ -88,6 +105,7 @@ async function handleSubscriptionCreated(supabase, session) {
     current_period_start: new Date(subscription.current_period_start * 1000).toISOString(),
     current_period_end: new Date(subscription.current_period_end * 1000).toISOString(),
     cancel_at_period_end: subscription.cancel_at_period_end,
+    stripe_overage_item_id: overageItem?.id || null,
   });
 }
 
@@ -134,4 +152,20 @@ async function handlePaymentFailed(supabase, invoice) {
       updated_at: new Date().toISOString(),
     })
     .eq('stripe_subscription_id', invoice.subscription);
+}
+
+// Sync overage usage with Stripe just before an invoice is finalized.
+// This ensures the metered charge reflects the actual listing count.
+async function handleInvoiceUpcoming(supabase, invoice) {
+  if (!invoice.customer) return;
+
+  const { data: landlord } = await supabase
+    .from('landlords')
+    .select('landlord_id')
+    .eq('stripe_customer_id', invoice.customer)
+    .single();
+
+  if (!landlord) return;
+
+  await reportOverageUsage(supabase, landlord.landlord_id);
 }

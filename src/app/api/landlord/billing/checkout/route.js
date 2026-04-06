@@ -23,7 +23,9 @@ export async function POST(request) {
   if (!landlord) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
   const body = await request.json();
-  const { planId, interval = 'monthly' } = body;
+  const { planId } = body;
+  // Pro and Super Pro are annual-only; ignore any interval from client
+  const interval = 'annual';
 
   if (!planId || planId === 'free') {
     return NextResponse.json({ error: 'Cannot checkout for free plan' }, { status: 400 });
@@ -56,10 +58,18 @@ export async function POST(request) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
+  // Base line item (annual price)
+  const lineItems = [{ price: stripePriceId, quantity: 1 }];
+
+  // Super Pro: add metered overage line item if configured
+  if (plan.stripe_overage_price_id) {
+    lineItems.push({ price: plan.stripe_overage_price_id });
+  }
+
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
     mode: 'subscription',
-    line_items: [{ price: stripePriceId, quantity: 1 }],
+    line_items: lineItems,
     success_url: `${siteUrl}/landlord/dashboard?billing=success`,
     cancel_url: `${siteUrl}/landlord/dashboard?billing=cancelled`,
     metadata: {
