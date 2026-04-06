@@ -15,10 +15,9 @@ const LISTING_SELECT = `
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
 
-// Fallback SELECT without verified_tier for pre-migration compatibility
+// Fallback SELECT without is_featured/verified_tier for pre-migration compatibility
 const LISTING_SELECT_FALLBACK = `
   listing_id,
-  is_featured,
   description,
   photos,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
