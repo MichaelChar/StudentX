@@ -67,7 +67,7 @@ export default function LandlordDashboardPage() {
   }
 
   async function handleDelete(listingId) {
-    if (!confirm('Delete this listing? This cannot be undone.')) return;
+    if (!confirm(t('deleteConfirm'))) return;
     setDeleting(listingId);
 
     const supabase = getSupabaseBrowser();
@@ -82,7 +82,7 @@ export default function LandlordDashboardPage() {
     if (res.ok) {
       setListings((prev) => prev.filter((l) => l.listing_id !== listingId));
     } else {
-      alert('Failed to delete listing. Please try again.');
+      alert(t('deleteError'));
     }
     setDeleting(null);
   }
@@ -111,7 +111,7 @@ export default function LandlordDashboardPage() {
       );
     } else {
       const data = await res.json().catch(() => ({}));
-      alert(data.error || 'Failed to update featured status.');
+      alert(data.error || t('featuredError'));
     }
     setTogglingFeatured(null);
   }
@@ -156,26 +156,26 @@ export default function LandlordDashboardPage() {
 
       {/* Billing & Subscription */}
       <div className="mb-8">
-        <h2 className="font-heading text-lg font-bold text-navy mb-4">Billing & Subscription</h2>
+        <h2 className="font-heading text-lg font-bold text-navy mb-4">{t('billingTitle')}</h2>
         <BillingSection />
       </div>
 
       {/* Analytics Overview */}
       {analytics && (listings.length > 0 || analytics.total_views > 0) && (
         <div className="mb-8">
-          <h2 className="font-heading text-lg font-bold text-navy mb-4">Analytics</h2>
+          <h2 className="font-heading text-lg font-bold text-navy mb-4">{t('analyticsTitle')}</h2>
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-            <StatCard label="Views (30d)" value={analytics.views_last_30_days} />
-            <StatCard label="Inquiries (30d)" value={analytics.inquiries_last_30_days} />
-            <StatCard label="Total Views" value={analytics.total_views} />
-            <StatCard label="Conversion" value={`${analytics.conversion_rate}%`} />
+            <StatCard label={t('views30d')} value={analytics.views_last_30_days} />
+            <StatCard label={t('inquiries30d')} value={analytics.inquiries_last_30_days} />
+            <StatCard label={t('totalViews')} value={analytics.total_views} />
+            <StatCard label={t('conversion')} value={`${analytics.conversion_rate}%`} />
           </div>
           {analytics.per_listing.length > 0 && (
             <div className="border border-gray-200 rounded-xl overflow-hidden">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="bg-gray-light text-gray-dark/60 text-xs">
-                    <th className="text-left px-4 py-2 font-medium">Listing</th>
+                    <th className="text-left px-4 py-2 font-medium">{t('listingColumn')}</th>
                     <th className="text-right px-4 py-2 font-medium">{t('views')}</th>
                     <th className="text-right px-4 py-2 font-medium">{t('inquiries')}</th>
                     <th className="text-right px-4 py-2 font-medium">{t('conversionRate')}</th>
@@ -228,7 +228,7 @@ export default function LandlordDashboardPage() {
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
                   <span className="font-heading font-semibold text-navy text-base truncate">
-                    {listing.location?.address || 'No address'}
+                    {listing.location?.address || t('noAddress')}
                   </span>
                   <span className="text-xs text-gray-dark/40 shrink-0">#{listing.listing_id}</span>
                   {listing.is_featured && (
@@ -243,7 +243,7 @@ export default function LandlordDashboardPage() {
                   <span>
                     {listing.rent?.monthly_price != null
                       ? `€${listing.rent.monthly_price}/mo`
-                      : 'Price on request'}
+                      : t('priceOnRequest')}
                   </span>
                 </div>
               </div>
@@ -265,7 +265,7 @@ export default function LandlordDashboardPage() {
                   target="_blank"
                   className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-dark/70 hover:border-navy hover:text-navy transition-colors"
                 >
-                  View
+                  {t('view')}
                 </Link>
                 <Link
                   href={`/landlord/listings/${listing.listing_id}/edit`}

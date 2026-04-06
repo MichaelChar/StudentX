@@ -17,6 +17,12 @@ export default function LandlordSignupPage() {
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+
+    if (password.length < 8) {
+      setError(t('passwordTooShort'));
+      return;
+    }
+
     setLoading(true);
 
     const supabase = getSupabaseBrowser();
@@ -38,8 +44,10 @@ export default function LandlordSignupPage() {
         body: JSON.stringify({ name }),
       });
       if (!res.ok) {
+        // Clean up auth session if profile creation fails
+        await supabase.auth.signOut();
         const { error: profileError } = await res.json();
-        setError(profileError || 'Failed to create landlord profile');
+        setError(profileError || t('profileCreateFailed'));
         setLoading(false);
         return;
       }

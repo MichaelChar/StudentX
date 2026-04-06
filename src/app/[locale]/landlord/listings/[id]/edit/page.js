@@ -5,8 +5,10 @@ import { useParams } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import ListingForm from '@/components/ListingForm';
+import { useTranslations } from 'next-intl';
 
 export default function EditListingPage() {
+  const t = useTranslations('landlord.editListing');
   const router = useRouter();
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState(null);
@@ -27,7 +29,7 @@ export default function EditListingPage() {
       });
 
       if (!res.ok) {
-        setError('Listing not found or you do not have permission to edit it.');
+        setError(t('notFoundError'));
         setLoading(false);
         return;
       }
@@ -64,6 +66,7 @@ export default function EditListingPage() {
       monthly_price: formData.monthly_price !== '' ? parseFloat(formData.monthly_price) : null,
       deposit: formData.deposit !== '' ? parseFloat(formData.deposit) : 0,
       sqm: formData.sqm !== '' ? parseInt(formData.sqm, 10) : null,
+      floor: formData.floor !== '' ? parseInt(formData.floor, 10) : null,
     };
 
     const res = await fetch(`/api/landlord/listings/${id}`, {
@@ -100,7 +103,7 @@ export default function EditListingPage() {
       <div className="mx-auto max-w-2xl px-4 py-12 text-center">
         <p className="text-red-600 mb-4">{error}</p>
         <Link href="/landlord/dashboard" className="text-gold hover:underline text-sm">
-          Back to dashboard
+          {t('backToDashboard')}
         </Link>
       </div>
     );
@@ -116,9 +119,9 @@ export default function EditListingPage() {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back to dashboard
+          {t('backToDashboard')}
         </Link>
-        <h1 className="font-heading text-2xl font-bold text-navy">Edit listing</h1>
+        <h1 className="font-heading text-2xl font-bold text-navy">{t('title')}</h1>
         <p className="text-sm text-gray-dark/50 mt-1">#{id}</p>
       </div>
 
@@ -126,7 +129,6 @@ export default function EditListingPage() {
         <ListingForm
           initialValues={initialValues}
           onSubmit={handleSubmit}
-          submitLabel="Save changes"
         />
       )}
     </div>

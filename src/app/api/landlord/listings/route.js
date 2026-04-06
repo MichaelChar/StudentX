@@ -80,9 +80,9 @@ export async function POST(request) {
   const body = await request.json();
 
   // Validate required fields
-  if (!body.address || !body.neighborhood || body.lat == null || body.lng == null || !body.property_type) {
+  if (!body.address || !body.neighborhood || !body.property_type) {
     return NextResponse.json(
-      { error: 'address, neighborhood, lat, lng, and property_type are required' },
+      { error: 'address, neighborhood, and property_type are required' },
       { status: 400 }
     );
   }
@@ -112,8 +112,8 @@ export async function POST(request) {
     .insert({
       address: body.address,
       neighborhood: body.neighborhood,
-      lat: parseFloat(body.lat),
-      lng: parseFloat(body.lng),
+      lat: body.lat != null && body.lat !== '' ? parseFloat(body.lat) : null,
+      lng: body.lng != null && body.lng !== '' ? parseFloat(body.lng) : null,
     })
     .select('location_id')
     .single();

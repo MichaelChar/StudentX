@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import ListingForm from '@/components/ListingForm';
+import { useTranslations } from 'next-intl';
 
 export default function NewListingPage() {
+  const t = useTranslations('landlord.newListing');
   const router = useRouter();
   const [token, setToken] = useState(null);
   const [checkingAuth, setCheckingAuth] = useState(true);
@@ -34,7 +36,7 @@ export default function NewListingPage() {
       monthly_price: formData.monthly_price ? parseFloat(formData.monthly_price) : null,
       deposit: formData.deposit ? parseFloat(formData.deposit) : 0,
       sqm: formData.sqm ? parseInt(formData.sqm, 10) : null,
-      floor: formData.floor !== '' ? formData.floor : null,
+      floor: formData.floor !== '' ? parseInt(formData.floor, 10) : null,
     };
 
     const res = await fetch('/api/landlord/listings', {
@@ -76,12 +78,12 @@ export default function NewListingPage() {
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
           </svg>
-          Back to dashboard
+          {t('backToDashboard')}
         </Link>
-        <h1 className="font-heading text-2xl font-bold text-navy">Add new listing</h1>
+        <h1 className="font-heading text-2xl font-bold text-navy">{t('title')}</h1>
       </div>
 
-      <ListingForm onSubmit={handleSubmit} submitLabel="Create listing" />
+      <ListingForm onSubmit={handleSubmit} />
     </div>
   );
 }
