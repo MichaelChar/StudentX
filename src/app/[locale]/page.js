@@ -332,6 +332,32 @@ export default function QuizPage() {
           </Link>
         </p>
       </section>
+
+      {/* How it works */}
+      <section className="mx-auto max-w-2xl px-4 pb-20">
+        <p className="uppercase tracking-[0.2em] text-xs font-heading font-semibold text-gray-dark/40 text-center mb-8">
+          {t('howItWorksTitle')}
+        </p>
+        <div className="grid grid-cols-3 gap-6">
+          {[
+            { num: '1', title: t('hiw1Title'), body: t('hiw1Body') },
+            { num: '2', title: t('hiw2Title'), body: t('hiw2Body') },
+            { num: '3', title: t('hiw3Title'), body: t('hiw3Body') },
+          ].map(({ num, title, body }) => (
+            <div key={num} className="text-center">
+              <div className="w-9 h-9 rounded-full bg-gold/10 text-gold font-heading font-bold text-sm flex items-center justify-center mx-auto mb-3">
+                {num}
+              </div>
+              <div className="font-heading font-semibold text-navy text-sm mb-1.5">
+                {title}
+              </div>
+              <p className="text-gray-dark/55 text-xs leading-relaxed">
+                {body}
+              </p>
+            </div>
+          ))}
+        </div>
+      </section>
     </>
   );
 }
