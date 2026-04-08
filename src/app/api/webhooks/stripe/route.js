@@ -91,11 +91,11 @@ async function handleSubscriptionCreated(supabase, session) {
     cancel_at_period_end: subscription.cancel_at_period_end,
   });
 
-  // Set verified status on landlord
+  // Set verified status and mark onboarding complete on landlord
   if (verifiedTier && ['verified', 'verified_pro'].includes(verifiedTier)) {
     await supabase
       .from('landlords')
-      .update({ verified_tier: verifiedTier })
+      .update({ verified_tier: verifiedTier, onboarding_completed: true })
       .eq('landlord_id', landlordId);
   }
 }
