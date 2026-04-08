@@ -128,7 +128,9 @@
     "estimated": "εκτ. ",
     "walkMin": "λεπτά πεζή",
     "transitMin": "λεπτά με ΜΜΜ",
-    "to": "έως"
+    "to": "έως",
+    "billsIncluded": "Κοινόχρηστα συμπεριλαμβάνονται",
+    "billsNotIncluded": "Χωρίς κοινόχρηστα"
   },
   "about": {
     "metaTitle": "Σχετικά με το StudentX",

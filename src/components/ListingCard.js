@@ -90,19 +90,26 @@ export default function ListingCard({ listing, faculty }) {
           </p>
         )}
 
-        {/* Amenity pills */}
-        {listing.amenities?.length > 0 && (
-          <div className="flex flex-wrap gap-1.5">
-            {listing.amenities.map((amenity) => (
-              <span
-                key={amenity}
-                className="text-[11px] px-2 py-0.5 rounded-full bg-gray-light text-gray-dark/70"
-              >
-                {amenity}
-              </span>
-            ))}
-          </div>
-        )}
+        {/* Bills badge + amenity pills */}
+        <div className="flex flex-wrap gap-1.5">
+          <span
+            className={`text-[11px] font-medium px-2 py-0.5 rounded-full ${
+              listing.bills_included
+                ? 'bg-green-100 text-green-700'
+                : 'bg-amber-100 text-amber-700'
+            }`}
+          >
+            {listing.bills_included ? t('billsIncluded') : t('billsNotIncluded')}
+          </span>
+          {listing.amenities?.map((amenity) => (
+            <span
+              key={amenity}
+              className="text-[11px] px-2 py-0.5 rounded-full bg-gray-light text-gray-dark/70"
+            >
+              {amenity}
+            </span>
+          ))}
+        </div>
       </div>
     </Link>
   );

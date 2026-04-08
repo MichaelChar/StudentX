@@ -136,7 +136,9 @@
     "estimated": "est ",
     "walkMin": "min walk",
     "transitMin": "min transit",
-    "to": "to"
+    "to": "to",
+    "billsIncluded": "Bills included",
+    "billsNotIncluded": "Bills not included"
   },
   "about": {
     "metaTitle": "About StudentX",
