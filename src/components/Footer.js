@@ -39,16 +39,6 @@ export default function Footer() {
             ))}
           </nav>
 
-          {/* CTA */}
-          <div>
-            <Link
-              href="/landlord/login"
-              className="inline-block bg-gold text-midnight text-sm font-semibold px-5 py-3 rounded-lg hover:bg-gold/90 transition-colors"
-            >
-              {t('listYourProperty')}
-            </Link>
-            <p className="text-white/40 text-xs mt-3">{t('forLandlords')}</p>
-          </div>
         </div>
 
         <div className="border-t border-white/10 mt-10 pt-6">
