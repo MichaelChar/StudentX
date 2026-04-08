@@ -259,6 +259,15 @@
       "availableFromLabel": "Available from",
       "rentalDurationLabel": "Rental duration",
       "rentalDurationPlaceholder": "e.g. 12 months, flexible",
+      "photosSection": "Photos",
+      "photosLabel": "Add photos",
+      "photosHint": "JPG, PNG or WebP · max 5 MB each · up to 10 photos",
+      "photosUploading": "Uploading…",
+      "photosRemove": "Remove",
+      "photosError": "Some files could not be uploaded.",
+      "photosFileTooLarge": "File exceeds 5 MB limit.",
+      "photosInvalidType": "Only JPG, PNG and WebP are allowed.",
+      "photosTooMany": "Maximum 10 photos allowed.",
       "amenitiesSection": "Amenities",
       "saving": "Saving…",
       "saveListing": "Save listing",
@@ -326,7 +335,8 @@
       "goToLogin": "Go to login",
       "passwordTooShort": "Password must be at least 8 characters.",
       "passwordMismatch": "Passwords do not match.",
-      "invalidLink": "This reset link is invalid or has expired. Please request a new one."
+      "invalidLink": "This reset link is invalid or has expired. Please request a new one.",
+      "requestNewLink": "Request a new reset link"
     }
   }
 }

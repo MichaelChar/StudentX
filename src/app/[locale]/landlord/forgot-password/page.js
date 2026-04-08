@@ -1,17 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, Link } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useTranslations } from 'next-intl';
 
-export default function LandlordLoginPage() {
-  const t = useTranslations('landlord.login');
-  const router = useRouter();
+export default function ForgotPasswordPage() {
+  const t = useTranslations('landlord.forgotPassword');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [submitted, setSubmitted] = useState(false);
+  const [error, setError] = useState('');
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -19,24 +18,39 @@ export default function LandlordLoginPage() {
     setLoading(true);
 
     const supabase = getSupabaseBrowser();
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    // Use current locale path directly so the recovery hash isn't lost on server redirect
+    const locale = window.location.pathname.split('/')[1] || 'el';
+    const redirectTo = `${window.location.origin}/${locale}/landlord/reset-password`;
+    const { error: authError } = await supabase.auth.resetPasswordForEmail(email, { redirectTo });
 
+    setLoading(false);
     if (authError) {
       setError(authError.message);
-      setLoading(false);
       return;
     }
+    setSubmitted(true);
+  }
 
-    router.push('/landlord/dashboard');
+  if (submitted) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <div className="w-full max-w-sm text-center">
+          <div className="mb-4 text-4xl">✉️</div>
+          <h1 className="font-heading text-2xl font-bold text-navy mb-2">{t('successTitle')}</h1>
+          <p className="text-sm text-gray-dark/60 mb-8">{t('successMessage')}</p>
+          <Link href="/landlord/login" className="text-gold font-medium hover:underline text-sm">
+            {t('backToLogin')}
+          </Link>
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4">
       <div className="w-full max-w-sm">
         <h1 className="font-heading text-2xl font-bold text-navy mb-2 text-center">{t('title')}</h1>
-        <p className="text-sm text-gray-dark/60 text-center mb-8">
-          {t('subtitle')}
-        </p>
+        <p className="text-sm text-gray-dark/60 text-center mb-8">{t('subtitle')}</p>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -51,26 +65,6 @@ export default function LandlordLoginPage() {
               onChange={(e) => setEmail(e.target.value)}
               className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold"
               placeholder={t('emailPlaceholder')}
-            />
-          </div>
-
-          <div>
-            <div className="flex items-center justify-between mb-1">
-              <label htmlFor="password" className="block text-sm font-medium text-gray-dark">
-                {t('passwordLabel')}
-              </label>
-              <Link href="/landlord/forgot-password" className="text-xs text-gold hover:underline">
-                {t('forgotPassword')}
-              </Link>
-            </div>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold"
-              placeholder={t('passwordPlaceholder')}
             />
           </div>
 
@@ -89,10 +83,9 @@ export default function LandlordLoginPage() {
           </button>
         </form>
 
-        <p className="mt-6 text-sm text-center text-gray-dark/60">
-          {t('noAccount')}{' '}
-          <Link href="/landlord/signup" className="text-gold font-medium hover:underline">
-            {t('signupLink')}
+        <p className="mt-6 text-sm text-center">
+          <Link href="/landlord/login" className="text-gold font-medium hover:underline">
+            {t('backToLogin')}
           </Link>
         </p>
       </div>
