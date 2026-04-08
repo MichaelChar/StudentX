@@ -3,10 +3,11 @@
 import { useState } from 'react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
-import { useTranslations } from 'next-intl';
+import { useLocale, useTranslations } from 'next-intl';
 
 export default function LandlordSignupPage() {
   const t = useTranslations('landlord.signup');
+  const locale = useLocale();
   const router = useRouter();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
@@ -26,7 +27,14 @@ export default function LandlordSignupPage() {
     setLoading(true);
 
     const supabase = getSupabaseBrowser();
-    const { data: authData, error: authError } = await supabase.auth.signUp({ email, password });
+    const siteUrl = window.location.origin;
+    const { data: authData, error: authError } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        emailRedirectTo: `${siteUrl}/${locale}/landlord/login`,
+      },
+    });
     if (authError) {
       setError(authError.message);
       setLoading(false);
