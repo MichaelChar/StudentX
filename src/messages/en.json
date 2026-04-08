@@ -346,6 +346,19 @@
       "passwordMismatch": "Passwords do not match.",
       "invalidLink": "This reset link is invalid or has expired. Please request a new one.",
       "requestNewLink": "Request a new reset link"
+    },
+    "inquiries": {
+      "title": "Inquiries",
+      "backToDashboard": "Back to dashboard",
+      "noInquiries": "No inquiries yet.",
+      "loadError": "Failed to load inquiries.",
+      "updateError": "Failed to update inquiry.",
+      "status_pending": "New",
+      "status_replied": "Replied",
+      "status_closed": "Closed",
+      "markReplied": "Mark as replied",
+      "markClosed": "Close",
+      "reopen": "Reopen"
     }
   }
 }

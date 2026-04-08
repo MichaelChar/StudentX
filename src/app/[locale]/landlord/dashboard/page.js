@@ -11,6 +11,7 @@ export default function LandlordDashboardPage() {
   const router = useRouter();
   const [listings, setListings] = useState([]);
   const [analytics, setAnalytics] = useState(null);
+  const [pendingInquiryCount, setPendingInquiryCount] = useState(0);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(null);
@@ -31,6 +32,7 @@ export default function LandlordDashboardPage() {
       await Promise.all([
         fetchListings(session.access_token),
         fetchAnalytics(session.access_token),
+        fetchPendingInquiries(session.access_token),
       ]);
     }
     init();
@@ -53,6 +55,20 @@ export default function LandlordDashboardPage() {
       setError('Failed to load listings');
     } finally {
       setLoading(false);
+    }
+  }
+
+  async function fetchPendingInquiries(accessToken) {
+    try {
+      const res = await fetch('/api/landlord/inquiries?status=pending', {
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (res.ok) {
+        const { inquiries } = await res.json();
+        setPendingInquiryCount(inquiries?.length ?? 0);
+      }
+    } catch {
+      // non-critical
     }
   }
 
@@ -143,6 +159,17 @@ export default function LandlordDashboardPage() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-heading text-2xl font-bold text-navy">{t('title')}</h1>
         <div className="flex items-center gap-3">
+          <Link
+            href="/landlord/inquiries"
+            className="relative text-sm px-4 py-2.5 rounded-lg border border-gray-200 text-gray-dark/70 hover:border-navy hover:text-navy transition-colors"
+          >
+            {t('inquiries')}
+            {pendingInquiryCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-gold text-white text-[10px] font-bold w-4.5 h-4.5 min-w-[1.1rem] min-h-[1.1rem] flex items-center justify-center rounded-full px-1">
+                {pendingInquiryCount}
+              </span>
+            )}
+          </Link>
           <Link
             href="/landlord/listings/new"
             className="bg-gold text-white font-heading font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-gold/90 transition-colors"
