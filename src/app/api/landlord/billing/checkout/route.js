@@ -23,7 +23,7 @@ export async function POST(request) {
   if (!landlord) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
   const body = await request.json();
-  const { tier } = body;
+  const { tier, returnTo } = body;
 
   if (!tier || !['verified', 'verified_pro'].includes(tier)) {
     return NextResponse.json({ error: 'Invalid tier. Must be "verified" or "verified_pro".' }, { status: 400 });
@@ -53,12 +53,20 @@ export async function POST(request) {
 
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
+  // Build line items — add overage metered price for verified_pro
+  const lineItems = [{ price: stripePriceId, quantity: 1 }];
+  if (tier === 'verified_pro' && plan.stripe_overage_price_id) {
+    lineItems.push({ price: plan.stripe_overage_price_id });
+  }
+
   const session = await stripe.checkout.sessions.create({
     customer: customerId,
     mode: 'subscription',
-    line_items: [{ price: stripePriceId, quantity: 1 }],
+    line_items: lineItems,
     success_url: `${siteUrl}/landlord/dashboard?billing=success`,
-    cancel_url: `${siteUrl}/landlord/dashboard?billing=cancelled`,
+    cancel_url: returnTo === 'onboarding'
+      ? `${siteUrl}/landlord/onboarding`
+      : `${siteUrl}/landlord/dashboard?billing=cancelled`,
     metadata: {
       landlord_id: landlord.landlord_id,
       plan_id: tier,
