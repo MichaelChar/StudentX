@@ -48,31 +48,39 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Plan not configured for Stripe billing' }, { status: 400 });
   }
 
-  const customerId = await getOrCreateCustomer(supabase, landlord.landlord_id, landlord.email, landlord.name);
-  const stripe = getStripe();
+  try {
+    const customerId = await getOrCreateCustomer(supabase, landlord.landlord_id, landlord.email, landlord.name);
+    const stripe = getStripe();
 
-  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
-  // Build line items — add overage metered price for verified_pro
-  const lineItems = [{ price: stripePriceId, quantity: 1 }];
-  if (tier === 'verified_pro' && plan.stripe_overage_price_id) {
-    lineItems.push({ price: plan.stripe_overage_price_id });
+    // Build line items — add overage metered price for verified_pro
+    const lineItems = [{ price: stripePriceId, quantity: 1 }];
+    if (tier === 'verified_pro' && plan.stripe_overage_price_id) {
+      lineItems.push({ price: plan.stripe_overage_price_id });
+    }
+
+    const session = await stripe.checkout.sessions.create({
+      customer: customerId,
+      mode: 'subscription',
+      line_items: lineItems,
+      success_url: `${siteUrl}/landlord/dashboard?billing=success`,
+      cancel_url: returnTo === 'onboarding'
+        ? `${siteUrl}/landlord/onboarding`
+        : `${siteUrl}/landlord/dashboard?billing=cancelled`,
+      metadata: {
+        landlord_id: landlord.landlord_id,
+        plan_id: tier,
+        verified_tier: tier,
+      },
+    });
+
+    return NextResponse.json({ url: session.url });
+  } catch (err) {
+    console.error('Stripe checkout error:', err);
+    return NextResponse.json(
+      { error: err.message || 'Failed to create checkout session' },
+      { status: 500 }
+    );
   }
-
-  const session = await stripe.checkout.sessions.create({
-    customer: customerId,
-    mode: 'subscription',
-    line_items: lineItems,
-    success_url: `${siteUrl}/landlord/dashboard?billing=success`,
-    cancel_url: returnTo === 'onboarding'
-      ? `${siteUrl}/landlord/onboarding`
-      : `${siteUrl}/landlord/dashboard?billing=cancelled`,
-    metadata: {
-      landlord_id: landlord.landlord_id,
-      plan_id: tier,
-      verified_tier: tier,
-    },
-  });
-
-  return NextResponse.json({ url: session.url });
 }

@@ -8,7 +8,7 @@ export function getStripe() {
     if (!key) {
       throw new Error('Missing STRIPE_SECRET_KEY environment variable');
     }
-    _stripe = new Stripe(key, { apiVersion: '2024-12-18.acacia' });
+    _stripe = new Stripe(key);
   }
   return _stripe;
 }
@@ -71,7 +71,8 @@ export async function getVerifiedTier(supabase, landlordId) {
 
 /**
  * Check if a landlord can create another listing.
- * Under the free model, all landlords can create unlimited listings.
+ * Free landlords: unlimited. Verified: up to max_listings from plan.
+ * Verified Pro with overage: always allowed (extra properties billed at €5/mo).
  */
 export async function canCreateListing(supabase, landlordId) {
   const { count } = await supabase
@@ -79,8 +80,29 @@ export async function canCreateListing(supabase, landlordId) {
     .select('listing_id', { count: 'exact', head: true })
     .eq('landlord_id', landlordId);
 
+  const currentCount = count || 0;
+
+  // Check active subscription
+  const sub = await getActiveSubscription(supabase, landlordId);
+  if (!sub) {
+    // No subscription = free tier, unlimited
+    return { allowed: true, currentCount };
+  }
+
+  const plan = sub.subscription_plans;
+  if (!plan) {
+    return { allowed: true, currentCount };
+  }
+
+  // Plans with overage pricing always allow creation (extra properties are billed)
+  if (plan.overage_price_cents > 0) {
+    return { allowed: true, currentCount, maxListings: plan.max_listings, hasOverage: true };
+  }
+
+  // Plans without overage enforce the hard cap
   return {
-    allowed: true,
-    currentCount: count || 0,
+    allowed: currentCount < plan.max_listings,
+    currentCount,
+    maxListings: plan.max_listings,
   };
 }

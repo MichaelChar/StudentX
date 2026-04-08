@@ -88,9 +88,12 @@ export async function POST(request) {
   }
 
   const authedSupabase = getSupabaseWithToken(token);
+  const supabase = getSupabase();
 
-  // Insert rent row
-  const { data: rentData, error: rentError } = await authedSupabase
+  // Insert rent row (use service-role client because the RLS ALL policy on
+  // rent requires the rent_id to already appear in listings, which blocks the
+  // read-back on a freshly inserted row before the listing is created)
+  const { data: rentData, error: rentError } = await supabase
     .from('rent')
     .insert({
       monthly_price: body.monthly_price || null,
@@ -106,8 +109,8 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Failed to create listing' }, { status: 500 });
   }
 
-  // Insert location row
-  const { data: locationData, error: locationError } = await authedSupabase
+  // Insert location row (same RLS issue as rent — use service-role client)
+  const { data: locationData, error: locationError } = await supabase
     .from('location')
     .insert({
       address: body.address,
