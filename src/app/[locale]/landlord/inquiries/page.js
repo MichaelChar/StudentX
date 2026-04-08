@@ -30,6 +30,10 @@ export default function LandlordInquiriesPage() {
         router.replace('/landlord/login');
         return;
       }
+      if (!session.user.email_confirmed_at) {
+        router.replace('/landlord/verify-email');
+        return;
+      }
       setToken(session.access_token);
       // Ensure landlord profile exists before fetching inquiries
       await fetch('/api/landlord/profile', {
