@@ -29,6 +29,15 @@ export default function LandlordDashboardPage() {
         router.replace('/landlord/verify-email');
         return;
       }
+      // Ensure landlord profile exists before fetching data
+      await fetch('/api/landlord/profile', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${session.access_token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({}),
+      });
       await Promise.all([
         fetchListings(session.access_token),
         fetchAnalytics(session.access_token),
