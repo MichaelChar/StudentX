@@ -101,26 +101,19 @@ export default function BillingSection() {
 
   const currentTier = billing?.verifiedTier || 'none';
   const sub = billing?.subscription;
-  const listingsCount = billing?.usage?.listingsCount || 0;
 
   return (
     <div className="space-y-6">
-      {/* Current status */}
-      <div className="border border-gray-200 rounded-xl p-5 bg-white">
-        <div className="flex items-center justify-between mb-4">
-          <div>
-            <div className="flex items-center gap-2">
-              <h3 className="font-heading font-semibold text-navy text-lg">
-                {t('freeListings')}
-              </h3>
-              <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${TIER_STYLES[currentTier]}`}>
-                {currentTier === 'none' ? t('tierFree') : currentTier === 'verified_pro' ? t('tierVerifiedPro') : t('tierVerified')}
-              </span>
-            </div>
-            <p className="text-sm text-gray-dark/60 mt-1">
-              {t('listingsCount', { count: listingsCount })}
-            </p>
-            {sub && (
+      {/* Subscription status for verified landlords */}
+      {sub && (
+        <div className="border border-gray-200 rounded-xl p-5 bg-white">
+          <div className="flex items-center justify-between">
+            <div>
+              <div className="flex items-center gap-2">
+                <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${TIER_STYLES[currentTier]}`}>
+                  {currentTier === 'verified_pro' ? t('tierVerifiedPro') : t('tierVerified')}
+                </span>
+              </div>
               <p className="text-sm text-gray-dark/60 mt-1">
                 {t('billingAnnual')} {t('billingSuffix')}
                 {sub.cancelAtPeriodEnd && ` — ${t('cancelAtPeriodEnd')}`}
@@ -128,9 +121,7 @@ export default function BillingSection() {
                   <> · {t('renews')} {new Date(sub.currentPeriodEnd).toLocaleDateString()}</>
                 )}
               </p>
-            )}
-          </div>
-          {sub && (
+            </div>
             <button
               onClick={handleManageBilling}
               disabled={actionLoading}
@@ -138,19 +129,13 @@ export default function BillingSection() {
             >
               {t('manageBilling')}
             </button>
-          )}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Verification tiers — shown to non-verified landlords */}
       {currentTier === 'none' && (
         <div>
-          <h3 className="font-heading font-semibold text-navy text-base mb-3">
-            {t('boostListings')}
-          </h3>
-          <p className="text-sm text-gray-dark/60 mb-4">
-            {t('verifiedDescription')}
-          </p>
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Verified */}
             <div className="border border-gray-200 rounded-xl p-5 bg-white">
