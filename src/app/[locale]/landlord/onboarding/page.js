@@ -67,30 +67,25 @@ export default function LandlordOnboardingPage() {
     setStep(2);
   }
 
-  async function handleProceed() {
+  function handleProceed() {
     setSubmitting(true);
     setError('');
-    try {
-      const res = await fetch('/api/landlord/billing/checkout', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ tier: selectedTier, returnTo: 'onboarding' }),
-      });
-      if (!res.ok) {
-        const { error: e } = await res.json();
-        setError(e || 'Something went wrong');
-        setSubmitting(false);
-        return;
-      }
-      const { url } = await res.json();
-      window.location.href = url;
-    } catch {
-      setError('Something went wrong. Please try again.');
-      setSubmitting(false);
+
+    const count = parseInt(exactCount, 10) || 0;
+    let stripeUrl;
+
+    if (selectedTier === 'verified') {
+      // superLandlord (1-5 properties)
+      stripeUrl = 'https://buy.stripe.com/test_4gM6oHb98dxKaqBewHawo03';
+    } else if (selectedTier === 'verified_pro' && count > 12) {
+      // superLandlord Heavy + additional properties (13+)
+      stripeUrl = 'https://buy.stripe.com/test_5kQcN55OO51egOZ3S3awo04';
+    } else {
+      // superLandlord Heavy (6-12 properties)
+      stripeUrl = 'https://buy.stripe.com/test_bJe7sLdhg0KY7ep3S3awo00';
     }
+
+    window.location.href = stripeUrl;
   }
 
   if (loading) {
