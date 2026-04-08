@@ -9,6 +9,7 @@ import { useTranslations } from 'next-intl';
 export default function LandlordDashboardPage() {
   const t = useTranslations('landlord.dashboard');
   const router = useRouter();
+  const [landlordName, setLandlordName] = useState('');
   const [listings, setListings] = useState([]);
   const [analytics, setAnalytics] = useState(null);
   const [pendingInquiryCount, setPendingInquiryCount] = useState(0);
@@ -30,7 +31,7 @@ export default function LandlordDashboardPage() {
         return;
       }
       // Ensure landlord profile exists before fetching data
-      await fetch('/api/landlord/profile', {
+      const profileRes = await fetch('/api/landlord/profile', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -38,6 +39,10 @@ export default function LandlordDashboardPage() {
         },
         body: JSON.stringify({}),
       });
+      if (profileRes.ok) {
+        const { landlord } = await profileRes.json();
+        if (landlord?.name) setLandlordName(landlord.name);
+      }
       await Promise.all([
         fetchListings(session.access_token),
         fetchAnalytics(session.access_token),
@@ -165,6 +170,9 @@ export default function LandlordDashboardPage() {
 
   return (
     <div className="mx-auto max-w-4xl px-4 py-8 md:py-12">
+      {landlordName && (
+        <p className="text-lg text-gray-dark/70 mb-2">{t('welcome', { name: landlordName })}</p>
+      )}
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-heading text-2xl font-bold text-navy">{t('title')}</h1>
         <div className="flex items-center gap-3">

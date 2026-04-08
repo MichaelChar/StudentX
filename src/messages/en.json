@@ -198,6 +198,7 @@
       "profileCreateFailed": "Failed to create landlord profile. Please try again."
     },
     "dashboard": {
+      "welcome": "Welcome back, {name}!",
       "title": "My listings",
       "addListing": "Add listing",
       "loading": "Loading…",
