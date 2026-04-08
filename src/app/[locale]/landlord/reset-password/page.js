@@ -13,7 +13,7 @@ export default function ResetPasswordPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState(false);
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(null); // null = waiting, true = ready, false = invalid
 
   useEffect(() => {
     // Supabase processes the recovery token from the URL hash automatically
@@ -22,9 +22,19 @@ export default function ResetPasswordPage() {
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'PASSWORD_RECOVERY') {
         setReady(true);
+      } else if (event === 'SIGNED_OUT' || event === 'TOKEN_REFRESHED') {
+        // Token was invalid or expired — no recovery event will come
+        setReady((prev) => (prev === null ? false : prev));
       }
     });
-    return () => subscription.unsubscribe();
+    // Fallback: if no auth event fires within 5s, treat as invalid link
+    const timeout = setTimeout(() => {
+      setReady((prev) => (prev === null ? false : prev));
+    }, 5000);
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(timeout);
+    };
   }, []);
 
   async function handleSubmit(e) {
@@ -67,7 +77,17 @@ export default function ResetPasswordPage() {
     );
   }
 
-  if (!ready) {
+  if (ready === null) {
+    return (
+      <div className="min-h-[80vh] flex items-center justify-center px-4">
+        <div className="w-full max-w-sm text-center">
+          <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto" />
+        </div>
+      </div>
+    );
+  }
+
+  if (ready === false) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center px-4">
         <div className="w-full max-w-sm text-center">
