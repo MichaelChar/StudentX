@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo } from 'react';
-import { useRouter } from '@/i18n/navigation';
+import { useRouter, Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 
 function getSemesterDates(duration) {
@@ -325,6 +325,12 @@ export default function QuizPage() {
             {t('findHousing')}
           </button>
         </form>
+
+        <p className="mt-5 text-center text-sm text-gray-dark/50">
+          <Link href="/results" className="hover:text-gold transition-colors">
+            {t('socialProof')}
+          </Link>
+        </p>
       </section>
     </>
   );
