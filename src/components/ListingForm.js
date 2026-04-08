@@ -346,9 +346,6 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
             <span className="text-sm text-gray-dark">{t('billsIncluded')}</span>
           </label>
 
-          <p className="text-xs text-gray-dark/50 leading-relaxed">
-            {t('pricingTip')}
-          </p>
         </div>
       </section>
 
