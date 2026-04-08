@@ -1,15 +1,22 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import Image from 'next/image';
 import { useTranslations } from 'next-intl';
+import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 const NEIGHBORHOODS_FALLBACK = [
   'Ano Poli', 'Center', 'Faliro', 'Kalamaria', 'Kentro',
   'Ladadika', 'Neapoli', 'Toumba', 'Vardaris',
 ];
 
+const MAX_PHOTOS = 10;
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
+
 export default function ListingForm({ initialValues = {}, onSubmit, submitLabel }) {
   const t = useTranslations('landlord.listingForm');
+  const fileInputRef = useRef(null);
   const [form, setForm] = useState({
     address: '',
     neighborhood: '',
@@ -25,6 +32,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     available_from: '',
     rental_duration: '',
     amenity_ids: [],
+    photos: [],
     ...initialValues,
   });
 
@@ -32,6 +40,8 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   const [amenities, setAmenities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const [uploading, setUploading] = useState(false);
+  const [photoError, setPhotoError] = useState('');
 
   useEffect(() => {
     async function loadOptions() {
@@ -62,6 +72,63 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
         ? prev.amenity_ids.filter((id) => id !== amenityId)
         : [...prev.amenity_ids, amenityId],
     }));
+  }
+
+  async function handlePhotoFiles(files) {
+    setPhotoError('');
+    const current = form.photos || [];
+    const remaining = MAX_PHOTOS - current.length;
+    if (remaining <= 0) {
+      setPhotoError(t('photosTooMany'));
+      return;
+    }
+
+    const toUpload = Array.from(files).slice(0, remaining);
+    for (const file of toUpload) {
+      if (!ALLOWED_TYPES.includes(file.type)) {
+        setPhotoError(t('photosInvalidType'));
+        return;
+      }
+      if (file.size > MAX_FILE_SIZE) {
+        setPhotoError(t('photosFileTooLarge'));
+        return;
+      }
+    }
+
+    setUploading(true);
+    try {
+      const supabase = getSupabaseBrowser();
+      const { data: { session } } = await supabase.auth.getSession();
+      const userId = session?.user?.id || 'anon';
+
+      const uploaded = [];
+      for (const file of toUpload) {
+        const ext = file.name.split('.').pop();
+        const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
+        const { error: uploadError } = await supabase.storage
+          .from('listing-photos')
+          .upload(path, file, { upsert: false });
+        if (uploadError) {
+          setPhotoError(t('photosError'));
+          continue;
+        }
+        const { data: { publicUrl } } = supabase.storage
+          .from('listing-photos')
+          .getPublicUrl(path);
+        uploaded.push(publicUrl);
+      }
+
+      if (uploaded.length > 0) {
+        setForm((prev) => ({ ...prev, photos: [...(prev.photos || []), ...uploaded] }));
+      }
+    } finally {
+      setUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  }
+
+  function removePhoto(url) {
+    setForm((prev) => ({ ...prev, photos: (prev.photos || []).filter((p) => p !== url) }));
   }
 
   async function handleSubmit(e) {
@@ -299,6 +366,83 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               placeholder={t('rentalDurationPlaceholder')}
             />
           </div>
+        </div>
+      </section>
+
+      {/* Photos */}
+      <section>
+        <h2 className="font-heading font-semibold text-navy mb-4 text-sm uppercase tracking-wider">
+          {t('photosSection')}
+        </h2>
+        <div className="space-y-4">
+          {/* Previews */}
+          {(form.photos || []).length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              {(form.photos || []).map((url, i) => (
+                <div key={url} className="relative group aspect-[4/3] rounded-lg overflow-hidden bg-gray-light">
+                  <Image
+                    src={url}
+                    alt={`Photo ${i + 1}`}
+                    fill
+                    className="object-cover"
+                    sizes="(max-width: 640px) 50vw, 33vw"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => removePhoto(url)}
+                    className="absolute top-1.5 right-1.5 bg-white/90 hover:bg-white text-gray-dark rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                    aria-label={t('photosRemove')}
+                  >
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Upload button */}
+          {(form.photos || []).length < MAX_PHOTOS && (
+            <div>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                multiple
+                className="sr-only"
+                id="photo-upload"
+                onChange={(e) => handlePhotoFiles(e.target.files)}
+                disabled={uploading}
+              />
+              <label
+                htmlFor="photo-upload"
+                className={`inline-flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-200 rounded-lg text-sm text-gray-dark/60 hover:border-gold/60 hover:text-navy cursor-pointer transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+              >
+                {uploading ? (
+                  <>
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+                    </svg>
+                    {t('photosUploading')}
+                  </>
+                ) : (
+                  <>
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                    </svg>
+                    {t('photosLabel')}
+                  </>
+                )}
+              </label>
+              <p className="mt-1.5 text-xs text-gray-dark/50">{t('photosHint')}</p>
+            </div>
+          )}
+
+          {photoError && (
+            <p className="text-sm text-red-600">{photoError}</p>
+          )}
         </div>
       </section>
 
