@@ -127,8 +127,19 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     }
   }
 
-  function removePhoto(url) {
+  async function removePhoto(url) {
     setForm((prev) => ({ ...prev, photos: (prev.photos || []).filter((p) => p !== url) }));
+    try {
+      const supabase = getSupabaseBrowser();
+      const marker = '/listing-photos/';
+      const idx = url.indexOf(marker);
+      if (idx !== -1) {
+        const path = url.slice(idx + marker.length);
+        await supabase.storage.from('listing-photos').remove([path]);
+      }
+    } catch {
+      // best-effort: UI already updated, storage cleanup failure is non-blocking
+    }
   }
 
   async function handleSubmit(e) {
