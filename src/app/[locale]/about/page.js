@@ -57,14 +57,6 @@ function AboutContent() {
           </div>
         </section>
 
-        <section>
-          <h2 className="font-heading text-xl font-semibold text-navy mb-3">
-            {t('forLandlordsTitle')}
-          </h2>
-          <p className="text-gray-dark/70 leading-relaxed">
-            {t('forLandlordsBody')}
-          </p>
-        </section>
 
         <section>
           <h2 className="font-heading text-xl font-semibold text-navy mb-3">
