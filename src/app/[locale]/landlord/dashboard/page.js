@@ -41,6 +41,10 @@ export default function LandlordDashboardPage() {
       });
       if (profileRes.ok) {
         const { landlord } = await profileRes.json();
+        if (landlord?.onboarding_completed === false) {
+          router.replace('/landlord/onboarding');
+          return;
+        }
         if (landlord?.name) setLandlordName(landlord.name);
       }
       await Promise.all([

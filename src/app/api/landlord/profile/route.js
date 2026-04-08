@@ -11,7 +11,7 @@ export async function GET(request) {
 
   const { data: landlord, error } = await getSupabase()
     .from('landlords')
-    .select('landlord_id, name, email, contact_info')
+    .select('landlord_id, name, email, contact_info, onboarding_completed')
     .eq('auth_user_id', user.id)
     .single();
 
@@ -32,7 +32,7 @@ export async function POST(request) {
   // Return existing profile if already created
   const { data: existing } = await getSupabase()
     .from('landlords')
-    .select('landlord_id, name, email')
+    .select('landlord_id, name, email, onboarding_completed')
     .eq('auth_user_id', user.id)
     .single();
 
