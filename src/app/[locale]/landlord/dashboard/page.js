@@ -24,6 +24,10 @@ export default function LandlordDashboardPage() {
         router.replace('/landlord/login');
         return;
       }
+      if (!session.user.email_confirmed_at) {
+        router.replace('/landlord/verify-email');
+        return;
+      }
       await Promise.all([
         fetchListings(session.access_token),
         fetchAnalytics(session.access_token),

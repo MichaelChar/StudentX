@@ -310,6 +310,15 @@
       "checkoutError": "Failed to start checkout",
       "portalError": "Failed to open billing portal"
     },
+    "verifyEmail": {
+      "title": "Check your inbox",
+      "message": "We've sent a confirmation email. Please click the link to verify your address before continuing.",
+      "resend": "Resend verification email",
+      "resending": "Resending…",
+      "resentConfirm": "Verification email sent. Please check your inbox.",
+      "noSession": "Session expired. Please log in again.",
+      "backToLogin": "Back to login"
+    },
     "forgotPassword": {
       "title": "Reset your password",
       "subtitle": "Enter your email and we'll send you a reset link",

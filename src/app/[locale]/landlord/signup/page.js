@@ -53,7 +53,7 @@ export default function LandlordSignupPage() {
       }
     }
 
-    router.push('/landlord/dashboard');
+    router.push('/landlord/verify-email');
   }
 
   return (

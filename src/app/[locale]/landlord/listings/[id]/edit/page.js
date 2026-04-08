@@ -23,6 +23,10 @@ export default function EditListingPage() {
         router.replace('/landlord/login');
         return;
       }
+      if (!session.user.email_confirmed_at) {
+        router.replace('/landlord/verify-email');
+        return;
+      }
 
       const res = await fetch(`/api/landlord/listings/${id}`, {
         headers: { Authorization: `Bearer ${session.access_token}` },
@@ -51,6 +55,7 @@ export default function EditListingPage() {
         available_from: listing.available_from || '',
         rental_duration: listing.rental_duration || '',
         amenity_ids: listing.listing_amenities?.map((la) => la.amenities.amenity_id) || [],
+        photos: listing.photos || [],
       });
       setLoading(false);
     }

@@ -20,6 +20,10 @@ export default function NewListingPage() {
         router.replace('/landlord/login');
         return;
       }
+      if (!session.user.email_confirmed_at) {
+        router.replace('/landlord/verify-email');
+        return;
+      }
       setToken(session.access_token);
       setCheckingAuth(false);
     }

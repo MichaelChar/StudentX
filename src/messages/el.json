@@ -251,6 +251,15 @@
       "availableFromLabel": "Διαθέσιμο από",
       "rentalDurationLabel": "Διάρκεια ενοικίασης",
       "rentalDurationPlaceholder": "π.χ. 12 μήνες, ευέλικτο",
+      "photosSection": "Φωτογραφίες",
+      "photosLabel": "Προσθήκη φωτογραφιών",
+      "photosHint": "JPG, PNG ή WebP · μέγ. 5 MB το αρχείο · έως 10 φωτογραφίες",
+      "photosUploading": "Μεταφόρτωση…",
+      "photosRemove": "Αφαίρεση",
+      "photosError": "Ορισμένα αρχεία δεν μπόρεσαν να μεταφορτωθούν.",
+      "photosFileTooLarge": "Το αρχείο υπερβαίνει το όριο 5 MB.",
+      "photosInvalidType": "Επιτρέπονται μόνο JPG, PNG και WebP.",
+      "photosTooMany": "Επιτρέπονται έως 10 φωτογραφίες.",
       "amenitiesSection": "Παροχές",
       "saving": "Αποθήκευση…",
       "saveListing": "Αποθήκευση αγγελίας",
@@ -292,6 +301,15 @@
       "upgradeButton99": "Αναβάθμιση — €99/έτος",
       "checkoutError": "Αποτυχία ολοκλήρωσης πληρωμής",
       "portalError": "Αποτυχία ανοίγματος διαχείρισης χρέωσης"
+    },
+    "verifyEmail": {
+      "title": "Έλεγξε τα εισερχόμενά σου",
+      "message": "Στείλαμε email επιβεβαίωσης. Κάνε κλικ στον σύνδεσμο για να επαληθεύσεις τη διεύθυνσή σου πριν συνεχίσεις.",
+      "resend": "Επαναποστολή email επιβεβαίωσης",
+      "resending": "Αποστολή…",
+      "resentConfirm": "Το email επιβεβαίωσης στάλθηκε. Έλεγξε τα εισερχόμενά σου.",
+      "noSession": "Η συνεδρία έληξε. Παρακαλώ συνδέσου ξανά.",
+      "backToLogin": "Επιστροφή στη σύνδεση"
     },
     "forgotPassword": {
       "title": "Επαναφορά κωδικού",
