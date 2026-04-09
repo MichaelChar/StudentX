@@ -75,14 +75,14 @@ export default function LandlordOnboardingPage() {
     let stripeUrl;
 
     if (selectedTier === 'verified') {
-      // superLandlord (1-5 properties)
-      stripeUrl = 'https://buy.stripe.com/test_4gM6oHb98dxKaqBewHawo03';
+      // Up to 5 properties
+      stripeUrl = 'https://buy.stripe.com/bJe7sLdhg0KY7ep3S3awo00';
     } else if (selectedTier === 'verified_pro' && count > 12) {
-      // superLandlord Heavy + additional properties (13+)
-      stripeUrl = 'https://buy.stripe.com/test_5kQcN55OO51egOZ3S3awo04';
+      // More than 12 properties
+      stripeUrl = 'https://buy.stripe.com/00wcN55OO51ebuF60bawo02';
     } else {
-      // superLandlord Heavy (6-12 properties)
-      stripeUrl = 'https://buy.stripe.com/test_bJe7sLdhg0KY7ep3S3awo00';
+      // 6-12 properties
+      stripeUrl = 'https://buy.stripe.com/bJe14n7WW1P256h74fawo01';
     }
 
     window.location.href = stripeUrl;
