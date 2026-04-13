@@ -7,7 +7,7 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 const TIERS = [
   {
     key: 'free',
-    name: 'Free',
+    name: 'Landlord Light',
     price: '€0',
     period: null,
     recommended: false,
@@ -15,17 +15,17 @@ const TIERS = [
       { label: 'Listing cap', value: '3' },
       { label: 'Photos per listing', value: '6' },
       { label: 'Listing expiry', value: '90 days (renewable)' },
-      { label: 'Student inquiries', value: 'Unlimited' },
+      { label: 'Student inquiries', value: '10 per listing' },
       { label: 'Search position', value: 'Standard' },
       { label: 'Verified badge', value: 'No' },
       { label: 'Analytics', value: 'None' },
       { label: 'Response time badge', value: 'No' },
-      { label: 'Support', value: '—' },
+      { label: 'Support', value: 'Email' },
     ],
   },
   {
     key: 'verified',
-    name: 'Verified',
+    name: 'SuperLandlord',
     price: '€49',
     period: '/yr',
     recommended: false,
@@ -43,10 +43,10 @@ const TIERS = [
   },
   {
     key: 'verified_pro',
-    name: 'Verified Pro',
+    name: 'SuperLandlord Heavy',
     price: '€99',
     period: '/yr',
-    recommended: true,
+    recommended: false,
     features: [
       { label: 'Listing cap', value: 'Up to 12 (+€5/mo overage)' },
       { label: 'Photos per listing', value: 'Unlimited' },

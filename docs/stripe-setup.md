@@ -1,20 +1,22 @@
-# Stripe Setup — Verified Pricing (Sandbox)
+# Stripe Setup — Pricing Plans (Sandbox)
 
 After running migration `012_verified_pricing_pivot.sql`, create the following Products and Prices in the Stripe Dashboard (or via API), then update the `subscription_plans` table with the resulting IDs.
 
 ## Pricing Model
 
-| Tier | Annual Price | Max Properties | Overage |
-|------|-------------|---------------|---------|
-| Free | €0 | Unlimited | — |
-| Verified | €49/year | 5 | — |
-| Verified Pro | €99/year | 12 | €5/property/month |
+| Tier | Annual Price | Max Properties | Overage | Support |
+|------|-------------|---------------|---------|---------|
+| Landlord Light (Free) | €0 | Unlimited | — | Email |
+| SuperLandlord (Verified) | €49/year | 5 | — | Email |
+| SuperLandlord Heavy (Verified Pro) | €99/year | 12 | €5/property/month | Priority |
+
+> **Note:** Free-tier inquiries are capped at 10 per listing. Paid tiers have unlimited inquiries.
 
 ## Sandbox IDs (Test Mode)
 
 These products and prices have been created in the Stripe test sandbox:
 
-### Verified — €49/year, up to 5 properties
+### SuperLandlord (Verified) — €49/year, up to 5 properties
 
 - **Product**: `prod_UITLnKWqtT4sYc`
 - **Price (annual)**: `price_1TJsOu2YOWEc8jqDua5lZoSp`
@@ -25,7 +27,7 @@ SET stripe_annual_price_id = 'price_1TJsOu2YOWEc8jqDua5lZoSp'
 WHERE plan_id = 'verified';
 ```
 
-### Verified Pro — €99/year, up to 12 properties + €5/property/month overage
+### SuperLandlord Heavy (Verified Pro) — €99/year, up to 12 properties + €5/property/month overage
 
 - **Product**: `prod_UITLRroVg38ra6`
 - **Price (annual base)**: `price_1TJsP72YOWEc8jqDwCHEFatr`

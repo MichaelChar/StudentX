@@ -47,7 +47,40 @@ export async function POST(request) {
       insertData.faculty_id = faculty_id.trim();
     }
 
-    const { data, error } = await getSupabase()
+    // Enforce free-tier inquiry cap (10 per listing)
+    const supabase = getSupabase();
+
+    const { data: listing, error: listingError } = await supabase
+      .from("listings")
+      .select("landlord_id")
+      .eq("listing_id", insertData.listing_id)
+      .single();
+
+    if (listingError || !listing) {
+      return NextResponse.json({ error: "Listing not found" }, { status: 404 });
+    }
+
+    const { data: landlord } = await supabase
+      .from("landlords")
+      .select("verified_tier")
+      .eq("landlord_id", listing.landlord_id)
+      .single();
+
+    if (landlord?.verified_tier === "none" || !landlord?.verified_tier) {
+      const { count } = await supabase
+        .from("inquiries")
+        .select("inquiry_id", { count: "exact", head: true })
+        .eq("listing_id", insertData.listing_id);
+
+      if (count >= 10) {
+        return NextResponse.json(
+          { error: "This listing has reached the maximum number of inquiries for the free tier." },
+          { status: 403 }
+        );
+      }
+    }
+
+    const { data, error } = await supabase
       .from("inquiries")
       .insert(insertData)
       .select("inquiry_id")

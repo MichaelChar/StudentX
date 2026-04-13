@@ -229,7 +229,7 @@ export default function LandlordDashboardPage() {
       {verifiedTier === 'none' && (
         <div className="mb-8 rounded-xl border border-gold/30 bg-gold/5 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex-1">
-            <p className="font-heading font-bold text-navy text-base mb-1">Unlock Verified features</p>
+            <p className="font-heading font-bold text-navy text-base mb-1">Unlock SuperLandlord features</p>
             <p className="text-sm text-gray-dark/70">Up to 5 listings, unlimited photos, priority placement &amp; verified badge.</p>
           </div>
           <Link
