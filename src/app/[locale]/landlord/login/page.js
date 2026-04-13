@@ -19,7 +19,7 @@ export default function LandlordLoginPage() {
     setLoading(true);
 
     const supabase = getSupabaseBrowser();
-    const { error: authError } = await supabase.auth.signInWithPassword({ email, password });
+    const { data: authData, error: authError } = await supabase.auth.signInWithPassword({ email, password });
 
     if (authError) {
       setError(authError.message);
@@ -27,7 +27,17 @@ export default function LandlordLoginPage() {
       return;
     }
 
-    router.push('/landlord/dashboard');
+    const { data: landlord } = await supabase
+      .from('landlords')
+      .select('onboarding_completed')
+      .eq('auth_user_id', authData.user.id)
+      .single();
+
+    if (!landlord?.onboarding_completed) {
+      router.push('/landlord/onboarding');
+    } else {
+      router.push('/landlord/dashboard');
+    }
   }
 
   return (
