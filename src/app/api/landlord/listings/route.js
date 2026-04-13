@@ -87,6 +87,22 @@ export async function POST(request) {
     );
   }
 
+  // Enforce photo cap for free-tier landlords (server-side)
+  if (Array.isArray(body.photos) && body.photos.length > 0) {
+    const { data: landlordTierData } = await getSupabase()
+      .from('landlords')
+      .select('verified_tier')
+      .eq('landlord_id', landlordId)
+      .single();
+    const tier = landlordTierData?.verified_tier || 'none';
+    if (tier === 'none' && body.photos.length > 6) {
+      return NextResponse.json(
+        { error: 'Free tier listings are limited to 6 photos.' },
+        { status: 400 }
+      );
+    }
+  }
+
   const authedSupabase = getSupabaseWithToken(token);
   const supabase = getSupabase();
 
