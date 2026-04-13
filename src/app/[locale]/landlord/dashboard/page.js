@@ -3,7 +3,6 @@
 import { useEffect, useState } from 'react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
-import BillingSection from '@/components/BillingSection';
 import { useTranslations } from 'next-intl';
 
 export default function LandlordDashboardPage() {
@@ -40,14 +39,16 @@ export default function LandlordDashboardPage() {
         },
         body: JSON.stringify({}),
       });
-      if (profileRes.ok) {
-        const { landlord } = await profileRes.json();
-        if (landlord?.onboarding_completed === false) {
-          router.replace('/landlord/onboarding');
-          return;
-        }
-        if (landlord?.name) setLandlordName(landlord.name);
+      if (!profileRes.ok) {
+        setLoading(false);
+        return;
       }
+      const { landlord } = await profileRes.json();
+      if (landlord?.onboarding_completed === false) {
+        router.replace('/landlord/onboarding');
+        return;
+      }
+      if (landlord?.name) setLandlordName(landlord.name);
       await Promise.all([
         fetchListings(session.access_token),
         fetchAnalytics(session.access_token),
@@ -239,12 +240,6 @@ export default function LandlordDashboardPage() {
           </Link>
         </div>
       )}
-
-      {/* Billing & Subscription */}
-      <div className="mb-8">
-        <h2 className="font-heading text-lg font-bold text-navy mb-4">{t('billingTitle')}</h2>
-        <BillingSection />
-      </div>
 
       {/* Analytics Overview */}
       {analytics && (listings.length > 0 || analytics.total_views > 0) && (
