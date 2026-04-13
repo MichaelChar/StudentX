@@ -17,6 +17,7 @@ export default function LandlordDashboardPage() {
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(null);
   const [togglingFeatured, setTogglingFeatured] = useState(null);
+  const [verifiedTier, setVerifiedTier] = useState(null);
 
   useEffect(() => {
     async function init() {
@@ -51,6 +52,7 @@ export default function LandlordDashboardPage() {
         fetchListings(session.access_token),
         fetchAnalytics(session.access_token),
         fetchPendingInquiries(session.access_token),
+        fetchSubscription(session.access_token),
       ]);
     }
     init();
@@ -101,6 +103,22 @@ export default function LandlordDashboardPage() {
       }
     } catch {
       // analytics are non-critical
+    }
+  }
+
+  async function fetchSubscription(token) {
+    try {
+      const res = await fetch('/api/landlord/billing/subscription', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const { verifiedTier: tier } = await res.json();
+        setVerifiedTier(tier ?? 'none');
+      } else {
+        setVerifiedTier('none');
+      }
+    } catch {
+      setVerifiedTier('none');
     }
   }
 
@@ -205,6 +223,22 @@ export default function LandlordDashboardPage() {
           </button>
         </div>
       </div>
+
+      {/* Upgrade banner — free tier only */}
+      {verifiedTier === 'none' && (
+        <div className="mb-8 rounded-xl border border-gold/30 bg-gold/5 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex-1">
+            <p className="font-heading font-bold text-navy text-base mb-1">Unlock Verified features</p>
+            <p className="text-sm text-gray-dark/70">Up to 5 listings, unlimited photos, priority placement &amp; verified badge.</p>
+          </div>
+          <Link
+            href="/landlord/onboarding"
+            className="shrink-0 bg-gold text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-gold/90 transition-colors text-center"
+          >
+            Upgrade now
+          </Link>
+        </div>
+      )}
 
       {/* Billing & Subscription */}
       <div className="mb-8">
