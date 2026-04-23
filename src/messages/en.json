@@ -148,6 +148,26 @@
     "billsIncluded": "Bills included",
     "billsNotIncluded": "Bills not included"
   },
+  "reviews": {
+    "title": "Reviews",
+    "noReviews": "No reviews yet. Be the first to leave one!",
+    "writeReview": "Write a review",
+    "close": "Close",
+    "yourRating": "Your rating",
+    "yourEmail": "Your email",
+    "emailPlaceholder": "Your email address",
+    "reviewText": "Your review",
+    "reviewPlaceholder": "Share your experience with this property…",
+    "ratingRequired": "Please select a star rating.",
+    "submitting": "Submitting…",
+    "submitReview": "Submit review",
+    "successTitle": "Review submitted!",
+    "successDesc": "Thank you — your review will appear shortly.",
+    "networkError": "Network error. Please check your connection and try again.",
+    "genericError": "Something went wrong. Please try again.",
+    "report": "Report",
+    "reported": "Reported"
+  },
   "about": {
     "metaTitle": "About StudentX",
     "metaDescription": "StudentX helps students find housing near their university in Thessaloniki, Greece. Free for students, free for landlords.",

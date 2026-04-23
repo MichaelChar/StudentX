@@ -2,6 +2,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { isEstimatedPrice } from '@/lib/estimatedListings';
+import StarRating from '@/components/StarRating';
 
 function isValidPhotoUrl(url) {
   return typeof url === 'string' && url.startsWith('http');
@@ -88,6 +89,15 @@ export default function ListingCard({ listing, faculty }) {
               </span>
             )}
           </p>
+        )}
+
+        {/* Average rating */}
+        {listing.avg_rating != null && (
+          <div className="flex items-center gap-1.5 mb-3">
+            <StarRating value={Math.round(listing.avg_rating)} size="sm" />
+            <span className="text-xs font-semibold text-navy">{listing.avg_rating.toFixed(1)}</span>
+            <span className="text-xs text-gray-dark/40">({listing.review_count})</span>
+          </div>
         )}
 
         {/* Bills badge + amenity pills */}

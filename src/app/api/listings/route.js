@@ -165,6 +165,28 @@ export async function GET(request) {
     // Transform rows to API shape
     let results = data.map(transformListing);
 
+    // Merge avg ratings from listing_rating_summary view
+    try {
+      const listingIds = results.map((l) => l.listing_id);
+      if (listingIds.length > 0) {
+        const { data: ratings } = await getSupabase()
+          .from("listing_rating_summary")
+          .select("listing_id, avg_rating, review_count")
+          .in("listing_id", listingIds);
+
+        if (ratings) {
+          const ratingMap = Object.fromEntries(ratings.map((r) => [r.listing_id, r]));
+          results = results.map((l) => ({
+            ...l,
+            avg_rating: ratingMap[l.listing_id]?.avg_rating ?? null,
+            review_count: ratingMap[l.listing_id]?.review_count ?? 0,
+          }));
+        }
+      }
+    } catch {
+      // Ratings are non-critical — continue without them if view doesn't exist yet
+    }
+
     // Post-query filter: exclude listings missing required amenities (dealbreakers)
     // e.g. exclude_amenities=AC,Elevator → only keep listings that have ALL of these
     if (excludeAmenities) {

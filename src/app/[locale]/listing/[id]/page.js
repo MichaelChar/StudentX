@@ -6,6 +6,7 @@ import { useRouter, Link } from '@/i18n/navigation';
 import Image from 'next/image';
 import { isEstimatedPrice } from '@/lib/estimatedListings';
 import InquiryForm from '@/components/InquiryForm';
+import ReviewList from '@/components/ReviewList';
 import { useTranslations } from 'next-intl';
 
 export default function ListingPage() {
@@ -223,6 +224,11 @@ export default function ListingPage() {
           {/* Contact form */}
           <InquiryForm listingId={listing.listing_id} />
         </div>
+      </div>
+
+      {/* Reviews section */}
+      <div className="mt-10 pt-8 border-t border-gray-200">
+        <ReviewList listingId={listing.listing_id} />
       </div>
     </div>
   );
