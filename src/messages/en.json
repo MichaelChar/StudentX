@@ -86,7 +86,8 @@
     "noResults": "No listings match your criteria",
     "noResultsHint": "Try adjusting your filters.",
     "loadingMap": "Loading map…",
-    "to": "to"
+    "to": "to",
+    "verifiedOnly": "Verified only"
   },
   "listing": {
     "backToResults": "Back to results",
@@ -243,7 +244,9 @@
       "deleteError": "Failed to delete listing. Please try again.",
       "featuredError": "Failed to update featured status.",
       "noAddress": "No address",
-      "priceOnRequest": "Price on request"
+      "priceOnRequest": "Price on request",
+      "getVerified": "Get Verified",
+      "getVerifiedDesc": "Upload your ID for a free Verified badge — shown on all your listings."
     },
     "listingForm": {
       "locationSection": "Location",

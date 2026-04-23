@@ -41,6 +41,7 @@ export async function GET(request) {
     const excludeAmenities = searchParams.get("exclude_amenities");
     const sortBy = searchParams.get("sort_by") || "price";
     const sortOrder = searchParams.get("sort_order") || "asc";
+    const verifiedOnly = searchParams.get("verified_only") === "true";
 
     // Validate sort params
     const validSortBy = ["price", "walk_minutes", "transit_minutes"];
@@ -133,6 +134,11 @@ export async function GET(request) {
     // Filter: faculty distances to selected faculty only
     if (faculty) {
       query = query.eq("faculty_distances.faculty_id", faculty);
+    }
+
+    // Filter: verified only
+    if (verifiedOnly) {
+      query = query.neq("landlords.verified_tier", "none");
     }
 
     let { data, error } = await query;

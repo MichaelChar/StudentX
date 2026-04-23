@@ -227,7 +227,7 @@ export default function LandlordDashboardPage() {
 
       {/* Upgrade banner — free tier only */}
       {verifiedTier === 'none' && (
-        <div className="mb-8 rounded-xl border border-gold/30 bg-gold/5 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
+        <div className="mb-4 rounded-xl border border-gold/30 bg-gold/5 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
           <div className="flex-1">
             <p className="font-heading font-bold text-navy text-base mb-1">Unlock SuperLandlord features</p>
             <p className="text-sm text-gray-dark/70">Up to 5 listings, unlimited photos, priority placement &amp; verified badge.</p>
@@ -237,6 +237,22 @@ export default function LandlordDashboardPage() {
             className="shrink-0 bg-gold text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-gold/90 transition-colors text-center"
           >
             Upgrade now
+          </Link>
+        </div>
+      )}
+
+      {/* Get Verified CTA — free tier only */}
+      {verifiedTier === 'none' && (
+        <div className="mb-8 rounded-xl border border-emerald-200 bg-emerald-50 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
+          <div className="flex-1">
+            <p className="font-heading font-bold text-navy text-base mb-1">{t('getVerified')}</p>
+            <p className="text-sm text-gray-dark/70">{t('getVerifiedDesc')}</p>
+          </div>
+          <Link
+            href="/landlord/verification"
+            className="shrink-0 bg-emerald-600 text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-emerald-700 transition-colors text-center"
+          >
+            {t('getVerified')}
           </Link>
         </div>
       )}

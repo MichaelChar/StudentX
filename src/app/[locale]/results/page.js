@@ -6,6 +6,7 @@ import { useRouter, Link } from '@/i18n/navigation';
 import dynamic from 'next/dynamic';
 import ListingCard from '@/components/ListingCard';
 import { useTranslations } from 'next-intl';
+import SaveSearchModal from '@/components/SaveSearchModal';
 
 function MapLoadingFallback() {
   const t = useTranslations('results');
@@ -68,6 +69,7 @@ function ResultsContent() {
   const [viewMode, setViewMode] = useState('list'); // 'list' | 'map'
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [neighborhoods, setNeighborhoods] = useState([]);
+  const [saveSearchOpen, setSaveSearchOpen] = useState(false);
 
   // Filter state (controlled independently from URL params from quiz)
   const [filters, setFilters] = useState({
@@ -76,6 +78,7 @@ function ResultsContent() {
     selectedTypes: [],
     selectedNeighborhoods: [],
     selectedAmenities: [],
+    verifiedOnly: false,
   });
 
   const faculty = searchParams.get('faculty') || '';
@@ -112,6 +115,7 @@ function ResultsContent() {
       if (filters.minBudget) params.set('min_budget', filters.minBudget);
       if (filters.selectedTypes.length > 0) params.set('types', filters.selectedTypes.join(','));
       if (filters.selectedNeighborhoods.length > 0) params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
+      if (filters.verifiedOnly) params.set('verified_only', 'true');
 
       params.set('sort_by', sortBy);
       params.set('sort_order', sortOrder);
@@ -177,7 +181,7 @@ function ResultsContent() {
   }
 
   function clearFilters() {
-    setFilters({ minBudget: '', maxBudget: '', selectedTypes: [], selectedNeighborhoods: [], selectedAmenities: [] });
+    setFilters({ minBudget: '', maxBudget: '', selectedTypes: [], selectedNeighborhoods: [], selectedAmenities: [], verifiedOnly: false });
   }
 
   const hasActiveFilters =
@@ -185,7 +189,8 @@ function ResultsContent() {
     filters.maxBudget ||
     filters.selectedTypes.length > 0 ||
     filters.selectedNeighborhoods.length > 0 ||
-    filters.selectedAmenities.length > 0;
+    filters.selectedAmenities.length > 0 ||
+    filters.verifiedOnly;
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-6 md:py-10">
@@ -236,9 +241,20 @@ function ResultsContent() {
             {t('filters')}
             {hasActiveFilters && (
               <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-gold text-white text-[10px] font-bold">
-                {[filters.selectedTypes, filters.selectedNeighborhoods, filters.selectedAmenities].reduce((n, a) => n + a.length, 0) + (filters.minBudget ? 1 : 0) + (filters.maxBudget ? 1 : 0)}
+                {[filters.selectedTypes, filters.selectedNeighborhoods, filters.selectedAmenities].reduce((n, a) => n + a.length, 0) + (filters.minBudget ? 1 : 0) + (filters.maxBudget ? 1 : 0) + (filters.verifiedOnly ? 1 : 0)}
               </span>
             )}
+          </button>
+
+          {/* Save search */}
+          <button
+            onClick={() => setSaveSearchOpen(true)}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-gray-200 text-sm text-gray-dark/60 hover:border-gold/40 hover:text-gold transition-colors cursor-pointer"
+          >
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            {t('saveSearch')}
           </button>
 
           {/* Sort controls */}
@@ -346,6 +362,19 @@ function ResultsContent() {
             </div>
           </div>
 
+          {/* Verified only */}
+          <div className="sm:col-span-2 lg:col-span-4">
+            <button
+              onClick={() => setFilters((p) => ({ ...p, verifiedOnly: !p.verifiedOnly }))}
+              className={`flex items-center gap-2 text-sm px-3 py-2 rounded-lg border transition-colors cursor-pointer ${filters.verifiedOnly ? 'border-emerald-400 bg-emerald-50 text-emerald-700 font-medium' : 'border-gray-200 text-gray-dark/60 hover:border-emerald-300'}`}
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+              </svg>
+              {t('verifiedOnly')}
+            </button>
+          </div>
+
           {/* Clear button */}
           {hasActiveFilters && (
             <div className="sm:col-span-2 lg:col-span-4 flex justify-end">
@@ -424,6 +453,15 @@ function ResultsContent() {
             </Link>
           </div>
         </div>
+      )}
+
+      {/* Save search modal */}
+      {saveSearchOpen && (
+        <SaveSearchModal
+          filters={filters}
+          faculty={faculty}
+          onClose={() => setSaveSearchOpen(false)}
+        />
       )}
     </div>
   );
