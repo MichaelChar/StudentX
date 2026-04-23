@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.101.0",
+    "resend": "^4.0.0",
     "leaflet": "^1.9.4",
     "next": "16.2.1",
     "next-intl": "^4.9.0",

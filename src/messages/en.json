@@ -64,6 +64,7 @@
   },
   "results": {
     "title": "Available listings",
+    "saveSearch": "Save alert",
     "resultsCount": "{count, plural, one {# result found} other {# results found}}",
     "filters": "Filters",
     "sort": "Sort:",
@@ -168,6 +169,39 @@
     "genericError": "Something went wrong. Please try again.",
     "report": "Report",
     "reported": "Reported"
+  },
+  "saveSearch": {
+    "title": "Save this search",
+    "desc": "Get an email when new listings match your filters.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@uni.gr",
+    "labelLabel": "Alert name (optional)",
+    "labelPlaceholder": "e.g. Near AUTH, under €500",
+    "frequencyLabel": "Send alerts",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "submit": "Save alert",
+    "saving": "Saving…",
+    "successTitle": "Alert saved!",
+    "successDesc": "Check your inbox for a confirmation email.",
+    "done": "Done",
+    "errorGeneric": "Something went wrong. Please try again."
+  },
+  "alerts": {
+    "title": "Manage your alert",
+    "desc": "You can view or delete your saved search alert below.",
+    "alertName": "Alert name",
+    "unnamedAlert": "Unnamed alert",
+    "frequency": "Frequency",
+    "filters": "Filters",
+    "createdOn": "Created on",
+    "unsubscribe": "Delete alert",
+    "unsubscribing": "Deleting…",
+    "unsubscribed": "Alert deleted",
+    "unsubscribedDesc": "You will no longer receive emails for this alert.",
+    "notFound": "Alert not found",
+    "notFoundDesc": "This alert may have already been deleted or the link has expired.",
+    "browseListings": "Browse listings"
   },
   "about": {
     "metaTitle": "About StudentX",

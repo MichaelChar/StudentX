@@ -7,5 +7,17 @@
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
+  },
+  // Cron triggers: daily at 09:00 UTC and weekly on Mondays at 09:00 UTC.
+  // The scheduled event calls /api/cron/saved-searches-digest via self-fetch.
+  // NOTE: @opennextjs/cloudflare v1.x worker.js does not export a `scheduled`
+  // handler by default. After `npm run build`, wrap the worker via open-next.config.ts
+  // or a post-build script to forward `scheduled` events to the cron API route
+  // using NEXT_PUBLIC_APP_URL + CRON_SECRET. See src/app/api/cron/saved-searches-digest/route.js.
+  "triggers": {
+    "crons": [
+      "0 9 * * *",   // daily digest
+      "0 9 * * 1"    // weekly digest (Mondays)
+    ]
   }
 }
