@@ -42,16 +42,16 @@ INSERT INTO amenities (amenity_id, name) VALUES
 -- Rent records (10, one per listing)
 -- ----------------------------------------
 INSERT INTO rent (rent_id, monthly_price, currency, bills_included, deposit) VALUES
-  (1,  320, 'EUR', false, 320),   -- 0001001
-  (2,  380, 'EUR', false, 380),   -- 0001002
-  (3,  480, 'EUR', false, 480),   -- 0002001
-  (4,  350, 'EUR', true,  350),   -- 0002002
-  (5,  200, 'EUR', true,  200),   -- 0003001
-  (6,  280, 'EUR', false, 280),   -- 0003002
-  (7,  520, 'EUR', false, 520),   -- 0004001
-  (8,  350, 'EUR', false, 350),   -- 0004002
-  (9,  300, 'EUR', false, 300),   -- 0005001
-  (10, 220, 'EUR', true,  220);   -- 0005002
+  (1,  500, 'EUR', false, 500),   -- 0001001 Studio, Kentro
+  (2,  550, 'EUR', false, 550),   -- 0001002 1-Bed, Kamara
+  (3,  700, 'EUR', false, 700),   -- 0002001 2-Bed, Kalamaria
+  (4,  580, 'EUR', true,  580),   -- 0002002 1-Bed, Kalamaria (bills incl)
+  (5,  500, 'EUR', true,  500),   -- 0003001 Room, Ano Poli (bills incl)
+  (6,  520, 'EUR', false, 520),   -- 0003002 Studio, Rotonda
+  (7,  750, 'EUR', false, 750),   -- 0004001 2-Bed, Triandria
+  (8,  560, 'EUR', false, 560),   -- 0004002 Studio, Kentro
+  (9,  530, 'EUR', false, 530),   -- 0005001 1-Bed, Toumba
+  (10, 500, 'EUR', true,  500);   -- 0005002 Room, Stavroupoli (bills incl)
 
 -- ----------------------------------------
 -- Location records (10, one per listing)
