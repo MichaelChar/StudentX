@@ -88,14 +88,18 @@ export async function POST(request) {
   }
 
   // Enforce photo cap for free-tier landlords (server-side)
-  if (Array.isArray(body.photos) && body.photos.length > 0) {
+  // Cap applies to the combined count of uploaded + external photos.
+  const uploadedPhotos = Array.isArray(body.photos) ? body.photos : [];
+  const externalPhotos = Array.isArray(body.external_photo_urls) ? body.external_photo_urls : [];
+  const totalPhotos = uploadedPhotos.length + externalPhotos.length;
+  if (totalPhotos > 0) {
     const { data: landlordTierData } = await getSupabase()
       .from('landlords')
       .select('verified_tier')
       .eq('landlord_id', landlordId)
       .single();
     const tier = landlordTierData?.verified_tier || 'none';
-    if (tier === 'none' && body.photos.length > 6) {
+    if (tier === 'none' && totalPhotos > 6) {
       return NextResponse.json(
         { error: 'Free tier listings are limited to 6 photos.' },
         { status: 400 }
@@ -181,6 +185,7 @@ export async function POST(request) {
       property_type_id: propType.property_type_id,
       description: body.description || null,
       photos: body.photos || [],
+      external_photo_urls: Array.isArray(body.external_photo_urls) ? body.external_photo_urls : [],
       sqm: body.sqm || null,
       floor: body.floor != null && body.floor !== '' ? parseInt(body.floor, 10) : null,
       available_from: body.available_from || null,
