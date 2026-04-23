@@ -95,7 +95,8 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   async function handlePhotoFiles(files) {
     setPhotoError('');
     const current = form.photos || [];
-    const remaining = photoLimit === null ? Infinity : photoLimit - current.length;
+    const externalCount = (form.external_photo_urls || []).length;
+    const remaining = photoLimit === null ? Infinity : photoLimit - current.length - externalCount;
     if (remaining <= 0) {
       setPhotoError(photoLimit === null ? t('photosTooMany') : `Maximum ${photoLimit} photos allowed.`);
       return;
