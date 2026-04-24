@@ -330,6 +330,7 @@
       "photosFileTooLarge": "File exceeds 5 MB limit.",
       "photosInvalidType": "Only JPG, PNG and WebP are allowed.",
       "photosTooMany": "Photo limit reached.",
+      "importedPhotos": "{count, plural, one {# imported photo} other {# imported photos}} — saved with listing",
       "amenitiesSection": "Amenities",
       "saving": "Saving…",
       "saveListing": "Save listing",

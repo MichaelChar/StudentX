@@ -322,6 +322,7 @@
       "photosFileTooLarge": "Το αρχείο υπερβαίνει το όριο 5 MB.",
       "photosInvalidType": "Επιτρέπονται μόνο JPG, PNG και WebP.",
       "photosTooMany": "Συμπληρώθηκε το όριο φωτογραφιών.",
+      "importedPhotos": "{count, plural, one {# εισαγόμενη φωτογραφία} other {# εισαγόμενες φωτογραφίες}} — αποθηκεύονται με την αγγελία",
       "amenitiesSection": "Παροχές",
       "saving": "Αποθήκευση…",
       "saveListing": "Αποθήκευση αγγελίας",

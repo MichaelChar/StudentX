@@ -429,8 +429,30 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
             </div>
           )}
 
+          {/* Imported external photos (read-only) */}
+          {(form.external_photo_urls || []).length > 0 && (
+            <div>
+              <p className="text-xs font-medium text-gray-dark/60 mb-2">
+                {t('importedPhotos', { count: form.external_photo_urls.length })}
+              </p>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {form.external_photo_urls.map((url, i) => (
+                  <div key={url} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-gray-light">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={url}
+                      alt={`Imported photo ${i + 1}`}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Upload button */}
-          {(photoLimit === null || (form.photos || []).length < photoLimit) && (
+          {(photoLimit === null || ((form.photos || []).length + (form.external_photo_urls || []).length) < photoLimit) && (
             <div>
               <input
                 ref={fileInputRef}
