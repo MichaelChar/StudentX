@@ -36,7 +36,7 @@ export default function LandlordInquiriesPage() {
       }
       setToken(session.access_token);
       // Ensure landlord profile exists before fetching inquiries
-      await fetch('/api/landlord/profile', {
+      const profileRes = await fetch('/api/landlord/profile', {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${session.access_token}`,
@@ -44,6 +44,11 @@ export default function LandlordInquiriesPage() {
         },
         body: JSON.stringify({}),
       });
+      if (!profileRes.ok) {
+        setError(t('profileError'));
+        setLoading(false);
+        return;
+      }
       await fetchInquiries(session.access_token);
     }
     init();

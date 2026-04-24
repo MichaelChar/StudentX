@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { createClient } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
 
@@ -37,6 +38,33 @@ export async function POST(request) {
     .single();
 
   if (existing) return NextResponse.json({ landlord: existing });
+
+  // Check if a landlord exists with the same email but no auth_user_id (e.g. seeded data)
+  const { data: orphan } = await getSupabase()
+    .from('landlords')
+    .select('landlord_id, name, email, onboarding_completed')
+    .eq('email', user.email)
+    .is('auth_user_id', null)
+    .single();
+
+  if (orphan) {
+    // Use service role to update orphan record (RLS UPDATE policy requires auth_user_id = auth.uid(),
+    // but the orphan has auth_user_id = null so the user's token can't match)
+    const serviceClient = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL,
+      process.env.SUPABASE_SERVICE_ROLE_KEY,
+      { auth: { persistSession: false } }
+    );
+    const { error: linkError } = await serviceClient
+      .from('landlords')
+      .update({ auth_user_id: user.id })
+      .eq('landlord_id', orphan.landlord_id);
+    if (linkError) {
+      console.error('Failed to link landlord profile:', linkError);
+      return NextResponse.json({ error: 'Failed to link profile' }, { status: 500 });
+    }
+    return NextResponse.json({ landlord: orphan });
+  }
 
   // Generate next 4-digit landlord_id
   const { data: rows } = await getSupabase()

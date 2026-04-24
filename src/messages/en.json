@@ -420,7 +420,8 @@
       "status_closed": "Closed",
       "markReplied": "Mark as replied",
       "markClosed": "Close",
-      "reopen": "Reopen"
+      "reopen": "Reopen",
+      "profileError": "Landlord profile not found"
     }
   }
 }
