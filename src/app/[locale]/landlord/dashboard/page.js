@@ -44,10 +44,7 @@ export default function LandlordDashboardPage() {
         return;
       }
       const { landlord } = await profileRes.json();
-      if (landlord?.onboarding_completed === false) {
-        router.replace('/landlord/onboarding');
-        return;
-      }
+      // No longer redirect to onboarding — let landlords use the dashboard immediately
       if (landlord?.name) setLandlordName(landlord.name);
       await Promise.all([
         fetchListings(session.access_token),
@@ -210,6 +207,14 @@ export default function LandlordDashboardPage() {
               </span>
             )}
           </Link>
+          {verifiedTier === 'none' && (
+            <Link
+              href="/landlord/get-verified"
+              className="text-sm px-4 py-2.5 rounded-lg bg-emerald-600 text-white font-heading font-semibold hover:bg-emerald-700 transition-colors"
+            >
+              {t('getVerified')}
+            </Link>
+          )}
           <Link
             href="/landlord/listings/new"
             className="bg-gold text-white font-heading font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-gold/90 transition-colors"
@@ -233,7 +238,7 @@ export default function LandlordDashboardPage() {
             <p className="text-sm text-gray-dark/70">Up to 5 listings, unlimited photos, priority placement &amp; verified badge.</p>
           </div>
           <Link
-            href="/landlord/onboarding"
+            href="/landlord/get-verified"
             className="shrink-0 bg-gold text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-gold/90 transition-colors text-center"
           >
             Upgrade now

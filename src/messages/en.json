@@ -282,6 +282,13 @@
       "getVerified": "Get Verified",
       "getVerifiedDesc": "Upload your ID for a free Verified badge — shown on all your listings."
     },
+    "getVerified": {
+      "title": "Get Verified",
+      "description": "Verification is central to the safety of the StudentX community. It lets students know that you are a genuine account holder. The verified badge appears publicly over your property, and also gives you priority search placement.",
+      "chooseTier": "Choose this plan",
+      "stripeNote": "Secure checkout via Stripe. Cancel anytime.",
+      "backToDashboard": "Back to dashboard"
+    },
     "listingForm": {
       "locationSection": "Location",
       "addressLabel": "Street address *",

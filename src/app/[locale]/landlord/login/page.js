@@ -27,17 +27,7 @@ export default function LandlordLoginPage() {
       return;
     }
 
-    const { data: landlord } = await supabase
-      .from('landlords')
-      .select('onboarding_completed')
-      .eq('auth_user_id', authData.user.id)
-      .single();
-
-    if (!landlord?.onboarding_completed) {
-      router.push('/landlord/onboarding');
-    } else {
-      router.push('/landlord/dashboard');
-    }
+    router.push('/landlord/dashboard');
   }
 
   return (
