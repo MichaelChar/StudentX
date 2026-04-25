@@ -28,7 +28,7 @@ export function digestEmailHtml({ label, listings, manageUrl, appUrl }) {
               <img src="${photo}" width="80" height="60" alt="" style="border-radius:6px;object-fit:cover;display:block;" />
             </td>` : ''}
             <td style="vertical-align:top;">
-              <p style="margin:0 0 4px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:700;color:#0A1436;">${price}</p>
+              <p style="margin:0 0 4px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:16px;font-weight:700;color:#01828D;">${price}</p>
               ${type ? `<p style="margin:0 0 2px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#555;">${type}${neighborhood ? ' · ' + neighborhood : ''}</p>` : ''}
               <a href="${listingUrl}" style="display:inline-block;margin-top:8px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;font-weight:600;color:#B8860B;text-decoration:none;">View listing →</a>
             </td>
@@ -52,7 +52,7 @@ export function digestEmailHtml({ label, listings, manageUrl, appUrl }) {
         <table width="560" cellpadding="0" cellspacing="0" style="background:#F0EBDF;border-radius:12px;overflow:hidden;border:1px solid #E5DFD0;">
           <!-- Header -->
           <tr>
-            <td style="background:#0A1436;padding:24px 32px;">
+            <td style="background:#01828D;padding:24px 32px;">
               <p style="margin:0;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#B8860B;">StudentX</p>
               <p style="margin:4px 0 0;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;color:#FAF8F3B3;">Student Housing · Thessaloniki</p>
             </td>
@@ -60,7 +60,7 @@ export function digestEmailHtml({ label, listings, manageUrl, appUrl }) {
           <!-- Body -->
           <tr>
             <td style="padding:32px;">
-              <h1 style="margin:0 0 8px;font-family:'EB Garamond',Garamond,Georgia,'Times New Roman',serif;font-size:24px;font-weight:600;color:#0A1436;letter-spacing:-0.01em;">${title}</h1>
+              <h1 style="margin:0 0 8px;font-family:'EB Garamond',Garamond,Georgia,'Times New Roman',serif;font-size:24px;font-weight:600;color:#01828D;letter-spacing:-0.01em;">${title}</h1>
               <p style="margin:0 0 24px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;color:#555;line-height:1.6;">
                 Here are the latest listings that match your saved search:
               </p>
