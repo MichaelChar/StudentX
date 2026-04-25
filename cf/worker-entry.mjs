@@ -43,9 +43,12 @@ async function runCron(event, env, ctx) {
   const startedAt = Date.now();
 
   try {
+    // Abort before CF's ~30s scheduled-handler limit so we get a logged
+    // timeout instead of a silent kill. ctx.waitUntil still respects this.
     const res = await fetch(url, {
       method: "POST",
       headers: { "x-cron-secret": secret },
+      signal: AbortSignal.timeout(25_000),
     });
     const elapsed = Date.now() - startedAt;
     if (!res.ok) {
