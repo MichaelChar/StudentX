@@ -1,13 +1,16 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useRouter, Link } from '@/i18n/navigation';
+import { Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useTranslations } from 'next-intl';
 
+import AuthShell from '@/components/landlord/AuthShell';
+import FormField from '@/components/landlord/FormField';
+import Button from '@/components/ui/Button';
+
 export default function ResetPasswordPage() {
   const t = useTranslations('landlord.resetPassword');
-  const router = useRouter();
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [loading, setLoading] = useState(false);
@@ -64,94 +67,82 @@ export default function ResetPasswordPage() {
 
   if (done) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4">
-        <div className="w-full max-w-sm text-center">
-          <div className="mb-4 text-4xl">✅</div>
-          <h1 className="font-heading text-2xl font-bold text-navy mb-2">{t('successTitle')}</h1>
-          <p className="text-sm text-gray-dark/60 mb-8">{t('successMessage')}</p>
-          <Link href="/landlord/login" className="text-gold font-medium hover:underline text-sm">
-            {t('goToLogin')}
+      <AuthShell eyebrow="Password reset" title={t('successTitle')} subtitle={t('successMessage')}>
+        <p className="text-sm">
+          <Link
+            href="/landlord/login"
+            className="text-blue font-medium hover:text-night"
+          >
+            {t('goToLogin')} →
           </Link>
-        </div>
-      </div>
+        </p>
+      </AuthShell>
     );
   }
 
   if (ready === null) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4">
-        <div className="w-full max-w-sm text-center">
-          <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin mx-auto" />
+      <AuthShell eyebrow="Reset password" title={t('title')}>
+        <div className="flex justify-center py-8">
+          <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
         </div>
-      </div>
+      </AuthShell>
     );
   }
 
   if (ready === false) {
     return (
-      <div className="min-h-[80vh] flex items-center justify-center px-4">
-        <div className="w-full max-w-sm text-center">
-          <p className="text-sm text-gray-dark/60 mb-4">{t('invalidLink')}</p>
-          <Link href="/landlord/forgot-password" className="text-gold font-medium hover:underline text-sm">
-            {t('requestNewLink')}
+      <AuthShell eyebrow="Reset password" title={t('invalidLinkTitle') || t('title')} subtitle={t('invalidLink')}>
+        <p className="text-sm">
+          <Link
+            href="/landlord/forgot-password"
+            className="text-blue font-medium hover:text-night"
+          >
+            {t('requestNewLink')} →
           </Link>
-        </div>
-      </div>
+        </p>
+      </AuthShell>
     );
   }
 
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      <div className="w-full max-w-sm">
-        <h1 className="font-heading text-2xl font-bold text-navy mb-2 text-center">{t('title')}</h1>
-        <p className="text-sm text-gray-dark/60 text-center mb-8">{t('subtitle')}</p>
+    <AuthShell eyebrow="Reset password" title={t('title')} subtitle={t('subtitle')}>
+      <form onSubmit={handleSubmit} className="space-y-5">
+        <FormField
+          id="password"
+          label={t('passwordLabel')}
+          type="password"
+          required
+          value={password}
+          onChange={setPassword}
+          placeholder={t('passwordPlaceholder')}
+        />
 
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-dark mb-1">
-              {t('passwordLabel')}
-            </label>
-            <input
-              id="password"
-              type="password"
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold"
-              placeholder={t('passwordPlaceholder')}
-            />
-          </div>
+        <FormField
+          id="confirm"
+          label={t('confirmLabel')}
+          type="password"
+          required
+          value={confirm}
+          onChange={setConfirm}
+          placeholder={t('confirmPlaceholder')}
+        />
 
-          <div>
-            <label htmlFor="confirm" className="block text-sm font-medium text-gray-dark mb-1">
-              {t('confirmLabel')}
-            </label>
-            <input
-              id="confirm"
-              type="password"
-              required
-              value={confirm}
-              onChange={(e) => setConfirm(e.target.value)}
-              className="w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold"
-              placeholder={t('confirmPlaceholder')}
-            />
-          </div>
+        {error && (
+          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-3 py-2">
+            {error}
+          </p>
+        )}
 
-          {error && (
-            <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-3 py-2">
-              {error}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full bg-navy text-white font-heading font-semibold py-2.5 rounded-lg hover:bg-navy/90 transition-colors disabled:opacity-50"
-          >
-            {loading ? t('submitting') : t('submit')}
-          </button>
-        </form>
-      </div>
-    </div>
+        <Button
+          type="submit"
+          variant="primary"
+          disabled={loading}
+          className="w-full justify-center"
+        >
+          {loading ? t('submitting') : t('submit')}
+        </Button>
+      </form>
+    </AuthShell>
   );
 }
