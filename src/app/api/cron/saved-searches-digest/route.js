@@ -96,7 +96,11 @@ export async function POST(request) {
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.gr';
   const resend = getResend();
   let emailsSent = 0;
-  const now = new Date().toISOString();
+  let alreadyClaimed = 0;
+  // Min interval per frequency. Slightly tighter than the full period so a
+  // cron that runs a few minutes late never gets blocked by its own previous
+  // run, but still wide enough that a retry within seconds/minutes is rejected.
+  const minInterval = frequency === 'weekly' ? '6 days' : '20 hours';
 
   for (const search of searches) {
     try {
@@ -105,6 +109,28 @@ export async function POST(request) {
 
       if (matches.length === 0) continue;
 
+      // Claim the send BEFORE calling Resend. The RPC's conditional UPDATE
+      // ensures only one caller per (saved_search, period) advances
+      // last_notified_at; concurrent or retried callers get false and skip.
+      // See supabase/migrations/022_claim_digest_send.sql.
+      const { data: claimed, error: claimError } = await supabase.rpc('claim_digest_send', {
+        p_saved_search_id: search.id,
+        p_min_interval: minInterval,
+      });
+
+      if (claimError) {
+        console.error(`claim_digest_send failed for ${search.id}:`, claimError);
+        continue;
+      }
+      if (!claimed) {
+        // Another invocation already claimed this period — skip silently.
+        alreadyClaimed++;
+        continue;
+      }
+
+      // From here on: the claim is committed. If Resend throws, this digest
+      // is lost for this period (no resend on retry). For digests this is
+      // the right tradeoff: missing one digest beats double-sending.
       const manageUrl = `${appUrl}/alerts/manage?token=${search.unsubscribe_token}`;
 
       await resend.emails.send({
@@ -120,17 +146,11 @@ export async function POST(request) {
       });
 
       emailsSent++;
-
-      // Update last_notified_at
-      await supabase
-        .from('saved_searches')
-        .update({ last_notified_at: now })
-        .eq('id', search.id);
     } catch (err) {
       console.error(`Error processing saved search ${search.id}:`, err);
       // Continue with next search
     }
   }
 
-  return NextResponse.json({ processed: searches.length, emailsSent });
+  return NextResponse.json({ processed: searches.length, emailsSent, alreadyClaimed });
 }
