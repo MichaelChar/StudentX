@@ -1,11 +1,14 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { useRouter, Link } from '@/i18n/navigation';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useTranslations } from 'next-intl';
+import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
-const STATUS_ORDER = ['pending', 'replied', 'closed'];
+import LandlordShell from '@/components/landlord/LandlordShell';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import Pill from '@/components/ui/Pill';
+import Icon from '@/components/ui/Icon';
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -15,7 +18,6 @@ function formatDate(iso) {
 
 export default function LandlordInquiriesPage() {
   const t = useTranslations('landlord.inquiries');
-  const router = useRouter();
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -23,39 +25,17 @@ export default function LandlordInquiriesPage() {
   const [token, setToken] = useState('');
 
   useEffect(() => {
-    async function init() {
+    (async () => {
       const supabase = getSupabaseBrowser();
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.replace('/landlord/login');
-        return;
-      }
-      if (!session.user.email_confirmed_at) {
-        router.replace('/landlord/verify-email');
-        return;
-      }
+      if (!session) return;
       setToken(session.access_token);
-      // Ensure landlord profile exists before fetching inquiries
-      const profileRes = await fetch('/api/landlord/profile', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-      });
-      if (!profileRes.ok) {
-        setError(t('profileError'));
-        setLoading(false);
-        return;
-      }
       await fetchInquiries(session.access_token);
-    }
-    init();
-  }, [router]);
+      setLoading(false);
+    })();
+  }, []);
 
   async function fetchInquiries(accessToken) {
-    setLoading(true);
     try {
       const res = await fetch('/api/landlord/inquiries', {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -69,8 +49,6 @@ export default function LandlordInquiriesPage() {
       setInquiries(data || []);
     } catch {
       setError(t('loadError'));
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -105,40 +83,27 @@ export default function LandlordInquiriesPage() {
     }
   }
 
-  if (loading) {
-    return (
-      <div className="mx-auto max-w-4xl px-4 py-12">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 w-48 bg-gray-light rounded" />
-          <div className="h-24 bg-gray-light rounded-xl" />
-          <div className="h-24 bg-gray-light rounded-xl" />
-        </div>
-      </div>
-    );
-  }
-
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 md:py-12">
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="font-heading text-2xl font-bold text-navy">{t('title')}</h1>
-        <Link
-          href="/landlord/dashboard"
-          className="text-sm text-gray-dark/60 hover:text-navy transition-colors"
-        >
-          ← {t('backToDashboard')}
-        </Link>
-      </div>
-
+    <LandlordShell eyebrow="Inbox" title={t('title')}>
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3 mb-6">
+        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3 mb-6">
           {error}
         </p>
       )}
 
-      {inquiries.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-xl">
-          <p className="text-gray-dark/50">{t('noInquiries')}</p>
+      {loading ? (
+        <div className="space-y-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-32 bg-parchment rounded-sm animate-pulse" />
+          ))}
         </div>
+      ) : inquiries.length === 0 ? (
+        <Card tone="parchment" className="p-12 text-center">
+          <Icon name="message" className="w-12 h-12 mx-auto text-night/30 mb-3" />
+          <p className="font-display text-xl text-night/60">
+            {t('noInquiries')}
+          </p>
+        </Card>
       ) : (
         <div className="space-y-4">
           {inquiries.map((inq) => (
@@ -152,87 +117,83 @@ export default function LandlordInquiriesPage() {
           ))}
         </div>
       )}
-    </div>
+    </LandlordShell>
   );
 }
 
-function StatusBadge({ status, t }) {
-  const styles = {
-    pending: 'bg-amber-50 text-amber-700 border-amber-200',
-    replied: 'bg-green-50 text-green-700 border-green-200',
-    closed: 'bg-gray-100 text-gray-500 border-gray-200',
-  };
-  return (
-    <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${styles[status] || styles.pending}`}>
-      {t(`status_${status}`)}
-    </span>
-  );
+function statusVariant(status) {
+  if (status === 'pending') return 'verified';
+  if (status === 'replied') return 'info';
+  return 'amenity';
 }
 
 function InquiryCard({ inquiry, updating, onStatusChange, t }) {
   const address = inquiry.listings?.location?.address || `#${inquiry.listing_id}`;
 
   return (
-    <div className="border border-gray-200 rounded-xl p-5 bg-white space-y-3">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
-            <span className="font-heading font-semibold text-navy text-sm">
+    <Card tone="white" className="p-5 md:p-6">
+      <div className="flex items-start justify-between gap-4 mb-4">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
+            <p className="font-display text-xl text-night">
               {inquiry.student_name}
-            </span>
-            <StatusBadge status={inquiry.status} t={t} />
+            </p>
+            <Pill variant={statusVariant(inquiry.status)}>
+              {t(`status_${inquiry.status}`)}
+            </Pill>
           </div>
-          <div className="text-xs text-gray-dark/50 space-x-3">
+          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-night/60">
             <a
               href={`mailto:${inquiry.student_email}`}
-              className="hover:text-gold transition-colors"
+              className="hover:text-blue transition-colors"
             >
               {inquiry.student_email}
             </a>
-            {inquiry.student_phone && (
-              <span>{inquiry.student_phone}</span>
-            )}
+            {inquiry.student_phone && <span>{inquiry.student_phone}</span>}
           </div>
         </div>
-        <div className="text-xs text-gray-dark/40 shrink-0 text-right">
-          <div>{formatDate(inquiry.created_at)}</div>
-          <div className="mt-0.5 text-gray-dark/30 truncate max-w-[140px]">{address}</div>
+        <div className="text-right text-xs text-night/50 shrink-0">
+          <p className="label-caps">{formatDate(inquiry.created_at)}</p>
+          <p className="mt-1 truncate max-w-[180px]">{address}</p>
         </div>
       </div>
 
-      <p className="text-sm text-gray-dark/80 bg-gray-light rounded-lg px-4 py-3 leading-relaxed">
+      <blockquote className="bg-parchment rounded-sm px-5 py-4 text-night/80 leading-relaxed mb-4 font-sans text-sm md:text-base">
         {inquiry.message}
-      </p>
+      </blockquote>
 
-      <div className="flex items-center gap-2 pt-1">
+      <div className="flex flex-wrap items-center gap-2">
         {inquiry.status === 'pending' && (
-          <button
-            onClick={() => onStatusChange(inquiry.inquiry_id, 'replied')}
+          <Button
+            size="sm"
+            variant="primary"
             disabled={updating}
-            className="text-xs px-3 py-1.5 rounded-lg bg-navy text-white font-medium hover:bg-navy/90 transition-colors disabled:opacity-50"
+            onClick={() => onStatusChange(inquiry.inquiry_id, 'replied')}
           >
             {updating ? '…' : t('markReplied')}
-          </button>
+          </Button>
         )}
         {inquiry.status !== 'closed' && (
-          <button
-            onClick={() => onStatusChange(inquiry.inquiry_id, 'closed')}
+          <Button
+            size="sm"
+            variant="outline"
             disabled={updating}
-            className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-dark/60 hover:border-gray-400 transition-colors disabled:opacity-50"
+            onClick={() => onStatusChange(inquiry.inquiry_id, 'closed')}
           >
             {updating ? '…' : t('markClosed')}
-          </button>
+          </Button>
         )}
         {inquiry.status === 'closed' && (
-          <button
-            onClick={() => onStatusChange(inquiry.inquiry_id, 'pending')}
+          <Button
+            size="sm"
+            variant="outline"
             disabled={updating}
-            className="text-xs px-3 py-1.5 rounded-lg border border-gray-200 text-gray-dark/60 hover:border-gray-400 transition-colors disabled:opacity-50"
+            onClick={() => onStatusChange(inquiry.inquiry_id, 'pending')}
           >
             {updating ? '…' : t('reopen')}
-          </button>
+          </Button>
         )}
       </div>
-    </div>
+    </Card>
   );
 }

@@ -2,92 +2,86 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, Link } from '@/i18n/navigation';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useTranslations } from 'next-intl';
+import Image from 'next/image';
+import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
+import LandlordShell from '@/components/landlord/LandlordShell';
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
+import Pill from '@/components/ui/Pill';
+import Icon from '@/components/ui/Icon';
+import VerifiedSeal from '@/components/ui/VerifiedSeal';
+
+/*
+  Propylaea landlord dashboard — widget-based rebuild.
+
+  Layout:
+    - Stats row (active listings, pending inquiries, views, conversion)
+    - Two-column widget grid:
+        - Left: Your listings (compact rows, max 5 + view all)
+        - Right: Recent inquiries (compact cards, max 5 + view all)
+        - Bottom: Verification card (state-dependent)
+
+  All existing API contracts are preserved — this is pure UI.
+*/
 export default function LandlordDashboardPage() {
-  const t = useTranslations('landlord.dashboard');
+  const t = useTranslations('propylaea.landlord.dashboard');
+  const tLegacy = useTranslations('landlord.dashboard');
   const router = useRouter();
-  const [landlordName, setLandlordName] = useState('');
+
   const [listings, setListings] = useState([]);
-  const [analytics, setAnalytics] = useState(null);
+  const [recentInquiries, setRecentInquiries] = useState([]);
   const [pendingInquiryCount, setPendingInquiryCount] = useState(0);
+  const [analytics, setAnalytics] = useState(null);
+  const [verifiedTier, setVerifiedTier] = useState('none');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [deleting, setDeleting] = useState(null);
-  const [togglingFeatured, setTogglingFeatured] = useState(null);
-  const [verifiedTier, setVerifiedTier] = useState(null);
 
   useEffect(() => {
-    async function init() {
+    (async () => {
       const supabase = getSupabaseBrowser();
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.replace('/landlord/login');
-        return;
-      }
-      if (!session.user.email_confirmed_at) {
-        router.replace('/landlord/verify-email');
-        return;
-      }
-      // Ensure landlord profile exists before fetching data
-      const profileRes = await fetch('/api/landlord/profile', {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({}),
-      });
-      if (!profileRes.ok) {
-        setLoading(false);
-        return;
-      }
-      const { landlord } = await profileRes.json();
-      // No longer redirect to onboarding — let landlords use the dashboard immediately
-      if (landlord?.name) setLandlordName(landlord.name);
+      if (!session) return; // LandlordShell handles redirect
       await Promise.all([
         fetchListings(session.access_token),
         fetchAnalytics(session.access_token),
-        fetchPendingInquiries(session.access_token),
+        fetchInquiries(session.access_token),
         fetchSubscription(session.access_token),
       ]);
-    }
-    init();
-  }, [router]);
+      setLoading(false);
+    })();
+  }, []);
 
   async function fetchListings(token) {
-    setLoading(true);
     try {
       const res = await fetch('/api/landlord/listings', {
         headers: { Authorization: `Bearer ${token}` },
       });
-      if (!res.ok) {
-        const { error: e } = await res.json();
-        setError(e || 'Failed to load listings');
-        return;
+      if (res.ok) {
+        const { listings: data } = await res.json();
+        setListings(data || []);
+      } else {
+        setError('Failed to load listings');
       }
-      const { listings: data } = await res.json();
-      setListings(data || []);
     } catch {
       setError('Failed to load listings');
-    } finally {
-      setLoading(false);
     }
   }
 
-  async function fetchPendingInquiries(accessToken) {
+  async function fetchInquiries(token) {
     try {
-      const res = await fetch('/api/landlord/inquiries?status=pending', {
-        headers: { Authorization: `Bearer ${accessToken}` },
+      const res = await fetch('/api/landlord/inquiries', {
+        headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
         const { inquiries } = await res.json();
-        setPendingInquiryCount(inquiries?.length ?? 0);
+        setRecentInquiries((inquiries || []).slice(0, 5));
+        setPendingInquiryCount(
+          (inquiries || []).filter((i) => i.status === 'pending').length
+        );
       }
-    } catch {
-      // non-critical
-    }
+    } catch {}
   }
 
   async function fetchAnalytics(token) {
@@ -99,9 +93,7 @@ export default function LandlordDashboardPage() {
         const { analytics: data } = await res.json();
         setAnalytics(data);
       }
-    } catch {
-      // analytics are non-critical
-    }
+    } catch {}
   }
 
   async function fetchSubscription(token) {
@@ -112,290 +104,309 @@ export default function LandlordDashboardPage() {
       if (res.ok) {
         const { verifiedTier: tier } = await res.json();
         setVerifiedTier(tier ?? 'none');
-      } else {
-        setVerifiedTier('none');
       }
-    } catch {
-      setVerifiedTier('none');
-    }
+    } catch {}
   }
 
-  async function handleDelete(listingId) {
-    if (!confirm(t('deleteConfirm'))) return;
-    setDeleting(listingId);
-
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { router.replace('/landlord/login'); return; }
-
-    const res = await fetch(`/api/landlord/listings/${listingId}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${session.access_token}` },
-    });
-
-    if (res.ok) {
-      setListings((prev) => prev.filter((l) => l.listing_id !== listingId));
-    } else {
-      alert(t('deleteError'));
-    }
-    setDeleting(null);
-  }
-
-  async function handleToggleFeatured(listingId, currentlyFeatured) {
-    setTogglingFeatured(listingId);
-
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { router.replace('/landlord/login'); return; }
-
-    const res = await fetch(`/api/landlord/listings/${listingId}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ is_featured: !currentlyFeatured }),
-    });
-
-    if (res.ok) {
-      setListings((prev) =>
-        prev.map((l) =>
-          l.listing_id === listingId ? { ...l, is_featured: !currentlyFeatured } : l
-        )
-      );
-    } else {
-      const data = await res.json().catch(() => ({}));
-      alert(data.error || t('featuredError'));
-    }
-    setTogglingFeatured(null);
-  }
-
-  async function handleSignOut() {
-    const supabase = getSupabaseBrowser();
-    await supabase.auth.signOut();
-    router.push('/landlord/login');
-  }
-
-  if (loading) {
-    return (
-      <div className="mx-auto max-w-4xl px-4 py-12">
-        <div className="animate-pulse space-y-4">
-          <div className="h-8 w-48 bg-gray-light rounded" />
-          <div className="h-32 bg-gray-light rounded-xl" />
-          <div className="h-32 bg-gray-light rounded-xl" />
-        </div>
-      </div>
-    );
-  }
+  const activeListings = listings.length;
+  const conversionPct = analytics?.conversion_rate ?? 0;
+  const views30d = analytics?.views_last_30_days ?? 0;
 
   return (
-    <div className="mx-auto max-w-4xl px-4 py-8 md:py-12">
-      {landlordName && (
-        <p className="text-lg text-gray-dark/70 mb-2">{t('welcome', { name: landlordName })}</p>
-      )}
-      <div className="flex items-center justify-between mb-8">
-        <h1 className="font-heading text-2xl font-bold text-navy">{t('title')}</h1>
-        <div className="flex items-center gap-3">
-          <Link
-            href="/landlord/inquiries"
-            className="relative text-sm px-4 py-2.5 rounded-lg border border-gray-200 text-gray-dark/70 hover:border-navy hover:text-navy transition-colors"
-          >
-            {t('inquiries')}
-            {pendingInquiryCount > 0 && (
-              <span className="absolute -top-1.5 -right-1.5 bg-gold text-white text-[10px] font-bold w-4.5 h-4.5 min-w-[1.1rem] min-h-[1.1rem] flex items-center justify-center rounded-full px-1">
-                {pendingInquiryCount}
-              </span>
-            )}
-          </Link>
-          {verifiedTier === 'none' && (
-            <Link
-              href="/landlord/get-verified"
-              className="text-sm px-4 py-2.5 rounded-lg bg-emerald-600 text-white font-heading font-semibold hover:bg-emerald-700 transition-colors"
-            >
-              {t('getVerified')}
-            </Link>
-          )}
-          <Link
-            href="/landlord/listings/new"
-            className="bg-gold text-white font-heading font-semibold text-sm px-4 py-2.5 rounded-lg hover:bg-gold/90 transition-colors"
-          >
-            + {t('addListing')}
-          </Link>
-          <button
-            onClick={handleSignOut}
-            className="text-sm text-gray-dark/60 hover:text-navy transition-colors"
-          >
-            {t('logout')}
-          </button>
-        </div>
-      </div>
-
-      {/* Upgrade banner — free tier only */}
-      {verifiedTier === 'none' && (
-        <div className="mb-4 rounded-xl border border-gold/30 bg-gold/5 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex-1">
-            <p className="font-heading font-bold text-navy text-base mb-1">Unlock SuperLandlord features</p>
-            <p className="text-sm text-gray-dark/70">Up to 5 listings, unlimited photos, priority placement &amp; verified badge.</p>
-          </div>
-          <Link
-            href="/landlord/get-verified"
-            className="shrink-0 bg-gold text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-gold/90 transition-colors text-center"
-          >
-            Upgrade now
-          </Link>
-        </div>
-      )}
-
-      {/* Get Verified CTA — free tier only */}
-      {verifiedTier === 'none' && (
-        <div className="mb-8 rounded-xl border border-emerald-200 bg-emerald-50 px-6 py-5 flex flex-col sm:flex-row sm:items-center gap-4">
-          <div className="flex-1">
-            <p className="font-heading font-bold text-navy text-base mb-1">{t('getVerified')}</p>
-            <p className="text-sm text-gray-dark/70">{t('getVerifiedDesc')}</p>
-          </div>
-          <Link
-            href="/landlord/verification"
-            className="shrink-0 bg-emerald-600 text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-emerald-700 transition-colors text-center"
-          >
-            {t('getVerified')}
-          </Link>
-        </div>
-      )}
-
-      {/* Analytics Overview */}
-      {analytics && (listings.length > 0 || analytics.total_views > 0) && (
-        <div className="mb-8">
-          <h2 className="font-heading text-lg font-bold text-navy mb-4">{t('analyticsTitle')}</h2>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-            <StatCard label={t('views30d')} value={analytics.views_last_30_days} />
-            <StatCard label={t('inquiries30d')} value={analytics.inquiries_last_30_days} />
-            <StatCard label={t('totalViews')} value={analytics.total_views} />
-            <StatCard label={t('conversion')} value={`${analytics.conversion_rate}%`} />
-          </div>
-          {analytics.per_listing.length > 0 && (
-            <div className="border border-gray-200 rounded-xl overflow-hidden">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="bg-gray-light text-gray-dark/60 text-xs">
-                    <th className="text-left px-4 py-2 font-medium">{t('listingColumn')}</th>
-                    <th className="text-right px-4 py-2 font-medium">{t('views')}</th>
-                    <th className="text-right px-4 py-2 font-medium">{t('inquiries')}</th>
-                    <th className="text-right px-4 py-2 font-medium">{t('conversionRate')}</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-100">
-                  {analytics.per_listing.map((pl) => {
-                    const listing = listings.find((l) => l.listing_id === pl.listing_id);
-                    return (
-                      <tr key={pl.listing_id}>
-                        <td className="px-4 py-2.5 truncate max-w-[200px]">
-                          {listing?.location?.address || `#${pl.listing_id}`}
-                        </td>
-                        <td className="px-4 py-2.5 text-right text-gray-dark/70">{pl.views}</td>
-                        <td className="px-4 py-2.5 text-right text-gray-dark/70">{pl.inquiries}</td>
-                        <td className="px-4 py-2.5 text-right text-gray-dark/70">{Math.round(pl.conversion * 10) / 10}%</td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-          )}
-        </div>
-      )}
-
+    <LandlordShell
+      eyebrow={t('welcomeEyebrow')}
+      title={t('welcomeTitle')}
+      actions={
+        <>
+          <Button href="/landlord/listings/new" variant="gold" size="sm">
+            {t('quickNewListing')}
+          </Button>
+        </>
+      }
+    >
       {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3 mb-6">
+        <p className="mb-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3">
           {error}
         </p>
       )}
 
-      {listings.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-xl">
-          <p className="text-gray-dark/50 mb-4">{t('noListings')}</p>
-          <Link
-            href="/landlord/listings/new"
-            className="inline-block bg-navy text-white font-heading font-semibold text-sm px-5 py-2.5 rounded-lg hover:bg-navy/90 transition-colors"
-          >
-            {t('addFirst')}
-          </Link>
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {listings.map((listing) => (
-            <div
-              key={listing.listing_id}
-              className="border border-gray-200 rounded-xl p-5 bg-white flex flex-col sm:flex-row sm:items-center gap-4"
-            >
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 mb-1">
-                  <span className="font-heading font-semibold text-navy text-base truncate">
-                    {listing.location?.address || t('noAddress')}
-                  </span>
-                  <span className="text-xs text-gray-dark/40 shrink-0">#{listing.listing_id}</span>
-                  {listing.is_featured && (
-                    <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-gold/10 text-gold shrink-0">
-                      {t('featured')}
-                    </span>
-                  )}
-                </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-sm text-gray-dark/60">
-                  <span>{listing.property_types?.name || '—'}</span>
-                  <span>{listing.location?.neighborhood || '—'}</span>
-                  <span>
-                    {listing.rent?.monthly_price != null
-                      ? `€${listing.rent.monthly_price}/mo`
-                      : t('priceOnRequest')}
-                  </span>
-                </div>
-              </div>
+      {/* Stats row */}
+      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+        <StatTile
+          label={t('statListings')}
+          value={activeListings}
+          loading={loading}
+        />
+        <StatTile
+          label={t('statInquiries')}
+          value={pendingInquiryCount}
+          loading={loading}
+          accent={pendingInquiryCount > 0}
+        />
+        <StatTile
+          label={t('statViews')}
+          value={views30d}
+          loading={loading}
+        />
+        <StatTile
+          label={t('statConversion')}
+          value={`${conversionPct}%`}
+          loading={loading}
+        />
+      </section>
 
-              <div className="flex items-center gap-2 shrink-0">
-                <button
-                  onClick={() => handleToggleFeatured(listing.listing_id, listing.is_featured)}
-                  disabled={togglingFeatured === listing.listing_id}
-                  className={`text-sm px-3 py-1.5 rounded-lg border transition-colors disabled:opacity-50 ${
-                    listing.is_featured
-                      ? 'border-gold/40 text-gold hover:bg-gold/5'
-                      : 'border-gray-200 text-gray-dark/70 hover:border-gold hover:text-gold'
-                  }`}
-                >
-                  {togglingFeatured === listing.listing_id ? '...' : listing.is_featured ? t('featured') : t('unfeatured')}
-                </button>
-                <Link
-                  href={`/listing/${listing.listing_id}`}
-                  target="_blank"
-                  className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-dark/70 hover:border-navy hover:text-navy transition-colors"
-                >
-                  {t('view')}
-                </Link>
-                <Link
-                  href={`/landlord/listings/${listing.listing_id}/edit`}
-                  className="text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-dark/70 hover:border-navy hover:text-navy transition-colors"
-                >
-                  {t('edit')}
-                </Link>
-                <button
-                  onClick={() => handleDelete(listing.listing_id)}
-                  disabled={deleting === listing.listing_id}
-                  className="text-sm px-3 py-1.5 rounded-lg border border-red-200 text-red-500 hover:bg-red-50 transition-colors disabled:opacity-50"
-                >
-                  {deleting === listing.listing_id ? t('deleting') : t('delete')}
-                </button>
-              </div>
+      {/* Two-column widget grid */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* Listings widget */}
+        <section className="lg:col-span-2">
+          <Card tone="white" className="p-6">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="font-display text-2xl text-night">
+                {t('widgetListings')}
+              </h2>
+              <Link
+                href="/landlord/listings"
+                className="label-caps text-blue hover:text-night"
+              >
+                {t('widgetListingsViewAll')} →
+              </Link>
             </div>
-          ))}
-        </div>
-      )}
+
+            {loading ? (
+              <ListingsSkeleton />
+            ) : listings.length === 0 ? (
+              <div className="text-center py-12 border border-dashed border-night/15 rounded-sm">
+                <p className="text-night/60 mb-4">
+                  {tLegacy('noListings')}
+                </p>
+                <Button href="/landlord/listings/new" variant="primary" size="sm">
+                  {tLegacy('addFirst')}
+                </Button>
+              </div>
+            ) : (
+              <ul className="divide-y divide-night/10">
+                {listings.slice(0, 5).map((listing) => (
+                  <li key={listing.listing_id} className="py-4 first:pt-0 last:pb-0">
+                    <ListingRow listing={listing} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
+        </section>
+
+        {/* Inquiries widget */}
+        <section>
+          <Card tone="white" className="p-6 h-full">
+            <div className="flex items-center justify-between mb-5">
+              <h2 className="font-display text-2xl text-night">
+                {t('widgetInquiries')}
+              </h2>
+              <Link
+                href="/landlord/inquiries"
+                className="label-caps text-blue hover:text-night"
+              >
+                {t('widgetInquiriesViewAll')} →
+              </Link>
+            </div>
+
+            {loading ? (
+              <div className="space-y-4">
+                {[1, 2, 3].map((i) => (
+                  <div key={i} className="h-16 bg-parchment rounded animate-pulse" />
+                ))}
+              </div>
+            ) : recentInquiries.length === 0 ? (
+              <p className="text-night/60 text-sm py-6">
+                {tLegacy('noListings') && 'No inquiries yet.'}
+              </p>
+            ) : (
+              <ul className="space-y-3">
+                {recentInquiries.map((inq) => (
+                  <li key={inq.id || inq.inquiry_id}>
+                    <InquiryRow inquiry={inq} />
+                  </li>
+                ))}
+              </ul>
+            )}
+          </Card>
+        </section>
+      </div>
+
+      {/* Verification card */}
+      <section className="mt-6">
+        <VerificationCard tier={verifiedTier} t={t} />
+      </section>
+    </LandlordShell>
+  );
+}
+
+function StatTile({ label, value, loading, accent }) {
+  return (
+    <Card
+      tone={accent ? 'night' : 'parchment'}
+      border={false}
+      className={`p-5 ${accent ? 'text-stone' : ''}`}
+    >
+      <p
+        className={`label-caps ${accent ? 'text-gold' : 'text-night/60'}`}
+      >
+        {label}
+      </p>
+      <p
+        className={`mt-2 font-display text-4xl md:text-5xl leading-none ${
+          accent ? 'text-stone' : 'text-blue'
+        }`}
+      >
+        {loading ? (
+          <span className="inline-block w-16 h-9 bg-night/10 rounded animate-pulse" />
+        ) : (
+          value
+        )}
+      </p>
+    </Card>
+  );
+}
+
+function ListingRow({ listing }) {
+  const photo = listing.photos?.find((url) => typeof url === 'string' && url.startsWith('http'));
+  const address = listing.location?.address || 'Untitled listing';
+  const neighborhood = listing.location?.neighborhood;
+  const price = listing.rent?.monthly_price;
+  const status = listing.is_featured ? 'Featured' : null;
+
+  return (
+    <div className="flex items-center gap-4">
+      <div className="relative w-16 h-16 rounded-sm bg-parchment overflow-hidden shrink-0">
+        {photo ? (
+          <Image
+            src={photo}
+            alt={address}
+            fill
+            className="object-cover"
+            sizes="64px"
+          />
+        ) : (
+          <div className="flex items-center justify-center h-full text-night/20">
+            <Icon name="photo" className="w-6 h-6" />
+          </div>
+        )}
+      </div>
+
+      <div className="flex-1 min-w-0">
+        <p className="font-display text-lg text-night truncate">{address}</p>
+        <p className="label-caps text-night/50 mt-0.5 truncate">
+          {neighborhood}
+          {price != null && <> · €{price}/mo</>}
+        </p>
+      </div>
+
+      <div className="flex items-center gap-2 shrink-0">
+        {status && <Pill variant="verified">{status}</Pill>}
+        <Link
+          href={`/landlord/listings/${listing.listing_id}/edit`}
+          className="label-caps text-blue hover:text-night transition-colors"
+        >
+          Edit
+        </Link>
+      </div>
     </div>
   );
 }
 
-function StatCard({ label, value }) {
+function InquiryRow({ inquiry }) {
+  const status = inquiry.status || 'pending';
+  const statusVariant =
+    status === 'pending' ? 'verified'
+    : status === 'replied' ? 'info'
+    : 'amenity';
+  const statusLabel =
+    status === 'pending' ? 'New'
+    : status === 'replied' ? 'Replied'
+    : 'Closed';
+  const date = inquiry.created_at
+    ? new Date(inquiry.created_at).toLocaleDateString()
+    : '';
+
   return (
-    <div className="bg-gray-light rounded-xl p-4">
-      <p className="text-xs text-gray-dark/50 mb-1">{label}</p>
-      <p className="font-heading text-xl font-bold text-navy">{value}</p>
-    </div>
+    <Link
+      href="/landlord/inquiries"
+      className="block rounded-sm border border-night/10 p-3 hover:border-blue transition-colors"
+    >
+      <div className="flex items-start justify-between gap-3 mb-1">
+        <p className="font-display text-base text-night truncate">
+          {inquiry.student_name || inquiry.name || 'Student'}
+        </p>
+        <Pill variant={statusVariant}>{statusLabel}</Pill>
+      </div>
+      {inquiry.message && (
+        <p className="text-xs text-night/60 line-clamp-2">
+          {inquiry.message}
+        </p>
+      )}
+      {date && (
+        <p className="label-caps text-night/40 mt-1">{date}</p>
+      )}
+    </Link>
+  );
+}
+
+function VerificationCard({ tier, t }) {
+  if (tier === 'verified' || tier === 'verified_pro') {
+    return (
+      <Card tone="parchment" className="p-6 flex items-center gap-5">
+        <VerifiedSeal size={52} />
+        <div className="flex-1">
+          <p className="label-caps text-gold">{t('widgetVerification')}</p>
+          <p className="font-display text-2xl text-night mt-1">
+            {t('verifiedTitle')}
+          </p>
+          <p className="text-night/70 text-sm mt-1">{t('verifiedBody')}</p>
+        </div>
+      </Card>
+    );
+  }
+
+  return (
+    <Card tone="night" className="p-6 md:p-8">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+        <div className="flex items-center gap-5">
+          <div className="w-12 h-12 rounded-full border border-gold/50 flex items-center justify-center">
+            <Icon name="shield" className="w-5 h-5 text-gold" />
+          </div>
+          <div>
+            <p className="label-caps text-gold">{t('widgetVerification')}</p>
+            <p className="font-display text-2xl text-stone mt-1">
+              {t('unverifiedTitle')}
+            </p>
+            <p className="text-stone/70 text-sm mt-1 max-w-md">
+              {t('unverifiedBody')}
+            </p>
+          </div>
+        </div>
+        <Button href="/landlord/get-verified" variant="gold" size="md">
+          {t('quickVerify')}
+        </Button>
+      </div>
+    </Card>
+  );
+}
+
+function ListingsSkeleton() {
+  return (
+    <ul className="divide-y divide-night/10">
+      {[1, 2, 3].map((i) => (
+        <li
+          key={i}
+          className="py-4 flex items-center gap-4 first:pt-0 last:pb-0"
+        >
+          <div className="w-16 h-16 rounded-sm bg-parchment animate-pulse" />
+          <div className="flex-1 space-y-2">
+            <div className="h-4 w-2/3 bg-parchment rounded animate-pulse" />
+            <div className="h-3 w-1/3 bg-parchment rounded animate-pulse" />
+          </div>
+        </li>
+      ))}
+    </ul>
   );
 }

@@ -1,33 +1,56 @@
 'use client';
 
-import { useLocale, useTranslations } from 'next-intl';
+import { useLocale } from 'next-intl';
 import { usePathname, useRouter } from '@/i18n/navigation';
 import { useTransition } from 'react';
 
+/*
+  Propylaea locale switcher — renders as "EL / EN" with the active locale
+  filled blue, the inactive one ghosted. Matches the design's top-right.
+*/
 export default function LocaleSwitcher() {
-  const t = useTranslations('nav');
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const [isPending, startTransition] = useTransition();
 
-  function switchLocale(nextLocale) {
+  function switchTo(next) {
+    if (next === locale) return;
     startTransition(() => {
-      router.replace(pathname, { locale: nextLocale });
+      router.replace(pathname, { locale: next });
     });
   }
 
-  const nextLocale = locale === 'en' ? 'el' : 'en';
-  const label = locale === 'en' ? t('switchToEl') : t('switchToEn');
+  const base =
+    'label-caps px-1.5 py-0.5 transition-colors disabled:opacity-50';
+  const active = 'text-blue';
+  const inactive = 'text-night/40 hover:text-night';
 
   return (
-    <button
-      onClick={() => switchLocale(nextLocale)}
-      disabled={isPending}
-      className="text-sm font-medium text-gray-dark/60 hover:text-navy transition-colors px-2 py-1 rounded-md hover:bg-gray-light disabled:opacity-50 cursor-pointer"
-      aria-label={`Switch to ${nextLocale === 'el' ? 'Greek' : 'English'}`}
+    <div
+      className="inline-flex items-center gap-1 select-none"
+      role="group"
+      aria-label="Language"
     >
-      {label}
-    </button>
+      <button
+        type="button"
+        onClick={() => switchTo('el')}
+        disabled={isPending}
+        aria-pressed={locale === 'el'}
+        className={`${base} ${locale === 'el' ? active : inactive}`}
+      >
+        EL
+      </button>
+      <span aria-hidden="true" className="text-night/30">/</span>
+      <button
+        type="button"
+        onClick={() => switchTo('en')}
+        disabled={isPending}
+        aria-pressed={locale === 'en'}
+        className={`${base} ${locale === 'en' ? active : inactive}`}
+      >
+        EN
+      </button>
+    </div>
   );
 }
