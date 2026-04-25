@@ -23,7 +23,7 @@ export function confirmationEmailHtml({ label, manageUrl, frequency }) {
         <table width="560" cellpadding="0" cellspacing="0" style="background:#F0EBDF;border-radius:12px;overflow:hidden;border:1px solid #E5DFD0;">
           <!-- Header -->
           <tr>
-            <td style="background:#0A1436;padding:24px 32px;">
+            <td style="background:#01828D;padding:24px 32px;">
               <p style="margin:0;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#B8860B;">StudentX</p>
               <p style="margin:4px 0 0;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;color:#FAF8F3B3;">Student Housing · Thessaloniki</p>
             </td>
@@ -31,7 +31,7 @@ export function confirmationEmailHtml({ label, manageUrl, frequency }) {
           <!-- Body -->
           <tr>
             <td style="padding:32px;">
-              <h1 style="margin:0 0 8px;font-family:'EB Garamond',Garamond,Georgia,'Times New Roman',serif;font-size:24px;font-weight:600;color:#0A1436;letter-spacing:-0.01em;">${title}</h1>
+              <h1 style="margin:0 0 8px;font-family:'EB Garamond',Garamond,Georgia,'Times New Roman',serif;font-size:24px;font-weight:600;color:#01828D;letter-spacing:-0.01em;">${title}</h1>
               <p style="margin:0 0 24px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;color:#555;line-height:1.6;">
                 You will receive a ${freqLabel} digest whenever new listings match your saved filters.
               </p>

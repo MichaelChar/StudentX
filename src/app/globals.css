@@ -11,16 +11,16 @@
   --color-gold: #B8860B;        /* Seal gold — verified pills, focus rings, partner seals ONLY */
   --color-stone: #FAF8F3;       /* Canvas / page background */
   --color-parchment: #F0EBDF;   /* Surface / cards / inputs */
-  --color-night: #0A1436;       /* Ink — body text, dark surfaces */
+  --color-night: #01828D;       /* Ink / dark surfaces — repointed to teal per design directive */
 
   /* Legacy aliases — repointed to Propylaea values so existing components */
   /* using these utilities pick up the new palette without manual migration. */
   /* Remove once every page is migrated to the new tokens. */
   --color-navy: #01828D;
-  --color-midnight: #0A1436;
-  --color-ink: #0A1436;
+  --color-midnight: #01828D;
+  --color-ink: #01828D;
   --color-white: #FFFFFF;
-  --color-text: #0A1436;
+  --color-text: #01828D;
   --color-gray-light: #F0EBDF;
 }
 
