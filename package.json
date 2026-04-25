@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.101.0",
+    "d3-geo": "^3.1.1",
     "leaflet": "^1.9.4",
     "next": "16.2.1",
     "next-intl": "^4.9.0",
@@ -20,7 +21,8 @@
     "react-dom": "19.2.4",
     "react-leaflet": "^5.0.0",
     "resend": "^4.0.0",
-    "stripe": "^22.0.0"
+    "stripe": "^22.0.0",
+    "topojson-client": "^3.1.0"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.18.0",
