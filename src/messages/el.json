@@ -535,7 +535,20 @@
         "inquiries": "Αιτήματα",
         "verification": "Επαλήθευση",
         "billing": "Χρεώσεις",
+        "settings": "Ρυθμίσεις",
         "signOut": "Αποσύνδεση"
+      },
+      "settings": {
+        "eyebrow": "Ρυθμίσεις",
+        "title": "Προτιμήσεις λογαριασμού",
+        "emailLanguageLabel": "Γλώσσα email",
+        "emailLanguageDescription": "Τα email για αιτήματα και ενημερώσεις θα στέλνονται σε αυτή τη γλώσσα. Η σελίδα για τους φοιτητές παραμένει στις δικές της γλωσσικές ρυθμίσεις.",
+        "localeOptionEl": "Ελληνικά",
+        "localeOptionEn": "English (Αγγλικά)",
+        "save": "Αποθήκευση",
+        "saving": "Αποθήκευση…",
+        "saved": "Αποθηκεύτηκε",
+        "error": "Η αποθήκευση απέτυχε. Δοκιμάστε ξανά."
       },
       "dashboard": {
         "welcomeEyebrow": "Πίνακας ιδιοκτήτη",

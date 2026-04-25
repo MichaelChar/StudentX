@@ -24,6 +24,7 @@ const NAV_ITEMS = [
   { key: 'inquiries', href: '/landlord/inquiries', icon: 'message' },
   { key: 'verification', href: '/landlord/verification', icon: 'shield' },
   { key: 'billing', href: '/landlord/get-verified', icon: 'euro' },
+  { key: 'settings', href: '/landlord/settings', icon: 'cog' },
 ];
 
 export default function LandlordShell({ title, eyebrow, actions, children }) {

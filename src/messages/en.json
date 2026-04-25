@@ -535,7 +535,20 @@
         "inquiries": "Inquiries",
         "verification": "Verification",
         "billing": "Billing",
+        "settings": "Settings",
         "signOut": "Sign out"
+      },
+      "settings": {
+        "eyebrow": "Settings",
+        "title": "Account preferences",
+        "emailLanguageLabel": "Email language",
+        "emailLanguageDescription": "Inquiry notifications and digests will be sent to you in this language. The student-facing site keeps its own language.",
+        "localeOptionEl": "Ελληνικά (Greek)",
+        "localeOptionEn": "English",
+        "save": "Save changes",
+        "saving": "Saving…",
+        "saved": "Saved",
+        "error": "Failed to save. Please try again."
       },
       "dashboard": {
         "welcomeEyebrow": "Landlord dashboard",
