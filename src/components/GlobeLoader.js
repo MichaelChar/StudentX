@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import {
   geoOrthographic,
-  geoMercator,
   geoPath,
   geoGraticule10,
 } from 'd3-geo';
@@ -51,48 +50,51 @@ export default function GlobeLoader({ onComplete }) {
     onCompleteRef.current = onComplete;
   }, [onComplete]);
 
-  // Reduce-motion: skip the animation entirely, fire onComplete immediately.
-  const [reduced, setReduced] = useState(false);
   useEffect(() => {
+    // Reduce-motion: skip the animation entirely, fire onComplete on a short
+    // delay so the parent can transition out cleanly. matchMedia is checked
+    // here (not via state) to keep the SSR/client render output identical.
     if (typeof window !== 'undefined' && window.matchMedia) {
       const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
       if (mq.matches) {
-        setReduced(true);
         const id = setTimeout(() => onCompleteRef.current && onCompleteRef.current(), 200);
         return () => clearTimeout(id);
       }
     }
-    return undefined;
-  }, []);
 
-  useEffect(() => {
-    if (reduced) return undefined;
     let cancelled = false;
     const cleanups = [];
 
     (async () => {
-      // Load topology — 110m for the spinning globe (small/fast),
-      // 50m for the Greece zoom (more coastal detail).
-      let world, worldHi;
+      // Load the 110m world atlas first — small (~105 KB), drives the spin
+      // immediately. Lazy-fetch the 50m hi-detail set in parallel; it's only
+      // needed once the zoom phase passes HI_AT (~0.12 in), which lands well
+      // after the 1.5 s spin hold + 1.2 s settle, so the larger payload
+      // (~756 KB) is hidden behind animation time rather than blocking TTI.
+      let world;
+      let countriesHi = null;
       try {
-        const [w, wHi] = await Promise.all([
-          fetch('/topojson/countries-110m.json').then((r) => r.json()),
-          fetch('/topojson/countries-50m.json').then((r) => r.json()).catch(() => null),
-        ]);
-        world = w;
-        worldHi = wHi;
+        world = await fetch('/topojson/countries-110m.json').then((r) => r.json());
       } catch (err) {
-        console.error('GlobeLoader: failed to load topology', err);
-        // Fail safe: skip the animation, signal complete so the page proceeds.
+        console.error('GlobeLoader: failed to load 110m topology', err);
         if (!cancelled && onCompleteRef.current) onCompleteRef.current();
         return;
       }
       if (cancelled) return;
 
       const countries = topojson.feature(world, world.objects.countries);
-      const countriesHi = worldHi
-        ? topojson.feature(worldHi, worldHi.objects.countries)
-        : countries;
+      // countriesHi defaults to the 110m set; the lazy fetch below upgrades
+      // it in place once the 50m payload arrives.
+      countriesHi = countries;
+      fetch('/topojson/countries-50m.json')
+        .then((r) => r.json())
+        .then((wHi) => {
+          if (cancelled || !wHi) return;
+          countriesHi = topojson.feature(wHi, wHi.objects.countries);
+        })
+        .catch(() => {
+          // Stays on 110m — coastlines a touch coarser, no visual breakage.
+        });
 
       const proj = geoOrthographic()
         .scale(R)
@@ -298,9 +300,7 @@ export default function GlobeLoader({ onComplete }) {
         try { fn(); } catch { /* noop */ }
       }
     };
-  }, [reduced]);
-
-  if (reduced) return null;
+  }, []);
 
   return (
     <div
