@@ -38,21 +38,6 @@ export default function LandlordDashboardPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return; // LandlordShell handles redirect
-      await Promise.all([
-        fetchListings(session.access_token),
-        fetchAnalytics(session.access_token),
-        fetchInquiries(session.access_token),
-        fetchSubscription(session.access_token),
-      ]);
-      setLoading(false);
-    })();
-  }, []);
-
   async function fetchListings(token) {
     try {
       const res = await fetch('/api/landlord/listings', {
@@ -107,6 +92,21 @@ export default function LandlordDashboardPage() {
       }
     } catch {}
   }
+
+  useEffect(() => {
+    (async () => {
+      const supabase = getSupabaseBrowser();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return; // LandlordShell handles redirect
+      await Promise.all([
+        fetchListings(session.access_token),
+        fetchAnalytics(session.access_token),
+        fetchInquiries(session.access_token),
+        fetchSubscription(session.access_token),
+      ]);
+      setLoading(false);
+    })();
+  }, []);
 
   const activeListings = listings.length;
   const conversionPct = analytics?.conversion_rate ?? 0;

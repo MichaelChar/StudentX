@@ -55,7 +55,7 @@ export default function GetVerifiedPage() {
   const t = useTranslations('landlord.getVerified');
 
   function handleChoose(stripeUrl) {
-    window.location.href = stripeUrl;
+    window.location.assign(stripeUrl);
   }
 
   return (
