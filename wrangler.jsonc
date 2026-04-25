@@ -16,6 +16,15 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Public Supabase config — these are also inlined into the client bundle
+  // via NEXT_PUBLIC_*, but server-side route handlers (e.g. /api/listings)
+  // read them from process.env at runtime in the Worker. Without these,
+  // every Supabase-backed API route 500s because getSupabase() throws on
+  // missing env. Anon key is RLS-protected and intentionally public.
+  "vars": {
+    "NEXT_PUBLIC_SUPABASE_URL": "https://ecluqurlfbvkxrnoyhaq.supabase.co",
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbHVxdXJsZmJ2a3hybm95aGFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODQ0MzUsImV4cCI6MjA5MDM2MDQzNX0.XspsrkDjv_AWltPgFqBQSocLXU4tBmq1auu_Zg8qTBE"
+  },
   // Cron triggers: daily at 09:00 UTC and weekly on Mondays at 09:00 UTC.
   // Dispatched via cf/worker-entry.mjs's `scheduled` handler, which POSTs to
   // /api/cron/saved-searches-digest using NEXT_PUBLIC_APP_URL + CRON_SECRET.
