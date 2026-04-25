@@ -3,8 +3,17 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
+const ERROR_CODES = new Set([
+  'RATE_LIMITED',
+  'CAP_EXCEEDED',
+  'LISTING_NOT_FOUND',
+  'INVALID_INPUT',
+  'INTERNAL',
+]);
+
 export default function InquiryForm({ listingId, facultyId }) {
   const t = useTranslations('inquiry');
+  const tErrors = useTranslations('inquiry.errors');
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({
     student_name: '',
@@ -43,7 +52,9 @@ export default function InquiryForm({ listingId, facultyId }) {
 
       const data = await res.json();
       if (!res.ok) {
-        setError(data.error || t('genericError'));
+        const code = ERROR_CODES.has(data.error_code) ? data.error_code : null;
+        const localized = code && tErrors.has(code) ? tErrors(code) : null;
+        setError(localized || data.error || t('genericError'));
         return;
       }
 

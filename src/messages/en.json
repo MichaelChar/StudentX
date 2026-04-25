@@ -108,7 +108,14 @@
     "successTitle": "Message sent!",
     "successDesc": "The landlord will be in touch shortly.",
     "networkError": "Network error. Please check your connection and try again.",
-    "genericError": "Something went wrong. Please try again."
+    "genericError": "Something went wrong. Please try again.",
+    "errors": {
+      "RATE_LIMITED": "Too many inquiries from your network. Please try again in an hour.",
+      "CAP_EXCEEDED": "This listing has reached its inquiry limit. Please try another listing.",
+      "LISTING_NOT_FOUND": "This listing could not be found. It may have been removed.",
+      "INVALID_INPUT": "Please check the form fields and try again.",
+      "INTERNAL": "Something went wrong on our end. Please try again shortly."
+    }
   },
   "listingCard": {
     "featured": "Featured",
