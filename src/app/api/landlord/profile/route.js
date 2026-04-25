@@ -11,12 +11,61 @@ export async function GET(request) {
 
   const { data: landlord, error } = await getSupabase()
     .from('landlords')
-    .select('landlord_id, name, email, contact_info, onboarding_completed')
+    .select('landlord_id, name, email, contact_info, onboarding_completed, preferred_locale')
     .eq('auth_user_id', user.id)
     .single();
 
   if (error || !landlord) {
     return NextResponse.json({ error: 'Profile not found' }, { status: 404 });
+  }
+
+  return NextResponse.json({ landlord });
+}
+
+export async function PATCH(request) {
+  const token = extractToken(request);
+  if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  const user = await getUserFromToken(token);
+  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
+  let body;
+  try {
+    body = await request.json();
+  } catch {
+    return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
+  }
+
+  // Whitelist updatable fields. preferred_locale is the only one for now.
+  // Email + name are owned by other flows (auth signup, onboarding).
+  const updates = {};
+  if (body.preferred_locale !== undefined) {
+    if (body.preferred_locale !== 'el' && body.preferred_locale !== 'en') {
+      return NextResponse.json(
+        { error: "preferred_locale must be 'el' or 'en'" },
+        { status: 400 }
+      );
+    }
+    updates.preferred_locale = body.preferred_locale;
+  }
+
+  if (Object.keys(updates).length === 0) {
+    return NextResponse.json({ error: 'No updatable fields supplied' }, { status: 400 });
+  }
+
+  // RLS UPDATE policy on landlords requires auth_user_id = auth.uid(),
+  // so we use the user-token client (not the anon service client).
+  const authedSupabase = getSupabaseWithToken(token);
+  const { data: landlord, error } = await authedSupabase
+    .from('landlords')
+    .update(updates)
+    .eq('auth_user_id', user.id)
+    .select('landlord_id, name, email, contact_info, onboarding_completed, preferred_locale')
+    .single();
+
+  if (error || !landlord) {
+    console.error('Failed to update landlord profile:', error);
+    return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
   }
 
   return NextResponse.json({ landlord });

@@ -16,11 +16,15 @@ function getClientIp(request) {
   return request.headers.get("x-real-ip") || null;
 }
 
-// Greek is the primary market and there is no `preferred_locale` column on
-// landlord_profiles yet, so we default to 'el' and only honour an explicit
-// 'en' preference from the request's Accept-Language header. If a landlord
-// preference column is added later, it should take precedence over this.
-function resolveEmailLocale(request) {
+// The inquiry email is landlord-facing, so we render in the landlord's
+// preferred_locale (added to `landlords` in migration 023). For legacy rows
+// or any oddity that returns null, fall back to the inquirer's Accept-Language
+// (still better than English-only), then to 'el' since Thessaloniki is the
+// primary market.
+function resolveLandlordEmailLocale(request, landlord) {
+  if (landlord?.preferred_locale === "el" || landlord?.preferred_locale === "en") {
+    return landlord.preferred_locale;
+  }
   const header = request.headers.get("accept-language") || "";
   const tags = header
     .split(",")
@@ -152,7 +156,7 @@ export async function POST(request) {
           listing_id,
           location ( address, neighborhood ),
           rent ( monthly_price ),
-          landlords ( name, email )
+          landlords ( name, email, preferred_locale )
         `)
         .eq("listing_id", cleanListingId)
         .single();
@@ -176,7 +180,7 @@ export async function POST(request) {
         const listingSummary = [location?.address, location?.neighborhood]
           .filter(Boolean)
           .join(" · ");
-        const emailLocale = resolveEmailLocale(request);
+        const emailLocale = resolveLandlordEmailLocale(request, landlord);
 
         await getResend().emails.send({
           from: FROM_ADDRESS,
