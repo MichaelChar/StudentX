@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
@@ -25,6 +25,15 @@ export default function LandlordSettingsPage() {
   const [error, setError] = useState('');
   const [preferredLocale, setPreferredLocale] = useState('el');
   const [originalLocale, setOriginalLocale] = useState('el');
+  const savedTimerRef = useRef(null);
+
+  // Clear any pending savedTick timer on unmount to avoid setting state on
+  // an unmounted component (React DEV warning).
+  useEffect(() => {
+    return () => {
+      if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+    };
+  }, []);
 
   useEffect(() => {
     let cancelled = false;
@@ -94,8 +103,10 @@ export default function LandlordSettingsPage() {
       setOriginalLocale(newLocale);
       setPreferredLocale(newLocale);
       setSavedTick(true);
-      // Auto-clear the saved indicator after a beat.
-      setTimeout(() => setSavedTick(false), 2500);
+      // Auto-clear the saved indicator after a beat. Stash the timer so the
+      // unmount effect can cancel it.
+      if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
+      savedTimerRef.current = setTimeout(() => setSavedTick(false), 2500);
     } catch {
       setError(t('error'));
     } finally {
