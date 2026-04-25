@@ -1,6 +1,11 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "studentx",
+  // Expose the Worker on Cloudflare's free `*.workers.dev` subdomain so the
+  // deployment has a public URL even before a custom domain is wired up.
+  // The hostname will be `studentx.<account-subdomain>.workers.dev`. Safe
+  // to leave on alongside a future custom domain — both serve the same code.
+  "workers_dev": true,
   // cf/worker-entry.mjs wraps .open-next/worker.js to add a `scheduled` handler
   // (OpenNext v1.x doesn't ship one). The wrapper imports the built worker, so
   // `npm run cf:build` must have run before `wrangler deploy`.
