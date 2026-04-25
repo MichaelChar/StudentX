@@ -12,6 +12,7 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
+import GlobeLoader from '@/components/GlobeLoader';
 
 /*
   Propylaea results page — matches page 06 of the reference design.
@@ -62,6 +63,27 @@ function ResultsContent() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
+  // Globe loader (post-quiz transition). Shown only when arriving with quiz
+  // params (budget/types/neighborhoods present) on first mount of the page —
+  // never on filter-driven re-fetches. Sequence runs ~6.5s; we hide the
+  // loader only after the animation completes AND listings are loaded so
+  // there's no jarring skeleton flash mid-zoom. We resolve `showLoader` in
+  // an effect (not the initializer) so SSR doesn't lock us into `false`.
+  const [loaderDone, setLoaderDone] = useState(false);
+  const [showLoader, setShowLoader] = useState(false);
+  const loaderDecidedRef = useRef(false);
+  useEffect(() => {
+    if (loaderDecidedRef.current) return;
+    loaderDecidedRef.current = true;
+    if (typeof window === 'undefined') return;
+    // Read the URL directly. useSearchParams() can interact awkwardly with
+    // the Suspense boundary that wraps this component on first paint, so we
+    // sidestep it for the loader gate.
+    const usp = new URLSearchParams(window.location.search);
+    const cameFromQuiz =
+      usp.has('budget') || usp.has('types') || usp.has('neighborhoods');
+    if (cameFromQuiz) setShowLoader(true);
+  }, []);
   const [sortBy, setSortBy] = useState('match');
   const [viewMode, setViewMode] = useState(
     searchParams.get('view') === 'map' ? 'map' : 'list'
@@ -149,8 +171,15 @@ function ResultsContent() {
   const featured = listings.find((l) => l.is_featured);
   const regular = listings.filter((l) => !l.is_featured);
 
+  // Show loader as a full-screen overlay until BOTH animation completes
+  // AND the initial listings fetch has finished. Both conditions guard
+  // against jank: the loader hides only when there's something legible
+  // to reveal beneath it.
+  const loaderVisible = showLoader && (!loaderDone || loading);
+
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 md:py-14">
+      {loaderVisible && <GlobeLoader onComplete={() => setLoaderDone(true)} />}
       {/* Header row */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
         <div>
