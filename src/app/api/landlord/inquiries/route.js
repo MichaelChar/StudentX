@@ -23,6 +23,7 @@ export async function GET(request) {
 
   const { searchParams } = new URL(request.url);
   const status = searchParams.get('status');
+  const includeCounts = searchParams.get('counts') === '1';
 
   const authedSupabase = getSupabaseWithToken(token);
   let query = authedSupabase
@@ -52,5 +53,20 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Failed to fetch inquiries' }, { status: 500 });
   }
 
-  return NextResponse.json({ inquiries: data });
+  const response = { inquiries: data };
+
+  if (includeCounts) {
+    const { count: pendingCount, error: countError } = await authedSupabase
+      .from('inquiries')
+      .select('inquiry_id', { count: 'exact', head: true })
+      .eq('status', 'pending');
+
+    if (countError) {
+      console.error('Failed to fetch inquiry counts:', countError);
+    } else {
+      response.pending_count = pendingCount ?? 0;
+    }
+  }
+
+  return NextResponse.json(response);
 }

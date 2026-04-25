@@ -11,6 +11,7 @@ export default function InquiryForm({ listingId, facultyId }) {
     student_email: '',
     student_phone: '',
     message: '',
+    website: '', // honeypot — must stay empty for real users
   });
   const [submitting, setSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -36,6 +37,7 @@ export default function InquiryForm({ listingId, facultyId }) {
           student_phone: form.student_phone || undefined,
           message: form.message,
           faculty_id: facultyId || undefined,
+          website: form.website,
         }),
       });
 
@@ -102,6 +104,20 @@ export default function InquiryForm({ listingId, facultyId }) {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-3">
+        {/* Honeypot — hidden from real users; bots fill every field */}
+        <div aria-hidden="true" style={{ position: 'absolute', left: '-9999px', width: '1px', height: '1px', overflow: 'hidden' }}>
+          <label htmlFor="inquiry-website">Website</label>
+          <input
+            id="inquiry-website"
+            name="website"
+            type="text"
+            tabIndex={-1}
+            autoComplete="off"
+            value={form.website}
+            onChange={handleChange}
+          />
+        </div>
+
         <div>
           <label htmlFor="inquiry-name" className="sr-only">{t('yourName')}</label>
           <input
