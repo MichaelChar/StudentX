@@ -16,13 +16,33 @@ function getClientIp(request) {
   return request.headers.get("x-real-ip") || null;
 }
 
+// Greek is the primary market and there is no `preferred_locale` column on
+// landlord_profiles yet, so we default to 'el' and only honour an explicit
+// 'en' preference from the request's Accept-Language header. If a landlord
+// preference column is added later, it should take precedence over this.
+function resolveEmailLocale(request) {
+  const header = request.headers.get("accept-language") || "";
+  const tags = header
+    .split(",")
+    .map((t) => t.split(";")[0].trim().toLowerCase())
+    .filter(Boolean);
+  for (const tag of tags) {
+    if (tag === "el" || tag.startsWith("el-")) return "el";
+    if (tag === "en" || tag.startsWith("en-")) return "en";
+  }
+  return "el";
+}
+
 export async function POST(request) {
   try {
     let body;
     try {
       body = await request.json();
     } catch {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: "Invalid JSON body" },
+        { status: 400 }
+      );
     }
 
     const { listing_id, student_name, student_email, student_phone, message, faculty_id, website } = body;
@@ -34,20 +54,32 @@ export async function POST(request) {
     }
 
     if (!listing_id || typeof listing_id !== "string") {
-      return NextResponse.json({ error: "listing_id is required" }, { status: 400 });
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: "listing_id is required" },
+        { status: 400 }
+      );
     }
     if (!student_name || typeof student_name !== "string" || student_name.trim().length === 0) {
-      return NextResponse.json({ error: "student_name is required" }, { status: 400 });
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: "student_name is required" },
+        { status: 400 }
+      );
     }
     if (!student_email || typeof student_email !== "string") {
-      return NextResponse.json({ error: "student_email is required" }, { status: 400 });
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: "student_email is required" },
+        { status: 400 }
+      );
     }
     if (!/^[^@]+@[^@]+\.[^@]+$/.test(student_email)) {
-      return NextResponse.json({ error: "student_email is invalid" }, { status: 400 });
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: "student_email is invalid" },
+        { status: 400 }
+      );
     }
     if (!message || typeof message !== "string" || message.trim().length < 10) {
       return NextResponse.json(
-        { error: "message must be at least 10 characters" },
+        { error_code: "INVALID_INPUT", error: "message must be at least 10 characters" },
         { status: 400 }
       );
     }
@@ -82,20 +114,32 @@ export async function POST(request) {
     if (rpcError) {
       switch (rpcError.code) {
         case "P0002":
-          return NextResponse.json({ error: "Listing not found" }, { status: 404 });
+          return NextResponse.json(
+            { error_code: "LISTING_NOT_FOUND", error: "Listing not found" },
+            { status: 404 }
+          );
         case "P0003":
           return NextResponse.json(
-            { error: "Too many inquiries from this network. Try again in an hour." },
+            {
+              error_code: "RATE_LIMITED",
+              error: "Too many inquiries from this network. Try again in an hour.",
+            },
             { status: 429 }
           );
         case "P0001":
           return NextResponse.json(
-            { error: "This listing has reached the maximum number of inquiries for the free tier." },
+            {
+              error_code: "CAP_EXCEEDED",
+              error: "This listing has reached the maximum number of inquiries for the free tier.",
+            },
             { status: 403 }
           );
         default:
           console.error("submit_inquiry RPC error:", rpcError);
-          return NextResponse.json({ error: "Failed to submit inquiry" }, { status: 500 });
+          return NextResponse.json(
+            { error_code: "INTERNAL", error: "Failed to submit inquiry" },
+            { status: 500 }
+          );
       }
     }
 
@@ -132,12 +176,13 @@ export async function POST(request) {
         const listingSummary = [location?.address, location?.neighborhood]
           .filter(Boolean)
           .join(" · ");
+        const emailLocale = resolveEmailLocale(request);
 
         await getResend().emails.send({
           from: FROM_ADDRESS,
           to: landlord.email,
           replyTo: cleanEmail,
-          subject: inquiryEmailSubject(cleanName, listingSummary),
+          subject: inquiryEmailSubject(cleanName, listingSummary, emailLocale),
           html: inquiryEmailHtml({
             landlordName: landlord.name,
             student: {
@@ -154,6 +199,7 @@ export async function POST(request) {
               monthly_price: rent?.monthly_price,
             },
             appUrl,
+            locale: emailLocale,
           }),
         });
 
@@ -171,6 +217,9 @@ export async function POST(request) {
     return NextResponse.json({ inquiry_id: inquiryId }, { status: 201 });
   } catch (err) {
     console.error("Unexpected error in POST /api/inquiries:", err);
-    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
+    return NextResponse.json(
+      { error_code: "INTERNAL", error: "Internal server error" },
+      { status: 500 }
+    );
   }
 }
