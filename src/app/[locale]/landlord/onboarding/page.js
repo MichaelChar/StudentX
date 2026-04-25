@@ -86,9 +86,9 @@ export default function LandlordOnboardingPage() {
     if (tierKey === 'free') {
       router.push('/landlord/dashboard');
     } else if (tierKey === 'verified') {
-      window.location.href = 'https://buy.stripe.com/bJe7sLdhg0KY7ep3S3awo00';
+      window.location.assign('https://buy.stripe.com/bJe7sLdhg0KY7ep3S3awo00');
     } else if (tierKey === 'verified_pro') {
-      window.location.href = 'https://buy.stripe.com/00wcN55OO51ebuF60bawo02';
+      window.location.assign('https://buy.stripe.com/00wcN55OO51ebuF60bawo02');
     }
   }
 

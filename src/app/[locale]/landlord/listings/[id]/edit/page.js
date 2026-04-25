@@ -2,10 +2,13 @@
 
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { useRouter, Link } from '@/i18n/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import ListingForm from '@/components/ListingForm';
 import { useTranslations } from 'next-intl';
+
+import LandlordShell from '@/components/landlord/LandlordShell';
+import Button from '@/components/ui/Button';
 
 export default function EditListingPage() {
   const t = useTranslations('landlord.editListing');
@@ -16,17 +19,10 @@ export default function EditListingPage() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    async function load() {
+    (async () => {
       const supabase = getSupabaseBrowser();
       const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.replace('/landlord/login');
-        return;
-      }
-      if (!session.user.email_confirmed_at) {
-        router.replace('/landlord/verify-email');
-        return;
-      }
+      if (!session) return;
 
       const res = await fetch(`/api/landlord/listings/${id}`, {
         headers: { Authorization: `Bearer ${session.access_token}` },
@@ -58,9 +54,8 @@ export default function EditListingPage() {
         photos: listing.photos || [],
       });
       setLoading(false);
-    }
-    load();
-  }, [id, router]);
+    })();
+  }, [id, t]);
 
   async function handleSubmit(formData) {
     const supabase = getSupabaseBrowser();
@@ -91,51 +86,30 @@ export default function EditListingPage() {
     router.push('/landlord/dashboard');
   }
 
-  if (loading) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-12 animate-pulse">
-        <div className="h-8 w-48 bg-gray-light rounded mb-8" />
-        <div className="space-y-4">
-          <div className="h-40 bg-gray-light rounded-xl" />
-          <div className="h-40 bg-gray-light rounded-xl" />
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="mx-auto max-w-2xl px-4 py-12 text-center">
-        <p className="text-red-600 mb-4">{error}</p>
-        <Link href="/landlord/dashboard" className="text-gold hover:underline text-sm">
-          {t('backToDashboard')}
-        </Link>
-      </div>
-    );
-  }
-
   return (
-    <div className="mx-auto max-w-2xl px-4 py-8 md:py-12">
-      <div className="mb-8">
-        <Link
-          href="/landlord/dashboard"
-          className="inline-flex items-center gap-1.5 text-sm text-gray-dark/60 hover:text-navy transition-colors mb-4"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-          </svg>
-          {t('backToDashboard')}
-        </Link>
-        <h1 className="font-heading text-2xl font-bold text-navy">{t('title')}</h1>
-        <p className="text-sm text-gray-dark/50 mt-1">#{id}</p>
+    <LandlordShell eyebrow={`Listing #${id}`} title={t('title')}>
+      <div className="max-w-3xl">
+        {loading ? (
+          <div className="space-y-4 animate-pulse">
+            <div className="h-40 bg-parchment rounded-sm" />
+            <div className="h-40 bg-parchment rounded-sm" />
+          </div>
+        ) : error ? (
+          <div className="text-center py-12">
+            <p className="text-red-600 mb-4">{error}</p>
+            <Button href="/landlord/dashboard" variant="ghost">
+              ← {t('backToDashboard')}
+            </Button>
+          </div>
+        ) : (
+          initialValues && (
+            <ListingForm
+              initialValues={initialValues}
+              onSubmit={handleSubmit}
+            />
+          )
+        )}
       </div>
-
-      {initialValues && (
-        <ListingForm
-          initialValues={initialValues}
-          onSubmit={handleSubmit}
-        />
-      )}
-    </div>
+    </LandlordShell>
   );
 }

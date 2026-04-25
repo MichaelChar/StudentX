@@ -1,42 +1,51 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter, Link } from '@/i18n/navigation';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useTranslations } from 'next-intl';
+
+import LandlordShell from '@/components/landlord/LandlordShell';
+import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
+import Pill from '@/components/ui/Pill';
+import Icon from '@/components/ui/Icon';
+import VerifiedSeal from '@/components/ui/VerifiedSeal';
+
+/*
+  Propylaea pricing / Get Verified page. Two tiers, seal-gold accents,
+  EB Garamond tier names, parchment comparison card.
+*/
 
 const PAID_TIERS = [
   {
     key: 'verified',
     name: 'SuperLandlord',
+    tagline: 'For landlords with 1–5 listings',
     price: '€49',
     period: '/yr',
+    highlight: false,
+    stripeUrl: 'https://buy.stripe.com/bJe7sLdhg0KY7ep3S3awo00',
     features: [
       { label: 'Listing cap', value: 'Up to 5' },
       { label: 'Photos per listing', value: 'Unlimited' },
-      { label: 'Listing expiry', value: 'No expiry' },
-      { label: 'Student inquiries', value: 'Unlimited' },
-      { label: 'Search position', value: 'Priority placement' },
       { label: 'Verified badge', value: 'Yes' },
-      { label: 'Analytics', value: 'Full analytics' },
-      { label: 'Response time badge', value: 'Yes' },
+      { label: 'Priority placement', value: 'Yes' },
+      { label: 'Analytics', value: 'Full' },
       { label: 'Support', value: 'Email' },
     ],
   },
   {
     key: 'verified_pro',
     name: 'SuperLandlord Heavy',
+    tagline: 'For portfolios with 6–12 listings',
     price: '€99',
     period: '/yr',
+    highlight: true,
+    stripeUrl: 'https://buy.stripe.com/00wcN55OO51ebuF60bawo02',
     features: [
       { label: 'Listing cap', value: 'Up to 12 (+€5/mo overage)' },
       { label: 'Photos per listing', value: 'Unlimited' },
-      { label: 'Listing expiry', value: 'No expiry' },
-      { label: 'Student inquiries', value: 'Unlimited' },
-      { label: 'Search position', value: 'Priority placement' },
       { label: 'Verified badge', value: 'Yes' },
-      { label: 'Analytics', value: 'Full analytics' },
-      { label: 'Response time badge', value: 'Yes' },
+      { label: 'Priority placement', value: 'Yes' },
+      { label: 'Analytics', value: 'Full' },
       { label: 'Support', value: 'Priority' },
     ],
   },
@@ -44,104 +53,134 @@ const PAID_TIERS = [
 
 export default function GetVerifiedPage() {
   const t = useTranslations('landlord.getVerified');
-  const router = useRouter();
-  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function init() {
-      const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        router.replace('/landlord/login');
-        return;
-      }
-      if (!session.user.email_confirmed_at) {
-        router.replace('/landlord/verify-email');
-        return;
-      }
-      setLoading(false);
-    }
-    init();
-  }, [router]);
-
-  function handleChoose(tierKey) {
-    if (tierKey === 'verified') {
-      window.location.href = 'https://buy.stripe.com/bJe7sLdhg0KY7ep3S3awo00';
-    } else if (tierKey === 'verified_pro') {
-      window.location.href = 'https://buy.stripe.com/00wcN55OO51ebuF60bawo02';
-    }
-  }
-
-  if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-pulse space-y-4 w-full max-w-md px-4">
-          <div className="h-8 w-48 bg-gray-light rounded mx-auto" />
-          <div className="h-32 bg-gray-light rounded-xl" />
-        </div>
-      </div>
-    );
+  function handleChoose(stripeUrl) {
+    window.location.assign(stripeUrl);
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
-      <h1 className="font-heading text-3xl font-bold text-navy mb-4 text-center">
-        {t('title')}
-      </h1>
+    <LandlordShell eyebrow="Pricing" title={t('title')}>
+      <div className="max-w-4xl">
+        <p className="text-night/70 text-base md:text-lg leading-relaxed mb-10 max-w-2xl">
+          {t('description')}
+        </p>
 
-      <p className="max-w-2xl text-sm text-gray-dark/70 text-center mb-10 leading-relaxed">
-        {t('description')}
-      </p>
-
-      <div className="w-full max-w-3xl">
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {PAID_TIERS.map((tier) => (
-            <div
+            <TierCard
               key={tier.key}
-              className="bg-white rounded-2xl shadow-sm border-2 border-gray-200 flex flex-col"
-            >
-              <div className="p-6 border-b border-gray-100">
-                <h2 className="font-heading text-xl font-bold text-navy mb-1">{tier.name}</h2>
-                <div className="flex items-baseline gap-0.5">
-                  <span className="font-heading text-3xl font-bold text-navy">{tier.price}</span>
-                  {tier.period && (
-                    <span className="text-gray-dark/50 text-sm">{tier.period}</span>
-                  )}
-                </div>
-              </div>
-
-              <ul className="p-6 space-y-3 flex-1">
-                {tier.features.map((f) => (
-                  <li key={f.label} className="flex flex-col gap-0.5">
-                    <span className="text-xs text-gray-dark/50 uppercase tracking-wide">{f.label}</span>
-                    <span className="text-sm font-medium text-navy">{f.value}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="p-6 pt-0">
-                <button
-                  onClick={() => handleChoose(tier.key)}
-                  className="w-full py-3 rounded-xl font-heading font-semibold bg-gold text-white hover:bg-gold/90 transition-colors"
-                >
-                  {t('chooseTier')}
-                </button>
-              </div>
-            </div>
+              tier={tier}
+              onChoose={() => handleChoose(tier.stripeUrl)}
+              ctaLabel={t('chooseTier')}
+            />
           ))}
         </div>
+
+        <p className="mt-8 label-caps text-night/40">{t('stripeNote')}</p>
+      </div>
+    </LandlordShell>
+  );
+}
+
+function TierCard({ tier, onChoose, ctaLabel }) {
+  return (
+    <Card
+      tone={tier.highlight ? 'night' : 'white'}
+      className={`p-7 md:p-8 flex flex-col relative ${
+        tier.highlight ? 'text-stone' : ''
+      }`}
+    >
+      {tier.highlight && (
+        <span className="absolute -top-3 right-6">
+          <Pill variant="verified">Most popular</Pill>
+        </span>
+      )}
+
+      <div className="flex items-center gap-3 mb-2">
+        {tier.highlight ? (
+          <VerifiedSeal size={28} />
+        ) : (
+          <div className="w-7 h-7 rounded-full border border-gold/50 flex items-center justify-center">
+            <Icon name="shield" className="w-3.5 h-3.5 text-gold" />
+          </div>
+        )}
+        <p className="label-caps text-gold">{tier.key.replace('_', ' ')}</p>
       </div>
 
-      <p className="text-xs text-gray-dark/40 mt-8">
-        {t('stripeNote')}
+      <h3
+        className={`font-display text-2xl md:text-3xl leading-tight ${
+          tier.highlight ? 'text-stone' : 'text-night'
+        }`}
+      >
+        {tier.name}
+      </h3>
+      <p
+        className={`text-sm mt-1 ${
+          tier.highlight ? 'text-stone/70' : 'text-night/60'
+        }`}
+      >
+        {tier.tagline}
       </p>
 
-      <Link
-        href="/landlord/dashboard"
-        className="mt-4 text-sm text-gray-dark/60 hover:text-navy transition-colors"
+      <div className="mt-6 flex items-baseline gap-1">
+        <span
+          className={`font-display text-5xl ${
+            tier.highlight ? 'text-gold' : 'text-blue'
+          }`}
+        >
+          {tier.price}
+        </span>
+        <span
+          className={`text-sm ${
+            tier.highlight ? 'text-stone/60' : 'text-night/50'
+          }`}
+        >
+          {tier.period}
+        </span>
+      </div>
+
+      <ul
+        className={`mt-8 space-y-3 flex-1 ${
+          tier.highlight ? 'divide-stone/10' : 'divide-night/10'
+        }`}
       >
-        {t('backToDashboard')}
-      </Link>
-    </div>
+        {tier.features.map((f) => (
+          <li key={f.label} className="flex items-start gap-2">
+            <Icon
+              name="check"
+              className={`w-4 h-4 shrink-0 mt-1 ${
+                tier.highlight ? 'text-gold' : 'text-gold'
+              }`}
+            />
+            <div>
+              <p
+                className={`label-caps ${
+                  tier.highlight ? 'text-stone/50' : 'text-night/50'
+                }`}
+              >
+                {f.label}
+              </p>
+              <p
+                className={`text-sm font-medium ${
+                  tier.highlight ? 'text-stone' : 'text-night'
+                }`}
+              >
+                {f.value}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-8">
+        <Button
+          onClick={onChoose}
+          variant={tier.highlight ? 'gold' : 'primary'}
+          className="w-full justify-center"
+        >
+          {ctaLabel}
+        </Button>
+      </div>
+    </Card>
   );
 }

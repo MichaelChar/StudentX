@@ -4,17 +4,20 @@ import { useState, useEffect, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import LocaleSwitcher from './LocaleSwitcher';
+import Icon from './ui/Icon';
 
 export default function Navbar() {
   const t = useTranslations('nav');
   const [drawerOpen, setDrawerOpen] = useState(false);
   const closeButtonRef = useRef(null);
 
+  // Propylaea nav — "The programme" and "FAQ" are defined in the design but
+  // hidden for now; unhide when those pages ship.
   const navLinks = [
-    { href: '/', label: t('home') },
-    { href: '/results', label: t('browse') },
-    { href: '/about', label: t('about') },
-    { href: '/landlord/login', label: t('landlords') },
+    { href: '/results', label: t('listings') },
+    { href: '/quiz', label: t('takeTheQuiz') },
+    // { href: '/programme', label: t('programme') },
+    // { href: '/faq', label: t('faq') },
   ];
 
   useEffect(() => {
@@ -29,10 +32,17 @@ export default function Navbar() {
   }, [drawerOpen]);
 
   return (
-    <nav className="sticky top-0 z-50 bg-white border-b border-gray-200/60">
-      <div className="mx-auto max-w-6xl px-4 py-4 flex items-center justify-between">
-        <Link href="/" className="font-heading text-xl font-bold text-navy tracking-tight">
-          StudentX
+    <nav className="sticky top-0 z-50 bg-stone/95 backdrop-blur border-b border-night/10">
+      <div className="mx-auto max-w-6xl px-5 py-4 flex items-center justify-between gap-6">
+        {/* Brand — StudentX × AUSOM */}
+        <Link
+          href="/"
+          className="flex items-center gap-2 text-night hover:text-blue transition-colors"
+        >
+          <span className="font-display text-xl tracking-tight">
+            StudentX <span className="text-night/40">×</span>{' '}
+            <span className="italic">AUSOM</span>
+          </span>
         </Link>
 
         {/* Desktop links */}
@@ -41,30 +51,35 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="text-gray-dark/70 hover:text-navy transition-colors text-sm font-medium tracking-wide"
+              className="label-caps text-night/70 hover:text-blue transition-colors"
             >
               {link.label}
             </Link>
           ))}
+          <span className="h-5 w-px bg-night/15" aria-hidden="true" />
           <LocaleSwitcher />
+          <Link
+            href="/landlord/login"
+            className="label-caps text-blue hover:text-night transition-colors"
+          >
+            {t('signIn')}
+          </Link>
         </div>
 
         {/* Mobile hamburger */}
         <button
-          className="md:hidden p-2 text-navy"
+          className="md:hidden p-2 text-night"
           onClick={() => setDrawerOpen(true)}
           aria-label={t('openMenu')}
         >
-          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
-          </svg>
+          <Icon name="list" className="w-6 h-6" />
         </button>
       </div>
 
       {/* Mobile drawer overlay */}
       {drawerOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 md:hidden"
+          className="fixed inset-0 bg-night/60 z-40 md:hidden"
           onClick={() => setDrawerOpen(false)}
         />
       )}
@@ -74,35 +89,40 @@ export default function Navbar() {
         role="dialog"
         aria-modal="true"
         aria-label={t('menu')}
-        className={`fixed right-0 top-0 h-full w-full bg-white z-50 shadow-lg transform transition-transform duration-300 md:hidden ${
+        className={`fixed right-0 top-0 h-full w-full bg-stone z-50 shadow-xl transform transition-transform duration-300 md:hidden ${
           drawerOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <div className="flex items-center justify-between p-4 border-b border-gray-light">
-          <span className="font-heading font-bold text-navy">{t('menu')}</span>
+        <div className="flex items-center justify-between p-5 border-b border-night/10">
+          <span className="font-display text-lg text-night">{t('menu')}</span>
           <button
             ref={closeButtonRef}
             onClick={() => setDrawerOpen(false)}
-            className="p-2 text-navy"
+            className="p-2 text-night"
             aria-label={t('closeMenu')}
           >
-            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
+            <Icon name="x" className="w-5 h-5" />
           </button>
         </div>
-        <div className="flex flex-col p-4 gap-4">
+        <div className="flex flex-col p-5 gap-5">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setDrawerOpen(false)}
-              className="text-gray-dark hover:text-gold transition-colors font-medium text-lg"
+              className="label-caps text-night hover:text-blue transition-colors text-base"
             >
               {link.label}
             </Link>
           ))}
-          <div className="pt-2 border-t border-gray-100">
+          <Link
+            href="/landlord/login"
+            onClick={() => setDrawerOpen(false)}
+            className="label-caps text-blue hover:text-night transition-colors text-base"
+          >
+            {t('signIn')}
+          </Link>
+          <div className="pt-3 border-t border-night/10">
             <LocaleSwitcher />
           </div>
         </div>

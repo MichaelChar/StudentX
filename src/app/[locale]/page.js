@@ -1,363 +1,154 @@
 'use client';
 
-import { useState, useEffect, useMemo } from 'react';
-import { useRouter, Link } from '@/i18n/navigation';
+import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
+import OrnamentRule from '@/components/ui/OrnamentRule';
 
-function getSemesterDates(duration) {
-  const now = new Date();
-  const year = now.getFullYear();
-  switch (duration) {
-    case 'autumn-semester':
-      return { from: `${year}-10-01`, to: `${year + 1}-01-31` };
-    case 'spring-semester':
-      return { from: `${year + 1}-02-01`, to: `${year + 1}-06-30` };
-    case 'academic-year':
-      return { from: `${year}-10-01`, to: `${year + 1}-06-30` };
-    default:
-      return { from: '', to: '' };
-  }
-}
+/*
+  Propylaea landing — the marketing home at /[locale]/.
+  Hero with bilingual eyebrow and gold italic accent, stat tiles row
+  (live listing count + reply time + brokerage), and a 3-step
+  "How it works" section. The "Vetting, not luck" copy block has been
+  removed per stakeholder direction; the stat tiles stand on their own.
+*/
+export default function LandingPage() {
+  const t = useTranslations('propylaea.landing');
+  const [listingCount, setListingCount] = useState(null);
 
-function formatDateDisplay(isoDate) {
-  if (!isoDate) return '';
-  const [y, m, d] = isoDate.split('-');
-  return `${d}/${m}/${y}`;
-}
-
-const DEFAULT_BUDGET_MAX = 1200;
-const BUDGET_MIN = 300;
-const BUDGET_STEP = 100;
-
-export default function QuizPage() {
-  const t = useTranslations('home');
-  const router = useRouter();
-  const [faculties, setFaculties] = useState([]);
-  const [facultyError, setFacultyError] = useState(false);
-  const [formData, setFormData] = useState({
-    faculty: '',
-    duration: '',
-    dateFrom: '',
-    dateTo: '',
-    budget: BUDGET_MIN,
-    types: [],
-    dealbreakers: [],
-  });
-
-  const DURATIONS = [
-    { value: 'spring-semester', label: t('springSemester') },
-    { value: 'autumn-semester', label: t('autumnSemester') },
-    { value: 'academic-year', label: t('academicYear') },
-    { value: 'custom', label: t('custom') },
-  ];
-
-  const PROPERTY_TYPES = [
-    { value: 'studio-1bed', label: t('studio1bed'), dbTypes: ['Studio', '1-Bedroom'] },
-    { value: '2-bed', label: t('twoBed'), dbTypes: ['2-Bedroom'] },
-    { value: '2-plus-bed', label: t('twoPlusBed'), dbTypes: ['2-Bedroom'] },
-    { value: 'room', label: t('roomShared'), dbTypes: ['Room in shared apartment'] },
-  ];
-
-  const DEALBREAKERS = [
-    { value: 'ground_floor', label: t('groundFloor') },
-    { value: 'no_ac', label: t('noAC') },
-    { value: 'bills_not_included', label: t('billsNotIncluded') },
-    { value: 'unfurnished', label: t('unfurnished') },
-  ];
-
+  // Live count of active listings, used in the stat tile.
   useEffect(() => {
-    fetch('/api/faculties')
-      .then((res) => {
-        if (!res.ok) throw new Error('Failed to fetch');
-        return res.json();
+    let cancelled = false;
+    fetch('/api/listings')
+      .then((r) => (r.ok ? r.json() : null))
+      .then((data) => {
+        if (cancelled || !data) return;
+        const n = Array.isArray(data.listings) ? data.listings.length : 0;
+        setListingCount(n);
       })
-      .then((data) => setFaculties(data.faculties || []))
-      .catch(() => setFacultyError(true));
+      .catch(() => {});
+    return () => {
+      cancelled = true;
+    };
   }, []);
 
-  const semesterDates = useMemo(
-    () => getSemesterDates(formData.duration),
-    [formData.duration]
-  );
-
-  const isCustomDuration = formData.duration === 'custom';
-  const isPresetDuration = formData.duration && !isCustomDuration;
-
-  const displayFrom = isPresetDuration
-    ? formatDateDisplay(semesterDates.from)
-    : formatDateDisplay(formData.dateFrom);
-  const displayTo = isPresetDuration
-    ? formatDateDisplay(semesterDates.to)
-    : formatDateDisplay(formData.dateTo);
-
-  function toggleArrayValue(field, value) {
-    setFormData((prev) => ({
-      ...prev,
-      [field]: prev[field].includes(value)
-        ? prev[field].filter((v) => v !== value)
-        : [...prev[field], value],
-    }));
-  }
-
-  function handleDurationChange(value) {
-    setFormData((prev) => ({ ...prev, duration: value, dateFrom: '', dateTo: '' }));
-  }
-
-  function handleSubmit(e) {
-    e.preventDefault();
-    const params = new URLSearchParams();
-    if (formData.faculty) params.set('faculty', formData.faculty);
-    if (formData.duration) params.set('duration', formData.duration);
-
-    const fromDate = isPresetDuration ? semesterDates.from : formData.dateFrom;
-    const toDate = isPresetDuration ? semesterDates.to : formData.dateTo;
-    if (fromDate) params.set('from', fromDate);
-    if (toDate) params.set('to', toDate);
-    params.set('budget', formData.budget.toString());
-
-    if (formData.types.length > 0) {
-      const dbTypeNames = [...new Set(
-        formData.types.flatMap((val) => {
-          const pt = PROPERTY_TYPES.find((p) => p.value === val);
-          return pt ? pt.dbTypes : [];
-        })
-      )];
-      if (dbTypeNames.length > 0) params.set('types', dbTypeNames.join(','));
-    }
-
-    if (formData.dealbreakers.length > 0) {
-      params.set('dealbreakers', formData.dealbreakers.join(','));
-    }
-
-    router.push(`/results?${params.toString()}`);
-  }
+  const steps = [
+    {
+      numeral: 'Ⅰ',
+      greek: t('step1Greek'),
+      english: t('step1English'),
+      body: t('step1Body'),
+    },
+    {
+      numeral: 'Ⅱ',
+      greek: t('step2Greek'),
+      english: t('step2English'),
+      body: t('step2Body'),
+    },
+    {
+      numeral: 'Ⅲ',
+      greek: t('step3Greek'),
+      english: t('step3English'),
+      body: t('step3Body'),
+    },
+  ];
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative bg-midnight overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-b from-ink/40 to-midnight" />
-        <div className="relative mx-auto max-w-4xl px-4 py-24 md:py-36 text-center">
-          <p className="uppercase tracking-[0.25em] text-gold text-sm font-heading font-semibold mb-6">
-            {t('location')}
-          </p>
-          <h1 className="font-heading text-4xl md:text-6xl font-bold text-white leading-tight mb-6 lowercase">
-            {t('hero')}
+      {/* Hero — Night surface */}
+      <section className="relative bg-night text-stone overflow-hidden">
+        <div
+          aria-hidden="true"
+          className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-gold/20 blur-3xl"
+        />
+        <div
+          aria-hidden="true"
+          className="absolute -bottom-32 -left-20 w-[28rem] h-[28rem] rounded-full bg-blue/30 blur-3xl"
+        />
+
+        <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 md:pt-28 md:pb-32">
+          <p className="label-caps text-gold mb-8">{t('eyebrow')}</p>
+          <h1 className="font-display text-4xl md:text-6xl lg:text-[4.5rem] leading-[1.05] max-w-3xl">
+            {t('heroBefore')}{' '}
+            <span className="italic text-gold">{t('heroItalic')}</span>{' '}
+            {t('heroAfter')}
           </h1>
-          <p className="text-white/60 text-lg md:text-xl max-w-xl mx-auto">
+          <p className="mt-6 max-w-xl text-stone/70 text-lg md:text-xl leading-relaxed">
             {t('subtitle')}
           </p>
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            <Button href="/quiz" variant="gold" size="lg">
+              {t('ctaPrimary')}
+            </Button>
+            <Button href="/results" variant="outlineOnDark" size="lg">
+              {t('ctaSecondary')}
+            </Button>
+          </div>
         </div>
       </section>
 
-      {/* Form */}
-      <section className="mx-auto max-w-2xl px-4 -mt-12 relative z-10 pb-16">
-        <form
-          onSubmit={handleSubmit}
-          className="bg-white rounded-2xl shadow-xl border border-gray-200 p-6 md:p-10 space-y-8"
-        >
-          {/* Faculty */}
-          <fieldset>
-            <label className="block uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-2">
-              {t('faculty')}
-            </label>
-            <select
-              value={formData.faculty}
-              onChange={(e) => setFormData({ ...formData, faculty: e.target.value })}
-              className="w-full rounded-lg border border-gray-200 bg-gray-light px-4 py-3.5 text-gray-dark focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors"
-            >
-              <option value="">{t('selectFaculty')}</option>
-              {faculties.map((f) => (
-                <option key={f.id} value={f.id}>{f.name}</option>
-              ))}
-            </select>
-            {facultyError && (
-              <p className="mt-2 text-sm text-red-600">{t('facultyError')}</p>
-            )}
-          </fieldset>
-
-          {/* Duration */}
-          <fieldset>
-            <label className="block uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-2">
-              {t('duration')}
-            </label>
-            <select
-              value={formData.duration}
-              onChange={(e) => handleDurationChange(e.target.value)}
-              className="w-full rounded-lg border border-gray-200 bg-gray-light px-4 py-3.5 text-gray-dark focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold transition-colors"
-            >
-              <option value="">{t('selectDuration')}</option>
-              {DURATIONS.map((d) => (
-                <option key={d.value} value={d.value}>{d.label}</option>
-              ))}
-            </select>
-
-            {isPresetDuration && (
-              <div className="mt-3 flex items-center gap-3 text-sm text-gray-dark/60 bg-gray-light rounded-lg px-4 py-3">
-                <svg className="w-4 h-4 text-gold shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span>{displayFrom} &mdash; {displayTo}</span>
-              </div>
-            )}
-
-            {isCustomDuration && (
-              <div className="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-sm text-gray-dark/50 mb-1">{t('from')}</label>
-                  <input
-                    type="date"
-                    value={formData.dateFrom}
-                    onChange={(e) => setFormData({ ...formData, dateFrom: e.target.value })}
-                    className="w-full rounded-lg border border-gray-200 bg-gray-light px-4 py-3 text-gray-dark focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm text-gray-dark/50 mb-1">{t('to')}</label>
-                  <input
-                    type="date"
-                    value={formData.dateTo}
-                    onChange={(e) => setFormData({ ...formData, dateTo: e.target.value })}
-                    className="w-full rounded-lg border border-gray-200 bg-gray-light px-4 py-3 text-gray-dark focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
-                  />
-                </div>
-              </div>
-            )}
-          </fieldset>
-
-          {/* Budget */}
-          <fieldset>
-            <label className="block uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-2">
-              {t('budget')}
-            </label>
-            <p className="text-sm text-gray-dark/60 mb-3">
-              {t('budgetLabel', { amount: formData.budget })}
-            </p>
-            <div className="flex items-center gap-4">
-              <input
-                type="range"
-                min={BUDGET_MIN}
-                max={DEFAULT_BUDGET_MAX}
-                step={BUDGET_STEP}
-                value={formData.budget}
-                onChange={(e) => setFormData({ ...formData, budget: Number(e.target.value) })}
-                aria-label="Budget upper bound"
-                className="flex-1"
-              />
-              <input
-                type="number"
-                min={BUDGET_MIN}
-                max={DEFAULT_BUDGET_MAX}
-                step={BUDGET_STEP}
-                value={formData.budget}
-                onChange={(e) => {
-                  const val = Math.min(DEFAULT_BUDGET_MAX, Math.max(BUDGET_MIN, Number(e.target.value)));
-                  setFormData({ ...formData, budget: val });
-                }}
-                className="w-20 rounded-lg border border-gray-200 bg-gray-light px-3 py-2 text-center text-gray-dark focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
-              />
-            </div>
-            <div className="flex justify-between text-xs text-gray-dark/40 mt-1">
-              <span>&euro;{BUDGET_MIN}</span>
-              <span>&euro;{DEFAULT_BUDGET_MAX}</span>
-            </div>
-          </fieldset>
-
-          {/* Property type */}
-          <fieldset>
-            <legend className="block uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-3">
-              {t('propertyType')}
-            </legend>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {PROPERTY_TYPES.map((pt) => (
-                <label
-                  key={pt.value}
-                  className={`flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-all ${
-                    formData.types.includes(pt.value)
-                      ? 'border-gold bg-gold/5 shadow-sm'
-                      : 'border-gray-200 bg-gray-light hover:border-gold/40'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={formData.types.includes(pt.value)}
-                    onChange={() => toggleArrayValue('types', pt.value)}
-                    className="accent-gold w-4 h-4"
-                  />
-                  <span className="text-gray-dark text-sm">{pt.label}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          {/* Dealbreakers */}
-          <fieldset>
-            <legend className="block uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-3">
-              {t('dealbreakers')}
-            </legend>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-              {DEALBREAKERS.map((db) => (
-                <label
-                  key={db.value}
-                  className={`flex items-center gap-3 rounded-lg border px-4 py-3 cursor-pointer transition-all ${
-                    formData.dealbreakers.includes(db.value)
-                      ? 'border-gold bg-gold/5 shadow-sm'
-                      : 'border-gray-200 bg-gray-light hover:border-gold/40'
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={formData.dealbreakers.includes(db.value)}
-                    onChange={() => toggleArrayValue('dealbreakers', db.value)}
-                    className="accent-gold w-4 h-4"
-                  />
-                  <span className="text-gray-dark text-sm">{db.label}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-
-          {/* Submit */}
-          <button
-            type="submit"
-            className="w-full bg-navy text-white font-heading font-semibold px-8 py-4 rounded-lg hover:bg-navy/90 transition-colors cursor-pointer text-base tracking-wide"
-          >
-            {t('findHousing')}
-          </button>
-        </form>
-
-        <p className="mt-5 text-center text-sm text-gray-dark/50">
-          <Link href="/results" className="hover:text-gold transition-colors">
-            {t('socialProof')}
-          </Link>
-        </p>
+      {/* Stat tiles — standalone, no programme heading */}
+      <section className="mx-auto max-w-6xl px-5 py-20 md:py-24">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+          <StatTile
+            value={listingCount == null ? '—' : String(listingCount)}
+            label={t('statListings')}
+          />
+          <StatTile value={t('statReplyValue')} label={t('statReply')} />
+          <StatTile value={t('statBrokerageValue')} label={t('statBrokerage')} />
+        </div>
       </section>
 
+      <div className="mx-auto max-w-6xl px-5">
+        <OrnamentRule />
+      </div>
+
       {/* How it works */}
-      <section className="mx-auto max-w-2xl px-4 pb-20">
-        <p className="uppercase tracking-[0.2em] text-xs font-heading font-semibold text-gray-dark/40 text-center mb-8">
-          {t('howItWorksTitle')}
-        </p>
-        <div className="grid grid-cols-3 gap-6">
-          {[
-            { num: '1', title: t('hiw1Title'), body: t('hiw1Body') },
-            { num: '2', title: t('hiw2Title'), body: t('hiw2Body') },
-            { num: '3', title: t('hiw3Title'), body: t('hiw3Body') },
-          ].map(({ num, title, body }) => (
-            <div key={num} className="text-center">
-              <div className="w-9 h-9 rounded-full bg-gold/10 text-gold font-heading font-bold text-sm flex items-center justify-center mx-auto mb-3">
-                {num}
-              </div>
-              <div className="font-heading font-semibold text-navy text-sm mb-1.5">
-                {title}
-              </div>
-              <p className="text-gray-dark/55 text-xs leading-relaxed">
-                {body}
+      <section className="mx-auto max-w-6xl px-5 py-20 md:py-28">
+        <p className="label-caps text-gold mb-5">{t('howEyebrow')}</p>
+        <h2 className="font-display text-3xl md:text-5xl text-night leading-tight max-w-3xl">
+          {t('howTitle')}{' '}
+          <span className="italic text-gold">{t('howTitleItalic')}</span>
+        </h2>
+
+        <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-10">
+          {steps.map((step) => (
+            <div key={step.numeral} className="relative">
+              <span
+                className="font-display text-5xl text-gold block leading-none mb-5"
+                aria-hidden="true"
+              >
+                {step.numeral}
+              </span>
+              <p className="label-caps text-night/50 mb-2">{step.greek}</p>
+              <p className="font-display text-2xl text-night leading-tight mb-3">
+                {step.english}
+              </p>
+              <p className="text-night/70 text-base leading-relaxed max-w-xs">
+                {step.body}
               </p>
             </div>
           ))}
         </div>
+
+        <div className="mt-16 flex justify-center">
+          <Button href="/quiz" variant="primary" size="lg">
+            {t('ctaPrimary')}
+          </Button>
+        </div>
       </section>
     </>
+  );
+}
+
+function StatTile({ value, label }) {
+  return (
+    <Card tone="parchment" border={false} className="px-6 py-8">
+      <p className="font-display text-5xl md:text-6xl text-blue leading-none">
+        {value}
+      </p>
+      <p className="mt-4 label-caps text-night/60">{label}</p>
+    </Card>
   );
 }

@@ -47,6 +47,11 @@ export async function importListing(url) {
     if (err.name === 'TimeoutError' || err.name === 'AbortError') {
       return { error: 'The request timed out. Please check the URL and try again.' };
     }
+    const errCode = err.code || err.cause?.code || '';
+    const errMsg = err.message || err.cause?.message || '';
+    if (errCode === 'CERT_HAS_EXPIRED' || errCode === 'UNABLE_TO_VERIFY_LEAF_SIGNATURE' || errMsg.includes('certificate')) {
+      return { error: `Could not securely connect to ${new URL(url).hostname} (SSL certificate issue). You can still fill in the form manually.` };
+    }
     return { error: 'Could not reach that page. Please check the URL and try again.' };
   }
 

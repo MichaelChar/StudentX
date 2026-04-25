@@ -3,47 +3,62 @@
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 
+/*
+  Propylaea footer — brand column on the left, single Product nav column.
+  Programme + Company columns were removed because their target pages
+  don't exist yet (per stakeholder direction). Add them back here when
+  /programme, /faq, /terms, /privacy ship.
+*/
 export default function Footer() {
   const t = useTranslations('footer');
-  const tNav = useTranslations('nav');
-
-  const navLinks = [
-    { href: '/', label: tNav('home') },
-    { href: '/results', label: tNav('browse') },
-    { href: '/about', label: tNav('about') },
-    { href: '/landlord/login', label: tNav('landlords') },
-  ];
+  const year = new Date().getFullYear();
 
   return (
-    <footer className="bg-midnight text-white">
-      <div className="mx-auto max-w-6xl px-4 py-16">
-        <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-10">
-          {/* Brand + tagline */}
-          <div>
-            <p className="font-heading text-lg font-bold tracking-tight mb-2">StudentX</p>
-            <p className="text-white/50 text-sm max-w-xs">
+    <footer className="bg-night text-stone">
+      <div className="mx-auto max-w-6xl px-5 py-16">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+          {/* Brand column */}
+          <div className="md:col-span-2">
+            <p className="font-display text-2xl text-stone mb-3">
+              StudentX <span className="text-stone/40">×</span>{' '}
+              <span className="italic text-gold">AUSOM</span>
+            </p>
+            <p className="text-stone/60 text-sm leading-relaxed max-w-md">
               {t('tagline')}
             </p>
           </div>
 
-          {/* Nav links */}
+          {/* Product column */}
           <nav className="flex flex-col gap-3">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="text-white/60 hover:text-white transition-colors text-sm"
-              >
-                {link.label}
-              </Link>
-            ))}
+            <span className="label-caps text-gold">{t('colProduct')}</span>
+            <Link
+              href="/results"
+              className="text-stone/75 hover:text-white transition-colors text-sm"
+            >
+              {t('listings')}
+            </Link>
+            <Link
+              href="/quiz"
+              className="text-stone/75 hover:text-white transition-colors text-sm"
+            >
+              {t('takeTheQuiz')}
+            </Link>
+            <Link
+              href="/results?view=map"
+              className="text-stone/75 hover:text-white transition-colors text-sm"
+            >
+              {t('map')}
+            </Link>
           </nav>
-
         </div>
 
-        <div className="border-t border-white/10 mt-10 pt-6">
-          <p className="text-white/30 text-xs tracking-wide">
-            &copy; {new Date().getFullYear()} StudentX. {t('rights')}
+        <div className="border-t border-stone/10 mt-12 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-xs text-stone/50">
+          <p>
+            &copy; {year} StudentX &middot; {t('officialPartner')} &middot;{' '}
+            {t('thessaloniki')}
+          </p>
+          <p className="text-stone/40 font-display italic">
+            Propylaea &middot; v2 &middot; April 2026
           </p>
         </div>
       </div>
