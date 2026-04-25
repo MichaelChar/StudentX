@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
@@ -24,18 +24,7 @@ export default function LandlordInquiriesPage() {
   const [updating, setUpdating] = useState(null);
   const [token, setToken] = useState('');
 
-  useEffect(() => {
-    (async () => {
-      const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) return;
-      setToken(session.access_token);
-      await fetchInquiries(session.access_token);
-      setLoading(false);
-    })();
-  }, []);
-
-  async function fetchInquiries(accessToken) {
+  const fetchInquiries = useCallback(async (accessToken) => {
     try {
       const res = await fetch('/api/landlord/inquiries', {
         headers: { Authorization: `Bearer ${accessToken}` },
@@ -50,7 +39,18 @@ export default function LandlordInquiriesPage() {
     } catch {
       setError(t('loadError'));
     }
-  }
+  }, [t]);
+
+  useEffect(() => {
+    (async () => {
+      const supabase = getSupabaseBrowser();
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) return;
+      setToken(session.access_token);
+      await fetchInquiries(session.access_token);
+      setLoading(false);
+    })();
+  }, [fetchInquiries]);
 
   async function handleStatusChange(inquiryId, newStatus) {
     setUpdating(inquiryId);

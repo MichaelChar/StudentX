@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
@@ -16,17 +16,13 @@ export default function BillingSection() {
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
 
-  useEffect(() => {
-    loadBilling();
-  }, []);
-
   async function getToken() {
     const supabase = getSupabaseBrowser();
     const { data: { session } } = await supabase.auth.getSession();
     return session?.access_token;
   }
 
-  async function loadBilling() {
+  const loadBilling = useCallback(async () => {
     setLoading(true);
     try {
       const token = await getToken();
@@ -42,7 +38,11 @@ export default function BillingSection() {
     } finally {
       setLoading(false);
     }
-  }
+  }, []);
+
+  useEffect(() => {
+    loadBilling();
+  }, [loadBilling]);
 
   async function handleCheckout(tier) {
     setActionLoading(true);
