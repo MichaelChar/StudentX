@@ -111,14 +111,21 @@ function ResultsContent() {
       if (filters.selectedNeighborhoods.length > 0)
         params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
       if (filters.verifiedOnly) params.set('verified_only', 'true');
-      params.set('sort_by', sortBy === 'price' ? 'price' : 'price');
+      // 'match' is the UI default; the API enforces verified/featured tier
+      // priority in route.js regardless of sort_by, so 'match' collapses to
+      // 'price' asc.
+      params.set('sort_by', 'price');
       params.set('sort_order', sortBy === 'priceDesc' ? 'desc' : 'asc');
 
       const res = await fetch(`/api/listings?${params.toString()}`);
-      if (!res.ok) throw new Error('API error');
+      if (!res.ok) {
+        const detail = await res.text().catch(() => '');
+        throw new Error(`API ${res.status}: ${detail}`);
+      }
       const data = await res.json();
       setListings(data.listings || []);
-    } catch {
+    } catch (err) {
+      console.error('fetchListings failed:', err);
       setError(true);
       setListings([]);
     } finally {
