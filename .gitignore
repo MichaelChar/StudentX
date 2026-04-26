@@ -32,6 +32,10 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+# Public NEXT_PUBLIC_* are tracked so Cloudflare Workers Builds (and any other
+# build env) inline them into the client bundle without per-dashboard config.
+# Same values are mirrored in wrangler.jsonc:vars for Worker runtime.
+!.env.production
 
 # vercel
 .vercel
