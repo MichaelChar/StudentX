@@ -14,15 +14,20 @@ import { useTranslations } from 'next-intl';
       provider: 'google',           // or 'apple'
       options: {
         redirectTo: `${siteUrl}/${locale}/student/login`,
-        // For Apple, also configure 'name email' scopes in the Supabase dashboard.
+        // The role tag is what tells the handle_new_student_user
+        // trigger (migration 029) that this auth.users row is a student
+        // signup, so it auto-creates the profile row even though the
+        // OAuth round-trip never gives us a chance to POST profile data
+        // ourselves. For Apple, also configure 'name email' scopes in
+        // the Supabase dashboard.
+        data: { role: 'student' },
       },
     });
 
-  Server-side, no extra changes are needed: SessionSync writes the cookie
-  on the redirected page once Supabase parses the OAuth fragment. The
-  create_student_profile RPC will fire the same way it does for
-  email/password signups (called from /api/student/profile POST after
-  the first authenticated render).
+  Server-side, no extra changes are needed: profile creation happens
+  inside the auth.users INSERT trigger from migration 029, and
+  SessionSync writes the access-token cookie on the redirected page
+  once Supabase parses the OAuth fragment.
 */
 export default function OAuthProvidersStub({ context = 'login' }) {
   const t = useTranslations(`student.oauth`);
