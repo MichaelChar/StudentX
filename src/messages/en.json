@@ -720,6 +720,7 @@
       "firstMessagePlaceholder": "Hi! I'm interested in this listing — could we arrange a viewing?",
       "send": "Start conversation",
       "sending": "Sending…",
+      "closeAriaLabel": "Close",
       "minLength": "Please write at least 10 characters.",
       "errorGeneric": "Couldn't start the conversation. Try again.",
       "errorListingMissing": "This listing is no longer available.",

@@ -106,7 +106,10 @@ export default async function StudentAccountPage({ params }) {
                         <div className="flex flex-wrap items-center gap-2 mb-1">
                           <p className="font-display text-xl text-night truncate">{address}</p>
                           {unread > 0 && (
-                            <span className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-gold text-white text-[11px] font-sans font-semibold px-1.5">
+                            <span
+                              aria-label={t('unread', { count: unread })}
+                              className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-gold text-white text-[11px] font-sans font-semibold px-1.5"
+                            >
                               {unread}
                             </span>
                           )}

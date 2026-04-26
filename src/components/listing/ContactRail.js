@@ -144,7 +144,7 @@ export default function ContactRail({ listing }) {
                 onClick={() => (sending ? null : setOpen(false))}
                 disabled={sending}
                 className="p-1 text-night/60 hover:text-night disabled:opacity-50"
-                aria-label="Close"
+                aria-label={tContact('closeAriaLabel')}
               >
                 <Icon name="x" className="w-5 h-5" />
               </button>
