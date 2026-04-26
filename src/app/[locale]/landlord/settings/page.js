@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
 import Button from '@/components/ui/Button';
@@ -18,6 +19,7 @@ import Icon from '@/components/ui/Icon';
 */
 export default function LandlordSettingsPage() {
   const t = useTranslations('propylaea.landlord.settings');
+  const accessToken = useAccessToken();
 
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
@@ -77,19 +79,15 @@ export default function LandlordSettingsPage() {
     setError('');
     setSavedTick(false);
 
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      setError(t('error'));
-      setSubmitting(false);
-      return;
-    }
-
     try {
+      if (!accessToken) {
+        setError(t('error'));
+        return;
+      }
       const res = await fetch('/api/landlord/profile', {
         method: 'PATCH',
         headers: {
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ preferred_locale: preferredLocale }),
@@ -107,7 +105,8 @@ export default function LandlordSettingsPage() {
       // unmount effect can cancel it.
       if (savedTimerRef.current) clearTimeout(savedTimerRef.current);
       savedTimerRef.current = setTimeout(() => setSavedTick(false), 2500);
-    } catch {
+    } catch (err) {
+      console.error('[LandlordSettings] save_profile failed:', err);
       setError(t('error'));
     } finally {
       setSubmitting(false);

@@ -5,6 +5,7 @@ import { useRouter, Link } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
 import Button from '@/components/ui/Button';
@@ -19,6 +20,7 @@ import Icon from '@/components/ui/Icon';
 export default function LandlordListingsPage() {
   const t = useTranslations('landlord.dashboard');
   const router = useRouter();
+  const accessToken = useAccessToken();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -51,45 +53,61 @@ export default function LandlordListingsPage() {
   async function handleDelete(listingId) {
     if (!confirm(t('deleteConfirm'))) return;
     setDeleting(listingId);
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { router.replace('/landlord/login'); return; }
-    const res = await fetch(`/api/landlord/listings/${listingId}`, {
-      method: 'DELETE',
-      headers: { Authorization: `Bearer ${session.access_token}` },
-    });
-    if (res.ok) {
-      setListings((prev) => prev.filter((l) => l.listing_id !== listingId));
-    } else {
+    try {
+      if (!accessToken) {
+        setDeleting(null);
+        router.replace('/landlord/login');
+        return;
+      }
+      const res = await fetch(`/api/landlord/listings/${listingId}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (res.ok) {
+        setListings((prev) => prev.filter((l) => l.listing_id !== listingId));
+      } else {
+        alert(t('deleteError'));
+      }
+    } catch (err) {
+      console.error('[LandlordListings] delete failed:', err);
       alert(t('deleteError'));
+    } finally {
+      setDeleting(null);
     }
-    setDeleting(null);
   }
 
   async function handleToggleFeatured(listingId, currentlyFeatured) {
     setTogglingFeatured(listingId);
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) { router.replace('/landlord/login'); return; }
-    const res = await fetch(`/api/landlord/listings/${listingId}`, {
-      method: 'PATCH',
-      headers: {
-        Authorization: `Bearer ${session.access_token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ is_featured: !currentlyFeatured }),
-    });
-    if (res.ok) {
-      setListings((prev) =>
-        prev.map((l) =>
-          l.listing_id === listingId ? { ...l, is_featured: !currentlyFeatured } : l
-        )
-      );
-    } else {
-      const data = await res.json().catch(() => ({}));
-      alert(data.error || t('featuredError'));
+    try {
+      if (!accessToken) {
+        setTogglingFeatured(null);
+        router.replace('/landlord/login');
+        return;
+      }
+      const res = await fetch(`/api/landlord/listings/${listingId}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ is_featured: !currentlyFeatured }),
+      });
+      if (res.ok) {
+        setListings((prev) =>
+          prev.map((l) =>
+            l.listing_id === listingId ? { ...l, is_featured: !currentlyFeatured } : l
+          )
+        );
+      } else {
+        const data = await res.json().catch(() => ({}));
+        alert(data.error || t('featuredError'));
+      }
+    } catch (err) {
+      console.error('[LandlordListings] toggle_featured failed:', err);
+      alert(t('featuredError'));
+    } finally {
+      setTogglingFeatured(null);
     }
-    setTogglingFeatured(null);
   }
 
   return (

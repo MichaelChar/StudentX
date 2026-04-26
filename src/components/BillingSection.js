@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 
 const TIER_STYLES = {
   none: 'bg-gray-100 text-gray-700',
@@ -12,20 +12,14 @@ const TIER_STYLES = {
 
 export default function BillingSection() {
   const t = useTranslations('landlord.billing');
+  const accessToken = useAccessToken();
   const [billing, setBilling] = useState(null);
   const [loading, setLoading] = useState(true);
   const [actionLoading, setActionLoading] = useState(false);
 
-  async function getToken() {
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    return session?.access_token;
-  }
-
-  const loadBilling = useCallback(async () => {
+  const loadBilling = useCallback(async (token) => {
     setLoading(true);
     try {
-      const token = await getToken();
       if (!token) return;
 
       const res = await fetch('/api/landlord/billing/subscription', {
@@ -33,25 +27,25 @@ export default function BillingSection() {
       });
 
       if (res.ok) setBilling(await res.json());
-    } catch {
-      // Billing info unavailable
+    } catch (err) {
+      console.error('[BillingSection] load_billing failed:', err);
     } finally {
       setLoading(false);
     }
   }, []);
 
   useEffect(() => {
-    loadBilling();
-  }, [loadBilling]);
+    if (accessToken === null) return; // wait for first session resolution
+    loadBilling(accessToken);
+  }, [accessToken, loadBilling]);
 
   async function handleCheckout(tier) {
     setActionLoading(true);
     try {
-      const token = await getToken();
       const res = await fetch('/api/landlord/billing/checkout', {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${accessToken}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ tier }),
@@ -64,6 +58,9 @@ export default function BillingSection() {
         const { error } = await res.json();
         alert(error || t('checkoutError'));
       }
+    } catch (err) {
+      console.error('[BillingSection] checkout failed:', err);
+      alert(t('checkoutError'));
     } finally {
       setActionLoading(false);
     }
@@ -72,10 +69,9 @@ export default function BillingSection() {
   async function handleManageBilling() {
     setActionLoading(true);
     try {
-      const token = await getToken();
       const res = await fetch('/api/landlord/billing/portal', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
 
       if (res.ok) {
@@ -85,6 +81,9 @@ export default function BillingSection() {
         const { error } = await res.json();
         alert(error || t('portalError'));
       }
+    } catch (err) {
+      console.error('[BillingSection] manage_billing failed:', err);
+      alert(t('portalError'));
     } finally {
       setActionLoading(false);
     }

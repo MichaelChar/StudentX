@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useRouter } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 import ListingForm from '@/components/ListingForm';
 import { useTranslations } from 'next-intl';
 
@@ -13,6 +14,7 @@ import Button from '@/components/ui/Button';
 export default function EditListingPage() {
   const t = useTranslations('landlord.editListing');
   const router = useRouter();
+  const accessToken = useAccessToken();
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -58,9 +60,6 @@ export default function EditListingPage() {
   }, [id, t]);
 
   async function handleSubmit(formData) {
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-
     const payload = {
       ...formData,
       monthly_price: formData.monthly_price !== '' ? parseFloat(formData.monthly_price) : null,
@@ -73,7 +72,7 @@ export default function EditListingPage() {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${session.access_token}`,
+        Authorization: `Bearer ${accessToken}`,
       },
       body: JSON.stringify(payload),
     });
