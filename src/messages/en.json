@@ -407,6 +407,7 @@
       "markReplied": "Mark as replied",
       "markClosed": "Close",
       "reopen": "Reopen",
+      "openChat": "Open chat",
       "profileError": "Landlord profile not found"
     }
   },
