@@ -24,6 +24,7 @@ import GlobeLoader from '@/components/GlobeLoader';
 const PROPERTY_TYPES = ['Studio', '1-Bedroom', '2-Bedroom', 'Room in shared apartment'];
 const BUDGET_MIN = 150;
 const BUDGET_MAX = 1200;
+const DEFAULT_BUDGET = 900;
 
 function MapLoadingFallback() {
   return (
@@ -84,7 +85,10 @@ function ResultsContent() {
       usp.has('budget') || usp.has('types') || usp.has('neighborhoods');
     if (cameFromQuiz) setShowLoader(true);
   }, []);
-  const [sortBy, setSortBy] = useState('match');
+  const [sortBy, setSortBy] = useState(() => {
+    const s = searchParams.get('sort_by');
+    return s === 'price' || s === 'priceDesc' ? s : 'match';
+  });
   const [viewMode, setViewMode] = useState(
     searchParams.get('view') === 'map' ? 'map' : 'list'
   );
@@ -92,11 +96,16 @@ function ResultsContent() {
   const [saveSearchOpen, setSaveSearchOpen] = useState(false);
   const [filtersMobileOpen, setFiltersMobileOpen] = useState(false);
 
-  const [filters, setFilters] = useState({
-    maxBudget: 900,
-    selectedTypes: [],
-    selectedNeighborhoods: [],
-    verifiedOnly: false,
+  const [filters, setFilters] = useState(() => {
+    const budget = Number(searchParams.get('budget'));
+    const types = searchParams.get('types');
+    const neighborhoods = searchParams.get('neighborhoods');
+    return {
+      maxBudget: Number.isFinite(budget) && budget > 0 ? budget : DEFAULT_BUDGET,
+      selectedTypes: types ? types.split(',').filter(Boolean) : [],
+      selectedNeighborhoods: neighborhoods ? neighborhoods.split(',').filter(Boolean) : [],
+      verifiedOnly: searchParams.get('verified_only') === 'true',
+    };
   });
 
   useEffect(() => {
@@ -106,21 +115,31 @@ function ResultsContent() {
       .catch(() => {});
   }, []);
 
-  // Seed filters from URL params on mount
-  const seededRef = useRef(false);
+  // Sync filter/sort/view state INTO the URL so refresh + share + back
+  // preserve what the user picked. The initial state is seeded from the
+  // URL above, so this effect is a no-op on first render and writes only
+  // on actual user changes. Uses replaceState (not router.replace) so we
+  // don't trigger an unnecessary RSC re-render — the listing fetch reads
+  // from local state, not useSearchParams. Note: the URL params here are
+  // the user-facing names (budget/types/neighborhoods), not the API names
+  // (max_budget); fetchListings translates between them.
   useEffect(() => {
-    if (seededRef.current) return;
-    seededRef.current = true;
-    const budget = searchParams.get('budget');
-    const types = searchParams.get('types');
-    const neighborhoods = searchParams.get('neighborhoods');
-    setFilters((prev) => ({
-      ...prev,
-      maxBudget: budget ? Number(budget) : prev.maxBudget,
-      selectedTypes: types ? types.split(',') : [],
-      selectedNeighborhoods: neighborhoods ? neighborhoods.split(',') : [],
-    }));
-  }, [searchParams]);
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams();
+    if (filters.maxBudget !== DEFAULT_BUDGET) params.set('budget', String(filters.maxBudget));
+    if (filters.selectedTypes.length > 0)
+      params.set('types', filters.selectedTypes.join(','));
+    if (filters.selectedNeighborhoods.length > 0)
+      params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
+    if (filters.verifiedOnly) params.set('verified_only', 'true');
+    if (sortBy !== 'match') params.set('sort_by', sortBy);
+    if (viewMode === 'map') params.set('view', 'map');
+    const next = params.toString();
+    const current = window.location.search.replace(/^\?/, '');
+    if (next === current) return;
+    const url = next ? `${window.location.pathname}?${next}` : window.location.pathname;
+    window.history.replaceState(null, '', url);
+  }, [filters, sortBy, viewMode]);
 
   const fetchListings = useCallback(async () => {
     setLoading(true);

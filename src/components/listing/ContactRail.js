@@ -81,7 +81,7 @@ export default function ContactRail({ listing }) {
                 <Icon name="x" className="w-5 h-5" />
               </button>
             </div>
-            <InquiryForm listingId={listing.listing_id} />
+            <InquiryForm listingId={listing.listing_id} defaultOpen />
           </Card>
         </div>
       )}
