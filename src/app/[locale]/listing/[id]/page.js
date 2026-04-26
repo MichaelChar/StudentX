@@ -3,8 +3,7 @@ import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
-import { getSupabase } from '@/lib/supabase';
-import { transformListing } from '@/lib/transformListing';
+import { getListingForRender } from '@/lib/listingForRender';
 
 import ContactRail from '@/components/listing/ContactRail';
 import ViewTracker from '@/components/listing/ViewTracker';
@@ -15,43 +14,21 @@ import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import OrnamentRule from '@/components/ui/OrnamentRule';
 
-const LISTING_SELECT = `
-  listing_id,
-  description,
-  photos,
-  rent ( monthly_price, currency, bills_included, deposit ),
-  location ( address, neighborhood, lat, lng ),
-  property_types ( name ),
-  landlords ( name, contact_info, verified_tier ),
-  listing_amenities ( amenities ( amenity_id, name ) ),
-  faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
-`;
-
-// Same shape as the existing API endpoint at src/app/api/listings/[id]/route.js,
-// but pulled in directly from the server component so the page SSRs the
-// listing instead of waiting for a client-side fetch (#audit M6 — bad for SEO
-// + first-contentful-paint).
-async function fetchListing(id) {
-  if (!id || !/^\d[\d-]+$/.test(id)) return null;
-  try {
-    const { data, error } = await getSupabase()
-      .from('listings')
-      .select(LISTING_SELECT)
-      .eq('listing_id', id)
-      .single();
-    if (error || !data) return null;
-    return transformListing(data);
-  } catch {
-    return null;
-  }
-}
-
-export default async function ListingPage({ params }) {
+export default async function ListingPage({ params, searchParams }) {
   const { locale, id } = await params;
+  const sp = (await searchParams) || {};
   setRequestLocale(locale);
 
-  const listing = await fetchListing(id);
+  // React.cache() de-dupes this with the layout's fetch — one Supabase
+  // round-trip per request instead of two.
+  const listing = await getListingForRender(id);
   if (!listing) notFound();
+
+  // ?from=<urlencoded querystring> threads the user's prior /results
+  // filter state into the back-link so it returns to the same filtered
+  // view they came from. Plain ?from= param (or missing) → bare /results.
+  const fromRaw = typeof sp.from === 'string' ? sp.from : '';
+  const backHref = fromRaw ? `/results?${fromRaw}` : '/results';
 
   const t = await getTranslations({ locale, namespace: 'propylaea.listing' });
   const tListing = await getTranslations({ locale, namespace: 'listing' });
@@ -68,11 +45,11 @@ export default async function ListingPage({ params }) {
     <div className="mx-auto max-w-6xl px-5 py-8 md:py-12">
       <ViewTracker listingId={listing.listing_id} />
 
-      {/* Back link — server-rendered Link instead of router.back() to keep
-          the back button server-side. Loses prior-search context but gains
-          SEO + crawlability. */}
+      {/* Back link — server-rendered Link. Threads the prior /results
+          filter state via ?from= so the back nav lands on the same
+          filtered view the user came from (set by ListingCard). */}
       <Link
-        href="/results"
+        href={backHref}
         className="inline-flex items-center gap-2 label-caps text-night/60 hover:text-blue transition-colors mb-8"
       >
         <Icon name="chevronRight" className="w-3.5 h-3.5 rotate-180" />
@@ -279,45 +256,70 @@ function BilingualField({ greek, english, value }) {
   );
 }
 
-// Derive the 3 Propylaea destinations from whatever faculty_distances
-// the API returned. Match by fuzzy name; fall back to showing the first
-// N rows with their original names if no matches found.
+// Pick up to 3 destination rows for the listing detail's distance table.
+// Match by faculty_id (stable across locales / display-name drift) — the
+// original fuzzy 'medic'/'ιατρ' match silently missed once AUTH Medical
+// School was seeded as "Faculty of Health Sciences".
+//
+// The committed seed (migrations/002_seed_faculties.sql) ships
+// auth-main / auth-medical / auth-agriculture. Production has been
+// extended via MCP with auth-philosophy / auth-engineering / etc. We
+// chain fallbacks so this works in both environments. Dedicated AHEPA
+// hospital / Central Library reference points don't exist yet, so we
+// drop the abstract "destHospital" row when its data would just be a
+// dupe of School of Medicine, and fall back to surfacing the next-
+// nearest unique faculty by its real name. That avoids the duplicate-
+// row UX the previous fuzzy-match approach was hiding.
 function deriveDestinations(facultyDistances, t) {
-  const byKey = (keyword) =>
-    facultyDistances.find((f) =>
-      (f.faculty_name || '').toLowerCase().includes(keyword),
-    );
+  const byId = (id) => facultyDistances.find((f) => f.faculty_id === id);
 
-  const medicine = byKey('medic') || byKey('ιατρ');
-  const ahepa = byKey('ahepa') || byKey('αχεπα');
-  const library = byKey('libr') || byKey('βιβλι');
+  const medicine = byId('auth-medical');
+  // Main campus row stands in for "Central Library"; prefer auth-main
+  // (committed seed), fall back to a representative main-campus AUTH
+  // row in production envs that don't have auth-main.
+  const mainCampus =
+    byId('auth-main') ||
+    byId('auth-philosophy') ||
+    byId('auth-engineering') ||
+    byId('auth-law');
 
-  const picks = [
-    {
+  const seen = new Set();
+  const picks = [];
+
+  if (medicine) {
+    picks.push({
       name: t('destSchool'),
-      walk: medicine?.walk_minutes,
-      transit: medicine?.transit_minutes,
-    },
-    {
-      name: t('destHospital'),
-      walk: ahepa?.walk_minutes,
-      transit: ahepa?.transit_minutes,
-    },
-    {
+      walk: medicine.walk_minutes,
+      transit: medicine.transit_minutes,
+    });
+    seen.add(medicine.faculty_id);
+  }
+  if (mainCampus && !seen.has(mainCampus.faculty_id)) {
+    picks.push({
       name: t('destLibrary'),
-      walk: library?.walk_minutes,
-      transit: library?.transit_minutes,
-    },
-  ];
+      walk: mainCampus.walk_minutes,
+      transit: mainCampus.transit_minutes,
+    });
+    seen.add(mainCampus.faculty_id);
+  }
 
-  // If no matches at all and we have raw distances, surface the first three.
-  const anyMatched = medicine || ahepa || library;
-  if (!anyMatched && facultyDistances.length > 0) {
-    return facultyDistances.slice(0, 3).map((f) => ({
+  // Pad to 3 rows with the next-nearest unique faculty under its real
+  // (localised) name. Sorted by walk time; ties broken by transit.
+  const remaining = [...facultyDistances]
+    .filter((f) => !seen.has(f.faculty_id))
+    .sort(
+      (a, b) =>
+        (a.walk_minutes ?? Infinity) - (b.walk_minutes ?? Infinity) ||
+        (a.transit_minutes ?? Infinity) - (b.transit_minutes ?? Infinity)
+    );
+  for (const f of remaining) {
+    if (picks.length >= 3) break;
+    picks.push({
       name: f.faculty_name,
       walk: f.walk_minutes,
       transit: f.transit_minutes,
-    }));
+    });
+    seen.add(f.faculty_id);
   }
 
   return picks;

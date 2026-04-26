@@ -73,9 +73,9 @@ function AboutContent() {
               >
                 {step.numeral}
               </span>
-              <p className="font-display text-2xl text-night leading-tight mb-3">
+              <h3 className="font-display text-2xl text-night leading-tight mb-3">
                 {step.title}
-              </p>
+              </h3>
               <p className="text-night/70 text-base leading-relaxed">
                 {step.body}
               </p>
