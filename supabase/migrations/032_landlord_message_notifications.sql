@@ -48,7 +48,7 @@ CREATE OR REPLACE FUNCTION public.get_pending_landlord_notifications(
   p_min_interval interval
 ) RETURNS TABLE (
   inquiry_id              UUID,
-  listing_id              UUID,
+  listing_id              TEXT,
   landlord_email          TEXT,
   landlord_name           TEXT,
   landlord_locale         TEXT,
