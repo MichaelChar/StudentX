@@ -664,8 +664,13 @@
       "continueWithApple": "Συνέχεια με Apple",
       "signupGoogle": "Εγγραφή με Google",
       "signupApple": "Εγγραφή με Apple",
-      "comingSoon": "Έρχεται σύντομα",
-      "soon": "Σύντομα"
+      "signingIn": "Σύνδεση…",
+      "callbackLoading": "Σε συνδέουμε…",
+      "errorTitle": "Η σύνδεση απέτυχε",
+      "errorGeneric": "Κάτι πήγε στραβά κατά τη σύνδεση. Δοκίμασε ξανά.",
+      "errorNoSession": "Η σύνδεση ακυρώθηκε ή δεν επιστράφηκε συνεδρία.",
+      "tryAgain": "Δοκίμασε ξανά",
+      "portal": "Φοιτητική πύλη"
     },
     "account": {
       "portal": "Φοιτητική πύλη",

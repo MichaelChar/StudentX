@@ -8,7 +8,7 @@ import { useLocale, useTranslations } from 'next-intl';
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
 import Button from '@/components/ui/Button';
-import OAuthProvidersStub from '@/components/student/OAuthProvidersStub';
+import OAuthProviders from '@/components/student/OAuthProviders';
 
 export default function StudentSignupPage() {
   const t = useTranslations('student.signup');
@@ -142,7 +142,7 @@ export default function StudentSignupPage() {
         <span className="h-px flex-1 bg-night/10" />
       </div>
 
-      <OAuthProvidersStub context="signup" />
+      <OAuthProviders context="signup" />
 
       <p className="mt-8 text-sm text-night/60">
         {t('haveAccount')}{' '}
