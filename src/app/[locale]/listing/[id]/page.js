@@ -1,75 +1,60 @@
-'use client';
-
-import { useEffect, useState } from 'react';
-import { useParams } from 'next/navigation';
-import { useRouter, Link } from '@/i18n/navigation';
+import { notFound } from 'next/navigation';
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
+import { Link } from '@/i18n/navigation';
 
-import InquiryForm from '@/components/InquiryForm';
+import { getSupabase } from '@/lib/supabase';
+import { transformListing } from '@/lib/transformListing';
+
+import ContactRail from '@/components/listing/ContactRail';
+import ViewTracker from '@/components/listing/ViewTracker';
 import ReviewList from '@/components/ReviewList';
-import Button from '@/components/ui/Button';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import OrnamentRule from '@/components/ui/OrnamentRule';
 
-/*
-  Propylaea listing detail — matches page 07 of the reference design.
-  Photo gallery, gold verified seal + programme pill, bilingual field
-  rows, amenity chips, distance-to-school table, sticky inquiry rail.
-*/
-export default function ListingPage() {
-  const t = useTranslations('propylaea.listing');
-  const tListing = useTranslations('listing');
-  const tInquiry = useTranslations('inquiry');
-  const { id } = useParams();
-  const router = useRouter();
-  const [listing, setListing] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [inquiryOpen, setInquiryOpen] = useState(false);
+const LISTING_SELECT = `
+  listing_id,
+  description,
+  photos,
+  rent ( monthly_price, currency, bills_included, deposit ),
+  location ( address, neighborhood, lat, lng ),
+  property_types ( name ),
+  landlords ( name, contact_info, verified_tier ),
+  listing_amenities ( amenities ( amenity_id, name ) ),
+  faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
+`;
 
-  useEffect(() => {
-    async function fetchListing() {
-      try {
-        const res = await fetch(`/api/listings/${id}`);
-        if (!res.ok) {
-          setError(
-            res.status === 404
-              ? tListing('listingNotFound')
-              : tListing('somethingWentWrong'),
-          );
-          return;
-        }
-        const data = await res.json();
-        setListing(data.listing);
-        fetch(`/api/listings/${id}/view`, { method: 'POST' }).catch(() => {});
-      } catch {
-        setError(tListing('failedToLoad'));
-      } finally {
-        setLoading(false);
-      }
-    }
-    fetchListing();
-  }, [id, tListing]);
-
-  if (loading) return <ListingSkeleton />;
-
-  if (error) {
-    return (
-      <div className="mx-auto max-w-3xl px-5 py-24 text-center">
-        <h1 className="font-display text-3xl text-night mb-3">
-          {tListing('listingNotFound')}
-        </h1>
-        <p className="text-night/60 mb-8">{tListing('listingNotFoundDesc')}</p>
-        <Button href="/results" variant="gold">
-          {tListing('backToSearchBtn')}
-        </Button>
-      </div>
-    );
+// Same shape as the existing API endpoint at src/app/api/listings/[id]/route.js,
+// but pulled in directly from the server component so the page SSRs the
+// listing instead of waiting for a client-side fetch (#audit M6 — bad for SEO
+// + first-contentful-paint).
+async function fetchListing(id) {
+  if (!id || !/^\d[\d-]+$/.test(id)) return null;
+  try {
+    const { data, error } = await getSupabase()
+      .from('listings')
+      .select(LISTING_SELECT)
+      .eq('listing_id', id)
+      .single();
+    if (error || !data) return null;
+    return transformListing(data);
+  } catch {
+    return null;
   }
+}
+
+export default async function ListingPage({ params }) {
+  const { locale, id } = await params;
+  setRequestLocale(locale);
+
+  const listing = await fetchListing(id);
+  if (!listing) notFound();
+
+  const t = await getTranslations({ locale, namespace: 'propylaea.listing' });
+  const tListing = await getTranslations({ locale, namespace: 'listing' });
 
   const photos = (listing.photos || []).filter(
     (url) => typeof url === 'string' && url.startsWith('http'),
@@ -77,21 +62,22 @@ export default function ListingPage() {
   const isVerified =
     listing.verified_tier && listing.verified_tier !== 'none';
 
-  // Destinations we want to show in the distance table — Propylaea spec.
-  // If the API returns matches, use them; otherwise fall back to whatever
-  // faculty_distances returned.
   const distances = deriveDestinations(listing.faculty_distances || [], t);
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-8 md:py-12">
-      {/* Back link */}
-      <button
-        onClick={() => router.back()}
-        className="inline-flex items-center gap-2 label-caps text-night/60 hover:text-blue transition-colors mb-8 cursor-pointer"
+      <ViewTracker listingId={listing.listing_id} />
+
+      {/* Back link — server-rendered Link instead of router.back() to keep
+          the back button server-side. Loses prior-search context but gains
+          SEO + crawlability. */}
+      <Link
+        href="/results"
+        className="inline-flex items-center gap-2 label-caps text-night/60 hover:text-blue transition-colors mb-8"
       >
         <Icon name="chevronRight" className="w-3.5 h-3.5 rotate-180" />
         {t('back')}
-      </button>
+      </Link>
 
       {/* Photo gallery — two-up mosaic matching the design */}
       <section className="mb-10">
@@ -245,77 +231,14 @@ export default function ListingPage() {
           </section>
         </div>
 
-        {/* Right column — sticky inquiry rail */}
-        <aside>
-          <div className="lg:sticky lg:top-24">
-            <Card tone="white" className="p-6">
-              <p className="font-display text-3xl text-blue">
-                {listing.monthly_price != null ? (
-                  <>
-                    €{listing.monthly_price}
-                    <span className="text-base text-night/50">/mo</span>
-                  </>
-                ) : (
-                  <span className="text-base text-night/50">
-                    {tListing('priceOnRequest')}
-                  </span>
-                )}
-              </p>
-              <div className="mt-2">
-                <Pill variant="programme">{t('authMedicalProgramme')}</Pill>
-              </div>
-              <p className="mt-5 text-night/70 text-sm leading-relaxed">
-                {t('directTagline')}
-              </p>
-              <div className="mt-5">
-                <Button
-                  variant="gold"
-                  onClick={() => setInquiryOpen(true)}
-                  className="w-full justify-center"
-                >
-                  {t('sendInquiry')}
-                </Button>
-              </div>
-              <p className="mt-3 label-caps text-night/50 text-center">
-                {t('replyWithin24h')}
-              </p>
-            </Card>
-          </div>
-        </aside>
+        {/* Right column — sticky inquiry rail (client-side for modal state) */}
+        <ContactRail listing={listing} />
       </div>
 
       {/* Reviews */}
       <div className="mt-16 pt-10 border-t border-night/10">
         <ReviewList listingId={listing.listing_id} />
       </div>
-
-      {/* Inquiry modal */}
-      {inquiryOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-          <div
-            className="absolute inset-0 bg-night/60"
-            onClick={() => setInquiryOpen(false)}
-          />
-          <Card
-            tone="white"
-            className="relative z-10 w-full max-w-lg p-6 md:p-8"
-          >
-            <div className="flex items-center justify-between mb-4">
-              <p className="font-display text-2xl text-night">
-                {tInquiry('sendMessage')}
-              </p>
-              <button
-                onClick={() => setInquiryOpen(false)}
-                className="p-1 text-night/60 hover:text-night"
-                aria-label={tInquiry('close')}
-              >
-                <Icon name="x" className="w-5 h-5" />
-              </button>
-            </div>
-            <InquiryForm listingId={listing.listing_id} />
-          </Card>
-        </div>
-      )}
     </div>
   );
 }
@@ -398,24 +321,4 @@ function deriveDestinations(facultyDistances, t) {
   }
 
   return picks;
-}
-
-function ListingSkeleton() {
-  return (
-    <div className="mx-auto max-w-6xl px-5 py-8 md:py-12 animate-pulse">
-      <div className="h-4 w-28 bg-parchment rounded mb-8" />
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mb-10">
-        <div className="aspect-[4/3] rounded-sm bg-parchment" />
-        <div className="aspect-[4/3] rounded-sm bg-parchment" />
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10">
-        <div className="space-y-8">
-          <div className="h-10 w-3/4 bg-parchment rounded" />
-          <div className="h-28 bg-parchment rounded-sm" />
-          <div className="h-40 bg-parchment rounded" />
-        </div>
-        <div className="h-56 bg-parchment rounded-sm" />
-      </div>
-    </div>
-  );
 }
