@@ -482,7 +482,9 @@
     },
     "results": {
       "eyebrow": "Your matches",
-      "titleTemplate": "{count, plural, =0 {No listings yet} one {# listing in Thessaloniki} other {# listings in Thessaloniki}}",
+      "titleLoading": "Student housing in Thessaloniki",
+      "titleEmpty": "No matches for these filters",
+      "titleTemplate": "{count, plural, =0 {No matches for these filters} one {# listing in Thessaloniki} other {# listings in Thessaloniki}}",
       "sortBestMatch": "Best match",
       "sortPriceAsc": "Price — low to high",
       "sortPriceDesc": "Price — high to low",
