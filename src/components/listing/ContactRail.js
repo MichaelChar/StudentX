@@ -47,9 +47,12 @@ export default function ContactRail({ listing }) {
 
     try {
       if (!accessToken) {
-        // Shouldn't happen — page is gated — but recover gracefully.
-        // Reset sending before navigating so a slow/aborted route change
-        // doesn't strand the modal in "SENDING…".
+        // accessToken === null (loading) is blocked by the disabled
+        // prop on the Send button below, so we only reach here for the
+        // genuine signed-out case ('') — shouldn't happen on this gated
+        // page, but recover gracefully. Reset sending before navigating
+        // so a slow/aborted route change doesn't strand the modal in
+        // "SENDING…".
         setSending(false);
         router.push('/student/login');
         return;
@@ -171,7 +174,7 @@ export default function ContactRail({ listing }) {
               <Button
                 type="submit"
                 variant="primary"
-                disabled={sending}
+                disabled={sending || accessToken === null}
                 className="w-full justify-center"
               >
                 {sending ? tContact('sending') : tContact('send')}
