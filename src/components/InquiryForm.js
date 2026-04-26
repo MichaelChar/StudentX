@@ -11,10 +11,14 @@ const ERROR_CODES = new Set([
   'INTERNAL',
 ]);
 
-export default function InquiryForm({ listingId, facultyId }) {
+export default function InquiryForm({ listingId, facultyId, defaultOpen = false }) {
   const t = useTranslations('inquiry');
   const tErrors = useTranslations('inquiry.errors');
-  const [open, setOpen] = useState(false);
+  // Standalone use renders a "Contact landlord" trigger first; when the
+  // form is mounted inside an explicit modal/dialog the parent is already
+  // a "send inquiry" affordance, so callers pass defaultOpen to skip the
+  // doubled click.
+  const [open, setOpen] = useState(defaultOpen);
   const [form, setForm] = useState({
     student_name: '',
     student_email: '',
