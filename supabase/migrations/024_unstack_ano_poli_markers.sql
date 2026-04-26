@@ -23,14 +23,27 @@
 -- only; replace with real surveyed coords when the listings are
 -- onboarded for production. Reversible via the down migration
 -- below (commented; uncomment to undo).
+--
+-- The location table is keyed by location_id; listings.location_id
+-- is the FK. The first version of this migration referenced
+-- location.listing_id which doesn't exist (caught when applied via
+-- MCP — the unfixed file would fail on `supabase db push`).
 
-UPDATE location SET lat = 40.6432, lng = 22.9535 WHERE listing_id = '0100001';
-UPDATE location SET lat = 40.6418, lng = 22.9532 WHERE listing_id = '0100002';
-UPDATE location SET lat = 40.6431, lng = 22.9508 WHERE listing_id = '0100003';
-UPDATE location SET lat = 40.6415, lng = 22.9510 WHERE listing_id = '0100004';
-UPDATE location SET lat = 40.6438, lng = 22.9522 WHERE listing_id = '0100005';
-UPDATE location SET lat = 40.6412, lng = 22.9525 WHERE listing_id = '0100006';
+UPDATE location l SET lat = 40.6432, lng = 22.9535
+  FROM listings s WHERE s.location_id = l.location_id AND s.listing_id = '0100001';
+UPDATE location l SET lat = 40.6418, lng = 22.9532
+  FROM listings s WHERE s.location_id = l.location_id AND s.listing_id = '0100002';
+UPDATE location l SET lat = 40.6431, lng = 22.9508
+  FROM listings s WHERE s.location_id = l.location_id AND s.listing_id = '0100003';
+UPDATE location l SET lat = 40.6415, lng = 22.9510
+  FROM listings s WHERE s.location_id = l.location_id AND s.listing_id = '0100004';
+UPDATE location l SET lat = 40.6438, lng = 22.9522
+  FROM listings s WHERE s.location_id = l.location_id AND s.listing_id = '0100005';
+UPDATE location l SET lat = 40.6412, lng = 22.9525
+  FROM listings s WHERE s.location_id = l.location_id AND s.listing_id = '0100006';
 
 -- ---- Reversal (un-comment to revert) --------------------------------
--- UPDATE location SET lat = 40.6425, lng = 22.952
---   WHERE listing_id IN ('0100001','0100002','0100003','0100004','0100005','0100006');
+-- UPDATE location l SET lat = 40.6425, lng = 22.952
+--   FROM listings s
+--  WHERE s.location_id = l.location_id
+--    AND s.listing_id IN ('0100001','0100002','0100003','0100004','0100005','0100006');
