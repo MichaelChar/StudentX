@@ -56,7 +56,7 @@
     "noResultsHint": "Try adjusting your filters.",
     "loadingMap": "Loading map…",
     "to": "to",
-    "verifiedOnly": "Verified only"
+    "verifiedOnly": "SuperLandlord only"
   },
   "listing": {
     "backToResults": "Back to results",
@@ -182,7 +182,7 @@
     "metaTitle": "About StudentX",
     "metaDescription": "StudentX helps students find housing near their university in Thessaloniki, Greece. Free for students, free for landlords.",
     "title": "About StudentX",
-    "intro": "StudentX is a student housing directory built for Thessaloniki. By students, for students. Viva our pocket money!",
+    "intro": "StudentX is a student housing directory built for Thessaloniki. By students, for students.",
     "missionTitle": "Our mission",
     "missionBody": "We bridge the gap between students and landlords. With a purpose-built platform that puts proximity to campus at the center of every search.",
     "howItWorksTitle": "How it works",
@@ -406,7 +406,7 @@
       "heroBefore": "your home",
       "heroItalic": "near",
       "heroAfter": "campus.",
-      "subtitle": "Verified student housing for medical students. Tell us what you need and we match you.",
+      "subtitle": "Curated student housing for medical students. Tell us what you need and we match you.",
       "ctaPrimary": "Take the quiz",
       "ctaSecondary": "Browse all listings",
       "programmeEyebrow": "The programme",
@@ -492,7 +492,7 @@
       "upTo": "up to",
       "neighborhood": "Neighborhood",
       "type": "Type",
-      "verified": "Verified",
+      "verified": "SuperLandlord",
       "billsIncluded": "Bills included",
       "authProgramme": "AUTh programme",
       "featuredTitle": "Aristotle Medical Housing Programme",
@@ -502,7 +502,7 @@
     "listing": {
       "back": "Back to results",
       "authMedicalProgramme": "AUTh Medical Programme",
-      "verified": "Verified",
+      "verified": "SuperLandlord",
       "rentGreek": "Ενοίκιο",
       "rentEnglish": "Rent",
       "depositGreek": "Εγγύηση",

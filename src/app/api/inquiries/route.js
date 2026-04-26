@@ -18,6 +18,29 @@ const MAX_MESSAGE_LEN = 4000;
 const MAX_LISTING_ID_LEN = 64;
 const MAX_FACULTY_ID_LEN = 64;
 
+// Public anonymous endpoint — no credentials, RPC enforces rate-limit and
+// per-listing cap, so wildcard origin is safe and lets partner sites
+// (AUSOM, university embeds) post inquiries from arbitrary hosts without
+// bespoke CORS lists.
+const CORS_HEADERS = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+  "Access-Control-Max-Age": "86400",
+};
+
+function jsonWithCors(body, init = {}) {
+  const res = NextResponse.json(body, init);
+  for (const [k, v] of Object.entries(CORS_HEADERS)) {
+    res.headers.set(k, v);
+  }
+  return res;
+}
+
+export function OPTIONS() {
+  return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
+}
+
 function getClientIp(request) {
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
@@ -54,7 +77,7 @@ export async function POST(request) {
     try {
       body = await request.json();
     } catch {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: "Invalid JSON body" },
         { status: 400 }
       );
@@ -65,11 +88,11 @@ export async function POST(request) {
     // Honeypot: bots tend to fill every field. Real users never see `website`.
     // Pretend success so bots don't learn to bypass.
     if (typeof website === "string" && website.trim().length > 0) {
-      return NextResponse.json({ inquiry_id: "blocked" }, { status: 201 });
+      return jsonWithCors({ inquiry_id: "blocked" }, { status: 201 });
     }
 
     if (!listing_id || typeof listing_id !== "string" || listing_id.length > MAX_LISTING_ID_LEN) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: "listing_id is required" },
         { status: 400 }
       );
@@ -88,68 +111,68 @@ export async function POST(request) {
       .maybeSingle();
     if (existsError) {
       console.error("Inquiry listing-existence check failed:", existsError);
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INTERNAL", error: "Failed to verify listing" },
         { status: 500 }
       );
     }
     if (!existingListing) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "LISTING_NOT_FOUND", error: "Listing not found" },
         { status: 404 }
       );
     }
 
     if (!student_name || typeof student_name !== "string" || student_name.trim().length === 0) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: "student_name is required" },
         { status: 400 }
       );
     }
     if (student_name.length > MAX_NAME_LEN) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: `student_name must be at most ${MAX_NAME_LEN} characters` },
         { status: 400 }
       );
     }
     if (!student_email || typeof student_email !== "string") {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: "student_email is required" },
         { status: 400 }
       );
     }
     if (student_email.length > MAX_EMAIL_LEN) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: `student_email must be at most ${MAX_EMAIL_LEN} characters` },
         { status: 400 }
       );
     }
     if (!/^[^@]+@[^@]+\.[^@]+$/.test(student_email)) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: "student_email is invalid" },
         { status: 400 }
       );
     }
     if (typeof student_phone === "string" && student_phone.length > MAX_PHONE_LEN) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: `student_phone must be at most ${MAX_PHONE_LEN} characters` },
         { status: 400 }
       );
     }
     if (typeof faculty_id === "string" && faculty_id.length > MAX_FACULTY_ID_LEN) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: `faculty_id must be at most ${MAX_FACULTY_ID_LEN} characters` },
         { status: 400 }
       );
     }
     if (!message || typeof message !== "string" || message.trim().length < 10) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: "message must be at least 10 characters" },
         { status: 400 }
       );
     }
     if (message.length > MAX_MESSAGE_LEN) {
-      return NextResponse.json(
+      return jsonWithCors(
         { error_code: "INVALID_INPUT", error: `message must be at most ${MAX_MESSAGE_LEN} characters` },
         { status: 400 }
       );
@@ -184,12 +207,12 @@ export async function POST(request) {
     if (rpcError) {
       switch (rpcError.code) {
         case "P0002":
-          return NextResponse.json(
+          return jsonWithCors(
             { error_code: "LISTING_NOT_FOUND", error: "Listing not found" },
             { status: 404 }
           );
         case "P0003":
-          return NextResponse.json(
+          return jsonWithCors(
             {
               error_code: "RATE_LIMITED",
               error: "Too many inquiries from this network. Try again in an hour.",
@@ -197,7 +220,7 @@ export async function POST(request) {
             { status: 429 }
           );
         case "P0001":
-          return NextResponse.json(
+          return jsonWithCors(
             {
               error_code: "CAP_EXCEEDED",
               error: "This listing has reached the maximum number of inquiries for the free tier.",
@@ -206,7 +229,7 @@ export async function POST(request) {
           );
         default:
           console.error("submit_inquiry RPC error:", rpcError);
-          return NextResponse.json(
+          return jsonWithCors(
             { error_code: "INTERNAL", error: "Failed to submit inquiry" },
             { status: 500 }
           );
@@ -284,10 +307,10 @@ export async function POST(request) {
       // Swallow — inquiry persisted, retry can be done out-of-band.
     }
 
-    return NextResponse.json({ inquiry_id: inquiryId }, { status: 201 });
+    return jsonWithCors({ inquiry_id: inquiryId }, { status: 201 });
   } catch (err) {
     console.error("Unexpected error in POST /api/inquiries:", err);
-    return NextResponse.json(
+    return jsonWithCors(
       { error_code: "INTERNAL", error: "Internal server error" },
       { status: 500 }
     );

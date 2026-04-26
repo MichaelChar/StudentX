@@ -52,13 +52,10 @@ export default function Footer() {
           </nav>
         </div>
 
-        <div className="border-t border-stone/10 mt-12 pt-6 flex flex-col md:flex-row md:items-center md:justify-between gap-2 text-xs text-stone/50">
+        <div className="border-t border-stone/10 mt-12 pt-6 text-xs text-stone/50">
           <p>
             &copy; {year} StudentX &middot; {t('officialPartner')} &middot;{' '}
             {t('thessaloniki')}
-          </p>
-          <p className="text-stone/40 font-display italic">
-            Propylaea &middot; v2 &middot; April 2026
           </p>
         </div>
       </div>
