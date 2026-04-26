@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -29,6 +29,7 @@ export default function ContactRail({ listing }) {
   const tListing = useTranslations('listing');
   const tContact = useTranslations('student.contact');
   const router = useRouter();
+  const accessToken = useAccessToken();
   const [open, setOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
@@ -45,10 +46,11 @@ export default function ContactRail({ listing }) {
     setSending(true);
 
     try {
-      const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
+      if (!accessToken) {
         // Shouldn't happen — page is gated — but recover gracefully.
+        // Reset sending before navigating so a slow/aborted route change
+        // doesn't strand the modal in "SENDING…".
+        setSending(false);
         router.push('/student/login');
         return;
       }
@@ -57,7 +59,7 @@ export default function ContactRail({ listing }) {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({
           listing_id: listing.listing_id,
@@ -68,13 +70,14 @@ export default function ContactRail({ listing }) {
       if (!res.ok || !data.inquiry_id) {
         const key = ERROR_TO_KEY[data.error_code] || 'errorGeneric';
         setError(tContact(key));
-        setSending(false);
         return;
       }
 
       router.push(`/student/inquiries/${data.inquiry_id}`);
-    } catch {
+    } catch (err) {
+      console.error('[ContactRail] start_inquiry failed:', err);
       setError(tContact('errorGeneric'));
+    } finally {
       setSending(false);
     }
   }
