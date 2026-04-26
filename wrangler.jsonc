@@ -23,7 +23,15 @@
   // missing env. Anon key is RLS-protected and intentionally public.
   "vars": {
     "NEXT_PUBLIC_SUPABASE_URL": "https://ecluqurlfbvkxrnoyhaq.supabase.co",
-    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbHVxdXJsZmJ2a3hybm95aGFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODQ0MzUsImV4cCI6MjA5MDM2MDQzNX0.XspsrkDjv_AWltPgFqBQSocLXU4tBmq1auu_Zg8qTBE"
+    "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbHVxdXJsZmJ2a3hybm95aGFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODQ0MzUsImV4cCI6MjA5MDM2MDQzNX0.XspsrkDjv_AWltPgFqBQSocLXU4tBmq1auu_Zg8qTBE",
+    // Canonical/sitemap/og:url + landlord email links all resolve from these.
+    // Code defaults to https://studentx.gr but the live deploy is the
+    // workers.dev host until DNS flips — without these bindings, every
+    // canonical points to a hostname Google can't fetch and every email
+    // button links somewhere broken. Flip back to studentx.gr (or just
+    // remove these lines, since the code falls back to it) once DNS lands.
+    "NEXT_PUBLIC_SITE_URL": "https://studentx.studentx-gr.workers.dev",
+    "NEXT_PUBLIC_APP_URL": "https://studentx.studentx-gr.workers.dev"
   },
   // Cron triggers: daily at 09:00 UTC and weekly on Mondays at 09:00 UTC.
   // Dispatched via cf/worker-entry.mjs's `scheduled` handler, which POSTs to

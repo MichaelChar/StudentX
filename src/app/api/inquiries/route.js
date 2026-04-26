@@ -74,6 +74,32 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+
+    // Verify the listing exists *before* validating the rest of the body so
+    // a stale URL surfaces as 404 LISTING_NOT_FOUND immediately, rather than
+    // hiding behind "message must be at least 10 characters" or similar
+    // (the audit flagged this exact precedence as confusing UX). The RPC
+    // re-checks existence under a row lock — this is just for error ordering.
+    const supabase = getSupabase();
+    const { data: existingListing, error: existsError } = await supabase
+      .from("listings")
+      .select("listing_id")
+      .eq("listing_id", listing_id.trim())
+      .maybeSingle();
+    if (existsError) {
+      console.error("Inquiry listing-existence check failed:", existsError);
+      return NextResponse.json(
+        { error_code: "INTERNAL", error: "Failed to verify listing" },
+        { status: 500 }
+      );
+    }
+    if (!existingListing) {
+      return NextResponse.json(
+        { error_code: "LISTING_NOT_FOUND", error: "Listing not found" },
+        { status: 404 }
+      );
+    }
+
     if (!student_name || typeof student_name !== "string" || student_name.trim().length === 0) {
       return NextResponse.json(
         { error_code: "INVALID_INPUT", error: "student_name is required" },
@@ -129,7 +155,6 @@ export async function POST(request) {
       );
     }
 
-    const supabase = getSupabase();
     const submitterIp = getClientIp(request);
 
     const cleanName = student_name.trim();
