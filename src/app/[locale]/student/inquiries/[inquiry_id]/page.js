@@ -10,7 +10,7 @@ export default async function StudentInquiryThreadPage({ params }) {
   setRequestLocale(locale);
 
   const auth = await requireStudent();
-  if (!auth) {
+  if (!auth || auth.kind === 'wrong-role') {
     const next =
       locale === 'el'
         ? `/student/inquiries/${inquiryId}`

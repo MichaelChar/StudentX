@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAuthEmail } from '@/lib/useAuthEmail';
 import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -10,6 +11,7 @@ import Button from '@/components/ui/Button';
 
 export default function StudentVerifyEmailPage() {
   const t = useTranslations('student.verifyEmail');
+  const email = useAuthEmail();
   const [resending, setResending] = useState(false);
   const [resent, setResent] = useState(false);
   const [error, setError] = useState('');
@@ -18,26 +20,31 @@ export default function StudentVerifyEmailPage() {
     setError('');
     setResending(true);
 
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    const email = session?.user?.email;
+    try {
+      if (!email) {
+        // Empty string means signed-out (hook resolved). null means
+        // still loading — but the disabled prop below blocks click in
+        // that state, so this branch only fires for a true sign-out.
+        setError(t('noSession'));
+        return;
+      }
 
-    if (!email) {
+      const supabase = getSupabaseBrowser();
+      const { error: resendError } = await supabase.auth.resend({
+        type: 'signup',
+        email,
+      });
+
+      if (resendError) {
+        setError(resendError.message);
+      } else {
+        setResent(true);
+      }
+    } catch (err) {
+      console.error('[student/verify-email] resend failed:', err);
       setError(t('noSession'));
+    } finally {
       setResending(false);
-      return;
-    }
-
-    const { error: resendError } = await supabase.auth.resend({
-      type: 'signup',
-      email,
-    });
-
-    setResending(false);
-    if (resendError) {
-      setError(resendError.message);
-    } else {
-      setResent(true);
     }
   }
 
@@ -63,7 +70,7 @@ export default function StudentVerifyEmailPage() {
           <Button
             onClick={handleResend}
             variant="primary"
-            disabled={resending}
+            disabled={resending || email === null}
             className="w-full justify-center"
           >
             {resending ? t('resending') : t('resend')}

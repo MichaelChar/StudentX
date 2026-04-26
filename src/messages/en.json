@@ -710,7 +710,11 @@
       "signIn": "Sign in",
       "signUp": "Create student account",
       "landlordHint": "Are you a landlord?",
-      "landlordLink": "Landlord portal"
+      "landlordLink": "Landlord portal",
+      "wrongRoleTitle": "This listing is for students",
+      "wrongRoleSubtitle": "You're signed in as a landlord. Switch to a student account to view this listing — landlord and student profiles are kept separate.",
+      "wrongRoleSwitch": "Switch to a student account",
+      "wrongRoleDashboard": "Back to landlord dashboard"
     },
     "contact": {
       "guestTitle": "Sign in to message this landlord",
@@ -721,6 +725,7 @@
       "firstMessagePlaceholder": "Hi! I'm interested in this listing — could we arrange a viewing?",
       "send": "Start conversation",
       "sending": "Sending…",
+      "closeAriaLabel": "Close",
       "minLength": "Please write at least 10 characters.",
       "errorGeneric": "Couldn't start the conversation. Try again.",
       "errorListingMissing": "This listing is no longer available.",

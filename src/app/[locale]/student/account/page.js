@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { requireStudent } from '@/lib/requireStudent';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
+import SignOutButton from '@/components/student/SignOutButton';
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -24,9 +25,10 @@ export default async function StudentAccountPage({ params }) {
   setRequestLocale(locale);
 
   const auth = await requireStudent();
-  if (!auth) {
-    // Not signed in (or not a student) — bounce to login. Preserve the
-    // page they were trying to reach so post-login lands them back here.
+  if (!auth || auth.kind === 'wrong-role') {
+    // Not signed in (or signed in as the wrong role, e.g. a landlord) —
+    // bounce to the student login. Preserve the page they were trying
+    // to reach so post-login lands them back here.
     const next = locale === 'el' ? '/student/account' : `/${locale}/student/account`;
     redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?next=${encodeURIComponent(next)}`);
   }
@@ -55,7 +57,10 @@ export default async function StudentAccountPage({ params }) {
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
-      <p className="label-caps text-gold mb-2">{t('eyebrow')}</p>
+      <div className="flex items-start justify-between gap-4 mb-2">
+        <p className="label-caps text-gold">{t('eyebrow')}</p>
+        <SignOutButton />
+      </div>
       <h1 className="font-display text-3xl md:text-4xl text-night mb-2">{t('title')}</h1>
       <p className="text-night/60 mb-10">{student.display_name} · {student.email}</p>
 
@@ -101,7 +106,10 @@ export default async function StudentAccountPage({ params }) {
                         <div className="flex flex-wrap items-center gap-2 mb-1">
                           <p className="font-display text-xl text-night truncate">{address}</p>
                           {unread > 0 && (
-                            <span className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-gold text-white text-[11px] font-sans font-semibold px-1.5">
+                            <span
+                              aria-label={t('unread', { count: unread })}
+                              className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-gold text-white text-[11px] font-sans font-semibold px-1.5"
+                            >
                               {unread}
                             </span>
                           )}

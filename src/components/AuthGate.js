@@ -5,18 +5,23 @@ import Icon from '@/components/ui/Icon';
 import AuthGateRescue from '@/components/AuthGateRescue';
 
 /**
- * Server-rendered gate shown to guests (and non-student-role accounts)
- * trying to view a listing detail page. The visual language mirrors the
- * existing modal pattern — navy backdrop fill, white rounded card, gold
- * accent — so it feels native rather than like an error page.
+ * Server-rendered gate shown when requireStudent() blocks listing access.
+ * Two modes share the same shell so the visual language stays consistent:
+ *
+ *   - 'guest' (default) — no auth at all. Offers sign-up / sign-in.
+ *   - 'wrong-role' — signed in but not as a student (e.g. a landlord).
+ *     Tells them this listing is for students and offers to switch
+ *     accounts or return to the landlord dashboard.
  *
  * `next` is a path-with-query (e.g. "/listing/3801?from=...") that the
  * sign-in page reads from `?next=` and assigns via window.location.
  */
-export default async function AuthGate({ next }) {
+export default async function AuthGate({ next, mode = 'guest' }) {
   const t = await getTranslations('student.gate');
   const safeNext = typeof next === 'string' && next.startsWith('/') ? next : '';
   const nextQuery = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
+
+  const isWrongRole = mode === 'wrong-role';
 
   return (
     <div className="min-h-[calc(100vh-12rem)] flex items-center justify-center px-5 py-16 bg-stone">
@@ -38,34 +43,55 @@ export default async function AuthGate({ next }) {
           </div>
 
           <h1 className="font-display text-3xl text-night leading-tight mb-3">
-            {t('title')}
+            {isWrongRole ? t('wrongRoleTitle') : t('title')}
           </h1>
-          <p className="text-night/70 leading-relaxed mb-8">{t('subtitle')}</p>
-
-          <div className="space-y-3">
-            <Link
-              href={`/student/signup${nextQuery}`}
-              className="inline-flex items-center justify-center w-full bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
-            >
-              {t('signUp')}
-            </Link>
-            <Link
-              href={`/student/login${nextQuery}`}
-              className="inline-flex items-center justify-center w-full border border-blue text-blue font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-blue hover:text-white transition-colors"
-            >
-              {t('signIn')}
-            </Link>
-          </div>
-
-          <p className="mt-8 text-sm text-night/50">
-            {t('landlordHint')}{' '}
-            <Link
-              href="/landlord/login"
-              className="text-blue hover:text-night font-medium"
-            >
-              {t('landlordLink')} →
-            </Link>
+          <p className="text-night/70 leading-relaxed mb-8">
+            {isWrongRole ? t('wrongRoleSubtitle') : t('subtitle')}
           </p>
+
+          {isWrongRole ? (
+            <div className="space-y-3">
+              <Link
+                href={`/student/signup${nextQuery}`}
+                className="inline-flex items-center justify-center w-full bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
+              >
+                {t('wrongRoleSwitch')}
+              </Link>
+              <Link
+                href="/landlord/dashboard"
+                className="inline-flex items-center justify-center w-full border border-blue text-blue font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-blue hover:text-white transition-colors"
+              >
+                {t('wrongRoleDashboard')}
+              </Link>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <Link
+                href={`/student/signup${nextQuery}`}
+                className="inline-flex items-center justify-center w-full bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
+              >
+                {t('signUp')}
+              </Link>
+              <Link
+                href={`/student/login${nextQuery}`}
+                className="inline-flex items-center justify-center w-full border border-blue text-blue font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-blue hover:text-white transition-colors"
+              >
+                {t('signIn')}
+              </Link>
+            </div>
+          )}
+
+          {!isWrongRole && (
+            <p className="mt-8 text-sm text-night/50">
+              {t('landlordHint')}{' '}
+              <Link
+                href="/landlord/login"
+                className="text-blue hover:text-night font-medium"
+              >
+                {t('landlordLink')} →
+              </Link>
+            </p>
+          )}
         </div>
       </Card>
     </div>
