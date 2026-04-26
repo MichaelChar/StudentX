@@ -7,7 +7,14 @@ import { Link } from '@/i18n/navigation';
   Left: Night surface with brand and Greek-key band.
   Right: Stone/white form card.
 */
-export default function AuthShell({ eyebrow, title, subtitle, children, brandBlurb }) {
+export default function AuthShell({
+  eyebrow,
+  title,
+  subtitle,
+  children,
+  brandBlurb,
+  portal = 'Landlord portal',
+}) {
   return (
     <div className="min-h-screen bg-stone flex flex-col lg:flex-row">
       {/* Brand panel — desktop */}
@@ -29,7 +36,7 @@ export default function AuthShell({ eyebrow, title, subtitle, children, brandBlu
             StudentX <span className="text-stone/40">×</span>{' '}
             <span className="italic text-gold">AUSOM</span>
           </Link>
-          <p className="mt-2 label-caps text-stone/40">Landlord portal</p>
+          <p className="mt-2 label-caps text-stone/40">{portal}</p>
         </div>
 
         <div className="relative max-w-md">

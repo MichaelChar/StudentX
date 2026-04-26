@@ -9,6 +9,7 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
+import { Link } from '@/i18n/navigation';
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -163,10 +164,17 @@ function InquiryCard({ inquiry, updating, onStatusChange, t }) {
       </blockquote>
 
       <div className="flex flex-wrap items-center gap-2">
+        <Link
+          href={`/landlord/inquiries/${inquiry.inquiry_id}/chat`}
+          className="inline-flex items-center justify-center gap-1 bg-blue text-white text-xs font-sans font-semibold uppercase tracking-[0.08em] px-3 py-1.5 rounded hover:bg-night transition-colors"
+        >
+          <Icon name="message" className="w-3.5 h-3.5" />
+          {t('openChat')}
+        </Link>
         {inquiry.status === 'pending' && (
           <Button
             size="sm"
-            variant="primary"
+            variant="outline"
             disabled={updating}
             onClick={() => onStatusChange(inquiry.inquiry_id, 'replied')}
           >

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
+import SessionSync from '@/components/SessionSync';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.gr';
 
@@ -75,6 +76,7 @@ export default async function LocaleLayout({ children, params }) {
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
+      <SessionSync />
       <Navbar />
       <main className="flex-1">{children}</main>
       <Footer />
