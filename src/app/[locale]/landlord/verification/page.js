@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useRef } from 'react';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
 import Button from '@/components/ui/Button';
@@ -9,6 +10,7 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 
 export default function LandlordVerificationPage() {
+  const accessToken = useAccessToken();
   const [loading, setLoading] = useState(true);
   const [verifiedTier, setVerifiedTier] = useState(null);
   const [latestRequest, setLatestRequest] = useState(null);
@@ -52,21 +54,17 @@ export default function LandlordVerificationPage() {
     setSubmitting(true);
     setSubmitError('');
 
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) {
-      setSubmitError('Session expired. Please sign in again.');
-      setSubmitting(false);
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append('id_document', file);
-
     try {
+      if (!accessToken) {
+        setSubmitError('Session expired. Please sign in again.');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('id_document', file);
+
       const res = await fetch('/api/landlord/verification', {
         method: 'POST',
-        headers: { Authorization: `Bearer ${session.access_token}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
         body: formData,
       });
       const data = await res.json();
@@ -76,7 +74,8 @@ export default function LandlordVerificationPage() {
         setSubmitSuccess(true);
         setLatestRequest({ status: 'pending', submitted_at: new Date().toISOString() });
       }
-    } catch {
+    } catch (err) {
+      console.error('[LandlordVerification] submit failed:', err);
       setSubmitError('Failed to submit. Please try again.');
     } finally {
       setSubmitting(false);

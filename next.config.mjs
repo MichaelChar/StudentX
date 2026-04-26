@@ -34,12 +34,12 @@ const SECURITY_HEADERS = [
   },
 ];
 
-// Marketing/listing HTML routes should be CDN-cacheable. OpenNext (and the
+// Marketing HTML routes should be CDN-cacheable. OpenNext (and the
 // dynamic-page default) serves `private, no-cache, no-store, must-revalidate`
 // for any page that touches request-scoped APIs (next-intl reads headers),
 // which kills shared caching for a public catalog. Override here. Excludes
-// /api/* (per-route control already set), /landlord/* (auth, must stay
-// private), and _next/static/.
+// /api/* (per-route control already set), auth-gated surfaces (/landlord/*,
+// /listing/*, /student/*), and _next/static/.
 //   public               — any cache (browser + CDN) may store the response
 //   s-maxage=300         — CDN holds for 5 min
 //   stale-while-revalidate=86400 — serve stale up to 1 day while refetching
@@ -70,7 +70,10 @@ const nextConfig = {
         source: '/:path*',
         headers: SECURITY_HEADERS,
       },
-      // Auth-bound landlord surfaces stay private.
+      // Auth-bound surfaces stay private. /listing/[id] is gated by
+      // requireStudent and renders an AuthGate body to anonymous users —
+      // CDN-caching it would serve one viewer's gated/non-gated body to
+      // another. /student/* (account, inquiries) is per-session.
       {
         source: '/landlord/:path*',
         headers: PRIVATE_CACHE_HEADERS,
@@ -79,11 +82,28 @@ const nextConfig = {
         source: '/:locale(en)/landlord/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
+      {
+        source: '/listing/:path*',
+        headers: PRIVATE_CACHE_HEADERS,
+      },
+      {
+        source: '/:locale(en)/listing/:path*',
+        headers: PRIVATE_CACHE_HEADERS,
+      },
+      {
+        source: '/student/:path*',
+        headers: PRIVATE_CACHE_HEADERS,
+      },
+      {
+        source: '/:locale(en)/student/:path*',
+        headers: PRIVATE_CACHE_HEADERS,
+      },
       // All other HTML routes are public-cacheable. The negative lookahead
-      // skips api / _next / landlord / files with extensions (favicon etc.).
+      // skips api / _next / auth-gated surfaces / files with extensions
+      // (favicon etc.).
       {
         source:
-          '/((?!api|_next|landlord|en/landlord|.*\\..*).*)',
+          '/((?!api|_next|landlord|en/landlord|listing|en/listing|student|en/student|.*\\..*).*)',
         headers: PUBLIC_CACHE_HEADERS,
       },
     ];

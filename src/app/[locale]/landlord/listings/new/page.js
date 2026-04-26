@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from '@/i18n/navigation';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 import ListingForm from '@/components/ListingForm';
 import { useTranslations } from 'next-intl';
 
@@ -17,6 +17,7 @@ import Button from '@/components/ui/Button';
 export default function NewListingPage() {
   const t = useTranslations('landlord.newListing');
   const router = useRouter();
+  const accessToken = useAccessToken();
 
   const [importUrl, setImportUrl] = useState('');
   const [importState, setImportState] = useState('idle');
@@ -30,10 +31,6 @@ export default function NewListingPage() {
     setImportError('');
 
     try {
-      const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
-      const accessToken = session?.access_token;
-
       const res = await fetch('/api/landlord/listings/import-url', {
         method: 'POST',
         headers: {
@@ -65,17 +62,14 @@ export default function NewListingPage() {
       }
 
       setImportState('success');
-    } catch {
+    } catch (err) {
+      console.error('[NewListing] import_url failed:', err);
       setImportState('error');
       setImportError('Something went wrong. Please try again.');
     }
   }
 
   async function handleSubmit(formData) {
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    const accessToken = session?.access_token;
-
     const payload = {
       ...formData,
       monthly_price: formData.monthly_price ? parseFloat(formData.monthly_price) : null,

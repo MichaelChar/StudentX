@@ -17,6 +17,7 @@ const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 export default function ListingForm({ initialValues = {}, onSubmit, submitLabel }) {
   const t = useTranslations('landlord.listingForm');
   const fileInputRef = useRef(null);
+  const [userId, setUserId] = useState('anon');
   const [form, setForm] = useState({
     address: '',
     neighborhood: '',
@@ -49,6 +50,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     async function loadOptions() {
       const supabase = getSupabaseBrowser();
       const { data: { session } } = await supabase.auth.getSession();
+      if (session?.user?.id) setUserId(session.user.id);
 
       const fetches = [fetch('/api/property-types'), fetch('/api/amenities')];
       if (session?.access_token) {
@@ -117,8 +119,6 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     setUploading(true);
     try {
       const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
-      const userId = session?.user?.id || 'anon';
 
       const uploaded = [];
       for (const file of toUpload) {
@@ -140,6 +140,9 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       if (uploaded.length > 0) {
         setForm((prev) => ({ ...prev, photos: [...(prev.photos || []), ...uploaded] }));
       }
+    } catch (err) {
+      console.error('[ListingForm] photo_upload failed:', err);
+      setPhotoError(t('photosError'));
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
