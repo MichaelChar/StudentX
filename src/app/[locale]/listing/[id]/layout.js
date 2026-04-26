@@ -24,7 +24,9 @@ export async function generateMetadata({ params }) {
   // images for content the user is gated out of, which trips the
   // cloaking heuristic. requireStudent is React.cache()'d so the
   // page-level call below shares this round-trip.
-  if (!auth) {
+  // Wrong-role auth (e.g. landlord) is treated the same as a guest:
+  // they'll see the gate, so the rich metadata must be stripped too.
+  if (!auth || auth.kind === 'wrong-role') {
     return {
       title: "Sign in to view listing — StudentX",
       description:
@@ -120,9 +122,10 @@ export default async function ListingLayout({ children, params }) {
   // Skip JSON-LD when the page body is the auth gate. We already set
   // robots:noindex above for the same reason, so emitting structured
   // data here would actively contradict the directive and expose the
-  // listing to crawlers under a sign-in wall.
+  // listing to crawlers under a sign-in wall. Wrong-role auth lands on
+  // the gate too, so JSON-LD must be skipped for them as well.
   let jsonLd = null;
-  if (listing && auth) {
+  if (listing && auth && auth.kind !== 'wrong-role') {
     const address = listing.address ?? "";
     const neighborhood = listing.neighborhood ?? "Thessaloniki";
     const price = listing.monthly_price;

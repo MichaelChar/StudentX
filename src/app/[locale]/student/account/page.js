@@ -25,9 +25,10 @@ export default async function StudentAccountPage({ params }) {
   setRequestLocale(locale);
 
   const auth = await requireStudent();
-  if (!auth) {
-    // Not signed in (or not a student) — bounce to login. Preserve the
-    // page they were trying to reach so post-login lands them back here.
+  if (!auth || auth.kind === 'wrong-role') {
+    // Not signed in (or signed in as the wrong role, e.g. a landlord) —
+    // bounce to the student login. Preserve the page they were trying
+    // to reach so post-login lands them back here.
     const next = locale === 'el' ? '/student/account' : `/${locale}/student/account`;
     redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?next=${encodeURIComponent(next)}`);
   }

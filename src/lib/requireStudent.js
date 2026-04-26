@@ -5,15 +5,17 @@ import { getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
 
 /**
  * Server-side helper that resolves the current student account from
- * the sb-access-token cookie set by SessionSync. Returns null when:
- *   - no cookie is present
- *   - the JWT is invalid/expired
- *   - the auth.users row exists but doesn't have a matching students row
- *     (e.g. the user signed up through the landlord flow)
+ * the sb-access-token cookie set by SessionSync. Returns one of:
+ *   - { student, user, supabase, token } — authenticated as a student
+ *   - { kind: 'wrong-role' } — JWT is valid but the auth.users row has
+ *     no matching students row (e.g. the user signed up as a landlord).
+ *     Truthy on purpose so AuthGate can show "this is for students,
+ *     switch accounts" copy instead of the guest sign-in prompt.
+ *   - null — no cookie present, or JWT invalid/expired (guest)
  *
- * Callers (notably the listing detail page) render <AuthGate /> on null.
+ * Existing callers that did `if (!auth)` need to also handle the
+ * wrong-role case: `if (!auth || auth.kind === 'wrong-role')`.
  *
- * Returns: { student, user, supabase } on success.
  * supabase is a token-scoped client so any further reads run under the
  * student's RLS context.
  *
@@ -36,7 +38,7 @@ export const requireStudent = cache(async function requireStudent() {
     .eq('auth_user_id', user.id)
     .maybeSingle();
 
-  if (error || !student) return null;
+  if (error || !student) return { kind: 'wrong-role' };
 
   return { student, user, supabase, token };
 });

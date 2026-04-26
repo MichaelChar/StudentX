@@ -705,7 +705,11 @@
       "signIn": "Sign in",
       "signUp": "Create student account",
       "landlordHint": "Are you a landlord?",
-      "landlordLink": "Landlord portal"
+      "landlordLink": "Landlord portal",
+      "wrongRoleTitle": "This listing is for students",
+      "wrongRoleSubtitle": "You're signed in as a landlord. Switch to a student account to view this listing — landlord and student profiles are kept separate.",
+      "wrongRoleSwitch": "Switch to a student account",
+      "wrongRoleDashboard": "Back to landlord dashboard"
     },
     "contact": {
       "guestTitle": "Sign in to message this landlord",

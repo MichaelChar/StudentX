@@ -31,11 +31,16 @@ export default async function ListingPage({ params, searchParams }) {
   // SEO metadata + JSON-LD live in the layout and still get served to
   // crawlers; this only replaces the page body.
   const auth = await requireStudent();
-  if (!auth) {
+  if (!auth || auth.kind === 'wrong-role') {
     const fromQs = fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : '';
     const localePrefix = locale === 'el' ? '' : `/${locale}`;
     const nextPath = `${localePrefix}/listing/${id}${fromQs}`;
-    return <AuthGate next={nextPath} />;
+    return (
+      <AuthGate
+        next={nextPath}
+        mode={auth?.kind === 'wrong-role' ? 'wrong-role' : 'guest'}
+      />
+    );
   }
 
   // React.cache() de-dupes this with the layout's fetch — one Supabase
