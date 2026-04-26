@@ -86,8 +86,8 @@ AS $function$
     JOIN listings  l  ON l.listing_id  = i.listing_id
     JOIN landlords ll ON ll.landlord_id = l.landlord_id
     LEFT JOIN students st ON st.auth_user_id = i.student_user_id
-    LEFT JOIN location loc ON loc.listing_id = l.listing_id
-    LEFT JOIN rent     r   ON r.listing_id   = l.listing_id
+    LEFT JOIN location loc ON loc.location_id = l.location_id
+    LEFT JOIN rent     r   ON r.rent_id       = l.rent_id
     LEFT JOIN landlord_message_notifications n
            ON n.inquiry_id = i.inquiry_id
    WHERE i.landlord_unread_count > 0
