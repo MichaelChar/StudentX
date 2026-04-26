@@ -33,14 +33,20 @@
     "NEXT_PUBLIC_SITE_URL": "https://studentx.studentx-gr.workers.dev",
     "NEXT_PUBLIC_APP_URL": "https://studentx.studentx-gr.workers.dev"
   },
-  // Cron triggers: daily at 09:00 UTC and weekly on Mondays at 09:00 UTC.
-  // Dispatched via cf/worker-entry.mjs's `scheduled` handler, which POSTs to
-  // /api/cron/saved-searches-digest using NEXT_PUBLIC_APP_URL + CRON_SECRET.
-  // Keep CRON_TO_FREQUENCY in cf/worker-entry.mjs in sync with these patterns.
+  // Cron triggers. Dispatched via cf/worker-entry.mjs's `scheduled` handler,
+  // which maps each cron expression to a route + payload and POSTs using
+  // NEXT_PUBLIC_APP_URL + CRON_SECRET. Keep cf/worker-entry.mjs's CRON_ROUTES
+  // in sync with these patterns.
+  //
+  //   0 9 * * *      → /api/cron/saved-searches-digest?frequency=daily
+  //   0 9 * * 1      → /api/cron/saved-searches-digest?frequency=weekly
+  //   */5 * * * *    → /api/cron/landlord-message-digest (per-message digest;
+  //                    debounced server-side via claim_landlord_message_notification)
   "triggers": {
     "crons": [
-      "0 9 * * *",   // daily digest
-      "0 9 * * 1"    // weekly digest (Mondays)
+      "0 9 * * *",   // daily saved-searches digest
+      "0 9 * * 1",   // weekly saved-searches digest (Mondays)
+      "*/5 * * * *"  // landlord message digest (every 5 min)
     ]
   }
 }
