@@ -122,9 +122,9 @@ export default function LandingPage() {
                 {step.numeral}
               </span>
               <p className="label-caps text-night/50 mb-2">{step.greek}</p>
-              <p className="font-display text-2xl text-night leading-tight mb-3">
+              <h3 className="font-display text-2xl text-night leading-tight mb-3">
                 {step.english}
-              </p>
+              </h3>
               <p className="text-night/70 text-base leading-relaxed max-w-xs">
                 {step.body}
               </p>

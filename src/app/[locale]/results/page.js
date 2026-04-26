@@ -328,6 +328,7 @@ function ResultsContent() {
                     <ListingCard
                       key={listing.listing_id}
                       listing={listing}
+                      fromQuery={searchParams.toString()}
                     />
                   ))}
                 </div>

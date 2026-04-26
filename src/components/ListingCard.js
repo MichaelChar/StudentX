@@ -15,16 +15,23 @@ function isValidPhotoUrl(url) {
   return typeof url === 'string' && url.startsWith('http');
 }
 
-export default function ListingCard({ listing }) {
+export default function ListingCard({ listing, fromQuery = '' }) {
   const t = useTranslations('propylaea.results');
   const tCard = useTranslations('listingCard');
   const photo = listing.photos?.find(isValidPhotoUrl);
   const isVerified =
     listing.verified_tier && listing.verified_tier !== 'none';
 
+  // Thread current results search-state into the listing URL so the
+  // detail page's back link returns to the same filtered view. Caller
+  // passes the encoded query string (without the leading "?").
+  const href = fromQuery
+    ? `/listing/${listing.listing_id}?from=${encodeURIComponent(fromQuery)}`
+    : `/listing/${listing.listing_id}`;
+
   return (
     <Link
-      href={`/listing/${listing.listing_id}`}
+      href={href}
       className="group block bg-white border border-night/10 rounded-sm overflow-hidden hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)] transition-all focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-2"
     >
       {/* Photo */}

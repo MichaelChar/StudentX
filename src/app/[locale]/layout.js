@@ -54,7 +54,7 @@ export async function generateMetadata({ params }) {
       locale: meta.ogLocale,
       images: [
         {
-          url: `${SITE_URL}/og-default.svg`,
+          url: `${SITE_URL}/og-default.png`,
           alt: 'StudentX — student housing in Thessaloniki',
         },
       ],
