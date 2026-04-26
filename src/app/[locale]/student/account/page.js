@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { requireStudent } from '@/lib/requireStudent';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
+import SignOutButton from '@/components/student/SignOutButton';
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -55,7 +56,10 @@ export default async function StudentAccountPage({ params }) {
 
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
-      <p className="label-caps text-gold mb-2">{t('eyebrow')}</p>
+      <div className="flex items-start justify-between gap-4 mb-2">
+        <p className="label-caps text-gold">{t('eyebrow')}</p>
+        <SignOutButton />
+      </div>
       <h1 className="font-display text-3xl md:text-4xl text-night mb-2">{t('title')}</h1>
       <p className="text-night/60 mb-10">{student.display_name} · {student.email}</p>
 
