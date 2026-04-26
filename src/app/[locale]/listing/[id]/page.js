@@ -4,7 +4,9 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
 import { getListingForRender } from '@/lib/listingForRender';
+import { requireStudent } from '@/lib/requireStudent';
 
+import AuthGate from '@/components/AuthGate';
 import ContactRail from '@/components/listing/ContactRail';
 import ViewTracker from '@/components/listing/ViewTracker';
 import ReviewList from '@/components/ReviewList';
@@ -19,16 +21,27 @@ export default async function ListingPage({ params, searchParams }) {
   const sp = (await searchParams) || {};
   setRequestLocale(locale);
 
-  // React.cache() de-dupes this with the layout's fetch — one Supabase
-  // round-trip per request instead of two.
-  const listing = await getListingForRender(id);
-  if (!listing) notFound();
-
   // ?from=<urlencoded querystring> threads the user's prior /results
   // filter state into the back-link so it returns to the same filtered
   // view they came from. Plain ?from= param (or missing) → bare /results.
   const fromRaw = typeof sp.from === 'string' ? sp.from : '';
   const backHref = fromRaw ? `/results?${fromRaw}` : '/results';
+
+  // Auth gate — only authenticated students view listing detail. The
+  // SEO metadata + JSON-LD live in the layout and still get served to
+  // crawlers; this only replaces the page body.
+  const auth = await requireStudent();
+  if (!auth) {
+    const fromQs = fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : '';
+    const localePrefix = locale === 'el' ? '' : `/${locale}`;
+    const nextPath = `${localePrefix}/listing/${id}${fromQs}`;
+    return <AuthGate next={nextPath} />;
+  }
+
+  // React.cache() de-dupes this with the layout's fetch — one Supabase
+  // round-trip per request instead of two.
+  const listing = await getListingForRender(id);
+  if (!listing) notFound();
 
   const t = await getTranslations({ locale, namespace: 'propylaea.listing' });
   const tListing = await getTranslations({ locale, namespace: 'listing' });
