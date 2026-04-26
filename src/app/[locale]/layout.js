@@ -52,6 +52,12 @@ export async function generateMetadata({ params }) {
     openGraph: {
       siteName: 'StudentX',
       locale: meta.ogLocale,
+      images: [
+        {
+          url: `${SITE_URL}/og-default.svg`,
+          alt: 'StudentX — student housing in Thessaloniki',
+        },
+      ],
     },
     robots: { index: true, follow: true },
   };

@@ -86,9 +86,17 @@ export async function generateMetadata({ params }) {
       url,
       siteName: "StudentX",
       type: "website",
+      // Photos hotlink third-party CDNs (e.g. Wix); when no usable photo is
+      // present we fall back to a self-hosted SVG so og:image is never empty
+      // and never relies on a host we don't control.
       images: photo
         ? [{ url: photo, alt: `${propertyType} at ${address}` }]
-        : [],
+        : [
+            {
+              url: `${SITE_URL}/og-default.svg`,
+              alt: "StudentX — student housing in Thessaloniki",
+            },
+          ],
       locale: locale === 'el' ? "el_GR" : "en_GB",
     },
     twitter: {

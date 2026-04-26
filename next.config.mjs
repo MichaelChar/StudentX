@@ -34,6 +34,33 @@ const SECURITY_HEADERS = [
   },
 ];
 
+// Marketing/listing HTML routes should be CDN-cacheable. OpenNext (and the
+// dynamic-page default) serves `private, no-cache, no-store, must-revalidate`
+// for any page that touches request-scoped APIs (next-intl reads headers),
+// which kills shared caching for a public catalog. Override here. Excludes
+// /api/* (per-route control already set), /landlord/* (auth, must stay
+// private), and _next/static/.
+//   public               — any cache (browser + CDN) may store the response
+//   s-maxage=300         — CDN holds for 5 min
+//   stale-while-revalidate=86400 — serve stale up to 1 day while refetching
+// Locale is in the URL path (/en/... vs /...), so there's no cross-locale
+// cache pollution. Add `Vary: Accept-Language` defensively in case any
+// future negotiation is added.
+const PUBLIC_CACHE_HEADERS = [
+  {
+    key: 'Cache-Control',
+    value: 'public, s-maxage=300, stale-while-revalidate=86400',
+  },
+  { key: 'Vary', value: 'Accept-Language' },
+];
+
+const PRIVATE_CACHE_HEADERS = [
+  {
+    key: 'Cache-Control',
+    value: 'private, no-cache, no-store, must-revalidate',
+  },
+];
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
@@ -42,6 +69,22 @@ const nextConfig = {
       {
         source: '/:path*',
         headers: SECURITY_HEADERS,
+      },
+      // Auth-bound landlord surfaces stay private.
+      {
+        source: '/landlord/:path*',
+        headers: PRIVATE_CACHE_HEADERS,
+      },
+      {
+        source: '/:locale(en)/landlord/:path*',
+        headers: PRIVATE_CACHE_HEADERS,
+      },
+      // All other HTML routes are public-cacheable. The negative lookahead
+      // skips api / _next / landlord / files with extensions (favicon etc.).
+      {
+        source:
+          '/((?!api|_next|landlord|en/landlord|.*\\..*).*)',
+        headers: PUBLIC_CACHE_HEADERS,
       },
     ];
   },
