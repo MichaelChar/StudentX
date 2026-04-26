@@ -185,7 +185,9 @@ function ResultsContent() {
         <div>
           <p className="label-caps text-gold">{t('eyebrow')}</p>
           <h1 className="mt-2 font-display text-3xl md:text-4xl text-night leading-tight">
-            {t('titleTemplate', { count: loading ? 0 : listings.length })}
+            {loading
+              ? t('titleLoading')
+              : t('titleTemplate', { count: listings.length })}
           </h1>
         </div>
 

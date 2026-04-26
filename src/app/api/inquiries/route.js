@@ -7,6 +7,17 @@ import { inquiryEmailHtml, inquiryEmailSubject } from "@/templates/email/inquiry
 // so we don't silently fail at Resend due to an unverified domain identity.
 const FROM_ADDRESS = "StudentX <alerts@studentx.gr>";
 
+// Defense-in-depth caps. The downstream email template escapes HTML, so XSS
+// is already mitigated, but unbounded input is a DoS / oversized-payload
+// vector and pollutes the landlord inbox. Caps are generous to avoid false
+// rejections on legitimate inquiries.
+const MAX_NAME_LEN = 200;
+const MAX_EMAIL_LEN = 320; // RFC 5321 max
+const MAX_PHONE_LEN = 30;
+const MAX_MESSAGE_LEN = 4000;
+const MAX_LISTING_ID_LEN = 64;
+const MAX_FACULTY_ID_LEN = 64;
+
 function getClientIp(request) {
   const forwarded = request.headers.get("x-forwarded-for");
   if (forwarded) {
@@ -57,7 +68,7 @@ export async function POST(request) {
       return NextResponse.json({ inquiry_id: "blocked" }, { status: 201 });
     }
 
-    if (!listing_id || typeof listing_id !== "string") {
+    if (!listing_id || typeof listing_id !== "string" || listing_id.length > MAX_LISTING_ID_LEN) {
       return NextResponse.json(
         { error_code: "INVALID_INPUT", error: "listing_id is required" },
         { status: 400 }
@@ -69,9 +80,21 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+    if (student_name.length > MAX_NAME_LEN) {
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: `student_name must be at most ${MAX_NAME_LEN} characters` },
+        { status: 400 }
+      );
+    }
     if (!student_email || typeof student_email !== "string") {
       return NextResponse.json(
         { error_code: "INVALID_INPUT", error: "student_email is required" },
+        { status: 400 }
+      );
+    }
+    if (student_email.length > MAX_EMAIL_LEN) {
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: `student_email must be at most ${MAX_EMAIL_LEN} characters` },
         { status: 400 }
       );
     }
@@ -81,9 +104,27 @@ export async function POST(request) {
         { status: 400 }
       );
     }
+    if (typeof student_phone === "string" && student_phone.length > MAX_PHONE_LEN) {
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: `student_phone must be at most ${MAX_PHONE_LEN} characters` },
+        { status: 400 }
+      );
+    }
+    if (typeof faculty_id === "string" && faculty_id.length > MAX_FACULTY_ID_LEN) {
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: `faculty_id must be at most ${MAX_FACULTY_ID_LEN} characters` },
+        { status: 400 }
+      );
+    }
     if (!message || typeof message !== "string" || message.trim().length < 10) {
       return NextResponse.json(
         { error_code: "INVALID_INPUT", error: "message must be at least 10 characters" },
+        { status: 400 }
+      );
+    }
+    if (message.length > MAX_MESSAGE_LEN) {
+      return NextResponse.json(
+        { error_code: "INVALID_INPUT", error: `message must be at most ${MAX_MESSAGE_LEN} characters` },
         { status: 400 }
       );
     }

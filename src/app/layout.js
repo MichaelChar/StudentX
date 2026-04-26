@@ -8,8 +8,8 @@ export const metadata = {
   metadataBase: new URL(SITE_URL),
   alternates: {
     languages: {
-      en: SITE_URL,
-      el: `${SITE_URL}/el`,
+      el: SITE_URL,
+      en: `${SITE_URL}/en`,
     },
   },
 };

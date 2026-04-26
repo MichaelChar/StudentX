@@ -7,31 +7,51 @@ import Footer from '@/components/Footer';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.gr';
 
+// Greek is the default locale and lives at the site root (no /el prefix);
+// English lives under /en. Keep these helpers in lockstep with `routing` in
+// src/i18n/routing.js (defaultLocale: 'el', localePrefix: 'as-needed').
+const localeUrl = (locale) =>
+  locale === 'el' ? SITE_URL : `${SITE_URL}/${locale}`;
+
+const META_BY_LOCALE = {
+  el: {
+    title: 'StudentX — Φοιτητικές Κατοικίες Θεσσαλονίκη',
+    description:
+      'Βρες φοιτητική κατοικία κοντά στο πανεπιστήμιό σου στη Θεσσαλονίκη.',
+    ogLocale: 'el_GR',
+  },
+  en: {
+    title: 'StudentX — Student Housing in Thessaloniki',
+    description: 'Find student housing near your university in Thessaloniki.',
+    ogLocale: 'en_GB',
+  },
+};
+
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
+  const meta = META_BY_LOCALE[locale] || META_BY_LOCALE.el;
   return {
     metadataBase: new URL(SITE_URL),
     title: {
-      default: 'StudentX — Φοιτητικές Κατοικίες Θεσσαλονίκη',
+      default: meta.title,
       template: '%s — StudentX',
     },
-    description:
-      'Βρες φοιτητική κατοικία κοντά στο πανεπιστήμιό σου στη Θεσσαλονίκη. | Find student housing near your university in Thessaloniki.',
+    description: meta.description,
     alternates: {
-      canonical: `${SITE_URL}/${locale}`,
+      canonical: localeUrl(locale),
       languages: {
-        el: `${SITE_URL}/el`,
-        en: `${SITE_URL}/en`,
-        'x-default': `${SITE_URL}`,
+        el: localeUrl('el'),
+        en: localeUrl('en'),
+        'x-default': localeUrl('el'),
       },
     },
     openGraph: {
       siteName: 'StudentX',
-      locale: locale === 'el' ? 'el_GR' : 'en_US',
+      locale: meta.ogLocale,
     },
     robots: { index: true, follow: true },
   };

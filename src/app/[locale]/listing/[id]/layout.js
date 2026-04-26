@@ -1,3 +1,4 @@
+import { notFound } from "next/navigation";
 import { getSupabase } from "@/lib/supabase";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.gr";
@@ -62,8 +63,10 @@ export async function generateMetadata({ params }) {
       : `${propertyType} available in ${neighborhood}, Thessaloniki${facultyHint}.`) +
     (data.description && data.description.length > 140 ? "…" : "");
 
-  const enUrl = `${SITE_URL}/listing/${id}`;
-  const elUrl = `${SITE_URL}/el/listing/${id}`;
+  // Greek is default (no prefix); English lives under /en. Mirror the
+  // routing in src/i18n/routing.js (defaultLocale: 'el', as-needed prefix).
+  const elUrl = `${SITE_URL}/listing/${id}`;
+  const enUrl = `${SITE_URL}/en/listing/${id}`;
   const url = locale === 'el' ? elUrl : enUrl;
 
   return {
@@ -72,9 +75,9 @@ export async function generateMetadata({ params }) {
     alternates: {
       canonical: url,
       languages: {
-        en: enUrl,
         el: elUrl,
-        'x-default': enUrl,
+        en: enUrl,
+        'x-default': elUrl,
       },
     },
     openGraph: {
@@ -86,7 +89,7 @@ export async function generateMetadata({ params }) {
       images: photo
         ? [{ url: photo, alt: `${propertyType} at ${address}` }]
         : [],
-      locale: locale === 'el' ? "el_GR" : "en_US",
+      locale: locale === 'el' ? "el_GR" : "en_GB",
     },
     twitter: {
       card: "summary_large_image",
@@ -98,8 +101,14 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function ListingLayout({ children, params }) {
-  const { id } = await params;
+  const { id, locale } = await params;
   const data = await fetchListingForMeta(id);
+
+  // Surface a real 404 when the listing doesn't exist instead of letting the
+  // client-side page render a soft "Listing not found" body with HTTP 200.
+  if (!data) {
+    notFound();
+  }
 
   let jsonLd = null;
   if (data) {
@@ -110,13 +119,17 @@ export default async function ListingLayout({ children, params }) {
     const photo = (data.photos ?? []).find(
       (url) => typeof url === "string" && url.startsWith("http")
     );
+    const localizedUrl =
+      locale === 'en'
+        ? `${SITE_URL}/en/listing/${id}`
+        : `${SITE_URL}/listing/${id}`;
 
     jsonLd = {
       "@context": "https://schema.org",
       "@type": "RealEstateListing",
       name: `${propertyType} in ${neighborhood}`,
       description: data.description ?? `${propertyType} available in ${neighborhood}, Thessaloniki.`,
-      url: `${SITE_URL}/listing/${id}`,
+      url: localizedUrl,
       ...(photo && { image: photo }),
       address: {
         "@type": "PostalAddress",
