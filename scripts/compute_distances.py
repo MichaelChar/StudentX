@@ -11,15 +11,28 @@ Usage:
     python3 scripts/compute_distances.py --only-missing   # skip already-computed pairs
     python3 scripts/compute_distances.py --listing 0100001 # compute for one listing only
 
+Re-run when:
+    - A new listing is added (or its location_id changes)
+    - A faculty's coordinates change
+    - The pace model below is updated
+
 Environment variables required:
     SUPABASE_URL      - Supabase project URL
-    SUPABASE_KEY      - Supabase service role key
+    SUPABASE_KEY      - Supabase service role key (anon won't have write
+                        access to faculty_distances)
 
 OSRM notes:
-    - Uses the public OSRM demo server (router.project-osrm.org) over HTTP
-    - Walking profile: foot
-    - Driving profile used as transit proxy (OSRM has no public transit;
-      driving duration x 1.5 approximates bus/transit in a city)
+    - Uses the public OSRM demo server (router.project-osrm.org) over HTTPS
+    - We pull *distances* (not durations) from the foot profile and convert
+      to minutes ourselves, because the public demo's foot duration is
+      broken — it returns car-speed durations regardless of profile.
+      Distances are real road distances and are correct.
+    - Pace model (Thessaloniki city averages):
+          walking:  5 km/h  =>  83 m/min
+          transit:  ~15 km/h average bus speed (in-vehicle, with stops)
+                    =>  250 m/min, plus a 5-min wait/walk-to-stop overhead
+      Bus is therefore worse than walking for short trips and quicker for
+      longer ones, which matches lived experience in the city.
     - Rate-limited to ~1 request/second to respect the public server
 """
 
@@ -47,11 +60,16 @@ except ImportError:
 # Constants
 # ---------------------------------------------------------------------------
 
-OSRM_BASE = "http://router.project-osrm.org"
+OSRM_BASE = "https://router.project-osrm.org"
 REQUEST_DELAY = 1.1  # seconds between OSRM requests (rate limiting)
-TRANSIT_MULTIPLIER = 1.5  # driving time x this ≈ transit time
 OSRM_TIMEOUT = 15  # seconds per HTTP request
 MAX_RETRIES = 3  # retry failed OSRM requests
+
+# Pace conversion (see docstring). Tweak together if Thessaloniki transit
+# meaningfully changes (e.g. metro opens) so walk/transit stay coherent.
+WALK_M_PER_MIN = 83          # 5 km/h walking pace
+BUS_M_PER_MIN = 250          # ~15 km/h average bus speed incl. stops
+BUS_OVERHEAD_MIN = 5         # avg wait + walk-to/from-stop
 
 
 # ---------------------------------------------------------------------------
@@ -160,16 +178,18 @@ def fetch_existing_pairs(supabase: Client) -> set:
         return set()
 
 
-def osrm_route(origin_lng: float, origin_lat: float,
-               dest_lng: float, dest_lat: float,
-               profile: str = "foot") -> int | None:
+def osrm_route_distance_m(origin_lng: float, origin_lat: float,
+                          dest_lng: float, dest_lat: float) -> float | None:
     """
-    Query OSRM for route duration in minutes (rounded up).
+    Query OSRM for the foot-profile *route distance* in metres.
+    We deliberately ignore OSRM's duration here — the public demo's foot
+    profile returns car-speed durations (long-standing demo data issue).
+    Distances are real road distances and reliable.
     Returns None on failure. Retries on timeout.
     OSRM expects coordinates as lng,lat.
     """
     url = (
-        f"{OSRM_BASE}/route/v1/{profile}/"
+        f"{OSRM_BASE}/route/v1/foot/"
         f"{origin_lng},{origin_lat};{dest_lng},{dest_lat}"
         f"?overview=false"
     )
@@ -181,19 +201,17 @@ def osrm_route(origin_lng: float, origin_lat: float,
             resp.raise_for_status()
             data = resp.json()
             if data.get("code") == "Ok" and data.get("routes"):
-                duration_sec = data["routes"][0]["duration"]
-                return math.ceil(duration_sec / 60)
-            # OSRM returned a non-Ok response
+                return float(data["routes"][0]["distance"])
             if data.get("code") == "NoRoute":
-                print(f"      OSRM: No route found ({profile})")
+                print("      OSRM: No route found")
                 return None
             print(f"      OSRM unexpected response: {data.get('code')}")
             return None
         except requests.exceptions.Timeout:
             last_error = f"Timeout after {OSRM_TIMEOUT}s"
             if attempt < MAX_RETRIES:
-                print(f"      OSRM timeout ({profile}), retry {attempt}/{MAX_RETRIES}...")
-                time.sleep(2 * attempt)  # exponential backoff
+                print(f"      OSRM timeout, retry {attempt}/{MAX_RETRIES}...")
+                time.sleep(2 * attempt)
             continue
         except requests.exceptions.ConnectionError as e:
             last_error = f"Connection error: {e}"
@@ -203,7 +221,7 @@ def osrm_route(origin_lng: float, origin_lat: float,
             continue
         except requests.exceptions.HTTPError as e:
             status = e.response.status_code if e.response else "unknown"
-            if status == 429:  # rate limited
+            if status == 429:
                 last_error = "Rate limited (429)"
                 wait = 5 * attempt
                 print(f"      OSRM rate limited, waiting {wait}s...")
@@ -212,32 +230,27 @@ def osrm_route(origin_lng: float, origin_lat: float,
             print(f"      OSRM HTTP {status}: {e}")
             return None
         except (KeyError, IndexError, ValueError) as e:
-            print(f"      OSRM parse error ({profile}): {e}")
+            print(f"      OSRM parse error: {e}")
             return None
 
-    print(f"      OSRM failed after {MAX_RETRIES} retries ({profile}): {last_error}")
+    print(f"      OSRM failed after {MAX_RETRIES} retries: {last_error}")
     return None
 
 
-def compute_walk_minutes(listing: dict, faculty: dict) -> int | None:
-    """Compute walking time via OSRM foot profile."""
-    return osrm_route(listing["lng"], listing["lat"],
-                      faculty["lng"], faculty["lat"],
-                      profile="foot")
-
-
-def compute_transit_minutes(listing: dict, faculty: dict) -> int | None:
+def compute_minutes(listing: dict, faculty: dict) -> tuple[int, int] | tuple[None, None]:
     """
-    Approximate transit time using OSRM driving profile x multiplier.
-    OSRM public server doesn't have a transit profile, so driving time
-    multiplied by 1.5 is a reasonable city-transit approximation.
+    Returns (walk_minutes, transit_minutes) computed from the road
+    distance using the pace model in the module docstring.
+    Single OSRM hit per pair (only the distance, not duration).
     """
-    driving = osrm_route(listing["lng"], listing["lat"],
-                         faculty["lng"], faculty["lat"],
-                         profile="driving")
-    if driving is not None:
-        return math.ceil(driving * TRANSIT_MULTIPLIER)
-    return None
+    distance_m = osrm_route_distance_m(
+        listing["lng"], listing["lat"], faculty["lng"], faculty["lat"]
+    )
+    if distance_m is None:
+        return (None, None)
+    walk = max(1, math.ceil(distance_m / WALK_M_PER_MIN))
+    transit = math.ceil(distance_m / BUS_M_PER_MIN) + BUS_OVERHEAD_MIN
+    return (walk, transit)
 
 
 # ---------------------------------------------------------------------------
@@ -297,7 +310,7 @@ def main():
         return
 
     total = len(pairs_to_compute)
-    est_minutes = total * REQUEST_DELAY * 2 / 60
+    est_minutes = total * REQUEST_DELAY / 60  # one OSRM hit per pair now
     print(f"\nComputing {total} listing–faculty pairs...")
     print(f"(Rate limited to {REQUEST_DELAY}s/request, estimated {est_minutes:.1f} minutes)\n")
 
@@ -310,20 +323,14 @@ def main():
         fid = faculty["faculty_id"]
         label = f"[{completed}/{total}] {lid} → {fid}"
 
-        # Walking time
-        walk = compute_walk_minutes(listing, faculty)
-        time.sleep(REQUEST_DELAY)
-
-        # Transit time
-        transit = compute_transit_minutes(listing, faculty)
+        walk, transit = compute_minutes(listing, faculty)
         time.sleep(REQUEST_DELAY)
 
         if walk is None or transit is None:
-            print(f"  {label} — FAILED (walk={walk}, transit={transit})")
+            print(f"  {label} — FAILED (no route)")
             errors += 1
             continue
 
-        # Upsert into faculty_distances
         try:
             supabase.table("faculty_distances").upsert({
                 "listing_id": lid,
