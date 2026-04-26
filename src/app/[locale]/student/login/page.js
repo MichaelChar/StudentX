@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl';
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
 import Button from '@/components/ui/Button';
-import OAuthProvidersStub from '@/components/student/OAuthProvidersStub';
+import OAuthProviders from '@/components/student/OAuthProviders';
 
 function StudentLoginInner() {
   const t = useTranslations('student.login');
@@ -123,7 +123,7 @@ function StudentLoginInner() {
         <span className="h-px flex-1 bg-night/10" />
       </div>
 
-      <OAuthProvidersStub context="login" />
+      <OAuthProviders context="login" />
 
       <p className="mt-8 text-sm text-night/60">
         {t('noAccount')}{' '}

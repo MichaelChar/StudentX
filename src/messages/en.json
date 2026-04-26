@@ -664,8 +664,13 @@
       "continueWithApple": "Continue with Apple",
       "signupGoogle": "Sign up with Google",
       "signupApple": "Sign up with Apple",
-      "comingSoon": "Coming soon",
-      "soon": "Soon"
+      "signingIn": "Signing in…",
+      "callbackLoading": "Signing you in…",
+      "errorTitle": "Sign-in failed",
+      "errorGeneric": "Something went wrong with sign-in. Please try again.",
+      "errorNoSession": "Sign-in was cancelled or no session was returned.",
+      "tryAgain": "Try again",
+      "portal": "Student portal"
     },
     "account": {
       "portal": "Student portal",
