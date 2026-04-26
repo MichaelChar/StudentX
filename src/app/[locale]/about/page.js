@@ -1,5 +1,7 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
+import OrnamentRule from '@/components/ui/OrnamentRule';
+import Button from '@/components/ui/Button';
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
@@ -18,55 +20,86 @@ export default async function AboutPage({ params }) {
 
 function AboutContent() {
   const t = useTranslations('about');
+  const tNav = useTranslations('nav');
+
+  const steps = [
+    { numeral: 'Ⅰ', title: t('step1Title'), body: t('step1Body') },
+    { numeral: 'Ⅱ', title: t('step2Title'), body: t('step2Body') },
+    { numeral: 'Ⅲ', title: t('step3Title'), body: t('step3Body') },
+  ];
 
   return (
-    <div className="mx-auto max-w-3xl px-4 py-16">
-      <h1 className="font-heading text-3xl font-bold text-navy mb-6">
-        {t('title')}
-      </h1>
+    <>
+      {/* Hero */}
+      <section className="mx-auto max-w-4xl px-5 pt-20 pb-12 md:pt-28 md:pb-16">
+        <p className="label-caps text-gold mb-6">{t('eyebrow')}</p>
+        <h1 className="font-display text-4xl md:text-6xl text-night leading-[1.05]">
+          {t('titlePrefix')}{' '}
+          <span className="italic text-gold">{t('titleItalic')}</span>
+        </h1>
+        <p className="mt-8 text-night/70 text-lg md:text-xl leading-relaxed max-w-2xl">
+          {t('intro')}
+        </p>
+      </section>
 
-      <p className="text-gray-dark/80 text-lg leading-relaxed mb-8">
-        {t('intro')}
-      </p>
+      {/* Mission */}
+      <section className="mx-auto max-w-4xl px-5 py-16 md:py-20">
+        <p className="label-caps text-gold mb-4">{t('missionEyebrow')}</p>
+        <h2 className="font-display text-3xl md:text-4xl text-night leading-tight max-w-2xl">
+          {t('missionTitle')}
+        </h2>
+        <p className="mt-6 text-night/70 text-lg leading-relaxed max-w-2xl">
+          {t('missionBody')}
+        </p>
+      </section>
 
-      <div className="space-y-10">
-        <section>
-          <h2 className="font-heading text-xl font-semibold text-navy mb-3">
-            {t('missionTitle')}
-          </h2>
-          <p className="text-gray-dark/70 leading-relaxed">
-            {t('missionBody')}
-          </p>
-        </section>
-
-        <section>
-          <h2 className="font-heading text-xl font-semibold text-navy mb-3">
-            {t('howItWorksTitle')}
-          </h2>
-          <div className="grid gap-4 sm:grid-cols-3">
-            {['step1', 'step2', 'step3'].map((step) => (
-              <div key={step} className="bg-gray-light/40 rounded-xl p-5">
-                <div className="font-heading font-semibold text-navy mb-1">
-                  {t(`${step}Title`)}
-                </div>
-                <p className="text-gray-dark/60 text-sm">
-                  {t(`${step}Body`)}
-                </p>
-              </div>
-            ))}
-          </div>
-        </section>
-
-
-        <section>
-          <h2 className="font-heading text-xl font-semibold text-navy mb-3">
-            {t('contactTitle')}
-          </h2>
-          <p className="text-gray-dark/70 leading-relaxed">
-            {t('contactBody')}
-          </p>
-        </section>
+      <div className="mx-auto max-w-4xl px-5">
+        <OrnamentRule />
       </div>
-    </div>
+
+      {/* How it works */}
+      <section className="mx-auto max-w-6xl px-5 py-16 md:py-24">
+        <p className="label-caps text-gold mb-4">{t('howItWorksEyebrow')}</p>
+        <h2 className="font-display text-3xl md:text-4xl text-night leading-tight max-w-2xl">
+          {t('howItWorksTitle')}
+        </h2>
+
+        <div className="mt-12 grid grid-cols-1 md:grid-cols-3 gap-10">
+          {steps.map((step) => (
+            <div key={step.numeral}>
+              <span
+                className="font-display text-5xl text-gold block leading-none mb-5"
+                aria-hidden="true"
+              >
+                {step.numeral}
+              </span>
+              <p className="font-display text-2xl text-night leading-tight mb-3">
+                {step.title}
+              </p>
+              <p className="text-night/70 text-base leading-relaxed">
+                {step.body}
+              </p>
+            </div>
+          ))}
+        </div>
+
+        <div className="mt-14 flex justify-center">
+          <Button href="/quiz" variant="primary" size="lg">
+            {tNav('takeTheQuiz')}
+          </Button>
+        </div>
+      </section>
+
+      {/* Contact */}
+      <section className="mx-auto max-w-4xl px-5 py-16 md:py-20">
+        <p className="label-caps text-gold mb-4">{t('contactEyebrow')}</p>
+        <h2 className="font-display text-3xl md:text-4xl text-night leading-tight">
+          {t('contactTitle')}
+        </h2>
+        <p className="mt-6 text-night/70 text-lg leading-relaxed max-w-2xl">
+          {t('contactBody')}
+        </p>
+      </section>
+    </>
   );
 }
