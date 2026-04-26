@@ -1,16 +1,36 @@
 import { notFound } from "next/navigation";
 import { getListingForRender } from "@/lib/listingForRender";
+import { requireStudent } from "@/lib/requireStudent";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.gr";
 
 export async function generateMetadata({ params }) {
   const { id, locale } = await params;
-  const listing = await getListingForRender(id);
+  const [listing, auth] = await Promise.all([
+    getListingForRender(id),
+    requireStudent(),
+  ]);
 
   if (!listing) {
     return {
       title: "Listing not found",
       description: "This student housing listing could not be found.",
+    };
+  }
+
+  // SEO cloaking guard: when the page body will render the auth gate
+  // instead of the listing, also strip the rich preview metadata down
+  // to a noindex stub. Otherwise Google sees structured data + OG
+  // images for content the user is gated out of, which trips the
+  // cloaking heuristic. requireStudent is React.cache()'d so the
+  // page-level call below shares this round-trip.
+  if (!auth) {
+    return {
+      title: "Sign in to view listing — StudentX",
+      description:
+        "StudentX listings are visible to verified student accounts. Create a free account to view this listing.",
+      robots: { index: false, follow: false },
+      alternates: undefined,
     };
   }
 
@@ -86,7 +106,10 @@ export async function generateMetadata({ params }) {
 
 export default async function ListingLayout({ children, params }) {
   const { id, locale } = await params;
-  const listing = await getListingForRender(id);
+  const [listing, auth] = await Promise.all([
+    getListingForRender(id),
+    requireStudent(),
+  ]);
 
   // Surface a real 404 when the listing doesn't exist instead of letting the
   // client-side page render a soft "Listing not found" body with HTTP 200.
@@ -94,8 +117,12 @@ export default async function ListingLayout({ children, params }) {
     notFound();
   }
 
+  // Skip JSON-LD when the page body is the auth gate. We already set
+  // robots:noindex above for the same reason, so emitting structured
+  // data here would actively contradict the directive and expose the
+  // listing to crawlers under a sign-in wall.
   let jsonLd = null;
-  if (listing) {
+  if (listing && auth) {
     const address = listing.address ?? "";
     const neighborhood = listing.neighborhood ?? "Thessaloniki";
     const price = listing.monthly_price;

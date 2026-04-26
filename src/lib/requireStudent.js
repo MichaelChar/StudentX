@@ -1,3 +1,4 @@
+import { cache } from 'react';
 import { cookies } from 'next/headers';
 import { SB_ACCESS_TOKEN_COOKIE } from '@/lib/authCookies';
 import { getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
@@ -15,8 +16,12 @@ import { getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
  * Returns: { student, user, supabase } on success.
  * supabase is a token-scoped client so any further reads run under the
  * student's RLS context.
+ *
+ * Wrapped in React.cache() so the layout (generateMetadata + body) and
+ * the page itself only pay one Supabase round-trip per request — same
+ * pattern as getListingForRender.
  */
-export async function requireStudent() {
+export const requireStudent = cache(async function requireStudent() {
   const cookieStore = await cookies();
   const token = cookieStore.get(SB_ACCESS_TOKEN_COOKIE)?.value;
   if (!token) return null;
@@ -34,7 +39,7 @@ export async function requireStudent() {
   if (error || !student) return null;
 
   return { student, user, supabase, token };
-}
+});
 
 /**
  * Same shape as requireStudent but for landlords — used by the new
@@ -42,7 +47,7 @@ export async function requireStudent() {
  * pattern. The existing landlord protected pages still rely on
  * client-side session checks; this helper bridges the new chat RSC.
  */
-export async function requireLandlord() {
+export const requireLandlord = cache(async function requireLandlord() {
   const cookieStore = await cookies();
   const token = cookieStore.get(SB_ACCESS_TOKEN_COOKIE)?.value;
   if (!token) return null;
@@ -60,4 +65,4 @@ export async function requireLandlord() {
   if (error || !landlord) return null;
 
   return { landlord, user, supabase, token };
-}
+});
