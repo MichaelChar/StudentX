@@ -18,7 +18,7 @@ export default async function StudentInquiryThreadPage({ params }) {
     redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?next=${encodeURIComponent(next)}`);
   }
 
-  const t = await getTranslations('student.chat');
+  const t = await getTranslations({ locale, namespace: 'student.chat' });
   const { user, supabase } = auth;
 
   // Single round-trip: inquiry + listing summary + initial message page.

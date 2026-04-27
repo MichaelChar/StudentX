@@ -38,6 +38,7 @@ export default async function ListingPage({ params, searchParams }) {
     return (
       <AuthGate
         next={nextPath}
+        locale={locale}
         mode={auth?.kind === 'wrong-role' ? 'wrong-role' : 'guest'}
       />
     );
