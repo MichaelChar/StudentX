@@ -1,8 +1,9 @@
 'use client';
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 
 /**
  * Real-time chat thread bound to one inquiry. Both the student-side
@@ -28,13 +29,18 @@ export default function ChatThread({
   className = '',
 }) {
   const t = useTranslations('student.chat');
+  const accessToken = useAccessToken();
   const [messages, setMessages] = useState(initialMessages);
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
-  const [accessToken, setAccessToken] = useState('');
   const scrollerRef = useRef(null);
   const seenIds = useRef(new Set(initialMessages.map((m) => m.message_id)));
+  // The realtime channel is set up once per mount, but its INSERT
+  // handler can fire hours later. Hold the latest token in a ref so
+  // markRead inside the handler always sees the post-TOKEN_REFRESHED
+  // value rather than a closure-captured one.
+  const tokenRef = useRef('');
 
   const otherLabel = role === 'student' ? t('landlordLabel') : t('studentLabel');
   const youLabel = t('youLabel');
@@ -51,52 +57,53 @@ export default function ChatThread({
     }
   }, [inquiryId]);
 
-  // Resolve a fresh access token + subscribe to Realtime + initial mark-read.
+  // Keep the ref in sync with the latest token so realtime callbacks
+  // and async work see post-refresh values.
+  useEffect(() => {
+    tokenRef.current = accessToken || '';
+  }, [accessToken]);
+
+  // Initial mark-read once we have a real token. Re-runs if the token
+  // rotates from null (loading) to a value, but skips the empty string
+  // (signed out) — the page itself is gated, so '' shouldn't occur in
+  // practice, but the guard keeps the fetch from going out unauth'd.
+  useEffect(() => {
+    if (accessToken) markRead(accessToken);
+  }, [accessToken, markRead]);
+
+  // Subscribe to Realtime once per inquiry. The handler reads the
+  // current token from tokenRef, so it stays valid across refresh
+  // events even when this effect doesn't re-run.
   useEffect(() => {
     const supabase = getSupabaseBrowser();
-    let cancelled = false;
-    let channel;
+    const channel = supabase
+      .channel(`inquiry-${inquiryId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'inquiry_messages',
+          filter: `inquiry_id=eq.${inquiryId}`,
+        },
+        (payload) => {
+          const m = payload.new;
+          if (!m || seenIds.current.has(m.message_id)) return;
+          seenIds.current.add(m.message_id);
+          setMessages((prev) => [...prev, m]);
 
-    (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (cancelled) return;
-      const token = session?.access_token || '';
-      setAccessToken(token);
-      if (token) markRead(token);
-
-      channel = supabase
-        .channel(`inquiry-${inquiryId}`)
-        .on(
-          'postgres_changes',
-          {
-            event: 'INSERT',
-            schema: 'public',
-            table: 'inquiry_messages',
-            filter: `inquiry_id=eq.${inquiryId}`,
-          },
-          (payload) => {
-            const m = payload.new;
-            if (!m || seenIds.current.has(m.message_id)) return;
-            seenIds.current.add(m.message_id);
-            setMessages((prev) => [...prev, m]);
-
-            // If the new message is from the other side, immediately
-            // mark it read so unread badges in the inbox stay accurate
-            // for an actively-viewing user.
-            if (m.sender_user_id !== viewerUserId) {
-              markRead(token);
-            }
+          // If the new message is from the other side, immediately
+          // mark it read so unread badges in the inbox stay accurate
+          // for an actively-viewing user.
+          if (m.sender_user_id !== viewerUserId) {
+            markRead(tokenRef.current);
           }
-        )
-        .subscribe();
-    })();
+        }
+      )
+      .subscribe();
 
     return () => {
-      cancelled = true;
-      if (channel) {
-        const supabase = getSupabaseBrowser();
-        supabase.removeChannel(channel);
-      }
+      supabase.removeChannel(channel);
     };
   }, [inquiryId, markRead, viewerUserId]);
 
@@ -121,12 +128,17 @@ export default function ChatThread({
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
+          Authorization: `Bearer ${accessToken || ''}`,
         },
         body: JSON.stringify({ body: trimmed }),
       });
       if (!res.ok) {
-        setError(t('sendError'));
+        const data = await res.json().catch(() => ({}));
+        if (data.error_code === 'CHAT_RATE_LIMIT') {
+          setError(t('rateLimit.message'));
+        } else {
+          setError(t('sendError'));
+        }
         setSending(false);
         return;
       }
@@ -186,7 +198,7 @@ export default function ChatThread({
         />
         <button
           type="submit"
-          disabled={sending || !draft.trim()}
+          disabled={sending || !draft.trim() || accessToken === null}
           className="bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-4 py-2.5 rounded hover:bg-night transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {sending ? t('sending') : t('send')}

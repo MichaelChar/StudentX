@@ -700,6 +700,9 @@
       "loadError": "Couldn't load messages. Try refreshing.",
       "sendError": "Couldn't send your message. Try again.",
       "messageTooLong": "Message is too long.",
+      "rateLimit": {
+        "message": "Slow down — too many messages. Try again in a few minutes."
+      },
       "backToAccount": "Back to my inquiries",
       "backToInbox": "Back to inbox",
       "listingLabel": "Listing"
