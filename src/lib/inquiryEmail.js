@@ -2,7 +2,7 @@ import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { inquiryEmailHtml, inquiryEmailSubject } from '@/templates/email/inquiry';
 
-const FROM_ADDRESS = 'StudentX <alerts@studentx.gr>';
+const FROM_ADDRESS = 'StudentX <alerts@updates.studentx.gr>';
 
 function resolveLandlordEmailLocale(request, landlord) {
   if (landlord?.preferred_locale === 'el' || landlord?.preferred_locale === 'en') {

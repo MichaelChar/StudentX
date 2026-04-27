@@ -134,7 +134,7 @@ export async function POST(request) {
       const manageUrl = `${appUrl}/alerts/manage?token=${search.unsubscribe_token}`;
 
       await resend.emails.send({
-        from: 'StudentX Alerts <alerts@studentx.gr>',
+        from: 'StudentX Alerts <alerts@updates.studentx.gr>',
         to: search.email,
         subject: digestEmailSubject(search.label, matches.length),
         html: digestEmailHtml({
