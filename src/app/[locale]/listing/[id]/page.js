@@ -16,6 +16,11 @@ import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import OrnamentRule from '@/components/ui/OrnamentRule';
 
+// Cap on the untrusted ?from= URL param. Real /results querystrings are
+// well under this; anything bigger is almost certainly an attempt to
+// stuff oversized payloads into the back-link / AuthGate redirect.
+const MAX_FROM_LENGTH = 512;
+
 export default async function ListingPage({ params, searchParams }) {
   const { locale, id } = await params;
   const sp = (await searchParams) || {};
@@ -24,7 +29,11 @@ export default async function ListingPage({ params, searchParams }) {
   // ?from=<urlencoded querystring> threads the user's prior /results
   // filter state into the back-link so it returns to the same filtered
   // view they came from. Plain ?from= param (or missing) → bare /results.
-  const fromRaw = typeof sp.from === 'string' ? sp.from : '';
+  // Drop oversized values (length cap above) — fall through to bare
+  // /results rather than echoing untrusted bytes into the rendered href.
+  const fromRawInput = typeof sp.from === 'string' ? sp.from : '';
+  const fromRaw =
+    fromRawInput && fromRawInput.length <= MAX_FROM_LENGTH ? fromRawInput : '';
   const backHref = fromRaw ? `/results?${fromRaw}` : '/results';
 
   // Auth gate — only authenticated students view listing detail. The
