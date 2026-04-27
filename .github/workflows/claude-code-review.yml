@@ -21,8 +21,12 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-      pull-requests: read
-      issues: read
+      # Write scopes are required for the action to actually post inline review
+      # comments and a top-level conversation comment. With read-only the
+      # Claude SDK still runs (logs show clean success), but the post-comment
+      # step is a silent no-op — the review is generated, then dropped.
+      pull-requests: write
+      issues: write
       id-token: write
 
     steps:
