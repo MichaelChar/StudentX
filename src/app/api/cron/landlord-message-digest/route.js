@@ -1,10 +1,21 @@
 import { NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import { getResend } from '@/lib/resend';
 import {
   landlordMessageDigestHtml,
   landlordMessageDigestSubject,
 } from '@/templates/email/landlordMessageDigest';
+
+// Service-role client: the digest RPCs are GRANTed only to service_role
+// (migration 033). The CRON_SECRET check above gates the route; this
+// client gates the database. Mirrors src/lib/metrics/supabase.js.
+function getServiceSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { persistSession: false } },
+  );
+}
 
 // Debounce window. One email per inquiry per this interval. Slightly
 // tighter than the cron tick (5 min) so a tick that runs a few seconds
@@ -38,7 +49,7 @@ export async function POST(request) {
     return NextResponse.json({ skipped: 'disabled' });
   }
 
-  const supabase = getSupabase();
+  const supabase = getServiceSupabase();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.gr';
 
   const { data: pending, error: fetchError } = await supabase.rpc(
