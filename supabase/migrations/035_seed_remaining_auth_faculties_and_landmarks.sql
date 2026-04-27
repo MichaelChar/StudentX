@@ -61,7 +61,7 @@ INSERT INTO faculties (faculty_id, name, university, lat, lng) VALUES
   ('auth-engineering', 'Faculty of Engineering',                    'AUTH', 40.6310, 22.9590),
   ('auth-fine-arts',   'Faculty of Fine Arts',                      'AUTH', 40.5584, 23.0093),
   ('auth-law',         'Faculty of Law',                            'AUTH', 40.6301, 22.9563),
-  ('auth-pe',          'Faculty of Physical Education & Sport Sci', 'AUTH', 40.5584, 23.0093),
+  ('auth-pe',          'Faculty of Physical Education & Sport Sciences', 'AUTH', 40.5584, 23.0093),
   ('auth-philosophy',  'Faculty of Philosophy',                     'AUTH', 40.6301, 22.9563),
   ('auth-sciences',    'Faculty of Sciences',                       'AUTH', 40.6301, 22.9563),
   ('auth-theology',    'Faculty of Theology',                       'AUTH', 40.6301, 22.9563),
