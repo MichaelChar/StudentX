@@ -26,7 +26,9 @@ Every 15 min, the Worker's `scheduled` handler POSTs to `/api/cron/synthetic-en-
 - `lang="el"`
 - `Συνδέσου` — from `student.gate.title` in [`src/messages/el.json`](../../src/messages/el.json)
 
-Any failed assertion (or non-200, or fetch timeout) sends an email via Resend to `SYNTHETIC_ALERT_EMAIL`.
+Any failed assertion (or non-200, or fetch timeout) attempts to send an email via Resend to `SYNTHETIC_ALERT_EMAIL`.
+
+> **Status as of merge:** the email alert path is configured in code but **logs-only in production** because Resend isn't set up yet (`studentx.gr` isn't a registered domain — see [the domain context note](#domain-context) below). Failures surface in `wrangler tail` logs only. To enable email alerts later: register the domain, verify it in Resend, set `RESEND_API_KEY` as a Worker secret. The route's email send is wrapped in try/catch so a missing `RESEND_API_KEY` doesn't break the check itself.
 
 ## Configuration
 
@@ -77,7 +79,24 @@ Production (manual run, doesn't wait for the next 15-min tick):
 - Cloudflare dashboard → Workers → `studentx` → Triggers → "Trigger Cron" on `*/15 * * * *`, OR
 - `curl -X POST -H "x-cron-secret: <secret>" https://studentx.studentx-gr.workers.dev/api/cron/synthetic-en-listing`
 
+## Domain context
+
+The codebase fallback addresses (`alerts@studentx.gr`) and the `NEXT_PUBLIC_SITE_URL` default (`https://studentx.gr`) reference a domain that is not yet registered. The live deploy runs on `studentx.studentx-gr.workers.dev` (a `*.workers.dev` subdomain) until DNS is sorted. This is why the email alert path is currently logs-only:
+
+1. Resend rejects sends from unverified domains.
+2. `studentx.gr` can't be verified because it doesn't exist.
+3. Until the domain is registered + verified, all email-sending paths in the codebase (this synthetic, saved-searches digest, landlord message digest, inquiry email) silently fail at the Resend send step.
+
+To enable email here:
+
+1. Register `studentx.gr` (or pick a different domain and update `NEXT_PUBLIC_SITE_URL` + the from-addresses in code).
+2. Add the domain to Cloudflare (or whatever DNS host you'll use).
+3. In Resend, add a sending subdomain (e.g. `updates.studentx.gr`) and follow the DNS verification flow.
+4. `npx wrangler secret put RESEND_API_KEY --name studentx`
+5. Update `RESEND_FROM_EMAIL` in `wrangler.jsonc` (or each route's hardcoded from-address) to match the verified subdomain.
+
 ## Known limitations
 
 - **Same-network probe.** The cron runs inside the same Cloudflare Worker that serves the page. Doesn't simulate a US user's edge cache. Acceptable because the listing page currently sets `Cache-Control: private, no-cache, no-store, must-revalidate` — there is no edge cache to test from a different POP.
-- **No alert dedupe.** A sustained outage emails every 15 min. If this becomes annoying, add a `synthetic_alert_state(check_name, last_alert_at)` Supabase row and gate the email on `now() - last_alert_at > 1 hour`.
+- **No alert dedupe.** A sustained outage would email every 15 min once email is wired up. If this becomes annoying, add a `synthetic_alert_state(check_name, last_alert_at)` Supabase row and gate the email on `now() - last_alert_at > 1 hour`.
+- **Logs-only until email is configured.** See [Domain context](#domain-context) above.
