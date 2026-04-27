@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import { getListingForRender } from "@/lib/listingForRender";
 import { requireStudent } from "@/lib/requireStudent";
 
@@ -26,11 +27,17 @@ export async function generateMetadata({ params }) {
   // page-level call below shares this round-trip.
   // Wrong-role auth (e.g. landlord) is treated the same as a guest:
   // they'll see the gate, so the rich metadata must be stripped too.
+  //
+  // The bare string form gets templated by the parent locale layout
+  // ('%s — StudentX' in src/app/[locale]/layout.js), so the title here
+  // must NOT include '— StudentX' itself or it doubles. Use the same
+  // student.gate.* translations that AuthGate renders in the body so
+  // the meta title and the visible heading stay in lockstep.
   if (!auth || auth.kind === 'wrong-role') {
+    const t = await getTranslations({ locale, namespace: 'student.gate' });
     return {
-      title: "Sign in to view listing — StudentX",
-      description:
-        "StudentX listings are visible to verified student accounts. Create a free account to view this listing.",
+      title: t('title'),
+      description: t('subtitle'),
       robots: { index: false, follow: false },
       alternates: undefined,
     };
