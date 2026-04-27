@@ -108,6 +108,12 @@ export async function POST(request, { params }) {
     .single();
 
   if (error) {
+    if (error.code === 'P0010') {
+      return NextResponse.json(
+        { error_code: 'CHAT_RATE_LIMIT', error: 'Too many messages.' },
+        { status: 429 }
+      );
+    }
     console.error('Failed to insert inquiry message:', error);
     return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
   }
