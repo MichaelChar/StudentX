@@ -60,7 +60,7 @@ function evaluateBody({ status, body }) {
 
 async function sendAlert({ to, listingId, url, status, reason, bodyExcerpt }) {
   const resend = getResend();
-  const from = process.env.RESEND_FROM_EMAIL || 'alerts@studentx.gr';
+  const from = process.env.RESEND_FROM_EMAIL || 'StudentX Alerts <alerts@updates.studentx.gr>';
   await resend.emails.send({
     from,
     to,
