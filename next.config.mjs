@@ -2,10 +2,22 @@ import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.js');
 
-// Baseline security headers applied to every route. CSP is delivered in
-// Report-Only mode so we observe violations without blocking the live site
-// — flip to enforced once the report endpoint is wired and clean.
-// Allow lists tracked alongside `next.config.mjs#images.remotePatterns`.
+// Baseline security headers applied to every route. CSP was rolled out in
+// Report-Only mode (PR #28); audit before flipping found the only
+// browser-loaded third-party host not yet covered was unpkg.com (Leaflet
+// default marker icons in src/components/ListingsMap.js). Added it to
+// img-src and flipped to enforced. Allow lists tracked alongside
+// `next.config.mjs#images.remotePatterns`.
+//
+// Audit summary (browser-side traffic surface):
+//   - script-src: only inline JSON-LD in src/app/[locale]/listing/[id]/layout.js;
+//     covered by 'unsafe-inline'.
+//   - img-src: static.wixstatic.com (listing photos), Supabase storage
+//     (uploaded photos), *.tile.openstreetmap.org (map tiles), unpkg.com
+//     (Leaflet marker PNGs); all listed below.
+//   - connect-src: only Supabase.
+//   - font-src: next/font/google self-hosts at build time; fonts.gstatic.com
+//     kept defensively in case any subset still pulls there.
 const SECURITY_HEADERS = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'DENY' },
@@ -19,12 +31,12 @@ const SECURITY_HEADERS = [
     value: 'max-age=63072000; includeSubDomains; preload',
   },
   {
-    key: 'Content-Security-Policy-Report-Only',
+    key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
       "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org",
+      "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org https://unpkg.com",
       "font-src 'self' data: https://fonts.gstatic.com",
       "connect-src 'self' https://ecluqurlfbvkxrnoyhaq.supabase.co",
       "frame-ancestors 'none'",
