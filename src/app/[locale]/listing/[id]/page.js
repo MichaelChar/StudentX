@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
 import { getListingForRender } from '@/lib/listingForRender';
+import { getListingReviews } from '@/lib/listingReviews';
 import { requireStudent } from '@/lib/requireStudent';
 
 import AuthGate from '@/components/AuthGate';
@@ -68,6 +69,12 @@ export default async function ListingPage({ params, searchParams }) {
     listing.verified_tier && listing.verified_tier !== 'none';
 
   const distances = deriveDestinations(listing.faculty_distances || [], t);
+
+  // Fetch reviews server-side so they ship in the SSR HTML (gated behind
+  // requireStudent above — only authenticated students see the body).
+  const { reviews, avg_rating, review_count } = await getListingReviews(
+    listing.listing_id,
+  );
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-8 md:py-12">
@@ -242,7 +249,12 @@ export default async function ListingPage({ params, searchParams }) {
 
       {/* Reviews */}
       <div className="mt-16 pt-10 border-t border-night/10">
-        <ReviewList listingId={listing.listing_id} />
+        <ReviewList
+          listingId={listing.listing_id}
+          reviews={reviews}
+          avgRating={avg_rating}
+          reviewCount={review_count}
+        />
       </div>
     </div>
   );
@@ -284,71 +296,32 @@ function BilingualField({ greek, english, value }) {
   );
 }
 
-// Pick up to 3 destination rows for the listing detail's distance table.
-// Match by faculty_id (stable across locales / display-name drift) — the
-// original fuzzy 'medic'/'ιατρ' match silently missed once AUTH Medical
-// School was seeded as "Faculty of Health Sciences".
-//
-// The committed seed (migrations/002_seed_faculties.sql) ships
-// auth-main / auth-medical / auth-agriculture. Production has been
-// extended via MCP with auth-philosophy / auth-engineering / etc. We
-// chain fallbacks so this works in both environments. Dedicated AHEPA
-// hospital / Central Library reference points don't exist yet, so we
-// drop the abstract "destHospital" row when its data would just be a
-// dupe of School of Medicine, and fall back to surfacing the next-
-// nearest unique faculty by its real name. That avoids the duplicate-
-// row UX the previous fuzzy-match approach was hiding.
+// Pick the three destination rows for the listing detail's distance
+// table. Each row maps to a dedicated reference point seeded in
+// migration 035: auth-medical (School of Medicine), ahepa-hospital
+// (AHEPA University Hospital), auth-library (AUTH Central Library).
+// compute_distances.py populates faculty_distances rows for every
+// listing × faculty pair, so a simple by-id lookup is sufficient.
 function deriveDestinations(facultyDistances, t) {
   const byId = (id) => facultyDistances.find((f) => f.faculty_id === id);
-
   const medicine = byId('auth-medical');
-  // Main campus row stands in for "Central Library"; prefer auth-main
-  // (committed seed), fall back to a representative main-campus AUTH
-  // row in production envs that don't have auth-main.
-  const mainCampus =
-    byId('auth-main') ||
-    byId('auth-philosophy') ||
-    byId('auth-engineering') ||
-    byId('auth-law');
-
-  const seen = new Set();
-  const picks = [];
-
-  if (medicine) {
-    picks.push({
+  const ahepa = byId('ahepa-hospital');
+  const library = byId('auth-library');
+  return [
+    {
       name: t('destSchool'),
-      walk: medicine.walk_minutes,
-      transit: medicine.transit_minutes,
-    });
-    seen.add(medicine.faculty_id);
-  }
-  if (mainCampus && !seen.has(mainCampus.faculty_id)) {
-    picks.push({
+      walk: medicine?.walk_minutes,
+      transit: medicine?.transit_minutes,
+    },
+    {
+      name: t('destHospital'),
+      walk: ahepa?.walk_minutes,
+      transit: ahepa?.transit_minutes,
+    },
+    {
       name: t('destLibrary'),
-      walk: mainCampus.walk_minutes,
-      transit: mainCampus.transit_minutes,
-    });
-    seen.add(mainCampus.faculty_id);
-  }
-
-  // Pad to 3 rows with the next-nearest unique faculty under its real
-  // (localised) name. Sorted by walk time; ties broken by transit.
-  const remaining = [...facultyDistances]
-    .filter((f) => !seen.has(f.faculty_id))
-    .sort(
-      (a, b) =>
-        (a.walk_minutes ?? Infinity) - (b.walk_minutes ?? Infinity) ||
-        (a.transit_minutes ?? Infinity) - (b.transit_minutes ?? Infinity)
-    );
-  for (const f of remaining) {
-    if (picks.length >= 3) break;
-    picks.push({
-      name: f.faculty_name,
-      walk: f.walk_minutes,
-      transit: f.transit_minutes,
-    });
-    seen.add(f.faculty_id);
-  }
-
-  return picks;
+      walk: library?.walk_minutes,
+      transit: library?.transit_minutes,
+    },
+  ];
 }

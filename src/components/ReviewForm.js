@@ -1,11 +1,13 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import StarRating from '@/components/StarRating';
 
 export default function ReviewForm({ listingId, onReviewSubmitted }) {
   const t = useTranslations('reviews');
+  const router = useRouter();
   const [open, setOpen] = useState(false);
   const [form, setForm] = useState({ user_email: '', rating: 0, review_text: '' });
   const [submitting, setSubmitting] = useState(false);
@@ -45,7 +47,14 @@ export default function ReviewForm({ listingId, onReviewSubmitted }) {
       }
 
       setSuccess(true);
-      onReviewSubmitted?.();
+      // Refresh the server-rendered review list so the new review
+      // appears without a manual page reload. Falls back to the
+      // legacy callback for any caller still wiring its own refetch.
+      if (onReviewSubmitted) {
+        onReviewSubmitted();
+      } else {
+        router.refresh();
+      }
     } catch {
       setError(t('networkError'));
     } finally {
