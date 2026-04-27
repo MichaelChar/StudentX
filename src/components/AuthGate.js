@@ -15,9 +15,16 @@ import AuthGateRescue from '@/components/AuthGateRescue';
  *
  * `next` is a path-with-query (e.g. "/listing/3801?from=...") that the
  * sign-in page reads from `?next=` and assigns via window.location.
+ *
+ * `locale` must be passed explicitly by the caller. Bare
+ * `getTranslations('namespace')` reads from next-intl's request scope,
+ * which under OpenNext on Workers can fall through to `defaultLocale`
+ * ('el') for components rendered inside a redirect/guard branch —
+ * producing Greek copy on /en/ routes. The explicit
+ * `{ locale, namespace }` form is authoritative.
  */
-export default async function AuthGate({ next, mode = 'guest' }) {
-  const t = await getTranslations('student.gate');
+export default async function AuthGate({ next, locale, mode = 'guest' }) {
+  const t = await getTranslations({ locale, namespace: 'student.gate' });
   const safeNext = typeof next === 'string' && next.startsWith('/') ? next : '';
   const nextQuery = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
 

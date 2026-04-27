@@ -33,7 +33,7 @@ export default async function StudentAccountPage({ params }) {
     redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?next=${encodeURIComponent(next)}`);
   }
 
-  const t = await getTranslations('student.account');
+  const t = await getTranslations({ locale, namespace: 'student.account' });
   const { student, supabase } = auth;
 
   const { data: inquiries, error } = await supabase
