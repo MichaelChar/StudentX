@@ -31,7 +31,13 @@
     // button links somewhere broken. Flip back to studentx.gr (or just
     // remove these lines, since the code falls back to it) once DNS lands.
     "NEXT_PUBLIC_SITE_URL": "https://studentx.studentx-gr.workers.dev",
-    "NEXT_PUBLIC_APP_URL": "https://studentx.studentx-gr.workers.dev"
+    "NEXT_PUBLIC_APP_URL": "https://studentx.studentx-gr.workers.dev",
+    // Synthetic uptime check — guards against the i18n regression class fixed
+    // in PR #48 (Greek copy leaking onto /en/listing/<id>). The */15 cron POSTs
+    // to /api/cron/synthetic-en-listing, which fetches /en/listing/<id> and
+    // emails alerts on locale-marker mismatches. See docs/runbooks/synthetic-en-listing.md.
+    "SYNTHETIC_LISTING_ID": "0100006",
+    "SYNTHETIC_ALERT_EMAIL": "michaeltubehd007@gmail.com"
   },
   // Cron triggers. Dispatched via cf/worker-entry.mjs's `scheduled` handler,
   // which maps each cron expression to a route + payload and POSTs using
@@ -42,11 +48,13 @@
   //   0 9 * * 1      → /api/cron/saved-searches-digest?frequency=weekly
   //   */5 * * * *    → /api/cron/landlord-message-digest (per-message digest;
   //                    debounced server-side via claim_landlord_message_notification)
+  //   */15 * * * *   → /api/cron/synthetic-en-listing (i18n regression guard, #49)
   "triggers": {
     "crons": [
-      "0 9 * * *",   // daily saved-searches digest
-      "0 9 * * 1",   // weekly saved-searches digest (Mondays)
-      "*/5 * * * *"  // landlord message digest (every 5 min)
+      "0 9 * * *",    // daily saved-searches digest
+      "0 9 * * 1",    // weekly saved-searches digest (Mondays)
+      "*/5 * * * *",  // landlord message digest (every 5 min)
+      "*/15 * * * *"  // synthetic /en/listing locale check (#49)
     ]
   }
 }
