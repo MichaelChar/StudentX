@@ -534,7 +534,11 @@
       "destLibrary": "Central Library",
       "directTagline": "Direct with the landlord. No brokers, no fees.",
       "sendInquiry": "Send inquiry",
-      "replyWithin24h": "Usually replies within 24 hours"
+      "replyWithin24h": "Usually replies within 24 hours",
+      "notFound": {
+        "title": "Listing not found",
+        "description": "This student housing listing could not be found."
+      }
     },
     "landlord": {
       "nav": {

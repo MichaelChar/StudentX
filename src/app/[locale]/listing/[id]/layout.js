@@ -13,9 +13,10 @@ export async function generateMetadata({ params }) {
   ]);
 
   if (!listing) {
+    const t = await getTranslations({ locale, namespace: 'propylaea.listing.notFound' });
     return {
-      title: "Listing not found",
-      description: "This student housing listing could not be found.",
+      title: t('title'),
+      description: t('description'),
     };
   }
 
