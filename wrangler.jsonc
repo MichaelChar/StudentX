@@ -46,6 +46,9 @@
   //
   //   0 9 * * *      → /api/cron/saved-searches-digest?frequency=daily
   //   0 9 * * 1      → /api/cron/saved-searches-digest?frequency=weekly
+  //   15 9 * * *     → /api/cron/recompute-distances (heals missing
+  //                    faculty_distances pairs for new/edited listings;
+  //                    no-op when fully populated)
   //   */5 * * * *    → /api/cron/landlord-message-digest (per-message digest;
   //                    debounced server-side via claim_landlord_message_notification)
   //   */15 * * * *   → /api/cron/synthetic-en-listing (i18n regression guard, #49)
@@ -53,6 +56,7 @@
     "crons": [
       "0 9 * * *",    // daily saved-searches digest
       "0 9 * * 1",    // weekly saved-searches digest (Mondays)
+      "15 9 * * *",   // nightly faculty_distances backfill
       "*/5 * * * *",  // landlord message digest (every 5 min)
       "*/15 * * * *"  // synthetic /en/listing locale check (#49)
     ]
