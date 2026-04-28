@@ -16,7 +16,13 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # Node 22+ for npm 10.9+ — earlier npm versions reject lockfiles
+          # whose esbuild platform packages rely on os/cpu filtering rather
+          # than per-entry `optional: true` flags. Vitest pulls in
+          # esbuild 0.28 which lists @esbuild/openharmony-arm64 in its
+          # optionalDependencies; older npm runs npm ci as if it were a
+          # regular dep and fails with EBADPLATFORM on linux-x64.
+          node-version: '22'
           cache: 'npm'
 
       - name: Install dependencies
@@ -24,6 +30,9 @@ jobs:
 
       - name: Lint
         run: npm run lint
+
+      - name: Test
+        run: npm run test
 
       - name: Build
         run: npm run build

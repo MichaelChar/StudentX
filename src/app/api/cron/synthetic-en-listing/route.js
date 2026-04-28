@@ -63,7 +63,7 @@ async function fetchListingHtml(url) {
 // regression. Catch it on every cron tick.
 const FORBIDDEN_PUBLIC_CACHE_RE = /public,\s*s-maxage=/i;
 
-function evaluateBody({ status, body, cacheControl }) {
+export function evaluateBody({ status, body, cacheControl }) {
   if (status !== 200) {
     return { ok: false, reason: `non-200 status: ${status}` };
   }
