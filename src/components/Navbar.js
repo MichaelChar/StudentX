@@ -278,9 +278,13 @@ function MobileAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount,
           <Link
             href={inquiriesHref}
             onClick={onClose}
+            aria-label={t('unreadAria', { count: unreadCount })}
             className="label-caps text-blue hover:text-night transition-colors text-base inline-flex items-center gap-3"
           >
-            <span className="inline-flex items-center justify-center min-w-[20px] h-5 rounded-full bg-gold text-white text-[11px] font-sans font-semibold px-1.5">
+            <span
+              aria-hidden="true"
+              className="inline-flex items-center justify-center min-w-[20px] h-5 rounded-full bg-gold text-white text-[11px] font-sans font-semibold px-1.5"
+            >
               {unreadCount >= 100 ? '99+' : unreadCount}
             </span>
             <span>{t('inbox')}</span>
