@@ -90,9 +90,13 @@ export default function Navbar() {
     };
   }, [fetchUnread]);
 
-  // Refresh unread count on every route change so navigating back from a
-  // chat thread (after marking as read) updates the badge promptly.
+  // Refresh unread count on every route change so navigating back from
+  // a chat thread (after marking as read) updates the badge promptly.
+  // The lint rule below flags setState-in-effect; here the effect is
+  // an intentional pathname subscription, not a render-time setState
+  // cascade — same shape as the existing role-fetch effect above.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchUnread();
   }, [pathname, fetchUnread]);
 
