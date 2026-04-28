@@ -1,17 +1,21 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Link, useRouter } from '@/i18n/navigation';
+import { Link, useRouter, usePathname } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import LocaleSwitcher from './LocaleSwitcher';
 import Icon from './ui/Icon';
+import UnreadBadge from './UnreadBadge';
+import TabTitleFlash from './TabTitleFlash';
 
 export default function Navbar() {
   const t = useTranslations('nav');
   const router = useRouter();
+  const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
   const [authState, setAuthState] = useState({ ready: false, role: null, name: null });
+  const [unread, setUnread] = useState({ count: 0, role: null });
   const closeButtonRef = useRef(null);
 
   // Propylaea nav — "The programme" and "FAQ" are defined in the design but
@@ -23,6 +27,26 @@ export default function Navbar() {
     // { href: '/faq', label: t('faq') },
   ];
 
+  // Shared fetcher — refreshes unread count using the current session token.
+  const fetchUnread = useCallback(async () => {
+    const supabase = getSupabaseBrowser();
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session?.access_token) {
+      setUnread({ count: 0, role: null });
+      return;
+    }
+    try {
+      const res = await fetch('/api/me/unread', {
+        headers: { Authorization: `Bearer ${session.access_token}` },
+      });
+      if (!res.ok) return;
+      const json = await res.json();
+      setUnread({ count: json.count || 0, role: json.role || null });
+    } catch {
+      // Silent — badge stays as-is.
+    }
+  }, []);
+
   // Resolve role through /api/auth/me using the browser session token. The
   // server endpoint returns { user: null } when unauthenticated, so guests
   // settle into the signed-out state without us treating non-200s as errors.
@@ -33,7 +57,10 @@ export default function Navbar() {
     async function refresh() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session?.access_token) {
-        if (!cancelled) setAuthState({ ready: true, role: null, name: null });
+        if (!cancelled) {
+          setAuthState({ ready: true, role: null, name: null });
+          setUnread({ count: 0, role: null });
+        }
         return;
       }
       try {
@@ -48,6 +75,7 @@ export default function Navbar() {
         if (!cancelled) {
           setAuthState({ ready: true, role: user?.role || null, name: user?.name || null });
         }
+        if (!cancelled) fetchUnread();
       } catch {
         if (!cancelled) setAuthState({ ready: true, role: null, name: null });
       }
@@ -60,7 +88,13 @@ export default function Navbar() {
       cancelled = true;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [fetchUnread]);
+
+  // Refresh unread count on every route change so navigating back from a
+  // chat thread (after marking as read) updates the badge promptly.
+  useEffect(() => {
+    fetchUnread();
+  }, [pathname, fetchUnread]);
 
   useEffect(() => {
     if (drawerOpen) {
@@ -82,8 +116,12 @@ export default function Navbar() {
   const accountHref =
     authState.role === 'landlord' ? '/landlord/dashboard' : '/student/account';
 
+  const inquiriesHref =
+    authState.role === 'landlord' ? '/landlord/inquiries' : '/student/account';
+
   return (
     <nav className="sticky top-0 z-50 bg-stone/95 backdrop-blur border-b border-night/10">
+      <TabTitleFlash count={unread.count} />
       <div className="mx-auto max-w-6xl px-5 py-4 flex items-center justify-between gap-6">
         <Link
           href="/"
@@ -111,6 +149,8 @@ export default function Navbar() {
             t={t}
             authState={authState}
             accountHref={accountHref}
+            inquiriesHref={inquiriesHref}
+            unreadCount={unread.count}
             onSignOut={handleSignOut}
           />
         </div>
@@ -165,6 +205,8 @@ export default function Navbar() {
             t={t}
             authState={authState}
             accountHref={accountHref}
+            inquiriesHref={inquiriesHref}
+            unreadCount={unread.count}
             onClose={() => setDrawerOpen(false)}
             onSignOut={async () => {
               setDrawerOpen(false);
@@ -180,7 +222,7 @@ export default function Navbar() {
   );
 }
 
-function DesktopAuthMenu({ t, authState, accountHref, onSignOut }) {
+function DesktopAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount, onSignOut }) {
   // Until the role probe resolves, render a placeholder of the correct width
   // so the navbar doesn't reflow when auth state arrives.
   if (!authState.ready) {
@@ -190,6 +232,7 @@ function DesktopAuthMenu({ t, authState, accountHref, onSignOut }) {
   if (authState.role) {
     return (
       <>
+        <UnreadBadge count={unreadCount} href={inquiriesHref} />
         <Link
           href={accountHref}
           className="label-caps text-blue hover:text-night transition-colors"
@@ -225,12 +268,24 @@ function DesktopAuthMenu({ t, authState, accountHref, onSignOut }) {
   );
 }
 
-function MobileAuthMenu({ t, authState, accountHref, onClose, onSignOut }) {
+function MobileAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount, onClose, onSignOut }) {
   if (!authState.ready) return null;
 
   if (authState.role) {
     return (
       <>
+        {unreadCount > 0 && (
+          <Link
+            href={inquiriesHref}
+            onClick={onClose}
+            className="label-caps text-blue hover:text-night transition-colors text-base inline-flex items-center gap-3"
+          >
+            <span className="inline-flex items-center justify-center min-w-[20px] h-5 rounded-full bg-gold text-white text-[11px] font-sans font-semibold px-1.5">
+              {unreadCount >= 100 ? '99+' : unreadCount}
+            </span>
+            <span>{t('inbox')}</span>
+          </Link>
+        )}
         <Link
           href={accountHref}
           onClick={onClose}
