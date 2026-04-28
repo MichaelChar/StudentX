@@ -19,17 +19,12 @@ const eslintConfig = defineConfig([
     // ours to lint.
     "coverage/**",
   ]),
-  {
-    // PR #61's eslint-config-next bump (16.2.1 → 16.2.4) tightened
-    // `react-hooks/set-state-in-effect` to an error. The codebase has
-    // a handful of pre-existing useEffect→fetch patterns that fire
-    // this rule; they were merged before the bump and addressing them
-    // is its own follow-up PR. Downgrade to warn so CI doesn't gate
-    // on legacy patterns.
-    rules: {
-      "react-hooks/set-state-in-effect": "warn",
-    },
-  },
+  // `react-hooks/set-state-in-effect` was downgraded to warn in PR #69
+  // while we audited the existing patterns. The 4 legacy fetch-on-mount
+  // sites are now annotated with explicit `eslint-disable-next-line`
+  // comments + justifications, so the rule can be re-enabled at error
+  // severity to catch new violations. Refactor to SWR/TanStack Query
+  // is tracked separately.
 ]);
 
 export default eslintConfig;

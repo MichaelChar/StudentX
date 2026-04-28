@@ -34,8 +34,11 @@ export default function BillingSection() {
     }
   }, []);
 
+  // Load billing once we have a session token. setState happens inside
+  // loadBilling — intentional fetch-on-mount pattern.
   useEffect(() => {
     if (accessToken === null) return; // wait for first session resolution
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     loadBilling(accessToken);
   }, [accessToken, loadBilling]);
 

@@ -43,8 +43,13 @@ function ManageContent() {
   const [unsubscribed, setUnsubscribed] = useState(false);
   const [unsubscribing, setUnsubscribing] = useState(false);
 
+  // Fetch-on-mount + token-presence gate. The setState calls inside
+  // this effect are intentional (the React docs accept this pattern
+  // for fetching from a server). Refactor to SWR/TanStack Query is a
+  // larger effort tracked separately.
   useEffect(() => {
     if (!token) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setLoading(false);
       setNotFound(true);
       return;

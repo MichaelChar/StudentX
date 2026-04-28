@@ -73,6 +73,9 @@ function ResultsContent() {
   const [loaderDone, setLoaderDone] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const loaderDecidedRef = useRef(false);
+  // One-time loader-gate decision based on URL params at mount. Could be
+  // lazy-initialized into useState, but the Suspense-boundary comment
+  // below explains why useEffect is preferred here.
   useEffect(() => {
     if (loaderDecidedRef.current) return;
     loaderDecidedRef.current = true;
@@ -83,6 +86,7 @@ function ResultsContent() {
     const usp = new URLSearchParams(window.location.search);
     const cameFromQuiz =
       usp.has('budget') || usp.has('types') || usp.has('neighborhoods');
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (cameFromQuiz) setShowLoader(true);
   }, []);
   const [sortBy, setSortBy] = useState(() => {
@@ -174,7 +178,11 @@ function ResultsContent() {
     }
   }, [filters, sortBy]);
 
+  // Fetch listings whenever the memoized fetchListings identity changes
+  // (i.e. filters, sortBy). Standard fetch-on-deps pattern; the inner
+  // call updates state, which is intentional.
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchListings();
   }, [fetchListings]);
 
