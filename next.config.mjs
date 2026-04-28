@@ -86,6 +86,18 @@ const nextConfig = {
       // requireStudent and renders an AuthGate body to anonymous users —
       // CDN-caching it would serve one viewer's gated/non-gated body to
       // another. /student/* (account, inquiries) is per-session.
+      //
+      // Tried promoting /listing/* to PUBLIC_CACHE_HEADERS (PR
+      // "fix(perf): edge-cache anonymous listing detail GETs") and verified
+      // via prod curl that the static config rule wins over Next's
+      // runtime per-request cache header — an authenticated request
+      // (Cookie: sb-access-token=...) still received
+      // `public, s-maxage=300, stale-while-revalidate=86400`, which would
+      // CDN-cache the gated body. Reverted; keeping listing pages private
+      // until the anon vs auth split can be done in middleware (out of
+      // scope here). The requireStudent cookie-fast-path below is still
+      // a defensible micro-optimization (skips one Supabase round-trip
+      // per anonymous request) even though the response stays uncacheable.
       {
         source: '/landlord/:path*',
         headers: PRIVATE_CACHE_HEADERS,
