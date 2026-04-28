@@ -11,7 +11,7 @@ import { getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
 // Next's runtime per-request cache header, so we can't safely split
 // anon vs auth from a single RSC path without middleware. See the
 // inline comment in next.config.mjs for the verification trail.
-export async function hasAuthCookie() {
+async function hasAuthCookie() {
   const h = await headers();
   const cookieHeader = h.get('cookie') || '';
   return cookieHeader.includes(`${SB_ACCESS_TOKEN_COOKIE}=`);
