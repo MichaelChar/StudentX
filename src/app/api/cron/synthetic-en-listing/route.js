@@ -49,12 +49,29 @@ async function fetchUrl(url, { method = 'GET' } = {}) {
 async function fetchListingHtml(url) {
   const res = await fetchUrl(url);
   const body = await res.text();
-  return { status: res.status, body };
+  return {
+    status: res.status,
+    body,
+    cacheControl: res.headers.get('cache-control') || '',
+  };
 }
 
-function evaluateBody({ status, body }) {
+// Auth-gated routes must NOT serve `public, s-maxage=...` — that would let
+// CF cache the gated body and serve it to a different viewer. Static
+// next.config.mjs rules win over Next runtime stamping (see PR #64 +
+// issue #67), so misconfiguring the headers config is the realistic
+// regression. Catch it on every cron tick.
+const FORBIDDEN_PUBLIC_CACHE_RE = /public,\s*s-maxage=/i;
+
+function evaluateBody({ status, body, cacheControl }) {
   if (status !== 200) {
     return { ok: false, reason: `non-200 status: ${status}` };
+  }
+  if (FORBIDDEN_PUBLIC_CACHE_RE.test(cacheControl)) {
+    return {
+      ok: false,
+      reason: `forbidden public cache header on auth-gated route: ${cacheControl}`,
+    };
   }
   for (const marker of EN_MARKERS_REQUIRED) {
     if (!body.includes(marker)) {

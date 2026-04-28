@@ -94,8 +94,8 @@ const nextConfig = {
       // (Cookie: sb-access-token=...) still received
       // `public, s-maxage=300, stale-while-revalidate=86400`, which would
       // CDN-cache the gated body. Reverted; keeping listing pages private
-      // until the anon vs auth split can be done in middleware (out of
-      // scope here). The requireStudent cookie-fast-path below is still
+      // until the anon vs auth split can be done in middleware (issue
+      // #67). The requireStudent cookie-fast-path below is still
       // a defensible micro-optimization (skips one Supabase round-trip
       // per anonymous request) even though the response stays uncacheable.
       {
