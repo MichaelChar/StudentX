@@ -15,7 +15,9 @@
     "openMenu": "Open menu",
     "closeMenu": "Close menu",
     "switchToEl": "Ελληνικά",
-    "switchToEn": "English"
+    "switchToEn": "English",
+    "inbox": "Inbox",
+    "unreadAria": "{count, plural, one {# unread message} other {# unread messages}}"
   },
   "footer": {
     "tagline": "The official housing partner for first-year medical students at Aristotle University of Thessaloniki.",
