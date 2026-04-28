@@ -1,7 +1,21 @@
 import { cache } from 'react';
-import { cookies } from 'next/headers';
+import { cookies, headers } from 'next/headers';
 import { SB_ACCESS_TOKEN_COOKIE } from '@/lib/authCookies';
 import { getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+
+// Fast cookie-presence probe via the raw Cookie header. Anonymous
+// requests skip cookies() (and the Supabase round-trip) entirely,
+// trimming work on the 99% guest-visitor path. The response itself
+// stays uncacheable — next.config.mjs keeps /listing/* on
+// PRIVATE_CACHE_HEADERS because the static config rule wins over
+// Next's runtime per-request cache header, so we can't safely split
+// anon vs auth from a single RSC path without middleware. See the
+// inline comment in next.config.mjs for the verification trail.
+async function hasAuthCookie() {
+  const h = await headers();
+  const cookieHeader = h.get('cookie') || '';
+  return cookieHeader.includes(`${SB_ACCESS_TOKEN_COOKIE}=`);
+}
 
 /**
  * Server-side helper that resolves the current student account from
@@ -24,6 +38,7 @@ import { getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
  * pattern as getListingForRender.
  */
 export const requireStudent = cache(async function requireStudent() {
+  if (!(await hasAuthCookie())) return null;
   const cookieStore = await cookies();
   const token = cookieStore.get(SB_ACCESS_TOKEN_COOKIE)?.value;
   if (!token) return null;
@@ -50,6 +65,7 @@ export const requireStudent = cache(async function requireStudent() {
  * client-side session checks; this helper bridges the new chat RSC.
  */
 export const requireLandlord = cache(async function requireLandlord() {
+  if (!(await hasAuthCookie())) return null;
   const cookieStore = await cookies();
   const token = cookieStore.get(SB_ACCESS_TOKEN_COOKIE)?.value;
   if (!token) return null;
