@@ -10,7 +10,7 @@ Concrete blockers today:
 
 1. **Email is silently broken.** Resend rejects sends from any unverified domain. Every outbound email path — inquiry to landlord, saved-searches digest, landlord message digest, synthetic alert — fails at the Resend `send` step. See [`docs/runbooks/synthetic-en-listing.md`](./synthetic-en-listing.md#domain-context) for the symptom from the synthetic check's side.
 2. **PR #51 is closed pending this.** [PR #51](https://github.com/MichaelChar/StudentX/pull/51) tried swapping the from-address to `alerts@updates.studentx.gr` (a Resend best-practice subdomain). Closed because the parent zone doesn't exist yet — Resend can't verify a subdomain of a non-existent domain. The work is pre-staged on draft [PR #63](https://github.com/MichaelChar/StudentX/pull/63) (branch `fix/email-from-updates-subdomain-prestage`); resurrect after step 6.
-3. **No Cloudflare zone.** Zone-scoped features (Health Checks, Page Rules, custom WAF rules, Cloudflare Analytics with hostname filtering) all require a registered domain attached to the account. The account currently has zero zones.
+3. **No Cloudflare zone.** Zone-scoped features all require a registered domain attached to the account, and the account currently has zero zones. On the **Free** plan you'd unlock Page Rules, Cloudflare Analytics with hostname filtering, and managed WAF rules; **Health Checks and custom WAF rules require Pro+**.
 4. **Production URL points at workers.dev.** [`wrangler.jsonc`](../../wrangler.jsonc) lines 33-34 hard-pin `NEXT_PUBLIC_SITE_URL` and `NEXT_PUBLIC_APP_URL` to `https://studentx.studentx-gr.workers.dev`. The code's default is `https://studentx.gr` — see the comment block at lines 27-32. Until DNS lands, every canonical URL, sitemap entry, og:url, and email link points at the workers.dev hostname.
 
 ## Style follows [`synthetic-en-listing.md`](./synthetic-en-listing.md)
@@ -89,7 +89,7 @@ The Resend-related TXT values (`resend._domainkey`, the SPF, the verification TX
 |---|---|---|---|---|
 | (added by step 6) | `@` (apex) | (Worker custom domain — see step 6) | n/a | Web traffic to the Worker |
 | CNAME | `www` | `studentx.gr` | Proxied | Redirect www → apex (apex CNAME flattening handled by CF) |
-| TXT | `@` (apex) | `v=spf1 include:_spf.resend.com ~all` | n/a | SPF — authorize Resend to send for the apex |
+| TXT | `@` (apex) | `v=spf1 include:amazonses.com ~all` | n/a | SPF — Resend sends via SES; verify the exact include shown in the Resend dashboard before saving |
 | TXT | `resend._domainkey` | (long base64 from Resend) | n/a | DKIM — sign outgoing emails |
 | TXT | `_dmarc` | `v=DMARC1; p=none; rua=mailto:dmarc-reports@studentx.gr` | n/a | DMARC — start permissive, escalate later |
 | TXT | (Resend verification) | (random token from Resend) | n/a | Domain ownership proof for Resend |
@@ -98,7 +98,7 @@ The Resend-related TXT values (`resend._domainkey`, the SPF, the verification TX
 
 | Type | Name | Value | Purpose |
 |---|---|---|---|
-| TXT | `updates` | `v=spf1 include:_spf.resend.com ~all` | SPF for the subdomain |
+| TXT | `updates` | (SPF value shown in the Resend dashboard for this subdomain) | SPF for the subdomain |
 | TXT | `resend._domainkey.updates` | (Resend value) | DKIM for the subdomain |
 | MX | `updates` | (Resend MX value, priority 10) | Receive bounce notifications |
 
@@ -166,6 +166,8 @@ Workers & Pages → **studentx** → Settings → **Triggers** → **Add Custom 
 - 1014 "CNAME cross-user banned" → the apex already had a conflicting CNAME from step 4; delete it and re-deploy.
 
 ## 7. Flip the URL config in `wrangler.jsonc`
+
+**Do not run this step until step 6's `curl -I https://studentx.gr` returns 200.** Flipping `NEXT_PUBLIC_SITE_URL` before the edge cert provisions causes 525 errors on every email link and canonical for 1-5 min.
 
 **WHAT:** Edit [`wrangler.jsonc`](../../wrangler.jsonc) lines 33-34. Change:
 
