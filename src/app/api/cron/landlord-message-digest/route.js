@@ -23,7 +23,7 @@ function getServiceSupabase() {
 // to absorb a burst of student messages into a single email.
 const MIN_INTERVAL = '4 minutes 30 seconds';
 
-const FROM_ADDRESS = 'StudentX <alerts@studentx.gr>';
+const FROM_ADDRESS = 'StudentX <alerts@updates.studentx.gr>';
 
 function isCronAuthorized(request) {
   const secret = process.env.CRON_SECRET;

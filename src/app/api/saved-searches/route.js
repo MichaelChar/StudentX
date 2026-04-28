@@ -51,7 +51,7 @@ export async function POST(request) {
     try {
       const resend = getResend();
       await resend.emails.send({
-        from: 'StudentX Alerts <alerts@studentx.gr>',
+        from: 'StudentX Alerts <alerts@updates.studentx.gr>',
         to: email.trim().toLowerCase(),
         subject: confirmationEmailSubject(label?.trim()),
         html: confirmationEmailHtml({
