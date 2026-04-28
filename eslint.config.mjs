@@ -10,6 +10,14 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // Sub-agent worktrees (PR #53 gitignore). Each agent worktree is a
+    // full copy of the repo including its own .next/ build artifacts;
+    // without this ignore, eslint walks them and duplicates every
+    // source-file error N times.
+    ".claude/worktrees/**",
+    // Vitest coverage output (also gitignored). Generated files; not
+    // ours to lint.
+    "coverage/**",
   ]),
   {
     // PR #61's eslint-config-next bump (16.2.1 → 16.2.4) tightened
