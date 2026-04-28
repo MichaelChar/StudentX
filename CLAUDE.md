@@ -25,6 +25,9 @@ is curated and verified.
   (a `*.workers.dev` subdomain) until `studentx.gr` DNS is wired up.
 - **Lint:** `eslint@^9` + `eslint-config-next@16.2.1`. **No test framework yet.**
 
+> Versions above are spot-checks at write time. `package.json` is authoritative;
+> update this list only on major bumps.
+
 ## Repo layout
 
 ```
@@ -221,9 +224,10 @@ unblock user-facing notifications.
 
 **Permanent fix** requires registering `studentx.gr` (or another domain),
 verifying it in Resend, and setting `RESEND_API_KEY` as a Worker secret.
-A sibling PR is authoring `docs/runbooks/domain-setup.md` with the full
-registration → DNS → Resend verification flow; until that lands, see the
-**Domain context** section of `docs/runbooks/synthetic-en-listing.md`.
+The full registration → DNS → Resend verification flow lives in
+`docs/runbooks/domain-setup.md`. The **Domain context** section of
+`docs/runbooks/synthetic-en-listing.md` covers why every Resend send
+currently no-ops.
 
 ## Tests
 
@@ -303,8 +307,5 @@ curl -X POST -H "x-cron-secret: $CRON_SECRET" \
 - Issues: <https://github.com/MichaelChar/StudentX/issues>
 - PR descriptions are usually rich — `gh pr view <n>` is a good first stop
   when chasing why a piece of code is the way it is.
-- Recent merged PRs (last 30) cover student accounts (#38), inquiry chat
-  (#39, #40, #47), distances (#34, #60), the i18n fix (#48) + its synthetic
-  guard (#50), CSP enforcement (#58), and the curated landmark expansion
-  (#56, #59). Skim that list before assuming something is broken vs. recently
-  reshaped.
+- `gh pr list --state merged --limit 30` is a good first stop before
+  assuming a piece of code is broken vs. recently reshaped.
