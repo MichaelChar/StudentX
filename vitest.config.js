@@ -15,8 +15,13 @@ export default defineConfig({
     include: ['__tests__/**/*.test.js'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'html', 'json-summary'],
+      // lcov for any future Codecov / Coveralls integration; the others
+      // are for local + CI human-readable consumption.
+      reporter: ['text', 'html', 'json-summary', 'lcov'],
       include: ['src/**/*.js'],
+      // Temporary v1 exclusions — components and page/layout files need
+      // jsdom-mode tests which aren't set up yet. Revisit when the first
+      // component test lands.
       exclude: [
         'src/**/*.test.js',
         'src/messages/**',
