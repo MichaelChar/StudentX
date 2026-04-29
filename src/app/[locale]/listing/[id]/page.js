@@ -4,13 +4,11 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
 import { getListingForRender } from '@/lib/listingForRender';
-import { getListingReviews } from '@/lib/listingReviews';
 import { requireStudent } from '@/lib/requireStudent';
 
 import AuthGate from '@/components/AuthGate';
 import ContactRail from '@/components/listing/ContactRail';
 import ViewTracker from '@/components/listing/ViewTracker';
-import ReviewList from '@/components/ReviewList';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
@@ -70,12 +68,6 @@ export default async function ListingPage({ params, searchParams }) {
 
   const distances = deriveDestinations(listing.faculty_distances || [], t);
 
-  // Fetch reviews server-side so they ship in the SSR HTML (gated behind
-  // requireStudent above — only authenticated students see the body).
-  const { reviews, avg_rating, review_count } = await getListingReviews(
-    listing.listing_id,
-  );
-
   return (
     <div className="mx-auto max-w-6xl px-5 py-8 md:py-12">
       <ViewTracker listingId={listing.listing_id} />
@@ -91,21 +83,18 @@ export default async function ListingPage({ params, searchParams }) {
         {t('back')}
       </Link>
 
-      {/* Photo gallery — two-up mosaic matching the design */}
+      {/* Photo gallery — responsive grid showing every uploaded photo */}
       <section className="mb-10">
         {photos.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <PhotoTile
-              src={photos[0]}
-              alt={`${listing.address} — interior`}
-              label="Interior"
-              priority
-            />
-            <PhotoTile
-              src={photos[1] || photos[0]}
-              alt={`${listing.address} — kitchen`}
-              label="Kitchen"
-            />
+            {photos.map((src, i) => (
+              <PhotoTile
+                key={src}
+                src={src}
+                alt={`${listing.address} — photo ${i + 1}`}
+                priority={i === 0}
+              />
+            ))}
           </div>
         ) : (
           <div className="aspect-[16/9] rounded-sm bg-parchment flex items-center justify-center">
@@ -246,21 +235,11 @@ export default async function ListingPage({ params, searchParams }) {
         {/* Right column — sticky inquiry rail (client-side for modal state) */}
         <ContactRail listing={listing} />
       </div>
-
-      {/* Reviews */}
-      <div className="mt-16 pt-10 border-t border-night/10">
-        <ReviewList
-          listingId={listing.listing_id}
-          reviews={reviews}
-          avgRating={avg_rating}
-          reviewCount={review_count}
-        />
-      </div>
     </div>
   );
 }
 
-function PhotoTile({ src, alt, label, priority = false }) {
+function PhotoTile({ src, alt, priority = false }) {
   return (
     <div className="relative aspect-[4/3] rounded-sm overflow-hidden bg-parchment">
       <Image
@@ -271,9 +250,6 @@ function PhotoTile({ src, alt, label, priority = false }) {
         sizes="(max-width: 768px) 100vw, 50vw"
         priority={priority}
       />
-      <span className="absolute top-3 left-3 label-caps text-white/90 bg-night/40 backdrop-blur px-2 py-1 rounded-sm">
-        {label}
-      </span>
     </div>
   );
 }
