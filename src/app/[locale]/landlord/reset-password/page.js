@@ -54,15 +54,30 @@ export default function ResetPasswordPage() {
     }
 
     setLoading(true);
-    const supabase = getSupabaseBrowser();
-    const { error: updateError } = await supabase.auth.updateUser({ password });
-    setLoading(false);
+    try {
+      const supabase = getSupabaseBrowser();
+      const updatePromise = supabase.auth.updateUser({ password });
+      const timeoutPromise = new Promise((_, reject) =>
+        setTimeout(
+          () => reject(new Error('Request timed out. Please try again.')),
+          15000,
+        ),
+      );
+      const { error: updateError } = await Promise.race([
+        updatePromise,
+        timeoutPromise,
+      ]);
 
-    if (updateError) {
-      setError(updateError.message);
-      return;
+      if (updateError) {
+        setError(updateError.message);
+        return;
+      }
+      setDone(true);
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
     }
-    setDone(true);
   }
 
   if (done) {
