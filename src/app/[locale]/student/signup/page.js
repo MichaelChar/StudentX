@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { withTimeout } from '@/lib/withTimeout';
 import { useLocale, useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -30,57 +31,66 @@ export default function StudentSignupPage() {
     }
 
     setLoading(true);
-
-    const supabase = getSupabaseBrowser();
-    const siteUrl = window.location.origin;
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${siteUrl}/${locale}/student/login`,
-        data: { display_name: name, role: 'student' },
-      },
-    });
-    if (authError) {
-      setError(authError.message);
-      setLoading(false);
-      return;
-    }
-
-    const session = authData.session;
-    if (session?.access_token) {
-      // Persist the session into the server-readable cookie before we
-      // call the profile endpoint — Supabase signUp returns a session
-      // immediately when email confirmations aren't enforced, but the
-      // SessionSync onAuthStateChange listener may not have fired yet.
-      await fetch('/api/auth/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ access_token: session.access_token }),
-      });
-
-      const res = await fetch('/api/student/profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({ display_name: name, preferred_locale: locale }),
-      });
-      if (!res.ok) {
-        await supabase.auth.signOut();
-        const { error: profileError } = await res.json().catch(() => ({}));
-        setError(profileError || t('profileCreateFailed'));
-        setLoading(false);
+    try {
+      const supabase = getSupabaseBrowser();
+      const siteUrl = window.location.origin;
+      const { data: authData, error: authError } = await withTimeout(
+        supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${siteUrl}/${locale}/student/login`,
+            data: { display_name: name, role: 'student' },
+          },
+        }),
+      );
+      if (authError) {
+        setError(authError.message);
         return;
       }
-      router.push('/student/account');
-      return;
-    }
 
-    // Email confirmation enforced → no session yet. Send them to the
-    // shared verify-email screen, mirroring the landlord flow.
-    router.push('/student/verify-email');
+      const session = authData.session;
+      if (session?.access_token) {
+        // Persist the session into the server-readable cookie before we
+        // call the profile endpoint — Supabase signUp returns a session
+        // immediately when email confirmations aren't enforced, but the
+        // SessionSync onAuthStateChange listener may not have fired yet.
+        await withTimeout(
+          fetch('/api/auth/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ access_token: session.access_token }),
+          }),
+        );
+
+        const res = await withTimeout(
+          fetch('/api/student/profile', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({ display_name: name, preferred_locale: locale }),
+          }),
+        );
+        if (!res.ok) {
+          await supabase.auth.signOut();
+          const { error: profileError } = await res.json().catch(() => ({}));
+          setError(profileError || t('profileCreateFailed'));
+          return;
+        }
+        router.push('/student/account');
+        return;
+      }
+
+      // Email confirmation enforced → no session yet. Send them to the
+      // shared verify-email screen, mirroring the landlord flow.
+      router.push('/student/verify-email');
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (

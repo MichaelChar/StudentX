@@ -4,6 +4,7 @@ import { Suspense, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { withTimeout } from '@/lib/withTimeout';
 import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -29,39 +30,44 @@ function StudentLoginInner() {
     e.preventDefault();
     setError('');
     setLoading(true);
+    try {
+      const supabase = getSupabaseBrowser();
+      const { data, error: authError } = await withTimeout(
+        supabase.auth.signInWithPassword({ email, password }),
+      );
 
-    const supabase = getSupabaseBrowser();
-    const { data, error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+      if (authError) {
+        setError(authError.message);
+        return;
+      }
 
-    if (authError) {
-      setError(authError.message);
+      // Sync cookie eagerly so the next navigation's RSC sees auth without
+      // waiting for SessionSync's onAuthStateChange to fire.
+      if (data.session?.access_token) {
+        await withTimeout(
+          fetch('/api/auth/session', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ access_token: data.session.access_token }),
+          }),
+        );
+      }
+
+      if (safeNext) {
+        // useRouter.push with a locale-prefixed path won't accept ?, so we
+        // hand a raw URL to window.location for paths that include query
+        // strings (the common case when AuthGate threads search/results
+        // state back into the next URL).
+        window.location.assign(safeNext);
+        return;
+      }
+
+      router.push('/student/account');
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
       setLoading(false);
-      return;
     }
-
-    // Sync cookie eagerly so the next navigation's RSC sees auth without
-    // waiting for SessionSync's onAuthStateChange to fire.
-    if (data.session?.access_token) {
-      await fetch('/api/auth/session', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ access_token: data.session.access_token }),
-      });
-    }
-
-    if (safeNext) {
-      // useRouter.push with a locale-prefixed path won't accept ?, so we
-      // hand a raw URL to window.location for paths that include query
-      // strings (the common case when AuthGate threads search/results
-      // state back into the next URL).
-      window.location.assign(safeNext);
-      return;
-    }
-
-    router.push('/student/account');
   }
 
   return (

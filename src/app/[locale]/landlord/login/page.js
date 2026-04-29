@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { withTimeout } from '@/lib/withTimeout';
 import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -21,20 +22,23 @@ export default function LandlordLoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
+    try {
+      const supabase = getSupabaseBrowser();
+      const { error: authError } = await withTimeout(
+        supabase.auth.signInWithPassword({ email, password }),
+      );
 
-    const supabase = getSupabaseBrowser();
-    const { error: authError } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
+      if (authError) {
+        setError(authError.message);
+        return;
+      }
 
-    if (authError) {
-      setError(authError.message);
+      router.push('/landlord/dashboard');
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
       setLoading(false);
-      return;
     }
-
-    router.push('/landlord/dashboard');
   }
 
   return (

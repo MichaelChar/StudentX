@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { withTimeout } from '@/lib/withTimeout';
 import { useLocale, useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -29,42 +30,49 @@ export default function LandlordSignupPage() {
     }
 
     setLoading(true);
-
-    const supabase = getSupabaseBrowser();
-    const siteUrl = window.location.origin;
-    const { data: authData, error: authError } = await supabase.auth.signUp({
-      email,
-      password,
-      options: {
-        emailRedirectTo: `${siteUrl}/${locale}/landlord/login`,
-      },
-    });
-    if (authError) {
-      setError(authError.message);
-      setLoading(false);
-      return;
-    }
-
-    const session = authData.session;
-    if (session?.access_token) {
-      const res = await fetch('/api/landlord/profile', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.access_token}`,
-        },
-        body: JSON.stringify({ name }),
-      });
-      if (!res.ok) {
-        await supabase.auth.signOut();
-        const { error: profileError } = await res.json();
-        setError(profileError || t('profileCreateFailed'));
-        setLoading(false);
+    try {
+      const supabase = getSupabaseBrowser();
+      const siteUrl = window.location.origin;
+      const { data: authData, error: authError } = await withTimeout(
+        supabase.auth.signUp({
+          email,
+          password,
+          options: {
+            emailRedirectTo: `${siteUrl}/${locale}/landlord/login`,
+          },
+        }),
+      );
+      if (authError) {
+        setError(authError.message);
         return;
       }
-    }
 
-    router.push('/landlord/verify-email');
+      const session = authData.session;
+      if (session?.access_token) {
+        const res = await withTimeout(
+          fetch('/api/landlord/profile', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${session.access_token}`,
+            },
+            body: JSON.stringify({ name }),
+          }),
+        );
+        if (!res.ok) {
+          await supabase.auth.signOut();
+          const { error: profileError } = await res.json().catch(() => ({}));
+          setError(profileError || t('profileCreateFailed'));
+          return;
+        }
+      }
+
+      router.push('/landlord/verify-email');
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
