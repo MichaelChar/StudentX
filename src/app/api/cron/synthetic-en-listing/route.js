@@ -177,7 +177,11 @@ async function checkNoMissingMessage(appUrl) {
 
 async function sendAlert({ to, subject, lines }) {
   const resend = getResend();
-  const from = process.env.RESEND_FROM_EMAIL || 'StudentX Alerts <alerts@studentx.gr>';
+  // Default from-address mirrors PR #51 / #63 — the verified-Resend
+  // subdomain that's standard across all outbound paths once the
+  // domain lands. Kept as a hardcoded fallback in case
+  // RESEND_FROM_EMAIL env var isn't set.
+  const from = process.env.RESEND_FROM_EMAIL || 'StudentX Alerts <alerts@updates.studentx.gr>';
   await resend.emails.send({
     from,
     to,
