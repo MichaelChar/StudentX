@@ -73,9 +73,16 @@ function ResultsContent() {
   const [loaderDone, setLoaderDone] = useState(false);
   const [showLoader, setShowLoader] = useState(false);
   const loaderDecidedRef = useRef(false);
-  // One-time loader-gate decision based on URL params at mount. Could be
-  // lazy-initialized into useState, but the Suspense-boundary comment
-  // below explains why useEffect is preferred here.
+  // One-time loader-gate decision based on URL params at mount. We
+  // INTENTIONALLY don't use a `useState(() => ...)` lazy initializer
+  // here because that would run server-side too — `typeof window` is
+  // undefined during SSR, so the lazy init returns `false`, but the
+  // client run returns `true` for users coming from the quiz, causing
+  // a hydration mismatch warning + layout flash. useEffect defers the
+  // decision to AFTER hydration, so SSR + first client paint agree on
+  // `false` and the loader fades in cleanly. See the line-72 comment
+  // above for the broader sequencing rationale.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (loaderDecidedRef.current) return;
     loaderDecidedRef.current = true;
@@ -86,9 +93,9 @@ function ResultsContent() {
     const usp = new URLSearchParams(window.location.search);
     const cameFromQuiz =
       usp.has('budget') || usp.has('types') || usp.has('neighborhoods');
-    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (cameFromQuiz) setShowLoader(true);
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
   const [sortBy, setSortBy] = useState(() => {
     const s = searchParams.get('sort_by');
     return s === 'price' || s === 'priceDesc' ? s : 'match';

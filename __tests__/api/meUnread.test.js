@@ -21,10 +21,18 @@ const { GET } = await import('@/app/api/me/unread/route');
 // Tiny fluent-builder mock for supabase client tables. Returns a chainable
 // object whose terminal `maybeSingle()` / awaited await resolves to the
 // data we wire up. The shape mirrors PostgREST: from().select().eq()...
+//
+// Captures every select() / eq() call into chain.calls so tests can assert
+// that the route invoked the right PostgREST query — critical for the
+// landlord-path inner-join (`listings!inner(landlord_id)`) where a future
+// agent could break the join syntax silently if we only checked aggregate
+// outputs.
 function table(terminalData) {
+  const calls = { select: [], eq: [] };
   const chain = {
-    select: () => chain,
-    eq: () => chain,
+    calls,
+    select: (...args) => { calls.select.push(args); return chain; },
+    eq: (...args) => { calls.eq.push(args); return chain; },
     maybeSingle: () => Promise.resolve(terminalData),
     then: (onFulfilled) => Promise.resolve(terminalData).then(onFulfilled),
   };
@@ -89,6 +97,7 @@ describe('GET /api/me/unread', () => {
   it('aggregates landlord_unread_count via listings join when caller is a landlord', async () => {
     extractToken.mockReturnValue('t');
     getUserFromToken.mockResolvedValue({ id: 'user-456' });
+    let inquiriesTable;
     getSupabaseWithToken.mockReturnValue({
       from: (tableName) => {
         if (tableName === 'students') {
@@ -96,12 +105,13 @@ describe('GET /api/me/unread', () => {
           return table({ data: null });
         }
         if (tableName === 'inquiries') {
-          return table({
+          inquiriesTable = table({
             data: [
               { landlord_unread_count: 1 },
               { landlord_unread_count: 4 },
             ],
           });
+          return inquiriesTable;
         }
         throw new Error(`unexpected authed table: ${tableName}`);
       },
@@ -118,6 +128,17 @@ describe('GET /api/me/unread', () => {
     const res = await GET(fakeRequest());
     const json = await res.json();
     expect(json).toEqual({ count: 5, role: 'landlord' });
+
+    // Verify the route actually invoked the inner-join syntax, not a
+    // looser shape. If a future agent drops `!inner` (loses the join's
+    // referential-integrity enforcement) or renames the FK column, this
+    // assertion fires before the regression ships.
+    expect(inquiriesTable.calls.select).toEqual([
+      ['landlord_unread_count, listings!inner(landlord_id)'],
+    ]);
+    expect(inquiriesTable.calls.eq).toEqual([
+      ['listings.landlord_id', 'l-1'],
+    ]);
   });
 
   it('returns count=0 + role=null when caller is neither student nor landlord', async () => {
