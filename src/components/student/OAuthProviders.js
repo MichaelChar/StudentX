@@ -1,86 +1,45 @@
 'use client';
 
-import { useState } from 'react';
-import { useLocale, useTranslations } from 'next-intl';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useTranslations } from 'next-intl';
 
+// OAuth (Google + Apple) is intentionally disabled while the Supabase
+// providers aren't configured yet. Buttons render in a "coming soon"
+// disabled state — visible so users know the option exists, blurred
+// + grayed so it's clearly not interactive. The original sign-in flow
+// (signInWithOAuth + redirect) is preserved in git history; restore
+// from there when the providers are wired up.
 export default function OAuthProviders({ context = 'login' }) {
   const t = useTranslations('student.oauth');
-  const locale = useLocale();
-  const [pending, setPending] = useState(null);
-  const [error, setError] = useState('');
-
-  async function handleOAuth(provider) {
-    setError('');
-    setPending(provider);
-
-    // Read `next` lazily from window so this component doesn't need
-    // a Suspense boundary on the signup page (which doesn't use one
-    // for the rest of its UI).
-    const params = new URLSearchParams(window.location.search);
-    const nextRaw = params.get('next') || '';
-    const safeNext = nextRaw.startsWith('/') ? nextRaw : '';
-
-    const origin = window.location.origin;
-    const callback = `${origin}/${locale}/student/auth/callback${
-      safeNext ? `?next=${encodeURIComponent(safeNext)}` : ''
-    }`;
-
-    const supabase = getSupabaseBrowser();
-    const { error: oauthError } = await supabase.auth.signInWithOAuth({
-      provider,
-      options: {
-        redirectTo: callback,
-        // The role tag tells handle_new_student_user (migration 029,
-        // extended in 030) to provision the students row when the
-        // auth.users insert lands. Migration 030 also accepts the
-        // provider stamp as a fallback if this tag is ever missing.
-        data: { role: 'student' },
-      },
-    });
-
-    if (oauthError) {
-      setError(oauthError.message || t('errorGeneric'));
-      setPending(null);
-    }
-    // On success, the browser navigates away — leave pending set so
-    // the button stays in its loading state until the redirect.
-  }
 
   const googleLabel = t(context === 'signup' ? 'signupGoogle' : 'continueWithGoogle');
   const appleLabel = t(context === 'signup' ? 'signupApple' : 'continueWithApple');
+  const comingSoon = t('comingSoon');
+
+  const buttonClass =
+    'w-full inline-flex items-center justify-center gap-3 border border-night/15 rounded-sm px-4 py-2.5 text-sm text-night bg-white opacity-50 grayscale cursor-not-allowed select-none';
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-3" aria-label={t('portal')}>
       <button
         type="button"
-        disabled={pending !== null}
-        onClick={() => handleOAuth('google')}
-        aria-label={googleLabel}
-        className="w-full inline-flex items-center justify-center gap-3 border border-night/15 rounded-sm px-4 py-2.5 text-sm text-night bg-white hover:bg-night/[0.03] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+        disabled
+        aria-disabled="true"
+        title={comingSoon}
+        className={buttonClass}
       >
-        <GoogleMark />
-        <span>{pending === 'google' ? t('signingIn') : googleLabel}</span>
+        <span className="blur-[0.5px]"><GoogleMark /></span>
+        <span>{googleLabel} {comingSoon}</span>
       </button>
       <button
         type="button"
-        disabled={pending !== null}
-        onClick={() => handleOAuth('apple')}
-        aria-label={appleLabel}
-        className="w-full inline-flex items-center justify-center gap-3 border border-night/15 rounded-sm px-4 py-2.5 text-sm text-night bg-white hover:bg-night/[0.03] disabled:opacity-60 disabled:cursor-not-allowed transition-colors"
+        disabled
+        aria-disabled="true"
+        title={comingSoon}
+        className={buttonClass}
       >
-        <AppleMark />
-        <span>{pending === 'apple' ? t('signingIn') : appleLabel}</span>
+        <span className="blur-[0.5px]"><AppleMark /></span>
+        <span>{appleLabel} {comingSoon}</span>
       </button>
-
-      {error && (
-        <p
-          role="alert"
-          className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-3 py-2"
-        >
-          {error}
-        </p>
-      )}
     </div>
   );
 }
