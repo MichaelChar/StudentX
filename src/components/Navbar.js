@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter, usePathname } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { withTimeout } from '@/lib/withTimeout';
 import LocaleSwitcher from './LocaleSwitcher';
 import Icon from './ui/Icon';
 import UnreadBadge from './UnreadBadge';
@@ -28,17 +29,21 @@ export default function Navbar() {
   ];
 
   // Shared fetcher — refreshes unread count using the current session token.
+  // All awaits are timeout-wrapped so a hung Supabase / API call can't leave
+  // the badge in a stale state forever.
   const fetchUnread = useCallback(async () => {
-    const supabase = getSupabaseBrowser();
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session?.access_token) {
-      setUnread({ count: 0, role: null });
-      return;
-    }
     try {
-      const res = await fetch('/api/me/unread', {
-        headers: { Authorization: `Bearer ${session.access_token}` },
-      });
+      const supabase = getSupabaseBrowser();
+      const { data: { session } } = await withTimeout(supabase.auth.getSession());
+      if (!session?.access_token) {
+        setUnread({ count: 0, role: null });
+        return;
+      }
+      const res = await withTimeout(
+        fetch('/api/me/unread', {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        }),
+      );
       if (!res.ok) return;
       const json = await res.json();
       setUnread({ count: json.count || 0, role: json.role || null });
@@ -50,23 +55,30 @@ export default function Navbar() {
   // Resolve role through /api/auth/me using the browser session token. The
   // server endpoint returns { user: null } when unauthenticated, so guests
   // settle into the signed-out state without us treating non-200s as errors.
+  // The whole probe is wrapped in try/catch + withTimeout so setAuthState
+  // ({ ready: true }) ALWAYS runs — without it, a hung getSession() (e.g.
+  // stale session-refresh on Cloudflare Workers cold start) leaves the
+  // navbar stuck on the placeholder forever, which previously hid the
+  // landlord-login link from guests on flaky sessions.
   useEffect(() => {
     let cancelled = false;
     const supabase = getSupabaseBrowser();
 
     async function refresh() {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session?.access_token) {
-        if (!cancelled) {
-          setAuthState({ ready: true, role: null, name: null });
-          setUnread({ count: 0, role: null });
-        }
-        return;
-      }
       try {
-        const res = await fetch('/api/auth/me', {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-        });
+        const { data: { session } } = await withTimeout(supabase.auth.getSession());
+        if (!session?.access_token) {
+          if (!cancelled) {
+            setAuthState({ ready: true, role: null, name: null });
+            setUnread({ count: 0, role: null });
+          }
+          return;
+        }
+        const res = await withTimeout(
+          fetch('/api/auth/me', {
+            headers: { Authorization: `Bearer ${session.access_token}` },
+          }),
+        );
         if (!res.ok) {
           if (!cancelled) setAuthState({ ready: true, role: null, name: null });
           return;
