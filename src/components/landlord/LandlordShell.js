@@ -50,15 +50,13 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
         router.replace('/landlord/verify-email');
         return;
       }
-      // Best-effort profile name fetch so topbar can greet.
+      // Best-effort profile name fetch so topbar can greet. GET (not POST):
+      // the shell only reads, and POST-on-every-mount would attempt to
+      // create a landlord row for any authed user — including students,
+      // which now hits the prevent_dual_role trigger from migration 036.
       try {
         const profileRes = await fetch('/api/landlord/profile', {
-          method: 'POST',
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({}),
+          headers: { Authorization: `Bearer ${session.access_token}` },
         });
         if (profileRes.ok) {
           const { landlord } = await profileRes.json();

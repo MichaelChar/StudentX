@@ -2,6 +2,17 @@
 -- Migration 036: Prevent the same email/auth user from holding
 -- BOTH a public.students row AND a public.landlords row.
 --
+-- PRODUCT DECISION (do not change without re-spec):
+-- "One email = one role" is a deliberate product rule for StudentX
+-- as of 2026-05. The alternative — letting one auth user wear both
+-- hats (e.g. a student who also sublets) — was considered and
+-- explicitly rejected for the current pre-launch phase: requireStudent
+-- and requireLandlord both returning truthy silently breaks role-
+-- routing, and a UI role-toggle is more product surface than the
+-- observed need justifies. If a future product change wants both
+-- roles per user, this migration's triggers AND handle_new_student_user's
+-- landlord-trumps short-circuit must be revisited together.
+--
 -- WHY THIS MATTERS:
 -- Both tables have UNIQUE(auth_user_id) and UNIQUE(email) within
 -- themselves, but nothing prevents the same user/email from

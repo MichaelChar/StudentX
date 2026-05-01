@@ -20,8 +20,11 @@ function StudentLoginInner() {
   // redirect — set by AuthGate when it pushes a guest to login.
   const nextRaw = searchParams.get('next') || '';
   const safeNext = nextRaw.startsWith('/') ? nextRaw : '';
+  // ?email=<addr> prefill — used by the landlord-signup roleConflict CTA
+  // to deep-link a dual-role student straight back to their own login.
+  const initialEmail = searchParams.get('email') || '';
 
-  const [email, setEmail] = useState('');
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
