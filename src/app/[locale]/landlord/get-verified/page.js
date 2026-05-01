@@ -98,6 +98,7 @@ export default function GetVerifiedPage() {
               tier={tier}
               onChoose={() => handleChoose(tier.key)}
               ctaLabel={t('chooseTier')}
+              badgeLabel={t('tierBadge')}
               disabled={pendingTier !== null}
               loading={pendingTier === tier.key}
             />
@@ -116,7 +117,7 @@ export default function GetVerifiedPage() {
   );
 }
 
-function TierCard({ tier, onChoose, ctaLabel, disabled = false, loading = false }) {
+function TierCard({ tier, onChoose, ctaLabel, badgeLabel, disabled = false, loading = false }) {
   return (
     <Card
       tone={tier.highlight ? 'night' : 'white'}
@@ -131,14 +132,8 @@ function TierCard({ tier, onChoose, ctaLabel, disabled = false, loading = false 
       )}
 
       <div className="flex items-center gap-3 mb-2">
-        {tier.highlight ? (
-          <VerifiedSeal size={28} />
-        ) : (
-          <div className="w-7 h-7 rounded-full border border-gold/50 flex items-center justify-center">
-            <Icon name="shield" className="w-3.5 h-3.5 text-gold" />
-          </div>
-        )}
-        <p className="label-caps text-gold">{tier.key.replace('_', ' ')}</p>
+        <VerifiedSeal size={28} />
+        <p className="label-caps text-gold">{badgeLabel}</p>
       </div>
 
       <h3

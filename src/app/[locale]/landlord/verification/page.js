@@ -13,6 +13,7 @@ export default function LandlordVerificationPage() {
   const accessToken = useAccessToken();
   const [loading, setLoading] = useState(true);
   const [verifiedTier, setVerifiedTier] = useState(null);
+  const [isVerified, setIsVerified] = useState(false);
   const [latestRequest, setLatestRequest] = useState(null);
   const [file, setFile] = useState(null);
   const [submitting, setSubmitting] = useState(false);
@@ -36,6 +37,7 @@ export default function LandlordVerificationPage() {
         if (res.ok) {
           const data = await res.json();
           setVerifiedTier(data.verifiedTier ?? 'none');
+          setIsVerified(data.isVerified === true);
           setLatestRequest(data.latestRequest ?? null);
         }
       } catch {
@@ -94,22 +96,20 @@ export default function LandlordVerificationPage() {
             <div className="h-8 w-48 bg-parchment rounded-sm" />
             <div className="h-32 bg-parchment rounded-sm" />
           </div>
-        ) : verifiedTier && verifiedTier !== 'none' ? (
-          /* Already verified */
+        ) : isVerified ? (
+          /* ID approved — fully verified once a paid tier is also active */
           <Card tone="parchment" className="px-6 py-5 flex items-start gap-4">
             <div className="mt-0.5 flex-shrink-0 w-9 h-9 rounded-full bg-blue/10 flex items-center justify-center text-blue">
               <Icon name="shieldCheck" className="w-5 h-5" />
             </div>
             <div>
               <p className="font-display text-lg text-night mb-0.5">
-                Your account is verified
+                Your ID is approved
               </p>
               <p className="text-sm text-night/70">
-                Your listings display the{' '}
-                <span className="font-semibold text-night">
-                  {verifiedTier === 'verified_pro' ? 'SuperLandlord Heavy' : 'SuperLandlord'}
-                </span>{' '}
-                badge automatically.
+                {verifiedTier && verifiedTier !== 'none'
+                  ? 'Your listings display the Verified badge automatically.'
+                  : 'Subscribe to SuperLandlord to display the Verified badge on your listings.'}
               </p>
             </div>
           </Card>

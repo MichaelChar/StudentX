@@ -6,7 +6,7 @@ import { getActiveSubscription } from '@/lib/stripe';
 async function getLandlord(userId) {
   const { data } = await getSupabase()
     .from('landlords')
-    .select('landlord_id, verified_tier')
+    .select('landlord_id, verified_tier, is_verified')
     .eq('auth_user_id', userId)
     .single();
   return data;
@@ -39,6 +39,7 @@ export async function GET(request) {
       cancelAtPeriodEnd: subscription.cancel_at_period_end,
     } : null,
     verifiedTier: landlord.verified_tier || 'none',
+    isVerified: landlord.is_verified === true,
     usage: {
       listingsCount: count || 0,
     },

@@ -64,7 +64,9 @@ export default async function ListingPage({ params, searchParams }) {
     (url) => typeof url === 'string' && url.startsWith('http'),
   );
   const isVerified =
-    listing.verified_tier && listing.verified_tier !== 'none';
+    listing.verified_tier &&
+    listing.verified_tier !== 'none' &&
+    listing.is_verified === true;
 
   const distances = deriveDestinations(listing.faculty_distances || [], t);
 

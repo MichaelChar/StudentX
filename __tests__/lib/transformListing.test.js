@@ -9,7 +9,7 @@ const fullRow = {
   rent: { monthly_price: 450, currency: 'EUR', bills_included: true, deposit: 900 },
   location: { address: '12 Egnatias', neighborhood: 'Center', lat: 40.63, lng: 22.94 },
   property_types: { name: 'Studio' },
-  landlords: { name: 'Alice', contact_info: 'a@example.com', verified_tier: 'gold' },
+  landlords: { name: 'Alice', contact_info: 'a@example.com', verified_tier: 'gold', is_verified: true },
   listing_amenities: [
     { amenities: { name: 'wifi' } },
     { amenities: { name: 'heating' } },
@@ -30,6 +30,7 @@ describe('transformListing', () => {
       listing_id: '0100006',
       is_featured: true,
       verified_tier: 'gold',
+      is_verified: true,
       address: '12 Egnatias',
       neighborhood: 'Center',
       lat: 40.63,
@@ -76,6 +77,11 @@ describe('transformListing', () => {
   it('defaults verified_tier to "none" when landlord row lacks it', () => {
     const row = { ...fullRow, landlords: { name: 'Bob', contact_info: null } };
     expect(transformListing(row).verified_tier).toBe('none');
+  });
+
+  it('defaults is_verified to false when landlord row lacks it', () => {
+    const row = { ...fullRow, landlords: { name: 'Bob', contact_info: null } };
+    expect(transformListing(row).is_verified).toBe(false);
   });
 
   it('returns empty arrays when amenities and faculty_distances are missing', () => {

@@ -1,0 +1,50 @@
+import { getResend } from '@/lib/resend';
+import { subscriptionWelcomeHtml, subscriptionWelcomeSubject } from '@/templates/email/subscriptionWelcome';
+
+const FROM_ADDRESS = 'StudentX <alerts@studentx.gr>';
+
+const TIER_DISPLAY_NAMES = {
+  verified: 'SuperLandlord',
+  verified_pro: 'SuperLandlord Heavy',
+};
+
+/**
+ * Send the subscription welcome email after a Stripe checkout completes.
+ * Errors are swallowed (logged): the webhook must always ack 2xx, and a
+ * Resend hiccup should never block downstream `customer.subscription.*`
+ * events. Currently logs-only in production until studentx.gr is verified
+ * with Resend (see CLAUDE.md → Email).
+ */
+export async function sendSubscriptionWelcomeEmail({ supabase, landlordId, tier }) {
+  try {
+    const { data: landlord } = await supabase
+      .from('landlords')
+      .select('name, email, preferred_locale')
+      .eq('landlord_id', landlordId)
+      .single();
+
+    if (!landlord?.email) {
+      console.warn(`Subscription welcome: no email for landlord ${landlordId}`);
+      return;
+    }
+
+    const locale = landlord.preferred_locale === 'en' ? 'en' : 'el';
+    const tierName = TIER_DISPLAY_NAMES[tier] || 'SuperLandlord';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.gr';
+    const verificationUrl = `${appUrl}/${locale === 'en' ? 'en/' : ''}landlord/verification`;
+
+    await getResend().emails.send({
+      from: FROM_ADDRESS,
+      to: landlord.email,
+      subject: subscriptionWelcomeSubject(tierName, locale),
+      html: subscriptionWelcomeHtml({
+        landlordName: landlord.name,
+        tierName,
+        verificationUrl,
+        locale,
+      }),
+    });
+  } catch (err) {
+    console.error('Failed to send subscription welcome email:', err);
+  }
+}

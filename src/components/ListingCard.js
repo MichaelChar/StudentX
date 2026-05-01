@@ -20,7 +20,9 @@ export default function ListingCard({ listing, fromQuery = '' }) {
   const tCard = useTranslations('listingCard');
   const photo = listing.photos?.find(isValidPhotoUrl);
   const isVerified =
-    listing.verified_tier && listing.verified_tier !== 'none';
+    listing.verified_tier &&
+    listing.verified_tier !== 'none' &&
+    listing.is_verified === true;
 
   // Thread current results search-state into the listing URL so the
   // detail page's back link returns to the same filtered view. Caller
