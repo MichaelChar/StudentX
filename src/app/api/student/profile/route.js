@@ -48,6 +48,14 @@ export async function POST(request) {
   });
 
   if (error) {
+    // prevent_dual_role trigger (migration 036) RAISEs unique_violation
+    // when the auth user already has a landlord row. Surface that as 409.
+    if (error.code === '23505' && /already registered as a landlord/i.test(error.message || '')) {
+      return NextResponse.json(
+        { error: 'role_conflict', conflict_role: 'landlord' },
+        { status: 409 }
+      );
+    }
     console.error('create_student_profile RPC error:', error);
     return NextResponse.json({ error: 'Failed to create profile' }, { status: 500 });
   }
