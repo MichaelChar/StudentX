@@ -75,8 +75,12 @@ export default function StudentSignupPage() {
         );
         if (!res.ok) {
           await supabase.auth.signOut();
-          const { error: profileError } = await res.json().catch(() => ({}));
-          setError(profileError || t('profileCreateFailed'));
+          const body = await res.json().catch(() => ({}));
+          if (res.status === 409 && body?.error === 'role_conflict') {
+            setError(t('roleConflict'));
+          } else {
+            setError(body?.error || t('profileCreateFailed'));
+          }
           return;
         }
         router.push('/student/account');
