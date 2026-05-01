@@ -568,7 +568,10 @@
         "unverifiedBody": "Show students you're a real landlord — seal, priority, more inquiries.",
         "subscribedAwaitingIdTitle": "Welcome to SuperLandlord",
         "subscribedAwaitingIdBody": "One last step — upload an ID to activate the Verified badge on your listings.",
-        "submitIdCta": "Upload ID"
+        "submitIdCta": "Upload ID",
+        "idApprovedAwaitingSubscriptionTitle": "Your ID is approved",
+        "idApprovedAwaitingSubscriptionBody": "Last step — subscribe to become a publicly verified landlord.",
+        "chooseSubscription": "Choose subscription"
       }
     }
   },

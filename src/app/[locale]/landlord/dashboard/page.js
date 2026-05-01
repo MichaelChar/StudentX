@@ -397,7 +397,32 @@ function VerificationCard({ tier, isVerified, t }) {
     );
   }
 
-  // No subscription — original CTA to upgrade.
+  // ID approved but no subscription — show their progress + nudge to subscribe.
+  if (isVerified) {
+    return (
+      <Card tone="parchment" className="p-6 md:p-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+          <div className="flex items-center gap-5">
+            <VerifiedSeal size={52} />
+            <div>
+              <p className="label-caps text-gold">{t('widgetVerification')}</p>
+              <p className="font-display text-2xl text-night mt-1">
+                {t('idApprovedAwaitingSubscriptionTitle')}
+              </p>
+              <p className="text-night/70 text-sm mt-1 max-w-md">
+                {t('idApprovedAwaitingSubscriptionBody')}
+              </p>
+            </div>
+          </div>
+          <Button href="/landlord/get-verified" variant="gold" size="md">
+            {t('chooseSubscription')}
+          </Button>
+        </div>
+      </Card>
+    );
+  }
+
+  // No subscription, no approved ID — original CTA to upgrade.
   return (
     <Card tone="night" className="p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">

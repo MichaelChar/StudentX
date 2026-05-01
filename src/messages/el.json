@@ -568,7 +568,10 @@
         "unverifiedBody": "Δείξε στους φοιτητές ότι είσαι γνήσιος — σήμα, προτεραιότητα, περισσότερα αιτήματα.",
         "subscribedAwaitingIdTitle": "Καλώς ήρθες στην SuperLandlord",
         "subscribedAwaitingIdBody": "Ένα τελευταίο βήμα — ανέβασε ταυτότητα για να ενεργοποιηθεί το σήμα Verified στις αγγελίες σου.",
-        "submitIdCta": "Ανέβασε ταυτότητα"
+        "submitIdCta": "Ανέβασε ταυτότητα",
+        "idApprovedAwaitingSubscriptionTitle": "Η ταυτότητά σου εγκρίθηκε",
+        "idApprovedAwaitingSubscriptionBody": "Τελευταίο βήμα — ξεκίνα συνδρομή για να εμφανίζεσαι δημόσια ως επαληθευμένος ιδιοκτήτης.",
+        "chooseSubscription": "Επίλεξε συνδρομή"
       }
     }
   },
