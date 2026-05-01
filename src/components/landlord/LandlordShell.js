@@ -90,7 +90,7 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
   return (
     <div className="min-h-screen bg-stone flex">
       {/* Sidebar — desktop */}
-      <aside className="hidden lg:flex w-[240px] flex-col bg-night text-stone fixed inset-y-0 left-0 z-30">
+      <aside className="hidden lg:flex w-[240px] flex-col bg-night text-stone fixed inset-y-0 left-0 z-[60]">
         <SidebarContent
           t={t}
           pathname={pathname}
