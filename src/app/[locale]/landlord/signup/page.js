@@ -18,11 +18,13 @@ export default function LandlordSignupPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [conflictRole, setConflictRole] = useState(null);
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
+    setConflictRole(null);
 
     if (password.length < 8) {
       setError(t('passwordTooShort'));
@@ -61,8 +63,13 @@ export default function LandlordSignupPage() {
         );
         if (!res.ok) {
           await supabase.auth.signOut();
-          const { error: profileError } = await res.json().catch(() => ({}));
-          setError(profileError || t('profileCreateFailed'));
+          const body = await res.json().catch(() => ({}));
+          if (res.status === 409 && body?.error === 'role_conflict') {
+            setError(t('roleConflict'));
+            setConflictRole(body?.conflict_role || 'student');
+          } else {
+            setError(body?.error || t('profileCreateFailed'));
+          }
           return;
         }
       }
@@ -107,9 +114,19 @@ export default function LandlordSignupPage() {
         />
 
         {error && (
-          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-3 py-2">
-            {error}
-          </p>
+          <div className="space-y-2">
+            <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-3 py-2">
+              {error}
+            </p>
+            {conflictRole === 'student' && (
+              <Link
+                href={{ pathname: '/student/login', query: { email } }}
+                className="inline-block text-sm text-blue font-medium hover:text-night"
+              >
+                {t('roleConflictCta')} →
+              </Link>
+            )}
+          </div>
         )}
 
         <Button

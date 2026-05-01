@@ -103,6 +103,12 @@ export async function POST(request) {
       p_landlord_id: orphan.landlord_id,
     });
     if (linkError) {
+      if (isRoleConflict(linkError)) {
+        return NextResponse.json(
+          { error: 'role_conflict', conflict_role: 'student' },
+          { status: 409 }
+        );
+      }
       console.error('Failed to link landlord profile:', linkError);
       return NextResponse.json({ error: 'Failed to link profile' }, { status: 500 });
     }
@@ -136,9 +142,21 @@ export async function POST(request) {
     .single();
 
   if (error) {
+    if (isRoleConflict(error)) {
+      return NextResponse.json(
+        { error: 'role_conflict', conflict_role: 'student' },
+        { status: 409 }
+      );
+    }
     console.error('Failed to create landlord profile:', error);
     return NextResponse.json({ error: 'Failed to create profile' }, { status: 500 });
   }
 
   return NextResponse.json({ landlord }, { status: 201 });
+}
+
+// Postgres unique_violation raised by the prevent_dual_role trigger
+// (migration 036) — the same email/auth user already has a students row.
+function isRoleConflict(err) {
+  return err?.code === '23505' && /already registered as a student/i.test(err?.message || '');
 }

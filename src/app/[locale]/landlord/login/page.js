@@ -1,6 +1,7 @@
 'use client';
 
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
@@ -10,10 +11,14 @@ import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
 import Button from '@/components/ui/Button';
 
-export default function LandlordLoginPage() {
+function LandlordLoginInner() {
   const t = useTranslations('landlord.login');
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const searchParams = useSearchParams();
+  // ?email=<addr> prefill — used by the student-signup roleConflict CTA
+  // to deep-link a dual-role landlord straight back to their own login.
+  const initialEmail = searchParams.get('email') || '';
+  const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -101,3 +106,11 @@ export default function LandlordLoginPage() {
   );
 }
 
+export default function LandlordLoginPage() {
+  // useSearchParams must be wrapped in Suspense in App Router.
+  return (
+    <Suspense fallback={null}>
+      <LandlordLoginInner />
+    </Suspense>
+  );
+}

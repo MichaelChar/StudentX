@@ -215,7 +215,9 @@
       "haveAccount": "Already have an account?",
       "loginLink": "Log in",
       "passwordTooShort": "Password must be at least 8 characters.",
-      "profileCreateFailed": "Failed to create landlord profile. Please try again."
+      "profileCreateFailed": "Failed to create landlord profile. Please try again.",
+      "roleConflict": "This email already has a student account on StudentX. Sign in instead, or use a different email to register as a landlord.",
+      "roleConflictCta": "Sign in to your student account"
     },
     "dashboard": {
       "welcome": "Welcome back, {name}!",
@@ -590,6 +592,8 @@
       "passwordPlaceholder": "At least 8 characters",
       "passwordTooShort": "Password must be at least 8 characters.",
       "profileCreateFailed": "We couldn't create your account. Please try again.",
+      "roleConflict": "This email already has a landlord account on StudentX. Sign in instead, or use a different email to register as a student.",
+      "roleConflictCta": "Sign in to your landlord account",
       "submit": "Create account",
       "submitting": "Creating account…",
       "or": "or",
