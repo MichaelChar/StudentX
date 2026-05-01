@@ -90,7 +90,7 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
   return (
     <div className="min-h-screen bg-stone flex">
       {/* Sidebar — desktop */}
-      <aside className="hidden lg:flex w-[240px] flex-col bg-night text-stone fixed inset-y-0 left-0 z-30">
+      <aside className="hidden lg:flex w-[240px] flex-col bg-night text-stone fixed inset-y-0 left-0 z-[60]">
         <SidebarContent
           t={t}
           pathname={pathname}
@@ -119,7 +119,7 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
       {/* Main area */}
       <div className="flex-1 lg:ml-[240px] flex flex-col min-w-0">
         {/* Topbar */}
-        <header className="sticky top-0 z-20 bg-stone/95 backdrop-blur border-b border-night/10">
+        <header className="sticky top-0 z-20 bg-stone border-b border-night/10">
           <div className="px-5 md:px-8 py-4 flex items-center gap-4">
             {/* Mobile menu */}
             <button

@@ -135,8 +135,16 @@ export default function Navbar() {
   const inquiriesHref =
     authState.role === 'landlord' ? '/landlord/inquiries' : '/student/account';
 
+  const isLandlord = pathname?.startsWith('/landlord') ?? false;
+
   return (
-    <nav className="sticky top-0 z-50 bg-stone/95 backdrop-blur border-b border-night/10">
+    <nav
+      className={
+        isLandlord
+          ? 'z-50 bg-stone border-b border-night/10'
+          : 'sticky top-0 z-50 bg-stone/95 backdrop-blur border-b border-night/10'
+      }
+    >
       <TabTitleFlash count={unread.count} />
       <div className="mx-auto max-w-6xl px-5 py-4 flex items-center justify-between gap-6">
         <Link
