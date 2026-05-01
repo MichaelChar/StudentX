@@ -62,7 +62,7 @@
     "noResultsHint": "Δοκίμασε να αλλάξεις τα φίλτρα σου.",
     "loadingMap": "Φόρτωση χάρτη…",
     "to": "έως",
-    "verifiedOnly": "Μόνο SuperLandlord"
+    "verifiedOnly": "Μόνο επαληθευμένοι"
   },
   "listing": {
     "backToResults": "Πίσω στα αποτελέσματα",
@@ -86,8 +86,8 @@
     "listingNotFound": "Η αγγελία δεν βρέθηκε",
     "listingNotFoundDesc": "Η αγγελία που αναζητάς ενδέχεται να έχει αφαιρεθεί ή δεν υπάρχει.",
     "backToSearchBtn": "Πίσω στην αναζήτηση",
-    "verified": "SuperLandlord",
-    "verifiedPro": "SuperLandlord Heavy",
+    "verified": "Επαληθευμένος",
+    "verifiedPro": "Επαληθευμένος",
     "minutes": "{n} λεπτά",
     "somethingWentWrong": "Κάτι πήγε στραβά",
     "failedToLoad": "Αποτυχία φόρτωσης αγγελίας"
@@ -120,8 +120,8 @@
   },
   "listingCard": {
     "featured": "Προβεβλημένο",
-    "verified": "SuperLandlord",
-    "verifiedPro": "SuperLandlord Heavy",
+    "verified": "Επαληθευμένος",
+    "verifiedPro": "Επαληθευμένος",
     "priceOnRequest": "Τιμή κατόπιν αιτήματος",
     "perMonth": "/μήνα",
     "estimated": "εκτ. ",
@@ -291,11 +291,12 @@
       "rentalDurationPlaceholder": "π.χ. 12 μήνες, ευέλικτο",
       "photosSection": "Φωτογραφίες",
       "photosLabel": "Προσθήκη φωτογραφιών",
-      "photosHint": "JPG, PNG ή WebP · μέγ. 5 MB το αρχείο · έως 6 φωτογραφίες",
+      "photosHint": "JPG, PNG ή WebP · μέγ. 10 MB το αρχείο · έως 6 φωτογραφίες",
+      "photosHintUnlimited": "JPG, PNG ή WebP · μέγ. 10 MB το αρχείο · απεριόριστες φωτογραφίες",
       "photosUploading": "Μεταφόρτωση…",
       "photosRemove": "Αφαίρεση",
       "photosError": "Ορισμένα αρχεία δεν μπόρεσαν να μεταφορτωθούν.",
-      "photosFileTooLarge": "Το αρχείο υπερβαίνει το όριο 5 MB.",
+      "photosFileTooLarge": "Πολύ μεγάλο αρχείο (μέγ. {max} MB): {names}",
       "photosInvalidType": "Επιτρέπονται μόνο JPG, PNG και WebP.",
       "photosTooMany": "Συμπληρώθηκε το όριο φωτογραφιών.",
       "importedPhotos": "{count, plural, one {# εισαγόμενη φωτογραφία} other {# εισαγόμενες φωτογραφίες}} — αποθηκεύονται με την αγγελία",
@@ -486,7 +487,7 @@
       "upTo": "έως",
       "neighborhood": "Συνοικία",
       "type": "Τύπος",
-      "verified": "SuperLandlord",
+      "verified": "Επαληθευμένος",
       "billsIncluded": "Κοινόχρηστα",
       "authProgramme": "Πρόγραμμα ΑΠΘ",
       "featuredTitle": "Πρόγραμμα Στέγασης Ιατρικής Αριστοτέλειο",
@@ -496,7 +497,7 @@
     "listing": {
       "back": "Πίσω στα αποτελέσματα",
       "authMedicalProgramme": "Πρόγραμμα Ιατρικής ΑΠΘ",
-      "verified": "SuperLandlord",
+      "verified": "Επαληθευμένος",
       "rentGreek": "Ενοίκιο",
       "rentEnglish": "Rent",
       "depositGreek": "Εγγύηση",

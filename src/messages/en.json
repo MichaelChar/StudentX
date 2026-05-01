@@ -62,7 +62,7 @@
     "noResultsHint": "Try adjusting your filters.",
     "loadingMap": "Loading map…",
     "to": "to",
-    "verifiedOnly": "SuperLandlord only"
+    "verifiedOnly": "Verified only"
   },
   "listing": {
     "backToResults": "Back to results",
@@ -86,8 +86,8 @@
     "listingNotFound": "Listing not found",
     "listingNotFoundDesc": "The listing you're looking for may have been removed or doesn't exist.",
     "backToSearchBtn": "Back to search",
-    "verified": "SuperLandlord",
-    "verifiedPro": "SuperLandlord Heavy",
+    "verified": "Verified",
+    "verifiedPro": "Verified",
     "minutes": "{n} min",
     "somethingWentWrong": "Something went wrong",
     "failedToLoad": "Failed to load listing"
@@ -120,8 +120,8 @@
   },
   "listingCard": {
     "featured": "Featured",
-    "verified": "SuperLandlord",
-    "verifiedPro": "SuperLandlord Heavy",
+    "verified": "Verified",
+    "verifiedPro": "Verified",
     "priceOnRequest": "Price on request",
     "perMonth": "/mo",
     "estimated": "est ",
@@ -291,11 +291,12 @@
       "rentalDurationPlaceholder": "e.g. 12 months, flexible",
       "photosSection": "Photos",
       "photosLabel": "Add photos",
-      "photosHint": "JPG, PNG or WebP · max 5 MB each · up to 6 photos",
+      "photosHint": "JPG, PNG or WebP · max 10 MB each · up to 6 photos",
+      "photosHintUnlimited": "JPG, PNG or WebP · max 10 MB each · unlimited photos",
       "photosUploading": "Uploading…",
       "photosRemove": "Remove",
       "photosError": "Some files could not be uploaded.",
-      "photosFileTooLarge": "File exceeds 5 MB limit.",
+      "photosFileTooLarge": "File too large (max {max} MB): {names}",
       "photosInvalidType": "Only JPG, PNG and WebP are allowed.",
       "photosTooMany": "Photo limit reached.",
       "importedPhotos": "{count, plural, one {# imported photo} other {# imported photos}} — saved with listing",
@@ -486,7 +487,7 @@
       "upTo": "up to",
       "neighborhood": "Neighborhood",
       "type": "Type",
-      "verified": "SuperLandlord",
+      "verified": "Verified",
       "billsIncluded": "Bills included",
       "authProgramme": "AUTh programme",
       "featuredTitle": "Aristotle Medical Housing Programme",
@@ -496,7 +497,7 @@
     "listing": {
       "back": "Back to results",
       "authMedicalProgramme": "AUTh Medical Programme",
-      "verified": "SuperLandlord",
+      "verified": "Verified",
       "rentGreek": "Ενοίκιο",
       "rentEnglish": "Rent",
       "depositGreek": "Εγγύηση",
