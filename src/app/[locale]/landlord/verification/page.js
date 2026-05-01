@@ -148,6 +148,7 @@ export default function LandlordVerificationPage() {
               submitError={submitError}
               submitSuccess={submitSuccess}
               onSubmit={handleSubmit}
+              subscribed={verifiedTier && verifiedTier !== 'none'}
             />
           </div>
         ) : (
@@ -167,7 +168,7 @@ export default function LandlordVerificationPage() {
   );
 }
 
-function UploadForm({ file, setFile, fileInputRef, submitting, submitError, submitSuccess, onSubmit }) {
+function UploadForm({ file, setFile, fileInputRef, submitting, submitError, submitSuccess, onSubmit, subscribed = false }) {
   if (submitSuccess) {
     return (
       <Card tone="parchment" className="px-6 py-5 flex items-start gap-4">
@@ -177,7 +178,9 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
         <div>
           <p className="font-display text-lg text-night mb-1">Document submitted</p>
           <p className="text-sm text-night/70">
-            We&apos;ll review your ID within 1–2 business days and notify you when your badge is activated.
+            {subscribed
+              ? <>We&apos;ll review your ID within 1–2 business days and notify you when your badge is activated.</>
+              : <>We&apos;ll review your ID within 1–2 business days. A SuperLandlord subscription is also required for the Verified badge to appear publicly on your listings — you can subscribe at any time, before or after your ID is approved.</>}
           </p>
         </div>
       </Card>
