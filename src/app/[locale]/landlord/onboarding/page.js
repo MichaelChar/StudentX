@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 
 const TIERS = [
   {
@@ -63,7 +64,10 @@ const TIERS = [
 
 export default function LandlordOnboardingPage() {
   const router = useRouter();
+  const accessToken = useAccessToken();
   const [loading, setLoading] = useState(true);
+  const [pendingTier, setPendingTier] = useState(null);
+  const [error, setError] = useState('');
 
   useEffect(() => {
     async function init() {
@@ -82,13 +86,34 @@ export default function LandlordOnboardingPage() {
     init();
   }, [router]);
 
-  function handleChoose(tierKey) {
+  async function handleChoose(tierKey) {
     if (tierKey === 'free') {
       router.push('/landlord/dashboard');
-    } else if (tierKey === 'verified') {
-      window.location.assign('https://buy.stripe.com/bJe7sLdhg0KY7ep3S3awo00');
-    } else if (tierKey === 'verified_pro') {
-      window.location.assign('https://buy.stripe.com/00wcN55OO51ebuF60bawo02');
+      return;
+    }
+
+    setError('');
+    setPendingTier(tierKey);
+    try {
+      const res = await fetch('/api/landlord/billing/checkout', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken || ''}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tier: tierKey, returnTo: 'onboarding' }),
+      });
+      const { url, error: apiError } = await res.json();
+      if (!res.ok || !url) {
+        setError(apiError || 'Failed to start checkout. Please try again.');
+        setPendingTier(null);
+        return;
+      }
+      window.location.assign(url);
+    } catch (err) {
+      console.error('[LandlordOnboarding] checkout failed:', err);
+      setError('Failed to start checkout. Please try again.');
+      setPendingTier(null);
     }
   }
 
@@ -151,19 +176,26 @@ export default function LandlordOnboardingPage() {
               <div className="p-6 pt-0">
                 <button
                   onClick={() => handleChoose(tier.key)}
-                  className={`w-full py-3 rounded-xl font-heading font-semibold transition-colors ${
+                  disabled={pendingTier !== null}
+                  className={`w-full py-3 rounded-xl font-heading font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     tier.key === 'free'
                       ? 'bg-navy text-white hover:bg-navy/90'
                       : 'bg-gold text-white hover:bg-gold/90'
                   }`}
                 >
-                  Choose this tier
+                  {pendingTier === tier.key ? '…' : 'Choose this tier'}
                 </button>
               </div>
             </div>
           ))}
         </div>
       </div>
+
+      {error && (
+        <p className="mt-6 max-w-md text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">
+          {error}
+        </p>
+      )}
 
       <p className="text-xs text-gray-dark/40 mt-8">
         Paid plans use secure checkout via Stripe. Cancel anytime.
