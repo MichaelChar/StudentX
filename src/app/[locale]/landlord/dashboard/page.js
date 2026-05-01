@@ -35,6 +35,7 @@ export default function LandlordDashboardPage() {
   const [pendingInquiryCount, setPendingInquiryCount] = useState(0);
   const [analytics, setAnalytics] = useState(null);
   const [verifiedTier, setVerifiedTier] = useState('none');
+  const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -87,8 +88,9 @@ export default function LandlordDashboardPage() {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (res.ok) {
-        const { verifiedTier: tier } = await res.json();
+        const { verifiedTier: tier, isVerified: idApproved } = await res.json();
         setVerifiedTier(tier ?? 'none');
+        setIsVerified(idApproved === true);
       }
     } catch {}
   }
@@ -235,7 +237,7 @@ export default function LandlordDashboardPage() {
 
       {/* Verification card */}
       <section className="mt-6">
-        <VerificationCard tier={verifiedTier} t={t} />
+        <VerificationCard tier={verifiedTier} isVerified={isVerified} t={t} />
       </section>
     </LandlordShell>
   );
@@ -351,8 +353,11 @@ function InquiryRow({ inquiry }) {
   );
 }
 
-function VerificationCard({ tier, t }) {
-  if (tier === 'verified' || tier === 'verified_pro') {
+function VerificationCard({ tier, isVerified, t }) {
+  const isSubscribed = tier === 'verified' || tier === 'verified_pro';
+
+  // Fully verified — paid AND admin-approved ID.
+  if (isSubscribed && isVerified) {
     return (
       <Card tone="parchment" className="p-6 flex items-center gap-5">
         <VerifiedSeal size={52} />
@@ -367,6 +372,32 @@ function VerificationCard({ tier, t }) {
     );
   }
 
+  // Subscribed but ID not yet approved — congratulate + nudge to upload.
+  if (isSubscribed) {
+    return (
+      <Card tone="parchment" className="p-6 md:p-8">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
+          <div className="flex items-center gap-5">
+            <VerifiedSeal size={52} />
+            <div>
+              <p className="label-caps text-gold">{t('widgetVerification')}</p>
+              <p className="font-display text-2xl text-night mt-1">
+                {t('subscribedAwaitingIdTitle')}
+              </p>
+              <p className="text-night/70 text-sm mt-1 max-w-md">
+                {t('subscribedAwaitingIdBody')}
+              </p>
+            </div>
+          </div>
+          <Button href="/landlord/verification" variant="gold" size="md">
+            {t('submitIdCta')}
+          </Button>
+        </div>
+      </Card>
+    );
+  }
+
+  // No subscription — original CTA to upgrade.
   return (
     <Card tone="night" className="p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">

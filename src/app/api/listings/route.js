@@ -10,7 +10,7 @@ const LISTING_SELECT = `
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
-  landlords!inner ( name, contact_info, verified_tier ),
+  landlords!inner ( name, contact_info, verified_tier, is_verified ),
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
@@ -136,9 +136,11 @@ export async function GET(request) {
       query = query.eq("faculty_distances.faculty_id", faculty);
     }
 
-    // Filter: verified only
+    // Filter: verified only — requires both a paid tier AND admin-approved ID
     if (verifiedOnly) {
-      query = query.neq("landlords.verified_tier", "none");
+      query = query
+        .neq("landlords.verified_tier", "none")
+        .eq("landlords.is_verified", true);
     }
 
     let { data, error } = await query;

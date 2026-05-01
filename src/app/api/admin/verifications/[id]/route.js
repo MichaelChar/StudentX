@@ -69,16 +69,18 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: 'Failed to update request' }, { status: 500 });
   }
 
-  // On approve: update landlord verified_tier
+  // On approve: flip is_verified only. Subscription tier (verified_tier) is
+  // independent — the public badge requires both is_verified=true AND a paid
+  // tier, so admin ID approval shouldn't grant a free subscription.
   if (action === 'approve') {
     const { error: landlordError } = await supabase
       .from('landlords')
-      .update({ is_verified: true, verified_tier: 'verified' })
+      .update({ is_verified: true })
       .eq('landlord_id', verificationRequest.landlord_id);
 
     if (landlordError) {
-      console.error('Failed to update landlord verified_tier:', landlordError);
-      return NextResponse.json({ error: 'Request approved but failed to update landlord tier' }, { status: 500 });
+      console.error('Failed to update landlord is_verified:', landlordError);
+      return NextResponse.json({ error: 'Request approved but failed to update landlord status' }, { status: 500 });
     }
   }
 

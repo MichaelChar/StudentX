@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getStripe } from '@/lib/stripe';
 import { createClient } from '@supabase/supabase-js';
+import { sendSubscriptionWelcomeEmail } from '@/lib/subscriptionEmail';
 
 // Use service role for webhook handling (bypasses RLS)
 function getServiceSupabase() {
@@ -91,12 +92,17 @@ async function handleSubscriptionCreated(supabase, session) {
     cancel_at_period_end: subscription.cancel_at_period_end,
   });
 
-  // Set verified status and mark onboarding complete on landlord
+  // Set subscription tier and mark onboarding complete on landlord. Note
+  // that is_verified is intentionally NOT touched here — the public Verified
+  // badge requires both verified_tier !== 'none' AND is_verified=true (the
+  // latter set by admin on ID approval). Subscription alone is not enough.
   if (verifiedTier && ['verified', 'verified_pro'].includes(verifiedTier)) {
     await supabase
       .from('landlords')
       .update({ verified_tier: verifiedTier, onboarding_completed: true })
       .eq('landlord_id', landlordId);
+
+    await sendSubscriptionWelcomeEmail({ supabase, landlordId, tier: verifiedTier });
   }
 }
 
