@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
@@ -8,6 +9,7 @@ import Button from '@/components/ui/Button';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
+import { useAccessToken } from '@/lib/useAccessToken';
 
 /*
   Propylaea pricing / Get Verified page. Two tiers, seal-gold accents,
@@ -22,7 +24,6 @@ const PAID_TIERS = [
     price: '€49',
     period: '/yr',
     highlight: false,
-    stripeUrl: 'https://buy.stripe.com/bJe7sLdhg0KY7ep3S3awo00',
     features: [
       { label: 'Listing cap', value: 'Up to 5' },
       { label: 'Photos per listing', value: 'Unlimited' },
@@ -39,7 +40,6 @@ const PAID_TIERS = [
     price: '€99',
     period: '/yr',
     highlight: true,
-    stripeUrl: 'https://buy.stripe.com/00wcN55OO51ebuF60bawo02',
     features: [
       { label: 'Listing cap', value: 'Up to 12 (+€5/mo overage)' },
       { label: 'Photos per listing', value: 'Unlimited' },
@@ -53,9 +53,35 @@ const PAID_TIERS = [
 
 export default function GetVerifiedPage() {
   const t = useTranslations('landlord.getVerified');
+  const tBilling = useTranslations('landlord.billing');
+  const accessToken = useAccessToken();
+  const [pendingTier, setPendingTier] = useState(null);
+  const [error, setError] = useState('');
 
-  function handleChoose(stripeUrl) {
-    window.location.assign(stripeUrl);
+  async function handleChoose(tierKey) {
+    setError('');
+    setPendingTier(tierKey);
+    try {
+      const res = await fetch('/api/landlord/billing/checkout', {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${accessToken || ''}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ tier: tierKey }),
+      });
+      const { url, error: apiError } = await res.json();
+      if (!res.ok || !url) {
+        setError(apiError || tBilling('checkoutError'));
+        setPendingTier(null);
+        return;
+      }
+      window.location.assign(url);
+    } catch (err) {
+      console.error('[GetVerified] checkout failed:', err);
+      setError(tBilling('checkoutError'));
+      setPendingTier(null);
+    }
   }
 
   return (
@@ -70,11 +96,19 @@ export default function GetVerifiedPage() {
             <TierCard
               key={tier.key}
               tier={tier}
-              onChoose={() => handleChoose(tier.stripeUrl)}
+              onChoose={() => handleChoose(tier.key)}
               ctaLabel={t('chooseTier')}
+              disabled={pendingTier !== null}
+              loading={pendingTier === tier.key}
             />
           ))}
         </div>
+
+        {error && (
+          <p className="mt-6 text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-3 py-2 max-w-2xl">
+            {error}
+          </p>
+        )}
 
         <p className="mt-8 label-caps text-night/40">{t('stripeNote')}</p>
       </div>
@@ -82,7 +116,7 @@ export default function GetVerifiedPage() {
   );
 }
 
-function TierCard({ tier, onChoose, ctaLabel }) {
+function TierCard({ tier, onChoose, ctaLabel, disabled = false, loading = false }) {
   return (
     <Card
       tone={tier.highlight ? 'night' : 'white'}
@@ -177,8 +211,9 @@ function TierCard({ tier, onChoose, ctaLabel }) {
           onClick={onChoose}
           variant={tier.highlight ? 'gold' : 'primary'}
           className="w-full justify-center"
+          disabled={disabled}
         >
-          {ctaLabel}
+          {loading ? '…' : ctaLabel}
         </Button>
       </div>
     </Card>
