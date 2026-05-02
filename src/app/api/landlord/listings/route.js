@@ -24,6 +24,26 @@ const LANDLORD_LISTING_SELECT = `
   listing_amenities ( amenities ( amenity_id, name ) )
 `;
 
+const LANDLORD_LISTING_SELECT_FALLBACK = `
+  listing_id,
+  landlord_id,
+  is_featured,
+  rent_id,
+  location_id,
+  property_type_id,
+  description,
+  photos,
+  sqm,
+  floor,
+  available_from,
+  created_at,
+  updated_at,
+  rent ( rent_id, monthly_price, currency, bills_included, deposit ),
+  location ( location_id, address, neighborhood, lat, lng ),
+  property_types ( property_type_id, name ),
+  listing_amenities ( amenities ( amenity_id, name ) )
+`;
+
 const ALLOWED_MIN_DURATIONS = [1, 5, 9];
 
 // Coerces the form value (string "" / "1" / "5" / "9" or number / null / undefined)
@@ -60,15 +80,25 @@ export async function GET(request) {
   if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
   const authedSupabase = getSupabaseWithToken(token);
-  const { data, error } = await authedSupabase
+  let { data, error } = await authedSupabase
     .from('listings')
     .select(LANDLORD_LISTING_SELECT)
     .eq('landlord_id', landlordId)
     .order('created_at', { ascending: false });
 
   if (error) {
-    console.error('Failed to fetch landlord listings:', error);
-    return NextResponse.json({ error: 'Failed to fetch listings' }, { status: 500 });
+    console.warn('Landlord listings query failed, retrying without min_duration_months:', error.message);
+    const fallback = await authedSupabase
+      .from('listings')
+      .select(LANDLORD_LISTING_SELECT_FALLBACK)
+      .eq('landlord_id', landlordId)
+      .order('created_at', { ascending: false });
+
+    if (fallback.error) {
+      console.error('Failed to fetch landlord listings:', fallback.error);
+      return NextResponse.json({ error: 'Failed to fetch listings' }, { status: 500 });
+    }
+    data = fallback.data;
   }
 
   return NextResponse.json({ listings: data });

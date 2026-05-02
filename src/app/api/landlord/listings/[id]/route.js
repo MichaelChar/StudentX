@@ -36,21 +36,46 @@ export async function GET(request, { params }) {
 
   const { id } = await params;
   const authedSupabase = getSupabaseWithToken(token);
-  const { data, error } = await authedSupabase
+
+  const SINGLE_LISTING_SELECT = `
+    listing_id, landlord_id, rent_id, location_id, property_type_id,
+    description, photos, sqm, floor, available_from, min_duration_months,
+    rent ( rent_id, monthly_price, bills_included, deposit ),
+    location ( location_id, address, neighborhood, lat, lng ),
+    property_types ( property_type_id, name ),
+    listing_amenities ( amenities ( amenity_id, name ) )
+  `;
+  const SINGLE_LISTING_SELECT_FALLBACK = `
+    listing_id, landlord_id, rent_id, location_id, property_type_id,
+    description, photos, sqm, floor, available_from,
+    rent ( rent_id, monthly_price, bills_included, deposit ),
+    location ( location_id, address, neighborhood, lat, lng ),
+    property_types ( property_type_id, name ),
+    listing_amenities ( amenities ( amenity_id, name ) )
+  `;
+
+  let { data, error } = await authedSupabase
     .from('listings')
-    .select(`
-      listing_id, landlord_id, rent_id, location_id, property_type_id,
-      description, photos, sqm, floor, available_from, min_duration_months,
-      rent ( rent_id, monthly_price, bills_included, deposit ),
-      location ( location_id, address, neighborhood, lat, lng ),
-      property_types ( property_type_id, name ),
-      listing_amenities ( amenities ( amenity_id, name ) )
-    `)
+    .select(SINGLE_LISTING_SELECT)
     .eq('listing_id', id)
     .eq('landlord_id', landlordId)
     .single();
 
-  if (error || !data) {
+  if (error) {
+    const fallback = await authedSupabase
+      .from('listings')
+      .select(SINGLE_LISTING_SELECT_FALLBACK)
+      .eq('listing_id', id)
+      .eq('landlord_id', landlordId)
+      .single();
+
+    if (fallback.error || !fallback.data) {
+      return NextResponse.json({ error: 'Listing not found' }, { status: 404 });
+    }
+    data = fallback.data;
+  }
+
+  if (!data) {
     return NextResponse.json({ error: 'Listing not found' }, { status: 404 });
   }
 
