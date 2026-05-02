@@ -62,7 +62,17 @@ export async function generateMetadata({ params }) {
     ? ` — ${nearbyFaculty.walk_minutes} min walk to ${nearbyFaculty.faculty_name}`
     : "";
 
-  const title = `${propertyType} in ${neighborhood}, ${priceStr}`;
+  // Prefer the landlord-chosen title for social/share cards. Fall back to the
+  // generated `${propertyType} in ${neighborhood}, ${priceStr}` when the title
+  // would just duplicate the address (true for the 13 backfilled rows from
+  // migration 038 until landlords edit) — that template is more compelling
+  // than a bare street address as a share-card headline.
+  const generatedTitle = `${propertyType} in ${neighborhood}, ${priceStr}`;
+  const titleIsDistinctFromAddress =
+    listing.title && listing.title !== listing.address;
+  const title = titleIsDistinctFromAddress
+    ? `${listing.title} — ${neighborhood}, ${priceStr}`
+    : generatedTitle;
   const description =
     (listing.description
       ? listing.description.slice(0, 140)
@@ -146,10 +156,19 @@ export default async function ListingLayout({ children, params }) {
         ? `${SITE_URL}/en/listing/${id}`
         : `${SITE_URL}/listing/${id}`;
 
+    // Same title-vs-generated logic as generateMetadata above. Schema.org
+    // RealEstateListing.name is the primary surface a search engine cards
+    // off, so prefer the landlord-chosen title when it's distinct from the
+    // backfilled-from-address default.
+    const jsonLdName =
+      listing.title && listing.title !== listing.address
+        ? listing.title
+        : `${propertyType} in ${neighborhood}`;
+
     jsonLd = {
       "@context": "https://schema.org",
       "@type": "RealEstateListing",
-      name: `${propertyType} in ${neighborhood}`,
+      name: jsonLdName,
       description: listing.description ?? `${propertyType} available in ${neighborhood}, Thessaloniki.`,
       url: localizedUrl,
       ...(photo && { image: photo }),

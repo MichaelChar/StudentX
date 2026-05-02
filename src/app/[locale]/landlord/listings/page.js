@@ -172,8 +172,12 @@ export default function LandlordListingsPage() {
 function ListingRow({ listing, deleting, toggling, onDelete, onToggleFeatured, t }) {
   const photo = listing.photos?.find((url) => typeof url === 'string' && url.startsWith('http'));
   const address = listing.location?.address || t('noAddress');
+  const heading = listing.title || address;
   const neighborhood = listing.location?.neighborhood;
   const price = listing.rent?.monthly_price;
+  // Only show the address as a sublabel when the heading isn't already the
+  // address (i.e. the landlord has set a distinct title).
+  const showAddressBelow = listing.title && listing.title !== address;
 
   return (
     <div className="flex flex-col md:flex-row md:items-center gap-4 p-5">
@@ -196,10 +200,13 @@ function ListingRow({ listing, deleting, toggling, onDelete, onToggleFeatured, t
       <div className="flex-1 min-w-0">
         <div className="flex flex-wrap items-center gap-2 mb-1">
           <p className="font-display text-xl text-night truncate">
-            {address}
+            {heading}
           </p>
           {listing.is_featured && <Pill variant="verified">Featured</Pill>}
         </div>
+        {showAddressBelow && (
+          <p className="text-xs text-night/50 mb-1 truncate">{address}</p>
+        )}
         <p className="label-caps text-night/50">
           {neighborhood}
           {listing.property_types?.name && (

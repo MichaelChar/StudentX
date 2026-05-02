@@ -79,26 +79,36 @@ INSERT INTO location (location_id, address, neighborhood, lat, lng) VALUES
 -- ----------------------------------------
 -- Listings (fact table, 10 rows — 7-digit IDs)
 -- ----------------------------------------
-INSERT INTO listings (listing_id, landlord_id, rent_id, location_id, property_type_id, description) VALUES
+INSERT INTO listings (listing_id, landlord_id, rent_id, location_id, property_type_id, title, description) VALUES
   ('0001001', '0001', 1, 1, 1,
+    'Renovated Kentro studio steps from Tsimiski',
     'Cozy studio in the heart of Kentro, steps from Tsimiski shopping street. Recently renovated with modern finishes.'),
   ('0001002', '0001', 2, 2, 2,
+    'Bright 1BR near Kamara & the Arch of Galerius',
     'Bright 1-bedroom near Kamara and the Arch of Galerius. Great nightlife access and close to university campus.'),
   ('0002001', '0002', 3, 3, 3,
+    'Spacious Kalamaria 2BR with sea-view balcony',
     'Spacious 2-bedroom apartment in Kalamaria with sea views from the balcony. Ideal for two students sharing.'),
   ('0002002', '0002', 4, 4, 2,
+    'Quiet Kalamaria 1BR — bills included',
     'Comfortable 1-bedroom in quiet Kalamaria neighborhood. Bills included — no surprises. Near the waterfront promenade.'),
   ('0003001', '0003', 5, 5, 4,
+    'Ano Poli shared room with panoramic city views',
     'Affordable room in a shared apartment in Ano Poli with panoramic city views. Authentic Thessaloniki neighborhood.'),
   ('0003002', '0003', 6, 6, 1,
+    'Charming studio near the Rotonda',
     'Charming studio near the Rotonda monument. Walking distance to AUTH campus and the city center.'),
   ('0004001', '0004', 7, 7, 3,
+    'Modern Triandria 2BR close to UoM',
     'Modern 2-bedroom in Triandria with full amenities. Perfect for students who want comfort close to UoM.'),
   ('0004002', '0004', 8, 8, 1,
+    'Quiet studio on Ethnikis Amynis',
     'Well-maintained studio on Ethnikis Amynis, between the city center and the university. Quiet street, good transport links.'),
   ('0005001', '0005', 9, 9, 2,
+    'Ground-floor 1BR in Toumba',
     'Ground-floor 1-bedroom in Toumba. Easy access, no stairs. Close to local markets and bus routes to campus.'),
   ('0005002', '0005', 10, 10, 4,
+    'Budget-friendly room in Stavroupoli',
     'Budget-friendly room in Stavroupoli with internet and heating included. Good bus connections to all campuses.');
 
 -- ----------------------------------------

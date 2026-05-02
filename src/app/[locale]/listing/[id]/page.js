@@ -120,9 +120,17 @@ export default async function ListingPage({ params, searchParams }) {
               <p className="label-caps text-night/50">
                 {listing.neighborhood} &middot; Thessaloniki
               </p>
-              <h1 className="mt-1 font-display text-4xl md:text-5xl text-night leading-tight">
-                {listing.address}
+              <h1 className="mt-1 font-display text-4xl md:text-5xl text-night leading-tight text-balance">
+                {listing.title || listing.address}
               </h1>
+              {listing.address && (
+                <p
+                  className="mt-2 label-caps text-night/60"
+                  aria-label={tListing('streetAddressA11y')}
+                >
+                  {listing.address}
+                </p>
+              )}
             </div>
           </div>
 

@@ -44,16 +44,25 @@ export default function ListingsMap({ listings }) {
         {withCoords.map((listing) => (
           <Marker key={listing.listing_id} position={[listing.lat, listing.lng]}>
             <Popup>
-              <div className="text-sm min-w-[160px]">
-                <p className="font-semibold text-navy mb-0.5">
-                  {listing.monthly_price != null
-                    ? `€${listing.monthly_price}/mo`
-                    : 'Price on request'}
+              <div className="text-sm min-w-[160px] max-w-[220px]">
+                <p className="font-semibold text-navy mb-0.5 line-clamp-2">
+                  {listing.title || listing.address}
                 </p>
                 <p className="text-gray-600 text-xs mb-1">
                   {listing.property_type} · {listing.neighborhood}
                 </p>
-                <p className="text-gray-500 text-xs mb-2">{listing.address}</p>
+                {/* Address kept on the popup even when title differs — students
+                    are comparing pins by location, not by marketing copy. */}
+                {listing.address && listing.title !== listing.address && (
+                  <p className="text-gray-500 text-xs mb-1 line-clamp-1">
+                    {listing.address}
+                  </p>
+                )}
+                <p className="text-gray-500 text-xs mb-2">
+                  {listing.monthly_price != null
+                    ? `€${listing.monthly_price}/mo`
+                    : 'Price on request'}
+                </p>
                 <Link
                   href={`/listing/${listing.listing_id}`}
                   className="text-xs font-medium text-blue-600 hover:underline"

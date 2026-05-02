@@ -4,6 +4,7 @@ import { transformListing } from '@/lib/transformListing';
 const fullRow = {
   listing_id: '0100006',
   is_featured: true,
+  title: 'Sunny studio near Medical School',
   description: 'Sunny studio',
   photos: ['a.jpg', 'b.jpg'],
   min_duration_months: 9,
@@ -32,6 +33,7 @@ describe('transformListing', () => {
       is_featured: true,
       verified_tier: 'gold',
       is_verified: true,
+      title: 'Sunny studio near Medical School',
       address: '12 Egnatias',
       neighborhood: 'Center',
       lat: 40.63,
@@ -56,6 +58,12 @@ describe('transformListing', () => {
         },
       ],
     });
+  });
+
+  it('defaults title to null when the row lacks one', () => {
+    const row = { ...fullRow };
+    delete row.title;
+    expect(transformListing(row).title).toBeNull();
   });
 
   it('falls back to defaults when the rent join is missing', () => {

@@ -4,6 +4,7 @@ import { transformListing } from '@/lib/transformListing';
 
 const LISTING_SELECT = `
   listing_id,
+  title,
   description,
   photos,
   rent ( monthly_price, currency, bills_included, deposit ),
@@ -19,6 +20,7 @@ const LISTING_SELECT = `
 // so the page server fetcher never 500s on a half-migrated environment.
 const LISTING_SELECT_FALLBACK = `
   listing_id,
+  title,
   description,
   photos,
   rent ( monthly_price, currency, bills_included, deposit ),

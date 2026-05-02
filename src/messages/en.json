@@ -261,6 +261,10 @@
     },
     "listingForm": {
       "locationSection": "Location",
+      "titleLabel": "Listing title *",
+      "titlePlaceholder": "e.g. Sunny 2BR near Medical School",
+      "titleHint": "Shown as your listing's public heading. Up to 80 characters.",
+      "titleSameAsAddress": "Tip: this is just your address. Try a memorable headline (\"Sunny 2BR\", \"Top floor near AHEPA\") so students remember your listing.",
       "addressLabel": "Street address *",
       "addressPlaceholder": "e.g. Egnatia 23",
       "neighborhoodLabel": "Neighborhood *",
@@ -514,6 +518,7 @@
       "back": "Back to results",
       "authMedicalProgramme": "AUTh Medical Programme",
       "verified": "Verified",
+      "streetAddressA11y": "Street address",
       "rentGreek": "Ενοίκιο",
       "rentEnglish": "Rent",
       "depositGreek": "Εγγύηση",

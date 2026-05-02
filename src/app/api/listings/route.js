@@ -5,6 +5,7 @@ import { transformListing } from "@/lib/transformListing";
 const LISTING_SELECT = `
   listing_id,
   is_featured,
+  title,
   description,
   photos,
   min_duration_months,
@@ -19,6 +20,7 @@ const LISTING_SELECT = `
 // Fallback SELECT without is_featured/verified_tier for pre-migration compatibility
 const LISTING_SELECT_FALLBACK = `
   listing_id,
+  title,
   description,
   photos,
   rent!inner ( monthly_price, currency, bills_included, deposit ),

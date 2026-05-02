@@ -2,11 +2,14 @@ import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
 import { canCreateListing } from '@/lib/stripe';
+import { recomputeMissingDistances } from '@/lib/recomputeDistances';
+import { normalizeTitle } from '@/lib/listingTitle';
 
 const LANDLORD_LISTING_SELECT = `
   listing_id,
   landlord_id,
   is_featured,
+  title,
   rent_id,
   location_id,
   property_type_id,
@@ -32,6 +35,7 @@ const LANDLORD_LISTING_SELECT_FALLBACK = `
   listing_id,
   landlord_id,
   is_featured,
+  title,
   rent_id,
   location_id,
   property_type_id,
@@ -137,6 +141,20 @@ export async function POST(request) {
     );
   }
 
+  // Validate + normalize the public title. Required, max 80 chars, trimmed.
+  let normalizedTitle;
+  try {
+    normalizedTitle = normalizeTitle(body.title);
+  } catch (err) {
+    if (err.code === 'TITLE_TOO_LONG') {
+      return NextResponse.json({ error: err.message }, { status: 400 });
+    }
+    throw err;
+  }
+  if (!normalizedTitle) {
+    return NextResponse.json({ error: 'title is required' }, { status: 400 });
+  }
+
   // Validate min_duration_months early so it surfaces as 400 rather than 500
   try {
     parseMinDuration(body.min_duration_months);
@@ -240,6 +258,7 @@ export async function POST(request) {
     .insert({
       listing_id: listingId,
       landlord_id: landlordId,
+      title: normalizedTitle,
       rent_id: rentData.rent_id,
       location_id: locationData.location_id,
       property_type_id: propType.property_type_id,
@@ -266,6 +285,16 @@ export async function POST(request) {
     if (amenityError) {
       console.error('Failed to insert amenities:', amenityError);
     }
+  }
+
+  // Populate faculty_distances inline so the new listing's detail page renders
+  // walk/transit minutes immediately, instead of waiting for the next 09:15
+  // UTC cron tick. Non-fatal: swallowed so a flaky OSRM never fails create —
+  // the daily cron remains the safety net.
+  try {
+    await recomputeMissingDistances({ listingIds: [listingId] });
+  } catch (err) {
+    console.error('[landlord/listings POST] inline distance recompute failed:', err);
   }
 
   return NextResponse.json({ listing_id: listingId }, { status: 201 });
