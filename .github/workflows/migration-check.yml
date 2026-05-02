@@ -23,3 +23,95 @@ jobs:
 
       - name: Start Supabase local stack (applies all migrations)
         run: supabase start
+
+  applied-to-prod:
+    # Block merge until any new migration in this PR has actually been
+    # applied to production Supabase. Cloudflare deploys on push-to-main
+    # with no migration gate, so merging ahead of the migration darks
+    # any route that SELECTs the new column (incident 2026-05-02, PR #85).
+    # See CLAUDE.md > Database (Supabase) > Migration ordering.
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout (full history for base diff)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Find new migration files in this PR
+        id: diff
+        run: |
+          set -euo pipefail
+          git fetch --no-tags origin "${{ github.base_ref }}" --depth=1 || true
+          NEW_FILES=$(git diff --name-only --diff-filter=A \
+            "origin/${{ github.base_ref }}...HEAD" \
+            -- 'supabase/migrations/*.sql' || true)
+          if [ -z "$NEW_FILES" ]; then
+            echo "No new migration files added in this PR — nothing to verify."
+            echo "new_files=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "New migration files added in this PR:"
+          echo "$NEW_FILES"
+          {
+            echo "new_files<<EOF"
+            echo "$NEW_FILES"
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Fetch applied migrations from production
+        if: steps.diff.outputs.new_files != ''
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_PROJECT_REF: ${{ vars.SUPABASE_PROJECT_REF }}
+        run: |
+          set -euo pipefail
+          if [ -z "${SUPABASE_ACCESS_TOKEN:-}" ] || [ -z "${SUPABASE_PROJECT_REF:-}" ]; then
+            echo "::warning::SUPABASE_ACCESS_TOKEN secret or SUPABASE_PROJECT_REF variable not configured — gate will warn-but-pass until they're set. See PR description for setup."
+            : > /tmp/applied-names.txt
+            exit 0
+          fi
+          # Tolerate both response shapes: bare array (REST API) or
+          # { migrations: [...] } envelope (some clients/proxies).
+          curl --fail --silent --show-error \
+            -H "Authorization: Bearer $SUPABASE_ACCESS_TOKEN" \
+            "https://api.supabase.com/v1/projects/$SUPABASE_PROJECT_REF/database/migrations" \
+            | jq -r '
+              if type == "array" then .[]
+              elif (.migrations // null | type) == "array" then .migrations[]
+              else empty end
+              | .name // empty
+            ' > /tmp/applied-names.txt
+          # Note: API order isn't a documented contract, so this is "last
+          # 10 from the API response", not "most recently applied".
+          echo "Found $(wc -l < /tmp/applied-names.txt) applied migrations on prod (last 10 from API response):"
+          tail -n 10 /tmp/applied-names.txt
+
+      - name: Verify new migrations are applied to prod
+        if: steps.diff.outputs.new_files != ''
+        run: |
+          set -euo pipefail
+          if [ ! -s /tmp/applied-names.txt ]; then
+            echo "::warning::No applied-migration list available — skipping enforcement (see prior step)."
+            exit 0
+          fi
+          missing=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            stem=$(basename "$f" .sql)
+            # Some historical rows in schema_migrations stored `name`
+            # without the leading NNN_ prefix (e.g. when applied via the
+            # Supabase CLI vs. an explicit-name client). Allow either form
+            # to match. Don't tighten this without auditing the historical
+            # data — the corner case is "PR adds NNN_foo.sql while prod
+            # has an unrelated row named 'foo'", which is rare enough to
+            # accept rather than risk false positives on legacy rows.
+            stripped=$(echo "$stem" | sed -E 's/^[0-9]+_//')
+            if grep -qxE "(${stem}|${stripped})" /tmp/applied-names.txt; then
+              echo "✓ $stem is applied to prod"
+            else
+              echo "::error file=$f::Migration '$stem' is not yet applied to production Supabase. Apply it ('supabase db push --linked') before merging. See CLAUDE.md > Database (Supabase) > Migration ordering."
+              missing=1
+            fi
+          done <<< "${{ steps.diff.outputs.new_files }}"
+          exit $missing
