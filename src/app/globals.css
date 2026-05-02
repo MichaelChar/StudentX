@@ -133,3 +133,28 @@ input[type="range"]::-moz-range-thumb {
   background: var(--color-gold);
   color: #FFFFFF;
 }
+
+/*
+  BauhausLoader keyframes — used by src/components/BauhausLoader.js for
+  every centred blocking spinner (landlord + student). The post-quiz
+  GlobeLoader animates separately. See plans/bauhaus-loader-rollout.
+*/
+@keyframes bauhausRotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes bauhausOrbit {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes bauhausPulse {
+  0%, 100% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
+  50%      { transform: translate(-50%, -50%) rotate(45deg) scale(1.6); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .bauhaus-rotate,
+  .bauhaus-orbit,
+  .bauhaus-pulse {
+    animation: none !important;
+  }
+}

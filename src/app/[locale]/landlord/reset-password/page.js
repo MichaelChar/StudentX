@@ -8,9 +8,11 @@ import { useTranslations } from 'next-intl';
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
 import Button from '@/components/ui/Button';
+import BauhausLoader from '@/components/BauhausLoader';
 
 export default function ResetPasswordPage() {
   const t = useTranslations('landlord.resetPassword');
+  const tLoaders = useTranslations('loaders');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [loading, setLoading] = useState(false);
@@ -98,9 +100,11 @@ export default function ResetPasswordPage() {
   if (ready === null) {
     return (
       <AuthShell eyebrow="Reset password" title={t('title')}>
-        <div className="flex justify-center py-8">
-          <div className="w-8 h-8 border-2 border-gold border-t-transparent rounded-full animate-spin" />
-        </div>
+        <BauhausLoader
+          mode="block"
+          eyebrow={tLoaders('verifying')}
+          statuses={tLoaders.raw('verifyingCycle')}
+        />
       </AuthShell>
     );
   }

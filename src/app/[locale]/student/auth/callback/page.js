@@ -8,9 +8,11 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import Button from '@/components/ui/Button';
+import BauhausLoader from '@/components/BauhausLoader';
 
 function StudentOAuthCallbackInner() {
   const t = useTranslations('student.oauth');
+  const tLoaders = useTranslations('loaders');
   const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -105,13 +107,11 @@ function StudentOAuthCallbackInner() {
             {t('tryAgain')}
           </Button>
         ) : (
-          <div className="flex items-center gap-3 text-sm text-night/60">
-            <span
-              aria-hidden="true"
-              className="h-4 w-4 rounded-full border-2 border-night/20 border-t-night animate-spin"
-            />
-            <span>{t('callbackLoading')}</span>
-          </div>
+          <BauhausLoader
+            mode="block"
+            eyebrow={tLoaders('signingIn')}
+            statuses={tLoaders.raw('signingInCycle')}
+          />
         )}
       </div>
     </AuthShell>

@@ -734,5 +734,16 @@
       "errorCapExceeded": "This listing has reached its inquiry limit. Try another.",
       "errorNotStudent": "Your account isn't set up as a student. Sign out and create a student account."
     }
+  },
+  "loaders": {
+    "uploading": "Uploading",
+    "processing": "Processing",
+    "verifying": "Verifying",
+    "signingIn": "Signing in",
+    "loading": "Loading",
+    "uploadingCycle": ["Drafting your listing", "Verifying address", "Saving room details", "Almost ready"],
+    "verifyingCycle": ["Verifying your link", "Almost ready"],
+    "signingInCycle": ["Signing you in", "Almost ready"],
+    "loadingCycle": ["Loading"]
   }
 }
