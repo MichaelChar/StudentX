@@ -4,6 +4,7 @@ import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supa
 import { canCreateListing } from '@/lib/stripe';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { normalizeTitle } from '@/lib/listingTitle';
+import { normalizeSingleLine, normalizeMultiLine } from '@/lib/textNormalize';
 
 const LANDLORD_LISTING_SELECT = `
   listing_id,
@@ -133,8 +134,16 @@ export async function POST(request) {
 
   const body = await request.json();
 
+  // Normalize free-text inputs (control-strip + whitespace-collapse + trim).
+  // Required fields are checked AFTER normalization so a string of pure
+  // whitespace surfaces as "missing" rather than passing the truthy check
+  // and then failing later in odd ways.
+  const normalizedAddress = normalizeSingleLine(body.address);
+  const normalizedNeighborhood = normalizeSingleLine(body.neighborhood);
+  const normalizedDescription = normalizeMultiLine(body.description);
+
   // Validate required fields
-  if (!body.address || !body.neighborhood || !body.property_type) {
+  if (!normalizedAddress || !normalizedNeighborhood || !body.property_type) {
     return NextResponse.json(
       { error: 'address, neighborhood, and property_type are required' },
       { status: 400 }
@@ -211,8 +220,8 @@ export async function POST(request) {
   const { data: locationData, error: locationError } = await supabase
     .from('location')
     .insert({
-      address: body.address,
-      neighborhood: body.neighborhood,
+      address: normalizedAddress,
+      neighborhood: normalizedNeighborhood,
       lat: body.lat != null && body.lat !== '' ? parseFloat(body.lat) : null,
       lng: body.lng != null && body.lng !== '' ? parseFloat(body.lng) : null,
     })
@@ -262,7 +271,7 @@ export async function POST(request) {
       rent_id: rentData.rent_id,
       location_id: locationData.location_id,
       property_type_id: propType.property_type_id,
-      description: body.description || null,
+      description: normalizedDescription,
       photos: body.photos || [],
       external_photo_urls: Array.isArray(body.external_photo_urls) ? body.external_photo_urls : [],
       sqm: body.sqm || null,

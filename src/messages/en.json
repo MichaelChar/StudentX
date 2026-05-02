@@ -261,10 +261,10 @@
     },
     "listingForm": {
       "locationSection": "Location",
-      "titleLabel": "Listing title *",
+      "titleLabel": "Name your listing *",
       "titlePlaceholder": "e.g. Sunny 2BR near Medical School",
-      "titleHint": "Shown as your listing's public heading. Up to 80 characters.",
-      "titleSameAsAddress": "Tip: this is just your address. Try a memorable headline (\"Sunny 2BR\", \"Top floor near AHEPA\") so students remember your listing.",
+      "titleHint": "The public name of your listing — students see this everywhere they encounter it. Up to 80 characters.",
+      "titleSameAsAddress": "Tip: this is just your address. Try a memorable name (\"Sunny 2BR\", \"Top floor near AHEPA\") so students remember your listing.",
       "addressLabel": "Street address *",
       "addressPlaceholder": "e.g. Egnatia 23",
       "neighborhoodLabel": "Neighborhood *",

@@ -5,6 +5,7 @@ import {
   getSupabaseWithToken,
 } from '@/lib/supabaseServer';
 import { sendLandlordInquiryEmail } from '@/lib/inquiryEmail';
+import { normalizeMultiLine, normalizeSingleLine } from '@/lib/textNormalize';
 
 const MAX_MESSAGE_LEN = 4000;
 const MAX_LISTING_ID_LEN = 64;
@@ -53,8 +54,8 @@ export async function POST(request) {
     );
   }
 
-  const listingId = typeof body.listing_id === 'string' ? body.listing_id.trim() : '';
-  const message = typeof body.message === 'string' ? body.message.trim() : '';
+  const listingId = normalizeSingleLine(body.listing_id) ?? '';
+  const message = normalizeMultiLine(body.message) ?? '';
 
   if (!listingId || listingId.length > MAX_LISTING_ID_LEN) {
     return NextResponse.json(
