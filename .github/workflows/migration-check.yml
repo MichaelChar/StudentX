@@ -82,7 +82,9 @@ jobs:
               else empty end
               | .name // empty
             ' > /tmp/applied-names.txt
-          echo "Found $(wc -l < /tmp/applied-names.txt) applied migrations on prod (most recent 10):"
+          # Note: API order isn't a documented contract, so this is "last
+          # 10 from the API response", not "most recently applied".
+          echo "Found $(wc -l < /tmp/applied-names.txt) applied migrations on prod (last 10 from API response):"
           tail -n 10 /tmp/applied-names.txt
 
       - name: Verify new migrations are applied to prod
@@ -98,12 +100,17 @@ jobs:
             [ -z "$f" ] && continue
             stem=$(basename "$f" .sql)
             # Some historical rows in schema_migrations stored `name`
-            # without the leading NNN_ prefix; allow either form to match.
+            # without the leading NNN_ prefix (e.g. when applied via the
+            # Supabase CLI vs. an explicit-name client). Allow either form
+            # to match. Don't tighten this without auditing the historical
+            # data — the corner case is "PR adds NNN_foo.sql while prod
+            # has an unrelated row named 'foo'", which is rare enough to
+            # accept rather than risk false positives on legacy rows.
             stripped=$(echo "$stem" | sed -E 's/^[0-9]+_//')
             if grep -qxE "(${stem}|${stripped})" /tmp/applied-names.txt; then
               echo "✓ $stem is applied to prod"
             else
-              echo "::error file=$f::Migration '$stem' is not yet applied to production Supabase. Apply it (mcp__supabase__apply_migration or 'supabase db push --linked') before merging. See CLAUDE.md > Database (Supabase) > Migration ordering."
+              echo "::error file=$f::Migration '$stem' is not yet applied to production Supabase. Apply it ('supabase db push --linked') before merging. See CLAUDE.md > Database (Supabase) > Migration ordering."
               missing=1
             fi
           done <<< "${{ steps.diff.outputs.new_files }}"
