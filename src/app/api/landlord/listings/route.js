@@ -24,6 +24,10 @@ const LANDLORD_LISTING_SELECT = `
   listing_amenities ( amenities ( amenity_id, name ) )
 `;
 
+// Pre-migration fallback: identical to LANDLORD_LISTING_SELECT minus columns
+// that may not yet exist in prod. When adding a column to LANDLORD_LISTING_SELECT
+// that ships ahead of its migration, also omit it here so the GET handler can
+// degrade gracefully instead of darking the landlord portal.
 const LANDLORD_LISTING_SELECT_FALLBACK = `
   listing_id,
   landlord_id,
