@@ -15,7 +15,7 @@ const LANDLORD_LISTING_SELECT = `
   sqm,
   floor,
   available_from,
-  rental_duration,
+  min_duration_months,
   created_at,
   updated_at,
   rent ( rent_id, monthly_price, currency, bills_included, deposit ),
@@ -23,6 +23,22 @@ const LANDLORD_LISTING_SELECT = `
   property_types ( property_type_id, name ),
   listing_amenities ( amenities ( amenity_id, name ) )
 `;
+
+const ALLOWED_MIN_DURATIONS = [1, 5, 9];
+
+// Coerces the form value (string "" / "1" / "5" / "9" or number / null / undefined)
+// into the SMALLINT enum stored in DB. Throws on invalid values so the caller
+// can return 400.
+function parseMinDuration(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const n = Number(value);
+  if (!ALLOWED_MIN_DURATIONS.includes(n)) {
+    const err = new Error('min_duration_months must be 1, 5, or 9');
+    err.code = 'INVALID_MIN_DURATION';
+    throw err;
+  }
+  return n;
+}
 
 async function getLandlordId(userId) {
   const { data } = await getSupabase()
@@ -85,6 +101,16 @@ export async function POST(request) {
       { error: 'address, neighborhood, and property_type are required' },
       { status: 400 }
     );
+  }
+
+  // Validate min_duration_months early so it surfaces as 400 rather than 500
+  try {
+    parseMinDuration(body.min_duration_months);
+  } catch (err) {
+    if (err.code === 'INVALID_MIN_DURATION') {
+      return NextResponse.json({ error: err.message }, { status: 400 });
+    }
+    throw err;
   }
 
   // Enforce photo cap for free-tier landlords (server-side)
@@ -189,7 +215,7 @@ export async function POST(request) {
       sqm: body.sqm || null,
       floor: body.floor != null && body.floor !== '' ? parseInt(body.floor, 10) : null,
       available_from: body.available_from || null,
-      rental_duration: body.rental_duration || null,
+      min_duration_months: parseMinDuration(body.min_duration_months),
     })
     .select('listing_id')
     .single();

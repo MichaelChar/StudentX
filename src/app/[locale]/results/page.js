@@ -111,11 +111,14 @@ function ResultsContent() {
     const budget = Number(searchParams.get('budget'));
     const types = searchParams.get('types');
     const neighborhoods = searchParams.get('neighborhoods');
+    const minDurationRaw = Number(searchParams.get('min_duration'));
+    const minDuration = [1, 5, 9].includes(minDurationRaw) ? minDurationRaw : null;
     return {
       maxBudget: Number.isFinite(budget) && budget > 0 ? budget : DEFAULT_BUDGET,
       selectedTypes: types ? types.split(',').filter(Boolean) : [],
       selectedNeighborhoods: neighborhoods ? neighborhoods.split(',').filter(Boolean) : [],
       verifiedOnly: searchParams.get('verified_only') === 'true',
+      minDuration,
     };
   });
 
@@ -143,6 +146,7 @@ function ResultsContent() {
     if (filters.selectedNeighborhoods.length > 0)
       params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
     if (filters.verifiedOnly) params.set('verified_only', 'true');
+    if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
     if (sortBy !== 'match') params.set('sort_by', sortBy);
     if (viewMode === 'map') params.set('view', 'map');
     const next = params.toString();
@@ -163,6 +167,7 @@ function ResultsContent() {
       if (filters.selectedNeighborhoods.length > 0)
         params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
       if (filters.verifiedOnly) params.set('verified_only', 'true');
+      if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
       // 'match' is the UI default; the API enforces verified/featured tier
       // priority in route.js regardless of sort_by, so 'match' collapses to
       // 'price' asc.
@@ -289,6 +294,9 @@ function ResultsContent() {
               onToggleVerified={() =>
                 setFilters((p) => ({ ...p, verifiedOnly: !p.verifiedOnly }))
               }
+              onSetMinDuration={(v) =>
+                setFilters((p) => ({ ...p, minDuration: v }))
+              }
               onSaveSearch={() => setSaveSearchOpen(true)}
             />
           </div>
@@ -400,6 +408,9 @@ function ResultsContent() {
               onToggleVerified={() =>
                 setFilters((p) => ({ ...p, verifiedOnly: !p.verifiedOnly }))
               }
+              onSetMinDuration={(v) =>
+                setFilters((p) => ({ ...p, minDuration: v }))
+              }
               onSaveSearch={() => setSaveSearchOpen(true)}
             />
           </aside>
@@ -417,6 +428,12 @@ function ResultsContent() {
   );
 }
 
+const MIN_DURATION_OPTIONS = [
+  { value: 1, nameKey: 'minDurationFlexibleName', monthsKey: 'minDurationFlexibleMonths' },
+  { value: 5, nameKey: 'minDurationSemesterName', monthsKey: 'minDurationSemesterMonths' },
+  { value: 9, nameKey: 'minDurationAcademicName', monthsKey: 'minDurationAcademicMonths' },
+];
+
 function FilterPanel({
   t,
   filters,
@@ -425,6 +442,7 @@ function FilterPanel({
   onToggleType,
   onToggleNeighborhood,
   onToggleVerified,
+  onSetMinDuration,
   onSaveSearch,
 }) {
   const neighborhoods = neighborhoodOptions.length > 0
@@ -503,6 +521,44 @@ function FilterPanel({
                 }`}
               >
                 {type}
+              </button>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Stay length */}
+      <section className="mb-8">
+        <p className="label-caps text-night/60 mb-3">{t('minDuration')}</p>
+        <div className="flex flex-wrap gap-1.5">
+          <button
+            type="button"
+            onClick={() => onSetMinDuration(null)}
+            aria-pressed={filters.minDuration === null}
+            className={`px-2.5 py-1 rounded-sm border text-xs font-sans transition-colors ${
+              filters.minDuration === null
+                ? 'border-blue bg-blue text-white'
+                : 'border-night/20 text-night/70 hover:border-blue'
+            }`}
+          >
+            {t('minDurationAny')}
+          </button>
+          {MIN_DURATION_OPTIONS.map((opt) => {
+            const active = filters.minDuration === opt.value;
+            return (
+              <button
+                key={opt.value}
+                type="button"
+                onClick={() => onSetMinDuration(active ? null : opt.value)}
+                aria-pressed={active}
+                className={`px-2.5 py-1 rounded-sm border font-sans transition-colors text-left leading-tight ${
+                  active
+                    ? 'border-blue bg-blue text-white'
+                    : 'border-night/20 text-night/70 hover:border-blue'
+                }`}
+              >
+                <span className="block text-xs">{t(opt.nameKey)}</span>
+                <span className="block text-[10px] opacity-60">{t(opt.monthsKey)}</span>
               </button>
             );
           })}
