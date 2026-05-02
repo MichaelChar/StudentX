@@ -243,10 +243,21 @@ currently no-ops.
 
 ## Tests
 
-**None.** No `__tests__/` directory, no `test` script in `package.json`, no
-test runner in `devDependencies`. Vitest scaffolding is planned as a separate
-PR. Until then, the synthetic monitor + CI build + `migration-check`
-workflow are the only automated guards.
+**Vitest.** `npm run test` (alias for `vitest run`); `npm run test:watch`
+for a live runner. Tests live under `__tests__/` mirroring `src/` —
+currently 8 files / 54 tests across `__tests__/{lib,api,templates}/`.
+The path alias `@/...` works in tests via `vitest.config.js`.
+
+When a `lib/` file's public shape changes (e.g. adding a field to
+`transformListing`), check `__tests__/lib/<name>.test.js` for a snapshot
+that needs updating. CI's `build` job runs `npm run test` between lint
+and build, so a stale fixture fails the PR before it gets to migration
+check.
+
+When a migration ships that adds a NOT NULL column to `listings` (or any
+seeded table), `supabase/seed.sql` must supply a value for that column —
+otherwise `supabase start` (run by `migration-check.yml`) fails the
+seed-load step on every PR. Migration 038 caught this the hard way.
 
 ## CI
 
@@ -254,7 +265,7 @@ workflow are the only automated guards.
 
 | Workflow | Trigger | What it does |
 |---|---|---|
-| `ci.yml`                | PR + push to main          | `npm ci && npm run lint && npm run build` |
+| `ci.yml`                | PR + push to main          | `npm ci && npm run lint && npm run test && npm run build` |
 | `migration-check.yml`   | PR touching `supabase/**`  | `supabase start` (applies every migration in a clean local stack) |
 | `claude.yml`            | Issue/PR mentions          | Claude Code GitHub Action |
 | `claude-code-review.yml`| PR opened/updated          | Automated PR review (write scope per PR #55) |
