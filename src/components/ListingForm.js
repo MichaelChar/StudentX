@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import BauhausLoader from '@/components/BauhausLoader';
+import { TITLE_MAX_LENGTH, codepointLength } from '@/lib/listingTitle';
 
 const NEIGHBORHOODS_FALLBACK = [
   'Ano Poli', 'Center', 'Faliro', 'Kalamaria', 'Kentro',
@@ -21,6 +22,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   const fileInputRef = useRef(null);
   const [userId, setUserId] = useState('anon');
   const [form, setForm] = useState({
+    title: '',
     address: '',
     neighborhood: '',
     lat: '',
@@ -206,6 +208,48 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
           {t('locationSection')}
         </h2>
         <div className="space-y-4">
+          <div>
+            <label className={labelClass}>{t('titleLabel')}</label>
+            <input
+              type="text"
+              required
+              value={form.title}
+              onChange={(e) => {
+                const next = e.target.value;
+                // Reject keystrokes that would push past TITLE_MAX_LENGTH
+                // codepoints. Note: we don't use the HTML `maxLength`
+                // attribute because it counts UTF-16 code units, which
+                // over-counts astral characters relative to the DB's
+                // char_length() CHECK.
+                if (codepointLength(next) > TITLE_MAX_LENGTH) return;
+                set('title', next);
+              }}
+              className={inputClass}
+              placeholder={t('titlePlaceholder')}
+            />
+            <div className="mt-1.5 flex justify-between items-start gap-3">
+              <p className="text-xs text-gray-dark/50 leading-relaxed">
+                {t('titleHint')}
+              </p>
+              <span className="text-xs text-gray-dark/40 tabular-nums shrink-0">
+                {codepointLength(form.title)}/{TITLE_MAX_LENGTH}
+              </span>
+            </div>
+            {/*
+              Lazy-landlord guard. After migration 038 backfilled every
+              existing row to title=address, the edit form pre-fills with
+              the address — without this hint, returning landlords might
+              save unchanged and never differentiate their listing.
+            */}
+            {form.title.trim() &&
+              form.address.trim() &&
+              form.title.trim() === form.address.trim() && (
+                <p className="mt-2 text-xs text-blue bg-blue/5 border border-blue/20 rounded-sm px-3 py-2 leading-relaxed">
+                  {t('titleSameAsAddress')}
+                </p>
+              )}
+          </div>
+
           <div>
             <label className={labelClass}>{t('addressLabel')}</label>
             <input

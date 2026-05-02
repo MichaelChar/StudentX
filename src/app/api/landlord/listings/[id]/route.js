@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { recomputeMissingDistances } from '@/lib/recomputeDistances';
+import { normalizeTitle } from '@/lib/listingTitle';
 
 const ALLOWED_MIN_DURATIONS = [1, 5, 9];
 
@@ -38,7 +40,7 @@ export async function GET(request, { params }) {
   const authedSupabase = getSupabaseWithToken(token);
 
   const SINGLE_LISTING_SELECT = `
-    listing_id, landlord_id, rent_id, location_id, property_type_id,
+    listing_id, landlord_id, title, rent_id, location_id, property_type_id,
     description, photos, sqm, floor, available_from, min_duration_months,
     rent ( rent_id, monthly_price, bills_included, deposit ),
     location ( location_id, address, neighborhood, lat, lng ),
@@ -49,7 +51,7 @@ export async function GET(request, { params }) {
   // any column that may not yet exist in prod (see route.js sibling for
   // the same guard on the list-GET path).
   const SINGLE_LISTING_SELECT_FALLBACK = `
-    listing_id, landlord_id, rent_id, location_id, property_type_id,
+    listing_id, landlord_id, title, rent_id, location_id, property_type_id,
     description, photos, sqm, floor, available_from,
     rent ( rent_id, monthly_price, bills_included, deposit ),
     location ( location_id, address, neighborhood, lat, lng ),
@@ -163,6 +165,29 @@ export async function PATCH(request, { params }) {
   // Update listing row
   const listingUpdate = {};
   if (body.is_featured !== undefined) listingUpdate.is_featured = !!body.is_featured;
+  // Title semantics:
+  //   undefined → leave alone (don't include in update)
+  //   null OR empty-after-normalization → 400 (cannot clear a required field)
+  //   too long → 400
+  //   otherwise → set normalized value
+  if (body.title !== undefined) {
+    let normalizedTitle;
+    try {
+      normalizedTitle = normalizeTitle(body.title);
+    } catch (err) {
+      if (err.code === 'TITLE_TOO_LONG') {
+        return NextResponse.json({ error: err.message }, { status: 400 });
+      }
+      throw err;
+    }
+    if (!normalizedTitle) {
+      return NextResponse.json(
+        { error: 'title cannot be empty' },
+        { status: 400 }
+      );
+    }
+    listingUpdate.title = normalizedTitle;
+  }
   if (body.description !== undefined) listingUpdate.description = body.description || null;
   if (body.photos !== undefined) listingUpdate.photos = body.photos;
   if (body.sqm !== undefined) listingUpdate.sqm = body.sqm || null;
@@ -199,6 +224,15 @@ export async function PATCH(request, { params }) {
       const rows = body.amenity_ids.map((amenity_id) => ({ listing_id: id, amenity_id }));
       await authedSupabase.from('listing_amenities').insert(rows);
     }
+  }
+
+  // Heal any missing faculty_distances rows after the edit. Idempotent — when
+  // coords didn't change and rows already exist, this is a cheap DB read with
+  // no OSRM call. Non-fatal: swallowed so a flaky OSRM never fails edit.
+  try {
+    await recomputeMissingDistances({ listingIds: [id] });
+  } catch (err) {
+    console.error('[landlord/listings PATCH] inline distance recompute failed:', err);
   }
 
   return NextResponse.json({ listing_id: id });

@@ -39,6 +39,7 @@ export default function EditListingPage() {
       const { listing } = await res.json();
 
       setInitialValues({
+        title: listing.title || '',
         address: listing.location?.address || '',
         neighborhood: listing.location?.neighborhood || '',
         lat: listing.location?.lat ?? '',

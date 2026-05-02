@@ -19,6 +19,7 @@ export async function GET(request, { params }) {
       .select(
         `
         listing_id,
+        title,
         description,
         photos,
         rent ( monthly_price, currency, bills_included, deposit ),
@@ -39,6 +40,7 @@ export async function GET(request, { params }) {
         .select(
           `
           listing_id,
+          title,
           description,
           photos,
           rent ( monthly_price, currency, bills_included, deposit ),

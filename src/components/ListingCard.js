@@ -68,8 +68,8 @@ export default function ListingCard({ listing, fromQuery = '' }) {
         <p className="label-caps text-night/50">
           {listing.neighborhood} &middot; Thessaloniki
         </p>
-        <h3 className="mt-1.5 font-display text-2xl text-night leading-tight">
-          {listing.address}
+        <h3 className="mt-1.5 font-display text-2xl text-night leading-tight line-clamp-2">
+          {listing.title || listing.address}
         </h3>
 
         <div className="mt-4 flex items-baseline justify-between gap-3">

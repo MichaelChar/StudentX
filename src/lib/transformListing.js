@@ -8,6 +8,7 @@ export function transformListing(row) {
     is_featured: row.is_featured ?? false,
     verified_tier: row.landlords?.verified_tier ?? 'none',
     is_verified: row.landlords?.is_verified ?? false,
+    title: row.title ?? null,
     address: row.location?.address ?? null,
     neighborhood: row.location?.neighborhood ?? null,
     lat: row.location?.lat ?? null,
