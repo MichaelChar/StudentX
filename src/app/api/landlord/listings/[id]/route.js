@@ -2,6 +2,19 @@ import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
 
+const ALLOWED_MIN_DURATIONS = [1, 5, 9];
+
+function parseMinDuration(value) {
+  if (value === null || value === undefined || value === '') return null;
+  const n = Number(value);
+  if (!ALLOWED_MIN_DURATIONS.includes(n)) {
+    const err = new Error('min_duration_months must be 1, 5, or 9');
+    err.code = 'INVALID_MIN_DURATION';
+    throw err;
+  }
+  return n;
+}
+
 async function getLandlordId(userId) {
   const { data } = await getSupabase()
     .from('landlords')
@@ -27,7 +40,7 @@ export async function GET(request, { params }) {
     .from('listings')
     .select(`
       listing_id, landlord_id, rent_id, location_id, property_type_id,
-      description, photos, sqm, floor, available_from, rental_duration,
+      description, photos, sqm, floor, available_from, min_duration_months,
       rent ( rent_id, monthly_price, bills_included, deposit ),
       location ( location_id, address, neighborhood, lat, lng ),
       property_types ( property_type_id, name ),
@@ -127,7 +140,16 @@ export async function PATCH(request, { params }) {
   if (body.sqm !== undefined) listingUpdate.sqm = body.sqm || null;
   if (body.floor !== undefined) listingUpdate.floor = body.floor != null && body.floor !== '' ? parseInt(body.floor, 10) : null;
   if (body.available_from !== undefined) listingUpdate.available_from = body.available_from || null;
-  if (body.rental_duration !== undefined) listingUpdate.rental_duration = body.rental_duration || null;
+  if (body.min_duration_months !== undefined) {
+    try {
+      listingUpdate.min_duration_months = parseMinDuration(body.min_duration_months);
+    } catch (err) {
+      if (err.code === 'INVALID_MIN_DURATION') {
+        return NextResponse.json({ error: err.message }, { status: 400 });
+      }
+      throw err;
+    }
+  }
   if (propertyTypeId !== undefined) listingUpdate.property_type_id = propertyTypeId;
 
   if (Object.keys(listingUpdate).length > 0) {

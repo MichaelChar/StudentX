@@ -274,26 +274,25 @@ def upsert_listing(conn, cur, row):
     floor = row.get("floor")
     source_url = row.get("source_url")
     available_from = row.get("available_from")
-    rental_duration = row.get("rental_duration")
     flags = json.dumps(row.get("flags", {}))
 
     if is_update:
         cur.execute("""
             UPDATE listings SET landlord_id=%s, rent_id=%s, location_id=%s, property_type_id=%s,
                 description=%s, photos=%s, sqm=%s, floor=%s, source_url=%s,
-                available_from=%s, rental_duration=%s, flags=%s
+                available_from=%s, flags=%s
             WHERE listing_id=%s
         """, (landlord_id, rent_id, location_id, pt_id,
               description, photos, sqm, floor, source_url,
-              available_from, rental_duration, flags, listing_id))
+              available_from, flags, listing_id))
     else:
         cur.execute("""
             INSERT INTO listings (listing_id, landlord_id, rent_id, location_id, property_type_id,
-                description, photos, sqm, floor, source_url, available_from, rental_duration, flags)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+                description, photos, sqm, floor, source_url, available_from, flags)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
         """, (listing_id, landlord_id, rent_id, location_id, pt_id,
               description, photos, sqm, floor, source_url,
-              available_from, rental_duration, flags))
+              available_from, flags))
 
     # Amenities
     raw_amenities = row.get("amenities", [])
@@ -563,7 +562,7 @@ def export_snapshot(conn):
             loc.address, loc.neighborhood, loc.lat, loc.lng,
             r.monthly_price, r.currency, r.bills_included, r.deposit,
             pt.name AS property_type, l.description, l.photos,
-            l.sqm, l.floor, l.source_url, l.available_from, l.rental_duration, l.flags,
+            l.sqm, l.floor, l.source_url, l.available_from, l.flags,
             l.created_at, l.updated_at
         FROM listings l
         JOIN landlords ll ON l.landlord_id = ll.landlord_id

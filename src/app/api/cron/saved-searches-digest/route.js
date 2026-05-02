@@ -9,6 +9,7 @@ const LISTING_SELECT = `
   is_featured,
   description,
   photos,
+  min_duration_months,
   created_at,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
@@ -49,6 +50,9 @@ async function fetchMatchingListings(supabase, filters, since) {
   }
   if (filters.types?.length > 0) {
     query = query.in('property_types.name', filters.types);
+  }
+  if (filters.minDuration && [1, 5, 9].includes(Number(filters.minDuration))) {
+    query = query.lte('min_duration_months', Number(filters.minDuration));
   }
 
   const { data, error } = await query;

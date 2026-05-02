@@ -33,7 +33,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     sqm: '',
     floor: '',
     available_from: '',
-    rental_duration: '',
+    min_duration_months: '9',
     amenity_ids: [],
     photos: [],
     ...initialValues,
@@ -404,14 +404,23 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
             />
           </div>
           <div>
-            <label className={labelClass}>{t('rentalDurationLabel')}</label>
-            <input
-              type="text"
-              value={form.rental_duration}
-              onChange={(e) => set('rental_duration', e.target.value)}
+            <label className={labelClass}>{t('minDurationLabel')}</label>
+            <select
+              value={form.min_duration_months}
+              onChange={(e) => set('min_duration_months', e.target.value)}
               className={inputClass}
-              placeholder={t('rentalDurationPlaceholder')}
-            />
+            >
+              <option value="1">
+                {t('minDurationFlexibleName')} ({t('minDurationFlexibleMonths')})
+              </option>
+              <option value="5">
+                {t('minDurationSemesterName')} ({t('minDurationSemesterMonths')})
+              </option>
+              <option value="9">
+                {t('minDurationAcademicName')} ({t('minDurationAcademicMonths')})
+              </option>
+            </select>
+            <p className="mt-1 text-xs text-night/50">{t('minDurationTip')}</p>
           </div>
         </div>
       </section>

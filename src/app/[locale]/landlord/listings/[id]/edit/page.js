@@ -51,7 +51,7 @@ export default function EditListingPage() {
         sqm: listing.sqm ?? '',
         floor: listing.floor ?? '',
         available_from: listing.available_from || '',
-        rental_duration: listing.rental_duration || '',
+        min_duration_months: String(listing.min_duration_months ?? 9),
         amenity_ids: listing.listing_amenities?.map((la) => la.amenities.amenity_id) || [],
         photos: listing.photos || [],
       });

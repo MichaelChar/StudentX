@@ -189,7 +189,6 @@ def load_seed_listings() -> list[dict]:
             "floor": None,
             "source_url": None,
             "available_from": None,
-            "rental_duration": None,
             "flags": {},
             "source": "seed",
         })
@@ -242,7 +241,6 @@ def load_batch_listings() -> list[dict]:
                 "floor": row.get("floor"),
                 "source_url": row.get("source_url"),
                 "available_from": row.get("available_from"),
-                "rental_duration": row.get("rental_duration"),
                 "flags": row.get("flags", {}),
                 "source": batch_file.name,
             })

@@ -17,15 +17,22 @@ INSERT INTO landlords (landlord_id, name, contact_info) VALUES
 -- ----------------------------------------
 -- Property types (4)
 -- ----------------------------------------
+-- Note: migration 003 inserts '2-Bedroom (x2)' with an auto-assigned id, so when
+-- supabase start applies migrations BEFORE seed (the CLI default), id=1 may
+-- already be taken. ON CONFLICT keeps the seed idempotent in that flow. In a
+-- fresh prod where seed runs before migration 003, all four rows insert cleanly.
 INSERT INTO property_types (property_type_id, name) VALUES
   (1, 'Studio'),
   (2, '1-Bedroom'),
   (3, '2-Bedroom'),
-  (4, 'Room in shared apartment');
+  (4, 'Room in shared apartment')
+ON CONFLICT (property_type_id) DO NOTHING;
 
 -- ----------------------------------------
 -- Amenities (10)
 -- ----------------------------------------
+-- Same idempotency pattern as property_types above — migration 003 inserts
+-- amenities with auto-assigned ids when run before seed.
 INSERT INTO amenities (amenity_id, name) VALUES
   (1,  'AC'),
   (2,  'Furnished'),
@@ -36,7 +43,8 @@ INSERT INTO amenities (amenity_id, name) VALUES
   (7,  'Washing machine'),
   (8,  'Dishwasher'),
   (9,  'Internet included'),
-  (10, 'Heating');
+  (10, 'Heating')
+ON CONFLICT (amenity_id) DO NOTHING;
 
 -- ----------------------------------------
 -- Rent records (10, one per listing)

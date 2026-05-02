@@ -20,6 +20,7 @@ export function transformListing(row) {
     amenities: (row.listing_amenities ?? []).map((la) => la.amenities.name),
     description: row.description ?? null,
     photos: row.photos ?? [],
+    min_duration_months: row.min_duration_months ?? null,
     landlord: {
       name: row.landlords?.name ?? null,
       contact_info: row.landlords?.contact_info ?? null,

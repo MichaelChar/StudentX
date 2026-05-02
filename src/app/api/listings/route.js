@@ -7,6 +7,7 @@ const LISTING_SELECT = `
   is_featured,
   description,
   photos,
+  min_duration_months,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
@@ -42,6 +43,21 @@ export async function GET(request) {
     const sortBy = searchParams.get("sort_by") || "price";
     const sortOrder = searchParams.get("sort_order") || "asc";
     const verifiedOnly = searchParams.get("verified_only") === "true";
+    const minDuration = searchParams.get("min_duration");
+
+    // Validate min_duration: must be 1, 5, or 9 (or absent)
+    const ALLOWED_MIN_DURATIONS = [1, 5, 9];
+    let minDurationN = null;
+    if (minDuration) {
+      const n = Number(minDuration);
+      if (!ALLOWED_MIN_DURATIONS.includes(n)) {
+        return NextResponse.json(
+          { error: "min_duration must be 1, 5, or 9" },
+          { status: 400 }
+        );
+      }
+      minDurationN = n;
+    }
 
     // Validate sort params
     const validSortBy = ["price", "walk_minutes", "transit_minutes"];
@@ -134,6 +150,14 @@ export async function GET(request) {
     // Filter: faculty distances to selected faculty only
     if (faculty) {
       query = query.eq("faculty_distances.faculty_id", faculty);
+    }
+
+    // Filter: minimum-duration commitment. A student picking N months sees
+    // listings whose min_duration_months <= N (i.e. they accept that
+    // commitment level or shorter). Listings with NULL min_duration_months
+    // are excluded when a filter is active.
+    if (minDurationN !== null) {
+      query = query.lte("min_duration_months", minDurationN);
     }
 
     // Filter: verified only — requires both a paid tier AND admin-approved ID
