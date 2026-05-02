@@ -162,7 +162,7 @@ Adding a new cron is a one-line entry in each table.
 
 Runbook: `docs/runbooks/synthetic-en-listing.md`.
 
-`/api/cron/synthetic-en-listing` runs **5 independent canaries** every 15 min,
+`/api/cron/synthetic-en-listing` runs **6 independent canaries** every 15 min,
 each soft-failing into a per-check report:
 
 1. `en-listing-locale` — `/en/listing/<SYNTHETIC_LISTING_ID>` contains
@@ -172,7 +172,9 @@ each soft-failing into a per-check report:
    `walk_minutes` across `faculty_distances`.
 3. `soft-404` — `/listing/does-not-exist` returns HTTP 404.
 4. `og-default` — `/og-default.png` serves with `image/png` content-type.
-5. `missing-message` — `/en` body contains no `MISSING_MESSAGE:` substring
+5. `landlord-listings-api` — `/api/landlord/listings` (no auth) returns 401,
+   not 5xx. Guards against the column-missing crash class fixed in PR #85.
+6. `missing-message` — `/en` body contains no `MISSING_MESSAGE:` substring
    (catches missing en.json keys).
 
 Failure path emails `SYNTHETIC_ALERT_EMAIL` via Resend — currently
@@ -185,8 +187,18 @@ Failures still surface in `wrangler tail`.
 
 - **Postgres + Auth + Storage + Realtime.** Inquiries use Supabase realtime channels.
 - **Migrations:** `supabase/migrations/` (NOT a top-level `migrations/`).
-  Numbered (`001_*` through `035_*`); CI applies them on every PR via
+  Numbered (`001_*` through `037_*`); CI applies them on every PR via
   `.github/workflows/migration-check.yml` (PR #45) using `supabase start`.
+- **Migration ordering — apply to prod BEFORE merging the consuming PR.**
+  Cloudflare deploys on push-to-main and there is no migration-aware gate;
+  if a PR adds/renames a column referenced by a SELECT, the deploy will
+  reach prod ahead of the migration and any route that touches the column
+  will 500 in the gap. Convention: when a PR includes a migration, apply
+  it to prod (`mcp__supabase__apply_migration` or `supabase db push`)
+  during PR review, paste the confirmation into the PR, then merge.
+  Affected routes should still be defensive — see the fallback-SELECT
+  pattern in `src/app/api/listings/route.js` and
+  `src/app/api/landlord/listings/route.js` (PR #85, post-incident).
 - **Star schema** (see `docs/schema.md`). `listings` is the fact table;
   `listings.location_id → location`, `listings.rent_id → rent`,
   `listings.landlord_id → landlords`. `transformListing.js`
