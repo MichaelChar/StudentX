@@ -45,6 +45,9 @@ export async function GET(request, { params }) {
     property_types ( property_type_id, name ),
     listing_amenities ( amenities ( amenity_id, name ) )
   `;
+  // Pre-migration fallback: keep in sync with SINGLE_LISTING_SELECT minus
+  // any column that may not yet exist in prod (see route.js sibling for
+  // the same guard on the list-GET path).
   const SINGLE_LISTING_SELECT_FALLBACK = `
     listing_id, landlord_id, rent_id, location_id, property_type_id,
     description, photos, sqm, floor, available_from,
