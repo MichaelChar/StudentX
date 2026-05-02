@@ -8,6 +8,7 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 import Icon from '@/components/ui/Icon';
 import LocaleSwitcher from '@/components/LocaleSwitcher';
+import BauhausLoader from '@/components/BauhausLoader';
 
 /*
   Propylaea landlord shell — fixed sidebar + topbar wrapper.
@@ -29,6 +30,7 @@ const NAV_ITEMS = [
 
 export default function LandlordShell({ title, eyebrow, actions, children }) {
   const t = useTranslations('propylaea.landlord.nav');
+  const tLoaders = useTranslations('loaders');
   const router = useRouter();
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
@@ -73,14 +75,15 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
     router.push('/landlord/login');
   }
 
-  // Skeleton while auth gate is resolving
+  // Loading state while auth gate is resolving
   if (!sessionReady) {
     return (
       <div className="min-h-screen bg-stone flex items-center justify-center">
-        <div className="animate-pulse flex items-center gap-3 text-night/50">
-          <div className="w-2.5 h-2.5 rounded-full bg-gold" />
-          <span className="label-caps">Loading…</span>
-        </div>
+        <BauhausLoader
+          mode="block"
+          eyebrow={tLoaders('processing')}
+          statuses={tLoaders.raw('loadingCycle')}
+        />
       </div>
     );
   }

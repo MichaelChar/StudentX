@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import BauhausLoader from '@/components/BauhausLoader';
 
 const NEIGHBORHOODS_FALLBACK = [
   'Ano Poli', 'Center', 'Faliro', 'Kalamaria', 'Kentro',
@@ -11,11 +12,12 @@ const NEIGHBORHOODS_FALLBACK = [
 ];
 
 const FREE_PHOTO_LIMIT = 6;
-const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
 export default function ListingForm({ initialValues = {}, onSubmit, submitLabel }) {
   const t = useTranslations('landlord.listingForm');
+  const tLoaders = useTranslations('loaders');
   const fileInputRef = useRef(null);
   const [userId, setUserId] = useState('anon');
   const [form, setForm] = useState({
@@ -105,15 +107,22 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     }
 
     const toUpload = Array.from(files).slice(0, remaining === Infinity ? files.length : remaining);
+    const wrongType = [];
+    const tooLarge = [];
     for (const file of toUpload) {
-      if (!ALLOWED_TYPES.includes(file.type)) {
-        setPhotoError(t('photosInvalidType'));
-        return;
-      }
-      if (file.size > MAX_FILE_SIZE) {
-        setPhotoError(t('photosFileTooLarge'));
-        return;
-      }
+      if (!ALLOWED_TYPES.includes(file.type)) wrongType.push(file);
+      else if (file.size > MAX_FILE_SIZE) tooLarge.push(file);
+    }
+    if (wrongType.length > 0) {
+      setPhotoError(t('photosInvalidType'));
+      return;
+    }
+    if (tooLarge.length > 0) {
+      const names = tooLarge
+        .map((f) => `${f.name} (${(f.size / 1024 / 1024).toFixed(1)} MB)`)
+        .join(', ');
+      setPhotoError(t('photosFileTooLarge', { names, max: MAX_FILE_SIZE / 1024 / 1024 }));
+      return;
     }
 
     setUploading(true);
@@ -182,7 +191,15 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   const labelClass = 'block text-sm font-medium text-gray-dark mb-1';
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-8">
+    <>
+      {loading && (
+        <BauhausLoader
+          mode="overlay"
+          eyebrow={tLoaders('uploading')}
+          statuses={tLoaders.raw('uploadingCycle')}
+        />
+      )}
+      <form onSubmit={handleSubmit} className="space-y-8">
       {/* Location */}
       <section>
         <h2 className="font-heading font-semibold text-navy mb-4 text-sm uppercase tracking-wider">
@@ -489,9 +506,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                 )}
               </label>
               <p className="mt-1.5 text-xs text-gray-dark/50">
-                {photoLimit === null
-                  ? 'JPG, PNG or WebP · max 5 MB each · unlimited photos'
-                  : t('photosHint')}
+                {photoLimit === null ? t('photosHintUnlimited') : t('photosHint')}
               </p>
             </div>
           )}
@@ -538,5 +553,6 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
         {loading ? t('saving') : (submitLabel || t('saveListing'))}
       </button>
     </form>
+    </>
   );
 }
