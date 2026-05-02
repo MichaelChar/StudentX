@@ -153,6 +153,37 @@ async function checkOgDefault(appUrl) {
   }
 }
 
+// /api/landlord/listings without an Authorization header should return 401
+// (route alive, auth-gated). A 5xx instead means the route crashed before
+// reaching the auth check — historically because a SELECT referenced a
+// column that didn't yet exist in prod (incident 2026-05-02, PR #85). The
+// fallback SELECT added in #85 makes this 5xx unlikely, but a brand-new
+// column-add in a future PR could still escape if the fallback constant
+// isn't kept in sync. Catch it within 15 minutes instead of via support.
+async function checkLandlordListingsApi(appUrl) {
+  const url = `${appUrl}/api/landlord/listings`;
+  try {
+    const res = await fetchUrl(url);
+    if (res.status >= 500) {
+      return {
+        name: 'landlord-listings-api',
+        ok: false,
+        reason: `expected 401 (auth-gated), got ${res.status} — route is crashing before auth`,
+      };
+    }
+    if (res.status !== 401) {
+      return {
+        name: 'landlord-listings-api',
+        ok: false,
+        reason: `expected 401, got ${res.status}`,
+      };
+    }
+    return { name: 'landlord-listings-api', ok: true };
+  } catch (err) {
+    return { name: 'landlord-listings-api', ok: false, reason: `fetch threw: ${err.message || err.name}` };
+  }
+}
+
 // next-intl renders `MISSING_MESSAGE: ...` placeholders when a key is absent
 // from the locale's messages bundle. Treat any such substring on /en as a
 // regression — it means a translation key was added without a peer in en.json.
@@ -228,6 +259,7 @@ export async function POST(request) {
     checkListingApiDistanceVariety(appUrl, listingId),
     checkSoft404(appUrl),
     checkOgDefault(appUrl),
+    checkLandlordListingsApi(appUrl),
     checkNoMissingMessage(appUrl),
   ]);
   for (const r of additional) {
