@@ -6,6 +6,7 @@ const fullRow = {
   is_featured: true,
   description: 'Sunny studio',
   photos: ['a.jpg', 'b.jpg'],
+  min_duration_months: 9,
   rent: { monthly_price: 450, currency: 'EUR', bills_included: true, deposit: 900 },
   location: { address: '12 Egnatias', neighborhood: 'Center', lat: 40.63, lng: 22.94 },
   property_types: { name: 'Studio' },
@@ -43,6 +44,7 @@ describe('transformListing', () => {
       amenities: ['wifi', 'heating'],
       description: 'Sunny studio',
       photos: ['a.jpg', 'b.jpg'],
+      min_duration_months: 9,
       landlord: { name: 'Alice', contact_info: 'a@example.com' },
       faculty_distances: [
         {
