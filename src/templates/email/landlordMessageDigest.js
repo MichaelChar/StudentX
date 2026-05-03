@@ -130,9 +130,9 @@ export function landlordMessageDigestHtml({
   const listingSummary = [safeAddress, safeNeighborhood, safePrice].filter(Boolean).join(' · ');
   const safeSnippet = snippet ? escapeHtml(snippet).replace(/\n/g, '<br/>') : '';
 
-  const chatUrl = `${appUrl}/landlord/inquiries/${inquiryId}/chat`;
-  const inboxUrl = `${appUrl}/landlord/inquiries`;
-  const listingUrl = listing?.listing_id ? `${appUrl}/listing/${listing.listing_id}` : null;
+  const chatUrl = `${appUrl}/property/landlord/inquiries/${inquiryId}/chat`;
+  const inboxUrl = `${appUrl}/property/landlord/inquiries`;
+  const listingUrl = listing?.listing_id ? `${appUrl}/property/listing/${listing.listing_id}` : null;
 
   const heading = s['student.notifications.heading'](unreadCount, safeStudent);
   const intro = s['student.notifications.intro'](

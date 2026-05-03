@@ -144,7 +144,7 @@ export default function StudentSignupPage() {
             </p>
             {conflictRole === 'landlord' && (
               <Link
-                href={{ pathname: '/landlord/login', query: { email } }}
+                href={{ pathname: '/property/landlord/login', query: { email } }}
                 className="inline-block text-sm text-blue font-medium hover:text-night"
               >
                 {t('roleConflictCta')} →

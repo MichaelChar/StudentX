@@ -20,12 +20,12 @@ import BauhausLoader from '@/components/BauhausLoader';
 */
 
 const NAV_ITEMS = [
-  { key: 'dashboard', href: '/landlord/dashboard', icon: 'home' },
-  { key: 'listings', href: '/landlord/listings', icon: 'book' },
-  { key: 'inquiries', href: '/landlord/inquiries', icon: 'message' },
-  { key: 'verification', href: '/landlord/verification', icon: 'shield' },
-  { key: 'billing', href: '/landlord/get-verified', icon: 'euro' },
-  { key: 'settings', href: '/landlord/settings', icon: 'cog' },
+  { key: 'dashboard', href: '/property/landlord/dashboard', icon: 'home' },
+  { key: 'listings', href: '/property/landlord/listings', icon: 'book' },
+  { key: 'inquiries', href: '/property/landlord/inquiries', icon: 'message' },
+  { key: 'verification', href: '/property/landlord/verification', icon: 'shield' },
+  { key: 'billing', href: '/property/landlord/get-verified', icon: 'euro' },
+  { key: 'settings', href: '/property/landlord/settings', icon: 'cog' },
 ];
 
 export default function LandlordShell({ title, eyebrow, actions, children }) {
@@ -45,11 +45,11 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
         data: { session },
       } = await supabase.auth.getSession();
       if (!session) {
-        router.replace('/landlord/login');
+        router.replace('/property/landlord/login');
         return;
       }
       if (!session.user.email_confirmed_at) {
-        router.replace('/landlord/verify-email');
+        router.replace('/property/landlord/verify-email');
         return;
       }
       // Best-effort profile name fetch so topbar can greet. GET (not POST):
@@ -72,7 +72,7 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
   async function handleSignOut() {
     const supabase = getSupabaseBrowser();
     await supabase.auth.signOut();
-    router.push('/landlord/login');
+    router.push('/property/landlord/login');
   }
 
   // Loading state while auth gate is resolving

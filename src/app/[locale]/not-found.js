@@ -23,7 +23,7 @@ export default async function LocaleNotFound() {
       <p className="label-caps text-gold mb-4">404</p>
       <h1 className="font-display text-4xl text-night mb-4">{t.title}</h1>
       <p className="text-night/70 mb-8">{t.body}</p>
-      <Button href="/results" variant="gold">
+      <Button href="/property/results" variant="gold">
         {t.cta}
       </Button>
     </div>

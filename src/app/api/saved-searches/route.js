@@ -46,7 +46,7 @@ export async function POST(request) {
 
     // Send confirmation email (best-effort — don't fail the request if email fails)
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
-    const manageUrl = `${appUrl}/alerts/manage?token=${data.unsubscribe_token}`;
+    const manageUrl = `${appUrl}/property/alerts/manage?token=${data.unsubscribe_token}`;
 
     try {
       const resend = getResend();

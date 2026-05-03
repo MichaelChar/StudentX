@@ -22,8 +22,8 @@ export default function Navbar() {
   // Propylaea nav — "The programme" and "FAQ" are defined in the design but
   // hidden for now; unhide when those pages ship.
   const navLinks = [
-    { href: '/results', label: t('listings') },
-    { href: '/quiz', label: t('takeTheQuiz') },
+    { href: '/property/results', label: t('listings') },
+    { href: '/property/quiz', label: t('takeTheQuiz') },
     // { href: '/programme', label: t('programme') },
     // { href: '/faq', label: t('faq') },
   ];
@@ -130,12 +130,12 @@ export default function Navbar() {
   }
 
   const accountHref =
-    authState.role === 'landlord' ? '/landlord/dashboard' : '/student/account';
+    authState.role === 'landlord' ? '/property/landlord/dashboard' : '/student/account';
 
   const inquiriesHref =
-    authState.role === 'landlord' ? '/landlord/inquiries' : '/student/account';
+    authState.role === 'landlord' ? '/property/landlord/inquiries' : '/student/account';
 
-  const isLandlord = pathname?.startsWith('/landlord') ?? false;
+  const isLandlord = pathname?.startsWith('/property/landlord') ?? false;
 
   return (
     <nav
@@ -283,7 +283,7 @@ function DesktopAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount
         {t('signInStudent')}
       </Link>
       <Link
-        href="/landlord/login"
+        href="/property/landlord/login"
         className="label-caps text-night/50 hover:text-night transition-colors"
       >
         {t('signInLandlord')}
@@ -342,7 +342,7 @@ function MobileAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount,
         {t('signInStudent')}
       </Link>
       <Link
-        href="/landlord/login"
+        href="/property/landlord/login"
         onClick={onClose}
         className="label-caps text-night/60 hover:text-night transition-colors text-base"
       >

@@ -119,10 +119,10 @@ async function checkListingApiDistanceVariety(appUrl, listingId) {
 }
 
 // Unknown listing should hit notFound() and serve the locale-aware 404 page
-// with HTTP 404. Greek is the default at root, so we hit `/listing/...`,
+// with HTTP 404. Greek is the default at root, so we hit `/property/listing/...`,
 // not `/en/listing/...`.
 async function checkSoft404(appUrl) {
-  const url = `${appUrl}/listing/does-not-exist`;
+  const url = `${appUrl}/property/listing/does-not-exist`;
   try {
     const res = await fetchUrl(url);
     if (res.status !== 404) {
@@ -225,7 +225,7 @@ export async function POST(request) {
   const listingId = process.env.SYNTHETIC_LISTING_ID || DEFAULT_LISTING_ID;
   const alertEmail = process.env.SYNTHETIC_ALERT_EMAIL;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const enListingUrl = `${appUrl}/en/listing/${listingId}`;
+  const enListingUrl = `${appUrl}/en/property/listing/${listingId}`;
 
   const checks = [];
   const failures = [];

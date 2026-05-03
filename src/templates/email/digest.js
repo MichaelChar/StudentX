@@ -17,7 +17,7 @@ export function digestEmailHtml({ label, listings, manageUrl, appUrl }) {
     const price = l.monthly_price ? `€${l.monthly_price}/mo` : '';
     const neighborhood = l.neighborhood || '';
     const type = l.property_type || '';
-    const listingUrl = `${appUrl}/listing/${l.listing_id}`;
+    const listingUrl = `${appUrl}/property/listing/${l.listing_id}`;
 
     return `
     <tr>
@@ -70,7 +70,7 @@ export function digestEmailHtml({ label, listings, manageUrl, appUrl }) {
               <table cellpadding="0" cellspacing="0" style="margin-top:24px;">
                 <tr>
                   <td style="background:#01828D;border-radius:8px;padding:0;">
-                    <a href="${appUrl}/results" style="display:inline-block;padding:12px 28px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">View all results</a>
+                    <a href="${appUrl}/property/results" style="display:inline-block;padding:12px 28px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">View all results</a>
                   </td>
                 </tr>
               </table>

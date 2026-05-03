@@ -64,7 +64,7 @@ export default function ListingsMap({ listings }) {
                     : 'Price on request'}
                 </p>
                 <Link
-                  href={`/listing/${listing.listing_id}`}
+                  href={`/property/listing/${listing.listing_id}`}
                   className="text-xs font-medium text-blue-600 hover:underline"
                 >
                   View listing →
