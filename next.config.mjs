@@ -151,9 +151,17 @@ const nextConfig = {
       ]),
       { source: '/listing/:id', destination: '/property/listing/:id', permanent: true },
       { source: '/en/listing/:id', destination: '/en/property/listing/:id', permanent: true },
+      // `:path*` matches one or more segments — the zero-segment case
+      // (bookmarked /landlord with no trailing path) needs an explicit
+      // sibling rule, otherwise the destination keeps the literal `:path*`
+      // placeholder and the user lands on a broken URL.
+      { source: '/landlord', destination: '/property/landlord', permanent: true },
       { source: '/landlord/:path*', destination: '/property/landlord/:path*', permanent: true },
+      { source: '/en/landlord', destination: '/en/property/landlord', permanent: true },
       { source: '/en/landlord/:path*', destination: '/en/property/landlord/:path*', permanent: true },
+      { source: '/alerts', destination: '/property/alerts', permanent: true },
       { source: '/alerts/:path*', destination: '/property/alerts/:path*', permanent: true },
+      { source: '/en/alerts', destination: '/en/property/alerts', permanent: true },
       { source: '/en/alerts/:path*', destination: '/en/property/alerts/:path*', permanent: true },
       { source: '/en', destination: '/en/property', permanent: true },
     ];

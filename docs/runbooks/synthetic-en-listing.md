@@ -28,7 +28,7 @@ Every 15 min, the Worker's `scheduled` handler POSTs to `/api/cron/synthetic-en-
 
 Any failed assertion (or non-200, or fetch timeout) attempts to send an email via Resend to `SYNTHETIC_ALERT_EMAIL`.
 
-> **Status as of merge:** the email alert path is configured in code but **logs-only in production** because Resend isn't set up yet (`studentx.uk` isn't a registered domain — see [the domain context note](#domain-context) below). Failures surface in `wrangler tail` logs only. To enable email alerts later: register the domain, verify it in Resend, set `RESEND_API_KEY` as a Worker secret. The route's email send is wrapped in try/catch so a missing `RESEND_API_KEY` doesn't break the check itself.
+> **Status (2026-05-03):** Resend is verified for `studentx.uk` and `RESEND_API_KEY` is set as a Worker secret — the alert path is live. On failure the route emails `SYNTHETIC_ALERT_EMAIL` from `alerts@studentx.uk`. Failures still surface in `wrangler tail` regardless. The route's email send is wrapped in try/catch, so a Resend hiccup doesn't break the check itself.
 
 ## Configuration
 
@@ -81,22 +81,9 @@ Production (manual run, doesn't wait for the next 15-min tick):
 
 ## Domain context
 
-The codebase fallback addresses (`alerts@studentx.uk`) and the `NEXT_PUBLIC_SITE_URL` default (`https://studentx.uk`) reference a domain that is not yet registered. The live deploy runs on `studentx.studentx-gr.workers.dev` (a `*.workers.dev` subdomain) until DNS is sorted. This is why the email alert path is currently logs-only:
-
-1. Resend rejects sends from unverified domains.
-2. `studentx.uk` can't be verified because it doesn't exist.
-3. Until the domain is registered + verified, all email-sending paths in the codebase (this synthetic, saved-searches digest, landlord message digest, inquiry email) silently fail at the Resend send step.
-
-To enable email here:
-
-1. Register `studentx.uk` (or pick a different domain and update `NEXT_PUBLIC_SITE_URL` + the from-addresses in code).
-2. Add the domain to Cloudflare (or whatever DNS host you'll use).
-3. In Resend, add a sending subdomain (e.g. `updates.studentx.uk`) and follow the DNS verification flow.
-4. `npx wrangler secret put RESEND_API_KEY --name studentx`
-5. Update `RESEND_FROM_EMAIL` in `wrangler.jsonc` (or each route's hardcoded from-address) to match the verified subdomain.
+`studentx.uk` is the live custom domain (since 2026-05-03). DKIM/SPF/DMARC records are on the CF zone, the apex is verified in Resend, and `RESEND_API_KEY` is a Worker secret. Email alerts from this synthetic check send from `alerts@studentx.uk`. The original setup history lives in [`docs/runbooks/domain-setup.md`](./domain-setup.md).
 
 ## Known limitations
 
 - **Same-network probe.** The cron runs inside the same Cloudflare Worker that serves the page. Doesn't simulate a US user's edge cache. Acceptable because the listing page currently sets `Cache-Control: private, no-cache, no-store, must-revalidate` — there is no edge cache to test from a different POP.
-- **No alert dedupe.** A sustained outage would email every 15 min once email is wired up. If this becomes annoying, add a `synthetic_alert_state(check_name, last_alert_at)` Supabase row and gate the email on `now() - last_alert_at > 1 hour`.
-- **Logs-only until email is configured.** See [Domain context](#domain-context) above.
+- **No alert dedupe.** A sustained outage emails every 15 min. If this becomes annoying, add a `synthetic_alert_state(check_name, last_alert_at)` Supabase row and gate the email on `now() - last_alert_at > 1 hour`.

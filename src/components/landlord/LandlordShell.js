@@ -16,7 +16,7 @@ import BauhausLoader from '@/components/BauhausLoader';
   verification, billing). Auth pages (login/signup/etc.) skip this shell.
 
   Auth gate is the shell's responsibility: if no Supabase session, redirect
-  to /landlord/login. This centralizes the check so pages don't re-implement.
+  to /property/landlord/login. This centralizes the check so pages don't re-implement.
 */
 
 const NAV_ITEMS = [

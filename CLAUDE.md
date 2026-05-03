@@ -219,12 +219,9 @@ Failures still surface in `wrangler tail`.
 
 ## Email (Resend)
 
-**Currently logs-only in production.** Resend sends will work once
-`studentx.uk` is verified in Resend and `RESEND_API_KEY` is set as a
-Worker secret. The full DNS + Resend verification flow lives in
-`docs/runbooks/domain-setup.md`. Until then, all outbound email paths
-silently fail at the Resend send step (each wrapped in try/catch, so the
-surrounding flow keeps working):
+**Live in production.** `studentx.uk` is verified in Resend (DKIM/SPF/DMARC
+records on the CF zone) and `RESEND_API_KEY` is set as a Worker secret.
+Outbound paths sending from `alerts@studentx.uk`:
 
 - Synthetic check alerts (`/api/cron/synthetic-en-listing`)
 - Saved-searches digest (`/api/cron/saved-searches-digest`)
@@ -232,9 +229,7 @@ surrounding flow keeps working):
 - Inquiry notifications (`src/lib/inquiryEmail.js`)
 - Subscription welcome (`src/lib/subscriptionEmail.js`)
 
-**Workaround for testing:** `onboarding@resend.dev` is Resend's free testing
-sender, but it only delivers to the Resend account-owner email — it doesn't
-unblock user-facing notifications.
+The DNS + verification flow is documented in `docs/runbooks/domain-setup.md`.
 
 ## Tests
 
