@@ -97,7 +97,7 @@ export async function POST(request) {
     return NextResponse.json({ processed: 0, emailsSent: 0 });
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.gr';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
   const resend = getResend();
   let emailsSent = 0;
   let alreadyClaimed = 0;
@@ -138,7 +138,7 @@ export async function POST(request) {
       const manageUrl = `${appUrl}/alerts/manage?token=${search.unsubscribe_token}`;
 
       await resend.emails.send({
-        from: 'StudentX Alerts <alerts@studentx.gr>',
+        from: 'StudentX Alerts <alerts@studentx.uk>',
         to: search.email,
         subject: digestEmailSubject(search.label, matches.length),
         html: digestEmailHtml({

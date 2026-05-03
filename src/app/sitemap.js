@@ -1,6 +1,6 @@
 import { getSupabase } from "@/lib/supabase";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.gr";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
 export default async function sitemap() {
   // Static pages — Greek is default (no prefix), English gets /en prefix

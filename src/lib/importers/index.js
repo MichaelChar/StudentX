@@ -31,7 +31,7 @@ export async function importListing(url) {
     const res = await fetch(url, {
       headers: {
         'User-Agent':
-          'Mozilla/5.0 (compatible; StudentXBot/1.0; +https://studentx.gr)',
+          'Mozilla/5.0 (compatible; StudentXBot/1.0; +https://studentx.uk)',
         Accept: 'text/html,application/xhtml+xml',
         'Accept-Language': 'el,en;q=0.9',
       },

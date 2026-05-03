@@ -1,5 +1,5 @@
 const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.gr';
+  process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
 export default function robots() {
   return {

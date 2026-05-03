@@ -6,7 +6,7 @@ import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SessionSync from '@/components/SessionSync';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.gr';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
 // Greek is the default locale and lives at the site root (no /el prefix);
 // English lives under /en. Keep these helpers in lockstep with `routing` in

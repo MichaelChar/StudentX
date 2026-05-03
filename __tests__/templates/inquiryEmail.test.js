@@ -39,14 +39,14 @@ describe('inquiryEmailHtml', () => {
     student: { name: 'Maria', email: 'maria@example.com' },
     message: 'Hi, is it still available?',
     listing: { listing_id: '0100006', address: '12 Egnatias', neighborhood: 'Center', monthly_price: 450 },
-    appUrl: 'https://studentx.gr',
+    appUrl: 'https://studentx.uk',
   };
 
   it('produces Greek HTML with the correct lang and listing URL by default', () => {
     const html = inquiryEmailHtml(baseArgs);
     expect(html).toContain('<html lang="el">');
-    expect(html).toContain('https://studentx.gr/listing/0100006');
-    expect(html).toContain('https://studentx.gr/landlord/inquiries');
+    expect(html).toContain('https://studentx.uk/listing/0100006');
+    expect(html).toContain('https://studentx.uk/landlord/inquiries');
     expect(html).toContain('€450/μήνα');
   });
 

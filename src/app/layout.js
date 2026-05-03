@@ -2,7 +2,7 @@ import { EB_Garamond, Source_Sans_3 } from "next/font/google";
 import { getLocale } from "next-intl/server";
 import "./globals.css";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.gr";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
 export const metadata = {
   metadataBase: new URL(SITE_URL),

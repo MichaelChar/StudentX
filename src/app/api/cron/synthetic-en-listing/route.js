@@ -212,7 +212,7 @@ async function sendAlert({ to, subject, lines }) {
   // subdomain that's standard across all outbound paths once the
   // domain lands. Kept as a hardcoded fallback in case
   // RESEND_FROM_EMAIL env var isn't set.
-  const from = process.env.RESEND_FROM_EMAIL || 'StudentX Alerts <alerts@updates.studentx.gr>';
+  const from = process.env.RESEND_FROM_EMAIL || 'StudentX Alerts <alerts@updates.studentx.uk>';
   await resend.emails.send({
     from,
     to,

@@ -2,7 +2,7 @@ import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { inquiryEmailHtml, inquiryEmailSubject } from '@/templates/email/inquiry';
 
-const FROM_ADDRESS = 'StudentX <alerts@studentx.gr>';
+const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
 function resolveLandlordEmailLocale(request, landlord) {
   if (landlord?.preferred_locale === 'el' || landlord?.preferred_locale === 'en') {
@@ -73,7 +73,7 @@ export async function sendLandlordInquiryEmail({
       facultyName = faculty?.name ?? null;
     }
 
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.gr';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
     const listingSummary = [location?.address, location?.neighborhood].filter(Boolean).join(' · ');
     const emailLocale = resolveLandlordEmailLocale(request, landlord);
 

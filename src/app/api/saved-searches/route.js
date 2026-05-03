@@ -45,13 +45,13 @@ export async function POST(request) {
     }
 
     // Send confirmation email (best-effort — don't fail the request if email fails)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.gr';
+    const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
     const manageUrl = `${appUrl}/alerts/manage?token=${data.unsubscribe_token}`;
 
     try {
       const resend = getResend();
       await resend.emails.send({
-        from: 'StudentX Alerts <alerts@studentx.gr>',
+        from: 'StudentX Alerts <alerts@studentx.uk>',
         to: email.trim().toLowerCase(),
         subject: confirmationEmailSubject(label?.trim()),
         html: confirmationEmailHtml({

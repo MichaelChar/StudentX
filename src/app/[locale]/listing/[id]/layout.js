@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { getListingForRender } from "@/lib/listingForRender";
 import { requireStudent } from "@/lib/requireStudent";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.gr";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
 export async function generateMetadata({ params }) {
   const { id, locale } = await params;

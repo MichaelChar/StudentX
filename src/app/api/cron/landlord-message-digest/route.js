@@ -23,7 +23,7 @@ function getServiceSupabase() {
 // to absorb a burst of student messages into a single email.
 const MIN_INTERVAL = '4 minutes 30 seconds';
 
-const FROM_ADDRESS = 'StudentX <alerts@studentx.gr>';
+const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
 function isCronAuthorized(request) {
   const secret = process.env.CRON_SECRET;
@@ -50,7 +50,7 @@ export async function POST(request) {
   }
 
   const supabase = getServiceSupabase();
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.gr';
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
 
   const { data: pending, error: fetchError } = await supabase.rpc(
     'get_pending_landlord_notifications',
