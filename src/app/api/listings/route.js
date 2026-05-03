@@ -8,6 +8,7 @@ const LISTING_SELECT = `
   title,
   description,
   photos,
+  floor,
   min_duration_months,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
@@ -23,6 +24,7 @@ const LISTING_SELECT_FALLBACK = `
   title,
   description,
   photos,
+  floor,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
@@ -46,6 +48,8 @@ export async function GET(request) {
     const sortOrder = searchParams.get("sort_order") || "asc";
     const verifiedOnly = searchParams.get("verified_only") === "true";
     const minDuration = searchParams.get("min_duration");
+    const excludeGroundFloor = searchParams.get("exclude_ground_floor") === "true";
+    const requireBillsIncluded = searchParams.get("require_bills_included") === "true";
 
     // Validate min_duration: must be 1, 5, or 9 (or absent)
     const ALLOWED_MIN_DURATIONS = [1, 5, 9];
@@ -198,6 +202,14 @@ export async function GET(request) {
 
     // Transform rows to API shape
     let results = data.map(transformListing);
+
+    if (excludeGroundFloor) {
+      results = results.filter((listing) => listing.floor !== 0);
+    }
+
+    if (requireBillsIncluded) {
+      results = results.filter((listing) => listing.bills_included === true);
+    }
 
     // Post-query filter: exclude listings missing required amenities (dealbreakers)
     // e.g. exclude_amenities=AC,Elevator → only keep listings that have ALL of these

@@ -112,12 +112,14 @@ function ResultsContent() {
     const neighborhoods = searchParams.get('neighborhoods');
     const minDurationRaw = Number(searchParams.get('min_duration'));
     const minDuration = [1, 5, 9].includes(minDurationRaw) ? minDurationRaw : null;
+    const dealbreakersRaw = searchParams.get('dealbreakers');
     return {
       maxBudget: Number.isFinite(budget) && budget > 0 ? budget : DEFAULT_BUDGET,
       selectedTypes: types ? types.split(',').filter(Boolean) : [],
       selectedNeighborhoods: neighborhoods ? neighborhoods.split(',').filter(Boolean) : [],
       verifiedOnly: searchParams.get('verified_only') === 'true',
       minDuration,
+      dealbreakers: dealbreakersRaw ? dealbreakersRaw.split(',').filter(Boolean) : [],
     };
   });
 
@@ -146,6 +148,8 @@ function ResultsContent() {
       params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
     if (filters.verifiedOnly) params.set('verified_only', 'true');
     if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
+    if (filters.dealbreakers.length > 0)
+      params.set('dealbreakers', filters.dealbreakers.join(','));
     if (sortBy !== 'match') params.set('sort_by', sortBy);
     if (viewMode === 'map') params.set('view', 'map');
     const next = params.toString();
@@ -167,6 +171,17 @@ function ResultsContent() {
         params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
       if (filters.verifiedOnly) params.set('verified_only', 'true');
       if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
+      if (filters.dealbreakers.length > 0) {
+        const requiredAmenities = [];
+        if (filters.dealbreakers.includes('unfurnished')) requiredAmenities.push('Furnished');
+        if (filters.dealbreakers.includes('no_ac')) requiredAmenities.push('AC');
+        if (requiredAmenities.length > 0)
+          params.set('exclude_amenities', requiredAmenities.join(','));
+        if (filters.dealbreakers.includes('ground_floor'))
+          params.set('exclude_ground_floor', 'true');
+        if (filters.dealbreakers.includes('bills_not_included'))
+          params.set('require_bills_included', 'true');
+      }
       // 'match' is the UI default; the API enforces verified/featured tier
       // priority in route.js regardless of sort_by, so 'match' collapses to
       // 'price' asc.
