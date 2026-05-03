@@ -1,5 +1,6 @@
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
+import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { inquiryEmailHtml, inquiryEmailSubject } from '@/templates/email/inquiry';
 
 const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
@@ -60,6 +61,11 @@ export async function sendLandlordInquiryEmail({
 
     if (!landlord?.email) {
       console.warn(`Inquiry ${inquiryId}: no landlord email on file for listing ${listingId}`);
+      return;
+    }
+
+    if (await isEmailSuppressed(landlord.email)) {
+      console.warn(`Inquiry ${inquiryId}: skipping send — ${landlord.email} is suppressed`);
       return;
     }
 

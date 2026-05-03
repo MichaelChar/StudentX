@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
+import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import {
   confirmationEmailHtml,
   confirmationEmailSubject,
@@ -49,17 +50,22 @@ export async function POST(request) {
     const manageUrl = `${appUrl}/property/alerts/manage?token=${data.unsubscribe_token}`;
 
     try {
-      const resend = getResend();
-      await resend.emails.send({
-        from: 'StudentX Alerts <alerts@studentx.uk>',
-        to: email.trim().toLowerCase(),
-        subject: confirmationEmailSubject(label?.trim()),
-        html: confirmationEmailHtml({
-          label: label?.trim(),
-          manageUrl,
-          frequency: freq,
-        }),
-      });
+      const recipient = email.trim().toLowerCase();
+      if (await isEmailSuppressed(recipient)) {
+        console.warn(`[saved-search-confirmation] skipping — ${recipient} is suppressed`);
+      } else {
+        const resend = getResend();
+        await resend.emails.send({
+          from: 'StudentX Alerts <alerts@studentx.uk>',
+          to: recipient,
+          subject: confirmationEmailSubject(label?.trim()),
+          html: confirmationEmailHtml({
+            label: label?.trim(),
+            manageUrl,
+            frequency: freq,
+          }),
+        });
+      }
     } catch (emailErr) {
       console.error('Confirmation email error (non-fatal):', emailErr);
     }
