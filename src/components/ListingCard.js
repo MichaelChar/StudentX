@@ -34,7 +34,11 @@ export default function ListingCard({ listing, fromQuery = '' }) {
   return (
     <Link
       href={href}
-      className="group block bg-white border border-night/10 rounded-sm overflow-hidden hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)] transition-all focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-2"
+      className={`group block bg-white rounded-sm overflow-hidden transition-all focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-2 ${
+        listing.is_featured
+          ? 'border-2 border-gold/60 shadow-[0_0_12px_-2px_rgba(191,155,48,0.4)] hover:shadow-[0_0_18px_-2px_rgba(191,155,48,0.55)]'
+          : 'border border-night/10 hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)]'
+      }`}
     >
       {/* Photo */}
       <div className="relative aspect-[4/3] bg-parchment">
@@ -45,7 +49,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
         )}
         {listing.is_featured && (
           <span className="absolute top-3 right-3 z-10">
-            <Pill variant="programme">AUTh programme</Pill>
+            <Pill variant="verified">{tCard('featured')}</Pill>
           </span>
         )}
         {photo ? (
