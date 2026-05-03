@@ -55,8 +55,8 @@
   // automatically (both proxied). Requires the CF zone to be Active first
   // (see docs/runbooks/domain-setup.md step 6).
   "routes": [
-    { "pattern": "studentx.uk/*", "custom_domain": true },
-    { "pattern": "www.studentx.uk/*", "custom_domain": true }
+    { "pattern": "studentx.uk", "custom_domain": true },
+    { "pattern": "www.studentx.uk", "custom_domain": true }
   ],
   "triggers": {
     "crons": [
