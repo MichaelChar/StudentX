@@ -1,4 +1,5 @@
 import { getResend } from '@/lib/resend';
+import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { subscriptionWelcomeHtml, subscriptionWelcomeSubject } from '@/templates/email/subscriptionWelcome';
 
 const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
@@ -12,8 +13,7 @@ const TIER_DISPLAY_NAMES = {
  * Send the subscription welcome email after a Stripe checkout completes.
  * Errors are swallowed (logged): the webhook must always ack 2xx, and a
  * Resend hiccup should never block downstream `customer.subscription.*`
- * events. Currently logs-only in production until studentx.uk is verified
- * with Resend (see CLAUDE.md → Email).
+ * events.
  */
 export async function sendSubscriptionWelcomeEmail({ supabase, landlordId, tier }) {
   try {
@@ -25,6 +25,11 @@ export async function sendSubscriptionWelcomeEmail({ supabase, landlordId, tier 
 
     if (!landlord?.email) {
       console.warn(`Subscription welcome: no email for landlord ${landlordId}`);
+      return;
+    }
+
+    if (await isEmailSuppressed(landlord.email)) {
+      console.warn(`Subscription welcome: skipping send — ${landlord.email} is suppressed`);
       return;
     }
 

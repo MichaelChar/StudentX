@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
+import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { digestEmailHtml, digestEmailSubject } from '@/templates/email/digest';
 import { transformListing } from '@/lib/transformListing';
 
@@ -136,6 +137,11 @@ export async function POST(request) {
       // is lost for this period (no resend on retry). For digests this is
       // the right tradeoff: missing one digest beats double-sending.
       const manageUrl = `${appUrl}/property/alerts/manage?token=${search.unsubscribe_token}`;
+
+      if (await isEmailSuppressed(search.email)) {
+        console.warn(`[saved-search-digest] skipping send — ${search.email} is suppressed`);
+        continue;
+      }
 
       await resend.emails.send({
         from: 'StudentX Alerts <alerts@studentx.uk>',

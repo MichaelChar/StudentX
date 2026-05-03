@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getResend } from '@/lib/resend';
+import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import {
   landlordMessageDigestHtml,
   landlordMessageDigestSubject,
@@ -103,6 +104,13 @@ export async function POST(request) {
       // this digest is lost for this period. Same tradeoff as the
       // saved-searches digest — missing one email beats double-sending.
       const locale = resolveLocale(row.landlord_locale);
+
+      if (await isEmailSuppressed(row.landlord_email)) {
+        console.warn(
+          `[landlord-digest] skipping send — ${row.landlord_email} is suppressed`,
+        );
+        continue;
+      }
 
       await resend.emails.send({
         from: FROM_ADDRESS,
