@@ -25,11 +25,10 @@
     "NEXT_PUBLIC_SUPABASE_URL": "https://ecluqurlfbvkxrnoyhaq.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbHVxdXJsZmJ2a3hybm95aGFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODQ0MzUsImV4cCI6MjA5MDM2MDQzNX0.XspsrkDjv_AWltPgFqBQSocLXU4tBmq1auu_Zg8qTBE",
     // Canonical/sitemap/og:url + landlord email links all resolve from these.
-    // Code defaults to https://studentx.gr but the live deploy is the
-    // workers.dev host until DNS flips — without these bindings, every
-    // canonical points to a hostname Google can't fetch and every email
-    // button links somewhere broken. Flip back to studentx.gr (or just
-    // remove these lines, since the code falls back to it) once DNS lands.
+    // Code defaults to https://studentx.uk; the live deploy is the
+    // workers.dev host until the custom domain is wired up. Once
+    // `curl -I https://studentx.uk` returns 200, flip these to the
+    // custom domain (or just remove them, since the code falls back to it).
     "NEXT_PUBLIC_SITE_URL": "https://studentx.studentx-gr.workers.dev",
     "NEXT_PUBLIC_APP_URL": "https://studentx.studentx-gr.workers.dev",
     // Synthetic uptime check — guards against the i18n regression class fixed
@@ -52,6 +51,13 @@
   //   */5 * * * *    → /api/cron/landlord-message-digest (per-message digest;
   //                    debounced server-side via claim_landlord_message_notification)
   //   */15 * * * *   → /api/cron/synthetic-en-listing (i18n regression guard, #49)
+  // Custom-domain routes. Wrangler creates the apex A record and www CNAME
+  // automatically (both proxied). Requires the CF zone to be Active first
+  // (see docs/runbooks/domain-setup.md step 6).
+  "routes": [
+    { "pattern": "studentx.uk/*", "custom_domain": true },
+    { "pattern": "www.studentx.uk/*", "custom_domain": true }
+  ],
   "triggers": {
     "crons": [
       "0 9 * * *",    // daily saved-searches digest

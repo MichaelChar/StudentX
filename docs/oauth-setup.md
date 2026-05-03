@@ -8,10 +8,10 @@ All work happens in the Supabase Dashboard for project `ecluqurlfbvkxrnoyhaq` ([
 
 ### 1. Authentication → URL Configuration
 
-- **Site URL**: `https://studentx.studentx-gr.workers.dev`
+- **Site URL**: `https://studentx.uk`
 - **Redirect URLs** (add all four):
-  - `https://studentx.studentx-gr.workers.dev/en/student/auth/callback`
-  - `https://studentx.studentx-gr.workers.dev/el/student/auth/callback`
+  - `https://studentx.uk/en/student/auth/callback`
+  - `https://studentx.uk/el/student/auth/callback`
   - `http://localhost:3000/en/student/auth/callback`
   - `http://localhost:3000/el/student/auth/callback`
 
@@ -47,7 +47,7 @@ All work happens in the Supabase Dashboard for project `ecluqurlfbvkxrnoyhaq` ([
 ## How the flow works
 
 1. User clicks **Continue with Google / Apple** on `/[locale]/student/login` or `/signup`.
-2. The browser is redirected to the provider, then back to `https://ecluqurlfbvkxrnoyhaq.supabase.co/auth/v1/callback`, which in turn redirects to `https://studentx.studentx-gr.workers.dev/[locale]/student/auth/callback#access_token=...`.
+2. The browser is redirected to the provider, then back to `https://ecluqurlfbvkxrnoyhaq.supabase.co/auth/v1/callback`, which in turn redirects to `https://studentx.uk/[locale]/student/auth/callback#access_token=...`.
 3. The callback page parses the session, posts the access token to `/api/auth/session` (cookie sync), calls the idempotent `/api/student/profile` POST, then forwards to `?next=` (if set by `AuthGate`) or `/student/account`.
 4. Profile provisioning has two layers:
    - **Database trigger** (migration 030): fires on `auth.users` insert when `raw_user_meta_data.role = 'student'` *or* `raw_app_meta_data.provider IN ('google','apple')`. Inserts the `students` row with `ON CONFLICT DO NOTHING`.

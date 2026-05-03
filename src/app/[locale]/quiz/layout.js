@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.gr';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
 // Greek is default at site root (no /el prefix); English at /en. Without
 // these, the locale layout's hreflang on /en/quiz points at the homepages

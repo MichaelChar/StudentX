@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.gr';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
 // Greek is default at site root (no /el prefix); English at /en. Mirrors
 // src/i18n/routing.js. Without these, the locale layout's hreflang points
