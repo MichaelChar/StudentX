@@ -17,14 +17,17 @@ export default function LandingPage() {
   const t = useTranslations('propylaea.landing');
   const [listingCount, setListingCount] = useState(null);
 
-  // Live count of active listings, used in the stat tile.
+  // Live count of active listings, used in the stat tile. Calls a
+  // dedicated count endpoint instead of fetching the full listings
+  // payload — the previous version downloaded ~80 KB of joined rows
+  // just to read `.length`.
   useEffect(() => {
     let cancelled = false;
-    fetch('/api/listings')
+    fetch('/api/listings/count')
       .then((r) => (r.ok ? r.json() : null))
       .then((data) => {
         if (cancelled || !data) return;
-        const n = Array.isArray(data.listings) ? data.listings.length : 0;
+        const n = typeof data.count === 'number' ? data.count : 0;
         setListingCount(n);
       })
       .catch(() => {});
