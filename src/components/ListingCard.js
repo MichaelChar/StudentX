@@ -34,14 +34,14 @@ export default function ListingCard({ listing, fromQuery = '' }) {
     <Link
       href={href}
       className={`group block bg-white rounded-sm overflow-hidden transition-all focus-visible:outline-2 focus-visible:outline-gold focus-visible:outline-offset-2 ${
-        listing.is_featured
+        isVerified
           ? 'border-2 border-gold/60 shadow-[0_0_12px_-2px_rgba(191,155,48,0.4)] hover:shadow-[0_0_18px_-2px_rgba(191,155,48,0.55)]'
           : 'border border-night/10 hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)]'
       }`}
     >
       {/* Photo */}
       <div className="relative aspect-[4/3] bg-parchment">
-        {listing.is_featured && (
+        {isVerified && (
           <span className="absolute top-3 right-3 z-10">
             <Pill variant="verified">{tCard('verified')}</Pill>
           </span>
