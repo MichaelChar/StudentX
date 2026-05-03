@@ -2,7 +2,6 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import Pill from '@/components/ui/Pill';
-import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import Icon from '@/components/ui/Icon';
 
 /*
@@ -42,14 +41,9 @@ export default function ListingCard({ listing, fromQuery = '' }) {
     >
       {/* Photo */}
       <div className="relative aspect-[4/3] bg-parchment">
-        {isVerified && (
-          <div className="absolute top-3 left-3 z-10">
-            <VerifiedSeal size={38} />
-          </div>
-        )}
         {listing.is_featured && (
           <span className="absolute top-3 right-3 z-10">
-            <Pill variant="verified">{tCard('featured')}</Pill>
+            <Pill variant="verified">{tCard('verified')}</Pill>
           </span>
         )}
         {photo ? (
