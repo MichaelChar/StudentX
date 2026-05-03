@@ -112,12 +112,14 @@ function ResultsContent() {
     const neighborhoods = searchParams.get('neighborhoods');
     const minDurationRaw = Number(searchParams.get('min_duration'));
     const minDuration = [1, 5, 9].includes(minDurationRaw) ? minDurationRaw : null;
+    const dealbreakersRaw = searchParams.get('dealbreakers');
     return {
       maxBudget: Number.isFinite(budget) && budget > 0 ? budget : DEFAULT_BUDGET,
       selectedTypes: types ? types.split(',').filter(Boolean) : [],
       selectedNeighborhoods: neighborhoods ? neighborhoods.split(',').filter(Boolean) : [],
       verifiedOnly: searchParams.get('verified_only') === 'true',
       minDuration,
+      dealbreakers: dealbreakersRaw ? dealbreakersRaw.split(',').filter(Boolean) : [],
     };
   });
 
@@ -146,6 +148,8 @@ function ResultsContent() {
       params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
     if (filters.verifiedOnly) params.set('verified_only', 'true');
     if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
+    if (filters.dealbreakers.length > 0)
+      params.set('dealbreakers', filters.dealbreakers.join(','));
     if (sortBy !== 'match') params.set('sort_by', sortBy);
     if (viewMode === 'map') params.set('view', 'map');
     const next = params.toString();
@@ -167,6 +171,17 @@ function ResultsContent() {
         params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
       if (filters.verifiedOnly) params.set('verified_only', 'true');
       if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
+      if (filters.dealbreakers.length > 0) {
+        const requiredAmenities = [];
+        if (filters.dealbreakers.includes('unfurnished')) requiredAmenities.push('Furnished');
+        if (filters.dealbreakers.includes('no_ac')) requiredAmenities.push('AC');
+        if (requiredAmenities.length > 0)
+          params.set('exclude_amenities', requiredAmenities.join(','));
+        if (filters.dealbreakers.includes('ground_floor'))
+          params.set('exclude_ground_floor', 'true');
+        if (filters.dealbreakers.includes('bills_not_included'))
+          params.set('require_bills_included', 'true');
+      }
       // 'match' is the UI default; the API enforces verified/featured tier
       // priority in route.js regardless of sort_by, so 'match' collapses to
       // 'price' asc.
@@ -293,6 +308,12 @@ function ResultsContent() {
               onSetMinDuration={(v) =>
                 setFilters((p) => ({ ...p, minDuration: v }))
               }
+              onRemoveDealbreaker={(db) =>
+                setFilters((p) => ({
+                  ...p,
+                  dealbreakers: p.dealbreakers.filter((x) => x !== db),
+                }))
+              }
               onSaveSearch={() => setSaveSearchOpen(true)}
             />
           </div>
@@ -403,6 +424,12 @@ function ResultsContent() {
               onSetMinDuration={(v) =>
                 setFilters((p) => ({ ...p, minDuration: v }))
               }
+              onRemoveDealbreaker={(db) =>
+                setFilters((p) => ({
+                  ...p,
+                  dealbreakers: p.dealbreakers.filter((x) => x !== db),
+                }))
+              }
               onSaveSearch={() => setSaveSearchOpen(true)}
             />
           </aside>
@@ -426,6 +453,13 @@ const MIN_DURATION_OPTIONS = [
   { value: 9, nameKey: 'minDurationAcademicName', monthsKey: 'minDurationAcademicMonths' },
 ];
 
+const DEALBREAKER_LABEL_KEYS = {
+  ground_floor: 'dbGroundFloor',
+  unfurnished: 'dbUnfurnished',
+  no_ac: 'dbNoAc',
+  bills_not_included: 'dbBillsNotIncluded',
+};
+
 function FilterPanel({
   t,
   filters,
@@ -435,8 +469,10 @@ function FilterPanel({
   onToggleNeighborhood,
   onToggleVerified,
   onSetMinDuration,
+  onRemoveDealbreaker,
   onSaveSearch,
 }) {
+  const tQuiz = useTranslations('propylaea.quiz');
   const neighborhoods = neighborhoodOptions.length > 0
     ? neighborhoodOptions
     : ['Kentro', 'Ano Poli', 'Analipsi', 'Kalamaria', 'Toumba', 'Faliro'];
@@ -556,6 +592,32 @@ function FilterPanel({
           })}
         </div>
       </section>
+
+      {/* Dealbreakers (from quiz) */}
+      {filters.dealbreakers.length > 0 && (
+        <section className="mb-8">
+          <p className="label-caps text-night/60 mb-3">{t('dealbreakers')}</p>
+          <div className="flex flex-wrap gap-1.5">
+            {filters.dealbreakers.map((db) => {
+              const labelKey = DEALBREAKER_LABEL_KEYS[db];
+              if (!labelKey) return null;
+              const label = tQuiz(labelKey);
+              return (
+                <button
+                  key={db}
+                  type="button"
+                  onClick={() => onRemoveDealbreaker(db)}
+                  aria-label={t('removeDealbreaker', { label })}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-night/20 text-xs font-sans text-night/80 hover:border-night hover:text-night transition-colors"
+                >
+                  <span>{label}</span>
+                  <Icon name="x" className="w-3 h-3 opacity-60" aria-hidden="true" />
+                </button>
+              );
+            })}
+          </div>
+        </section>
+      )}
 
       {/* Verified only */}
       <section className="mb-8">

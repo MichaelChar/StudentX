@@ -386,13 +386,22 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
             </div>
             <div>
               <label className={labelClass}>{t('floorLabel')}</label>
-              <input
-                type="number"
+              <select
                 value={form.floor}
                 onChange={(e) => set('floor', e.target.value)}
                 className={inputClass}
-                placeholder={t('floorPlaceholder')}
-              />
+              >
+                <option value="">{t('floorPlaceholder')}</option>
+                <option value="0">{t('floorGround')}</option>
+                {Array.from({ length: 20 }, (_, i) => i + 1).map((n) => (
+                  <option key={n} value={String(n)}>{n}</option>
+                ))}
+                {form.floor !== '' &&
+                  form.floor != null &&
+                  Number(form.floor) > 20 && (
+                    <option value={String(form.floor)}>{form.floor}</option>
+                  )}
+              </select>
             </div>
           </div>
 

@@ -281,7 +281,8 @@
       "sqmLabel": "Size (m²)",
       "sqmPlaceholder": "e.g. 45",
       "floorLabel": "Floor",
-      "floorPlaceholder": "e.g. 2",
+      "floorPlaceholder": "Select floor",
+      "floorGround": "Ground floor",
       "descriptionLabel": "Description",
       "descriptionPlaceholder": "Describe the property…",
       "descriptionTip": "Tip: Mention proximity to campus, transport, and supermarkets. Highlight what makes your place stand out — furnished, balcony, quiet street, natural light.",
@@ -514,6 +515,8 @@
       "verified": "Verified",
       "billsIncluded": "Bills included",
       "authProgramme": "AUTh programme",
+      "dealbreakers": "Your dealbreakers",
+      "removeDealbreaker": "Remove {label}",
       "featuredTitle": "Aristotle Medical Housing Programme",
       "featuredBody": "Vetted landlords, walkable to the School of Medicine, fair rent — handpicked for incoming first-years.",
       "featuredCta": "See programme listings"
