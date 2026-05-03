@@ -4,6 +4,7 @@ import {
   getUserFromToken,
   getSupabaseWithToken,
 } from '@/lib/supabaseServer';
+import { normalizeMultiLine } from '@/lib/textNormalize';
 
 const MAX_BODY_LEN = 4000;
 
@@ -80,7 +81,7 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  const messageBody = typeof body.body === 'string' ? body.body.trim() : '';
+  const messageBody = normalizeMultiLine(body.body) ?? '';
   if (!messageBody) {
     return NextResponse.json({ error: 'body is required' }, { status: 400 });
   }

@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { normalizeSingleLine } from '@/lib/textNormalize';
 
 export async function GET(request) {
   const token = extractToken(request);
@@ -126,7 +127,10 @@ export async function POST(request) {
   const nextId = String(maxId + 1).padStart(4, '0');
 
   const body = await request.json().catch(() => ({}));
-  const name = body.name?.trim() || user.email.split('@')[0];
+  // Normalize the supplied name; fall back to the email-prefix when missing
+  // or empty after normalization. Email is owned by Supabase auth so it's
+  // already trimmed and lowercased upstream.
+  const name = normalizeSingleLine(body.name) || user.email.split('@')[0];
 
   const authedSupabase = getSupabaseWithToken(token);
   const { data: landlord, error } = await authedSupabase

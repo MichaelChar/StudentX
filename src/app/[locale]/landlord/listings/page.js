@@ -175,9 +175,6 @@ function ListingRow({ listing, deleting, toggling, onDelete, onToggleFeatured, t
   const heading = listing.title || address;
   const neighborhood = listing.location?.neighborhood;
   const price = listing.rent?.monthly_price;
-  // Only show the address as a sublabel when the heading isn't already the
-  // address (i.e. the landlord has set a distinct title).
-  const showAddressBelow = listing.title && listing.title !== address;
 
   return (
     <div className="flex flex-col md:flex-row md:items-center gap-4 p-5">
@@ -204,9 +201,12 @@ function ListingRow({ listing, deleting, toggling, onDelete, onToggleFeatured, t
           </p>
           {listing.is_featured && <Pill variant="verified">Featured</Pill>}
         </div>
-        {showAddressBelow && (
-          <p className="text-xs text-night/50 mb-1 truncate">{address}</p>
-        )}
+        {/* Address always rendered on this internal surface — landlords
+            identify their own listings by street most reliably. For
+            backfilled rows where heading IS the address, this duplicates
+            briefly until the landlord edits the name; small UX cost for
+            a consistent layout. */}
+        <p className="text-xs text-night/50 mb-1 truncate">{address}</p>
         <p className="label-caps text-night/50">
           {neighborhood}
           {listing.property_types?.name && (

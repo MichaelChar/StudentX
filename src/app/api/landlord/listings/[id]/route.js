@@ -3,6 +3,7 @@ import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { normalizeTitle } from '@/lib/listingTitle';
+import { normalizeSingleLine, normalizeMultiLine } from '@/lib/textNormalize';
 
 const ALLOWED_MIN_DURATIONS = [1, 5, 9];
 
@@ -131,11 +132,31 @@ export async function PATCH(request, { params }) {
     }
   }
 
-  // Update location
+  // Update location. Address + neighborhood are required-when-supplied:
+  // if a caller explicitly sends "address: ''", that's an attempt to clear
+  // a required field — same shape as the title PATCH semantics.
   if (body.address !== undefined || body.neighborhood !== undefined || body.lat !== undefined || body.lng !== undefined) {
     const locationUpdate = {};
-    if (body.address !== undefined) locationUpdate.address = body.address;
-    if (body.neighborhood !== undefined) locationUpdate.neighborhood = body.neighborhood;
+    if (body.address !== undefined) {
+      const normalized = normalizeSingleLine(body.address);
+      if (!normalized) {
+        return NextResponse.json(
+          { error: 'address cannot be empty' },
+          { status: 400 }
+        );
+      }
+      locationUpdate.address = normalized;
+    }
+    if (body.neighborhood !== undefined) {
+      const normalized = normalizeSingleLine(body.neighborhood);
+      if (!normalized) {
+        return NextResponse.json(
+          { error: 'neighborhood cannot be empty' },
+          { status: 400 }
+        );
+      }
+      locationUpdate.neighborhood = normalized;
+    }
     if (body.lat !== undefined) locationUpdate.lat = parseFloat(body.lat);
     if (body.lng !== undefined) locationUpdate.lng = parseFloat(body.lng);
 
@@ -188,7 +209,11 @@ export async function PATCH(request, { params }) {
     }
     listingUpdate.title = normalizedTitle;
   }
-  if (body.description !== undefined) listingUpdate.description = body.description || null;
+  // Description: undefined → leave alone, null/empty/whitespace-only → clear.
+  // Description is optional, so a deliberate clear is allowed (unlike title).
+  if (body.description !== undefined) {
+    listingUpdate.description = normalizeMultiLine(body.description);
+  }
   if (body.photos !== undefined) listingUpdate.photos = body.photos;
   if (body.sqm !== undefined) listingUpdate.sqm = body.sqm || null;
   if (body.floor !== undefined) listingUpdate.floor = body.floor != null && body.floor !== '' ? parseInt(body.floor, 10) : null;
