@@ -393,9 +393,14 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               >
                 <option value="">{t('floorPlaceholder')}</option>
                 <option value="0">{t('floorGround')}</option>
-                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
+                {Array.from({ length: 20 }, (_, i) => i + 1).map((n) => (
                   <option key={n} value={String(n)}>{n}</option>
                 ))}
+                {form.floor !== '' &&
+                  form.floor != null &&
+                  Number(form.floor) > 20 && (
+                    <option value={String(form.floor)}>{form.floor}</option>
+                  )}
               </select>
             </div>
           </div>

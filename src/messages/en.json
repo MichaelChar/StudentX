@@ -515,6 +515,8 @@
       "verified": "Verified",
       "billsIncluded": "Bills included",
       "authProgramme": "AUTh programme",
+      "dealbreakers": "Your dealbreakers",
+      "removeDealbreaker": "Remove {label}",
       "featuredTitle": "Aristotle Medical Housing Programme",
       "featuredBody": "Vetted landlords, walkable to the School of Medicine, fair rent — handpicked for incoming first-years.",
       "featuredCta": "See programme listings"

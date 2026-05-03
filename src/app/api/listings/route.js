@@ -204,7 +204,13 @@ export async function GET(request) {
     let results = data.map(transformListing);
 
     if (excludeGroundFloor) {
-      results = results.filter((listing) => listing.floor !== 0);
+      results = results.filter((listing) => {
+        if (listing.floor === 0) return false;
+        const tagged = (listing.amenities || []).some(
+          (a) => a.toLowerCase() === "ground floor"
+        );
+        return !tagged;
+      });
     }
 
     if (requireBillsIncluded) {
