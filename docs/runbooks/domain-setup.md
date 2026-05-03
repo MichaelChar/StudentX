@@ -1,6 +1,13 @@
 # Runbook — Register `studentx.uk` and verify Resend
 
-**Blocks:** Resend transactional email · Cloudflare zone-scoped features · production URL flip · [PR #51](https://github.com/MichaelChar/StudentX/pull/51) (closed pending domain) · [PR #63](https://github.com/MichaelChar/StudentX/pull/63) (pre-staged re-apply, draft)
+> **Status: completed (2026-05-03).** Domain registered, CF zone active,
+> Resend verified, `RESEND_API_KEY` set as a Worker secret, custom domain
+> serving HTTPS, `NEXT_PUBLIC_*` URL bindings flipped. Kept as historical
+> reference / playbook for future domain swaps. PRs: [#94](https://github.com/MichaelChar/StudentX/pull/94),
+> [#95](https://github.com/MichaelChar/StudentX/pull/95). PR #63 (pre-staged
+> email-subdomain branch) was superseded and closed.
+
+**Originally blocked:** Resend transactional email · Cloudflare zone-scoped features · production URL flip · [PR #51](https://github.com/MichaelChar/StudentX/pull/51) (closed pending domain) · [PR #63](https://github.com/MichaelChar/StudentX/pull/63) (pre-staged re-apply, closed)
 
 ## Why this exists
 
