@@ -25,12 +25,11 @@
     "NEXT_PUBLIC_SUPABASE_URL": "https://ecluqurlfbvkxrnoyhaq.supabase.co",
     "NEXT_PUBLIC_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbHVxdXJsZmJ2a3hybm95aGFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODQ0MzUsImV4cCI6MjA5MDM2MDQzNX0.XspsrkDjv_AWltPgFqBQSocLXU4tBmq1auu_Zg8qTBE",
     // Canonical/sitemap/og:url + landlord email links all resolve from these.
-    // Code defaults to https://studentx.uk; the live deploy is the
-    // workers.dev host until the custom domain is wired up. Once
-    // `curl -I https://studentx.uk` returns 200, flip these to the
-    // custom domain (or just remove them, since the code falls back to it).
-    "NEXT_PUBLIC_SITE_URL": "https://studentx.studentx-gr.workers.dev",
-    "NEXT_PUBLIC_APP_URL": "https://studentx.studentx-gr.workers.dev",
+    // NEXT_PUBLIC_* are inlined at build time, so any local .env.local with a
+    // dev URL (http://localhost:3000) leaks into the build unless overridden
+    // explicitly at build (or the Worker is built from CI with no .env.local).
+    "NEXT_PUBLIC_SITE_URL": "https://studentx.uk",
+    "NEXT_PUBLIC_APP_URL": "https://studentx.uk",
     // Synthetic uptime check — guards against the i18n regression class fixed
     // in PR #48 (Greek copy leaking onto /en/listing/<id>). The */15 cron POSTs
     // to /api/cron/synthetic-en-listing, which fetches /en/listing/<id> and
