@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import BauhausLoader from '@/components/BauhausLoader';
 import { TITLE_MAX_LENGTH, codepointLength } from '@/lib/listingTitle';
+import { arrayMove } from '@/lib/arrayMove';
 
 const NEIGHBORHOODS_FALLBACK = [
   'Ano Poli', 'Center', 'Faliro', 'Kalamaria', 'Kentro',
@@ -49,6 +50,24 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   const [photoError, setPhotoError] = useState('');
   // null = unlimited (paid tiers), number = cap (free tier)
   const [photoLimit, setPhotoLimit] = useState(FREE_PHOTO_LIMIT);
+  const [dragIndex, setDragIndex] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [isDirty, setIsDirty] = useState(false);
+
+  function reorderPhoto(from, to) {
+    setForm((prev) => ({ ...prev, photos: arrayMove(prev.photos || [], from, to) }));
+    setIsDirty(true);
+  }
+
+  useEffect(() => {
+    function handleBeforeUnload(e) {
+      if (!isDirty) return;
+      e.preventDefault();
+      e.returnValue = '';
+    }
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [isDirty]);
 
   useEffect(() => {
     async function loadOptions() {
@@ -87,6 +106,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
 
   function set(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
+    setIsDirty(true);
   }
 
   function toggleAmenity(amenityId) {
@@ -96,6 +116,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
         ? prev.amenity_ids.filter((id) => id !== amenityId)
         : [...prev.amenity_ids, amenityId],
     }));
+    setIsDirty(true);
   }
 
   async function handlePhotoFiles(files) {
@@ -150,6 +171,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
 
       if (uploaded.length > 0) {
         setForm((prev) => ({ ...prev, photos: [...(prev.photos || []), ...uploaded] }));
+        setIsDirty(true);
       }
     } catch (err) {
       console.error('[ListingForm] photo_upload failed:', err);
@@ -162,6 +184,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
 
   async function removePhoto(url) {
     setForm((prev) => ({ ...prev, photos: (prev.photos || []).filter((p) => p !== url) }));
+    setIsDirty(true);
     try {
       const supabase = getSupabaseBrowser();
       const marker = '/listing-photos/';
@@ -181,6 +204,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     setLoading(true);
     try {
       await onSubmit(form);
+      setIsDirty(false);
     } catch (err) {
       setError(err.message || t('errorGeneric'));
     } finally {
@@ -477,29 +501,101 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
         <div className="space-y-4">
           {/* Previews */}
           {(form.photos || []).length > 0 && (
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-              {(form.photos || []).map((url, i) => (
-                <div key={url} className="relative group aspect-[4/3] rounded-lg overflow-hidden bg-gray-light">
-                  <Image
-                    src={url}
-                    alt={`Photo ${i + 1}`}
-                    fill
-                    className="object-cover"
-                    sizes="(max-width: 640px) 50vw, 33vw"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => removePhoto(url)}
-                    className="absolute top-1.5 right-1.5 bg-white/90 hover:bg-white text-gray-dark rounded-full w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity shadow"
-                    aria-label={t('photosRemove')}
-                  >
-                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-              ))}
-            </div>
+            <>
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                {(form.photos || []).map((url, i) => {
+                  const total = (form.photos || []).length;
+                  const isDragging = dragIndex === i;
+                  const isDragOver = dragOverIndex === i && dragIndex !== null && dragIndex !== i;
+                  return (
+                    <div
+                      key={url}
+                      draggable
+                      onDragStart={(e) => {
+                        setDragIndex(i);
+                        e.dataTransfer.effectAllowed = 'move';
+                        // Required by Firefox to actually start a drag
+                        try { e.dataTransfer.setData('text/plain', String(i)); } catch {}
+                      }}
+                      onDragOver={(e) => {
+                        if (dragIndex === null || dragIndex === i) return;
+                        e.preventDefault();
+                        e.dataTransfer.dropEffect = 'move';
+                        if (dragOverIndex !== i) setDragOverIndex(i);
+                      }}
+                      onDragLeave={() => {
+                        if (dragOverIndex === i) setDragOverIndex(null);
+                      }}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        if (dragIndex !== null && dragIndex !== i) reorderPhoto(dragIndex, i);
+                        setDragIndex(null);
+                        setDragOverIndex(null);
+                      }}
+                      onDragEnd={() => {
+                        setDragIndex(null);
+                        setDragOverIndex(null);
+                      }}
+                      className={`relative group aspect-[4/3] rounded-lg overflow-hidden bg-gray-light cursor-grab active:cursor-grabbing transition-all ${
+                        i === 0 ? 'col-span-2' : ''
+                      } ${isDragging ? 'opacity-40' : ''} ${
+                        isDragOver ? 'ring-2 ring-gold ring-offset-2' : ''
+                      }`}
+                    >
+                      <Image
+                        src={url}
+                        alt={`Photo ${i + 1}`}
+                        fill
+                        className="object-cover pointer-events-none"
+                        sizes={i === 0 ? '(max-width: 640px) 100vw, 66vw' : '(max-width: 640px) 50vw, 33vw'}
+                      />
+                      {i === 0 && (
+                        <span className="absolute top-2 left-2 bg-gold text-white text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded shadow">
+                          {t('photosMain')}
+                        </span>
+                      )}
+                      <div className="absolute bottom-2 left-2 flex gap-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100 transition-opacity [@media(hover:none)]:opacity-100">
+                        <button
+                          type="button"
+                          onClick={() => reorderPhoto(i, i - 1)}
+                          disabled={i === 0}
+                          className="bg-white/95 hover:bg-white text-gray-dark rounded-full w-9 h-9 flex items-center justify-center shadow disabled:opacity-40 disabled:cursor-not-allowed"
+                          aria-label={t('photosMoveLeft')}
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                          </svg>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => reorderPhoto(i, i + 1)}
+                          disabled={i === total - 1}
+                          className="bg-white/95 hover:bg-white text-gray-dark rounded-full w-9 h-9 flex items-center justify-center shadow disabled:opacity-40 disabled:cursor-not-allowed"
+                          aria-label={t('photosMoveRight')}
+                        >
+                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </button>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removePhoto(url)}
+                        className="absolute top-2 right-2 bg-white/95 hover:bg-white text-gray-dark rounded-full w-9 h-9 flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100 transition-opacity shadow [@media(hover:none)]:opacity-100"
+                        aria-label={t('photosRemove')}
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+              {(form.photos || []).length > 1 && (
+                <p className="text-xs text-gray-dark/50">{t('photosReorderHint')}</p>
+              )}
+            </>
           )}
 
           {/* Imported external photos (read-only) */}
