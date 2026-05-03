@@ -9,7 +9,6 @@ import { useTranslations } from 'next-intl';
 import ListingCard from '@/components/ListingCard';
 import SaveSearchModal from '@/components/SaveSearchModal';
 import Button from '@/components/ui/Button';
-import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import GlobeLoader from '@/components/GlobeLoader';
@@ -207,9 +206,6 @@ function ResultsContent() {
     }));
   }
 
-  const featured = listings.find((l) => l.is_featured);
-  const regular = listings.filter((l) => !l.is_featured);
-
   // Show loader as a full-screen overlay until BOTH animation completes
   // AND the initial listings fetch has finished. Both conditions guard
   // against jank: the loader hides only when there's something legible
@@ -322,10 +318,6 @@ function ResultsContent() {
           {/* List view */}
           {viewMode === 'list' && (
             <>
-              {featured && !loading && (
-                <FeaturedCard featured={featured} t={t} />
-              )}
-
               {loading && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
                   {Array.from({ length: 6 }).map((_, i) => (
@@ -345,9 +337,9 @@ function ResultsContent() {
                 </div>
               )}
 
-              {!loading && !error && regular.length > 0 && (
+              {!loading && !error && listings.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
-                  {regular.map((listing) => (
+                  {listings.map((listing) => (
                     <ListingCard
                       key={listing.listing_id}
                       listing={listing}
@@ -590,36 +582,6 @@ function FilterPanel({
         + Save this search
       </button>
     </div>
-  );
-}
-
-function FeaturedCard({ featured, t }) {
-  return (
-    <Card
-      tone="night"
-      className="mb-8 relative overflow-hidden bg-night text-stone p-8 md:p-10"
-    >
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-        <div>
-          <p className="label-caps text-gold mb-3">
-            {t('featuredTitle')}
-          </p>
-          <p className="font-display text-2xl md:text-3xl text-stone leading-tight max-w-lg">
-            {t('featuredBody')}
-          </p>
-        </div>
-        <Link
-          href={`/listing/${featured.listing_id}`}
-          className="label-caps text-gold hover:text-white transition-colors shrink-0"
-        >
-          {t('featuredCta')} →
-        </Link>
-      </div>
-      <div
-        aria-hidden="true"
-        className="absolute -bottom-20 -right-16 w-72 h-72 rounded-full bg-gold/15 blur-2xl"
-      />
-    </Card>
   );
 }
 

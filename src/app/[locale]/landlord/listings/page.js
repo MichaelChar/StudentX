@@ -25,8 +25,6 @@ export default function LandlordListingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(null);
-  const [togglingFeatured, setTogglingFeatured] = useState(null);
-
   useEffect(() => {
     (async () => {
       const supabase = getSupabaseBrowser();
@@ -76,40 +74,6 @@ export default function LandlordListingsPage() {
     }
   }
 
-  async function handleToggleFeatured(listingId, currentlyFeatured) {
-    setTogglingFeatured(listingId);
-    try {
-      if (!accessToken) {
-        setTogglingFeatured(null);
-        router.replace('/landlord/login');
-        return;
-      }
-      const res = await fetch(`/api/landlord/listings/${listingId}`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ is_featured: !currentlyFeatured }),
-      });
-      if (res.ok) {
-        setListings((prev) =>
-          prev.map((l) =>
-            l.listing_id === listingId ? { ...l, is_featured: !currentlyFeatured } : l
-          )
-        );
-      } else {
-        const data = await res.json().catch(() => ({}));
-        alert(data.error || t('featuredError'));
-      }
-    } catch (err) {
-      console.error('[LandlordListings] toggle_featured failed:', err);
-      alert(t('featuredError'));
-    } finally {
-      setTogglingFeatured(null);
-    }
-  }
-
   return (
     <LandlordShell
       eyebrow="Portfolio"
@@ -150,14 +114,7 @@ export default function LandlordListingsPage() {
                 <ListingRow
                   listing={listing}
                   deleting={deleting === listing.listing_id}
-                  toggling={togglingFeatured === listing.listing_id}
                   onDelete={() => handleDelete(listing.listing_id)}
-                  onToggleFeatured={() =>
-                    handleToggleFeatured(
-                      listing.listing_id,
-                      listing.is_featured
-                    )
-                  }
                   t={t}
                 />
               </li>
@@ -169,7 +126,7 @@ export default function LandlordListingsPage() {
   );
 }
 
-function ListingRow({ listing, deleting, toggling, onDelete, onToggleFeatured, t }) {
+function ListingRow({ listing, deleting, onDelete, t }) {
   const photo = listing.photos?.find((url) => typeof url === 'string' && url.startsWith('http'));
   const address = listing.location?.address || t('noAddress');
   const heading = listing.title || address;
@@ -199,7 +156,7 @@ function ListingRow({ listing, deleting, toggling, onDelete, onToggleFeatured, t
           <p className="font-display text-xl text-night truncate">
             {heading}
           </p>
-          {listing.is_featured && <Pill variant="verified">Featured</Pill>}
+          {listing.is_featured && <Pill variant="verified">{t('featured')}</Pill>}
         </div>
         {/* Address always rendered on this internal surface — landlords
             identify their own listings by street most reliably. For
@@ -217,17 +174,6 @@ function ListingRow({ listing, deleting, toggling, onDelete, onToggleFeatured, t
       </div>
 
       <div className="flex flex-wrap items-center gap-2 shrink-0">
-        <button
-          onClick={onToggleFeatured}
-          disabled={toggling}
-          className={`label-caps px-3 py-1.5 rounded-sm border transition-colors disabled:opacity-50 ${
-            listing.is_featured
-              ? 'border-gold text-gold hover:bg-gold hover:text-white'
-              : 'border-night/20 text-night/60 hover:border-gold hover:text-gold'
-          }`}
-        >
-          {toggling ? '…' : listing.is_featured ? t('featured') : t('unfeatured')}
-        </button>
         <Link
           href={`/listing/${listing.listing_id}`}
           target="_blank"

@@ -185,7 +185,6 @@ export async function PATCH(request, { params }) {
 
   // Update listing row
   const listingUpdate = {};
-  if (body.is_featured !== undefined) listingUpdate.is_featured = !!body.is_featured;
   // Title semantics:
   //   undefined → leave alone (don't include in update)
   //   null OR empty-after-normalization → 400 (cannot clear a required field)

@@ -261,6 +261,15 @@ export async function POST(request) {
   }
   const listingId = landlordId + String(nextSeq).padStart(3, '0');
 
+  // Auto-feature listings for landlords with an active subscription
+  const { data: activeSub } = await supabase
+    .from('subscriptions')
+    .select('subscription_id')
+    .eq('landlord_id', landlordId)
+    .eq('status', 'active')
+    .limit(1);
+  const isFeatured = activeSub && activeSub.length > 0;
+
   // Insert listing row
   const { data: listing, error: listingError } = await authedSupabase
     .from('listings')
@@ -278,6 +287,7 @@ export async function POST(request) {
       floor: body.floor != null && body.floor !== '' ? parseInt(body.floor, 10) : null,
       available_from: body.available_from || null,
       min_duration_months: parseMinDuration(body.min_duration_months),
+      is_featured: isFeatured,
     })
     .select('listing_id')
     .single();
