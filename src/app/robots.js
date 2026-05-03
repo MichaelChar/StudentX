@@ -7,7 +7,7 @@ export default function robots() {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/api/', '/landlord/'],
+        disallow: ['/api/', '/property/landlord/'],
       },
     ],
     sitemap: `${SITE_URL}/sitemap.xml`,

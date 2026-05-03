@@ -45,8 +45,8 @@ describe('inquiryEmailHtml', () => {
   it('produces Greek HTML with the correct lang and listing URL by default', () => {
     const html = inquiryEmailHtml(baseArgs);
     expect(html).toContain('<html lang="el">');
-    expect(html).toContain('https://studentx.uk/listing/0100006');
-    expect(html).toContain('https://studentx.uk/landlord/inquiries');
+    expect(html).toContain('https://studentx.uk/property/listing/0100006');
+    expect(html).toContain('https://studentx.uk/property/landlord/inquiries');
     expect(html).toContain('€450/μήνα');
   });
 

@@ -99,19 +99,19 @@ const nextConfig = {
       // a defensible micro-optimization (skips one Supabase round-trip
       // per anonymous request) even though the response stays uncacheable.
       {
-        source: '/landlord/:path*',
+        source: '/property/landlord/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
       {
-        source: '/:locale(en)/landlord/:path*',
+        source: '/:locale(en)/property/landlord/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
       {
-        source: '/listing/:path*',
+        source: '/property/listing/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
       {
-        source: '/:locale(en)/listing/:path*',
+        source: '/:locale(en)/property/listing/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
       {
@@ -127,9 +127,35 @@ const nextConfig = {
       // (favicon etc.).
       {
         source:
-          '/((?!api|_next|landlord|en/landlord|listing|en/listing|student|en/student|.*\\..*).*)',
+          '/((?!api|_next|property/landlord|en/property/landlord|property/listing|en/property/listing|student|en/student|.*\\..*).*)',
         headers: PUBLIC_CACHE_HEADERS,
       },
+    ];
+  },
+  async redirects() {
+    // Legacy paths from the pre-/property directory layout. The directory
+    // moved under /property in 2026 to make room for /services on the same
+    // domain. Permanent so search engines flow link equity to the new URLs;
+    // since we just launched, there's no real index to preserve, but cheap
+    // insurance. Mirrors each path with the /en variant.
+    const directoryPaths = [
+      ['/results', '/property/results'],
+      ['/quiz', '/property/quiz'],
+      ['/about', '/property/about'],
+    ];
+    return [
+      { source: '/', destination: '/property', permanent: true },
+      ...directoryPaths.flatMap(([from, to]) => [
+        { source: from, destination: to, permanent: true },
+        { source: `/en${from}`, destination: `/en${to}`, permanent: true },
+      ]),
+      { source: '/listing/:id', destination: '/property/listing/:id', permanent: true },
+      { source: '/en/listing/:id', destination: '/en/property/listing/:id', permanent: true },
+      { source: '/landlord/:path*', destination: '/property/landlord/:path*', permanent: true },
+      { source: '/en/landlord/:path*', destination: '/en/property/landlord/:path*', permanent: true },
+      { source: '/alerts/:path*', destination: '/property/alerts/:path*', permanent: true },
+      { source: '/en/alerts/:path*', destination: '/en/property/alerts/:path*', permanent: true },
+      { source: '/en', destination: '/en/property', permanent: true },
     ];
   },
   images: {

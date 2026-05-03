@@ -31,7 +31,7 @@ export async function POST(request) {
 
   const session = await stripe.billingPortal.sessions.create({
     customer: landlord.stripe_customer_id,
-    return_url: `${siteUrl}/landlord/dashboard`,
+    return_url: `${siteUrl}/property/landlord/dashboard`,
   });
 
   return NextResponse.json({ url: session.url });

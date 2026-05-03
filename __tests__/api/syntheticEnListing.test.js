@@ -4,7 +4,7 @@ import { evaluateBody } from '@/app/api/cron/synthetic-en-listing/route';
 // The cache-header regression guard added in PR #64. Issue #67 tracks
 // the deferred middleware-level anon/auth split that would let listing
 // routes safely return public cache. Until that ships, evaluateBody
-// must fail loudly if /en/listing/<id> ever returns public, s-maxage=...
+// must fail loudly if /en/property/listing/<id> ever returns public, s-maxage=...
 // — that's the session-leak shape the original cache-rework attempt
 // was reverted to avoid.
 

@@ -31,7 +31,7 @@ export async function sendSubscriptionWelcomeEmail({ supabase, landlordId, tier 
     const locale = landlord.preferred_locale === 'en' ? 'en' : 'el';
     const tierName = TIER_DISPLAY_NAMES[tier] || 'SuperLandlord';
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
-    const verificationUrl = `${appUrl}/${locale === 'en' ? 'en/' : ''}landlord/verification`;
+    const verificationUrl = `${appUrl}/${locale === 'en' ? 'en/' : ''}property/landlord/verification`;
 
     await getResend().emails.send({
       from: FROM_ADDRESS,

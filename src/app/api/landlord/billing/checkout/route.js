@@ -64,10 +64,10 @@ export async function POST(request) {
       customer: customerId,
       mode: 'subscription',
       line_items: lineItems,
-      success_url: `${siteUrl}/landlord/dashboard?billing=success`,
+      success_url: `${siteUrl}/property/landlord/dashboard?billing=success`,
       cancel_url: returnTo === 'onboarding'
-        ? `${siteUrl}/landlord/onboarding`
-        : `${siteUrl}/landlord/dashboard?billing=cancelled`,
+        ? `${siteUrl}/property/landlord/onboarding`
+        : `${siteUrl}/property/landlord/dashboard?billing=cancelled`,
       metadata: {
         landlord_id: landlord.landlord_id,
         plan_id: tier,

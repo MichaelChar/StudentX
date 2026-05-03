@@ -32,19 +32,19 @@ export default function Footer() {
           <nav className="flex flex-col gap-3">
             <span className="label-caps text-gold">{t('colProduct')}</span>
             <Link
-              href="/results"
+              href="/property/results"
               className="text-stone/75 hover:text-white transition-colors text-sm"
             >
               {t('listings')}
             </Link>
             <Link
-              href="/quiz"
+              href="/property/quiz"
               className="text-stone/75 hover:text-white transition-colors text-sm"
             >
               {t('takeTheQuiz')}
             </Link>
             <Link
-              href="/results?view=map"
+              href="/property/results?view=map"
               className="text-stone/75 hover:text-white transition-colors text-sm"
             >
               {t('map')}

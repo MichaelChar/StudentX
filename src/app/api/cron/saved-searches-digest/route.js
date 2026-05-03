@@ -135,7 +135,7 @@ export async function POST(request) {
       // From here on: the claim is committed. If Resend throws, this digest
       // is lost for this period (no resend on retry). For digests this is
       // the right tradeoff: missing one digest beats double-sending.
-      const manageUrl = `${appUrl}/alerts/manage?token=${search.unsubscribe_token}`;
+      const manageUrl = `${appUrl}/property/alerts/manage?token=${search.unsubscribe_token}`;
 
       await resend.emails.send({
         from: 'StudentX Alerts <alerts@studentx.uk>',

@@ -13,7 +13,7 @@ import AuthGateRescue from '@/components/AuthGateRescue';
  *     Tells them this listing is for students and offers to switch
  *     accounts or return to the landlord dashboard.
  *
- * `next` is a path-with-query (e.g. "/listing/3801?from=...") that the
+ * `next` is a path-with-query (e.g. "/property/listing/3801?from=...") that the
  * sign-in page reads from `?next=` and assigns via window.location.
  *
  * `locale` must be passed explicitly by the caller. Bare
@@ -65,7 +65,7 @@ export default async function AuthGate({ next, locale, mode = 'guest' }) {
                 {t('wrongRoleSwitch')}
               </Link>
               <Link
-                href="/landlord/dashboard"
+                href="/property/landlord/dashboard"
                 className="inline-flex items-center justify-center w-full border border-blue text-blue font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-blue hover:text-white transition-colors"
               >
                 {t('wrongRoleDashboard')}
@@ -92,7 +92,7 @@ export default async function AuthGate({ next, locale, mode = 'guest' }) {
             <p className="mt-8 text-sm text-night/50">
               {t('landlordHint')}{' '}
               <Link
-                href="/landlord/login"
+                href="/property/landlord/login"
                 className="text-blue hover:text-night font-medium"
               >
                 {t('landlordLink')} →

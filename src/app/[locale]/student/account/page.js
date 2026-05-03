@@ -73,7 +73,7 @@ export default async function StudentAccountPage({ params }) {
           <Icon name="message" className="w-12 h-12 mx-auto text-night/30 mb-3" />
           <p className="font-display text-xl text-night/60 mb-5">{t('empty')}</p>
           <Link
-            href="/results"
+            href="/property/results"
             className="inline-flex items-center justify-center bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
           >
             {t('emptyCta')}

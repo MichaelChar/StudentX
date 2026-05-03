@@ -83,8 +83,8 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
   const safePrice = listing.monthly_price ? s.pricePerMonth(Number(listing.monthly_price)) : '';
   const safeGreeting = landlordName ? escapeHtml(landlordName) : s.greetingFallback;
 
-  const listingUrl = `${appUrl}/listing/${listing.listing_id}`;
-  const inboxUrl = `${appUrl}/landlord/inquiries`;
+  const listingUrl = `${appUrl}/property/listing/${listing.listing_id}`;
+  const inboxUrl = `${appUrl}/property/landlord/inquiries`;
 
   const listingSummary = [safeAddress, safeNeighborhood, safePrice].filter(Boolean).join(' · ');
   const intro = listingSummary
