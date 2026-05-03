@@ -126,7 +126,7 @@ Smoke test the site:
 
 - Open `/listing/0100001` (or any listing) and confirm the gallery loads.
 - Use the OpenGraph debugger
-  (https://www.opengraph.xyz/url/https%3A%2F%2Fstudentx.gr%2Flisting%2F0100001)
+  (https://www.opengraph.xyz/url/https%3A%2F%2Fstudentx.uk%2Flisting%2F0100001)
   to confirm og:image points at `*.supabase.co/storage/...` and renders.
 
 ## Rollback

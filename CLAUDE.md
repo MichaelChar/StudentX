@@ -21,9 +21,9 @@ is curated and verified.
 - **Maps:** Leaflet `1.9.4` + `react-leaflet@^5.0.0`; OSM tiles; topojson + d3-geo for region shapes.
 - **CSS:** Tailwind v4 (`tailwindcss@^4` + `@tailwindcss/postcss`).
 - **Hosting:** Cloudflare Workers via OpenNext (`@opennextjs/cloudflare@^1.18.0`),
-  `wrangler@^4.80.0`. Live at `https://studentx.studentx-gr.workers.dev`
-  (a `*.workers.dev` subdomain) until `studentx.gr` DNS is wired up.
-- **Lint:** `eslint@^9` + `eslint-config-next@16.2.1`. **No test framework yet.**
+  `wrangler@^4.80.0`. Custom domain `https://studentx.uk` (pending DNS
+  setup); interim URL `https://studentx.studentx-gr.workers.dev`.
+- **Lint:** `eslint@^9` + `eslint-config-next@16.2.1`.
 
 > Versions above are spot-checks at write time. `package.json` is authoritative;
 > update this list only on major bumps.
@@ -178,9 +178,8 @@ each soft-failing into a per-check report:
    (catches missing en.json keys).
 
 Failure path emails `SYNTHETIC_ALERT_EMAIL` via Resend — currently
-**logs-only in production** because the parent `studentx.gr` domain is
-unregistered (NXDOMAIN). PR #51 (`fix(email): send from
-alerts@updates.studentx.gr`) is **closed** pending domain registration.
+**logs-only in production** pending Resend domain verification for
+`studentx.uk` (see `docs/runbooks/domain-setup.md`).
 Failures still surface in `wrangler tail`.
 
 ## Database (Supabase)
@@ -220,26 +219,22 @@ Failures still surface in `wrangler tail`.
 
 ## Email (Resend)
 
-**Currently broken in production.** All Resend sends silently fail because
-`studentx.gr` is unregistered → no domain to verify → Resend rejects every
-send. Affected paths (each wrapped in try/catch, so the surrounding flow
-keeps working):
+**Currently logs-only in production.** Resend sends will work once
+`studentx.uk` is verified in Resend and `RESEND_API_KEY` is set as a
+Worker secret. The full DNS + Resend verification flow lives in
+`docs/runbooks/domain-setup.md`. Until then, all outbound email paths
+silently fail at the Resend send step (each wrapped in try/catch, so the
+surrounding flow keeps working):
 
 - Synthetic check alerts (`/api/cron/synthetic-en-listing`)
 - Saved-searches digest (`/api/cron/saved-searches-digest`)
 - Landlord message digest (`/api/cron/landlord-message-digest`)
 - Inquiry notifications (`src/lib/inquiryEmail.js`)
+- Subscription welcome (`src/lib/subscriptionEmail.js`)
 
 **Workaround for testing:** `onboarding@resend.dev` is Resend's free testing
 sender, but it only delivers to the Resend account-owner email — it doesn't
 unblock user-facing notifications.
-
-**Permanent fix** requires registering `studentx.gr` (or another domain),
-verifying it in Resend, and setting `RESEND_API_KEY` as a Worker secret.
-The full registration → DNS → Resend verification flow lives in
-`docs/runbooks/domain-setup.md`. The **Domain context** section of
-`docs/runbooks/synthetic-en-listing.md` covers why every Resend send
-currently no-ops.
 
 ## Tests
 

@@ -60,7 +60,7 @@ Copy the webhook signing secret to `STRIPE_WEBHOOK_SECRET` in your `.env.local`.
 ```
 STRIPE_SECRET_KEY=sk_test_...
 STRIPE_WEBHOOK_SECRET=whsec_...
-NEXT_PUBLIC_SITE_URL=http://localhost:3000
+NEXT_PUBLIC_SITE_URL=http://localhost:3000  # Production: https://studentx.uk
 ```
 
 ## How Overage Billing Works
