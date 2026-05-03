@@ -133,10 +133,12 @@ Add to [`wrangler.jsonc`](../../wrangler.jsonc) (sibling of `triggers`):
 
 ```json
 "routes": [
-  { "pattern": "studentx.uk/*", "custom_domain": true },
-  { "pattern": "www.studentx.uk/*", "custom_domain": true }
+  { "pattern": "studentx.uk", "custom_domain": true },
+  { "pattern": "www.studentx.uk", "custom_domain": true }
 ]
 ```
+
+> Note: `custom_domain: true` routes take bare hostnames — wildcards (`/*`) and paths are rejected by `wrangler deploy` with "Wildcard operators (*) are not allowed in Custom Domains".
 
 Then:
 
