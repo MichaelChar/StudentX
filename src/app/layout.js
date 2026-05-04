@@ -1,5 +1,5 @@
 import { EB_Garamond, Source_Sans_3 } from "next/font/google";
-import { getLocale } from "next-intl/server";
+import LangSync from "@/components/LangSync";
 import "./globals.css";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
@@ -31,15 +31,20 @@ const sourceSans = Source_Sans_3({
   display: "swap",
 });
 
-export default async function RootLayout({ children }) {
-  const locale = await getLocale().catch(() => "el");
+// Hardcode lang to the default locale. Calling next-intl's getLocale() here
+// poisons the per-request config cache before any child layout has had a
+// chance to call setRequestLocale(locale), which makes every t()/getMessages()
+// in /en/* render Greek. <LangSync> updates document.documentElement.lang
+// client-side once next-intl's provider has the real locale.
+export default function RootLayout({ children }) {
   return (
     <html
-      lang={locale}
+      lang="el"
       suppressHydrationWarning
       className={`${ebGaramond.variable} ${sourceSans.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-stone text-night">
+        <LangSync />
         {children}
       </body>
     </html>

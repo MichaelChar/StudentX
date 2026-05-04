@@ -21,9 +21,9 @@ import GlobeLoader from '@/components/GlobeLoader';
 */
 
 const PROPERTY_TYPE_GROUPS = [
-  { label: 'Studio / 1-bed', values: ['Studio', '1-Bedroom'] },
-  { label: '2-bed', values: ['2-Bedroom'] },
-  { label: 'Private room', values: ['Room in shared apartment'] },
+  { labelKey: 'typeStudio1Bed', values: ['Studio', '1-Bedroom'] },
+  { labelKey: 'type2Bed', values: ['2-Bedroom'] },
+  { labelKey: 'typePrivateRoom', values: ['Room in shared apartment'] },
 ];
 const BUDGET_MIN = 150;
 const BUDGET_MAX = 1200;
@@ -562,7 +562,7 @@ function FilterPanel({
             const active = group.values.every((v) => filters.selectedTypes.includes(v));
             return (
               <button
-                key={group.label}
+                key={group.labelKey}
                 type="button"
                 onClick={() => onToggleType(group.values)}
                 aria-pressed={active}
@@ -572,7 +572,7 @@ function FilterPanel({
                     : 'border-night/20 text-night/70 hover:border-blue'
                 }`}
               >
-                {group.label}
+                {tQuiz(group.labelKey)}
               </button>
             );
           })}
