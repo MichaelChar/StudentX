@@ -13,6 +13,7 @@ import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
+import { variantUrl } from '@/lib/photoVariants';
 import OrnamentRule from '@/components/ui/OrnamentRule';
 
 // Cap on the untrusted ?from= URL param. Real /results querystrings are
@@ -253,7 +254,7 @@ function PhotoTile({ src, alt, priority = false }) {
   return (
     <div className="relative aspect-[4/3] rounded-sm overflow-hidden bg-parchment">
       <Image
-        src={src}
+        src={variantUrl(src, 'full')}
         alt={alt}
         fill
         className="object-cover"
