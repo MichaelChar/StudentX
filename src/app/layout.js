@@ -1,7 +1,14 @@
-import { EB_Garamond, Source_Sans_3 } from "next/font/google";
-import LangSync from "@/components/LangSync";
-import "./globals.css";
-
+// Minimal root layout. The actual <html>/<body> shell lives in
+// src/app/[locale]/layout.js so it can render with the correct lang attribute
+// from `params.locale`. Calling next-intl's getLocale() here would poison
+// the per-request config cache before any child layout has had a chance to
+// call setRequestLocale(locale), which makes every t()/getMessages() in
+// /en/* return Greek messages. Per next-intl's recommended structure for
+// `localePrefix: 'as-needed'`, the root layout is just a pass-through.
+//
+// Required to exist by Next.js even though every rendered route goes
+// through [locale]/layout.js (non-locale routes under src/app/property/*
+// and src/app/page.js are all redirects, so they never render HTML).
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
 export const metadata = {
@@ -14,39 +21,6 @@ export const metadata = {
   },
 };
 
-// Propylaea display face — EB Garamond (Greek polytonic coverage)
-const ebGaramond = EB_Garamond({
-  subsets: ["latin", "greek"],
-  variable: "--font-eb-garamond",
-  weight: ["400", "500", "600", "700"],
-  style: ["normal", "italic"],
-  display: "swap",
-});
-
-// Propylaea body/UI face — Source Sans 3 (wide x-height, Greek polytonic coverage)
-const sourceSans = Source_Sans_3({
-  subsets: ["latin", "greek"],
-  variable: "--font-source-sans",
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-});
-
-// Hardcode lang to the default locale. Calling next-intl's getLocale() here
-// poisons the per-request config cache before any child layout has had a
-// chance to call setRequestLocale(locale), which makes every t()/getMessages()
-// in /en/* render Greek. <LangSync> updates document.documentElement.lang
-// client-side once next-intl's provider has the real locale.
 export default function RootLayout({ children }) {
-  return (
-    <html
-      lang="el"
-      suppressHydrationWarning
-      className={`${ebGaramond.variable} ${sourceSans.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col font-sans bg-stone text-night">
-        <LangSync />
-        {children}
-      </body>
-    </html>
-  );
+  return children;
 }

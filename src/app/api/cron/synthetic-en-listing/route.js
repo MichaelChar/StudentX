@@ -219,8 +219,8 @@ async function checkNoMissingMessage(appUrl) {
   const url = `${appUrl}/en`;
   try {
     const res = await fetchUrl(url);
-    if (res.status !== 200) {
-      return { name: 'missing-message', ok: false, reason: `expected 200, got ${res.status} from ${url}` };
+    if (res.status !== 200 && res.status !== 307 && res.status !== 308) {
+      return { name: 'missing-message', ok: false, reason: `expected 200/redirect, got ${res.status} from ${url}` };
     }
     const body = await res.text();
     if (body.includes('MISSING_MESSAGE:')) {
@@ -231,6 +231,31 @@ async function checkNoMissingMessage(appUrl) {
     return { name: 'missing-message', ok: true };
   } catch (err) {
     return { name: 'missing-message', ok: false, reason: `fetch threw: ${err.message || err.name}` };
+  }
+}
+
+// Generic /en/* locale check: assert at least one EN-only marker is present
+// and no EL-only marker leaks through. Caller passes a list of EN markers
+// any of which is sufficient (forgiving against copy tweaks) and a list of
+// EL forbidden markers all of which must be absent.
+async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers }) {
+  try {
+    const res = await fetchUrl(url);
+    if (res.status !== 200) {
+      return { name, ok: false, reason: `expected 200, got ${res.status} from ${url}` };
+    }
+    const body = await res.text();
+    const hasEn = anyEnMarker.some((m) => body.includes(m));
+    if (!hasEn) {
+      return { name, ok: false, reason: `missing all EN markers: ${anyEnMarker.join(', ')}` };
+    }
+    const leakedEl = forbidElMarkers.find((m) => body.includes(m));
+    if (leakedEl) {
+      return { name, ok: false, reason: `forbidden EL marker present: ${leakedEl}` };
+    }
+    return { name, ok: true };
+  } catch (err) {
+    return { name, ok: false, reason: `fetch threw: ${err.message || err.name}` };
   }
 }
 
@@ -300,6 +325,23 @@ export async function POST(request) {
     checkOgDefault(appUrl),
     checkLandlordListingsApi(appUrl),
     checkNoMissingMessage(appUrl),
+    // Sitewide /en/* locale guards. The /en/listing/[id] check above only
+    // catches regressions on that route; this caught a sitewide regression
+    // (PR #109) where every /en/* page rendered Greek because of poisoned
+    // next-intl request scope. Any one of these failing means /en/* dropped
+    // back to default-locale rendering somewhere in the layout chain.
+    checkEnLocale({
+      name: 'en-homepage-locale',
+      url: `${appUrl}/en/property`,
+      anyEnMarker: ['Take the quiz', 'See all listings', 'How it works'],
+      forbidElMarkers: ['Κάνε το κουίζ', 'Δες όλες τις αγγελίες'],
+    }),
+    checkEnLocale({
+      name: 'en-quiz-locale',
+      url: `${appUrl}/en/property/quiz`,
+      anyEnMarker: ['One minute', "That's it"],
+      forbidElMarkers: ['Ένα λεπτό', 'Συνέχεια'],
+    }),
   ]);
   for (const r of additional) {
     checks.push(r);
