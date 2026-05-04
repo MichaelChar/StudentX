@@ -84,37 +84,43 @@ unprefixed Greek-default entry points the middleware rewrites into the
 
 ## i18n calling convention (READ THIS BEFORE TOUCHING SERVER COMPONENTS)
 
-**Always pass `locale` explicitly to `getTranslations`:**
+The `<html>` element lives in `src/app/[locale]/layout.js` (not the root
+`src/app/layout.js`) so `lang={locale}` is set from `params` rather than from
+`getLocale()`. Calling `getLocale()` in the root layout poisoned next-intl's
+per-request config cache and made every `/en/*` route render Greek (PR #110;
+fixed at the root cause, replacing the band-aid in #109). The root layout is
+a minimal pass-through.
 
-```js
-const t = await getTranslations({ locale, namespace: 'student.gate' });
-```
+Conventions still in force:
 
-The bare form `getTranslations('namespace')` reads from next-intl's request
-scope, which under OpenNext on Workers can fall through to `defaultLocale: 'el'`
-when the component renders inside a redirect/guard branch — producing Greek
-copy on `/en/` routes. PR #48 fixed every known instance; #52 and #54 cleaned
-up two more. Synthetic check (#50) guards against recurrence.
+- **Always pass `locale` explicitly to `getTranslations`** in server
+  components, even though the request-scope path is now reliable:
 
-`AuthGate` takes `locale` as an explicit prop. Its JSDoc is the canonical
-explanation — copying verbatim from `src/components/AuthGate.js`:
+  ```js
+  const t = await getTranslations({ locale, namespace: 'student.gate' });
+  ```
 
-> `locale` must be passed explicitly by the caller. Bare
-> `getTranslations('namespace')` reads from next-intl's request scope, which
-> under OpenNext on Workers can fall through to `defaultLocale` ('el') for
-> components rendered inside a redirect/guard branch — producing Greek copy
-> on /en/ routes. The explicit `{ locale, namespace }` form is authoritative.
+  The explicit form is self-documenting at the call site and avoids
+  re-introducing dependence on the request scope. PR #48/#52/#54 fixed
+  every known leak of the bare form.
 
-When a server component receives `params`, also call `setRequestLocale(locale)`
-near the top — see `src/app/[locale]/listing/[id]/page.js` for the canonical
-pattern.
+- **`AuthGate` takes `locale` as an explicit prop.** Its JSDoc explains why
+  in detail — the short version: any component rendered inside a redirect
+  or guard branch should not assume request scope.
+
+- **When a server component receives `params`, call `setRequestLocale(locale)`
+  near the top** — see `src/app/[locale]/property/listing/[id]/page.js` for
+  the canonical pattern. With `<html>` now in `[locale]/layout.js`, this is
+  belt-and-braces rather than load-bearing, but stay in the habit.
+
+- **Synthetic canary `/api/cron/synthetic-en-listing` guards `/en` against
+  Greek leakage** on the listing detail page, the property homepage, and
+  the matching quiz (extended in PR #110). Add a check there if you build
+  a new locale-sensitive surface.
 
 ## OpenNext-on-Workers quirks
 
-1. **next-intl request scope is unreliable inside redirect/guard branches.**
-   See above. Always pass `{ locale, namespace }` explicitly.
-
-2. **Auth-touching pages don't get CDN caching, regardless of `next.config.mjs`.**
+1. **Auth-touching pages don't get CDN caching, regardless of `next.config.mjs`.**
    `next.config.mjs` declares `public, s-maxage=300, stale-while-revalidate=86400`
    for marketing routes and `private, no-cache, no-store, must-revalidate` for
    `/landlord/*`, `/listing/*`, `/student/*` (and their `/en/` counterparts).
@@ -123,7 +129,7 @@ pattern.
    config — OpenNext / Workers force-private any response from a route that
    touches request-scoped APIs (cookies, headers).
 
-3. **OpenNext v1.x doesn't ship a `scheduled` handler.** `cf/worker-entry.mjs`
+2. **OpenNext v1.x doesn't ship a `scheduled` handler.** `cf/worker-entry.mjs`
    wraps `.open-next/worker.js` to add one and re-exports the Durable Object
    classes (`DOQueueHandler`, `DOShardedTagCache`, `BucketCachePurge`) that
    Cloudflare requires at module top level.
