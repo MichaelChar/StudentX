@@ -1,9 +1,10 @@
 import Image from 'next/image';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import { variantUrl } from '@/lib/photoVariants';
+import { formatPropertyType } from '@/lib/propertyType';
 
 /*
   Propylaea listing card — matches page 06 of the reference design.
@@ -18,6 +19,7 @@ function isValidPhotoUrl(url) {
 export default function ListingCard({ listing, fromQuery = '' }) {
   const t = useTranslations('propylaea.results');
   const tCard = useTranslations('listingCard');
+  const locale = useLocale();
   const photo = listing.photos?.find(isValidPhotoUrl);
   const isVerified =
     listing.verified_tier &&
@@ -73,7 +75,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
 
         <div className="mt-4 flex items-baseline justify-between gap-3">
           <span className="label-caps text-night/60">
-            {listing.property_type}
+            {formatPropertyType(listing.property_type, locale)}
           </span>
           <span className="font-display text-xl text-blue">
             {listing.monthly_price != null ? (

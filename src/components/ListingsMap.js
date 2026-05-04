@@ -3,8 +3,10 @@
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import Link from 'next/link';
 import { useEffect } from 'react';
+import { useLocale } from 'next-intl';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import { formatPropertyType } from '@/lib/propertyType';
 
 // Fix missing marker icons in webpack/Next.js builds
 function useLeafletIcons() {
@@ -23,6 +25,7 @@ const THESSALONIKI_CENTER = [40.6301, 22.9439];
 const DEFAULT_ZOOM = 13;
 
 export default function ListingsMap({ listings }) {
+  const locale = useLocale();
   useLeafletIcons();
 
   const withCoords = listings.filter(
@@ -49,7 +52,7 @@ export default function ListingsMap({ listings }) {
                   {listing.title || listing.address}
                 </p>
                 <p className="text-gray-600 text-xs mb-1">
-                  {listing.property_type} · {listing.neighborhood}
+                  {formatPropertyType(listing.property_type, locale)} · {listing.neighborhood}
                 </p>
                 {/* Address kept on the popup even when title differs — students
                     are comparing pins by location, not by marketing copy. */}

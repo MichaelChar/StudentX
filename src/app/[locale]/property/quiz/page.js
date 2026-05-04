@@ -23,10 +23,9 @@ const BUDGET_STEP = 25;
 const BUDGET_DEFAULT = 550;
 
 const TYPE_OPTIONS = [
-  { value: 'Studio', labelKey: 'typeStudio' },
-  { value: '1-Bedroom', labelKey: 'type1Bed' },
-  { value: '2-Bedroom', labelKey: 'type2Bed' },
-  { value: 'Room in shared apartment', labelKey: 'typeShared' },
+  { value: ['Studio', '1-Bedroom'], labelKey: 'typeStudio1Bed' },
+  { value: ['2-Bedroom'], labelKey: 'type2Bed' },
+  { value: ['Room in shared apartment'], labelKey: 'typePrivateRoom' },
 ];
 
 // Dealbreaker keys must align with what /results/page.js filters on.
@@ -101,7 +100,14 @@ export default function QuizPage() {
           <TypeStep
             t={t}
             types={types}
-            onToggleType={(v) => toggleIn(types, setTypes, v)}
+            onToggleType={(vals) => {
+              setTypes((prev) => {
+                const allPresent = vals.every((v) => prev.includes(v));
+                return allPresent
+                  ? prev.filter((v) => !vals.includes(v))
+                  : [...prev.filter((v) => !vals.includes(v)), ...vals];
+              });
+            }}
           />
         )}
 
@@ -188,12 +194,13 @@ function TypeStep({ t, types, onToggleType }) {
 
       <div className="mt-6 flex flex-wrap gap-2">
         {TYPE_OPTIONS.map((opt) => {
-          const active = types.includes(opt.value);
+          const vals = opt.value;
+          const active = vals.every((v) => types.includes(v));
           return (
             <button
-              key={opt.value}
+              key={opt.labelKey}
               type="button"
-              onClick={() => onToggleType(opt.value)}
+              onClick={() => onToggleType(vals)}
               aria-pressed={active}
               className={`px-4 py-2 rounded-sm border text-sm font-sans transition-colors ${
                 active

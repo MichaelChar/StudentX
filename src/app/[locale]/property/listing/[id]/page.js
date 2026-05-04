@@ -14,6 +14,7 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import { variantUrl } from '@/lib/photoVariants';
+import { formatPropertyType } from '@/lib/propertyType';
 import OrnamentRule from '@/components/ui/OrnamentRule';
 
 // Cap on the untrusted ?from= URL param. Real /results querystrings are
@@ -166,7 +167,7 @@ export default async function ListingPage({ params, searchParams }) {
               <BilingualField
                 greek={t('typeGreek')}
                 english={t('typeEnglish')}
-                value={listing.property_type}
+                value={formatPropertyType(listing.property_type, locale)}
               />
             </dl>
           </Card>

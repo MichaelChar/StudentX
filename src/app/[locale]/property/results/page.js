@@ -20,7 +20,11 @@ import GlobeLoader from '@/components/GlobeLoader';
   featured programme banner at top when applicable.
 */
 
-const PROPERTY_TYPES = ['Studio', '1-Bedroom', '2-Bedroom', 'Room in shared apartment'];
+const PROPERTY_TYPE_GROUPS = [
+  { label: 'Studio / 1-bed', values: ['Studio', '1-Bedroom'] },
+  { label: '2-bed', values: ['2-Bedroom'] },
+  { label: 'Private room', values: ['Room in shared apartment'] },
+];
 const BUDGET_MIN = 150;
 const BUDGET_MAX = 1200;
 const DEFAULT_BUDGET = 900;
@@ -300,7 +304,17 @@ function ResultsContent() {
               filters={filters}
               neighborhoodOptions={neighborhoodOptions}
               onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
-              onToggleType={(v) => toggleIn('selectedTypes', v)}
+              onToggleType={(vals) => {
+                setFilters((prev) => {
+                  const allPresent = vals.every((v) => prev.selectedTypes.includes(v));
+                  return {
+                    ...prev,
+                    selectedTypes: allPresent
+                      ? prev.selectedTypes.filter((v) => !vals.includes(v))
+                      : [...prev.selectedTypes.filter((v) => !vals.includes(v)), ...vals],
+                  };
+                });
+              }}
               onToggleNeighborhood={(v) => toggleIn('selectedNeighborhoods', v)}
               onToggleVerified={() =>
                 setFilters((p) => ({ ...p, verifiedOnly: !p.verifiedOnly }))
@@ -416,7 +430,17 @@ function ResultsContent() {
               filters={filters}
               neighborhoodOptions={neighborhoodOptions}
               onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
-              onToggleType={(v) => toggleIn('selectedTypes', v)}
+              onToggleType={(vals) => {
+                setFilters((prev) => {
+                  const allPresent = vals.every((v) => prev.selectedTypes.includes(v));
+                  return {
+                    ...prev,
+                    selectedTypes: allPresent
+                      ? prev.selectedTypes.filter((v) => !vals.includes(v))
+                      : [...prev.selectedTypes.filter((v) => !vals.includes(v)), ...vals],
+                  };
+                });
+              }}
               onToggleNeighborhood={(v) => toggleIn('selectedNeighborhoods', v)}
               onToggleVerified={() =>
                 setFilters((p) => ({ ...p, verifiedOnly: !p.verifiedOnly }))
@@ -534,13 +558,13 @@ function FilterPanel({
       <section className="mb-8">
         <p className="label-caps text-night/60 mb-3">{t('type')}</p>
         <div className="flex flex-wrap gap-1.5">
-          {PROPERTY_TYPES.map((type) => {
-            const active = filters.selectedTypes.includes(type);
+          {PROPERTY_TYPE_GROUPS.map((group) => {
+            const active = group.values.every((v) => filters.selectedTypes.includes(v));
             return (
               <button
-                key={type}
+                key={group.label}
                 type="button"
-                onClick={() => onToggleType(type)}
+                onClick={() => onToggleType(group.values)}
                 aria-pressed={active}
                 className={`px-3 py-1.5 rounded-sm border text-xs font-sans transition-colors ${
                   active
@@ -548,7 +572,7 @@ function FilterPanel({
                     : 'border-night/20 text-night/70 hover:border-blue'
                 }`}
               >
-                {type}
+                {group.label}
               </button>
             );
           })}
