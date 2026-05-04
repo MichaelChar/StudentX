@@ -36,42 +36,50 @@ function isCronAuthorized(request) {
   return searchParams.get('secret') === secret;
 }
 
-async function fetchUrl(url, { method = 'GET' } = {}) {
+// Synthetic-only stub cookie. Middleware checks for cookie *presence*
+// only (not validity) when deciding the cache-control branch — see
+// middleware.js. So any non-empty value here trips the authed branch
+// and we can verify the server-side split without holding a real JWT.
+const SYNTHETIC_AUTH_COOKIE = 'sb-access-token=synthetic-canary-stub';
+
+async function fetchUrl(url, { method = 'GET', cookie = '' } = {}) {
+  const headers = { 'user-agent': 'StudentX-synthetic/1.0' };
+  if (cookie) headers.cookie = cookie;
   const res = await fetch(url, {
     method,
-    headers: { 'user-agent': 'StudentX-synthetic/1.0' },
+    headers,
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     redirect: 'manual',
   });
   return res;
 }
 
-async function fetchListingHtml(url) {
-  const res = await fetchUrl(url);
+async function fetchListingHtml(url, { cookie } = {}) {
+  const res = await fetchUrl(url, { cookie });
   const body = await res.text();
   return {
     status: res.status,
     body,
     cacheControl: res.headers.get('cache-control') || '',
+    cfCacheStatus: res.headers.get('cf-cache-status') || '',
   };
 }
 
-// Auth-gated routes must NOT serve `public, s-maxage=...` — that would let
-// CF cache the gated body and serve it to a different viewer. Static
-// next.config.mjs rules win over Next runtime stamping (see PR #64 +
-// issue #67), so misconfiguring the headers config is the realistic
-// regression. Catch it on every cron tick.
-const FORBIDDEN_PUBLIC_CACHE_RE = /public,\s*s-maxage=/i;
+// Cache-header expectations after the issue #67 split (PR #105):
+//   anon (no sb-access-token cookie) → must include `public, s-maxage=...`
+//     (middleware lets Cloudflare's edge cache the AuthGate body)
+//   authed (cookie present)          → must NOT include public, s-maxage=...
+//     (the body contains gated contact info; CDN-caching it would leak)
+//
+// The forbidden direction is the original session-leak shape the
+// pre-PR-105 attempt was reverted for. The required direction is the
+// new shape: if middleware ever drops back to private for anon, we
+// silently lose the perf win and want to know within 15 min.
+const PUBLIC_CACHE_RE = /public,\s*s-maxage=/i;
 
-export function evaluateBody({ status, body, cacheControl }) {
+export function evaluateBody({ status, body }) {
   if (status !== 200) {
     return { ok: false, reason: `non-200 status: ${status}` };
-  }
-  if (FORBIDDEN_PUBLIC_CACHE_RE.test(cacheControl)) {
-    return {
-      ok: false,
-      reason: `forbidden public cache header on auth-gated route: ${cacheControl}`,
-    };
   }
   for (const marker of EN_MARKERS_REQUIRED) {
     if (!body.includes(marker)) {
@@ -82,6 +90,26 @@ export function evaluateBody({ status, body, cacheControl }) {
     if (body.includes(marker)) {
       return { ok: false, reason: `forbidden EL marker present: ${marker}` };
     }
+  }
+  return { ok: true };
+}
+
+export function evaluateAnonCacheHeader(cacheControl) {
+  if (!PUBLIC_CACHE_RE.test(cacheControl || '')) {
+    return {
+      ok: false,
+      reason: `anon listing detail must serve public, s-maxage=... (issue #67); got: ${cacheControl || '(none)'}`,
+    };
+  }
+  return { ok: true };
+}
+
+export function evaluateAuthedCacheHeader(cacheControl) {
+  if (PUBLIC_CACHE_RE.test(cacheControl || '')) {
+    return {
+      ok: false,
+      reason: `authed listing detail returned public, s-maxage=... — session-leak risk: ${cacheControl}`,
+    };
   }
   return { ok: true };
 }
@@ -230,24 +258,39 @@ export async function POST(request) {
   const checks = [];
   const failures = [];
 
-  // --- Original assertion: /en/listing renders without Greek leakage -------
+  function record(name, verdict) {
+    const result = { name, ...verdict };
+    checks.push(result);
+    if (!verdict.ok) failures.push(result);
+  }
+
+  // --- /en listing detail, anon: locale check + anon cache header ---------
+  // (post-PR #105: anon must now receive public, s-maxage=... so Cloudflare
+  // can cache the AuthGate body across visitors.)
   let enListingExcerpt = '';
   try {
     const fetched = await fetchListingHtml(enListingUrl);
-    const verdict = evaluateBody(fetched);
-    if (verdict.ok) {
-      checks.push({ name: 'en-listing-locale', ok: true });
-    } else {
+    record('en-listing-locale', evaluateBody(fetched));
+    record('en-listing-anon-cache', evaluateAnonCacheHeader(fetched.cacheControl));
+    if (fetched.status !== 200 || !checks.find((c) => c.name === 'en-listing-locale')?.ok) {
       enListingExcerpt = (fetched.body || '').slice(0, 500);
-      const failure = { name: 'en-listing-locale', ok: false, reason: verdict.reason };
-      checks.push(failure);
-      failures.push(failure);
     }
   } catch (err) {
     const reason = `fetch threw: ${err.name || 'Error'} ${err.message || ''}`.trim();
-    const failure = { name: 'en-listing-locale', ok: false, reason };
-    checks.push(failure);
-    failures.push(failure);
+    record('en-listing-locale', { ok: false, reason });
+    record('en-listing-anon-cache', { ok: false, reason });
+  }
+
+  // --- Same URL, with synthetic auth cookie: authed cache header ----------
+  // (session-leak guard. Middleware checks cookie presence only, not
+  // validity — any non-empty sb-access-token value trips the authed
+  // branch, so we can verify the per-request split without a real JWT.)
+  try {
+    const fetched = await fetchListingHtml(enListingUrl, { cookie: SYNTHETIC_AUTH_COOKIE });
+    record('en-listing-authed-cache', evaluateAuthedCacheHeader(fetched.cacheControl));
+  } catch (err) {
+    const reason = `fetch threw: ${err.name || 'Error'} ${err.message || ''}`.trim();
+    record('en-listing-authed-cache', { ok: false, reason });
   }
 
   // --- Additional assertions, run independently ----------------------------
