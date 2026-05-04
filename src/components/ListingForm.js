@@ -7,6 +7,8 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import BauhausLoader from '@/components/BauhausLoader';
 import { TITLE_MAX_LENGTH, codepointLength } from '@/lib/listingTitle';
 import { arrayMove } from '@/lib/arrayMove';
+import { resizeToVariants } from '@/lib/imageResize';
+import { variantUrl } from '@/lib/photoVariants';
 
 const NEIGHBORHOODS_FALLBACK = [
   'Ano Poli', 'Center', 'Faliro', 'Kalamaria', 'Kentro',
@@ -154,19 +156,49 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
 
       const uploaded = [];
       for (const file of toUpload) {
-        const ext = file.name.split('.').pop();
-        const path = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}.${ext}`;
-        const { error: uploadError } = await supabase.storage
-          .from('listing-photos')
-          .upload(path, file, { upsert: false });
-        if (uploadError) {
+        // Generate three variants (thumb/card/full) in the browser before
+        // upload so the public site can pick a small file for thumbnails
+        // and a larger one for the listing-detail hero. The CARD url is
+        // what we store in `photos`; thumb/full are derived at display
+        // time via variantUrl(). See src/lib/photoVariants.js.
+        let variants;
+        try {
+          variants = await resizeToVariants(file);
+        } catch (err) {
+          console.error('[ListingForm] image resize failed:', err);
           setPhotoError(t('photosError'));
           continue;
         }
-        const { data: { publicUrl } } = supabase.storage
-          .from('listing-photos')
-          .getPublicUrl(path);
-        uploaded.push(publicUrl);
+
+        const stem = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}`;
+        const contentType = variants.ext === 'webp' ? 'image/webp' : 'image/jpeg';
+        const targets = [
+          { size: 'thumb', blob: variants.thumb },
+          { size: 'card', blob: variants.card },
+          { size: 'full', blob: variants.full },
+        ];
+
+        let cardUrl = null;
+        let failed = false;
+        for (const { size, blob } of targets) {
+          const path = `${stem}__${size}.${variants.ext}`;
+          const { error: uploadError } = await supabase.storage
+            .from('listing-photos')
+            .upload(path, blob, { upsert: false, contentType });
+          if (uploadError) {
+            failed = true;
+            break;
+          }
+          if (size === 'card') {
+            const { data } = supabase.storage.from('listing-photos').getPublicUrl(path);
+            cardUrl = data.publicUrl;
+          }
+        }
+        if (failed || !cardUrl) {
+          setPhotoError(t('photosError'));
+          continue;
+        }
+        uploaded.push(cardUrl);
       }
 
       if (uploaded.length > 0) {
@@ -189,10 +221,17 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       const supabase = getSupabaseBrowser();
       const marker = '/listing-photos/';
       const idx = url.indexOf(marker);
-      if (idx !== -1) {
-        const path = url.slice(idx + marker.length);
-        await supabase.storage.from('listing-photos').remove([path]);
-      }
+      if (idx === -1) return;
+      const path = url.slice(idx + marker.length);
+      // For variant URLs, remove all three sibling files at once (we stored
+      // only the CARD URL but uploaded thumb/card/full together). Legacy
+      // paths without the __<size> suffix fall through and get removed
+      // as a single file.
+      const variantMatch = path.match(/^(.*)__(thumb|card|full)\.(webp|jpe?g)$/i);
+      const paths = variantMatch
+        ? ['thumb', 'card', 'full'].map((s) => `${variantMatch[1]}__${s}.${variantMatch[3]}`)
+        : [path];
+      await supabase.storage.from('listing-photos').remove(paths);
     } catch {
       // best-effort: UI already updated, storage cleanup failure is non-blocking
     }
@@ -552,7 +591,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                       }`}
                     >
                       <Image
-                        src={url}
+                        src={variantUrl(url, i === 0 ? 'card' : 'thumb')}
                         alt={`Photo ${i + 1}`}
                         fill
                         className="object-cover pointer-events-none"

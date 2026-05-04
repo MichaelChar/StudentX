@@ -3,6 +3,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
+import { variantUrl } from '@/lib/photoVariants';
 
 /*
   Propylaea listing card — matches page 06 of the reference design.
@@ -48,7 +49,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
         )}
         {photo ? (
           <Image
-            src={photo}
+            src={variantUrl(photo, 'card')}
             alt={listing.address}
             fill
             className="object-cover"

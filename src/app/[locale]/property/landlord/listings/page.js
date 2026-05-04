@@ -8,6 +8,7 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useAccessToken } from '@/lib/useAccessToken';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
+import { variantUrl } from '@/lib/photoVariants';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
@@ -138,7 +139,7 @@ function ListingRow({ listing, deleting, onDelete, t }) {
       <div className="relative w-full md:w-20 aspect-[4/3] md:aspect-square rounded-sm bg-parchment overflow-hidden shrink-0">
         {photo ? (
           <Image
-            src={photo}
+            src={variantUrl(photo, 'thumb')}
             alt={address}
             fill
             className="object-cover"

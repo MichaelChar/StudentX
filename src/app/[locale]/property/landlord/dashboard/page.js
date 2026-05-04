@@ -8,6 +8,7 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
 import Button from '@/components/ui/Button';
+import { variantUrl } from '@/lib/photoVariants';
 import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
@@ -282,7 +283,7 @@ function ListingRow({ listing }) {
       <div className="relative w-16 h-16 rounded-sm bg-parchment overflow-hidden shrink-0">
         {photo ? (
           <Image
-            src={photo}
+            src={variantUrl(photo, 'thumb')}
             alt={address}
             fill
             className="object-cover"
