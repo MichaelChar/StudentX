@@ -82,22 +82,22 @@ const nextConfig = {
         source: '/:path*',
         headers: SECURITY_HEADERS,
       },
-      // Auth-bound surfaces stay private. /listing/[id] is gated by
-      // requireStudent and renders an AuthGate body to anonymous users —
-      // CDN-caching it would serve one viewer's gated/non-gated body to
-      // another. /student/* (account, inquiries) is per-session.
+      // Auth-bound surfaces stay private at the static-rule level.
+      // /student/* and /property/landlord/* are per-session and never
+      // shareable across users.
       //
-      // Tried promoting /listing/* to PUBLIC_CACHE_HEADERS (PR
-      // "fix(perf): edge-cache anonymous listing detail GETs") and verified
-      // via prod curl that the static config rule wins over Next's
-      // runtime per-request cache header — an authenticated request
-      // (Cookie: sb-access-token=...) still received
-      // `public, s-maxage=300, stale-while-revalidate=86400`, which would
-      // CDN-cache the gated body. Reverted; keeping listing pages private
-      // until the anon vs auth split can be done in middleware (issue
-      // #67). The requireStudent cookie-fast-path below is still
-      // a defensible micro-optimization (skips one Supabase round-trip
-      // per anonymous request) even though the response stays uncacheable.
+      // /property/listing/[id] is intentionally NOT pinned here. It
+      // renders different copy for authenticated vs anonymous viewers
+      // (gated contact info), but the anon body IS shareable across
+      // anon visitors. middleware.js sets Cache-Control per-request
+      // based on the sb-access-token cookie — public for anon (so
+      // Cloudflare's edge serves repeat hits), private for authed
+      // (so the gated body is never cached). Issue #67 / commit history:
+      // an earlier attempt to flip the static rule to PUBLIC was
+      // reverted because authed users then inherited the public header.
+      // Keeping listing detail OUT of both static rules so middleware
+      // is the sole arbiter; the public-cache negative lookahead below
+      // therefore continues to exclude these paths.
       {
         source: '/property/landlord/:path*',
         headers: PRIVATE_CACHE_HEADERS,
@@ -107,20 +107,27 @@ const nextConfig = {
         headers: PRIVATE_CACHE_HEADERS,
       },
       {
-        source: '/property/listing/:path*',
-        headers: PRIVATE_CACHE_HEADERS,
-      },
-      {
-        source: '/:locale(en)/property/listing/:path*',
-        headers: PRIVATE_CACHE_HEADERS,
-      },
-      {
         source: '/student/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
       {
         source: '/:locale(en)/student/:path*',
         headers: PRIVATE_CACHE_HEADERS,
+      },
+      // Vary: Cookie on listing detail responses so Cloudflare's edge
+      // treats anon (no sb-access-token) and authed (with cookie)
+      // requests as separate cache entries — prevents serving the
+      // cached anon body to an authenticated visitor. Setting this
+      // here rather than in middleware because Next's response
+      // pipeline tends to replace middleware-set Vary headers.
+      // Cache-Control itself is set per-request by middleware.js.
+      {
+        source: '/property/listing/:path*',
+        headers: [{ key: 'Vary', value: 'Cookie' }],
+      },
+      {
+        source: '/:locale(en)/property/listing/:path*',
+        headers: [{ key: 'Vary', value: 'Cookie' }],
       },
       // All other HTML routes are public-cacheable. The negative lookahead
       // skips api / _next / auth-gated surfaces / files with extensions
