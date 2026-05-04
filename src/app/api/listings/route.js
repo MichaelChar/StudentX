@@ -173,6 +173,22 @@ export async function GET(request) {
         .eq("landlords.is_verified", true);
     }
 
+    // Filter: bills included. Pushed to SQL so Supabase only returns
+    // matching rows instead of the route filtering them in JS post-fetch.
+    if (requireBillsIncluded) {
+      query = query.eq("rent.bills_included", true);
+    }
+
+    // Filter: exclude ground-floor units. The `floor === 0` half is
+    // handled in SQL here. The complementary "ground floor" amenity-tag
+    // check stays in JS below because amenities live behind a join we
+    // can't AND-filter cleanly via PostgREST. NULL floors are kept (not
+    // every listing has a recorded floor) — `WHERE floor != 0` would
+    // drop them since NULL <> 0 is NULL, not TRUE.
+    if (excludeGroundFloor) {
+      query = query.or("floor.is.null,floor.neq.0");
+    }
+
     let { data, error } = await query;
 
     // If query fails (e.g. verified_tier column not yet migrated), retry without it
@@ -188,6 +204,8 @@ export async function GET(request) {
       }
       if (types) fallbackQuery = fallbackQuery.in("property_types.name", types.split(",").map((t) => t.trim()));
       if (faculty) fallbackQuery = fallbackQuery.eq("faculty_distances.faculty_id", faculty);
+      if (requireBillsIncluded) fallbackQuery = fallbackQuery.eq("rent.bills_included", true);
+      if (excludeGroundFloor) fallbackQuery = fallbackQuery.or("floor.is.null,floor.neq.0");
 
       const fallbackResult = await fallbackQuery;
       if (fallbackResult.error) {
@@ -203,18 +221,16 @@ export async function GET(request) {
     // Transform rows to API shape
     let results = data.map(transformListing);
 
+    // Residual amenity-tag check for excludeGroundFloor — the `floor != 0`
+    // half is now in SQL above, so this only catches listings whose floor
+    // is unset/non-zero but carry the "ground floor" amenity tag anyway.
     if (excludeGroundFloor) {
       results = results.filter((listing) => {
-        if (listing.floor === 0) return false;
         const tagged = (listing.amenities || []).some(
           (a) => a.toLowerCase() === "ground floor"
         );
         return !tagged;
       });
-    }
-
-    if (requireBillsIncluded) {
-      results = results.filter((listing) => listing.bills_included === true);
     }
 
     // Post-query filter: exclude listings missing required amenities (dealbreakers)
