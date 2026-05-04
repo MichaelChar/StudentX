@@ -4,6 +4,14 @@
 -- referenced_table(col) ordering syntax. Auto-computes from
 -- verified_tier on INSERT/UPDATE.
 
+-- Ensure verified_tier exists. Production has it via APPLY_004_to_012.sql,
+-- but CI's local Supabase stack skips that file (filename does not match
+-- the numbered <prefix>_name.sql pattern), so the column would be absent
+-- when this migration runs against a fresh CI database.
+ALTER TABLE landlords
+  ADD COLUMN IF NOT EXISTS verified_tier TEXT DEFAULT 'none'
+    CHECK (verified_tier IN ('none', 'verified', 'verified_pro'));
+
 ALTER TABLE landlords
   ADD COLUMN IF NOT EXISTS verified_tier_rank SMALLINT
   GENERATED ALWAYS AS (
