@@ -1,3 +1,4 @@
+import { EB_Garamond, Source_Sans_3 } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -5,6 +6,7 @@ import { routing } from '@/i18n/routing';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import SessionSync from '@/components/SessionSync';
+import '../globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
@@ -27,6 +29,23 @@ const META_BY_LOCALE = {
     ogLocale: 'en_GB',
   },
 };
+
+// Propylaea display face — EB Garamond (Greek polytonic coverage)
+const ebGaramond = EB_Garamond({
+  subsets: ['latin', 'greek'],
+  variable: '--font-eb-garamond',
+  weight: ['400', '500', '600', '700'],
+  style: ['normal', 'italic'],
+  display: 'swap',
+});
+
+// Propylaea body/UI face — Source Sans 3 (wide x-height, Greek polytonic coverage)
+const sourceSans = Source_Sans_3({
+  subsets: ['latin', 'greek'],
+  variable: '--font-source-sans',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -64,6 +83,10 @@ export async function generateMetadata({ params }) {
   };
 }
 
+// This layout owns the <html>/<body> shell so the lang attribute renders
+// server-side from `params.locale` — the root layout (src/app/layout.js)
+// can't do this because params aren't available there, and using next-intl's
+// getLocale() in the root poisons the per-request config cache.
 export default async function LocaleLayout({ children, params }) {
   const { locale } = await params;
 
@@ -75,11 +98,18 @@ export default async function LocaleLayout({ children, params }) {
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      <SessionSync />
-      <Navbar />
-      <main className="flex-1">{children}</main>
-      <Footer />
-    </NextIntlClientProvider>
+    <html
+      lang={locale}
+      className={`${ebGaramond.variable} ${sourceSans.variable} h-full antialiased`}
+    >
+      <body className="min-h-full flex flex-col font-sans bg-stone text-night">
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <SessionSync />
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }
