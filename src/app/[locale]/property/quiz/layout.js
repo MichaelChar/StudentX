@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server';
+import { getTranslations, setRequestLocale } from 'next-intl/server';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
@@ -28,6 +28,8 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function QuizLayout({ children }) {
+export default async function QuizLayout({ children, params }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   return children;
 }
