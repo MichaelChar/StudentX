@@ -3,11 +3,18 @@ import { NextResponse } from 'next/server';
 import { routing } from './i18n/routing';
 import { SB_ACCESS_TOKEN_COOKIE } from './lib/authCookies';
 
-// Next.js 16 renamed `middleware` to `proxy` (file convention + named
-// export). The functionality is the same — see
-// https://nextjs.org/docs/app/getting-started/proxy. Edge runtime is no
-// longer supported here; nodejs is the only runtime. OpenNext's
-// Cloudflare Workers adapter still handles this correctly.
+// Next.js 16 renamed `middleware` to `proxy`, with one important caveat:
+// `proxy` runs in the nodejs runtime and edge is no longer available for
+// it. OpenNext's Cloudflare Workers adapter requires edge — `npm run
+// cf:build` errors with "Node.js middleware is not currently supported.
+// Consider switching to Edge Middleware." So we deliberately stay on the
+// (deprecated but fully supported) `middleware.js` filename and named
+// export, which keeps the edge runtime.
+//
+// Location is `src/middleware.js` (not the repo root) because Next 16 +
+// Turbopack with `src/app/` only loads the file when it's at the same
+// level as `app/`. The legacy repo-root location was silently ignored in
+// dev, leaving the URL redirect logic dormant.
 //
 // Wraps next-intl's middleware so we can post-process the response with
 // auth-aware Cache-Control on listing detail pages (issue #67).
@@ -45,7 +52,7 @@ const OLD_PROPERTY_PATH =
 
 const intlMiddleware = createMiddleware(routing);
 
-export function proxy(request) {
+export function middleware(request) {
   const pathname = request.nextUrl?.pathname || '';
 
   const oldMatch = OLD_PROPERTY_PATH.exec(pathname);
@@ -65,8 +72,8 @@ export function proxy(request) {
   const hasAuthCookie = cookieHeader.includes(`${SB_ACCESS_TOKEN_COOKIE}=`);
 
   response.headers.set('Cache-Control', hasAuthCookie ? PRIVATE_CACHE : PUBLIC_CACHE);
-  // Vary: Cookie on these paths is set in next.config.mjs — proxy header
-  // mutations to Vary get clobbered by Next's response pipeline.
+  // Vary: Cookie on these paths is set in next.config.mjs — middleware
+  // header mutations to Vary get clobbered by Next's response pipeline.
   return response;
 }
 
