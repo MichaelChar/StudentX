@@ -16,16 +16,16 @@ import BauhausLoader from '@/components/BauhausLoader';
   verification, billing). Auth pages (login/signup/etc.) skip this shell.
 
   Auth gate is the shell's responsibility: if no Supabase session, redirect
-  to /property/landlord/login. This centralizes the check so pages don't re-implement.
+  to /property/thessaloniki/landlord/login. This centralizes the check so pages don't re-implement.
 */
 
 const NAV_ITEMS = [
-  { key: 'dashboard', href: '/property/landlord/dashboard', icon: 'home' },
-  { key: 'listings', href: '/property/landlord/listings', icon: 'book' },
-  { key: 'inquiries', href: '/property/landlord/inquiries', icon: 'message' },
-  { key: 'verification', href: '/property/landlord/verification', icon: 'shield' },
-  { key: 'billing', href: '/property/landlord/get-verified', icon: 'euro' },
-  { key: 'settings', href: '/property/landlord/settings', icon: 'cog' },
+  { key: 'dashboard', href: '/property/thessaloniki/landlord/dashboard', icon: 'home' },
+  { key: 'listings', href: '/property/thessaloniki/landlord/listings', icon: 'book' },
+  { key: 'inquiries', href: '/property/thessaloniki/landlord/inquiries', icon: 'message' },
+  { key: 'verification', href: '/property/thessaloniki/landlord/verification', icon: 'shield' },
+  { key: 'billing', href: '/property/thessaloniki/landlord/get-verified', icon: 'euro' },
+  { key: 'settings', href: '/property/thessaloniki/landlord/settings', icon: 'cog' },
 ];
 
 export default function LandlordShell({ title, eyebrow, actions, children }) {
@@ -45,11 +45,11 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
         data: { session },
       } = await supabase.auth.getSession();
       if (!session) {
-        router.replace('/property/landlord/login');
+        router.replace('/property/thessaloniki/landlord/login');
         return;
       }
       if (!session.user.email_confirmed_at) {
-        router.replace('/property/landlord/verify-email');
+        router.replace('/property/thessaloniki/landlord/verify-email');
         return;
       }
       // Best-effort profile name fetch so topbar can greet. GET (not POST):
@@ -72,7 +72,7 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
   async function handleSignOut() {
     const supabase = getSupabaseBrowser();
     await supabase.auth.signOut();
-    router.push('/property/landlord/login');
+    router.push('/property/thessaloniki/landlord/login');
   }
 
   // Loading state while auth gate is resolving

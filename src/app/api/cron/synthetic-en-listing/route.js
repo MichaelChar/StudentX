@@ -147,10 +147,10 @@ async function checkListingApiDistanceVariety(appUrl, listingId) {
 }
 
 // Unknown listing should hit notFound() and serve the locale-aware 404 page
-// with HTTP 404. Greek is the default at root, so we hit `/property/listing/...`,
-// not `/en/listing/...`.
+// with HTTP 404. Greek is the default at root, so we hit
+// `/property/thessaloniki/listing/...`, not `/en/.../listing/...`.
 async function checkSoft404(appUrl) {
-  const url = `${appUrl}/property/listing/does-not-exist`;
+  const url = `${appUrl}/property/thessaloniki/listing/does-not-exist`;
   try {
     const res = await fetchUrl(url);
     if (res.status !== 404) {
@@ -278,7 +278,7 @@ export async function POST(request) {
   const listingId = process.env.SYNTHETIC_LISTING_ID || DEFAULT_LISTING_ID;
   const alertEmail = process.env.SYNTHETIC_ALERT_EMAIL;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const enListingUrl = `${appUrl}/en/property/listing/${listingId}`;
+  const enListingUrl = `${appUrl}/en/property/thessaloniki/listing/${listingId}`;
 
   const checks = [];
   const failures = [];
@@ -330,15 +330,23 @@ export async function POST(request) {
     // (PR #109) where every /en/* page rendered Greek because of poisoned
     // next-intl request scope. Any one of these failing means /en/* dropped
     // back to default-locale rendering somewhere in the layout chain.
+    // City-hub landing (post Phase-1 multi-city refactor) — distinct from
+    // the per-city Propylaea landing checked below.
+    checkEnLocale({
+      name: 'en-cityhub-locale',
+      url: `${appUrl}/en/property`,
+      anyEnMarker: ['Pick where', 'More cities', 'Find your home'],
+      forbidElMarkers: ['Διάλεξε πού', 'κι άλλες πόλεις', 'Βρες το σπίτι σου'],
+    }),
     checkEnLocale({
       name: 'en-homepage-locale',
-      url: `${appUrl}/en/property`,
+      url: `${appUrl}/en/property/thessaloniki`,
       anyEnMarker: ['Take the quiz', 'See all listings', 'How it works'],
       forbidElMarkers: ['Κάνε το κουίζ', 'Δες όλες τις αγγελίες'],
     }),
     checkEnLocale({
       name: 'en-quiz-locale',
-      url: `${appUrl}/en/property/quiz`,
+      url: `${appUrl}/en/property/thessaloniki/quiz`,
       anyEnMarker: ['One minute', "That's it"],
       forbidElMarkers: ['Ένα λεπτό', 'Συνέχεια'],
     }),

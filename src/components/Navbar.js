@@ -9,6 +9,7 @@ import LocaleSwitcher from './LocaleSwitcher';
 import Icon from './ui/Icon';
 import UnreadBadge from './UnreadBadge';
 import TabTitleFlash from './TabTitleFlash';
+import { DEFAULT_CITY } from '@/lib/cityRoutes';
 
 export default function Navbar() {
   const t = useTranslations('nav');
@@ -19,14 +20,24 @@ export default function Navbar() {
   const [unread, setUnread] = useState({ count: 0, role: null });
   const closeButtonRef = useRef(null);
 
+  // Hide directory links on the multi-city hub itself — the user hasn't
+  // chosen a city yet, so "Listings"/"Quiz" wouldn't know where to point.
+  // Everywhere else, link into the current city if there is one, falling
+  // back to the default city for non-property pages (e.g. /student/account).
+  const isOnHub = pathname === '/property';
+  const cityMatch = pathname?.match(/^\/property\/([^/]+)/);
+  const currentCity = cityMatch?.[1] ?? DEFAULT_CITY;
+
   // Propylaea nav — "The programme" and "FAQ" are defined in the design but
   // hidden for now; unhide when those pages ship.
-  const navLinks = [
-    { href: '/property/results', label: t('listings') },
-    { href: '/property/quiz', label: t('takeTheQuiz') },
-    // { href: '/programme', label: t('programme') },
-    // { href: '/faq', label: t('faq') },
-  ];
+  const navLinks = isOnHub
+    ? []
+    : [
+        { href: `/property/${currentCity}/results`, label: t('listings') },
+        { href: `/property/${currentCity}/quiz`, label: t('takeTheQuiz') },
+        // { href: '/programme', label: t('programme') },
+        // { href: '/faq', label: t('faq') },
+      ];
 
   // Shared fetcher — refreshes unread count using the current session token.
   // All awaits are timeout-wrapped so a hung Supabase / API call can't leave
@@ -130,12 +141,12 @@ export default function Navbar() {
   }
 
   const accountHref =
-    authState.role === 'landlord' ? '/property/landlord/dashboard' : '/student/account';
+    authState.role === 'landlord' ? `/property/${currentCity}/landlord/dashboard` : '/student/account';
 
   const inquiriesHref =
-    authState.role === 'landlord' ? '/property/landlord/inquiries' : '/student/account';
+    authState.role === 'landlord' ? `/property/${currentCity}/landlord/inquiries` : '/student/account';
 
-  const isLandlord = pathname?.startsWith('/property/landlord') ?? false;
+  const isLandlord = pathname?.startsWith(`/property/${currentCity}/landlord`) ?? false;
 
   return (
     <nav
@@ -174,6 +185,7 @@ export default function Navbar() {
             authState={authState}
             accountHref={accountHref}
             inquiriesHref={inquiriesHref}
+            landlordLoginHref={`/property/${currentCity}/landlord/login`}
             unreadCount={unread.count}
             onSignOut={handleSignOut}
           />
@@ -230,6 +242,7 @@ export default function Navbar() {
             authState={authState}
             accountHref={accountHref}
             inquiriesHref={inquiriesHref}
+            landlordLoginHref={`/property/${currentCity}/landlord/login`}
             unreadCount={unread.count}
             onClose={() => setDrawerOpen(false)}
             onSignOut={async () => {
@@ -246,7 +259,7 @@ export default function Navbar() {
   );
 }
 
-function DesktopAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount, onSignOut }) {
+function DesktopAuthMenu({ t, authState, accountHref, inquiriesHref, landlordLoginHref, unreadCount, onSignOut }) {
   // Until the role probe resolves, render a placeholder of the correct width
   // so the navbar doesn't reflow when auth state arrives.
   if (!authState.ready) {
@@ -283,7 +296,7 @@ function DesktopAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount
         {t('signInStudent')}
       </Link>
       <Link
-        href="/property/landlord/login"
+        href={landlordLoginHref}
         className="label-caps text-night/50 hover:text-night transition-colors"
       >
         {t('signInLandlord')}
@@ -292,7 +305,7 @@ function DesktopAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount
   );
 }
 
-function MobileAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount, onClose, onSignOut }) {
+function MobileAuthMenu({ t, authState, accountHref, inquiriesHref, landlordLoginHref, unreadCount, onClose, onSignOut }) {
   if (!authState.ready) return null;
 
   if (authState.role) {
@@ -342,7 +355,7 @@ function MobileAuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount,
         {t('signInStudent')}
       </Link>
       <Link
-        href="/property/landlord/login"
+        href={landlordLoginHref}
         onClick={onClose}
         className="label-caps text-night/60 hover:text-night transition-colors text-base"
       >

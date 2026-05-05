@@ -83,11 +83,11 @@ const nextConfig = {
         headers: SECURITY_HEADERS,
       },
       // Auth-bound surfaces stay private at the static-rule level.
-      // /student/* and /property/landlord/* are per-session and never
-      // shareable across users.
+      // /student/* and /property/[city]/landlord/* are per-session and
+      // never shareable across users.
       //
-      // /property/listing/[id] is intentionally NOT pinned here. It
-      // renders different copy for authenticated vs anonymous viewers
+      // /property/[city]/listing/[id] is intentionally NOT pinned here.
+      // It renders different copy for authenticated vs anonymous viewers
       // (gated contact info), but the anon body IS shareable across
       // anon visitors. middleware.js sets Cache-Control per-request
       // based on the sb-access-token cookie — public for anon (so
@@ -99,11 +99,11 @@ const nextConfig = {
       // is the sole arbiter; the public-cache negative lookahead below
       // therefore continues to exclude these paths.
       {
-        source: '/property/landlord/:path*',
+        source: '/property/:city/landlord/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
       {
-        source: '/:locale(en)/property/landlord/:path*',
+        source: '/:locale(en)/property/:city/landlord/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
       {
@@ -122,19 +122,21 @@ const nextConfig = {
       // pipeline tends to replace middleware-set Vary headers.
       // Cache-Control itself is set per-request by middleware.js.
       {
-        source: '/property/listing/:path*',
+        source: '/property/:city/listing/:path*',
         headers: [{ key: 'Vary', value: 'Cookie' }],
       },
       {
-        source: '/:locale(en)/property/listing/:path*',
+        source: '/:locale(en)/property/:city/listing/:path*',
         headers: [{ key: 'Vary', value: 'Cookie' }],
       },
       // All other HTML routes are public-cacheable. The negative lookahead
       // skips api / _next / auth-gated surfaces / files with extensions
-      // (favicon etc.).
+      // (favicon etc.). The [^/]+ in the property patterns matches any
+      // city slug — Phase 1 only allow-lists thessaloniki, but the
+      // pattern shouldn't need updating when more cities go live.
       {
         source:
-          '/((?!api|_next|property/landlord|en/property/landlord|property/listing|en/property/listing|student|en/student|.*\\..*).*)',
+          '/((?!api|_next|property/[^/]+/landlord|en/property/[^/]+/landlord|property/[^/]+/listing|en/property/[^/]+/listing|student|en/student|.*\\..*).*)',
         headers: PUBLIC_CACHE_HEADERS,
       },
     ];
@@ -142,13 +144,14 @@ const nextConfig = {
   async redirects() {
     // Legacy paths from the pre-/property directory layout. The directory
     // moved under /property in 2026 to make room for /services on the same
-    // domain. Permanent so search engines flow link equity to the new URLs;
-    // since we just launched, there's no real index to preserve, but cheap
-    // insurance. Mirrors each path with the /en variant.
+    // domain; in 2026 the /property tree got a [city] segment for multi-city
+    // expansion, and these destinations point straight at /thessaloniki to
+    // avoid a 2-hop redirect chain through middleware.js. Permanent so
+    // search engines flow link equity to the canonical URLs.
     const directoryPaths = [
-      ['/results', '/property/results'],
-      ['/quiz', '/property/quiz'],
-      ['/about', '/property/about'],
+      ['/results', '/property/thessaloniki/results'],
+      ['/quiz', '/property/thessaloniki/quiz'],
+      ['/about', '/property/thessaloniki/about'],
     ];
     return [
       { source: '/', destination: '/property', permanent: true },
@@ -156,20 +159,20 @@ const nextConfig = {
         { source: from, destination: to, permanent: true },
         { source: `/en${from}`, destination: `/en${to}`, permanent: true },
       ]),
-      { source: '/listing/:id', destination: '/property/listing/:id', permanent: true },
-      { source: '/en/listing/:id', destination: '/en/property/listing/:id', permanent: true },
+      { source: '/listing/:id', destination: '/property/thessaloniki/listing/:id', permanent: true },
+      { source: '/en/listing/:id', destination: '/en/property/thessaloniki/listing/:id', permanent: true },
       // `:path*` matches one or more segments — the zero-segment case
       // (bookmarked /landlord with no trailing path) needs an explicit
       // sibling rule, otherwise the destination keeps the literal `:path*`
       // placeholder and the user lands on a broken URL.
-      { source: '/landlord', destination: '/property/landlord', permanent: true },
-      { source: '/landlord/:path*', destination: '/property/landlord/:path*', permanent: true },
-      { source: '/en/landlord', destination: '/en/property/landlord', permanent: true },
-      { source: '/en/landlord/:path*', destination: '/en/property/landlord/:path*', permanent: true },
-      { source: '/alerts', destination: '/property/alerts', permanent: true },
-      { source: '/alerts/:path*', destination: '/property/alerts/:path*', permanent: true },
-      { source: '/en/alerts', destination: '/en/property/alerts', permanent: true },
-      { source: '/en/alerts/:path*', destination: '/en/property/alerts/:path*', permanent: true },
+      { source: '/landlord', destination: '/property/thessaloniki/landlord', permanent: true },
+      { source: '/landlord/:path*', destination: '/property/thessaloniki/landlord/:path*', permanent: true },
+      { source: '/en/landlord', destination: '/en/property/thessaloniki/landlord', permanent: true },
+      { source: '/en/landlord/:path*', destination: '/en/property/thessaloniki/landlord/:path*', permanent: true },
+      { source: '/alerts', destination: '/property/thessaloniki/alerts', permanent: true },
+      { source: '/alerts/:path*', destination: '/property/thessaloniki/alerts/:path*', permanent: true },
+      { source: '/en/alerts', destination: '/en/property/thessaloniki/alerts', permanent: true },
+      { source: '/en/alerts/:path*', destination: '/en/property/thessaloniki/alerts/:path*', permanent: true },
       { source: '/en', destination: '/en/property', permanent: true },
     ];
   },
