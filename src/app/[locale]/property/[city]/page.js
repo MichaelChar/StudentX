@@ -81,10 +81,10 @@ export default function LandingPage() {
             {t('subtitle')}
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Button href="/property/quiz" variant="gold" size="lg">
+            <Button href="/property/thessaloniki/quiz" variant="gold" size="lg">
               {t('ctaPrimary')}
             </Button>
-            <Button href="/property/results" variant="outlineOnDark" size="lg">
+            <Button href="/property/thessaloniki/results" variant="outlineOnDark" size="lg">
               {t('ctaSecondary')}
             </Button>
           </div>
@@ -136,7 +136,7 @@ export default function LandingPage() {
         </div>
 
         <div className="mt-16 flex justify-center">
-          <Button href="/property/quiz" variant="primary" size="lg">
+          <Button href="/property/thessaloniki/quiz" variant="primary" size="lg">
             {t('ctaPrimary')}
           </Button>
         </div>
