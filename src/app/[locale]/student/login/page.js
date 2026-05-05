@@ -35,39 +35,52 @@ function StudentLoginInner() {
     setLoading(true);
     try {
       const supabase = getSupabaseBrowser();
-      const { data, error: authError } = await withTimeout(
-        supabase.auth.signInWithPassword({ email, password }),
-      );
+      // Clear any stale session first — a hung _recoverAndRefresh on the
+      // cached browser client can saturate the HTTP/2 connection to Supabase
+      // and queue the login POST behind a stuck token-refresh request.
+      await supabase.auth.signOut().catch(() => {});
 
-      if (authError) {
-        setError(authError.message);
-        return;
+      let lastErr;
+      for (let attempt = 0; attempt < 2; attempt++) {
+        try {
+          const { data, error: authError } = await withTimeout(
+            supabase.auth.signInWithPassword({ email, password }),
+          );
+          if (authError) {
+            setError(authError.message);
+            return;
+          }
+
+          // Sync cookie eagerly so the next navigation's RSC sees auth without
+          // waiting for SessionSync's onAuthStateChange to fire.
+          if (data.session?.access_token) {
+            await withTimeout(
+              fetch('/api/auth/session', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ access_token: data.session.access_token }),
+              }),
+            );
+          }
+
+          if (safeNext) {
+            // useRouter.push with a locale-prefixed path won't accept ?, so we
+            // hand a raw URL to window.location for paths that include query
+            // strings (the common case when AuthGate threads search/results
+            // state back into the next URL).
+            window.location.assign(safeNext);
+            return;
+          }
+
+          router.push('/student/account');
+          return;
+        } catch (err) {
+          lastErr = err;
+          if (attempt === 0 && err.message?.includes('timed out')) continue;
+          break;
+        }
       }
-
-      // Sync cookie eagerly so the next navigation's RSC sees auth without
-      // waiting for SessionSync's onAuthStateChange to fire.
-      if (data.session?.access_token) {
-        await withTimeout(
-          fetch('/api/auth/session', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ access_token: data.session.access_token }),
-          }),
-        );
-      }
-
-      if (safeNext) {
-        // useRouter.push with a locale-prefixed path won't accept ?, so we
-        // hand a raw URL to window.location for paths that include query
-        // strings (the common case when AuthGate threads search/results
-        // state back into the next URL).
-        window.location.assign(safeNext);
-        return;
-      }
-
-      router.push('/student/account');
-    } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again.');
+      setError(lastErr?.message || 'Something went wrong. Please try again.');
     } finally {
       setLoading(false);
     }

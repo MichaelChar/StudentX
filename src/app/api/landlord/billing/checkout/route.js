@@ -23,7 +23,7 @@ export async function POST(request) {
   if (!landlord) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
   const body = await request.json();
-  const { tier, returnTo } = body;
+  const { tier, returnTo, promoCode } = body;
 
   if (!tier || !['verified', 'verified_pro'].includes(tier)) {
     return NextResponse.json({ error: 'Invalid tier. Must be "verified" or "verified_pro".' }, { status: 400 });
@@ -60,10 +60,26 @@ export async function POST(request) {
       lineItems.push({ price: plan.stripe_overage_price_id });
     }
 
+    // Founding-cohort promo: if promoCode is supplied, resolve it to a Stripe
+    // promotion_code id and attach as a discount. Invalid/expired codes are
+    // ignored silently — checkout proceeds at full price rather than 400ing.
+    let discounts;
+    if (promoCode && typeof promoCode === 'string') {
+      const codes = await stripe.promotionCodes.list({
+        code: promoCode,
+        active: true,
+        limit: 1,
+      });
+      if (codes.data[0]) {
+        discounts = [{ promotion_code: codes.data[0].id }];
+      }
+    }
+
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
       line_items: lineItems,
+      ...(discounts ? { discounts } : { allow_promotion_codes: true }),
       success_url: `${siteUrl}/property/thessaloniki/landlord/dashboard?billing=success`,
       cancel_url: returnTo === 'onboarding'
         ? `${siteUrl}/property/thessaloniki/landlord/onboarding`
@@ -72,6 +88,7 @@ export async function POST(request) {
         landlord_id: landlord.landlord_id,
         plan_id: tier,
         verified_tier: tier,
+        ...(promoCode ? { promo_code: promoCode } : {}),
       },
     });
 
