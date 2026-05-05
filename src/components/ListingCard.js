@@ -30,8 +30,8 @@ export default function ListingCard({ listing, fromQuery = '' }) {
   // detail page's back link returns to the same filtered view. Caller
   // passes the encoded query string (without the leading "?").
   const href = fromQuery
-    ? `/property/listing/${listing.listing_id}?from=${encodeURIComponent(fromQuery)}`
-    : `/property/listing/${listing.listing_id}`;
+    ? `/property/thessaloniki/listing/${listing.listing_id}?from=${encodeURIComponent(fromQuery)}`
+    : `/property/thessaloniki/listing/${listing.listing_id}`;
 
   return (
     <Link

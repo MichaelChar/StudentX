@@ -21,6 +21,7 @@
   },
   "footer": {
     "tagline": "The official housing partner for first-year medical students at Aristotle University of Thessaloniki.",
+    "taglineMultiCity": "Curated student housing across Greece. By students, for students.",
     "rights": "All rights reserved.",
     "forLandlords": "For landlords",
     "listYourProperty": "List your property",
@@ -442,6 +443,25 @@
       "step3Greek": "Επικοινώνησε απευθείας",
       "step3English": "Reach out directly",
       "step3Body": "No brokers. No hidden fees."
+    },
+    "cityHub": {
+      "eyebrow": "Ἀγορά",
+      "heroBefore": "Find your home,",
+      "heroItalic": "wherever",
+      "heroAfter": "you study.",
+      "subtitle": "Curated student housing across Greece. Choose a city to begin — new cities join the directory each term.",
+      "citiesEyebrow": "Cities",
+      "citiesTitle": "Pick where you're",
+      "citiesTitleItalic": "headed.",
+      "thessaloniki": {
+        "greek": "Θεσσαλονίκη",
+        "name": "Thessaloniki",
+        "description": "Curated student housing for Aristotle, UoM, and IHU students. The original StudentX directory.",
+        "cta": "Browse Thessaloniki"
+      },
+      "comingSoonEyebrow": "Coming soon",
+      "comingSoonTitle": "More cities, soon.",
+      "comingSoonBody": "We're adding cities one at a time so each one stays curated. Want yours next? <link>Tell us</link>."
     },
     "quiz": {
       "pageTitle": "Matching quiz",
