@@ -33,7 +33,6 @@ is curated and verified.
 ```
 .
 ├── CLAUDE.md                    ← this file
-├── middleware.js                ← next-intl middleware (REPO ROOT, not src/)
 ├── next.config.mjs              ← security headers, CSP (enforced), cache policy
 ├── wrangler.jsonc               ← Worker name, vars, cron triggers
 ├── cf/
@@ -41,13 +40,16 @@ is curated and verified.
 ├── src/
 │   ├── app/
 │   │   ├── [locale]/            ← locale-aware route tree (el + en)
+│   │   │   └── property/        ← multi-city tree: hub + [city]/{about,alerts,landlord,listing,quiz,results}
 │   │   ├── api/                 ← API routes (no locale prefix)
 │   │   │   └── cron/            ← scheduled-handler endpoints
-│   │   ├── landlord/, listing/, results/  ← non-locale parallel routes
+│   │   ├── property/            ← non-locale parallel: hub + [city]/* redirect stubs to /el/property/...
+│   │   ├── student/             ← student auth (login/signup/reset/verify)
 │   │   ├── layout.js, page.js, sitemap.js, robots.js
+│   ├── middleware.js            ← next-intl + auth-cache split + legacy /property URL 301s (PR #113)
 │   ├── components/              ← React components (server-default, 'use client' only when needed)
 │   ├── i18n/{routing.js, request.js, navigation.js}
-│   ├── lib/                     ← server helpers (supabase, requireStudent, transformListing, …)
+│   ├── lib/                     ← server helpers (supabase, requireStudent, transformListing, cityRoutes, …)
 │   └── messages/{el,en}.json    ← next-intl message catalogs
 ├── supabase/
 │   ├── migrations/              ← numbered SQL migrations (37+ files)
@@ -72,15 +74,38 @@ defaultLocale: 'el'
 localePrefix: 'as-needed'  // /results (Greek), /en/results (English)
 ```
 
-The middleware lives at the **repo root** as `middleware.js` (NOT `src/middleware.js`).
-It runs `createMiddleware(routing)` with matcher
+The middleware lives at **`src/middleware.js`**. Next 16 + Turbopack only
+picks up the file when it sits at the same level as `app/`, so the
+legacy repo-root location is silently ignored when `src/app/` is in use
+(verified in PR #113 — the original `middleware.js` at the root was
+dormant in dev mode and only worked at build/deploy time, leaving the
+URL redirect logic effectively off). It runs `createMiddleware(routing)`
+plus a 301 layer for legacy `/property/{results,quiz,listing,landlord,
+about,alerts}/...` → `/property/thessaloniki/...` URLs, with matcher
 `'/((?!api|_next|_vercel|.*\\..*).*)'`.
 
-Both `/listing/<id>` and `/en/listing/<id>` resolve to
-`src/app/[locale]/listing/[id]/page.js`. The non-locale parallel directories
-(`src/app/landlord/`, `src/app/listing/`, `src/app/results/`) exist as the
-unprefixed Greek-default entry points the middleware rewrites into the
-`[locale]` tree.
+**`middleware.js` vs `proxy.js` (Next 16):** the new convention is
+`proxy.js` with a named export `proxy`, but `proxy` runs on the
+**nodejs** runtime and OpenNext-on-Cloudflare-Workers requires edge —
+`npm run cf:build` errors with `"Node.js middleware is not currently
+supported. Consider switching to Edge Middleware."` if you switch.
+Stay on the deprecated-but-fully-supported `middleware.js` filename
+and named export `middleware` to keep edge.
+
+Both `/property/thessaloniki/listing/<id>` and the `/en/` variant resolve
+to `src/app/[locale]/property/[city]/listing/[id]/page.js`. The non-
+locale parallel tree at `src/app/property/...` contains thin redirect
+stubs (~5 lines each) that forward `/property/<city>/...` to
+`/el/property/<city>/...` so Greek-default unprefixed URLs work without
+a locale prefix. Visiting an unsupported city slug 404s via
+`notFound()` in `[locale]/property/[city]/layout.js`; the allowlist is
+`SUPPORTED_CITIES` in `src/lib/cityRoutes.js` (PR #113).
+
+Old single-city URLs (`/property/results`, `/property/landlord/login`,
+etc.) 301 to their `/property/thessaloniki/...` equivalents via the
+middleware. Pre-`/property` legacy paths (`/results`, `/listing/:id`,
+`/landlord/...`, `/alerts/...`) 308 directly to the `/thessaloniki/`
+destination via `next.config.mjs#redirects()` to avoid 2-hop chains.
 
 ## i18n calling convention (READ THIS BEFORE TOUCHING SERVER COMPONENTS)
 
