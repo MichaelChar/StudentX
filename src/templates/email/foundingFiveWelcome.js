@@ -56,7 +56,6 @@ export function foundingFiveWelcomeHtml({
                   <td style="padding:20px 24px;text-align:center;">
                     <p style="margin:0 0 4px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:11px;font-weight:700;letter-spacing:0.18em;text-transform:uppercase;color:#B8860B;">${copy.codeLabel}</p>
                     <p style="margin:0;font-family:'EB Garamond',Garamond,Georgia,'Times New Roman',serif;font-size:28px;font-weight:600;color:#FAF8F3;letter-spacing:0.04em;">${promoCode}</p>
-                    <p style="margin:8px 0 0;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#FAF8F3B3;line-height:1.5;">${copy.codeBody}</p>
                   </td>
                 </tr>
               </table>
@@ -105,7 +104,6 @@ const COPY = {
     body2:
       'Ως μέλος της Founding Five, η συνδρομή σου SuperLandlord για τον πρώτο χρόνο γίνεται από €49 → €9,80 με τον παρακάτω κωδικό. Πέρασέ τον στο πεδίο "Add promotion code" κατά το checkout.',
     codeLabel: 'Κωδικός Founding Five',
-    codeBody: 'Εφαρμόζεται μόνο στην πρώτη χρονιά. Ανανέωση στην πλήρη τιμή κατόπιν.',
     cta: 'Ενεργοποίησε SuperLandlord',
     footnote:
       'Μετά την ενεργοποίηση, ανέβασε ταυτότητα στο Verification για να ξεκλειδώσεις το σήμα Founding Member πάνω από τις αγγελίες σου.',
@@ -123,7 +121,6 @@ const COPY = {
     body2:
       "As a Founding Five member, your first-year SuperLandlord subscription drops from €49 → €9.80 with the code below. Paste it into the \"Add promotion code\" field at checkout.",
     codeLabel: 'Founding Five code',
-    codeBody: "Applies to your first year only. Renews at full price after that.",
     cta: 'Activate SuperLandlord',
     footnote:
       'After activation, upload an ID on the Verification page to unlock the Founding Member badge on your listings.',

@@ -56,9 +56,6 @@ export function foundingCohortWelcomeHtml({
                   </td>
                 </tr>
               </table>
-              <p style="margin:0;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;color:#999;line-height:1.5;">
-                ${copy.footnote}
-              </p>
             </td>
           </tr>
           <tr>
@@ -95,8 +92,6 @@ const COPY = {
     unlockBody:
       'Ενεργοποίησε τη συνδρομή SuperLandlord και ολοκλήρωσε την ταυτοποίηση. Όσο και τα δύο είναι ενεργά, οι αγγελίες σου θα φέρουν το σήμα Founding Member — αναγνωρίσιμο από κάθε φοιτητή που μας επισκέπτεται.',
     cta: 'Ενεργοποίησε SuperLandlord',
-    footnote:
-      'Το σήμα Founding Member απονέμεται στους πρώτους πενήντα επαληθευμένους ιδιοκτήτες και διατηρείται όσο η συνδρομή σου είναι ενεργή.',
     subject: 'Καλώς ήρθες στην ιδρυτική ομάδα — είσαι ο #{rank}',
   },
   en: {
@@ -112,8 +107,6 @@ const COPY = {
     unlockBody:
       'Activate a SuperLandlord subscription and complete identity verification. While both are active, your listings will display the Founding Member badge — visible to every student who browses StudentX.',
     cta: 'Activate SuperLandlord',
-    footnote:
-      'The Founding Member badge is awarded to the first fifty verified landlords and stays as long as your subscription remains active.',
     subject: "Welcome to the founding cohort — you're member #{rank}",
   },
 };
