@@ -17,7 +17,7 @@ const BASE =
 
 const VARIANTS = {
   primary:
-    'bg-blue text-white hover:bg-night',
+    'bg-brand text-white hover:opacity-90',
   gold:
     'bg-gold text-white hover:bg-[#9a7209]',
   outline:

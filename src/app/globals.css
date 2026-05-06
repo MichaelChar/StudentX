@@ -1,36 +1,50 @@
 @import "tailwindcss";
 
 /*
-  Propylaea — StudentX × AUSOM design tokens (v2 · April 2026)
-  AUTh School of Medicine partnership. Locked brand.
-  See: /Users/mcg/Desktop/Aristotle × StudentX — Propylaea (print).pdf
+  StudentX design tokens — Stripe-modern palette.
+  Iris primary, navy ink, white canvas, orange/magenta accents, Inter type.
 */
 :root {
-  /* Propylaea palette — primary tokens */
-  --color-blue: #01828D;        /* Propylaea teal — primary, CTAs, headers */
-  --color-gold: #B8860B;        /* Seal gold — verified pills, focus rings, partner seals ONLY */
-  --color-stone: #FAF8F3;       /* Canvas / page background */
-  --color-parchment: #F0EBDF;   /* Surface / cards / inputs */
-  --color-night: #01828D;       /* Ink / dark surfaces — repointed to teal per design directive */
+  /* Primary tokens */
+  --color-blue: #635BFF;        /* Stripe iris — primary, CTAs, headers */
+  --color-gold: #ff8a3d;        /* Orange — verified pills, focus rings, accents */
+  --color-stone: #ffffff;       /* Canvas / page background */
+  --color-parchment: #f6f4ff;   /* Surface / cards / inputs (very-light iris tint) */
+  --color-night: #0a2540;       /* Ink / dark surfaces */
 
-  /* Legacy aliases — repointed to Propylaea values so existing components */
-  /* using these utilities pick up the new palette without manual migration. */
-  /* Remove once every page is migrated to the new tokens. */
-  --color-navy: #01828D;
-  --color-midnight: #01828D;
-  --color-ink: #01828D;
+  /* Extended palette — Stripe-style accents used in gradients + highlights */
+  --color-magenta: #ff5fa2;
+  --color-yellow: #ffcb57;
+  --color-iris-soft: #ece7ff;   /* Section backgrounds, hub gradient */
+  --color-peach-soft: #ffe7d6;  /* Hub gradient stop */
+
+  /* Brand gradient — primary CTAs, wordmark, hero accents.
+     Iris → magenta → orange (matches the StudentX wordmark). */
+  --gradient-brand: linear-gradient(120deg, #635BFF 0%, #ff5fa2 50%, #ff8a3d 100%);
+
+  /* Legacy aliases — point at the new palette so existing components pick */
+  /* up the rebrand without manual migration. */
+  --color-navy: #0a2540;
+  --color-midnight: #0a2540;
+  --color-ink: #0a2540;
   --color-white: #FFFFFF;
-  --color-text: #01828D;
-  --color-gray-light: #F0EBDF;
+  --color-text: #0a2540;
+  --color-gray-light: #f6f4ff;
 }
 
 @theme inline {
-  /* Propylaea colors */
+  /* Primary tokens */
   --color-blue: var(--color-blue);
   --color-gold: var(--color-gold);
   --color-stone: var(--color-stone);
   --color-parchment: var(--color-parchment);
   --color-night: var(--color-night);
+
+  /* Extended palette */
+  --color-magenta: var(--color-magenta);
+  --color-yellow: var(--color-yellow);
+  --color-iris-soft: var(--color-iris-soft);
+  --color-peach-soft: var(--color-peach-soft);
 
   /* Legacy aliases mapped into Tailwind's utility surface */
   --color-navy: var(--color-navy);
@@ -39,11 +53,11 @@
   --color-gray-dark: var(--color-text);
   --color-gray-light: var(--color-gray-light);
 
-  /* Type — Propylaea pairing: EB Garamond (display) + Source Sans 3 (body/UI) */
-  --font-sans: var(--font-source-sans), system-ui, sans-serif;
-  --font-display: var(--font-eb-garamond), Georgia, "Times New Roman", serif;
+  /* Type — Inter for both display and body (Latin + Greek) */
+  --font-sans: var(--font-inter), system-ui, sans-serif;
+  --font-display: var(--font-inter), system-ui, sans-serif;
   /* Legacy alias kept for any component still using font-heading */
-  --font-heading: var(--font-eb-garamond), Georgia, "Times New Roman", serif;
+  --font-heading: var(--font-inter), system-ui, sans-serif;
 }
 
 body {
@@ -53,48 +67,30 @@ body {
   font-feature-settings: "ss01", "cv11"; /* humanist numerals where available */
 }
 
-/* Display typography — EB Garamond renders true for Greek polytonic */
+/* Display typography — Inter at tighter tracking for headings */
 h1, h2, h3, h4, h5, h6, .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.01em;
+  letter-spacing: -0.02em;
 }
 
-/* Focus-visible — gold outline, Propylaea spec */
+/* Focus-visible — iris outline */
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
 select:focus-visible,
 textarea:focus-visible {
-  outline: 2px solid var(--color-gold);
+  outline: 2px solid var(--color-blue);
   outline-offset: 2px;
   border-radius: 4px;
 }
 
 /* Range slider */
 input[type="range"] {
-  accent-color: var(--color-gold);
+  accent-color: var(--color-blue);
 }
 input[type="range"]::-webkit-slider-thumb,
 input[type="range"]::-moz-range-thumb {
   cursor: pointer;
-}
-
-/*
-  Greek-key band — a repeatable meander/fret motif (classical).
-  Applied as a 1-line SVG background. Height ~14px; lives between sections.
-*/
-.greek-key-band {
-  height: 14px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='14' viewBox='0 0 56 14'><g fill='none' stroke='%23B8860B' stroke-width='1.25' stroke-linecap='square'><path d='M0 13 L0 3 L10 3 L10 10 L4 10 L4 6 L7 6'/><path d='M14 13 L14 3 L24 3 L24 10 L18 10 L18 6 L21 6'/><path d='M28 13 L28 3 L38 3 L38 10 L32 10 L32 6 L35 6'/><path d='M42 13 L42 3 L52 3 L52 10 L46 10 L46 6 L49 6'/></g></svg>");
-  background-repeat: repeat-x;
-  background-position: center;
-}
-
-.greek-key-band-blue {
-  height: 14px;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='56' height='14' viewBox='0 0 56 14'><g fill='none' stroke='%2301828D' stroke-width='1.25' stroke-linecap='square'><path d='M0 13 L0 3 L10 3 L10 10 L4 10 L4 6 L7 6'/><path d='M14 13 L14 3 L24 3 L24 10 L18 10 L18 6 L21 6'/><path d='M28 13 L28 3 L38 3 L38 10 L32 10 L32 6 L35 6'/><path d='M42 13 L42 3 L52 3 L52 10 L46 10 L46 6 L49 6'/></g></svg>");
-  background-repeat: repeat-x;
-  background-position: center;
 }
 
 /*
@@ -130,14 +126,21 @@ input[type="range"]::-moz-range-thumb {
 
 /* Selection color */
 ::selection {
-  background: var(--color-gold);
+  background: var(--color-blue);
   color: #FFFFFF;
+}
+
+/* Brand gradient utility — applied to primary CTAs and any surface that
+   should carry the wordmark gradient. Use alongside `text-white` so the
+   label reads against all three stops. */
+.bg-brand {
+  background-image: var(--gradient-brand);
+  background-color: var(--color-blue); /* fallback if gradients are unsupported */
 }
 
 /*
   BauhausLoader keyframes — used by src/components/BauhausLoader.js for
-  every centred blocking spinner (landlord + student). The post-quiz
-  GlobeLoader animates separately. See plans/bauhaus-loader-rollout.
+  every centred blocking spinner (landlord + student).
 */
 @keyframes bauhausRotate {
   from { transform: rotate(0deg); }

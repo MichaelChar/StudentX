@@ -1,4 +1,4 @@
-import { EB_Garamond, Source_Sans_3 } from 'next/font/google';
+import { Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -30,19 +30,10 @@ const META_BY_LOCALE = {
   },
 };
 
-// Propylaea display face — EB Garamond (Greek polytonic coverage)
-const ebGaramond = EB_Garamond({
+// Inter — display + body face (Latin + Greek subsets)
+const inter = Inter({
   subsets: ['latin', 'greek'],
-  variable: '--font-eb-garamond',
-  weight: ['400', '500', '600', '700'],
-  style: ['normal', 'italic'],
-  display: 'swap',
-});
-
-// Propylaea body/UI face — Source Sans 3 (wide x-height, Greek polytonic coverage)
-const sourceSans = Source_Sans_3({
-  subsets: ['latin', 'greek'],
-  variable: '--font-source-sans',
+  variable: '--font-inter',
   weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
@@ -100,7 +91,7 @@ export default async function LocaleLayout({ children, params }) {
   return (
     <html
       lang={locale}
-      className={`${ebGaramond.variable} ${sourceSans.variable} h-full antialiased`}
+      className={`${inter.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-stone text-night">
         <NextIntlClientProvider locale={locale} messages={messages}>
