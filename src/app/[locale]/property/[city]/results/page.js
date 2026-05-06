@@ -11,7 +11,7 @@ import SaveSearchModal from '@/components/SaveSearchModal';
 import Button from '@/components/ui/Button';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
-import GlobeLoader from '@/components/GlobeLoader';
+import BauhausLoader from '@/components/BauhausLoader';
 
 /*
   Propylaea results page — matches page 06 of the reference design.
@@ -67,24 +67,12 @@ function ResultsContent() {
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  // Globe loader (post-quiz transition). Shown only when arriving with quiz
-  // params (budget/types/neighborhoods present) on first mount of the page —
-  // never on filter-driven re-fetches. Sequence runs ~6.5s; we hide the
-  // loader only after the animation completes AND listings are loaded so
-  // there's no jarring skeleton flash mid-zoom. We resolve `showLoader` in
-  // an effect (not the initializer) so SSR doesn't lock us into `false`.
-  const [loaderDone, setLoaderDone] = useState(false);
+  // Post-quiz loader. Shown only when arriving with quiz params
+  // (budget/types/neighborhoods) on first mount — never on filter re-fetches.
   const [showLoader, setShowLoader] = useState(false);
   const loaderDecidedRef = useRef(false);
-  // One-time loader-gate decision based on URL params at mount. We
-  // INTENTIONALLY don't use a `useState(() => ...)` lazy initializer
-  // here because that would run server-side too — `typeof window` is
-  // undefined during SSR, so the lazy init returns `false`, but the
-  // client run returns `true` for users coming from the quiz, causing
-  // a hydration mismatch warning + layout flash. useEffect defers the
-  // decision to AFTER hydration, so SSR + first client paint agree on
-  // `false` and the loader fades in cleanly. See the line-72 comment
-  // above for the broader sequencing rationale.
+  // Deferred to useEffect (not useState initializer) to avoid SSR/client
+  // hydration mismatch — see loaderDecidedRef guard.
   /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     if (loaderDecidedRef.current) return;
@@ -225,15 +213,17 @@ function ResultsContent() {
     }));
   }
 
-  // Show loader as a full-screen overlay until BOTH animation completes
-  // AND the initial listings fetch has finished. Both conditions guard
-  // against jank: the loader hides only when there's something legible
-  // to reveal beneath it.
-  const loaderVisible = showLoader && (!loaderDone || loading);
+  const loaderVisible = showLoader && loading;
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 md:py-14">
-      {loaderVisible && <GlobeLoader onComplete={() => setLoaderDone(true)} />}
+      {loaderVisible && (
+        <BauhausLoader
+          mode="overlay"
+          eyebrow={t('eyebrow')}
+          statuses={[t('titleLoading')]}
+        />
+      )}
       {/* Header row */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
         <div>
