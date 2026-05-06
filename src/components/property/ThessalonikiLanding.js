@@ -147,7 +147,7 @@ export default function ThessalonikiLanding() {
 function StatTile({ value, label }) {
   return (
     <Card tone="parchment" border={false} className="px-6 py-8">
-      <p className="font-display text-5xl md:text-6xl text-blue leading-none">
+      <p className="font-display text-5xl md:text-6xl text-gold leading-none">
         {value}
       </p>
       <p className="mt-4 label-caps text-night/60">{label}</p>
