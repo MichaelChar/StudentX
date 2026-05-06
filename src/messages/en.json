@@ -444,24 +444,21 @@
       "step3English": "Reach out directly",
       "step3Body": "No brokers. No hidden fees."
     },
-    "cityHub": {
-      "eyebrow": "Ἀγορά",
-      "heroBefore": "Find your home,",
-      "heroItalic": "wherever",
-      "heroAfter": "you study.",
-      "subtitle": "Curated student housing across Greece. Choose a city to begin — new cities join the directory each term.",
-      "citiesEyebrow": "Cities",
-      "citiesTitle": "Pick where you're",
-      "citiesTitleItalic": "headed.",
-      "thessaloniki": {
-        "greek": "Θεσσαλονίκη",
-        "name": "Thessaloniki",
-        "description": "Curated student housing for Aristotle, UoM, and IHU students. The original StudentX directory.",
-        "cta": "Browse Thessaloniki"
-      },
-      "comingSoonEyebrow": "Coming soon",
-      "comingSoonTitle": "More cities, soon.",
-      "comingSoonBody": "We're adding cities one at a time so each one stays curated. Want yours next? <link>Tell us</link>."
+    "hub": {
+      "description": "Curated student housing across Greece, Cyprus, the UK and Ireland. Pick a city to begin.",
+      "headerStat": "Global students empowered by StudentX:",
+      "searchPlaceholder": "Hover over your city or find it below",
+      "comingSoonGhost": "coming soon…",
+      "clearSearch": "Clear search"
+    },
+    "comingSoon": {
+      "eyebrow": "Coming soon",
+      "titlePrefix": "Coming soon to",
+      "subtitle": "Listings will appear here when {city} launches. We're hand-curating each city, one at a time, so the directory stays trustworthy.",
+      "ctaEyebrow": "First-mover advantage",
+      "ctaTitle": "Want to be the first landlord here?",
+      "ctaBody": "Founding landlords get priority placement when {city} launches and a permanent Founding Member badge on every listing. <link>Tell us about your property</link>.",
+      "ctaButton": "Email us about {city}"
     },
     "quiz": {
       "pageTitle": "Matching quiz",

@@ -335,8 +335,16 @@ export async function POST(request) {
     checkEnLocale({
       name: 'en-cityhub-locale',
       url: `${appUrl}/en/property`,
-      anyEnMarker: ['Pick where', 'More cities', 'Find your home'],
-      forbidElMarkers: ['Διάλεξε πού', 'κι άλλες πόλεις', 'Βρες το σπίτι σου'],
+      anyEnMarker: [
+        'Hover over your city',
+        'Global students empowered',
+        'Curated student housing',
+      ],
+      forbidElMarkers: [
+        'Πέρασε πάνω από την πόλη',
+        'Φοιτητές παγκοσμίως',
+        'Επιλεγμένη φοιτητική στέγη',
+      ],
     }),
     checkEnLocale({
       name: 'en-homepage-locale',
