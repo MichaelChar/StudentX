@@ -163,8 +163,7 @@ export default function Navbar() {
           className="flex items-center gap-2 text-night hover:text-blue transition-colors"
         >
           <span className="font-display text-xl tracking-tight">
-            StudentX <span className="text-night/40">×</span>{' '}
-            <span className="italic">AUSOM</span>
+            StudentX
           </span>
         </Link>
 
