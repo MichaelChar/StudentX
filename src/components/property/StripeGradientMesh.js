@@ -21,7 +21,7 @@ import { useEffect, useRef } from 'react';
   visible (still readable as a static gradient).
 */
 
-const DEFAULT_PALETTE = ['#635BFF', '#FF5FA2', '#FF8A3D', '#F6F4FF'];
+const DEFAULT_PALETTE = ['#635BFF', '#FF5FA2', '#FFE7D6', '#F6F4FF'];
 
 // Shader sources — verbatim from the design file.
 const SHADER_NOISE = `
