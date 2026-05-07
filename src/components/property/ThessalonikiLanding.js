@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import OrnamentRule from '@/components/ui/OrnamentRule';
+import StripeGradientMesh from '@/components/property/StripeGradientMesh';
 
 /*
   Propylaea landing — the Thessaloniki city home at /property/thessaloniki.
@@ -58,32 +59,24 @@ export default function ThessalonikiLanding() {
 
   return (
     <>
-      {/* Hero — Night surface */}
-      <section className="relative bg-night text-stone overflow-hidden">
-        <div
-          aria-hidden="true"
-          className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-gold/20 blur-3xl"
-        />
-        <div
-          aria-hidden="true"
-          className="absolute -bottom-32 -left-20 w-[28rem] h-[28rem] rounded-full bg-blue/30 blur-3xl"
-        />
-
+      {/* Hero — Stripe-style WebGL mesh gradient background */}
+      <section className="relative overflow-hidden">
+        <StripeGradientMesh />
         <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 md:pt-28 md:pb-32">
           <p className="label-caps text-gold mb-8">{t('eyebrow')}</p>
-          <h1 className="font-display text-4xl md:text-6xl lg:text-[4.5rem] leading-[1.05] max-w-3xl">
+          <h1 className="font-display text-4xl md:text-6xl lg:text-[4.5rem] leading-[1.05] max-w-3xl text-night">
             {t('heroBefore')}{' '}
             <span className="italic text-gold">{t('heroItalic')}</span>{' '}
             {t('heroAfter')}
           </h1>
-          <p className="mt-6 max-w-xl text-stone/70 text-lg md:text-xl leading-relaxed">
+          <p className="mt-6 max-w-xl text-night/70 text-lg md:text-xl leading-relaxed">
             {t('subtitle')}
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Button href="/property/thessaloniki/quiz" variant="gold" size="lg">
               {t('ctaPrimary')}
             </Button>
-            <Button href="/property/thessaloniki/results" variant="outlineOnDark" size="lg">
+            <Button href="/property/thessaloniki/results" variant="outline" size="lg">
               {t('ctaSecondary')}
             </Button>
           </div>
@@ -147,7 +140,7 @@ export default function ThessalonikiLanding() {
 function StatTile({ value, label }) {
   return (
     <Card tone="parchment" border={false} className="px-6 py-8">
-      <p className="font-display text-5xl md:text-6xl text-blue leading-none">
+      <p className="font-display text-5xl md:text-6xl text-gold leading-none">
         {value}
       </p>
       <p className="mt-4 label-caps text-night/60">{label}</p>
