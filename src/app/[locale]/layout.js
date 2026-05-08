@@ -4,7 +4,6 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import Navbar from '@/components/Navbar';
-import Footer from '@/components/Footer';
 import SessionSync from '@/components/SessionSync';
 import '../globals.css';
 
@@ -98,7 +97,6 @@ export default async function LocaleLayout({ children, params }) {
           <SessionSync />
           <Navbar />
           <main className="flex-1">{children}</main>
-          <Footer />
         </NextIntlClientProvider>
       </body>
     </html>
