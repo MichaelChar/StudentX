@@ -807,7 +807,10 @@
       },
       "backToAccount": "Πίσω στα αιτήματά μου",
       "backToInbox": "Πίσω στα εισερχόμενα",
-      "listingLabel": "Αγγελία"
+      "listingLabel": "Αγγελία",
+      "disconnected": "Η σύνδεση χάθηκε — επανασύνδεση…",
+      "disconnectedStuck": "Συνεχίζουμε να προσπαθούμε.",
+      "refresh": "Ανανέωση"
     },
     "gate": {
       "title": "Συνδέσου για να δεις την αγγελία",

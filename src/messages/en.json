@@ -807,7 +807,10 @@
       },
       "backToAccount": "Back to my inquiries",
       "backToInbox": "Back to inbox",
-      "listingLabel": "Listing"
+      "listingLabel": "Listing",
+      "disconnected": "Connection lost — reconnecting…",
+      "disconnectedStuck": "Still trying to reconnect.",
+      "refresh": "Refresh page"
     },
     "gate": {
       "title": "Sign in to view this listing",
