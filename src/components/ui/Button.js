@@ -1,6 +1,7 @@
 'use client';
 
 import { Link } from '@/i18n/navigation';
+import StripeGradientMesh from '@/components/property/StripeGradientMesh';
 
 /*
   Propylaea Button.
@@ -11,6 +12,10 @@ import { Link } from '@/i18n/navigation';
     - ghost    : No background, subtle hover
     - onDark   : Stone fill on Night surface (for dark hero)
   Sizes: sm | md | lg
+
+  Pass `animated` to render the WebGL StripeGradientMesh as the button
+  background instead of the variant's flat fill — used on the primary
+  conversion CTAs (quiz, sign in, create account).
 */
 const BASE =
   'inline-flex items-center justify-center gap-2 font-sans font-semibold tracking-[0.08em] uppercase transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
@@ -19,7 +24,7 @@ const VARIANTS = {
   primary:
     'bg-brand text-white hover:opacity-90',
   gold:
-    'bg-gold text-white hover:bg-[#9a7209]',
+    'bg-yellow text-white hover:opacity-90',
   outline:
     'border border-blue text-blue bg-transparent hover:bg-blue hover:text-white',
   outlineOnDark:
@@ -29,6 +34,8 @@ const VARIANTS = {
   onDark:
     'bg-stone text-night hover:bg-white',
 };
+
+const ANIMATED_VARIANT = 'relative overflow-hidden text-white shadow-md hover:opacity-95';
 
 const SIZES = {
   sm: 'text-xs px-3 py-1.5 rounded',
@@ -41,24 +48,37 @@ export default function Button({
   href,
   variant = 'primary',
   size = 'md',
+  animated = false,
   className = '',
   children,
   type,
   ...rest
 }) {
-  const classes = `${BASE} ${VARIANTS[variant] || VARIANTS.primary} ${SIZES[size] || SIZES.md} ${className}`;
+  const variantClasses = animated ? ANIMATED_VARIANT : (VARIANTS[variant] || VARIANTS.primary);
+  const classes = `${BASE} ${variantClasses} ${SIZES[size] || SIZES.md} ${className}`;
+
+  const content = animated ? (
+    <>
+      <span aria-hidden="true" className="absolute inset-0 pointer-events-none">
+        <StripeGradientMesh />
+      </span>
+      <span className="relative z-10 inline-flex items-center justify-center gap-2">
+        {children}
+      </span>
+    </>
+  ) : children;
 
   if (href) {
     return (
       <Link href={href} className={classes} {...rest}>
-        {children}
+        {content}
       </Link>
     );
   }
 
   return (
     <button type={type || 'button'} className={classes} {...rest}>
-      {children}
+      {content}
     </button>
   );
 }

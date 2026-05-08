@@ -63,17 +63,17 @@ export default function ThessalonikiLanding() {
       <section className="relative overflow-hidden">
         <StripeGradientMesh />
         <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 md:pt-28 md:pb-32">
-          <p className="label-caps text-gold mb-8">{t('eyebrow')}</p>
+          <p className="label-caps text-yellow mb-8">{t('eyebrow')}</p>
           <h1 className="font-display text-4xl md:text-6xl lg:text-[4.5rem] leading-[1.05] max-w-3xl text-night">
             {t('heroBefore')}{' '}
-            <span className="italic text-gold">{t('heroItalic')}</span>{' '}
+            <span className="italic text-yellow">{t('heroItalic')}</span>{' '}
             {t('heroAfter')}
           </h1>
           <p className="mt-6 max-w-xl text-night/70 text-lg md:text-xl leading-relaxed">
             {t('subtitle')}
           </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Button href="/property/thessaloniki/quiz" variant="gold" size="lg">
+            <Button href="/property/thessaloniki/quiz" animated size="lg">
               {t('ctaPrimary')}
             </Button>
             <Button href="/property/thessaloniki/results" variant="outline" size="lg">
@@ -101,17 +101,17 @@ export default function ThessalonikiLanding() {
 
       {/* How it works */}
       <section className="mx-auto max-w-6xl px-5 py-20 md:py-28">
-        <p className="label-caps text-gold mb-5">{t('howEyebrow')}</p>
+        <p className="label-caps text-yellow mb-5">{t('howEyebrow')}</p>
         <h2 className="font-display text-3xl md:text-5xl text-night leading-tight max-w-3xl">
           {t('howTitle')}{' '}
-          <span className="italic text-gold">{t('howTitleItalic')}</span>
+          <span className="italic text-yellow">{t('howTitleItalic')}</span>
         </h2>
 
         <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-10">
           {steps.map((step) => (
             <div key={step.numeral} className="relative">
               <span
-                className="font-display text-5xl text-gold block leading-none mb-5"
+                className="font-display text-5xl text-yellow block leading-none mb-5"
                 aria-hidden="true"
               >
                 {step.numeral}
@@ -128,7 +128,7 @@ export default function ThessalonikiLanding() {
         </div>
 
         <div className="mt-16 flex justify-center">
-          <Button href="/property/thessaloniki/quiz" variant="primary" size="lg">
+          <Button href="/property/thessaloniki/quiz" animated size="lg">
             {t('ctaPrimary')}
           </Button>
         </div>
@@ -140,7 +140,7 @@ export default function ThessalonikiLanding() {
 function StatTile({ value, label }) {
   return (
     <Card tone="parchment" border={false} className="px-6 py-8">
-      <p className="font-display text-5xl md:text-6xl text-gold leading-none">
+      <p className="font-display text-5xl md:text-6xl text-yellow leading-none">
         {value}
       </p>
       <p className="mt-4 label-caps text-night/60">{label}</p>
