@@ -16,7 +16,7 @@ The bug can recur whenever a new locale-aware server component is added or a sub
 | Cron dispatch (cron expr → route) | [`cf/worker-entry.mjs`](../../cf/worker-entry.mjs) `CRON_ROUTES` |
 | Check logic + alerting | [`src/app/api/cron/synthetic-en-listing/route.js`](../../src/app/api/cron/synthetic-en-listing/route.js) |
 
-Every 15 min, the Worker's `scheduled` handler POSTs to `/api/cron/synthetic-en-listing` with the `x-cron-secret` header. The route fetches `${NEXT_PUBLIC_APP_URL}/en/property/listing/${SYNTHETIC_LISTING_ID}` and asserts:
+Every 15 min, the Worker's `scheduled` handler POSTs to `/api/cron/synthetic-en-listing` with the `x-cron-secret` header. The route fetches `${NEXT_PUBLIC_APP_URL}/en/property/thessaloniki/listing/${SYNTHETIC_LISTING_ID}` (the city-prefixed canonical path; `/en/property/listing/<id>` 301s to it via `src/middleware.js`) and asserts:
 
 **Body (anon fetch — `en-listing-locale`):**
 
@@ -99,16 +99,16 @@ When investigating a `*-cache` failure, the same two requests the canary makes c
 
 ```bash
 # Anon — must include `cache-control: public, s-maxage=300, ...`
-curl -sI https://studentx.uk/en/property/listing/0100006 | grep -i cache-control
+curl -sI https://studentx.uk/en/property/thessaloniki/listing/0100006 | grep -i cache-control
 
 # Authed — must NOT include `public, s-maxage=...` (private/no-store is fine)
 curl -sI -H 'Cookie: sb-access-token=any-non-empty-value' \
-  https://studentx.uk/en/property/listing/0100006 | grep -i cache-control
+  https://studentx.uk/en/property/thessaloniki/listing/0100006 | grep -i cache-control
 
 # Bonus — confirm Cloudflare is actually caching the anon variant.
 # Run twice; second call should show `cf-cache-status: HIT`.
-curl -sI https://studentx.uk/en/property/listing/0100006 | grep -i cf-cache-status
-curl -sI https://studentx.uk/en/property/listing/0100006 | grep -i cf-cache-status
+curl -sI https://studentx.uk/en/property/thessaloniki/listing/0100006 | grep -i cf-cache-status
+curl -sI https://studentx.uk/en/property/thessaloniki/listing/0100006 | grep -i cf-cache-status
 ```
 
 If the anon request returns `private` or the authed request returns `public, s-maxage=`, the middleware split has broken — start with `git log middleware.js next.config.mjs` to find the offending change.
@@ -117,4 +117,5 @@ If the anon request returns `private` or the authed request returns `public, s-m
 
 - **Same-network probe.** The cron runs inside the same Cloudflare Worker that serves the page, so it sees the origin response, not what a different PoP returns from cache. The header check is still meaningful (it confirms the Worker is sending the right `cache-control` for both branches), but a real session-leak across PoPs would only surface via the manual two-tab browser test in `docs/runbooks/`. Worth running that test by hand once a week post-PR-#105 deploy until the design is settled.
 - **`Vary: Cookie` may not split CDN keys on Cloudflare free tier.** If a session leak is observed despite the canary passing, add a Cloudflare Cache Rule in the dashboard: "Bypass cache when Cookie contains `sb-access-token`". This sacrifices the perf win for authed users (small fraction of traffic on a directory site) and keeps anon caching intact.
+- **Path-prefix gotcha — the rule must match the canonical city-prefixed URL.** The deployed Cloudflare Cache Rule's match expression must reference `/property/thessaloniki/listing/...` (and `/en/...`), not `/property/listing/...`. Cloudflare's rule fires on the *request* URL **before** the middleware-driven 301 redirect happens, so a rule matching the legacy path only caches the 301 itself — not the actual page response. If the canary `*-cache` checks pass but `cf-cache-status` is absent on the canonical URL, this is the most likely cause.
 - **No alert dedupe.** A sustained outage emails every 15 min. If this becomes annoying, add a `synthetic_alert_state(check_name, last_alert_at)` Supabase row and gate the email on `now() - last_alert_at > 1 hour`.
