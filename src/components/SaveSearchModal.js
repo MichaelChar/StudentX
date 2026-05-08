@@ -119,7 +119,7 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
                 value={form.email}
                 onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                 placeholder={t('emailPlaceholder')}
-                className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2.5 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
+                className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2.5 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow"
               />
             </div>
 
@@ -133,7 +133,7 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
                 onChange={(e) => setForm((p) => ({ ...p, label: e.target.value }))}
                 placeholder={t('labelPlaceholder')}
                 maxLength={80}
-                className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2.5 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold"
+                className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2.5 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow"
               />
             </div>
 
@@ -147,7 +147,7 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
                     key={freq}
                     type="button"
                     onClick={() => setForm((p) => ({ ...p, frequency: freq }))}
-                    className={`flex-1 py-2 rounded-lg text-sm border transition-colors cursor-pointer ${form.frequency === freq ? 'border-gold bg-gold/10 text-gold font-medium' : 'border-gray-200 text-gray-dark/60 hover:border-gold/40'}`}
+                    className={`flex-1 py-2 rounded-lg text-sm border transition-colors cursor-pointer ${form.frequency === freq ? 'border-yellow bg-yellow/10 text-yellow font-medium' : 'border-gray-200 text-gray-dark/60 hover:border-yellow/40'}`}
                   >
                     {t(freq)}
                   </button>
@@ -162,7 +162,7 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3 rounded-lg bg-gold text-white font-heading font-semibold text-sm hover:bg-gold/90 transition-colors cursor-pointer disabled:opacity-60"
+              className="w-full py-3 rounded-lg bg-yellow text-white font-heading font-semibold text-sm hover:bg-yellow/90 transition-colors cursor-pointer disabled:opacity-60"
             >
               {submitting ? t('saving') : t('submit')}
             </button>

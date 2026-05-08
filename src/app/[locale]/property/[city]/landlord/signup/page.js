@@ -131,7 +131,7 @@ export default function LandlordSignupPage() {
 
         <Button
           type="submit"
-          variant="primary"
+          animated
           disabled={loading}
           className="w-full justify-center"
         >

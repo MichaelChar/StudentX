@@ -24,7 +24,7 @@ export default function CharterPage() {
       <section className="relative bg-night text-stone overflow-hidden">
         <div
           aria-hidden="true"
-          className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-gold/20 blur-3xl"
+          className="absolute -top-24 -right-24 w-80 h-80 rounded-full bg-yellow/20 blur-3xl"
         />
         <div
           aria-hidden="true"
@@ -38,10 +38,10 @@ export default function CharterPage() {
         </span>
 
         <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 md:pt-28 md:pb-32">
-          <p className="label-caps text-gold mb-8">{t('heroEyebrow')}</p>
+          <p className="label-caps text-yellow mb-8">{t('heroEyebrow')}</p>
           <h1 className="font-display text-4xl md:text-6xl lg:text-[4.5rem] leading-[1.05] max-w-3xl">
             {t('heroBefore')}{' '}
-            <span className="italic text-gold">{t('heroItalic')}</span>
+            <span className="italic text-yellow">{t('heroItalic')}</span>
           </h1>
           <p className="mt-6 max-w-xl text-stone/70 text-lg md:text-xl leading-relaxed">
             {t('heroSubtitle')}
@@ -58,10 +58,10 @@ export default function CharterPage() {
 
       {/* Section 01 — Context */}
       <section className="mx-auto max-w-6xl px-5 py-16 md:py-24">
-        <p className="label-caps text-gold mb-5">{t('contextLabel')}</p>
+        <p className="label-caps text-yellow mb-5">{t('contextLabel')}</p>
         <h2 className="font-display text-3xl md:text-5xl text-night leading-tight max-w-3xl">
           {t('contextHeading')}{' '}
-          <span className="italic text-gold">{t('contextHeadingItalic')}</span>
+          <span className="italic text-yellow">{t('contextHeadingItalic')}</span>
         </h2>
         <p className="mt-6 max-w-2xl text-night/70 text-base md:text-lg leading-relaxed">
           {t('contextBody')}
@@ -128,7 +128,7 @@ export default function CharterPage() {
 
       {/* Section 02 — Preferences, Offer & Claim */}
       <section className="mx-auto max-w-6xl px-5 py-16 md:py-24">
-        <p className="label-caps text-gold mb-5">{t('prefsLabel')}</p>
+        <p className="label-caps text-yellow mb-5">{t('prefsLabel')}</p>
 
         {/* Preference items */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-6 mt-8">
@@ -136,7 +136,7 @@ export default function CharterPage() {
             <div key={pref.title} className="flex gap-4 items-start">
               <Icon
                 name="shieldCheck"
-                className="w-6 h-6 text-gold shrink-0 mt-0.5"
+                className="w-6 h-6 text-yellow shrink-0 mt-0.5"
               />
               <div>
                 <p className="font-display text-lg text-night leading-snug">
@@ -171,7 +171,7 @@ export default function CharterPage() {
               <span className="text-stone/40 line-through text-lg">
                 {t('priceOriginal')}
               </span>
-              <span className="font-display text-4xl md:text-5xl text-gold leading-none">
+              <span className="font-display text-4xl md:text-5xl text-yellow leading-none">
                 {t('priceDiscounted')}
               </span>
               <span className="text-stone/60 text-lg">{t('pricePeriod')}</span>
@@ -191,7 +191,7 @@ export default function CharterPage() {
 
           <div className="mt-10 grid grid-cols-1 md:grid-cols-2 gap-10">
             <div>
-              <span className="font-display text-5xl text-gold block leading-none mb-4">
+              <span className="font-display text-5xl text-yellow block leading-none mb-4">
                 01
               </span>
               <h4 className="font-display text-xl text-night mb-2">
@@ -202,7 +202,7 @@ export default function CharterPage() {
               </p>
             </div>
             <div>
-              <span className="font-display text-5xl text-gold block leading-none mb-4">
+              <span className="font-display text-5xl text-yellow block leading-none mb-4">
                 02
               </span>
               <h4 className="font-display text-xl text-night mb-2">

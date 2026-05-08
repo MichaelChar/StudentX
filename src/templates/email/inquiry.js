@@ -25,7 +25,7 @@ const STRINGS = {
     introNoSummary: (greeting) =>
       `Γεια ${greeting}, ένας φοιτητής μόλις σου έστειλε μήνυμα για την αγγελία σου.`,
     introWithSummary: (greeting, summary) =>
-      `Γεια ${greeting}, ένας φοιτητής μόλις σου έστειλε μήνυμα για την αγγελία σου <strong style="color:#1a2744;">${summary}</strong>.`,
+      `Γεια ${greeting}, ένας φοιτητής μόλις σου έστειλε μήνυμα για την αγγελία σου <strong style="color:#0a2540;">${summary}</strong>.`,
     studentLabel: 'Φοιτητής',
     facultyLabel: 'Σχολή',
     messageLabel: 'Μήνυμα',
@@ -49,7 +49,7 @@ const STRINGS = {
     introNoSummary: (greeting) =>
       `Hi ${greeting}, a student just sent you a message about your listing.`,
     introWithSummary: (greeting, summary) =>
-      `Hi ${greeting}, a student just sent you a message about your listing <strong style="color:#1a2744;">${summary}</strong>.`,
+      `Hi ${greeting}, a student just sent you a message about your listing <strong style="color:#0a2540;">${summary}</strong>.`,
     studentLabel: 'Student',
     facultyLabel: 'Faculty',
     messageLabel: 'Message',
@@ -98,69 +98,69 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${s.titleTag}</title>
 </head>
-<body style="margin:0;padding:0;background:#f5f5f0;font-family:Georgia,serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f0;padding:40px 16px;">
+<body style="margin:0;padding:0;background:#f6f4ff;font-family:Georgia,serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4ff;padding:40px 16px;">
     <tr>
       <td align="center">
-        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e5e0;">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e6eaef;">
           <!-- Header -->
           <tr>
-            <td style="background:#1a2744;padding:24px 32px;">
-              <p style="margin:0;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c9a84c;">StudentX</p>
+            <td style="background:#0a2540;padding:24px 32px;">
+              <p style="margin:0;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#ffcb57;">StudentX</p>
               <p style="margin:4px 0 0;font-family:'Helvetica Neue',sans-serif;font-size:11px;color:#ffffff80;">${s.headerTagline}</p>
             </td>
           </tr>
           <!-- Body -->
           <tr>
             <td style="padding:32px;">
-              <h1 style="margin:0 0 8px;font-family:'Helvetica Neue',sans-serif;font-size:22px;font-weight:700;color:#1a2744;">${s.headingFrom(safeName)}</h1>
-              <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
+              <h1 style="margin:0 0 8px;font-family:'Helvetica Neue',sans-serif;font-size:22px;font-weight:700;color:#0a2540;">${s.headingFrom(safeName)}</h1>
+              <p style="margin:0 0 24px;font-size:15px;color:#0a2540;line-height:1.6;">
                 ${intro}
               </p>
 
               <!-- Student card -->
-              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f0;border-radius:8px;padding:20px;margin-bottom:20px;">
+              <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4ff;border-radius:8px;padding:20px;margin-bottom:20px;">
                 <tr>
                   <td>
-                    <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#888;">${s.studentLabel}</p>
-                    <p style="margin:0 0 4px;font-family:'Helvetica Neue',sans-serif;font-size:16px;font-weight:700;color:#1a2744;">${safeName}</p>
-                    <p style="margin:0;font-size:14px;color:#555;">
-                      <a href="mailto:${safeEmail}" style="color:#c9a84c;text-decoration:none;">${safeEmail}</a>
-                      ${safePhone ? ` · <a href="tel:${safePhone}" style="color:#c9a84c;text-decoration:none;">${safePhone}</a>` : ''}
+                    <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a8595;">${s.studentLabel}</p>
+                    <p style="margin:0 0 4px;font-family:'Helvetica Neue',sans-serif;font-size:16px;font-weight:700;color:#0a2540;">${safeName}</p>
+                    <p style="margin:0;font-size:14px;color:#0a2540;">
+                      <a href="mailto:${safeEmail}" style="color:#ffcb57;text-decoration:none;">${safeEmail}</a>
+                      ${safePhone ? ` · <a href="tel:${safePhone}" style="color:#ffcb57;text-decoration:none;">${safePhone}</a>` : ''}
                     </p>
-                    ${safeFaculty ? `<p style="margin:6px 0 0;font-size:13px;color:#777;">${s.facultyLabel}: ${safeFaculty}</p>` : ''}
+                    ${safeFaculty ? `<p style="margin:6px 0 0;font-size:13px;color:#7a8595;">${s.facultyLabel}: ${safeFaculty}</p>` : ''}
                   </td>
                 </tr>
               </table>
 
               <!-- Message -->
-              <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#888;">${s.messageLabel}</p>
-              <div style="font-size:15px;color:#333;line-height:1.6;border-left:3px solid #c9a84c;padding:4px 16px;margin-bottom:24px;">
+              <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a8595;">${s.messageLabel}</p>
+              <div style="font-size:15px;color:#0a2540;line-height:1.6;border-left:3px solid #ffcb57;padding:4px 16px;margin-bottom:24px;">
                 ${safeMessage}
               </div>
 
               <!-- CTAs -->
               <table cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="background:#1a2744;border-radius:8px;padding:0;">
+                  <td style="background:#0a2540;border-radius:8px;padding:0;">
                     <a href="mailto:${safeEmail}" style="display:inline-block;padding:12px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">${s.replyButton}</a>
                   </td>
                   <td style="width:8px;"></td>
-                  <td style="border:1px solid #1a2744;border-radius:8px;padding:0;">
-                    <a href="${inboxUrl}" style="display:inline-block;padding:11px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#1a2744;text-decoration:none;">${s.inboxButton}</a>
+                  <td style="border:1px solid #0a2540;border-radius:8px;padding:0;">
+                    <a href="${inboxUrl}" style="display:inline-block;padding:11px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#0a2540;text-decoration:none;">${s.inboxButton}</a>
                   </td>
                 </tr>
               </table>
 
-              <p style="margin:24px 0 0;font-size:13px;color:#888;">
-                <a href="${listingUrl}" style="color:#888;">${s.viewListing}</a>
+              <p style="margin:24px 0 0;font-size:13px;color:#7a8595;">
+                <a href="${listingUrl}" style="color:#7a8595;">${s.viewListing}</a>
               </p>
             </td>
           </tr>
           <!-- Footer -->
           <tr>
-            <td style="background:#f5f5f0;padding:20px 32px;border-top:1px solid #e5e5e0;">
-              <p style="margin:0;font-size:12px;color:#999;">
+            <td style="background:#f6f4ff;padding:20px 32px;border-top:1px solid #e6eaef;">
+              <p style="margin:0;font-size:12px;color:#7a8595;">
                 ${s.footerLine1}<br/>
                 ${s.footerLine2}<br/>
                 ${s.footerLine3}

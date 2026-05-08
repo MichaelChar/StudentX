@@ -252,7 +252,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   }
 
   const inputClass =
-    'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-gold/40 focus:border-gold';
+    'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow/40 focus:border-yellow';
   const labelClass = 'block text-sm font-medium text-gray-dark mb-1';
 
   return (
@@ -378,7 +378,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                   href="https://www.google.com/maps"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-gold underline"
+                  className="text-yellow underline"
                 >
                   {chunks}
                 </a>
@@ -496,7 +496,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               type="checkbox"
               checked={form.bills_included}
               onChange={(e) => set('bills_included', e.target.checked)}
-              className="w-4 h-4 accent-gold"
+              className="w-4 h-4 accent-yellow"
             />
             <span className="text-sm text-gray-dark">{t('billsIncluded')}</span>
           </label>
@@ -587,7 +587,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                       className={`relative group aspect-[4/3] rounded-lg overflow-hidden bg-gray-light cursor-grab active:cursor-grabbing transition-all ${
                         i === 0 ? 'col-span-2' : ''
                       } ${isDragging ? 'opacity-40' : ''} ${
-                        isDragOver ? 'ring-2 ring-gold ring-offset-2' : ''
+                        isDragOver ? 'ring-2 ring-yellow ring-offset-2' : ''
                       }`}
                     >
                       <Image
@@ -598,7 +598,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                         sizes={i === 0 ? '(max-width: 640px) 100vw, 66vw' : '(max-width: 640px) 50vw, 33vw'}
                       />
                       {i === 0 && (
-                        <span className="absolute top-2 left-2 bg-gold text-white text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded shadow">
+                        <span className="absolute top-2 left-2 bg-yellow text-white text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded shadow">
                           {t('photosMain')}
                         </span>
                       )}
@@ -683,7 +683,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               />
               <label
                 htmlFor="photo-upload"
-                className={`inline-flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-200 rounded-lg text-sm text-gray-dark/60 hover:border-gold/60 hover:text-navy cursor-pointer transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+                className={`inline-flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-200 rounded-lg text-sm text-gray-dark/60 hover:border-yellow/60 hover:text-navy cursor-pointer transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
               >
                 {uploading ? (
                   <>
@@ -727,7 +727,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                   type="checkbox"
                   checked={form.amenity_ids.includes(amenity.amenity_id)}
                   onChange={() => toggleAmenity(amenity.amenity_id)}
-                  className="w-4 h-4 accent-gold"
+                  className="w-4 h-4 accent-yellow"
                 />
                 <span className="text-sm text-gray-dark">{amenity.name}</span>
               </label>
@@ -745,7 +745,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       <button
         type="submit"
         disabled={loading}
-        className="w-full sm:w-auto bg-gold text-white font-heading font-semibold px-8 py-3 rounded-lg hover:bg-gold/90 transition-colors disabled:opacity-50"
+        className="w-full sm:w-auto bg-yellow text-white font-heading font-semibold px-8 py-3 rounded-lg hover:bg-yellow/90 transition-colors disabled:opacity-50"
       >
         {loading ? t('saving') : (submitLabel || t('saveListing'))}
       </button>

@@ -88,7 +88,7 @@ export default function ContactRail({ listing }) {
   return (
     <>
       <aside>
-        <div className="lg:sticky lg:top-24">
+        <div className="lg:sticky lg:top-6">
           <Card tone="white" className="p-6">
             <p className="font-display text-3xl text-blue">
               {listing.monthly_price != null ? (

@@ -70,7 +70,7 @@ export default function QuizPage() {
       {/* Heading */}
       <h1 className="font-display text-4xl md:text-5xl text-night text-center leading-tight">
         {t('heading')}{' '}
-        <span className="italic text-gold">{t('headingItalic')}</span>
+        <span className="italic text-yellow">{t('headingItalic')}</span>
       </h1>
 
       {/* Step indicator */}

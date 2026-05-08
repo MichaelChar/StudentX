@@ -133,13 +133,13 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
 
             <div className="flex-1 min-w-0">
               {eyebrow && (
-                <p className="label-caps text-gold">{eyebrow}</p>
+                <p className="label-caps text-yellow">{eyebrow}</p>
               )}
               {title && (
                 <h1 className="font-display text-2xl md:text-3xl text-night leading-tight truncate">
                   {title}
                   {landlordName && eyebrow?.toLowerCase().includes('welcome') ? (
-                    <span className="italic text-gold"> {landlordName}</span>
+                    <span className="italic text-yellow"> {landlordName}</span>
                   ) : null}
                 </h1>
               )}
@@ -174,7 +174,7 @@ function SidebarContent({ t, pathname, onSignOut, onNavigate }) {
       <div className="px-6 pt-7 pb-8">
         <p className="font-display text-xl text-stone">
           StudentX <span className="text-stone/40">×</span>{' '}
-          <span className="italic text-gold">AUSOM</span>
+          <span className="italic text-yellow">AUSOM</span>
         </p>
         <p className="label-caps text-stone/40 mt-1">Landlord portal</p>
       </div>
@@ -200,7 +200,7 @@ function SidebarContent({ t, pathname, onSignOut, onNavigate }) {
               {active && (
                 <span
                   aria-hidden="true"
-                  className="absolute left-0 top-2 bottom-2 w-0.5 bg-gold rounded-r"
+                  className="absolute left-0 top-2 bottom-2 w-0.5 bg-yellow rounded-r"
                 />
               )}
               <Icon name={item.icon} className="w-4 h-4 shrink-0" />

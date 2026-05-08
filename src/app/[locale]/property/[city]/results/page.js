@@ -227,7 +227,7 @@ function ResultsContent() {
       {/* Header row */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
         <div>
-          <p className="label-caps text-gold">{t('eyebrow')}</p>
+          <p className="label-caps text-yellow">{t('eyebrow')}</p>
           <h1 className="mt-2 font-display text-3xl md:text-4xl text-night leading-tight">
             {loading
               ? t('titleLoading')
@@ -288,7 +288,7 @@ function ResultsContent() {
       <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10">
         {/* Filter panel */}
         <aside className="hidden lg:block">
-          <div className="sticky top-24">
+          <div className="sticky top-6">
             <FilterPanel
               t={t}
               filters={filters}
@@ -641,8 +641,8 @@ function FilterPanel({
           aria-pressed={filters.verifiedOnly}
           className={`w-full flex items-center gap-2 px-3 py-2 rounded-sm border text-xs font-sans transition-colors ${
             filters.verifiedOnly
-              ? 'border-gold bg-gold text-white'
-              : 'border-night/20 text-night/70 hover:border-gold'
+              ? 'border-yellow bg-yellow text-white'
+              : 'border-night/20 text-night/70 hover:border-yellow'
           }`}
         >
           <Icon name="shieldCheck" className="w-4 h-4" />

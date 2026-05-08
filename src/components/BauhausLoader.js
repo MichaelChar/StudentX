@@ -67,7 +67,7 @@ export default function BauhausLoader({
       aria-label={ariaLabel || eyebrow}
     >
       <div className="flex flex-col items-center justify-center">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-gold">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-yellow">
           {eyebrow}
         </span>
 
@@ -86,7 +86,7 @@ export default function BauhausLoader({
           />
           {/* Gold circle — orbits the square */}
           <div
-            className="bauhaus-orbit absolute rounded-full bg-gold"
+            className="bauhaus-orbit absolute rounded-full bg-yellow"
             style={{
               top: 0,
               left: '50%',
