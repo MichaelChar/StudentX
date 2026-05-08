@@ -185,6 +185,7 @@ Current crons (verified against `wrangler.jsonc` and `cf/worker-entry.mjs`):
 | `0 9 * * 1`     | `/api/cron/saved-searches-digest?frequency=weekly` | Weekly saved-search digest (Monday) |
 | `15 9 * * *`    | `/api/cron/recompute-distances`                    | Heal missing `faculty_distances` rows (PR #60) |
 | `*/5 * * * *`   | `/api/cron/landlord-message-digest`                | Per-message landlord digest |
+| `2-58/5 * * * *` | `/api/cron/student-message-digest`               | Per-message student digest (mirror of landlord, offset 2 min) |
 | `*/15 * * * *`  | `/api/cron/synthetic-en-listing`                   | i18n regression guard (issue #49) |
 
 Adding a new cron is a one-line entry in each table.
@@ -257,6 +258,7 @@ Outbound paths sending from `alerts@studentx.uk`:
 - Synthetic check alerts (`/api/cron/synthetic-en-listing`)
 - Saved-searches digest (`/api/cron/saved-searches-digest`)
 - Landlord message digest (`/api/cron/landlord-message-digest`)
+- Student message digest (`/api/cron/student-message-digest`)
 - Inquiry notifications (`src/lib/inquiryEmail.js`)
 - Subscription welcome (`src/lib/subscriptionEmail.js`)
 
