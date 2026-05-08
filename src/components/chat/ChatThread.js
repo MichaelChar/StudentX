@@ -5,22 +5,6 @@ import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useAccessToken } from '@/lib/useAccessToken';
 
-/**
- * Real-time chat thread bound to one inquiry. Both the student-side
- * page and the landlord-side page mount this with their own role label
- * and viewer id.
- *
- * Realtime transport: Supabase postgres_changes channel keyed by the
- * inquiry_id. RLS on inquiry_messages restricts which rows a client
- * can subscribe to, so we don't need to filter in JS for security —
- * just for redundancy / dedupe with our own optimistic POST response.
- *
- * Mark-as-read: when the thread mounts (and after any incoming new
- * message) we POST to /api/inquiries/[id]/read which calls
- * mark_messages_read on the server. This zeroes the caller's unread
- * counter and stamps read_at on the other side's messages so the
- * inbox badges drop.
- */
 export default function ChatThread({
   inquiryId,
   role,
@@ -34,13 +18,13 @@ export default function ChatThread({
   const [draft, setDraft] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
+  const [connected, setConnected] = useState(true);
+  const [retryCount, setRetryCount] = useState(0);
   const scrollerRef = useRef(null);
   const seenIds = useRef(new Set(initialMessages.map((m) => m.message_id)));
-  // The realtime channel is set up once per mount, but its INSERT
-  // handler can fire hours later. Hold the latest token in a ref so
-  // markRead inside the handler always sees the post-TOKEN_REFRESHED
-  // value rather than a closure-captured one.
   const tokenRef = useRef('');
+  const retryTimer = useRef(null);
+  const hasSubscribedBefore = useRef(false);
 
   const otherLabel = role === 'student' ? t('landlordLabel') : t('studentLabel');
   const youLabel = t('youLabel');
@@ -57,55 +41,101 @@ export default function ChatThread({
     }
   }, [inquiryId]);
 
-  // Keep the ref in sync with the latest token so realtime callbacks
-  // and async work see post-refresh values.
+  const refetchMessages = useCallback(async () => {
+    const token = tokenRef.current;
+    if (!token) return;
+    try {
+      const res = await fetch(`/api/inquiries/${inquiryId}/messages`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return;
+      const { messages: fresh } = await res.json();
+      if (!fresh) return;
+      // Merge with local state instead of replacing: an in-flight
+      // optimistic send might be in `prev` but not yet in the DB
+      // response, and we don't want to visually clobber it.
+      setMessages((prev) => {
+        const freshIds = new Set(fresh.map((m) => m.message_id));
+        const localExtra = prev.filter((m) => !freshIds.has(m.message_id));
+        const merged = [...fresh, ...localExtra].sort(
+          (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+        );
+        seenIds.current = new Set(merged.map((m) => m.message_id));
+        return merged;
+      });
+    } catch {
+      // Silent — the channel is back, messages will arrive via realtime.
+    }
+  }, [inquiryId]);
+
   useEffect(() => {
     tokenRef.current = accessToken || '';
   }, [accessToken]);
 
-  // Initial mark-read once we have a real token. Re-runs if the token
-  // rotates from null (loading) to a value, but skips the empty string
-  // (signed out) — the page itself is gated, so '' shouldn't occur in
-  // practice, but the guard keeps the fetch from going out unauth'd.
   useEffect(() => {
     if (accessToken) markRead(accessToken);
   }, [accessToken, markRead]);
 
-  // Subscribe to Realtime once per inquiry. The handler reads the
-  // current token from tokenRef, so it stays valid across refresh
-  // events even when this effect doesn't re-run.
   useEffect(() => {
     const supabase = getSupabaseBrowser();
-    const channel = supabase
-      .channel(`inquiry-${inquiryId}`)
-      .on(
-        'postgres_changes',
-        {
-          event: 'INSERT',
-          schema: 'public',
-          table: 'inquiry_messages',
-          filter: `inquiry_id=eq.${inquiryId}`,
-        },
-        (payload) => {
-          const m = payload.new;
-          if (!m || seenIds.current.has(m.message_id)) return;
-          seenIds.current.add(m.message_id);
-          setMessages((prev) => [...prev, m]);
+    let channel;
 
-          // If the new message is from the other side, immediately
-          // mark it read so unread badges in the inbox stay accurate
-          // for an actively-viewing user.
-          if (m.sender_user_id !== viewerUserId) {
-            markRead(tokenRef.current);
+    function subscribe() {
+      channel = supabase
+        .channel(`inquiry-${inquiryId}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'INSERT',
+            schema: 'public',
+            table: 'inquiry_messages',
+            filter: `inquiry_id=eq.${inquiryId}`,
+          },
+          (payload) => {
+            const m = payload.new;
+            if (!m || seenIds.current.has(m.message_id)) return;
+            seenIds.current.add(m.message_id);
+            setMessages((prev) => [...prev, m]);
+            if (m.sender_user_id !== viewerUserId) {
+              markRead(tokenRef.current);
+            }
           }
-        }
-      )
-      .subscribe();
+        )
+        .subscribe((status) => {
+          if (status === 'SUBSCRIBED') {
+            setConnected(true);
+            setRetryCount(0);
+            // First subscribe uses initialMessages (already accurate).
+            // Re-subscribes follow a disconnect — refetch to fill the gap.
+            if (hasSubscribedBefore.current) {
+              refetchMessages();
+            }
+            hasSubscribedBefore.current = true;
+          }
+          if (status === 'CHANNEL_ERROR' || status === 'TIMED_OUT') {
+            setConnected(false);
+            if (!retryTimer.current) {
+              retryTimer.current = setTimeout(() => {
+                retryTimer.current = null;
+                setRetryCount((n) => n + 1);
+                supabase.removeChannel(channel);
+                subscribe();
+              }, 5000);
+            }
+          }
+        });
+    }
+
+    subscribe();
 
     return () => {
-      supabase.removeChannel(channel);
+      if (retryTimer.current) {
+        clearTimeout(retryTimer.current);
+        retryTimer.current = null;
+      }
+      if (channel) supabase.removeChannel(channel);
     };
-  }, [inquiryId, markRead, viewerUserId]);
+  }, [inquiryId, markRead, viewerUserId, refetchMessages]);
 
   // Auto-scroll on new messages.
   useEffect(() => {
@@ -159,6 +189,20 @@ export default function ChatThread({
 
   return (
     <div className={`flex flex-col bg-white border border-night/10 rounded-sm ${className}`}>
+      {!connected && (
+        <div className="bg-yellow/10 border-b border-yellow/30 px-4 py-2 text-xs text-night/70 text-center flex items-center justify-center gap-3">
+          <span>{retryCount >= 3 ? t('disconnectedStuck') : t('disconnected')}</span>
+          {retryCount >= 3 && (
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="underline hover:text-blue"
+            >
+              {t('refresh')}
+            </button>
+          )}
+        </div>
+      )}
       <div
         ref={scrollerRef}
         className="flex-1 overflow-y-auto px-5 py-6 space-y-3 min-h-[400px] max-h-[60vh]"

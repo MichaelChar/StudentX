@@ -29,7 +29,11 @@ export default function LandlordInquiryChatPage() {
 
     (async () => {
       const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
+      let { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        const { data } = await supabase.auth.refreshSession();
+        session = data?.session;
+      }
       if (!session?.access_token) {
         if (!cancelled) setState((s) => ({ ...s, loading: false, error: t('loadError') }));
         return;

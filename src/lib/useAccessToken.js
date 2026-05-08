@@ -21,7 +21,14 @@ export function useAccessToken() {
     let cancelled = false;
 
     (async () => {
-      const { data: { session } } = await supabase.auth.getSession();
+      let { data: { session } } = await supabase.auth.getSession();
+      if (!session?.access_token) {
+        // Cached session is missing or expired (e.g. tab idle for hours).
+        // Force a refresh so consumers don't fire requests with a stale
+        // token and get 401s before autoRefreshToken catches up.
+        const { data } = await supabase.auth.refreshSession();
+        session = data?.session;
+      }
       if (!cancelled) setToken(session?.access_token ?? '');
     })();
 
