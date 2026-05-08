@@ -49,6 +49,8 @@
   //                    no-op when fully populated)
   //   */5 * * * *    → /api/cron/landlord-message-digest (per-message digest;
   //                    debounced server-side via claim_landlord_message_notification)
+  //   2-58/5 * * * * → /api/cron/student-message-digest (mirror of the landlord
+  //                    digest, offset 2 min so the two never share a tick)
   //   */15 * * * *   → /api/cron/synthetic-en-listing (i18n regression guard, #49)
   // Custom-domain routes. Wrangler creates the apex A record and www CNAME
   // automatically (both proxied). Requires the CF zone to be Active first
@@ -63,6 +65,7 @@
       "0 9 * * 1",    // weekly saved-searches digest (Mondays)
       "15 9 * * *",   // nightly faculty_distances backfill
       "*/5 * * * *",  // landlord message digest (every 5 min)
+      "2-58/5 * * * *", // student message digest (every 5 min, offset 2 min from landlord)
       "*/15 * * * *"  // synthetic /en/listing locale check (#49)
     ]
   }

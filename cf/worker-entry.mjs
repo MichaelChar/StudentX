@@ -23,6 +23,7 @@ const CRON_ROUTES = {
   "0 9 * * 1":    { name: "saved-searches-weekly",  path: "/api/cron/saved-searches-digest",   query: "frequency=weekly" },
   "15 9 * * *":   { name: "recompute-distances",    path: "/api/cron/recompute-distances",     query: null },
   "*/5 * * * *":  { name: "landlord-message-digest", path: "/api/cron/landlord-message-digest", query: null },
+  "2-58/5 * * * *": { name: "student-message-digest", path: "/api/cron/student-message-digest", query: null },
   "*/15 * * * *": { name: "synthetic-en-listing",   path: "/api/cron/synthetic-en-listing",    query: null },
 };
 
