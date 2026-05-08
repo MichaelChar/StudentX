@@ -16,7 +16,7 @@ export default function VerifiedSeal({ size = 44, className = '', label = 'Verif
         height={size}
         aria-hidden="true"
       >
-        <circle cx="22" cy="22" r="20" fill="var(--color-gold)" />
+        <circle cx="22" cy="22" r="20" fill="var(--color-yellow)" />
         <circle cx="22" cy="22" r="20" fill="none" stroke="#FFFFFF" strokeOpacity="0.45" strokeWidth="1" />
         <circle cx="22" cy="22" r="17" fill="none" stroke="#FFFFFF" strokeOpacity="0.5" strokeWidth="0.75" />
         <path

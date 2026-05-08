@@ -110,14 +110,14 @@ export default function HubBackground() {
     // REGION density hotspots — population-weighted on top of LAND.
     const REGIONS = [
       // ── NORTH AMERICA ──
-      { cx: 0.265, cy: 0.345, rx: 0.022, ry: 0.025, density: 1.4, color: '#C44AB8' },
-      { cx: 0.235, cy: 0.33, rx: 0.03, ry: 0.022, density: 0.9, color: '#C44AB8' },
-      { cx: 0.245, cy: 0.385, rx: 0.035, ry: 0.025, density: 0.8, color: '#C44AB8' },
-      { cx: 0.155, cy: 0.37, rx: 0.012, ry: 0.035, density: 1.0, color: '#C44AB8' },
-      { cx: 0.155, cy: 0.305, rx: 0.012, ry: 0.018, density: 0.55, color: '#C44AB8' },
-      { cx: 0.215, cy: 0.44, rx: 0.025, ry: 0.02, density: 1.1, color: '#C44AB8' },
-      { cx: 0.235, cy: 0.475, rx: 0.02, ry: 0.012, density: 0.6, color: '#C44AB8' },
-      { cx: 0.27, cy: 0.45, rx: 0.025, ry: 0.01, density: 0.5, color: '#C44AB8' },
+      { cx: 0.265, cy: 0.345, rx: 0.022, ry: 0.025, density: 1.4, color: '#ff5fa2' },
+      { cx: 0.235, cy: 0.33, rx: 0.03, ry: 0.022, density: 0.9, color: '#ff5fa2' },
+      { cx: 0.245, cy: 0.385, rx: 0.035, ry: 0.025, density: 0.8, color: '#ff5fa2' },
+      { cx: 0.155, cy: 0.37, rx: 0.012, ry: 0.035, density: 1.0, color: '#ff5fa2' },
+      { cx: 0.155, cy: 0.305, rx: 0.012, ry: 0.018, density: 0.55, color: '#ff5fa2' },
+      { cx: 0.215, cy: 0.44, rx: 0.025, ry: 0.02, density: 1.1, color: '#ff5fa2' },
+      { cx: 0.235, cy: 0.475, rx: 0.02, ry: 0.012, density: 0.6, color: '#ff5fa2' },
+      { cx: 0.27, cy: 0.45, rx: 0.025, ry: 0.01, density: 0.5, color: '#ff5fa2' },
 
       // ── SOUTH AMERICA ──
       { cx: 0.33, cy: 0.625, rx: 0.025, ry: 0.025, density: 1.2, color: '#ff5fa2' },
@@ -128,30 +128,30 @@ export default function HubBackground() {
       { cx: 0.295, cy: 0.7, rx: 0.006, ry: 0.04, density: 0.5, color: '#ff5fa2' },
 
       // ── EUROPE ──
-      { cx: 0.49, cy: 0.3, rx: 0.03, ry: 0.022, density: 1.5, color: '#C44AB8' },
-      { cx: 0.52, cy: 0.31, rx: 0.025, ry: 0.02, density: 1.1, color: '#C44AB8' },
-      { cx: 0.56, cy: 0.295, rx: 0.03, ry: 0.025, density: 0.8, color: '#C44AB8' },
-      { cx: 0.515, cy: 0.235, rx: 0.025, ry: 0.03, density: 0.35, color: '#C44AB8' },
-      { cx: 0.555, cy: 0.355, rx: 0.03, ry: 0.018, density: 0.9, color: '#C44AB8' },
+      { cx: 0.49, cy: 0.3, rx: 0.03, ry: 0.022, density: 1.5, color: '#ff5fa2' },
+      { cx: 0.52, cy: 0.31, rx: 0.025, ry: 0.02, density: 1.1, color: '#ff5fa2' },
+      { cx: 0.56, cy: 0.295, rx: 0.03, ry: 0.025, density: 0.8, color: '#ff5fa2' },
+      { cx: 0.515, cy: 0.235, rx: 0.025, ry: 0.03, density: 0.35, color: '#ff5fa2' },
+      { cx: 0.555, cy: 0.355, rx: 0.03, ry: 0.018, density: 0.9, color: '#ff5fa2' },
       // StudentX markets — highlight pulse
       { cx: 0.485, cy: 0.345, rx: 0.014, ry: 0.022, density: 2.0, color: '#ffcb57', highlight: true },
       { cx: 0.47, cy: 0.345, rx: 0.008, ry: 0.018, density: 1.8, color: '#ff5fa2', highlight: true },
-      { cx: 0.515, cy: 0.345, rx: 0.01, ry: 0.025, density: 2.0, color: '#ff8a3d', highlight: true },
+      { cx: 0.515, cy: 0.345, rx: 0.01, ry: 0.025, density: 2.0, color: '#ffcb57', highlight: true },
       { cx: 0.54, cy: 0.355, rx: 0.012, ry: 0.014, density: 2.0, color: '#ff5fa2', highlight: true },
 
       // ── AFRICA ──
-      { cx: 0.56, cy: 0.43, rx: 0.008, ry: 0.045, density: 1.3, color: '#ff8a3d' },
-      { cx: 0.495, cy: 0.395, rx: 0.03, ry: 0.012, density: 0.7, color: '#ff8a3d' },
-      { cx: 0.515, cy: 0.51, rx: 0.03, ry: 0.02, density: 1.3, color: '#ff8a3d' },
-      { cx: 0.585, cy: 0.52, rx: 0.02, ry: 0.025, density: 0.9, color: '#ff8a3d' },
-      { cx: 0.585, cy: 0.575, rx: 0.018, ry: 0.025, density: 0.9, color: '#ff8a3d' },
-      { cx: 0.555, cy: 0.7, rx: 0.02, ry: 0.02, density: 0.6, color: '#ff8a3d' },
-      { cx: 0.61, cy: 0.64, rx: 0.008, ry: 0.022, density: 0.4, color: '#ff8a3d' },
+      { cx: 0.56, cy: 0.43, rx: 0.008, ry: 0.045, density: 1.3, color: '#ffcb57' },
+      { cx: 0.495, cy: 0.395, rx: 0.03, ry: 0.012, density: 0.7, color: '#ffcb57' },
+      { cx: 0.515, cy: 0.51, rx: 0.03, ry: 0.02, density: 1.3, color: '#ffcb57' },
+      { cx: 0.585, cy: 0.52, rx: 0.02, ry: 0.025, density: 0.9, color: '#ffcb57' },
+      { cx: 0.585, cy: 0.575, rx: 0.018, ry: 0.025, density: 0.9, color: '#ffcb57' },
+      { cx: 0.555, cy: 0.7, rx: 0.02, ry: 0.02, density: 0.6, color: '#ffcb57' },
+      { cx: 0.61, cy: 0.64, rx: 0.008, ry: 0.022, density: 0.4, color: '#ffcb57' },
 
       // ── MIDDLE EAST ──
-      { cx: 0.595, cy: 0.395, rx: 0.025, ry: 0.02, density: 0.9, color: '#ff8a3d' },
-      { cx: 0.62, cy: 0.43, rx: 0.022, ry: 0.025, density: 0.55, color: '#ff8a3d' },
-      { cx: 0.625, cy: 0.38, rx: 0.022, ry: 0.018, density: 0.8, color: '#ff8a3d' },
+      { cx: 0.595, cy: 0.395, rx: 0.025, ry: 0.02, density: 0.9, color: '#ffcb57' },
+      { cx: 0.62, cy: 0.43, rx: 0.022, ry: 0.025, density: 0.55, color: '#ffcb57' },
+      { cx: 0.625, cy: 0.38, rx: 0.022, ry: 0.018, density: 0.8, color: '#ffcb57' },
 
       // ── SOUTH ASIA ──
       { cx: 0.66, cy: 0.42, rx: 0.02, ry: 0.025, density: 1.6, color: '#ff5fa2' },
@@ -162,12 +162,12 @@ export default function HubBackground() {
       { cx: 0.7, cy: 0.42, rx: 0.012, ry: 0.008, density: 1.0, color: '#ff5fa2' },
 
       // ── EAST ASIA ──
-      { cx: 0.785, cy: 0.395, rx: 0.025, ry: 0.04, density: 2.0, color: '#C44AB8' },
-      { cx: 0.755, cy: 0.405, rx: 0.022, ry: 0.02, density: 1.3, color: '#C44AB8' },
-      { cx: 0.825, cy: 0.37, rx: 0.01, ry: 0.022, density: 1.6, color: '#C44AB8' },
-      { cx: 0.86, cy: 0.38, rx: 0.012, ry: 0.03, density: 1.7, color: '#C44AB8' },
-      { cx: 0.815, cy: 0.435, rx: 0.006, ry: 0.012, density: 1.4, color: '#C44AB8' },
-      { cx: 0.76, cy: 0.33, rx: 0.03, ry: 0.018, density: 0.25, color: '#C44AB8' },
+      { cx: 0.785, cy: 0.395, rx: 0.025, ry: 0.04, density: 2.0, color: '#ff5fa2' },
+      { cx: 0.755, cy: 0.405, rx: 0.022, ry: 0.02, density: 1.3, color: '#ff5fa2' },
+      { cx: 0.825, cy: 0.37, rx: 0.01, ry: 0.022, density: 1.6, color: '#ff5fa2' },
+      { cx: 0.86, cy: 0.38, rx: 0.012, ry: 0.03, density: 1.7, color: '#ff5fa2' },
+      { cx: 0.815, cy: 0.435, rx: 0.006, ry: 0.012, density: 1.4, color: '#ff5fa2' },
+      { cx: 0.76, cy: 0.33, rx: 0.03, ry: 0.018, density: 0.25, color: '#ff5fa2' },
 
       // ── SOUTHEAST ASIA ──
       { cx: 0.77, cy: 0.48, rx: 0.01, ry: 0.03, density: 1.3, color: '#ff5fa2' },
@@ -254,7 +254,7 @@ export default function HubBackground() {
       LAND.forEach((region) => {
         const share = (region.rx * region.ry) / totalLandArea;
         const N = Math.max(50, Math.floor(landBudget * share));
-        seedEllipse(region, N, 0.5, '#A89AE8', false, null, false);
+        seedEllipse(region, N, 0.5, '#f6f4ff', false, null, false);
       });
 
       const totalDensity = REGIONS.reduce((s, r) => s + r.density * r.rx * r.ry, 0);

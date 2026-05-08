@@ -58,7 +58,7 @@ export default async function StudentAccountPage({ params }) {
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
       <div className="flex items-start justify-between gap-4 mb-2">
-        <p className="label-caps text-gold">{t('eyebrow')}</p>
+        <p className="label-caps text-yellow">{t('eyebrow')}</p>
         <SignOutButton />
       </div>
       <h1 className="font-display text-3xl md:text-4xl text-night mb-2">{t('title')}</h1>
@@ -108,7 +108,7 @@ export default async function StudentAccountPage({ params }) {
                           {unread > 0 && (
                             <span
                               aria-label={t('unread', { count: unread })}
-                              className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-gold text-white text-[11px] font-sans font-semibold px-1.5"
+                              className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-yellow text-white text-[11px] font-sans font-semibold px-1.5"
                             >
                               {unread}
                             </span>

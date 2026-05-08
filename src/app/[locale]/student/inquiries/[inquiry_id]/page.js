@@ -65,7 +65,7 @@ export default async function StudentInquiryThreadPage({ params }) {
       </Link>
 
       <header className="mb-6">
-        <p className="label-caps text-gold mb-1">{t('listingLabel')}</p>
+        <p className="label-caps text-yellow mb-1">{t('listingLabel')}</p>
         <h1 className="font-display text-2xl md:text-3xl text-night leading-tight mb-1">
           {location?.address || `#${inquiry.listing_id}`}
         </h1>

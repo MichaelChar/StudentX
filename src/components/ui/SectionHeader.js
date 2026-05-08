@@ -13,7 +13,7 @@ export default function SectionHeader({
   className = '',
 }) {
   const alignCls = align === 'center' ? 'items-center text-center' : 'items-start';
-  const eyebrowColor = onDark ? 'text-gold' : 'text-gold';
+  const eyebrowColor = onDark ? 'text-yellow' : 'text-yellow';
   const titleColor = onDark ? 'text-white' : 'text-night';
   const ledeColor = onDark ? 'text-stone/70' : 'text-night/70';
 
@@ -26,7 +26,7 @@ export default function SectionHeader({
         <h2 className={`font-display text-3xl md:text-4xl leading-tight ${titleColor}`}>
           {title}
           {titleItalic && (
-            <span className="italic text-gold"> {titleItalic}</span>
+            <span className="italic text-yellow"> {titleItalic}</span>
           )}
         </h2>
       )}

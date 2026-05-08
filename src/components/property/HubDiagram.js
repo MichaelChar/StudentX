@@ -39,7 +39,7 @@ const T = {
   nodeSoonText: 'rgba(10,37,64,0.4)',
   hub: 'url(#stripe-grad)',
   hubText: '#ffffff',
-  wordmarkFill: 'linear-gradient(120deg, #635BFF 0%, #ff5fa2 50%, #ff8a3d 100%)',
+  wordmarkFill: 'linear-gradient(120deg, #635BFF 0%, #ff5fa2 50%, #ffcb57 100%)',
   wordmarkGlow: 'rgba(255,95,162,0.35)',
   xColor: '#ff5fa2',
   inputBg: 'rgba(99,91,255,0.04)',
@@ -283,7 +283,7 @@ export default function HubDiagram() {
               <linearGradient id="stripe-grad" x1="0" y1="0" x2="1" y2="1">
                 <stop offset="0%" stopColor="#635BFF" />
                 <stop offset="50%" stopColor="#ff5fa2" />
-                <stop offset="100%" stopColor="#ff8a3d" />
+                <stop offset="100%" stopColor="#ffcb57" />
               </linearGradient>
             </defs>
 

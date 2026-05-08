@@ -143,12 +143,12 @@ export default function LandlordOnboardingPage() {
             <div
               key={tier.key}
               className={`relative bg-white rounded-2xl shadow-sm border-2 flex flex-col ${
-                tier.recommended ? 'border-gold' : 'border-gray-200'
+                tier.recommended ? 'border-yellow' : 'border-gray-200'
               }`}
             >
               {tier.recommended && (
                 <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                  <span className="inline-block bg-gold text-white text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
+                  <span className="inline-block bg-yellow text-white text-xs font-semibold px-3 py-1 rounded-full whitespace-nowrap">
                     Recommended
                   </span>
                 </div>
@@ -180,7 +180,7 @@ export default function LandlordOnboardingPage() {
                   className={`w-full py-3 rounded-xl font-heading font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     tier.key === 'free'
                       ? 'bg-navy text-white hover:bg-navy/90'
-                      : 'bg-gold text-white hover:bg-gold/90'
+                      : 'bg-yellow text-white hover:bg-yellow/90'
                   }`}
                 >
                   {pendingTier === tier.key ? '…' : 'Choose this tier'}

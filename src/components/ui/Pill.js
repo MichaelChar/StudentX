@@ -9,7 +9,7 @@
 */
 const VARIANTS = {
   verified:
-    'bg-gold text-white border border-gold',
+    'bg-yellow text-white border border-yellow',
   programme:
     'border border-blue text-blue bg-transparent',
   amenity:

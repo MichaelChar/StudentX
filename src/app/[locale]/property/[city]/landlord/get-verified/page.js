@@ -133,7 +133,7 @@ function TierCard({ tier, onChoose, ctaLabel, badgeLabel, disabled = false, load
 
       <div className="flex items-center gap-3 mb-2">
         <VerifiedSeal size={28} />
-        <p className="label-caps text-gold">{badgeLabel}</p>
+        <p className="label-caps text-yellow">{badgeLabel}</p>
       </div>
 
       <h3
@@ -154,7 +154,7 @@ function TierCard({ tier, onChoose, ctaLabel, badgeLabel, disabled = false, load
       <div className="mt-6 flex items-baseline gap-1">
         <span
           className={`font-display text-5xl ${
-            tier.highlight ? 'text-gold' : 'text-blue'
+            tier.highlight ? 'text-yellow' : 'text-blue'
           }`}
         >
           {tier.price}
@@ -178,7 +178,7 @@ function TierCard({ tier, onChoose, ctaLabel, badgeLabel, disabled = false, load
             <Icon
               name="check"
               className={`w-4 h-4 shrink-0 mt-1 ${
-                tier.highlight ? 'text-gold' : 'text-gold'
+                tier.highlight ? 'text-yellow' : 'text-yellow'
               }`}
             />
             <div>

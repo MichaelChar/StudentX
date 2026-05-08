@@ -116,7 +116,7 @@ export default function LandlordVerificationPage() {
         ) : latestRequest?.status === 'pending' ? (
           /* Pending review */
           <Card tone="parchment" className="px-6 py-5">
-            <p className="label-caps text-gold mb-1">Under review</p>
+            <p className="label-caps text-yellow mb-1">Under review</p>
             <p className="font-display text-lg text-night mb-1">
               Your ID is being reviewed
             </p>
@@ -201,7 +201,7 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
           className={`cursor-pointer rounded-sm border-2 border-dashed px-6 py-8 text-center transition-colors ${
             file
               ? 'border-blue/40 bg-blue/5 text-blue'
-              : 'border-night/15 hover:border-gold/60 bg-parchment text-night/60'
+              : 'border-night/15 hover:border-yellow/60 bg-parchment text-night/60'
           }`}
         >
           <input
