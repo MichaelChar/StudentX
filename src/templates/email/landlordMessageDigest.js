@@ -32,7 +32,7 @@ const STRINGS = {
     'student.notifications.intro': (greeting, count, name, summary) => {
       const noun = count === 1 ? 'ένα αδιάβαστο μήνυμα' : `${count} αδιάβαστα μηνύματα`;
       const tail = summary
-        ? ` σχετικά με την αγγελία σου <strong style="color:#1a2744;">${summary}</strong>`
+        ? ` σχετικά με την αγγελία σου <strong style="color:#0a2540;">${summary}</strong>`
         : '';
       return `Γεια ${greeting}, έχεις ${noun} από τον/την ${name}${tail}.`;
     },
@@ -64,7 +64,7 @@ const STRINGS = {
     'student.notifications.intro': (greeting, count, name, summary) => {
       const noun = count === 1 ? 'one unread message' : `${count} unread messages`;
       const tail = summary
-        ? ` about your listing <strong style="color:#1a2744;">${summary}</strong>`
+        ? ` about your listing <strong style="color:#0a2540;">${summary}</strong>`
         : '';
       return `Hi ${greeting}, you have ${noun} from ${name}${tail}.`;
     },
@@ -149,23 +149,23 @@ export function landlordMessageDigestHtml({
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>${s['student.notifications.titleTag']}</title>
 </head>
-<body style="margin:0;padding:0;background:#f5f5f0;font-family:Georgia,serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f5f5f0;padding:40px 16px;">
+<body style="margin:0;padding:0;background:#f6f4ff;font-family:Georgia,serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4ff;padding:40px 16px;">
     <tr>
       <td align="center">
-        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e5e5e0;">
+        <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:12px;overflow:hidden;border:1px solid #e6eaef;">
           <!-- Header -->
           <tr>
-            <td style="background:#1a2744;padding:24px 32px;">
-              <p style="margin:0;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#c9a84c;">StudentX</p>
+            <td style="background:#0a2540;padding:24px 32px;">
+              <p style="margin:0;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#ffcb57;">StudentX</p>
               <p style="margin:4px 0 0;font-family:'Helvetica Neue',sans-serif;font-size:11px;color:#ffffff80;">${s['student.notifications.headerTagline']}</p>
             </td>
           </tr>
           <!-- Body -->
           <tr>
             <td style="padding:32px;">
-              <h1 style="margin:0 0 8px;font-family:'Helvetica Neue',sans-serif;font-size:22px;font-weight:700;color:#1a2744;">${heading}</h1>
-              <p style="margin:0 0 24px;font-size:15px;color:#555;line-height:1.6;">
+              <h1 style="margin:0 0 8px;font-family:'Helvetica Neue',sans-serif;font-size:22px;font-weight:700;color:#0a2540;">${heading}</h1>
+              <p style="margin:0 0 24px;font-size:15px;color:#0a2540;line-height:1.6;">
                 ${intro}
               </p>
 
@@ -173,8 +173,8 @@ export function landlordMessageDigestHtml({
                 safeSnippet
                   ? `
               <!-- Snippet -->
-              <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#888;">${s['student.notifications.snippetLabel']}</p>
-              <div style="font-size:15px;color:#333;line-height:1.6;border-left:3px solid #c9a84c;padding:4px 16px;margin-bottom:24px;">
+              <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a8595;">${s['student.notifications.snippetLabel']}</p>
+              <div style="font-size:15px;color:#0a2540;line-height:1.6;border-left:3px solid #ffcb57;padding:4px 16px;margin-bottom:24px;">
                 ${safeSnippet}
               </div>`
                   : ''
@@ -183,20 +183,20 @@ export function landlordMessageDigestHtml({
               <!-- CTAs -->
               <table cellpadding="0" cellspacing="0">
                 <tr>
-                  <td style="background:#1a2744;border-radius:8px;padding:0;">
+                  <td style="background:#0a2540;border-radius:8px;padding:0;">
                     <a href="${chatUrl}" style="display:inline-block;padding:12px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">${s['student.notifications.cta']}</a>
                   </td>
                   <td style="width:8px;"></td>
-                  <td style="border:1px solid #1a2744;border-radius:8px;padding:0;">
-                    <a href="${inboxUrl}" style="display:inline-block;padding:11px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#1a2744;text-decoration:none;">${s['student.notifications.inboxButton']}</a>
+                  <td style="border:1px solid #0a2540;border-radius:8px;padding:0;">
+                    <a href="${inboxUrl}" style="display:inline-block;padding:11px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#0a2540;text-decoration:none;">${s['student.notifications.inboxButton']}</a>
                   </td>
                 </tr>
               </table>
 
               ${
                 listingUrl
-                  ? `<p style="margin:24px 0 0;font-size:13px;color:#888;">
-                <a href="${listingUrl}" style="color:#888;">${s['student.notifications.viewListing']}</a>
+                  ? `<p style="margin:24px 0 0;font-size:13px;color:#7a8595;">
+                <a href="${listingUrl}" style="color:#7a8595;">${s['student.notifications.viewListing']}</a>
               </p>`
                   : ''
               }
@@ -204,8 +204,8 @@ export function landlordMessageDigestHtml({
           </tr>
           <!-- Footer -->
           <tr>
-            <td style="background:#f5f5f0;padding:20px 32px;border-top:1px solid #e5e5e0;">
-              <p style="margin:0;font-size:12px;color:#999;">
+            <td style="background:#f6f4ff;padding:20px 32px;border-top:1px solid #e6eaef;">
+              <p style="margin:0;font-size:12px;color:#7a8595;">
                 ${s['student.notifications.footerLine1']}<br/>
                 ${s['student.notifications.footerLine2']}<br/>
                 ${s['student.notifications.footerLine3']}
