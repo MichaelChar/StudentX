@@ -100,7 +100,7 @@ function ManageContent() {
       <div className="mx-auto max-w-lg px-4 py-16 text-center">
         <h1 className="font-heading text-2xl font-bold text-navy mb-3">{t('notFound')}</h1>
         <p className="text-gray-dark/60 mb-6">{t('notFoundDesc')}</p>
-        <Link href="/property/thessaloniki/results" className="inline-block bg-gold text-white font-heading font-semibold px-6 py-3 rounded-lg hover:bg-gold/90 transition-colors">
+        <Link href="/property/thessaloniki/results" className="inline-block bg-yellow text-white font-heading font-semibold px-6 py-3 rounded-lg hover:bg-yellow/90 transition-colors">
           {t('browseListings')}
         </Link>
       </div>

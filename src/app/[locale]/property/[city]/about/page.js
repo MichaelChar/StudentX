@@ -40,10 +40,10 @@ function AboutContent() {
     <>
       {/* Hero */}
       <section className="mx-auto max-w-4xl px-5 pt-20 pb-12 md:pt-28 md:pb-16">
-        <p className="label-caps text-gold mb-6">{t('eyebrow')}</p>
+        <p className="label-caps text-yellow mb-6">{t('eyebrow')}</p>
         <h1 className="font-display text-4xl md:text-6xl text-night leading-[1.05]">
           {t('titlePrefix')}{' '}
-          <span className="italic text-gold">{t('titleItalic')}</span>
+          <span className="italic text-yellow">{t('titleItalic')}</span>
         </h1>
         <p className="mt-8 text-night/70 text-lg md:text-xl leading-relaxed max-w-2xl">
           {t('intro')}
@@ -52,7 +52,7 @@ function AboutContent() {
 
       {/* Mission */}
       <section className="mx-auto max-w-4xl px-5 py-16 md:py-20">
-        <p className="label-caps text-gold mb-4">{t('missionEyebrow')}</p>
+        <p className="label-caps text-yellow mb-4">{t('missionEyebrow')}</p>
         <h2 className="font-display text-3xl md:text-4xl text-night leading-tight max-w-2xl">
           {t('missionTitle')}
         </h2>
@@ -67,7 +67,7 @@ function AboutContent() {
 
       {/* How it works */}
       <section className="mx-auto max-w-6xl px-5 py-16 md:py-24">
-        <p className="label-caps text-gold mb-4">{t('howItWorksEyebrow')}</p>
+        <p className="label-caps text-yellow mb-4">{t('howItWorksEyebrow')}</p>
         <h2 className="font-display text-3xl md:text-4xl text-night leading-tight max-w-2xl">
           {t('howItWorksTitle')}
         </h2>
@@ -76,7 +76,7 @@ function AboutContent() {
           {steps.map((step) => (
             <div key={step.numeral}>
               <span
-                className="font-display text-5xl text-gold block leading-none mb-5"
+                className="font-display text-5xl text-yellow block leading-none mb-5"
                 aria-hidden="true"
               >
                 {step.numeral}
@@ -100,7 +100,7 @@ function AboutContent() {
 
       {/* Contact */}
       <section className="mx-auto max-w-4xl px-5 py-16 md:py-20">
-        <p className="label-caps text-gold mb-4">{t('contactEyebrow')}</p>
+        <p className="label-caps text-yellow mb-4">{t('contactEyebrow')}</p>
         <h2 className="font-display text-3xl md:text-4xl text-night leading-tight">
           {t('contactTitle')}
         </h2>

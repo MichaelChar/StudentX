@@ -41,12 +41,12 @@ export default async function AuthGate({ next, locale, mode = 'guest' }) {
         />
         <div
           aria-hidden="true"
-          className="absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-gold/10 blur-3xl"
+          className="absolute -bottom-20 -left-20 w-56 h-56 rounded-full bg-yellow/10 blur-3xl"
         />
 
         <div className="relative">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-gold/15 mb-5">
-            <Icon name="shield" className="w-6 h-6 text-gold" />
+          <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-yellow/15 mb-5">
+            <Icon name="shield" className="w-6 h-6 text-yellow" />
           </div>
 
           <h1 className="font-display text-3xl text-night leading-tight mb-3">

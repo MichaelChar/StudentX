@@ -48,7 +48,7 @@ export default async function ComingSoonCity({ locale, city }) {
 
       {/* Body — call to action */}
       <section className="mx-auto max-w-3xl px-5 py-20 md:py-24 text-center">
-        <p className="label-caps text-gold mb-5">{t('ctaEyebrow')}</p>
+        <p className="label-caps text-yellow mb-5">{t('ctaEyebrow')}</p>
         <h2 className="font-display text-3xl md:text-5xl text-night leading-tight">
           {t('ctaTitle')}
         </h2>

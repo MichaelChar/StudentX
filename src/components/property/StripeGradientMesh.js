@@ -11,7 +11,7 @@ import { useEffect, useRef } from 'react';
   driving a 4-color WaveLayer fragment shader).
 
   Locked tweaks (from TWEAK_DEFAULTS in the design file):
-    palette: #635BFF → #FF5FA2 → #FF8A3D → #F6F4FF
+    palette: #635BFF → #FF5FA2 → #FFE7D6 → #F6F4FF
     amp 300, speed 0.9, freqX 14e-5, freqY 24e-5, darkenTop true, grain 0.15
 
   Renders an absolute-positioned canvas + grain overlay that fills the

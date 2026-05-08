@@ -305,7 +305,7 @@ export default function GlobeLoader({ onComplete }) {
   return (
     <div
       className="fixed inset-0 z-[100] flex items-center justify-center"
-      style={{ background: '#f1ede4' }}
+      style={{ background: '#f6f4ff' }}
       role="status"
       aria-live="polite"
       aria-label="Loading your matches"
@@ -341,18 +341,18 @@ export default function GlobeLoader({ onComplete }) {
                 <circle cx="100" cy="100" r="92" />
               </clipPath>
             </defs>
-            <circle cx="100" cy="100" r="92" fill="none" stroke="#1a1a1a" strokeWidth="1.25" />
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#0a2540" strokeWidth="1.25" />
             <g clipPath="url(#gl-globe-clip)">
               <g
                 ref={graticuleRef}
-                stroke="#1a1a1a"
+                stroke="#0a2540"
                 strokeOpacity="0.18"
                 fill="none"
                 strokeWidth="0.5"
               />
               <g
                 ref={countriesRef}
-                stroke="#1a1a1a"
+                stroke="#0a2540"
                 strokeWidth="0.7"
                 strokeLinejoin="round"
                 strokeLinecap="round"
@@ -376,29 +376,29 @@ export default function GlobeLoader({ onComplete }) {
                 <g ref={cityTier1Ref} opacity="0">
                   <path
                     d="M -10 134 Q 30 124 70 138 Q 110 152 150 168 Q 180 180 210 200 L 210 230 L -10 230 Z"
-                    fill="#1a1a1a"
+                    fill="#0a2540"
                     fillOpacity="0.06"
                     stroke="none"
                   />
                   <path
                     d="M 12 118 L 12 138 L 50 138 L 50 130 L 38 130 L 38 124 L 24 124 L 24 118 Z"
-                    fill="#1a1a1a"
+                    fill="#0a2540"
                     fillOpacity="0.05"
-                    stroke="#1a1a1a"
+                    stroke="#0a2540"
                     strokeOpacity="0.55"
                     strokeWidth="0.7"
                   />
                   <path
                     d="M -8 124 L 12 124 L 12 138 L 50 138 Q 80 144 110 154 Q 145 167 175 178 Q 195 184 210 192"
                     fill="none"
-                    stroke="#1a1a1a"
+                    stroke="#0a2540"
                     strokeWidth="1"
                   />
                 </g>
 
                 {/* Tier 2: street network */}
                 <g ref={cityTier2Ref} opacity="0">
-                  <g stroke="#1a1a1a" fill="none" strokeLinecap="round">
+                  <g stroke="#0a2540" fill="none" strokeLinecap="round">
                     <path d="M 50 134 Q 80 140 110 150 Q 145 162 178 174" strokeOpacity="0.7" strokeWidth="0.85" />
                     <path d="M 22 122 Q 56 124 92 132 Q 128 142 168 158" strokeOpacity="0.55" strokeWidth="0.75" />
                     <path d="M 22 114 Q 58 116 96 124 Q 132 134 172 150" strokeOpacity="0.7" strokeWidth="0.9" />
@@ -408,7 +408,7 @@ export default function GlobeLoader({ onComplete }) {
                     <path d="M 22 78 Q 60 80 100 88 Q 138 98 178 114" strokeOpacity="0.45" strokeWidth="0.7" />
                     <path d="M 30 68 Q 70 70 110 78 Q 145 86 178 100" strokeOpacity="0.35" strokeWidth="0.65" />
                   </g>
-                  <g stroke="#1a1a1a" fill="none" strokeLinecap="round">
+                  <g stroke="#0a2540" fill="none" strokeLinecap="round">
                     <path d="M 47 134 L 52 70" strokeOpacity="0.4" strokeWidth="0.6" />
                     <path d="M 66 132 L 72 68" strokeOpacity="0.55" strokeWidth="0.75" />
                     <path d="M 78 134 L 86 64" strokeOpacity="0.85" strokeWidth="1.05" />
@@ -419,7 +419,7 @@ export default function GlobeLoader({ onComplete }) {
                   </g>
                   <path
                     d="M 14 102 L 50 100 L 80 100"
-                    stroke="#1a1a1a"
+                    stroke="#0a2540"
                     strokeOpacity="0.5"
                     strokeWidth="0.75"
                     fill="none"
@@ -427,7 +427,7 @@ export default function GlobeLoader({ onComplete }) {
                   />
                   <path
                     d="M 38 64 L 52 58 L 78 54 L 110 54 L 138 58 L 158 66 L 168 78 L 168 92"
-                    stroke="#1a1a1a"
+                    stroke="#0a2540"
                     strokeOpacity="0.55"
                     strokeWidth="0.8"
                     fill="none"
@@ -437,9 +437,9 @@ export default function GlobeLoader({ onComplete }) {
                   />
                   <path
                     d="M 118 88 L 152 88 L 154 110 L 120 112 Z"
-                    fill="#1a1a1a"
+                    fill="#0a2540"
                     fillOpacity="0.08"
-                    stroke="#1a1a1a"
+                    stroke="#0a2540"
                     strokeOpacity="0.5"
                     strokeWidth="0.6"
                   />
@@ -447,23 +447,23 @@ export default function GlobeLoader({ onComplete }) {
 
                 {/* Tier 3: landmark glyphs + AUSoM marker */}
                 <g ref={cityTier3Ref} opacity="0">
-                  <circle cx="82" cy="130" r="1.4" fill="#1a1a1a" />
-                  <circle cx="135" cy="148" r="1.6" fill="#1a1a1a" />
-                  <circle cx="135" cy="148" r="3.2" fill="none" stroke="#1a1a1a" strokeOpacity="0.55" strokeWidth="0.5" />
-                  <rect x="113" y="106.5" width="3" height="3" fill="#1a1a1a" fillOpacity="0.8" />
-                  <circle cx="118" cy="96" r="1.6" fill="none" stroke="#1a1a1a" strokeWidth="0.8" />
-                  <circle cx="118" cy="96" r="0.6" fill="#1a1a1a" />
+                  <circle cx="82" cy="130" r="1.4" fill="#0a2540" />
+                  <circle cx="135" cy="148" r="1.6" fill="#0a2540" />
+                  <circle cx="135" cy="148" r="3.2" fill="none" stroke="#0a2540" strokeOpacity="0.55" strokeWidth="0.5" />
+                  <rect x="113" y="106.5" width="3" height="3" fill="#0a2540" fillOpacity="0.8" />
+                  <circle cx="118" cy="96" r="1.6" fill="none" stroke="#0a2540" strokeWidth="0.8" />
+                  <circle cx="118" cy="96" r="0.6" fill="#0a2540" />
                   <g>
-                    <circle ref={cityPulseRef} cx="132" cy="100" r="3.2" fill="none" stroke="#1a1a1a" strokeWidth="1" />
-                    <circle cx="132" cy="100" r="2.5" fill="#1a1a1a" />
-                    <path d="M 134 98 L 148 76" stroke="#1a1a1a" strokeWidth="0.8" fill="none" />
+                    <circle ref={cityPulseRef} cx="132" cy="100" r="3.2" fill="none" stroke="#0a2540" strokeWidth="1" />
+                    <circle cx="132" cy="100" r="2.5" fill="#0a2540" />
+                    <path d="M 134 98 L 148 76" stroke="#0a2540" strokeWidth="0.8" fill="none" />
                     <text
                       x="150"
                       y="74"
                       fontFamily="-apple-system, BlinkMacSystemFont, Inter, sans-serif"
                       fontSize="9"
                       fontWeight="600"
-                      fill="#1a1a1a"
+                      fill="#0a2540"
                       letterSpacing="0.5"
                     >
                       AUSoM
@@ -472,7 +472,7 @@ export default function GlobeLoader({ onComplete }) {
                 </g>
               </g>
             </g>
-            <circle cx="100" cy="100" r="92" fill="none" stroke="#1a1a1a" strokeWidth="1.25" />
+            <circle cx="100" cy="100" r="92" fill="none" stroke="#0a2540" strokeWidth="1.25" />
           </svg>
         </div>
       </div>

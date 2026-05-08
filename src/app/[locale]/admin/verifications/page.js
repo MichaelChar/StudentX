@@ -158,7 +158,7 @@ export default function AdminVerificationsPage() {
                     value={notesMap[req.id] || ''}
                     onChange={(e) => setNotesMap((prev) => ({ ...prev, [req.id]: e.target.value }))}
                     rows={2}
-                    className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-gold/50 focus:border-gold resize-none"
+                    className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow resize-none"
                   />
                   <div className="flex gap-2">
                     <button

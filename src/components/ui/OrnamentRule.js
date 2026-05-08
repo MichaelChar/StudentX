@@ -4,7 +4,7 @@
   listing detail.
 */
 export default function OrnamentRule({ className = '', tone = 'gold' }) {
-  const colorCls = tone === 'gold' ? 'text-gold' : tone === 'blue' ? 'text-blue' : 'text-night/40';
+  const colorCls = tone === 'gold' ? 'text-yellow' : tone === 'blue' ? 'text-blue' : 'text-night/40';
   return (
     <div
       role="presentation"

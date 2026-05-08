@@ -252,7 +252,7 @@ function StatTile({ label, value, loading, accent }) {
       className={`p-5 ${accent ? 'text-stone' : ''}`}
     >
       <p
-        className={`label-caps ${accent ? 'text-gold' : 'text-night/60'}`}
+        className={`label-caps ${accent ? 'text-yellow' : 'text-night/60'}`}
       >
         {label}
       </p>
@@ -363,7 +363,7 @@ function VerificationCard({ tier, isVerified, t }) {
       <Card tone="parchment" className="p-6 flex items-center gap-5">
         <VerifiedSeal size={52} />
         <div className="flex-1">
-          <p className="label-caps text-gold">{t('widgetVerification')}</p>
+          <p className="label-caps text-yellow">{t('widgetVerification')}</p>
           <p className="font-display text-2xl text-night mt-1">
             {t('verifiedTitle')}
           </p>
@@ -381,7 +381,7 @@ function VerificationCard({ tier, isVerified, t }) {
           <div className="flex items-center gap-5">
             <VerifiedSeal size={52} />
             <div>
-              <p className="label-caps text-gold">{t('widgetVerification')}</p>
+              <p className="label-caps text-yellow">{t('widgetVerification')}</p>
               <p className="font-display text-2xl text-night mt-1">
                 {t('subscribedAwaitingIdTitle')}
               </p>
@@ -406,7 +406,7 @@ function VerificationCard({ tier, isVerified, t }) {
           <div className="flex items-center gap-5">
             <VerifiedSeal size={52} />
             <div>
-              <p className="label-caps text-gold">{t('widgetVerification')}</p>
+              <p className="label-caps text-yellow">{t('widgetVerification')}</p>
               <p className="font-display text-2xl text-night mt-1">
                 {t('idApprovedAwaitingSubscriptionTitle')}
               </p>
@@ -428,11 +428,11 @@ function VerificationCard({ tier, isVerified, t }) {
     <Card tone="night" className="p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
         <div className="flex items-center gap-5">
-          <div className="w-12 h-12 rounded-full border border-gold/50 flex items-center justify-center">
-            <Icon name="shield" className="w-5 h-5 text-gold" />
+          <div className="w-12 h-12 rounded-full border border-yellow/50 flex items-center justify-center">
+            <Icon name="shield" className="w-5 h-5 text-yellow" />
           </div>
           <div>
-            <p className="label-caps text-gold">{t('widgetVerification')}</p>
+            <p className="label-caps text-yellow">{t('widgetVerification')}</p>
             <p className="font-display text-2xl text-stone mt-1">
               {t('unverifiedTitle')}
             </p>

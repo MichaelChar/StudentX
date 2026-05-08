@@ -7,7 +7,6 @@
 :root {
   /* Primary tokens */
   --color-blue: #635BFF;        /* Stripe iris — primary, CTAs, headers */
-  --color-gold: #ff8a3d;        /* Orange — verified pills, focus rings, accents */
   --color-stone: #ffffff;       /* Canvas / page background */
   --color-parchment: #f6f4ff;   /* Surface / cards / inputs (very-light iris tint) */
   --color-night: #0a2540;       /* Ink / dark surfaces */
@@ -20,7 +19,7 @@
 
   /* Brand gradient — primary CTAs, wordmark, hero accents.
      Iris → magenta → orange (matches the StudentX wordmark). */
-  --gradient-brand: linear-gradient(120deg, #635BFF 0%, #ff5fa2 50%, #ff8a3d 100%);
+  --gradient-brand: linear-gradient(120deg, #635BFF 0%, #ff5fa2 50%, #ffcb57 100%);
 
   /* Legacy aliases — point at the new palette so existing components pick */
   /* up the rebrand without manual migration. */
@@ -35,7 +34,6 @@
 @theme inline {
   /* Primary tokens */
   --color-blue: var(--color-blue);
-  --color-gold: var(--color-gold);
   --color-stone: var(--color-stone);
   --color-parchment: var(--color-parchment);
   --color-night: var(--color-night);
@@ -101,7 +99,7 @@ input[type="range"]::-moz-range-thumb {
   display: flex;
   align-items: center;
   gap: 10px;
-  color: var(--color-gold);
+  color: var(--color-yellow);
 }
 .rule-ornament::before,
 .rule-ornament::after {
