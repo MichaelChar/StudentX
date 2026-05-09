@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getResend } from '@/lib/resend';
 
 // Synthetic uptime check guarding against the regression class fixed in PR #48
@@ -42,16 +43,30 @@ function isCronAuthorized(request) {
 // and we can verify the server-side split without holding a real JWT.
 const SYNTHETIC_AUTH_COOKIE = 'sb-access-token=synthetic-canary-stub';
 
+// Resolve the self-fetcher (env.WORKER_SELF_REFERENCE) so probes hit the
+// Worker directly, bypassing DNS/CDN/asset-binding interception. Returns
+// null when running outside the Cloudflare runtime (local dev, unit tests),
+// in which case fetchUrl falls back to global fetch.
+async function getSelfFetcher() {
+  try {
+    const { env } = await getCloudflareContext({ async: true });
+    return env?.WORKER_SELF_REFERENCE ?? null;
+  } catch {
+    return null;
+  }
+}
+
 async function fetchUrl(url, { method = 'GET', cookie = '' } = {}) {
   const headers = { 'user-agent': 'StudentX-synthetic/1.0' };
   if (cookie) headers.cookie = cookie;
-  const res = await fetch(url, {
+  const init = {
     method,
     headers,
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     redirect: 'manual',
-  });
-  return res;
+  };
+  const self = await getSelfFetcher();
+  return self ? self.fetch(url, init) : fetch(url, init);
 }
 
 async function fetchListingHtml(url, { cookie } = {}) {
@@ -94,7 +109,18 @@ export function evaluateBody({ status, body }) {
   return { ok: true };
 }
 
-export function evaluateAnonCacheHeader(cacheControl) {
+// Cache-header evaluators take { status, cacheControl } and short-circuit
+// on non-200 responses: a 522 / 5xx error page has its own (Cloudflare /
+// upstream) cache-control header that has nothing to do with our middleware,
+// and evaluateBody already flags the underlying status problem. Without
+// this guard the synthetic alert double-flagged a single 522 as both
+// "non-200 status" AND "anon must serve public, s-maxage=..." — the latter
+// reading CF's error-page header (`private, max-age=0, no-store, no-cache,
+// must-revalidate, post-check=0, pre-check=0`).
+export function evaluateAnonCacheHeader({ status, cacheControl }) {
+  if (status != null && status !== 200) {
+    return { ok: true };
+  }
   if (!PUBLIC_CACHE_RE.test(cacheControl || '')) {
     return {
       ok: false,
@@ -104,7 +130,10 @@ export function evaluateAnonCacheHeader(cacheControl) {
   return { ok: true };
 }
 
-export function evaluateAuthedCacheHeader(cacheControl) {
+export function evaluateAuthedCacheHeader({ status, cacheControl }) {
+  if (status != null && status !== 200) {
+    return { ok: true };
+  }
   if (PUBLIC_CACHE_RE.test(cacheControl || '')) {
     return {
       ok: false,
@@ -296,7 +325,10 @@ export async function POST(request) {
   try {
     const fetched = await fetchListingHtml(enListingUrl);
     record('en-listing-locale', evaluateBody(fetched));
-    record('en-listing-anon-cache', evaluateAnonCacheHeader(fetched.cacheControl));
+    record(
+      'en-listing-anon-cache',
+      evaluateAnonCacheHeader({ status: fetched.status, cacheControl: fetched.cacheControl }),
+    );
     if (fetched.status !== 200 || !checks.find((c) => c.name === 'en-listing-locale')?.ok) {
       enListingExcerpt = (fetched.body || '').slice(0, 500);
     }
@@ -312,7 +344,10 @@ export async function POST(request) {
   // branch, so we can verify the per-request split without a real JWT.)
   try {
     const fetched = await fetchListingHtml(enListingUrl, { cookie: SYNTHETIC_AUTH_COOKIE });
-    record('en-listing-authed-cache', evaluateAuthedCacheHeader(fetched.cacheControl));
+    record(
+      'en-listing-authed-cache',
+      evaluateAuthedCacheHeader({ status: fetched.status, cacheControl: fetched.cacheControl }),
+    );
   } catch (err) {
     const reason = `fetch threw: ${err.name || 'Error'} ${err.message || ''}`.trim();
     record('en-listing-authed-cache', { ok: false, reason });

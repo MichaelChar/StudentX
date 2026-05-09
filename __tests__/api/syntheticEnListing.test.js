@@ -55,29 +55,39 @@ describe('evaluateBody', () => {
 
 describe('evaluateAnonCacheHeader', () => {
   it('passes when anon response includes public, s-maxage=...', () => {
-    expect(evaluateAnonCacheHeader(PUBLIC_CC)).toEqual({ ok: true });
+    expect(evaluateAnonCacheHeader({ status: 200, cacheControl: PUBLIC_CC })).toEqual({ ok: true });
   });
 
   it('passes on the comma-spaceless variant', () => {
-    expect(evaluateAnonCacheHeader('public,s-maxage=60')).toEqual({ ok: true });
+    expect(evaluateAnonCacheHeader({ status: 200, cacheControl: 'public,s-maxage=60' })).toEqual({ ok: true });
   });
 
   it('fails when middleware drops back to private (anon perf regression)', () => {
-    const result = evaluateAnonCacheHeader(PRIVATE_CC);
+    const result = evaluateAnonCacheHeader({ status: 200, cacheControl: PRIVATE_CC });
     expect(result.ok).toBe(false);
     expect(result.reason).toMatch(/anon listing detail must serve public/);
   });
 
   it('fails when the header is missing entirely', () => {
-    const result = evaluateAnonCacheHeader('');
+    const result = evaluateAnonCacheHeader({ status: 200, cacheControl: '' });
     expect(result.ok).toBe(false);
     expect(result.reason).toMatch(/anon listing detail must serve public/);
+  });
+
+  // Non-200 short-circuit: a 522 / 5xx error page has its own cache-control
+  // (Cloudflare's `private, max-age=0, no-store, no-cache, must-revalidate,
+  // post-check=0, pre-check=0`) which has nothing to do with our middleware.
+  // evaluateBody already reports the status problem; the cache check has
+  // nothing useful to add and must not double-flag.
+  it('passes silently on non-200 responses (defers to evaluateBody)', () => {
+    expect(evaluateAnonCacheHeader({ status: 522, cacheControl: PRIVATE_CC })).toEqual({ ok: true });
+    expect(evaluateAnonCacheHeader({ status: 500, cacheControl: '' })).toEqual({ ok: true });
   });
 });
 
 describe('evaluateAuthedCacheHeader', () => {
   it('passes when authed response is private/no-store', () => {
-    expect(evaluateAuthedCacheHeader(PRIVATE_CC)).toEqual({ ok: true });
+    expect(evaluateAuthedCacheHeader({ status: 200, cacheControl: PRIVATE_CC })).toEqual({ ok: true });
   });
 
   // Session-leak guard. If the authed branch ever returns public, s-maxage=...
@@ -85,18 +95,22 @@ describe('evaluateAuthedCacheHeader', () => {
   // caches the gated body and serves it to other users. This is the original
   // failure mode that made the pre-PR-105 cache attempt unsafe to ship.
   it('fails when authed route returns public, s-maxage=... (session-leak)', () => {
-    const result = evaluateAuthedCacheHeader(PUBLIC_CC);
+    const result = evaluateAuthedCacheHeader({ status: 200, cacheControl: PUBLIC_CC });
     expect(result.ok).toBe(false);
     expect(result.reason).toMatch(/session-leak/);
   });
 
   it('also catches s-maxage with no comma-space (defensive regex)', () => {
-    const result = evaluateAuthedCacheHeader('public,s-maxage=60');
+    const result = evaluateAuthedCacheHeader({ status: 200, cacheControl: 'public,s-maxage=60' });
     expect(result.ok).toBe(false);
     expect(result.reason).toMatch(/session-leak/);
   });
 
   it('treats empty cacheControl as ok (no public, s-maxage=)', () => {
-    expect(evaluateAuthedCacheHeader('')).toEqual({ ok: true });
+    expect(evaluateAuthedCacheHeader({ status: 200, cacheControl: '' })).toEqual({ ok: true });
+  });
+
+  it('passes silently on non-200 responses (defers to evaluateBody)', () => {
+    expect(evaluateAuthedCacheHeader({ status: 522, cacheControl: PUBLIC_CC })).toEqual({ ok: true });
   });
 });
