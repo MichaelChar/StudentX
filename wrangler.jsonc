@@ -30,6 +30,16 @@
     // explicitly at build (or the Worker is built from CI with no .env.local).
     "NEXT_PUBLIC_SITE_URL": "https://studentx.uk",
     "NEXT_PUBLIC_APP_URL": "https://studentx.uk",
+    // Worker self-fetch URL for cf/worker-entry.mjs's scheduled handler.
+    // Distinct from NEXT_PUBLIC_APP_URL because the custom-domain route
+    // for studentx.uk isn't yet serving HTTP traffic to this Worker — a
+    // self-fetch to https://studentx.uk/api/cron/* returns HTTP 522 in
+    // ~15ms and silently breaks every cron. Pointing the dispatcher at
+    // the always-live workers.dev URL unblocks the crons without
+    // changing canonical/sitemap/og:url, which still resolve from
+    // NEXT_PUBLIC_APP_URL above. Drop this var once studentx.uk DNS is
+    // fully wired (docs/runbooks/domain-setup.md).
+    "CRON_DISPATCH_URL": "https://studentx.studentx-gr.workers.dev",
     // Synthetic uptime check — guards against the i18n regression class fixed
     // in PR #48 (Greek copy leaking onto /en/listing/<id>). The */15 cron POSTs
     // to /api/cron/synthetic-en-listing, which fetches /en/listing/<id> and
