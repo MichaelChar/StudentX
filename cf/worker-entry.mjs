@@ -27,41 +27,42 @@ const CRON_ROUTES = {
   "*/15 * * * *": { name: "synthetic-en-listing",   path: "/api/cron/synthetic-en-listing",    query: null },
 };
 
-async function runCron(event, env) {
+async function runCron(event, env, ctx) {
   const route = CRON_ROUTES[event.cron];
   if (!route) {
     console.error(`[cron] unknown cron expression: ${event.cron}`);
     return;
   }
 
-  // Prefer CRON_DISPATCH_URL for self-fetch — NEXT_PUBLIC_APP_URL points at
-  // the canonical public domain (studentx.uk), which currently 522s when the
-  // Worker fetches it because the custom-domain route binding isn't fully
-  // wired yet. CRON_DISPATCH_URL points at the always-live workers.dev URL.
-  // Falls back to NEXT_PUBLIC_APP_URL so local `wrangler dev` still works
-  // without a second var.
-  const appUrl = env.CRON_DISPATCH_URL || env.NEXT_PUBLIC_APP_URL;
   const secret = env.CRON_SECRET;
-  if (!appUrl || !secret) {
-    console.error(
-      `[cron] ${route.name}: missing CRON_DISPATCH_URL/NEXT_PUBLIC_APP_URL or CRON_SECRET — cannot dispatch`,
-    );
+  if (!secret) {
+    console.error(`[cron] ${route.name}: missing CRON_SECRET — cannot dispatch`);
     return;
   }
 
+  // Invoke OpenNext's fetch handler directly instead of HTTP self-fetching.
+  // Worker→own-Worker self-fetches don't follow the same routing path as
+  // external traffic on Cloudflare: the assets binding intercepts and
+  // returns 404 for /api/* paths before the Next.js handler runs (external
+  // curl returns 401, internal fetch returns 404). Direct invocation
+  // skips the network and the asset binding entirely, so the request lands
+  // straight in the Next.js route handler. Bonus: no URL config needed.
+  // The Request URL host is only used by Next.js for canonical/routing
+  // decisions; we use NEXT_PUBLIC_APP_URL (with a safe fallback) to keep
+  // those resolutions consistent with normal traffic.
+  const baseUrl = env.NEXT_PUBLIC_APP_URL || "https://studentx.uk";
   const url = route.query
-    ? `${appUrl}${route.path}?${route.query}`
-    : `${appUrl}${route.path}`;
+    ? `${baseUrl}${route.path}?${route.query}`
+    : `${baseUrl}${route.path}`;
   const startedAt = Date.now();
 
   try {
-    // Abort before CF's ~30s scheduled-handler limit so we get a logged
-    // timeout instead of a silent kill. ctx.waitUntil still respects this.
-    const res = await fetch(url, {
+    const request = new Request(url, {
       method: "POST",
       headers: { "x-cron-secret": secret },
       signal: AbortSignal.timeout(25_000),
     });
+    const res = await openNextWorker.fetch(request, env, ctx);
     const elapsed = Date.now() - startedAt;
     if (!res.ok) {
       const body = await res.text().catch(() => "");
@@ -83,7 +84,7 @@ export default {
   fetch: openNextWorker.fetch,
   async scheduled(event, env, ctx) {
     // ctx.waitUntil keeps the worker alive past the synchronous handler return
-    // until the cron POST completes.
-    ctx.waitUntil(runCron(event, env));
+    // until the direct invocation resolves.
+    ctx.waitUntil(runCron(event, env, ctx));
   },
 };
