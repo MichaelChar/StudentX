@@ -16,6 +16,19 @@
     "directory": ".open-next/assets",
     "binding": "ASSETS"
   },
+  // Self service-binding so the Worker can invoke its own routes without
+  // going through the network. Used by the synthetic-en-listing cron to
+  // dodge the Worker self-fetch issues observed on both studentx.uk
+  // (returns 522 — see PR #133's findings) and the workers.dev URL
+  // (asset binding intercepts /api/* with 404). With this binding,
+  // env.WORKER_SELF_REFERENCE.fetch(url) bypasses the network entirely
+  // and goes straight to the Worker's fetch handler — same response
+  // body and headers, no DNS or asset-binding fragility. Name follows
+  // OpenNext's typed convention (CloudflareEnv["WORKER_SELF_REFERENCE"]
+  // in @opennextjs/cloudflare).
+  "services": [
+    { "binding": "WORKER_SELF_REFERENCE", "service": "studentx" }
+  ],
   // Public Supabase config — these are also inlined into the client bundle
   // via NEXT_PUBLIC_*, but server-side route handlers (e.g. /api/listings)
   // read them from process.env at runtime in the Worker. Without these,
