@@ -34,11 +34,17 @@ async function runCron(event, env) {
     return;
   }
 
-  const appUrl = env.NEXT_PUBLIC_APP_URL;
+  // Prefer CRON_DISPATCH_URL for self-fetch — NEXT_PUBLIC_APP_URL points at
+  // the canonical public domain (studentx.uk), which currently 522s when the
+  // Worker fetches it because the custom-domain route binding isn't fully
+  // wired yet. CRON_DISPATCH_URL points at the always-live workers.dev URL.
+  // Falls back to NEXT_PUBLIC_APP_URL so local `wrangler dev` still works
+  // without a second var.
+  const appUrl = env.CRON_DISPATCH_URL || env.NEXT_PUBLIC_APP_URL;
   const secret = env.CRON_SECRET;
   if (!appUrl || !secret) {
     console.error(
-      `[cron] ${route.name}: missing NEXT_PUBLIC_APP_URL or CRON_SECRET — cannot dispatch`,
+      `[cron] ${route.name}: missing CRON_DISPATCH_URL/NEXT_PUBLIC_APP_URL or CRON_SECRET — cannot dispatch`,
     );
     return;
   }
