@@ -6,7 +6,7 @@
     "landlords": "Landlords",
     "listings": "Listings",
     "takeTheQuiz": "Take the quiz",
-    "signIn": "Landlord login",
+    "signIn": "Sign in",
     "signInStudent": "Sign in",
     "signInLandlord": "Landlord",
     "myAccount": "My account",
@@ -840,6 +840,24 @@
       "errorCapExceeded": "This listing has reached its inquiry limit. Try another.",
       "errorNotStudent": "Your account isn't set up as a student. Sign out and create a student account."
     }
+  },
+  "unifiedSignin": {
+    "eyebrow": "Sign in",
+    "title": "Welcome back",
+    "subtitle": "Students and landlords sign in here.",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Password",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Forgot?",
+    "submit": "Sign in",
+    "submitting": "Signing in…",
+    "or": "or",
+    "noStudentAccount": "New student?",
+    "studentSignupLink": "Create a student account",
+    "noLandlordAccount": "Are you a landlord?",
+    "landlordSignupLink": "Create a landlord account",
+    "noProfileError": "Account found but no profile. Did you finish signup?"
   },
   "loaders": {
     "uploading": "Uploading",

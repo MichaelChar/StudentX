@@ -144,7 +144,7 @@ export default function StudentSignupPage() {
             </p>
             {conflictRole === 'landlord' && (
               <Link
-                href={{ pathname: '/property/thessaloniki/landlord/login', query: { email } }}
+                href={{ pathname: '/signin', query: { email } }}
                 className="inline-block text-sm text-blue font-medium hover:text-night"
               >
                 {t('roleConflictCta')} →
@@ -174,7 +174,7 @@ export default function StudentSignupPage() {
       <p className="mt-8 text-sm text-night/60">
         {t('haveAccount')}{' '}
         <Link
-          href="/student/login"
+          href="/signin"
           className="text-blue font-medium hover:text-night"
         >
           {t('loginLink')} →

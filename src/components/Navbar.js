@@ -111,7 +111,6 @@ export default function Navbar() {
           authState={authState}
           accountHref={accountHref}
           inquiriesHref={inquiriesHref}
-          landlordLoginHref={`/property/${currentCity}/landlord/login`}
           unreadCount={unread.count}
           onSignOut={handleSignOut}
         />
@@ -120,9 +119,9 @@ export default function Navbar() {
   );
 }
 
-function AuthMenu({ t, authState, accountHref, inquiriesHref, landlordLoginHref, unreadCount, onSignOut }) {
+function AuthMenu({ t, authState, accountHref, inquiriesHref, unreadCount, onSignOut }) {
   if (!authState.ready) {
-    return <span className="label-caps text-night/30">{t('signInStudent')}</span>;
+    return <span className="label-caps text-night/30">{t('signIn')}</span>;
   }
 
   if (authState.role) {
@@ -147,19 +146,11 @@ function AuthMenu({ t, authState, accountHref, inquiriesHref, landlordLoginHref,
   }
 
   return (
-    <>
-      <Link
-        href="/student/login"
-        className="label-caps text-blue hover:text-night transition-colors"
-      >
-        {t('signInStudent')}
-      </Link>
-      <Link
-        href={landlordLoginHref}
-        className="label-caps text-night/50 hover:text-night transition-colors"
-      >
-        {t('signInLandlord')}
-      </Link>
-    </>
+    <Link
+      href="/signin"
+      className="label-caps text-blue hover:text-night transition-colors"
+    >
+      {t('signIn')}
+    </Link>
   );
 }

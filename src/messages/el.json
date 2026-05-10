@@ -6,7 +6,7 @@
     "landlords": "Ιδιοκτήτες",
     "listings": "Αγγελίες",
     "takeTheQuiz": "Κάνε το κουίζ",
-    "signIn": "Σύνδεση ιδιοκτήτη",
+    "signIn": "Σύνδεση",
     "signInStudent": "Σύνδεση",
     "signInLandlord": "Ιδιοκτήτης",
     "myAccount": "Ο λογαριασμός μου",
@@ -840,6 +840,24 @@
       "errorCapExceeded": "Η αγγελία έφτασε το όριο αιτημάτων. Δοκίμασε άλλη.",
       "errorNotStudent": "Ο λογαριασμός σου δεν είναι φοιτητικός. Αποσυνδέσου και δημιούργησε φοιτητικό λογαριασμό."
     }
+  },
+  "unifiedSignin": {
+    "eyebrow": "Σύνδεση",
+    "title": "Καλώς ήρθες πίσω",
+    "subtitle": "Φοιτητές και ιδιοκτήτες συνδέονται εδώ.",
+    "emailLabel": "Διεύθυνση email",
+    "emailPlaceholder": "you@example.com",
+    "passwordLabel": "Κωδικός",
+    "passwordPlaceholder": "••••••••",
+    "forgotPassword": "Ξεχάσατε;",
+    "submit": "Σύνδεση",
+    "submitting": "Σύνδεση…",
+    "or": "ή",
+    "noStudentAccount": "Νέος φοιτητής;",
+    "studentSignupLink": "Δημιούργησε φοιτητικό λογαριασμό",
+    "noLandlordAccount": "Είσαι ιδιοκτήτης;",
+    "landlordSignupLink": "Δημιούργησε λογαριασμό ιδιοκτήτη",
+    "noProfileError": "Ο λογαριασμός βρέθηκε αλλά δεν υπάρχει προφίλ. Ολοκλήρωσες την εγγραφή;"
   },
   "loaders": {
     "uploading": "Μεταφόρτωση",
