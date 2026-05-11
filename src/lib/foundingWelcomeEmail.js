@@ -30,7 +30,8 @@ function pickLocale(request, hintedLocale) {
     if (tag === 'el' || tag.startsWith('el-')) return 'el';
     if (tag === 'en' || tag.startsWith('en-')) return 'en';
   }
-  return 'el';
+  // Default English (2026-05-11 product call).
+  return 'en';
 }
 
 /**

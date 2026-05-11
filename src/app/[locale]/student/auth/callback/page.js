@@ -64,7 +64,8 @@ function StudentOAuthCallbackInner() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({ preferred_locale: locale }),
+          // English by default (2026-05-11 product call).
+          body: JSON.stringify({ preferred_locale: 'en' }),
         });
       } catch {
         // Network blip — proceed anyway; account page will surface

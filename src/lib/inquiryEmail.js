@@ -18,7 +18,10 @@ function resolveLandlordEmailLocale(request, landlord) {
     if (tag === 'el' || tag.startsWith('el-')) return 'el';
     if (tag === 'en' || tag.startsWith('en-')) return 'en';
   }
-  return 'el';
+  // Default English (2026-05-11 product call). Note: header-based 'el'
+  // is still honored above so a browser explicitly requesting Greek
+  // still gets Greek — only the absent/unknown fallback changed.
+  return 'en';
 }
 
 /**
