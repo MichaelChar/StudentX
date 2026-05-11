@@ -161,17 +161,41 @@ Conventions still in force:
 
 ## Cron architecture
 
-Two pieces must stay in sync:
+Three pieces must stay in sync:
 
 | Piece | File | What it holds |
 |---|---|---|
 | Cron triggers | `wrangler.jsonc` `triggers.crons` | Cron expressions Cloudflare fires |
 | Cron dispatch | `cf/worker-entry.mjs` `CRON_ROUTES` | Cron expression → `{ name, path, query }` |
+| Live schedules | Cloudflare API `/workers/scripts/studentx/schedules` | What CF actually fires (deploy pipeline doesn't sync this — see PR #150) |
 
-The `scheduled` handler looks up `event.cron` in `CRON_ROUTES`, then POSTs
-to `${NEXT_PUBLIC_APP_URL}${path}?${query}` with the `x-cron-secret` header.
+The `scheduled` handler looks up `event.cron` in `CRON_ROUTES`, then invokes
+OpenNext's `fetch` directly (no network self-call — see PR #133's findings).
 25-second `AbortSignal.timeout` (under CF's ~30 s scheduled-handler limit).
 `ctx.waitUntil()` keeps the Worker alive past the synchronous return.
+
+**Cloudflare Free plan caps a Worker at 5 cron triggers** — the 6th is
+silently rejected at registration time with API error 10072 (confirmed in
+PR #150 after the student-message-digest trigger had been silently dropped
+for 3 days). Keep `triggers.crons` at ≤5; if you need more, either upgrade
+to Workers Paid ($5/mo, 250-trigger cap) or consolidate cadences into a
+single trigger with day-of-week branching inside the route (saved-searches
+is the canonical example — see `frequenciesToProcess` in
+`src/app/api/cron/saved-searches-digest/route.js`).
+
+**The deploy pipeline does NOT sync trigger changes.**
+`opennextjs-cloudflare deploy` pushes the script bundle but leaves
+`/schedules` untouched. After any edit to `wrangler.jsonc.triggers.crons`,
+re-PUT the live schedules array via the CF API or
+`wrangler deploy`. Verify drift with:
+
+```bash
+curl -sS -H "Authorization: Bearer $TOKEN" \
+  "https://api.cloudflare.com/client/v4/accounts/<acct>/workers/scripts/studentx/schedules" \
+  | jq -r '.result.schedules[].cron' | sort
+```
+
+against the `triggers.crons` array in `wrangler.jsonc`. They must match.
 
 **All cron routes auth via `CRON_SECRET`** — accepted via either the
 `x-cron-secret` header OR `?secret=` query param. `CRON_SECRET` is a Worker
@@ -181,14 +205,17 @@ Current crons (verified against `wrangler.jsonc` and `cf/worker-entry.mjs`):
 
 | Cron expression | Route | Purpose |
 |---|---|---|
-| `0 9 * * *`     | `/api/cron/saved-searches-digest?frequency=daily`  | Daily saved-search digest |
-| `0 9 * * 1`     | `/api/cron/saved-searches-digest?frequency=weekly` | Weekly saved-search digest (Monday) |
-| `15 9 * * *`    | `/api/cron/recompute-distances`                    | Heal missing `faculty_distances` rows (PR #60) |
-| `*/5 * * * *`   | `/api/cron/landlord-message-digest`                | Per-message landlord digest |
-| `2-58/5 * * * *` | `/api/cron/student-message-digest`               | Per-message student digest (mirror of landlord, offset 2 min) |
-| `*/15 * * * *`  | `/api/cron/synthetic-en-listing`                   | i18n regression guard (issue #49) |
+| `0 9 * * *`     | `/api/cron/saved-searches-digest`                  | Saved-search digest. Daily every day; weekly subscribers are also processed on Mondays via `getUTCDay() === 1` inside the route (consolidated in PR #150 to free a trigger slot under CF's 5-trigger cap). Explicit `?frequency=daily\|weekly` still works for manual curl. |
+| `15 9 * * *`    | `/api/cron/recompute-distances`                    | Heal missing `faculty_distances` rows (PR #60). |
+| `*/5 * * * *`   | `/api/cron/landlord-message-digest`                | Per-message landlord digest. |
+| `2-58/5 * * * *` | `/api/cron/student-message-digest`                | Per-message student digest (mirror of landlord, offset 2 min). |
+| `*/15 * * * *`  | `/api/cron/synthetic-en-listing`                   | i18n regression guard (issue #49). |
 
-Adding a new cron is a one-line entry in each table.
+Adding a new cron is a one-line entry in each of `wrangler.jsonc.triggers.crons`
+and `cf/worker-entry.mjs`'s `CRON_ROUTES`, **plus** a manual schedule sync
+(see "Cron architecture" above — deploy pipeline doesn't sync triggers).
+If this would push the count above 5, consolidate an existing cron first
+(saved-searches is the template) or upgrade to Workers Paid.
 
 ## Synthetic monitoring
 

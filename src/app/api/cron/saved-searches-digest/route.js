@@ -178,8 +178,16 @@ export async function POST(request) {
   } else if (frequencyParam === 'daily') {
     frequenciesToProcess = ['daily'];
   } else {
-    // getUTCDay(): 0=Sun, 1=Mon, ..., 6=Sat. Cron fires at 09:00 UTC, well
-    // away from the day boundary, so day-of-week is unambiguous.
+    // getUTCDay(): 0=Sun, 1=Mon, ..., 6=Sat. Coupling to keep in mind: the
+    // cron trigger in wrangler.jsonc fires at 09:00 UTC, well away from the
+    // day boundary, so "Monday in UTC at fire time" matches "Monday in
+    // Europe/Athens at fire time" (11:00 EET / 12:00 EEST) all year round.
+    // If you re-time this cron, re-check that the UTC-Monday window still
+    // aligns with the intended user-perceived Monday. Note this also reads
+    // the wall clock at request time, not at the scheduled fire time, so a
+    // manual curl invocation across the UTC day boundary will see whichever
+    // side it lands on — fine because claim_digest_send debounces any
+    // duplicate weekly run within 6 days.
     const dayOfWeek = new Date().getUTCDay();
     frequenciesToProcess = dayOfWeek === 1 ? ['daily', 'weekly'] : ['daily'];
   }
