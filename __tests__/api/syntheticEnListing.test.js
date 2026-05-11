@@ -20,13 +20,9 @@ import {
 const PRIVATE_CC = 'private, no-cache, no-store, must-revalidate';
 const PUBLIC_CC = 'public, s-maxage=300, stale-while-revalidate=86400';
 
-const VALID_BODY = '<html lang="en"><body>Sign in to view this listing</body></html>';
-// Includes the required English marker so we trip the EL check, not the
-// missing-EN check. (evaluateBody runs required-EN-markers BEFORE
-// forbidden-EL-markers; a real Greek leak in production would have both
-// signals because the page renders the el namespace's title verbatim.)
+const VALID_BODY = '<html lang="en"><body>Sign in to message this landlord</body></html>';
 const GREEK_LEAK_BODY =
-  '<html lang="en"><body>Sign in to view this listing — Συνδέσου για να δεις την αγγελία</body></html>';
+  '<html lang="en"><body>Sign in to message this landlord — Συνδέσου για να επικοινωνήσεις με τον ιδιοκτήτη</body></html>';
 const MISSING_MARKER_BODY = '<html lang="en"><body>Welcome</body></html>';
 
 describe('evaluateBody', () => {

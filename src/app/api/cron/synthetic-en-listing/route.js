@@ -21,11 +21,11 @@ const FETCH_TIMEOUT_MS = 10_000;
 
 const EN_MARKERS_REQUIRED = [
   '<html lang="en"',
-  'Sign in to view this listing',
+  'Sign in to message this landlord',
 ];
 const EL_MARKERS_FORBIDDEN = [
   'lang="el"',
-  'Συνδέσου',
+  'Συνδέσου για να επικοινωνήσεις',
 ];
 
 function isCronAuthorized(request) {

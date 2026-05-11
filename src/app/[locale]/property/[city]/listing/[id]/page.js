@@ -6,8 +6,8 @@ import { Link } from '@/i18n/navigation';
 import { getListingForRender } from '@/lib/listingForRender';
 import { requireStudent } from '@/lib/requireStudent';
 
-import AuthGate from '@/components/AuthGate';
 import ContactRail from '@/components/listing/ContactRail';
+import ContactGate from '@/components/listing/ContactGate';
 import ViewTracker from '@/components/listing/ViewTracker';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
@@ -27,35 +27,14 @@ export default async function ListingPage({ params, searchParams }) {
   const sp = (await searchParams) || {};
   setRequestLocale(locale);
 
-  // ?from=<urlencoded querystring> threads the user's prior /results
-  // filter state into the back-link so it returns to the same filtered
-  // view they came from. Plain ?from= param (or missing) → bare /results.
-  // Drop oversized values (length cap above) — fall through to bare
-  // /results rather than echoing untrusted bytes into the rendered href.
   const fromRawInput = typeof sp.from === 'string' ? sp.from : '';
   const fromRaw =
     fromRawInput && fromRawInput.length <= MAX_FROM_LENGTH ? fromRawInput : '';
   const backHref = fromRaw ? `/property/thessaloniki/results?${fromRaw}` : '/property/thessaloniki/results';
 
-  // Auth gate — only authenticated students view listing detail. The
-  // SEO metadata + JSON-LD live in the layout and still get served to
-  // crawlers; this only replaces the page body.
   const auth = await requireStudent();
-  if (!auth || auth.kind === 'wrong-role') {
-    const fromQs = fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : '';
-    const localePrefix = locale === 'el' ? '' : `/${locale}`;
-    const nextPath = `${localePrefix}/property/thessaloniki/listing/${id}${fromQs}`;
-    return (
-      <AuthGate
-        next={nextPath}
-        locale={locale}
-        mode={auth?.kind === 'wrong-role' ? 'wrong-role' : 'guest'}
-      />
-    );
-  }
+  const isAuthed = auth && auth.kind !== 'wrong-role';
 
-  // React.cache() de-dupes this with the layout's fetch — one Supabase
-  // round-trip per request instead of two.
   const listing = await getListingForRender(id);
   if (!listing) notFound();
 
@@ -74,7 +53,7 @@ export default async function ListingPage({ params, searchParams }) {
 
   return (
     <div className="mx-auto max-w-6xl px-5 py-8 md:py-12">
-      <ViewTracker listingId={listing.listing_id} />
+      {isAuthed && <ViewTracker listingId={listing.listing_id} />}
 
       {/* Back link — server-rendered Link. Threads the prior /results
           filter state via ?from= so the back nav lands on the same
@@ -245,7 +224,11 @@ export default async function ListingPage({ params, searchParams }) {
         </div>
 
         {/* Right column — sticky inquiry rail (client-side for modal state) */}
-        <ContactRail listing={listing} />
+        {isAuthed ? (
+          <ContactRail listing={listing} />
+        ) : (
+          <ContactGate listing={listing} locale={locale} fromRaw={fromRaw} />
+        )}
       </div>
     </div>
   );

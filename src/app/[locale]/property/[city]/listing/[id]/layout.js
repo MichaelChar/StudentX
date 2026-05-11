@@ -1,46 +1,18 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getListingForRender } from "@/lib/listingForRender";
-import { requireStudent } from "@/lib/requireStudent";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
 export async function generateMetadata({ params }) {
   const { id, locale } = await params;
-  const [listing, auth] = await Promise.all([
-    getListingForRender(id),
-    requireStudent(),
-  ]);
+  const listing = await getListingForRender(id);
 
   if (!listing) {
     const t = await getTranslations({ locale, namespace: 'propylaea.listing.notFound' });
     return {
       title: t('title'),
       description: t('description'),
-    };
-  }
-
-  // SEO cloaking guard: when the page body will render the auth gate
-  // instead of the listing, also strip the rich preview metadata down
-  // to a noindex stub. Otherwise Google sees structured data + OG
-  // images for content the user is gated out of, which trips the
-  // cloaking heuristic. requireStudent is React.cache()'d so the
-  // page-level call below shares this round-trip.
-  // Wrong-role auth (e.g. landlord) is treated the same as a guest:
-  // they'll see the gate, so the rich metadata must be stripped too.
-  //
-  // The bare string form gets templated by the parent locale layout
-  // ('%s — StudentX' in src/app/[locale]/layout.js), so the title here
-  // must NOT include '— StudentX' itself or it doubles. Use the same
-  // student.gate.* translations that AuthGate renders in the body so
-  // the meta title and the visible heading stay in lockstep.
-  if (!auth || auth.kind === 'wrong-role') {
-    const t = await getTranslations({ locale, namespace: 'student.gate' });
-    return {
-      title: t('title'),
-      description: t('subtitle'),
-      robots: { index: false, follow: false },
-      alternates: undefined,
     };
   }
 
@@ -127,24 +99,14 @@ export async function generateMetadata({ params }) {
 
 export default async function ListingLayout({ children, params }) {
   const { id, locale } = await params;
-  const [listing, auth] = await Promise.all([
-    getListingForRender(id),
-    requireStudent(),
-  ]);
+  const listing = await getListingForRender(id);
 
-  // Surface a real 404 when the listing doesn't exist instead of letting the
-  // client-side page render a soft "Listing not found" body with HTTP 200.
   if (!listing) {
     notFound();
   }
 
-  // Skip JSON-LD when the page body is the auth gate. We already set
-  // robots:noindex above for the same reason, so emitting structured
-  // data here would actively contradict the directive and expose the
-  // listing to crawlers under a sign-in wall. Wrong-role auth lands on
-  // the gate too, so JSON-LD must be skipped for them as well.
   let jsonLd = null;
-  if (listing && auth && auth.kind !== 'wrong-role') {
+  if (listing) {
     const address = listing.address ?? "";
     const neighborhood = listing.neighborhood ?? "Thessaloniki";
     const price = listing.monthly_price;
