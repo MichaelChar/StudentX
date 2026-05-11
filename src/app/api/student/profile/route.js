@@ -3,7 +3,7 @@ import {
   extractToken,
   getUserFromToken,
   getSupabaseWithToken,
-  deleteAuthUserAsService,
+  cleanupFreshOrphanAuthUser,
 } from '@/lib/supabaseServer';
 
 export async function GET(request) {
@@ -56,7 +56,7 @@ export async function POST(request) {
     // prevent_dual_role trigger (migration 036) RAISEs unique_violation
     // when the auth user already has a landlord row. Surface that as 409.
     if (error.code === '23505' && /already registered as a landlord/i.test(error.message || '')) {
-      await cleanupOrphanAuthUser(user);
+      await cleanupFreshOrphanAuthUser(user);
       return NextResponse.json(
         { error: 'role_conflict', conflict_role: 'landlord' },
         { status: 409 }
@@ -70,28 +70,4 @@ export async function POST(request) {
   // (not wrapped in an array) when called via PostgREST.
   const student = Array.isArray(rows) ? rows[0] : rows;
   return NextResponse.json({ student }, { status: 201 });
-}
-
-// Delete the auth.users row left behind by auth.signUp() when the
-// prevent_dual_role guard rejects the students insert. Without this,
-// the orphan auth user keeps "signing in" forever and loops at
-// requireStudent (wrong-role). Guarded by user.created_at recency so
-// we never nuke a legacy dual-role user that's re-probing via
-// SessionSync (e.g. landlord clicking student-side OAuth after the
-// "coming soon" buttons go live).
-async function cleanupOrphanAuthUser(user) {
-  if (!isFreshlyCreated(user)) return;
-  try {
-    await deleteAuthUserAsService(user.id);
-  } catch (err) {
-    console.error('Failed to clean up orphan auth user:', err);
-  }
-}
-
-function isFreshlyCreated(user) {
-  if (!user?.created_at) return false;
-  const ageMs = Date.now() - new Date(user.created_at).getTime();
-  // 5 min window is generous for any reasonable signup flow; outside
-  // of that, treat the auth user as "real" and leave it alone.
-  return Number.isFinite(ageMs) && ageMs >= 0 && ageMs < 5 * 60 * 1000;
 }

@@ -32,12 +32,12 @@ export default async function StudentAccountPage({ params }) {
     // conflict context so the login page can show a "switch to
     // landlord login" CTA instead of a silent re-prompt.
     const next = locale === 'el' ? '/student/account' : `/${locale}/student/account`;
-    const params = new URLSearchParams({ next });
+    const loginParams = new URLSearchParams({ next });
     if (auth?.kind === 'wrong-role' && auth.conflict_role) {
-      params.set('roleConflict', auth.conflict_role);
-      if (auth.email) params.set('email', auth.email);
+      loginParams.set('roleConflict', auth.conflict_role);
+      if (auth.email) loginParams.set('email', auth.email);
     }
-    redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?${params.toString()}`);
+    redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?${loginParams.toString()}`);
   }
 
   const t = await getTranslations({ locale, namespace: 'student.account' });

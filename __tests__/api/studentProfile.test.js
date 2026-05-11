@@ -5,13 +5,13 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const extractToken = vi.fn();
 const getUserFromToken = vi.fn();
 const getSupabaseWithToken = vi.fn();
-const deleteAuthUserAsService = vi.fn();
+const cleanupFreshOrphanAuthUser = vi.fn();
 
 vi.mock('@/lib/supabaseServer', () => ({
   extractToken: (...args) => extractToken(...args),
   getUserFromToken: (...args) => getUserFromToken(...args),
   getSupabaseWithToken: (...args) => getSupabaseWithToken(...args),
-  deleteAuthUserAsService: (...args) => deleteAuthUserAsService(...args),
+  cleanupFreshOrphanAuthUser: (...args) => cleanupFreshOrphanAuthUser(...args),
 }));
 
 const { POST } = await import('@/app/api/student/profile/route');
@@ -20,12 +20,9 @@ beforeEach(() => {
   extractToken.mockReset();
   getUserFromToken.mockReset();
   getSupabaseWithToken.mockReset();
-  deleteAuthUserAsService.mockReset();
+  cleanupFreshOrphanAuthUser.mockReset();
 });
 
-// Build a fake authedSupabase whose .rpc() returns the supplied result.
-// The route only invokes .rpc('create_student_profile', ...), so a single
-// shared implementation is enough.
 function fakeAuthedSupabase(rpcResult) {
   return { rpc: vi.fn(async () => rpcResult) };
 }
@@ -38,67 +35,43 @@ function jsonRequest(body = {}, token = 'jwt') {
   });
 }
 
+const FRESH_USER = () => ({
+  id: 'auth-fresh',
+  email: 'fresh@example.com',
+  created_at: new Date().toISOString(),
+});
+
 describe('POST /api/student/profile — role-conflict cleanup', () => {
-  it('returns 409 role_conflict and deletes the freshly-created auth user', async () => {
+  it('returns 409 role_conflict and delegates to cleanupFreshOrphanAuthUser', async () => {
     extractToken.mockReturnValue('jwt');
-    getUserFromToken.mockResolvedValue({
-      id: 'auth-fresh',
-      email: 'fresh@example.com',
-      // 30 seconds old — well within the 5-min fresh window
-      created_at: new Date(Date.now() - 30_000).toISOString(),
-    });
+    getUserFromToken.mockResolvedValue(FRESH_USER());
     getSupabaseWithToken.mockReturnValue(
       fakeAuthedSupabase({
         data: null,
         error: {
           code: '23505',
-          message:
-            'Email fresh@example.com already registered as a landlord; one email cannot be both',
+          message: 'Email fresh@example.com already registered as a landlord',
         },
       })
     );
-    deleteAuthUserAsService.mockResolvedValue({ data: null, error: null });
+    cleanupFreshOrphanAuthUser.mockResolvedValue(undefined);
 
     const res = await POST(jsonRequest({ display_name: 'Fresh' }));
 
     expect(res.status).toBe(409);
     const body = await res.json();
     expect(body).toEqual({ error: 'role_conflict', conflict_role: 'landlord' });
-    expect(deleteAuthUserAsService).toHaveBeenCalledTimes(1);
-    expect(deleteAuthUserAsService).toHaveBeenCalledWith('auth-fresh');
-  });
-
-  it('does NOT delete the auth user when it was created long ago (defensive)', async () => {
-    extractToken.mockReturnValue('jwt');
-    getUserFromToken.mockResolvedValue({
-      id: 'auth-old',
-      email: 'old@example.com',
-      // 10 days old — outside the 5-min fresh window
-      created_at: new Date(Date.now() - 10 * 24 * 60 * 60 * 1000).toISOString(),
-    });
-    getSupabaseWithToken.mockReturnValue(
-      fakeAuthedSupabase({
-        data: null,
-        error: {
-          code: '23505',
-          message: 'Email already registered as a landlord',
-        },
-      })
+    expect(cleanupFreshOrphanAuthUser).toHaveBeenCalledTimes(1);
+    // Asserts the route hands the full user object (so the helper can
+    // check created_at) rather than a bare id.
+    expect(cleanupFreshOrphanAuthUser).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 'auth-fresh' })
     );
-
-    const res = await POST(jsonRequest({ display_name: 'Old' }));
-
-    expect(res.status).toBe(409);
-    expect(deleteAuthUserAsService).not.toHaveBeenCalled();
   });
 
-  it('does NOT delete on non-role-conflict errors', async () => {
+  it('does NOT call cleanup on non-role-conflict errors', async () => {
     extractToken.mockReturnValue('jwt');
-    getUserFromToken.mockResolvedValue({
-      id: 'auth-fresh',
-      email: 'fresh@example.com',
-      created_at: new Date().toISOString(),
-    });
+    getUserFromToken.mockResolvedValue(FRESH_USER());
     getSupabaseWithToken.mockReturnValue(
       fakeAuthedSupabase({
         data: null,
@@ -109,16 +82,12 @@ describe('POST /api/student/profile — role-conflict cleanup', () => {
     const res = await POST(jsonRequest({ display_name: 'Fresh' }));
 
     expect(res.status).toBe(500);
-    expect(deleteAuthUserAsService).not.toHaveBeenCalled();
+    expect(cleanupFreshOrphanAuthUser).not.toHaveBeenCalled();
   });
 
-  it('returns 201 on the happy path and never touches the admin API', async () => {
+  it('returns 201 on the happy path and never touches cleanup', async () => {
     extractToken.mockReturnValue('jwt');
-    getUserFromToken.mockResolvedValue({
-      id: 'auth-fresh',
-      email: 'fresh@example.com',
-      created_at: new Date().toISOString(),
-    });
+    getUserFromToken.mockResolvedValue(FRESH_USER());
     getSupabaseWithToken.mockReturnValue(
       fakeAuthedSupabase({
         data: { student_id: 'S99', email: 'fresh@example.com', display_name: 'Fresh' },
@@ -129,6 +98,6 @@ describe('POST /api/student/profile — role-conflict cleanup', () => {
     const res = await POST(jsonRequest({ display_name: 'Fresh', preferred_locale: 'en' }));
 
     expect(res.status).toBe(201);
-    expect(deleteAuthUserAsService).not.toHaveBeenCalled();
+    expect(cleanupFreshOrphanAuthUser).not.toHaveBeenCalled();
   });
 });

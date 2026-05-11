@@ -60,10 +60,42 @@ function getSupabaseAsService() {
  * Without this, the orphan auth user could "sign in" forever and loop
  * on the destination page's wrong-role check.
  *
- * Caller must validate the JWT first — only the user who just signed up
- * should ever invoke this for their own user.id.
+ * Caller MUST validate the JWT first (so the user.id we delete is the
+ * user we just authenticated, never one supplied by a request body) AND
+ * SHOULD bound deletion to freshly-created users via `cleanupFreshOrphanAuthUser`
+ * below — calling this directly with an old user.id will delete a real
+ * account.
  */
 export async function deleteAuthUserAsService(userId) {
   const admin = getSupabaseAsService();
   return admin.auth.admin.deleteUser(userId);
+}
+
+/**
+ * Safer wrapper around deleteAuthUserAsService: only deletes if
+ * `user.created_at` is within the last 5 minutes — i.e. clearly an
+ * orphan from a just-now signup whose role-row INSERT failed. Outside
+ * that window, leaves the user alone (defends against accidentally
+ * nuking a legacy dual-role user re-probing through SessionSync or
+ * OAuth). Swallows admin-API errors and logs them — the 409 response
+ * to the user is the visible signal; cleanup failures are operational.
+ *
+ * Use this from any route that catches the prevent_dual_role 23505
+ * and needs to roll back the auth.users row created by auth.signUp.
+ */
+export async function cleanupFreshOrphanAuthUser(user) {
+  if (!isFreshlyCreated(user)) return;
+  try {
+    await deleteAuthUserAsService(user.id);
+  } catch (err) {
+    console.error('Failed to clean up orphan auth user:', err);
+  }
+}
+
+function isFreshlyCreated(user) {
+  if (!user?.created_at) return false;
+  const ageMs = Date.now() - new Date(user.created_at).getTime();
+  // 5 min window is generous for any reasonable signup flow; outside
+  // of that, treat the auth user as "real" and leave it alone.
+  return Number.isFinite(ageMs) && ageMs >= 0 && ageMs < 5 * 60 * 1000;
 }
