@@ -23,6 +23,11 @@ function StudentLoginInner() {
   // ?email=<addr> prefill — used by the landlord-signup roleConflict CTA
   // to deep-link a dual-role student straight back to their own login.
   const initialEmail = searchParams.get('email') || '';
+  // ?roleConflict=landlord (carried by requireStudent's wrong-role
+  // redirect when the auth user has a landlord row) — render a clear
+  // banner with a CTA to landlord login instead of silently bouncing.
+  const roleConflict = searchParams.get('roleConflict');
+  const showLandlordConflict = roleConflict === 'landlord';
 
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
@@ -96,6 +101,22 @@ function StudentLoginInner() {
       portal={t('portal')}
       brandBlurb={t('brandBlurb')}
     >
+      {showLandlordConflict && (
+        <div className="mb-6 rounded-sm border border-yellow/40 bg-yellow/10 px-4 py-3 text-sm text-night">
+          <p className="font-medium">{t('roleConflictLandlordTitle')}</p>
+          <p className="mt-1 text-night/70">{t('roleConflictLandlordBody')}</p>
+          <Link
+            href={{
+              pathname: '/property/thessaloniki/landlord/login',
+              query: initialEmail ? { email: initialEmail } : {},
+            }}
+            className="mt-2 inline-block text-blue font-medium hover:text-night"
+          >
+            {t('roleConflictLandlordCta')} →
+          </Link>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-5">
         <FormField
           label={t('emailLabel')}

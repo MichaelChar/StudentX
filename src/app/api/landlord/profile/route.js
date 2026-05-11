@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import {
+  extractToken,
+  getUserFromToken,
+  getSupabaseWithToken,
+  cleanupFreshOrphanAuthUser,
+} from '@/lib/supabaseServer';
 import { normalizeSingleLine } from '@/lib/textNormalize';
 import { sendFoundingWelcomeEmail } from '@/lib/foundingWelcomeEmail';
 
@@ -106,6 +111,7 @@ export async function POST(request) {
     });
     if (linkError) {
       if (isRoleConflict(linkError)) {
+        await cleanupFreshOrphanAuthUser(user);
         return NextResponse.json(
           { error: 'role_conflict', conflict_role: 'student' },
           { status: 409 }
@@ -151,6 +157,7 @@ export async function POST(request) {
 
   if (error) {
     if (isRoleConflict(error)) {
+      await cleanupFreshOrphanAuthUser(user);
       return NextResponse.json(
         { error: 'role_conflict', conflict_role: 'student' },
         { status: 409 }
@@ -178,3 +185,4 @@ export async function POST(request) {
 function isRoleConflict(err) {
   return err?.code === '23505' && /already registered as a student/i.test(err?.message || '');
 }
+

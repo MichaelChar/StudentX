@@ -21,10 +21,14 @@ export async function hasAuthCookie() {
  * Server-side helper that resolves the current student account from
  * the sb-access-token cookie set by SessionSync. Returns one of:
  *   - { student, user, supabase, token } — authenticated as a student
- *   - { kind: 'wrong-role' } — JWT is valid but the auth.users row has
- *     no matching students row (e.g. the user signed up as a landlord).
- *     Truthy on purpose so AuthGate can show "this is for students,
- *     switch accounts" copy instead of the guest sign-in prompt.
+ *   - { kind: 'wrong-role', conflict_role, email } — JWT is valid but the
+ *     auth.users row has no matching students row. conflict_role is
+ *     'landlord' if the email is registered as a landlord, or null
+ *     otherwise (true orphan — should be rare given migration 029's
+ *     trigger). Callers redirect to login with these as query params so
+ *     the login page can render a "this email is a landlord — switch"
+ *     CTA instead of a silent bounce. Truthy on purpose so AuthGate can
+ *     short-circuit too.
  *   - null — no cookie present, or JWT invalid/expired (guest)
  *
  * Existing callers that did `if (!auth)` need to also handle the
@@ -53,16 +57,35 @@ export const requireStudent = cache(async function requireStudent() {
     .eq('auth_user_id', user.id)
     .maybeSingle();
 
-  if (error || !student) return { kind: 'wrong-role' };
+  if (error || !student) {
+    // Wrong-role: probe the landlords table so the redirect can carry
+    // the conflict context. One extra round-trip only on the unhappy
+    // path; the cache wrapper still amortises across layout + page.
+    const { data: landlord } = await supabase
+      .from('landlords')
+      .select('email')
+      .eq('auth_user_id', user.id)
+      .maybeSingle();
+    return {
+      kind: 'wrong-role',
+      conflict_role: landlord ? 'landlord' : null,
+      email: landlord?.email ?? user.email ?? null,
+    };
+  }
 
   return { student, user, supabase, token };
 });
 
 /**
- * Same shape as requireStudent but for landlords — used by the new
- * landlord-side chat page to authenticate without re-implementing the
- * pattern. The existing landlord protected pages still rely on
- * client-side session checks; this helper bridges the new chat RSC.
+ * Same shape as requireStudent but for landlords. Returns:
+ *   - { landlord, user, supabase, token } — authenticated as a landlord
+ *   - { kind: 'wrong-role', conflict_role, email } — JWT valid but no
+ *     landlords row. conflict_role is 'student' if the email is a
+ *     student, or null otherwise. Mirrors requireStudent's contract so
+ *     landlord-side wrong-role redirects can render the same kind of
+ *     "switch to student login" CTA. Existing callers that did
+ *     `if (!auth)` should now also handle `auth.kind === 'wrong-role'`.
+ *   - null — no cookie present, or JWT invalid/expired (guest)
  */
 export const requireLandlord = cache(async function requireLandlord() {
   if (!(await hasAuthCookie())) return null;
@@ -80,7 +103,18 @@ export const requireLandlord = cache(async function requireLandlord() {
     .eq('auth_user_id', user.id)
     .maybeSingle();
 
-  if (error || !landlord) return null;
+  if (error || !landlord) {
+    const { data: student } = await supabase
+      .from('students')
+      .select('email')
+      .eq('auth_user_id', user.id)
+      .maybeSingle();
+    return {
+      kind: 'wrong-role',
+      conflict_role: student ? 'student' : null,
+      email: student?.email ?? user.email ?? null,
+    };
+  }
 
   return { landlord, user, supabase, token };
 });

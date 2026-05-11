@@ -15,7 +15,12 @@ export default async function StudentInquiryThreadPage({ params }) {
       locale === 'el'
         ? `/student/inquiries/${inquiryId}`
         : `/${locale}/student/inquiries/${inquiryId}`;
-    redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?next=${encodeURIComponent(next)}`);
+    const loginParams = new URLSearchParams({ next });
+    if (auth?.kind === 'wrong-role' && auth.conflict_role) {
+      loginParams.set('roleConflict', auth.conflict_role);
+      if (auth.email) loginParams.set('email', auth.email);
+    }
+    redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?${loginParams.toString()}`);
   }
 
   const t = await getTranslations({ locale, namespace: 'student.chat' });

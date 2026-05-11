@@ -1,5 +1,10 @@
 import { NextResponse } from 'next/server';
-import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import {
+  extractToken,
+  getUserFromToken,
+  getSupabaseWithToken,
+  cleanupFreshOrphanAuthUser,
+} from '@/lib/supabaseServer';
 
 export async function GET(request) {
   const token = extractToken(request);
@@ -51,6 +56,7 @@ export async function POST(request) {
     // prevent_dual_role trigger (migration 036) RAISEs unique_violation
     // when the auth user already has a landlord row. Surface that as 409.
     if (error.code === '23505' && /already registered as a landlord/i.test(error.message || '')) {
+      await cleanupFreshOrphanAuthUser(user);
       return NextResponse.json(
         { error: 'role_conflict', conflict_role: 'landlord' },
         { status: 409 }

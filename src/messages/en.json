@@ -200,7 +200,10 @@
       "submitting": "Logging in…",
       "noAccount": "Don't have an account?",
       "signupLink": "Sign up",
-      "forgotPassword": "Forgot password?"
+      "forgotPassword": "Forgot password?",
+      "roleConflictStudentTitle": "This email is registered as a student.",
+      "roleConflictStudentBody": "Each StudentX email can be either a student or a landlord — not both. Switch to the student login to continue.",
+      "roleConflictStudentCta": "Go to student login"
     },
     "signup": {
       "title": "Create a Landlord Account",
@@ -687,7 +690,10 @@
       "submitting": "Signing in…",
       "or": "or",
       "noAccount": "Don't have an account?",
-      "signupLink": "Create one"
+      "signupLink": "Create one",
+      "roleConflictLandlordTitle": "This email is registered as a landlord.",
+      "roleConflictLandlordBody": "Each StudentX email can be either a student or a landlord — not both. Switch to the landlord login to continue.",
+      "roleConflictLandlordCta": "Go to landlord login"
     },
     "forgotPassword": {
       "portal": "Student portal",

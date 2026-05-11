@@ -18,6 +18,11 @@ function LandlordLoginInner() {
   // ?email=<addr> prefill — used by the student-signup roleConflict CTA
   // to deep-link a dual-role landlord straight back to their own login.
   const initialEmail = searchParams.get('email') || '';
+  // ?roleConflict=student (carried by requireLandlord's wrong-role
+  // redirect when the auth user has a students row) — render a banner
+  // with a CTA to student login instead of silently bouncing.
+  const roleConflict = searchParams.get('roleConflict');
+  const showStudentConflict = roleConflict === 'student';
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -60,6 +65,22 @@ function LandlordLoginInner() {
 
   return (
     <AuthShell eyebrow="Sign in" title={t('title')} subtitle={t('subtitle')}>
+      {showStudentConflict && (
+        <div className="mb-6 rounded-sm border border-yellow/40 bg-yellow/10 px-4 py-3 text-sm text-night">
+          <p className="font-medium">{t('roleConflictStudentTitle')}</p>
+          <p className="mt-1 text-night/70">{t('roleConflictStudentBody')}</p>
+          <Link
+            href={{
+              pathname: '/student/login',
+              query: initialEmail ? { email: initialEmail } : {},
+            }}
+            className="mt-2 inline-block text-blue font-medium hover:text-night"
+          >
+            {t('roleConflictStudentCta')} →
+          </Link>
+        </div>
+      )}
+
       <form onSubmit={handleSubmit} className="space-y-5">
         <FormField
           label={t('emailLabel')}

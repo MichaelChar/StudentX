@@ -3,11 +3,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // Mock next/headers before importing the SUT — the SUT awaits headers()
 // at call time, so the mock just needs a settable cookieHeader.
 let cookieHeader = '';
+let tokenValue;
 vi.mock('next/headers', () => ({
   headers: vi.fn(async () => ({
     get: (name) => (name === 'cookie' ? cookieHeader : null),
   })),
-  cookies: vi.fn(async () => ({ get: () => undefined })),
+  cookies: vi.fn(async () => ({
+    get: (name) => (name === 'sb-access-token' && tokenValue ? { value: tokenValue } : undefined),
+  })),
 }));
 
 // Mock the auth-cookies module so the test's expected cookie name is
@@ -23,11 +26,30 @@ vi.mock('@/lib/supabaseServer', () => ({
   getSupabaseWithToken: vi.fn(),
 }));
 
-const { hasAuthCookie } = await import('@/lib/requireStudent');
+const { hasAuthCookie, requireStudent, requireLandlord } = await import('@/lib/requireStudent');
+const supabaseServer = await import('@/lib/supabaseServer');
 
 beforeEach(() => {
   cookieHeader = '';
+  tokenValue = undefined;
+  vi.mocked(supabaseServer.getUserFromToken).mockReset();
+  vi.mocked(supabaseServer.getSupabaseWithToken).mockReset();
 });
+
+// Build a fake token-scoped supabase client whose chained
+// `.from(table).select().eq().maybeSingle()` returns the table-keyed
+// fixture. Used by both requireStudent and requireLandlord tests.
+function buildFakeSupabase(fixtures) {
+  return {
+    from: (table) => ({
+      select: () => ({
+        eq: () => ({
+          maybeSingle: async () => ({ data: fixtures[table] ?? null, error: null }),
+        }),
+      }),
+    }),
+  };
+}
 
 describe('hasAuthCookie', () => {
   it('returns false when no Cookie header is present', async () => {
@@ -58,5 +80,91 @@ describe('hasAuthCookie', () => {
   it('substring-matches xsb-access-token (known false-positive, harmless)', async () => {
     cookieHeader = 'xsb-access-token=somevalue';
     expect(await hasAuthCookie()).toBe(true);
+  });
+});
+
+describe('requireStudent wrong-role shape', () => {
+  it('returns the student row on the happy path', async () => {
+    cookieHeader = 'sb-access-token=jwt';
+    tokenValue = 'jwt';
+    vi.mocked(supabaseServer.getUserFromToken).mockResolvedValue({
+      id: 'auth-user-1',
+      email: 'happy@example.com',
+    });
+    vi.mocked(supabaseServer.getSupabaseWithToken).mockReturnValue(
+      buildFakeSupabase({
+        students: { student_id: 'S1', email: 'happy@example.com', display_name: 'Happy' },
+      })
+    );
+
+    const auth = await requireStudent();
+    expect(auth.student).toBeDefined();
+    expect(auth.student.student_id).toBe('S1');
+    expect(auth.kind).toBeUndefined();
+  });
+
+  it('returns wrong-role with conflict_role=landlord when the email is a landlord', async () => {
+    cookieHeader = 'sb-access-token=jwt';
+    tokenValue = 'jwt';
+    vi.mocked(supabaseServer.getUserFromToken).mockResolvedValue({
+      id: 'auth-user-2',
+      email: 'duo@example.com',
+    });
+    vi.mocked(supabaseServer.getSupabaseWithToken).mockReturnValue(
+      buildFakeSupabase({
+        students: null,
+        landlords: { email: 'duo@example.com' },
+      })
+    );
+
+    const auth = await requireStudent();
+    expect(auth).toEqual({
+      kind: 'wrong-role',
+      conflict_role: 'landlord',
+      email: 'duo@example.com',
+    });
+  });
+
+  it('returns wrong-role with conflict_role=null when no role rows exist', async () => {
+    cookieHeader = 'sb-access-token=jwt';
+    tokenValue = 'jwt';
+    vi.mocked(supabaseServer.getUserFromToken).mockResolvedValue({
+      id: 'auth-user-3',
+      email: 'orphan@example.com',
+    });
+    vi.mocked(supabaseServer.getSupabaseWithToken).mockReturnValue(
+      buildFakeSupabase({ students: null, landlords: null })
+    );
+
+    const auth = await requireStudent();
+    expect(auth).toEqual({
+      kind: 'wrong-role',
+      conflict_role: null,
+      email: 'orphan@example.com',
+    });
+  });
+});
+
+describe('requireLandlord wrong-role shape', () => {
+  it('returns wrong-role with conflict_role=student when the email is a student', async () => {
+    cookieHeader = 'sb-access-token=jwt';
+    tokenValue = 'jwt';
+    vi.mocked(supabaseServer.getUserFromToken).mockResolvedValue({
+      id: 'auth-user-4',
+      email: 'student@example.com',
+    });
+    vi.mocked(supabaseServer.getSupabaseWithToken).mockReturnValue(
+      buildFakeSupabase({
+        landlords: null,
+        students: { email: 'student@example.com' },
+      })
+    );
+
+    const auth = await requireLandlord();
+    expect(auth).toEqual({
+      kind: 'wrong-role',
+      conflict_role: 'student',
+      email: 'student@example.com',
+    });
   });
 });
