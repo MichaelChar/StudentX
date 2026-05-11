@@ -14,7 +14,7 @@ is curated and verified.
 ## Tech stack
 
 - **Framework:** Next.js `16.2.1` (App Router, JS — no TypeScript), React `19.2.4`.
-- **i18n:** `next-intl@^4.9.0` (`el` + `en`).
+- **i18n:** `next-intl@^4.9.0` (English only as of #158 / Step B — was bilingual `el` + `en`).
 - **Backend:** Supabase (`@supabase/supabase-js@^2.101.0`) — Postgres + Auth + Storage + Realtime.
 - **Email:** Resend (`resend@^4.0.0`) — currently logs-only in prod, see Email section.
 - **Payments:** Stripe (`stripe@^22.0.0`) — landlord plans + verified-tier upgrades.
@@ -43,14 +43,14 @@ is curated and verified.
 │   │   │   └── property/        ← multi-city tree: hub + [city]/{about,alerts,landlord,listing,quiz,results}
 │   │   ├── api/                 ← API routes (no locale prefix)
 │   │   │   └── cron/            ← scheduled-handler endpoints
-│   │   ├── property/            ← non-locale parallel: hub + [city]/* redirect stubs to /el/property/...
+│   │   │   (legacy non-locale redirect-stub tree at src/app/property/ was removed in #158)
 │   │   ├── student/             ← student auth (login/signup/reset/verify)
 │   │   ├── layout.js, page.js, sitemap.js, robots.js
 │   ├── middleware.js            ← next-intl + auth-cache split + legacy /property URL 301s (PR #113)
 │   ├── components/              ← React components (server-default, 'use client' only when needed)
 │   ├── i18n/{routing.js, request.js, navigation.js}
 │   ├── lib/                     ← server helpers (supabase, requireStudent, transformListing, cityRoutes, …)
-│   └── messages/{el,en}.json    ← next-intl message catalogs
+│   └── messages/en.json         ← next-intl message catalog (English-only; el.json removed in #158)
 ├── supabase/
 │   ├── migrations/              ← numbered SQL migrations (37+ files)
 │   ├── config.toml, seed.sql
@@ -69,10 +69,18 @@ is curated and verified.
 `src/i18n/routing.js`:
 
 ```js
-locales: ['el', 'en']
-defaultLocale: 'el'
-localePrefix: 'as-needed'  // /results (Greek), /en/results (English)
+locales: ['en']
+defaultLocale: 'en'
+localePrefix: 'never'  // all URLs unprefixed; /en/* and /el/* 301 to /*
 ```
+
+Greek was removed from the platform in issue #158 / Step B (PR following
+#157). The single-locale config keeps the `[locale]` route segment in
+the file tree (next-intl injects `'en'` silently) but no URL ever
+carries a locale prefix in or out. `src/messages/el.json` and the
+`src/app/property/` redirect-stub tree (which forwarded unprefixed
+URLs to `/el/...`) are gone. The settings UI's email-language picker
+and the navbar `LocaleSwitcher` component are gone too.
 
 The middleware lives at **`src/middleware.js`**. Next 16 + Turbopack only
 picks up the file when it sits at the same level as `app/`, so the
@@ -92,12 +100,9 @@ supported. Consider switching to Edge Middleware."` if you switch.
 Stay on the deprecated-but-fully-supported `middleware.js` filename
 and named export `middleware` to keep edge.
 
-Both `/property/thessaloniki/listing/<id>` and the `/en/` variant resolve
-to `src/app/[locale]/property/[city]/listing/[id]/page.js`. The non-
-locale parallel tree at `src/app/property/...` contains thin redirect
-stubs (~5 lines each) that forward `/property/<city>/...` to
-`/el/property/<city>/...` so Greek-default unprefixed URLs work without
-a locale prefix. Visiting an unsupported city slug 404s via
+`/property/thessaloniki/listing/<id>` resolves to
+`src/app/[locale]/property/[city]/listing/[id]/page.js` (the locale
+segment is implicit). Visiting an unsupported city slug 404s via
 `notFound()` in `[locale]/property/[city]/layout.js`; the allowlist is
 `SUPPORTED_CITIES` in `src/lib/cityRoutes.js` (PR #113).
 
@@ -106,15 +111,17 @@ etc.) 301 to their `/property/thessaloniki/...` equivalents via the
 middleware. Pre-`/property` legacy paths (`/results`, `/listing/:id`,
 `/landlord/...`, `/alerts/...`) 308 directly to the `/thessaloniki/`
 destination via `next.config.mjs#redirects()` to avoid 2-hop chains.
+Any `/en/*` or `/el/*` URL 301s to its unprefixed equivalent via two
+catch-all entries in the same `redirects()` block.
 
 ## i18n calling convention (READ THIS BEFORE TOUCHING SERVER COMPONENTS)
 
 The `<html>` element lives in `src/app/[locale]/layout.js` (not the root
-`src/app/layout.js`) so `lang={locale}` is set from `params` rather than from
-`getLocale()`. Calling `getLocale()` in the root layout poisoned next-intl's
-per-request config cache and made every `/en/*` route render Greek (PR #110;
-fixed at the root cause, replacing the band-aid in #109). The root layout is
-a minimal pass-through.
+`src/app/layout.js`) so `lang={locale}` is set from `params`. With one
+locale this is mostly belt-and-braces, but the inherited pattern from
+when the site was bilingual is still in place. Calling `getLocale()` in
+the root layout previously poisoned next-intl's per-request config
+cache (PR #110 fixed it). The root layout stays a minimal pass-through.
 
 Conventions still in force:
 
@@ -125,30 +132,32 @@ Conventions still in force:
   const t = await getTranslations({ locale, namespace: 'student.gate' });
   ```
 
-  The explicit form is self-documenting at the call site and avoids
-  re-introducing dependence on the request scope. PR #48/#52/#54 fixed
-  every known leak of the bare form.
+  Self-documenting at the call site and avoids re-introducing dependence
+  on the request scope. With one locale the value is always `'en'`, but
+  the explicit form is cheap and keeps the option open if Greek (or any
+  other locale) ever comes back.
 
-- **`AuthGate` takes `locale` as an explicit prop.** Its JSDoc explains why
-  in detail — the short version: any component rendered inside a redirect
-  or guard branch should not assume request scope.
+- **`AuthGate` takes `locale` as an explicit prop.** Its JSDoc explains
+  why — any component rendered inside a redirect or guard branch should
+  not assume request scope.
 
-- **When a server component receives `params`, call `setRequestLocale(locale)`
-  near the top** — see `src/app/[locale]/property/listing/[id]/page.js` for
-  the canonical pattern. With `<html>` now in `[locale]/layout.js`, this is
-  belt-and-braces rather than load-bearing, but stay in the habit.
+- **When a server component receives `params`, call
+  `setRequestLocale(locale)` near the top** — see
+  `src/app/[locale]/property/listing/[id]/page.js`. Belt-and-braces with
+  one locale; stay in the habit.
 
-- **Synthetic canary `/api/cron/synthetic-en-listing` guards `/en` against
-  Greek leakage** on the listing detail page, the property homepage, and
-  the matching quiz (extended in PR #110). Add a check there if you build
-  a new locale-sensitive surface.
+- **Synthetic canary `/api/cron/synthetic-en-listing` was originally
+  built to guard `/en` against Greek leakage** (PR #48). With Greek gone
+  its leakage checks are vestigial — the canary's broader uptime checks
+  (soft-404, og-default, listing-api-distances, landlord-listings-api)
+  remain useful. Issue #158 tracks repurposing or trimming it.
 
 ## OpenNext-on-Workers quirks
 
 1. **Auth-touching pages don't get CDN caching, regardless of `next.config.mjs`.**
    `next.config.mjs` declares `public, s-maxage=300, stale-while-revalidate=86400`
    for marketing routes and `private, no-cache, no-store, must-revalidate` for
-   `/landlord/*`, `/listing/*`, `/student/*` (and their `/en/` counterparts).
+   `/landlord/*`, `/listing/*`, `/student/*`.
    Verified via `curl` on prod: public pages get the public header correctly;
    auth-touching pages get `private, no-cache` regardless of any `s-maxage`
    config — OpenNext / Workers force-private any response from a route that

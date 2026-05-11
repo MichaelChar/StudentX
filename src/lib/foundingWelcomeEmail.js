@@ -64,7 +64,7 @@ export async function sendFoundingWelcomeEmail({
 
     const locale = pickLocale(request, hintedLocale);
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
-    const subscribeUrl = `${appUrl}/${locale === 'en' ? 'en/' : ''}property/thessaloniki/landlord/onboarding`;
+    const subscribeUrl = `${appUrl}/property/thessaloniki/landlord/onboarding`;
 
     const isFoundingFive =
       foundingRank >= FOUNDING_FIVE_MIN && foundingRank <= FOUNDING_FIVE_MAX;

@@ -108,15 +108,7 @@ const nextConfig = {
         headers: PRIVATE_CACHE_HEADERS,
       },
       {
-        source: '/:locale(en)/property/:city/landlord/:path*',
-        headers: PRIVATE_CACHE_HEADERS,
-      },
-      {
         source: '/student/:path*',
-        headers: PRIVATE_CACHE_HEADERS,
-      },
-      {
-        source: '/:locale(en)/student/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
       // Vary: Cookie on listing detail responses so Cloudflare's edge
@@ -130,18 +122,16 @@ const nextConfig = {
         source: '/property/:city/listing/:path*',
         headers: [{ key: 'Vary', value: 'Cookie' }],
       },
-      {
-        source: '/:locale(en)/property/:city/listing/:path*',
-        headers: [{ key: 'Vary', value: 'Cookie' }],
-      },
       // All other HTML routes are public-cacheable. The negative lookahead
       // skips api / _next / auth-gated surfaces / files with extensions
       // (favicon etc.). The [^/]+ in the property patterns matches any
       // city slug — Phase 1 only allow-lists thessaloniki, but the
       // pattern shouldn't need updating when more cities go live.
+      // /en/* and /el/* matchers removed in Step B (issue #158) since
+      // those paths now 301 to their unprefixed equivalent.
       {
         source:
-          '/((?!api|_next|property/[^/]+/landlord|en/property/[^/]+/landlord|property/[^/]+/listing|en/property/[^/]+/listing|student|en/student|.*\\..*).*)',
+          '/((?!api|_next|property/[^/]+/landlord|property/[^/]+/listing|student|.*\\..*).*)',
         headers: PUBLIC_CACHE_HEADERS,
       },
     ];
@@ -153,6 +143,13 @@ const nextConfig = {
     // expansion, and these destinations point straight at /thessaloniki to
     // avoid a 2-hop redirect chain through middleware.js. Permanent so
     // search engines flow link equity to the canonical URLs.
+    //
+    // Locale-prefix consolidation (Step B, 2026-05-11): with Greek removed
+    // and the site now single-locale English, every /en/* and /el/* URL
+    // 301s to its unprefixed equivalent. Catch-all redirects at the bottom
+    // collapse arbitrary prefixed paths; the explicit rules below cover
+    // pre-prefix legacy bookmarks. Source-order matters — explicit rules
+    // win over the trailing catch-all because Next applies them in order.
     const directoryPaths = [
       ['/results', '/property/thessaloniki/results'],
       ['/quiz', '/property/thessaloniki/quiz'],
@@ -160,25 +157,23 @@ const nextConfig = {
     ];
     return [
       { source: '/', destination: '/property', permanent: true },
-      ...directoryPaths.flatMap(([from, to]) => [
-        { source: from, destination: to, permanent: true },
-        { source: `/en${from}`, destination: `/en${to}`, permanent: true },
-      ]),
+      ...directoryPaths.map(([from, to]) => ({ source: from, destination: to, permanent: true })),
       { source: '/listing/:id', destination: '/property/thessaloniki/listing/:id', permanent: true },
-      { source: '/en/listing/:id', destination: '/en/property/thessaloniki/listing/:id', permanent: true },
       // `:path*` matches one or more segments — the zero-segment case
       // (bookmarked /landlord with no trailing path) needs an explicit
       // sibling rule, otherwise the destination keeps the literal `:path*`
       // placeholder and the user lands on a broken URL.
       { source: '/landlord', destination: '/property/thessaloniki/landlord', permanent: true },
       { source: '/landlord/:path*', destination: '/property/thessaloniki/landlord/:path*', permanent: true },
-      { source: '/en/landlord', destination: '/en/property/thessaloniki/landlord', permanent: true },
-      { source: '/en/landlord/:path*', destination: '/en/property/thessaloniki/landlord/:path*', permanent: true },
       { source: '/alerts', destination: '/property/thessaloniki/alerts', permanent: true },
       { source: '/alerts/:path*', destination: '/property/thessaloniki/alerts/:path*', permanent: true },
-      { source: '/en/alerts', destination: '/en/property/thessaloniki/alerts', permanent: true },
-      { source: '/en/alerts/:path*', destination: '/en/property/thessaloniki/alerts/:path*', permanent: true },
-      { source: '/en', destination: '/en/property', permanent: true },
+      // /en/* and /el/* catch-alls. These come LAST so the explicit
+      // directoryPaths and /listing/:id rules win. The :path* segment
+      // captures the rest of the URL verbatim.
+      { source: '/en', destination: '/property', permanent: true },
+      { source: '/en/:path*', destination: '/:path*', permanent: true },
+      { source: '/el', destination: '/property', permanent: true },
+      { source: '/el/:path*', destination: '/:path*', permanent: true },
     ];
   },
   images: {

@@ -16,7 +16,7 @@ export function foundingFiveWelcomeHtml({
   foundingRank,
   promoCode,
   subscribeUrl,
-  locale = 'el',
+  locale = 'en',
 }) {
   const copy = COPY[locale === 'en' ? 'en' : 'el'];
   const greeting = landlordName ? `${copy.greetingPrefix} ${landlordName},` : copy.greetingFallback;
@@ -86,7 +86,7 @@ export function foundingFiveWelcomeHtml({
 </html>`;
 }
 
-export function foundingFiveWelcomeSubject(foundingRank, locale = 'el') {
+export function foundingFiveWelcomeSubject(foundingRank, locale = 'en') {
   const copy = COPY[locale === 'en' ? 'en' : 'el'];
   return copy.subject.replace('{rank}', foundingRank);
 }

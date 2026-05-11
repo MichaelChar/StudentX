@@ -9,7 +9,7 @@
  * @param {string} params.verificationUrl - Full URL to /landlord/verification
  * @param {'el'|'en'} params.locale
  */
-export function subscriptionWelcomeHtml({ landlordName, tierName, verificationUrl, locale = 'el' }) {
+export function subscriptionWelcomeHtml({ landlordName, tierName, verificationUrl, locale = 'en' }) {
   const copy = COPY[locale === 'en' ? 'en' : 'el'];
   const greeting = landlordName ? `${copy.greetingPrefix} ${landlordName},` : copy.greetingFallback;
 
@@ -70,7 +70,7 @@ export function subscriptionWelcomeHtml({ landlordName, tierName, verificationUr
 </html>`;
 }
 
-export function subscriptionWelcomeSubject(tierName, locale = 'el') {
+export function subscriptionWelcomeSubject(tierName, locale = 'en') {
   const copy = COPY[locale === 'en' ? 'en' : 'el'];
   return copy.subject.replace('{tier}', tierName);
 }

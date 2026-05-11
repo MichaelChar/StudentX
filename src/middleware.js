@@ -39,16 +39,17 @@ import { SB_ACCESS_TOKEN_COOKIE } from './lib/authCookies';
 // "Bypass cache when Cookie contains sb-access-token" in the dashboard.
 const PUBLIC_CACHE = 'public, s-maxage=300, stale-while-revalidate=86400';
 const PRIVATE_CACHE = 'private, no-cache, no-store, must-revalidate';
-const LISTING_DETAIL_PATH = /^\/(?:en\/)?property\/[^/]+\/listing\/[^/]+\/?$/;
+// /en/ and /el/ prefixes dropped from the regex in Step B (issue #158) —
+// those URLs now 301 to the unprefixed form via next.config.mjs and won't
+// reach this middleware.
+const LISTING_DETAIL_PATH = /^\/property\/[^/]+\/listing\/[^/]+\/?$/;
 
 // Old single-city URLs (pre-multi-city refactor) get 301'd to their
-// /thessaloniki/ equivalents. Captures both the Greek-default unprefixed
-// shape (/property/...) and the English shape (/en/property/...). The
-// segment alternation lists every Phase-1 city sub-route — /property
-// itself is intentionally excluded because it's now the central city-hub
-// landing.
+// /thessaloniki/ equivalents. The segment alternation lists every Phase-1
+// city sub-route — /property itself is intentionally excluded because it's
+// now the central city-hub landing.
 const OLD_PROPERTY_PATH =
-  /^(\/(?:en\/)?property)\/(results|quiz|listing|landlord|about|alerts)(\/.*)?$/;
+  /^(\/property)\/(results|quiz|listing|landlord|about|alerts)(\/.*)?$/;
 
 const intlMiddleware = createMiddleware(routing);
 

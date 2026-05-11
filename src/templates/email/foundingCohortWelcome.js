@@ -14,7 +14,7 @@ export function foundingCohortWelcomeHtml({
   landlordName,
   foundingRank,
   subscribeUrl,
-  locale = 'el',
+  locale = 'en',
 }) {
   const copy = COPY[locale === 'en' ? 'en' : 'el'];
   const greeting = landlordName ? `${copy.greetingPrefix} ${landlordName},` : copy.greetingFallback;
@@ -73,7 +73,7 @@ export function foundingCohortWelcomeHtml({
 </html>`;
 }
 
-export function foundingCohortWelcomeSubject(foundingRank, locale = 'el') {
+export function foundingCohortWelcomeSubject(foundingRank, locale = 'en') {
   const copy = COPY[locale === 'en' ? 'en' : 'el'];
   return copy.subject.replace('{rank}', foundingRank);
 }

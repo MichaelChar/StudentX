@@ -9,27 +9,15 @@ import '../globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
-// Greek is the default locale and lives at the site root (no /el prefix);
-// English lives under /en. Keep these helpers in lockstep with `routing` in
-// src/i18n/routing.js (defaultLocale: 'el', localePrefix: 'as-needed').
-const localeUrl = (locale) =>
-  locale === 'el' ? SITE_URL : `${SITE_URL}/${locale}`;
+// Single-locale (Step B, #158): canonical is always the site root; no
+// language alternates. The `[locale]` route segment is retained in the
+// file tree but next-intl injects 'en' silently with `localePrefix:
+// 'never'`.
 
-const META_BY_LOCALE = {
-  el: {
-    title: 'StudentX — Φοιτητικές Κατοικίες Θεσσαλονίκη',
-    description:
-      'Βρες φοιτητική κατοικία κοντά στο πανεπιστήμιό σου στη Θεσσαλονίκη.',
-    ogLocale: 'el_GR',
-  },
-  en: {
-    title: 'StudentX — Student Housing in Thessaloniki',
-    description: 'Find student housing near your university in Thessaloniki.',
-    ogLocale: 'en_GB',
-  },
-};
-
-// Inter — display + body face (Latin + Greek subsets)
+// Inter — display + body face. Greek subset retained because the dormant
+// inquiry/digest email templates still have Greek STRINGS branches
+// (regression-guard tests pin them). Dropping the subset can wait for
+// the follow-up template-strip PR.
 const inter = Inter({
   subsets: ['latin', 'greek'],
   variable: '--font-inter',
@@ -41,27 +29,20 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
-export async function generateMetadata({ params }) {
-  const { locale } = await params;
-  const meta = META_BY_LOCALE[locale] || META_BY_LOCALE.el;
+export function generateMetadata() {
   return {
     metadataBase: new URL(SITE_URL),
     title: {
-      default: meta.title,
+      default: 'StudentX — Student Housing in Thessaloniki',
       template: '%s — StudentX',
     },
-    description: meta.description,
+    description: 'Find student housing near your university in Thessaloniki.',
     alternates: {
-      canonical: localeUrl(locale),
-      languages: {
-        el: localeUrl('el'),
-        en: localeUrl('en'),
-        'x-default': localeUrl('el'),
-      },
+      canonical: SITE_URL,
     },
     openGraph: {
       siteName: 'StudentX',
-      locale: meta.ogLocale,
+      locale: 'en_GB',
       images: [
         {
           url: `${SITE_URL}/og-default.png`,

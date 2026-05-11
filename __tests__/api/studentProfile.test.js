@@ -111,8 +111,10 @@ describe('POST /api/student/profile — preferred_locale forwarding', () => {
   // for the SQL fallback to do the right thing — i.e. an empty string when
   // the client sends nothing or sends an unrecognized value. A future
   // "simplification" that, say, defaults the preferred_locale variable to
-  // 'el' before forwarding would silently re-introduce Greek defaults; this
-  // test catches that.
+  // 'el' before forwarding would silently re-introduce a deprecated locale;
+  // this test catches that. (Step B has since dropped Greek as a valid
+  // locale entirely — the route coerces 'el' to '' rather than 400, see
+  // the dedicated test below.)
 
   function rpcCapturingSupabase() {
     const rpcCalls = [];
@@ -168,7 +170,7 @@ describe('POST /api/student/profile — preferred_locale forwarding', () => {
     expect(rpcCalls[0].args.p_preferred_locale).toBe('en');
   });
 
-  it('still forwards explicit "el" when the body asks for Greek (back-compat until Step B)', async () => {
+  it('coerces deprecated "el" to empty string so the SQL fallback resolves to "en" (Step B: Greek removed)', async () => {
     extractToken.mockReturnValue('jwt');
     getUserFromToken.mockResolvedValue(FRESH_USER());
     const { supabase, rpcCalls } = rpcCapturingSupabase();
@@ -176,6 +178,10 @@ describe('POST /api/student/profile — preferred_locale forwarding', () => {
 
     await POST(jsonRequest({ display_name: 'Fresh', preferred_locale: 'el' }));
 
-    expect(rpcCalls[0].args.p_preferred_locale).toBe('el');
+    // 'el' is no longer accepted; the route silently drops it and the
+    // RPC's COALESCE('', 'en') fallback turns the resulting profile into
+    // English. (The student-side route silently coerces rather than 400s
+    // so a stale OAuth callback can still land its idempotent POST.)
+    expect(rpcCalls[0].args.p_preferred_locale).toBe('');
   });
 });
