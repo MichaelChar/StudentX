@@ -33,7 +33,9 @@ export async function sendSubscriptionWelcomeEmail({ supabase, landlordId, tier 
       return;
     }
 
-    const locale = landlord.preferred_locale === 'en' ? 'en' : 'el';
+    // Default English (2026-05-11 product call). Explicit 'el'
+    // preference is still honored.
+    const locale = landlord.preferred_locale === 'el' ? 'el' : 'en';
     const tierName = TIER_DISPLAY_NAMES[tier] || 'SuperLandlord';
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
     const verificationUrl = `${appUrl}/${locale === 'en' ? 'en/' : ''}property/thessaloniki/landlord/verification`;

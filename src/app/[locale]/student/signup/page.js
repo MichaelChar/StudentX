@@ -72,7 +72,11 @@ export default function StudentSignupPage() {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${session.access_token}`,
             },
-            body: JSON.stringify({ display_name: name, preferred_locale: locale }),
+            // English by default (2026-05-11 product call). Site is being
+            // collapsed to English-only in a follow-up; in the interim,
+            // every new signup gets 'en' regardless of which URL prefix
+            // they signed up through.
+            body: JSON.stringify({ display_name: name, preferred_locale: 'en' }),
           }),
         );
         if (!res.ok) {

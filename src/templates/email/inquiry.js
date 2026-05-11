@@ -2,10 +2,11 @@
  * Email sent to a landlord when a student submits an inquiry from a listing.
  * Mirrors the brand styling used by digest.js.
  *
- * Greek is the primary market, so locale defaults to 'el'. The route resolves
- * the locale from Accept-Language (and would prefer a landlord-stored
- * preferred_locale if/when that column is added). EN is kept as a fallback
- * for non-Greek-speaking landlords.
+ * English is the default locale as of 2026-05-11 (PR #157). The route
+ * still respects an explicit landlord-stored preferred_locale='el' and an
+ * Accept-Language='el-*' browser header for backward compatibility, but
+ * the absent/unknown fallback resolves to 'en'. Step B (issue #158) is
+ * planned to drop Greek support entirely.
  *
  * @param {object} params
  * @param {string} params.landlordName - Name shown in greeting (falls back to "there"/"εσένα")
@@ -13,7 +14,7 @@
  * @param {string} params.message - Raw student message
  * @param {object} params.listing - { listing_id, address?, neighborhood?, monthly_price? }
  * @param {string} params.appUrl - Base URL of the app (no trailing slash)
- * @param {'el'|'en'} [params.locale='el'] - Email locale
+ * @param {'el'|'en'} [params.locale='en'] - Email locale
  */
 
 const STRINGS = {

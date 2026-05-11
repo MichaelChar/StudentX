@@ -37,7 +37,9 @@ function isCronAuthorized(request) {
 
 function resolveLocale(landlordLocale) {
   if (landlordLocale === 'el' || landlordLocale === 'en') return landlordLocale;
-  return 'el';
+  // Default English (2026-05-11 product call: emails go in English by
+  // default; explicit 'el' preference still honored if set in settings).
+  return 'en';
 }
 
 export async function POST(request) {

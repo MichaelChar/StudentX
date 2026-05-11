@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from '@/i18n/navigation';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -13,7 +13,6 @@ import BauhausLoader from '@/components/BauhausLoader';
 function StudentOAuthCallbackInner() {
   const t = useTranslations('student.oauth');
   const tLoaders = useTranslations('loaders');
-  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextRaw = searchParams.get('next') || '';
@@ -64,7 +63,8 @@ function StudentOAuthCallbackInner() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({ preferred_locale: locale }),
+          // English by default (2026-05-11 product call).
+          body: JSON.stringify({ preferred_locale: 'en' }),
         });
       } catch {
         // Network blip — proceed anyway; account page will surface

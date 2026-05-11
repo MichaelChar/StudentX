@@ -101,3 +101,81 @@ describe('POST /api/student/profile — role-conflict cleanup', () => {
     expect(cleanupFreshOrphanAuthUser).not.toHaveBeenCalled();
   });
 });
+
+describe('POST /api/student/profile — preferred_locale forwarding', () => {
+  // These tests guard the application-layer half of the "English by default"
+  // contract introduced in PR #157 / migration 047. The SQL half (COALESCE
+  // fallback in create_student_profile, schema DEFAULT 'en', trigger
+  // fallback) is exercised by the migration-check workflow's `supabase start`.
+  // Here we assert that the route forwards exactly what the RPC needs to see
+  // for the SQL fallback to do the right thing — i.e. an empty string when
+  // the client sends nothing or sends an unrecognized value. A future
+  // "simplification" that, say, defaults the preferred_locale variable to
+  // 'el' before forwarding would silently re-introduce Greek defaults; this
+  // test catches that.
+
+  function rpcCapturingSupabase() {
+    const rpcCalls = [];
+    const supabase = {
+      rpc: vi.fn(async (name, args) => {
+        rpcCalls.push({ name, args });
+        return {
+          data: { student_id: 'S99', email: 'fresh@example.com', display_name: 'Fresh' },
+          error: null,
+        };
+      }),
+    };
+    return { supabase, rpcCalls };
+  }
+
+  it('forwards an empty preferred_locale when the body omits the field', async () => {
+    extractToken.mockReturnValue('jwt');
+    getUserFromToken.mockResolvedValue(FRESH_USER());
+    const { supabase, rpcCalls } = rpcCapturingSupabase();
+    getSupabaseWithToken.mockReturnValue(supabase);
+
+    await POST(jsonRequest({ display_name: 'Fresh' }));
+
+    expect(rpcCalls).toHaveLength(1);
+    expect(rpcCalls[0].name).toBe('create_student_profile');
+    // The route MUST pass '' (empty string) so the RPC's
+    // `COALESCE(NULLIF(p_preferred_locale, ''), 'en')` resolves to 'en'.
+    expect(rpcCalls[0].args).toEqual({
+      p_display_name: 'Fresh',
+      p_preferred_locale: '',
+    });
+  });
+
+  it('forwards an empty preferred_locale when the body sends an unrecognized value', async () => {
+    extractToken.mockReturnValue('jwt');
+    getUserFromToken.mockResolvedValue(FRESH_USER());
+    const { supabase, rpcCalls } = rpcCapturingSupabase();
+    getSupabaseWithToken.mockReturnValue(supabase);
+
+    await POST(jsonRequest({ display_name: 'Fresh', preferred_locale: 'fr' }));
+
+    expect(rpcCalls[0].args.p_preferred_locale).toBe('');
+  });
+
+  it('forwards explicit "en" when the body asks for English', async () => {
+    extractToken.mockReturnValue('jwt');
+    getUserFromToken.mockResolvedValue(FRESH_USER());
+    const { supabase, rpcCalls } = rpcCapturingSupabase();
+    getSupabaseWithToken.mockReturnValue(supabase);
+
+    await POST(jsonRequest({ display_name: 'Fresh', preferred_locale: 'en' }));
+
+    expect(rpcCalls[0].args.p_preferred_locale).toBe('en');
+  });
+
+  it('still forwards explicit "el" when the body asks for Greek (back-compat until Step B)', async () => {
+    extractToken.mockReturnValue('jwt');
+    getUserFromToken.mockResolvedValue(FRESH_USER());
+    const { supabase, rpcCalls } = rpcCapturingSupabase();
+    getSupabaseWithToken.mockReturnValue(supabase);
+
+    await POST(jsonRequest({ display_name: 'Fresh', preferred_locale: 'el' }));
+
+    expect(rpcCalls[0].args.p_preferred_locale).toBe('el');
+  });
+});
