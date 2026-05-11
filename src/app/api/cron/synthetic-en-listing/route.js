@@ -47,6 +47,18 @@ const SYNTHETIC_AUTH_COOKIE = 'sb-access-token=synthetic-canary-stub';
 // Worker directly, bypassing DNS/CDN/asset-binding interception. Returns
 // null when running outside the Cloudflare runtime (local dev, unit tests),
 // in which case fetchUrl falls back to global fetch.
+//
+// Heads-up for future maintainers: the three /en/property/* page-locale
+// checks deliberately opt out of this binding via useGlobalFetch=true. The
+// service binding bypasses the CDN cache and forces fresh SSR on every
+// probe — which is fine for the AuthGate listing detail (cheap render)
+// and for API routes (no SSR), but tips the heavy property pages over
+// the Worker's resource limits when the 8 checks run concurrently
+// (HubBackground 240k particles + HubDiagram + StripeGradientMesh
+// WebGL all SSR-walking at once → 503/timeout). Those checks only need
+// HTML marker presence, so a CDN-cached response is fine; please don't
+// "unify" them back onto the service binding without rethinking the
+// concurrency model.
 async function getSelfFetcher() {
   try {
     const { env } = await getCloudflareContext({ async: true });
@@ -56,7 +68,7 @@ async function getSelfFetcher() {
   }
 }
 
-async function fetchUrl(url, { method = 'GET', cookie = '' } = {}) {
+async function fetchUrl(url, { method = 'GET', cookie = '', useGlobalFetch = false } = {}) {
   const headers = { 'user-agent': 'StudentX-synthetic/1.0' };
   if (cookie) headers.cookie = cookie;
   const init = {
@@ -65,6 +77,7 @@ async function fetchUrl(url, { method = 'GET', cookie = '' } = {}) {
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     redirect: 'manual',
   };
+  if (useGlobalFetch) return fetch(url, init);
   const self = await getSelfFetcher();
   return self ? self.fetch(url, init) : fetch(url, init);
 }
@@ -281,9 +294,9 @@ async function checkNoMissingMessage(appUrl) {
 // and no EL-only marker leaks through. Caller passes a list of EN markers
 // any of which is sufficient (forgiving against copy tweaks) and a list of
 // EL forbidden markers all of which must be absent.
-async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers }) {
+async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers, useGlobalFetch = false }) {
   try {
-    const res = await fetchUrl(url);
+    const res = await fetchUrl(url, { useGlobalFetch });
     if (res.status !== 200) {
       return { name, ok: false, reason: `expected 200, got ${res.status} from ${url}` };
     }
@@ -381,9 +394,16 @@ export async function POST(request) {
     // back to default-locale rendering somewhere in the layout chain.
     // City-hub landing (post Phase-1 multi-city refactor) — distinct from
     // the per-city Propylaea landing checked below.
+    // These three checks use global fetch (CDN path) instead of the
+    // self service-binding — see the comment on getSelfFetcher above.
+    // The locale assertions only need HTML marker presence, so a
+    // CDN-cached response satisfies them; routing them through the
+    // service binding triggers concurrent fresh SSR of the heavy
+    // property pages and 503s the Worker.
     checkEnLocale({
       name: 'en-cityhub-locale',
       url: `${appUrl}/en/property`,
+      useGlobalFetch: true,
       anyEnMarker: [
         'Hover over your city',
         'Global students empowered',
@@ -398,12 +418,14 @@ export async function POST(request) {
     checkEnLocale({
       name: 'en-homepage-locale',
       url: `${appUrl}/en/property/thessaloniki`,
+      useGlobalFetch: true,
       anyEnMarker: ['Take the quiz', 'See all listings', 'How it works'],
       forbidElMarkers: ['Κάνε το κουίζ', 'Δες όλες τις αγγελίες'],
     }),
     checkEnLocale({
       name: 'en-quiz-locale',
       url: `${appUrl}/en/property/thessaloniki/quiz`,
+      useGlobalFetch: true,
       anyEnMarker: ['One minute', "That's it"],
       forbidElMarkers: ['Ένα λεπτό', 'Συνέχεια'],
     }),

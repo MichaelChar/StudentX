@@ -38,6 +38,13 @@ Any failed assertion (or non-200, or fetch timeout) attempts to send an email vi
 
 > **Status (2026-05-03):** Resend is verified for `studentx.uk` and `RESEND_API_KEY` is set as a Worker secret — the alert path is live. On failure the route emails `SYNTHETIC_ALERT_EMAIL` from `alerts@studentx.uk`. Failures still surface in `wrangler tail` regardless. The route's email send is wrapped in try/catch, so a Resend hiccup doesn't break the check itself.
 
+### Fetch strategy: service binding vs. global fetch
+
+The route uses two fetch paths depending on the check:
+
+- **Service binding (`env.WORKER_SELF_REFERENCE`)** — used by the listing-detail body + cache-header checks and the API checks (`/api/listings/<id>`, `/api/landlord/listings`, `/og-default.png`, `/en` missing-message). Bypasses DNS/CDN/asset-binding interception, so it gives a deterministic origin response (required for the cache-header assertions and avoids the workers.dev asset-binding 404 on `/api/*`).
+- **Global `fetch()` (CDN path)** — used by the three `/en/property/*` page-locale checks (`en-cityhub-locale`, `en-homepage-locale`, `en-quiz-locale`). Service-binding sub-fetches force fresh SSR for these heavy property pages (HubBackground 240k particles, HubDiagram, StripeGradientMesh WebGL) and exceed Worker resource limits when 8 checks run concurrently — symptom is 503/timeout in the alert email despite the pages serving 200 to real users. The locale checks only need HTML marker presence, so a CDN-cached response satisfies them; a real i18n regression surfaces within the CDN TTL on the first cache miss after deploy.
+
 ## Configuration
 
 Vars in [`wrangler.jsonc`](../../wrangler.jsonc):
