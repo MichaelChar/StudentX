@@ -72,16 +72,10 @@ async function fetchMatchingListings(supabase, filters, since) {
   return results;
 }
 
-export async function POST(request) {
-  if (!isCronAuthorized(request)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
-  const { searchParams } = new URL(request.url);
-  const frequency = searchParams.get('frequency') === 'weekly' ? 'weekly' : 'daily';
-
-  const supabase = getSupabase();
-
+// Process one frequency's saved searches. Returns aggregate stats. Factored
+// out so a single cron invocation can run both daily and weekly back-to-back
+// (e.g. on Mondays under the consolidated cron).
+async function processFrequency(supabase, frequency, appUrl, resend) {
   // Fetch all active saved searches for this frequency
   const { data: searches, error: fetchError } = await supabase
     .from('saved_searches')
@@ -90,16 +84,14 @@ export async function POST(request) {
     .eq('frequency', frequency);
 
   if (fetchError) {
-    console.error('Failed to fetch saved searches:', fetchError);
-    return NextResponse.json({ error: 'Failed to fetch saved searches' }, { status: 500 });
+    console.error(`Failed to fetch ${frequency} saved searches:`, fetchError);
+    return { processed: 0, emailsSent: 0, alreadyClaimed: 0, error: true };
   }
 
   if (!searches || searches.length === 0) {
-    return NextResponse.json({ processed: 0, emailsSent: 0 });
+    return { processed: 0, emailsSent: 0, alreadyClaimed: 0 };
   }
 
-  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
-  const resend = getResend();
   let emailsSent = 0;
   let alreadyClaimed = 0;
   // Min interval per frequency. Slightly tighter than the full period so a
@@ -162,5 +154,70 @@ export async function POST(request) {
     }
   }
 
-  return NextResponse.json({ processed: searches.length, emailsSent, alreadyClaimed });
+  return { processed: searches.length, emailsSent, alreadyClaimed };
+}
+
+export async function POST(request) {
+  if (!isCronAuthorized(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  // Cron consolidation: we run on a single daily trigger (0 9 * * *) instead
+  // of two separate triggers (one daily, one weekly), to stay under
+  // Cloudflare's Free-plan limit of 5 cron triggers per Worker. When called
+  // without an explicit `frequency` query param, process daily every day and
+  // also process weekly on Mondays (UTC). An explicit `?frequency=...` value
+  // overrides this — useful for manual curl invocations and for backward
+  // compatibility with any legacy cron registration that still passes the
+  // query string.
+  const { searchParams } = new URL(request.url);
+  const frequencyParam = searchParams.get('frequency');
+  let frequenciesToProcess;
+  if (frequencyParam === 'weekly') {
+    frequenciesToProcess = ['weekly'];
+  } else if (frequencyParam === 'daily') {
+    frequenciesToProcess = ['daily'];
+  } else {
+    // getUTCDay(): 0=Sun, 1=Mon, ..., 6=Sat. Cron fires at 09:00 UTC, well
+    // away from the day boundary, so day-of-week is unambiguous.
+    const dayOfWeek = new Date().getUTCDay();
+    frequenciesToProcess = dayOfWeek === 1 ? ['daily', 'weekly'] : ['daily'];
+  }
+
+  const supabase = getSupabase();
+  const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
+  const resend = getResend();
+
+  let totalProcessed = 0;
+  let totalEmailsSent = 0;
+  let totalAlreadyClaimed = 0;
+  let sawError = false;
+
+  for (const frequency of frequenciesToProcess) {
+    const stats = await processFrequency(supabase, frequency, appUrl, resend);
+    totalProcessed += stats.processed;
+    totalEmailsSent += stats.emailsSent;
+    totalAlreadyClaimed += stats.alreadyClaimed;
+    if (stats.error) sawError = true;
+  }
+
+  if (sawError) {
+    return NextResponse.json(
+      {
+        error: 'One or more frequencies failed to fetch',
+        processed: totalProcessed,
+        emailsSent: totalEmailsSent,
+        alreadyClaimed: totalAlreadyClaimed,
+        frequencies: frequenciesToProcess,
+      },
+      { status: 500 },
+    );
+  }
+
+  return NextResponse.json({
+    processed: totalProcessed,
+    emailsSent: totalEmailsSent,
+    alreadyClaimed: totalAlreadyClaimed,
+    frequencies: frequenciesToProcess,
+  });
 }
