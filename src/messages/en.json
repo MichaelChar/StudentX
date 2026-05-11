@@ -219,12 +219,12 @@
       "profileCreateFailed": "Failed to create landlord profile. Please try again.",
       "roleConflict": "This email already has a student account on StudentX. Sign in instead, or use a different email to register as a landlord.",
       "roleConflictCta": "Sign in to your student account",
-      "founderTierLabel": "SuperLandlord · Year 1",
-      "founderTierName": "Founding Five Pricing",
+      "founderTierLabel": "Founding offer · First 5 landlords",
+      "founderTierName": "80% off Year 1",
       "priceOriginal": "€49",
       "priceDiscounted": "€9.80",
       "pricePeriod": "/ yr",
-      "founderBlurb": "The first five landlords to sign up get 80% off Year 1 — no auto-renewal at full price."
+      "founderBlurb": "The first five landlords to sign up lock in this price for Year 1. No auto-renewal at full price."
     },
     "dashboard": {
       "welcome": "Welcome back, {name}!",
@@ -643,14 +643,11 @@
       "howEyebrow": "How it works",
       "howTitle": "Three steps. No",
       "howTitleItalic": "middlemen.",
-      "step1Greek": "Δημιούργησε λογαριασμό",
-      "step1English": "Create your account",
+      "step1Title": "Create your account",
       "step1Body": "Sign up with your email and verify your landlord identity.",
-      "step2Greek": "Καταχώρησε το ακίνητο",
-      "step2English": "List your property",
+      "step2Title": "List your property",
       "step2Body": "Add photos, price, and lease terms — published in English.",
-      "step3Greek": "Λάβε αιτήματα φοιτητών",
-      "step3English": "Receive student inquiries",
+      "step3Title": "Receive student inquiries",
       "step3Body": "Verified students message you directly. No brokers, no fees."
     }
   },

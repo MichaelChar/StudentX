@@ -10,24 +10,9 @@ export default function CharterPage() {
   const t = useTranslations('propylaea.charter');
 
   const steps = [
-    {
-      numeral: 'Ⅰ',
-      greek: t('step1Greek'),
-      english: t('step1English'),
-      body: t('step1Body'),
-    },
-    {
-      numeral: 'Ⅱ',
-      greek: t('step2Greek'),
-      english: t('step2English'),
-      body: t('step2Body'),
-    },
-    {
-      numeral: 'Ⅲ',
-      greek: t('step3Greek'),
-      english: t('step3English'),
-      body: t('step3Body'),
-    },
+    { numeral: 'Ⅰ', title: t('step1Title'), body: t('step1Body') },
+    { numeral: 'Ⅱ', title: t('step2Title'), body: t('step2Body') },
+    { numeral: 'Ⅲ', title: t('step3Title'), body: t('step3Body') },
   ];
 
   return (
@@ -86,9 +71,8 @@ export default function CharterPage() {
               >
                 {step.numeral}
               </span>
-              <p className="label-caps text-night/50 mb-2">{step.greek}</p>
               <h3 className="font-display text-2xl text-night leading-tight mb-3">
-                {step.english}
+                {step.title}
               </h3>
               <p className="text-night/70 text-base leading-relaxed max-w-xs">
                 {step.body}
