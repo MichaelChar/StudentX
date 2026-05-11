@@ -85,11 +85,16 @@ END;
 $$;
 
 -- ---- create_student_profile (re-create with 'en' fallback) ----------
--- Mirrors migration 026's version with only the COALESCE fallback
--- flipped. The validate-only return path (lines 116-118 in the
--- original) is preserved.
+-- TRUE line-for-line mirror of migration 026's body. The ONLY changes
+-- are the two `'el'` literals on the locale lines flipped to `'en'`
+-- (the COALESCE fallback and the validation re-pin). DECLARE block,
+-- auth.users lookup, existing-row early return, three-tier display
+-- name fallback chain (p_display_name → raw_user_meta_data display_name
+-- → email-local-part), INSERT shape, and grants all stay identical.
+-- A prior version of this migration drifted from 026 in ways that
+-- silently regressed unrelated behavior (PM review caught it).
 CREATE OR REPLACE FUNCTION public.create_student_profile(
-  p_display_name text,
+  p_display_name     text,
   p_preferred_locale text
 )
 RETURNS students
@@ -98,19 +103,24 @@ SECURITY DEFINER
 SET search_path = public
 AS $function$
 DECLARE
-  v_user RECORD;
-  v_name text;
-  v_locale text;
-  v_result students;
+  v_user        auth.users%ROWTYPE;
+  v_existing    students%ROWTYPE;
+  v_locale      text;
+  v_name        text;
+  v_result      students%ROWTYPE;
 BEGIN
-  SELECT auth.uid() AS id, auth.jwt()->>'email' AS email INTO v_user;
+  IF auth.uid() IS NULL THEN
+    RAISE EXCEPTION 'NOT_AUTHENTICATED' USING ERRCODE = 'P0004';
+  END IF;
+
+  SELECT * INTO v_user FROM auth.users WHERE id = auth.uid();
   IF v_user.id IS NULL THEN
     RAISE EXCEPTION 'NOT_AUTHENTICATED' USING ERRCODE = 'P0004';
   END IF;
 
-  v_name := COALESCE(NULLIF(trim(p_display_name), ''), split_part(v_user.email, '@', 1));
-  IF char_length(v_name) > 80 THEN
-    v_name := substr(v_name, 1, 80);
+  SELECT * INTO v_existing FROM students WHERE auth_user_id = v_user.id;
+  IF v_existing.student_id IS NOT NULL THEN
+    RETURN v_existing;
   END IF;
 
   v_locale := COALESCE(NULLIF(p_preferred_locale, ''), 'en');
@@ -118,10 +128,11 @@ BEGIN
     v_locale := 'en';
   END IF;
 
-  SELECT * INTO v_result FROM students WHERE auth_user_id = v_user.id;
-  IF FOUND THEN
-    RETURN v_result;
-  END IF;
+  v_name := COALESCE(
+    NULLIF(trim(p_display_name), ''),
+    NULLIF(v_user.raw_user_meta_data->>'display_name', ''),
+    split_part(v_user.email, '@', 1)
+  );
 
   INSERT INTO students (auth_user_id, email, display_name, preferred_locale)
   VALUES (v_user.id, lower(v_user.email), v_name, v_locale)
