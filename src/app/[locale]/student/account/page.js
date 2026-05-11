@@ -28,9 +28,16 @@ export default async function StudentAccountPage({ params }) {
   if (!auth || auth.kind === 'wrong-role') {
     // Not signed in (or signed in as the wrong role, e.g. a landlord) —
     // bounce to the student login. Preserve the page they were trying
-    // to reach so post-login lands them back here.
+    // to reach so post-login lands them back here, and carry the
+    // conflict context so the login page can show a "switch to
+    // landlord login" CTA instead of a silent re-prompt.
     const next = locale === 'el' ? '/student/account' : `/${locale}/student/account`;
-    redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?next=${encodeURIComponent(next)}`);
+    const params = new URLSearchParams({ next });
+    if (auth?.kind === 'wrong-role' && auth.conflict_role) {
+      params.set('roleConflict', auth.conflict_role);
+      if (auth.email) params.set('email', auth.email);
+    }
+    redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?${params.toString()}`);
   }
 
   const t = await getTranslations({ locale, namespace: 'student.account' });

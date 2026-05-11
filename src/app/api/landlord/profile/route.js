@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import {
+  extractToken,
+  getUserFromToken,
+  getSupabaseWithToken,
+  deleteAuthUserAsService,
+} from '@/lib/supabaseServer';
 import { normalizeSingleLine } from '@/lib/textNormalize';
 import { sendFoundingWelcomeEmail } from '@/lib/foundingWelcomeEmail';
 
@@ -106,6 +111,7 @@ export async function POST(request) {
     });
     if (linkError) {
       if (isRoleConflict(linkError)) {
+        await cleanupOrphanAuthUser(user);
         return NextResponse.json(
           { error: 'role_conflict', conflict_role: 'student' },
           { status: 409 }
@@ -151,6 +157,7 @@ export async function POST(request) {
 
   if (error) {
     if (isRoleConflict(error)) {
+      await cleanupOrphanAuthUser(user);
       return NextResponse.json(
         { error: 'role_conflict', conflict_role: 'student' },
         { status: 409 }
@@ -177,4 +184,28 @@ export async function POST(request) {
 // (migration 036) — the same email/auth user already has a students row.
 function isRoleConflict(err) {
   return err?.code === '23505' && /already registered as a student/i.test(err?.message || '');
+}
+
+// Delete the auth.users row left behind by auth.signUp() when the
+// dual-role guard rejects the landlord profile insert. Without this,
+// the orphan auth user keeps "signing in" forever and loops at
+// requireLandlord (wrong-role). Guarded by user.created_at recency
+// (see isFreshlyCreated) so we never nuke a legacy dual-role user
+// that's re-probing the route via SessionSync (e.g. an existing
+// student clicking landlord-side OAuth after the "coming soon"
+// buttons go live). Swallow errors — the 409 response is the
+// user-visible signal; admin-delete failures are operational.
+async function cleanupOrphanAuthUser(user) {
+  if (!isFreshlyCreated(user)) return;
+  try {
+    await deleteAuthUserAsService(user.id);
+  } catch (err) {
+    console.error('Failed to clean up orphan auth user:', err);
+  }
+}
+
+function isFreshlyCreated(user) {
+  if (!user?.created_at) return false;
+  const ageMs = Date.now() - new Date(user.created_at).getTime();
+  return Number.isFinite(ageMs) && ageMs >= 0 && ageMs < 5 * 60 * 1000;
 }
