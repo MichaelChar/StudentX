@@ -8,14 +8,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 export async function generateMetadata({ params }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'about' });
-  const elUrl = `${SITE_URL}/property/thessaloniki/about`;
-  const enUrl = `${SITE_URL}/en/property/thessaloniki/about`;
   return {
     title: t('metaTitle'),
     description: t('metaDescription'),
     alternates: {
-      canonical: locale === 'el' ? elUrl : enUrl,
-      languages: { el: elUrl, en: enUrl, 'x-default': elUrl },
+      canonical: `${SITE_URL}/property/thessaloniki/about`,
     },
   };
 }

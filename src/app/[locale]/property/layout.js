@@ -9,18 +9,15 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 //
 // Sub-routes with their own layout.js metadata (quiz, results, listing/[id])
 // already override this with route-specific URLs.
-export async function generateMetadata({ params }) {
-  const { locale } = await params;
-  const elUrl = `${SITE_URL}/property`;
-  const enUrl = `${SITE_URL}/en/property`;
+//
+// Single-locale (Step B, #158): no `languages` alternates; the canonical
+// is the only URL. Pre-Step-B emitted both /property and /en/property
+// alternates; with /en/* now 301'd to /*, those alternates would point
+// at redirect URLs and pollute the hreflang index.
+export function generateMetadata() {
   return {
     alternates: {
-      canonical: locale === 'el' ? elUrl : enUrl,
-      languages: {
-        el: elUrl,
-        en: enUrl,
-        'x-default': elUrl,
-      },
+      canonical: `${SITE_URL}/property`,
     },
   };
 }

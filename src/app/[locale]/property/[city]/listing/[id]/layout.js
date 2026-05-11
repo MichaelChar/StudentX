@@ -51,23 +51,16 @@ export async function generateMetadata({ params }) {
       : `${propertyType} available in ${neighborhood}, Thessaloniki${facultyHint}.`) +
     (listing.description && listing.description.length > 140 ? "…" : "");
 
-  // Greek is default (no prefix); English lives under /en. Mirror the
-  // routing in src/i18n/routing.js (defaultLocale: 'el', as-needed prefix).
+  // Single-locale (Step B, #158): one canonical URL, no language
+  // alternates. og:locale stays en_GB.
   const { city } = await params;
-  const elUrl = `${SITE_URL}/property/${city}/listing/${id}`;
-  const enUrl = `${SITE_URL}/en/property/${city}/listing/${id}`;
-  const url = locale === 'el' ? elUrl : enUrl;
+  const url = `${SITE_URL}/property/${city}/listing/${id}`;
 
   return {
     title,
     description,
     alternates: {
       canonical: url,
-      languages: {
-        el: elUrl,
-        en: enUrl,
-        'x-default': elUrl,
-      },
     },
     openGraph: {
       title: `${title} — StudentX`,
@@ -86,7 +79,7 @@ export async function generateMetadata({ params }) {
               alt: "StudentX — student housing in Thessaloniki",
             },
           ],
-      locale: locale === 'el' ? "el_GR" : "en_GB",
+      locale: "en_GB",
     },
     twitter: {
       card: "summary_large_image",
@@ -115,10 +108,7 @@ export default async function ListingLayout({ children, params }) {
       (url) => typeof url === "string" && url.startsWith("http")
     );
     const { city } = await params;
-    const localizedUrl =
-      locale === 'en'
-        ? `${SITE_URL}/en/property/${city}/listing/${id}`
-        : `${SITE_URL}/property/${city}/listing/${id}`;
+    const localizedUrl = `${SITE_URL}/property/${city}/listing/${id}`;
 
     // Same title-vs-generated logic as generateMetadata above. Schema.org
     // RealEstateListing.name is the primary surface a search engine cards

@@ -12,18 +12,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 // Sub-routes with their own layout.js (quiz, results, listing/[id]) will
 // override this again with route-specific URLs.
 export async function generateMetadata({ params }) {
-  const { locale, city } = await params;
+  const { city } = await params;
   if (!isSupportedCity(city)) return {};
-  const elUrl = `${SITE_URL}/property/${city}`;
-  const enUrl = `${SITE_URL}/en/property/${city}`;
   return {
     alternates: {
-      canonical: locale === 'el' ? elUrl : enUrl,
-      languages: {
-        el: elUrl,
-        en: enUrl,
-        'x-default': elUrl,
-      },
+      canonical: `${SITE_URL}/property/${city}`,
     },
   };
 }

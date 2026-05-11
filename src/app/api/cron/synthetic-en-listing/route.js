@@ -336,7 +336,10 @@ export async function POST(request) {
   const listingId = process.env.SYNTHETIC_LISTING_ID || DEFAULT_LISTING_ID;
   const alertEmail = process.env.SYNTHETIC_ALERT_EMAIL;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
-  const enListingUrl = `${appUrl}/en/property/thessaloniki/listing/${listingId}`;
+  // Step B (issue #158) collapsed the site to English-only and 301'd
+  // every /en/* path to its unprefixed form. The "en-" check names are
+  // kept for log/alert continuity but they now hit the canonical URL.
+  const enListingUrl = `${appUrl}/property/thessaloniki/listing/${listingId}`;
 
   const checks = [];
   const failures = [];
@@ -389,47 +392,40 @@ export async function POST(request) {
     checkOgDefault(appUrl),
     checkLandlordListingsApi(appUrl),
     checkNoMissingMessage(appUrl),
-    // Sitewide /en/* locale guards. The /en/listing/[id] check above only
-    // catches regressions on that route; this caught a sitewide regression
-    // (PR #109) where every /en/* page rendered Greek because of poisoned
-    // next-intl request scope. Any one of these failing means /en/* dropped
-    // back to default-locale rendering somewhere in the layout chain.
-    // City-hub landing (post Phase-1 multi-city refactor) — distinct from
-    // the per-city Propylaea landing checked below.
+    // Site-wide page renders. Originally these checked /en/* against
+    // Greek leakage (PR #109 regression); with Greek removed in Step B
+    // (#158), the Greek-leakage angle is moot but the English-marker
+    // assertions still catch any regression that breaks the page render
+    // entirely. Repurpose vs. delete is tracked in #158 followups.
     // These three checks use global fetch (CDN path) instead of the
     // self service-binding — see the comment on getSelfFetcher above.
-    // The locale assertions only need HTML marker presence, so a
-    // CDN-cached response satisfies them; routing them through the
-    // service binding triggers concurrent fresh SSR of the heavy
-    // property pages and 503s the Worker.
+    // The marker assertions only need HTML presence, so a CDN-cached
+    // response satisfies them; routing through the service binding
+    // triggers fresh SSR of the heavy property pages and 503s the Worker.
     checkEnLocale({
       name: 'en-cityhub-locale',
-      url: `${appUrl}/en/property`,
+      url: `${appUrl}/property`,
       useGlobalFetch: true,
       anyEnMarker: [
         'Hover over your city',
         'Global students empowered',
         'Curated student housing',
       ],
-      forbidElMarkers: [
-        'Πέρασε πάνω από την πόλη',
-        'Φοιτητές παγκοσμίως',
-        'Επιλεγμένη φοιτητική στέγη',
-      ],
+      forbidElMarkers: [],
     }),
     checkEnLocale({
       name: 'en-homepage-locale',
-      url: `${appUrl}/en/property/thessaloniki`,
+      url: `${appUrl}/property/thessaloniki`,
       useGlobalFetch: true,
       anyEnMarker: ['Take the quiz', 'See all listings', 'How it works'],
-      forbidElMarkers: ['Κάνε το κουίζ', 'Δες όλες τις αγγελίες'],
+      forbidElMarkers: [],
     }),
     checkEnLocale({
       name: 'en-quiz-locale',
-      url: `${appUrl}/en/property/thessaloniki/quiz`,
+      url: `${appUrl}/property/thessaloniki/quiz`,
       useGlobalFetch: true,
       anyEnMarker: ['One minute', "That's it"],
-      forbidElMarkers: ['Ένα λεπτό', 'Συνέχεια'],
+      forbidElMarkers: [],
     }),
   ]);
   for (const r of additional) {

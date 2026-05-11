@@ -33,9 +33,10 @@ export async function sendSubscriptionWelcomeEmail({ supabase, landlordId, tier 
       return;
     }
 
-    // Default English (2026-05-11 product call). Explicit 'el'
-    // preference is still honored.
-    const locale = landlord.preferred_locale === 'el' ? 'el' : 'en';
+    // English-only post-Step-B (issue #158). Any DB drift to 'el' is
+    // ignored — the API now rejects 'el' writes and the column will be
+    // dropped in the schema cleanup follow-up.
+    const locale = 'en';
     const tierName = TIER_DISPLAY_NAMES[tier] || 'SuperLandlord';
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
     const verificationUrl = `${appUrl}/${locale === 'en' ? 'en/' : ''}property/thessaloniki/landlord/verification`;
