@@ -38,7 +38,7 @@ function StudentLoginInner() {
       // Clear any stale session first — a hung _recoverAndRefresh on the
       // cached browser client can saturate the HTTP/2 connection to Supabase
       // and queue the login POST behind a stuck token-refresh request.
-      await supabase.auth.signOut().catch(() => {});
+      await withTimeout(supabase.auth.signOut(), 5000).catch(() => {});
 
       let lastErr;
       for (let attempt = 0; attempt < 2; attempt++) {
