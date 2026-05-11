@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter } from '@/i18n/navigation';
-import { useLocale, useTranslations } from 'next-intl';
+import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -13,7 +13,6 @@ import BauhausLoader from '@/components/BauhausLoader';
 function StudentOAuthCallbackInner() {
   const t = useTranslations('student.oauth');
   const tLoaders = useTranslations('loaders');
-  const locale = useLocale();
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextRaw = searchParams.get('next') || '';
