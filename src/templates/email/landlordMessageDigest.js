@@ -87,7 +87,7 @@ const STRINGS = {
 };
 
 function pickStrings(locale) {
-  return STRINGS[locale] || STRINGS.el;
+  return STRINGS[locale] || STRINGS.en;
 }
 
 function escapeHtml(value) {
@@ -99,7 +99,7 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
-export function landlordMessageDigestSubject(studentName, unreadCount, locale = 'el') {
+export function landlordMessageDigestSubject(studentName, unreadCount, locale = 'en') {
   const s = pickStrings(locale);
   const trimmed = (studentName || '').trim() || s['student.notifications.subjectFallbackName'];
   return unreadCount === 1
@@ -115,7 +115,7 @@ export function landlordMessageDigestHtml({
   snippet,
   appUrl,
   inquiryId,
-  locale = 'el',
+  locale = 'en',
 }) {
   const s = pickStrings(locale);
   const safeStudent = escapeHtml(studentName || s['student.notifications.subjectFallbackName']);

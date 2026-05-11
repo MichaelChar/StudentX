@@ -5,7 +5,6 @@ import { useTranslations } from 'next-intl';
 import { Link, useRouter, usePathname } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
-import LocaleSwitcher from './LocaleSwitcher';
 import UnreadBadge from './UnreadBadge';
 import TabTitleFlash from './TabTitleFlash';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
@@ -104,8 +103,6 @@ export default function Navbar() {
     <>
       <TabTitleFlash count={unread.count} />
       <nav className="fixed top-5 right-5 z-50 flex items-center gap-3 bg-stone/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-sm">
-        <LocaleSwitcher />
-        <span className="h-4 w-px bg-night/15" aria-hidden="true" />
         <AuthMenu
           t={t}
           authState={authState}

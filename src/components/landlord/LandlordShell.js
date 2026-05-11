@@ -7,7 +7,6 @@ import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 import Icon from '@/components/ui/Icon';
-import LocaleSwitcher from '@/components/LocaleSwitcher';
 import BauhausLoader from '@/components/BauhausLoader';
 
 /*
@@ -147,7 +146,6 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
 
             <div className="flex items-center gap-4 shrink-0">
               {actions}
-              <LocaleSwitcher />
               <button
                 type="button"
                 onClick={handleSignOut}

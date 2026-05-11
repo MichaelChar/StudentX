@@ -89,7 +89,7 @@ const STRINGS = {
 };
 
 function pickStrings(locale) {
-  return STRINGS[locale] || STRINGS.el;
+  return STRINGS[locale] || STRINGS.en;
 }
 
 function escapeHtml(value) {
@@ -105,7 +105,7 @@ function localePrefix(locale) {
   return locale === 'en' ? '/en' : '';
 }
 
-export function studentMessageDigestSubject(landlordName, unreadCount, locale = 'el') {
+export function studentMessageDigestSubject(landlordName, unreadCount, locale = 'en') {
   const s = pickStrings(locale);
   const trimmed = (landlordName || '').trim() || s['landlord.notifications.subjectFallbackName'];
   return unreadCount === 1
@@ -121,7 +121,7 @@ export function studentMessageDigestHtml({
   snippet,
   appUrl,
   inquiryId,
-  locale = 'el',
+  locale = 'en',
 }) {
   const s = pickStrings(locale);
   const safeLandlord = escapeHtml(landlordName || s['landlord.notifications.subjectFallbackName']);

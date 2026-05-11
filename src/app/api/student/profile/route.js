@@ -37,10 +37,10 @@ export async function POST(request) {
 
   const body = await request.json().catch(() => ({}));
   const displayName = typeof body.display_name === 'string' ? body.display_name.trim() : '';
-  const preferredLocale =
-    body.preferred_locale === 'el' || body.preferred_locale === 'en'
-      ? body.preferred_locale
-      : '';
+  // Greek removed in Step B (issue #158): only forward 'en'; anything else
+  // (including the now-deprecated 'el') becomes empty so the RPC's
+  // COALESCE-to-'en' fallback wins.
+  const preferredLocale = body.preferred_locale === 'en' ? 'en' : '';
 
   // create_student_profile is SECURITY DEFINER and idempotent — calling
   // it for an already-provisioned auth.users row returns the existing

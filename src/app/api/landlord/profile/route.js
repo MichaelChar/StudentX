@@ -43,13 +43,16 @@ export async function PATCH(request) {
     return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
   }
 
-  // Whitelist updatable fields. preferred_locale is the only one for now.
-  // Email + name are owned by other flows (auth signup, onboarding).
+  // Whitelist updatable fields. preferred_locale was the only one and the
+  // settings UI has been removed (issue #158, Step B). We still accept
+  // explicit 'en' for any legacy client that hasn't refreshed; 'el' is
+  // rejected because Greek is no longer supported. The column itself is
+  // scheduled for removal in the schema cleanup follow-up.
   const updates = {};
   if (body.preferred_locale !== undefined) {
-    if (body.preferred_locale !== 'el' && body.preferred_locale !== 'en') {
+    if (body.preferred_locale !== 'en') {
       return NextResponse.json(
-        { error: "preferred_locale must be 'el' or 'en'" },
+        { error: "preferred_locale must be 'en'" },
         { status: 400 }
       );
     }

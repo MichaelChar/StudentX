@@ -69,10 +69,10 @@ const STRINGS = {
 };
 
 function pickStrings(locale) {
-  return STRINGS[locale] || STRINGS.el;
+  return STRINGS[locale] || STRINGS.en;
 }
 
-export function inquiryEmailHtml({ landlordName, student, message, listing, appUrl, locale = 'el' }) {
+export function inquiryEmailHtml({ landlordName, student, message, listing, appUrl, locale = 'en' }) {
   const s = pickStrings(locale);
   const safeName = escapeHtml(student.name);
   const safeEmail = escapeHtml(student.email);
@@ -176,7 +176,7 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
 </html>`;
 }
 
-export function inquiryEmailSubject(studentName, listingSummary, locale = 'el') {
+export function inquiryEmailSubject(studentName, listingSummary, locale = 'en') {
   const s = pickStrings(locale);
   const trimmedName = (studentName || '').trim() || s.subjectFallbackName;
   if (listingSummary) {
