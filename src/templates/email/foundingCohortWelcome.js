@@ -82,7 +82,7 @@ const COPY = {
   el: {
     eyebrow: 'Founding 50',
     headerTagline: 'Φοιτητική Στέγαση · Θεσσαλονίκη',
-    footerTagline: 'Επίσημος συνεργάτης στέγασης AUSoM',
+    footerTagline: 'Επίσημος συνεργάτης στέγασης AUSoM και άλλων κορυφαίων πανεπιστημίων',
     title: 'Είσαι ο ιδρυτικός #{rank} από τους 50',
     greetingPrefix: 'Γεια σου',
     greetingFallback: 'Γεια σου,',
@@ -97,7 +97,7 @@ const COPY = {
   en: {
     eyebrow: 'Founding 50',
     headerTagline: 'Student Housing · Thessaloniki',
-    footerTagline: 'Official housing partner for AUSoM',
+    footerTagline: 'Official housing partner for AUSoM and other world-class universities',
     title: "You're founding member #{rank} of 50",
     greetingPrefix: 'Hi',
     greetingFallback: 'Hi there,',
