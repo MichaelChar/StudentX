@@ -293,7 +293,9 @@ async function checkNoMissingMessage(appUrl) {
 // Generic /en/* locale check: assert at least one EN-only marker is present
 // and no EL-only marker leaks through. Caller passes a list of EN markers
 // any of which is sufficient (forgiving against copy tweaks) and a list of
-// EL forbidden markers all of which must be absent.
+// EL forbidden markers all of which must be absent. Pass useGlobalFetch=true
+// to route via the CDN instead of the self service-binding — see the comment
+// on getSelfFetcher above for when (and why) you'd want that.
 async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers, useGlobalFetch = false }) {
   try {
     const res = await fetchUrl(url, { useGlobalFetch });

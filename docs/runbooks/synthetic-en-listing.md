@@ -65,7 +65,7 @@ Subject: `[StudentX synthetic] N check(s) failed`
 
 Body includes the failing check name, reason, and the first 500 chars of the anon HTML response. Possible reasons:
 
-- `non-200 status: <code>` — the page errored or redirected. Check the Worker logs.
+- `non-200 status: <code>` — the page errored or redirected. Check the Worker logs. **For the three `/en/property/*` page-locale checks**, these go via the CDN (see [Fetch strategy](#fetch-strategy-service-binding-vs-global-fetch)), so a non-200 means the CDN itself is failing or the origin is genuinely down — try the user-facing curl first before assuming the Worker is broken.
 - `missing required EN marker: <marker>` — page returned 200 but the English copy disappeared. Either the gate copy was edited (update marker constants in `route.js`) or the i18n regression class from PR #48 is back.
 - `forbidden EL marker present: <marker>` — Greek leaked onto the EN page. **i18n regression** — investigate `getTranslations` calls in any recently-changed server component.
 - `anon listing detail must serve public, s-maxage=...` — the middleware-set per-request cache header (PR #105) regressed for anon visitors. Either middleware.js stopped matching the path, or `next.config.mjs` re-introduced a static `private` rule that's overriding it. Run the curl commands in the [Manual cache-header probe](#manual-cache-header-probe) section to localise.
