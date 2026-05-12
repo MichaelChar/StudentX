@@ -1,5 +1,5 @@
 -- ============================================================
--- Migration 045: Enable RLS on all unprotected public tables.
+-- Migration 048: Enable RLS on all unprotected public tables.
 -- ============================================================
 --
 -- The Supabase dashboard flags 14+ tables with "RLS Disabled in
