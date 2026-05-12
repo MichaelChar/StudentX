@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import { COUNTRIES, propertyHref } from '@/lib/cityRoutes';
 
 const GlobeLoader = dynamic(() => import('@/components/GlobeLoader'), { ssr: false });
+const CityGlobeLoader = dynamic(() => import('@/components/CityGlobeLoader'), { ssr: false });
 
 // Multi-country hub diagram — port of `NeuralNetLanding` (stripe theme
 // only) from the Claude Design wireframe bundle. Renders the
@@ -72,7 +73,7 @@ export default function HubDiagram() {
   const router = useRouter();
   const [hovered, setHovered] = useState(null);
   const [search, setSearch] = useState('');
-  const [globeLoading, setGlobeLoading] = useState(false);
+  const [globeLoading, setGlobeLoading] = useState(null);
 
   // Order countries; append per-country ghost row ("coming soon…") for
   // any non-Greek country with no second city yet. Ghost rows are
@@ -150,17 +151,13 @@ export default function HubDiagram() {
     activeCity && activeCity.country.code === cc && activeCity.slug === slug;
 
   const handleGlobeComplete = useCallback(() => {
-    router.push(propertyHref('thessaloniki'));
-  }, [router]);
+    if (globeLoading) router.push(propertyHref(globeLoading));
+  }, [router, globeLoading]);
 
   const onCityClick = (city) => {
     if (!city.clickable && city.clickable !== undefined) return;
     if (city.ghost) return;
-    if (city.slug === 'thessaloniki') {
-      setGlobeLoading(true);
-      return;
-    }
-    router.push(propertyHref(city.slug));
+    setGlobeLoading(city.slug);
   };
 
   return (
@@ -545,7 +542,10 @@ export default function HubDiagram() {
           )}
         </div>
       </div>
-      {globeLoading && <GlobeLoader onComplete={handleGlobeComplete} />}
+      {globeLoading === 'thessaloniki' && <GlobeLoader onComplete={handleGlobeComplete} />}
+      {globeLoading && globeLoading !== 'thessaloniki' && (
+        <CityGlobeLoader city={globeLoading} onComplete={handleGlobeComplete} />
+      )}
     </div>
   );
 }
