@@ -1,5 +1,3 @@
-import { getSupabase } from '@/lib/supabase';
-
 // Computes any missing rows in `faculty_distances` for the given listings (or
 // every listing if `listingIds` is omitted) and upserts them. Idempotent — only
 // fills gaps, so a fully-populated DB is a no-op (cheap DB read, no OSRM call).
@@ -13,11 +11,8 @@ import { getSupabase } from '@/lib/supabase';
 // rows produced here are indistinguishable from rows the manual script
 // produces. Keep the constants in sync with that file when tweaking.
 //
-// faculty_distances has no RLS (see supabase/migrations/001_create_schema.sql
-// and 005_listings_rls.sql — RLS is enabled per-table; faculty_distances is
-// not in either list), so the anon client returned by getSupabase() can read
-// AND write. We deliberately do NOT introduce a service-role client here —
-// the Worker doesn't have SUPABASE_SERVICE_ROLE_KEY in its vars.
+// Callers pass a Supabase client: the cron route passes a service-role
+// client; landlord listing routes pass their token-scoped client.
 
 const WALK_M_PER_MIN = 83;       // 5 km/h walking pace
 const BUS_M_PER_MIN = 250;       // ~15 km/h average bus speed incl. stops
@@ -39,8 +34,8 @@ function distanceToMinutes(distanceM) {
   return { walk, transit };
 }
 
-export async function recomputeMissingDistances({ listingIds } = {}) {
-  const supabase = getSupabase();
+export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
+  if (!supabase) throw new Error('recomputeMissingDistances: supabase client is required');
 
   // 1. Fetch listings (with their location lat/lng) and faculties.
   //    location is INNER-joined: a listing without a location row can't be

@@ -254,7 +254,7 @@ export async function PATCH(request, { params }) {
   // coords didn't change and rows already exist, this is a cheap DB read with
   // no OSRM call. Non-fatal: swallowed so a flaky OSRM never fails edit.
   try {
-    await recomputeMissingDistances({ listingIds: [id] });
+    await recomputeMissingDistances({ listingIds: [id], supabase: authedSupabase });
   } catch (err) {
     console.error('[landlord/listings PATCH] inline distance recompute failed:', err);
   }
