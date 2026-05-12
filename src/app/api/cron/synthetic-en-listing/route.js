@@ -63,7 +63,7 @@ async function getSelfFetcher() {
   }
 }
 
-async function fetchUrl(url, { method = 'GET', cookie = '', useGlobalFetch = false } = {}) {
+async function fetchUrl(url, { method = 'GET', cookie = '' } = {}) {
   const headers = { 'user-agent': 'StudentX-synthetic/1.0' };
   if (cookie) headers.cookie = cookie;
   const init = {
@@ -72,7 +72,6 @@ async function fetchUrl(url, { method = 'GET', cookie = '', useGlobalFetch = fal
     signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
     redirect: 'manual',
   };
-  if (useGlobalFetch) return fetch(url, init);
   const self = await getSelfFetcher();
   return self ? self.fetch(url, init) : fetch(url, init);
 }
@@ -285,15 +284,13 @@ async function checkNoMissingMessage(appUrl) {
   }
 }
 
-// Generic /en/* locale check: assert at least one EN-only marker is present
-// and no EL-only marker leaks through. Caller passes a list of EN markers
-// any of which is sufficient (forgiving against copy tweaks) and a list of
-// EL forbidden markers all of which must be absent. Pass useGlobalFetch=true
-// to route via the CDN instead of the self service-binding — see the comment
-// on getSelfFetcher above for when (and why) you'd want that.
-async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers, useGlobalFetch = false }) {
+// Generic locale check: assert at least one EN-only marker is present and no
+// EL-only marker leaks through. Caller passes a list of EN markers any of
+// which is sufficient (forgiving against copy tweaks) and a list of EL
+// forbidden markers all of which must be absent.
+async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers }) {
   try {
-    const res = await fetchUrl(url, { useGlobalFetch });
+    const res = await fetchUrl(url);
     if (res.status !== 200) {
       return { name, ok: false, reason: `expected 200, got ${res.status} from ${url}` };
     }
