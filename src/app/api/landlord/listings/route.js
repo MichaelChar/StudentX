@@ -311,7 +311,7 @@ export async function POST(request) {
   // UTC cron tick. Non-fatal: swallowed so a flaky OSRM never fails create —
   // the daily cron remains the safety net.
   try {
-    await recomputeMissingDistances({ listingIds: [listingId] });
+    await recomputeMissingDistances({ listingIds: [listingId], supabase: authedSupabase });
   } catch (err) {
     console.error('[landlord/listings POST] inline distance recompute failed:', err);
   }
