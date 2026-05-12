@@ -48,17 +48,12 @@ const SYNTHETIC_AUTH_COOKIE = 'sb-access-token=synthetic-canary-stub';
 // null when running outside the Cloudflare runtime (local dev, unit tests),
 // in which case fetchUrl falls back to global fetch.
 //
-// Heads-up for future maintainers: the three /en/property/* page-locale
-// checks deliberately opt out of this binding via useGlobalFetch=true. The
-// service binding bypasses the CDN cache and forces fresh SSR on every
-// probe — which is fine for the AuthGate listing detail (cheap render)
-// and for API routes (no SSR), but tips the heavy property pages over
-// the Worker's resource limits when the 8 checks run concurrently
-// (HubBackground 240k particles + HubDiagram + StripeGradientMesh
-// WebGL all SSR-walking at once → 503/timeout). Those checks only need
-// HTML marker presence, so a CDN-cached response is fine; please don't
-// "unify" them back onto the service binding without rethinking the
-// concurrency model.
+// The three property-page locale checks previously used useGlobalFetch=true
+// to hit the CDN cache instead of the service binding, avoiding concurrent
+// SSR resource exhaustion. That caused Worker self-fetch 522s whenever the
+// CDN cache was cold (post-deploy, different edge PoP). Fixed by running
+// them sequentially via the service binding after the lightweight checks
+// finish — one SSR at a time stays within the Worker's resource budget.
 async function getSelfFetcher() {
   try {
     const { env } = await getCloudflareContext({ async: true });
@@ -386,48 +381,49 @@ export async function POST(request) {
   }
 
   // --- Additional assertions, run independently ----------------------------
+  // Lightweight checks (API routes, static assets, redirects) run concurrently
+  // via service binding — fast and no resource pressure.
   const additional = await Promise.all([
     checkListingApiDistanceVariety(appUrl, listingId),
     checkSoft404(appUrl),
     checkOgDefault(appUrl),
     checkLandlordListingsApi(appUrl),
     checkNoMissingMessage(appUrl),
-    // Site-wide page renders. Originally these checked /en/* against
-    // Greek leakage (PR #109 regression); with Greek removed in Step B
-    // (#158), the Greek-leakage angle is moot but the English-marker
-    // assertions still catch any regression that breaks the page render
-    // entirely. Repurpose vs. delete is tracked in #158 followups.
-    // These three checks use global fetch (CDN path) instead of the
-    // self service-binding — see the comment on getSelfFetcher above.
-    // The marker assertions only need HTML presence, so a CDN-cached
-    // response satisfies them; routing through the service binding
-    // triggers fresh SSR of the heavy property pages and 503s the Worker.
-    checkEnLocale({
+  ]);
+
+  // Heavy property-page locale checks run sequentially via service binding.
+  // These pages SSR WebGL components (HubBackground, StripeGradientMesh) that
+  // are too resource-intensive to render concurrently. Sequential keeps each
+  // render within the Worker's CPU budget. Previously these used global fetch
+  // (CDN path) to avoid SSR, but that caused Worker self-fetch 522s whenever
+  // the CDN cache was cold (post-deploy, different edge PoP).
+  const heavyPageChecks = [
+    {
       name: 'en-cityhub-locale',
       url: `${appUrl}/property`,
-      useGlobalFetch: true,
       anyEnMarker: [
         'Hover over your city',
         'Global students empowered',
         'Curated student housing',
       ],
       forbidElMarkers: [],
-    }),
-    checkEnLocale({
+    },
+    {
       name: 'en-homepage-locale',
       url: `${appUrl}/property/thessaloniki`,
-      useGlobalFetch: true,
       anyEnMarker: ['Take the quiz', 'See all listings', 'How it works'],
       forbidElMarkers: [],
-    }),
-    checkEnLocale({
+    },
+    {
       name: 'en-quiz-locale',
       url: `${appUrl}/property/thessaloniki/quiz`,
-      useGlobalFetch: true,
       anyEnMarker: ['One minute', "That's it"],
       forbidElMarkers: [],
-    }),
-  ]);
+    },
+  ];
+  for (const check of heavyPageChecks) {
+    additional.push(await checkEnLocale(check));
+  }
   for (const r of additional) {
     checks.push(r);
     if (!r.ok) failures.push(r);
