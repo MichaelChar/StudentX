@@ -16,8 +16,8 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 const supabaseCalls = { frequencies: [] };
 
-vi.mock('@/lib/supabase', () => ({
-  getSupabase: () => ({
+vi.mock('@supabase/supabase-js', () => ({
+  createClient: () => ({
     from: (_table) => {
       const chain = {
         select: () => chain,

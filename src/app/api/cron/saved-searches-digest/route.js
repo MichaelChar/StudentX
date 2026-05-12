@@ -1,9 +1,20 @@
 import { NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase';
+import { createClient } from '@supabase/supabase-js';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { digestEmailHtml, digestEmailSubject } from '@/templates/email/digest';
 import { transformListing } from '@/lib/transformListing';
+
+// Service-role client: claim_digest_send is GRANTed only to service_role
+// (migration 049). The CRON_SECRET check above gates the route; this
+// client gates the database. Mirrors the landlord-message-digest route.
+function getServiceSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+    { auth: { persistSession: false } },
+  );
+}
 
 const LISTING_SELECT = `
   listing_id,
@@ -192,7 +203,7 @@ export async function POST(request) {
     frequenciesToProcess = dayOfWeek === 1 ? ['daily', 'weekly'] : ['daily'];
   }
 
-  const supabase = getSupabase();
+  const supabase = getServiceSupabase();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
   const resend = getResend();
 
