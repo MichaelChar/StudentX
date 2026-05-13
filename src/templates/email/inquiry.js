@@ -2,78 +2,15 @@
  * Email sent to a landlord when a student submits an inquiry from a listing.
  * Mirrors the brand styling used by digest.js.
  *
- * English is the default locale as of 2026-05-11 (PR #157). The route
- * still respects an explicit landlord-stored preferred_locale='el' and an
- * Accept-Language='el-*' browser header for backward compatibility, but
- * the absent/unknown fallback resolves to 'en'. Step B (issue #158) is
- * planned to drop Greek support entirely.
- *
  * @param {object} params
- * @param {string} params.landlordName - Name shown in greeting (falls back to "there"/"εσένα")
+ * @param {string} params.landlordName - Name shown in greeting (falls back to "there")
  * @param {object} params.student - { name, email, phone?, faculty? }
  * @param {string} params.message - Raw student message
  * @param {object} params.listing - { listing_id, address?, neighborhood?, monthly_price? }
  * @param {string} params.appUrl - Base URL of the app (no trailing slash)
- * @param {'el'|'en'} [params.locale='en'] - Email locale
  */
 
-const STRINGS = {
-  el: {
-    htmlLang: 'el',
-    titleTag: 'Νέο αίτημα για την αγγελία σου',
-    headerTagline: 'Φοιτητική στέγαση · Θεσσαλονίκη',
-    headingFrom: (name) => `Νέο αίτημα από ${name}`,
-    introNoSummary: (greeting) =>
-      `Γεια ${greeting}, ένας φοιτητής μόλις σου έστειλε μήνυμα για την αγγελία σου.`,
-    introWithSummary: (greeting, summary) =>
-      `Γεια ${greeting}, ένας φοιτητής μόλις σου έστειλε μήνυμα για την αγγελία σου <strong style="color:#0a2540;">${summary}</strong>.`,
-    studentLabel: 'Φοιτητής',
-    facultyLabel: 'Σχολή',
-    messageLabel: 'Μήνυμα',
-    replyButton: 'Απάντηση στον φοιτητή',
-    inboxButton: 'Άνοιγμα εισερχομένων',
-    viewListing: 'Δες την αγγελία →',
-    footerLine1: 'StudentX · Κατάλογος φοιτητικής στέγης για τη Θεσσαλονίκη',
-    footerLine2: 'Λαμβάνεις αυτό το email επειδή ένας φοιτητής επικοινώνησε μαζί σου για την αγγελία σου στο StudentX.',
-    footerLine3: 'Πάτα Reply για απάντηση — το μήνυμά σου θα πάει απευθείας στον φοιτητή.',
-    greetingFallback: 'εσένα',
-    subjectWithSummary: (name, summary) => `Νέο αίτημα από ${name} — ${summary} · StudentX`,
-    subjectNoSummary: (name) => `Νέο αίτημα από ${name} · StudentX`,
-    subjectFallbackName: 'Ένας φοιτητής',
-    pricePerMonth: (n) => `€${n}/μήνα`,
-  },
-  en: {
-    htmlLang: 'en',
-    titleTag: 'New inquiry on your listing',
-    headerTagline: 'Student Housing · Thessaloniki',
-    headingFrom: (name) => `New inquiry from ${name}`,
-    introNoSummary: (greeting) =>
-      `Hi ${greeting}, a student just sent you a message about your listing.`,
-    introWithSummary: (greeting, summary) =>
-      `Hi ${greeting}, a student just sent you a message about your listing <strong style="color:#0a2540;">${summary}</strong>.`,
-    studentLabel: 'Student',
-    facultyLabel: 'Faculty',
-    messageLabel: 'Message',
-    replyButton: 'Reply to student',
-    inboxButton: 'Open inbox',
-    viewListing: 'View listing →',
-    footerLine1: 'StudentX · Student housing directory for Thessaloniki, Greece',
-    footerLine2: "You're receiving this because a student contacted you about your listing on StudentX.",
-    footerLine3: 'Just hit Reply to respond — your message will go straight to the student.',
-    greetingFallback: 'there',
-    subjectWithSummary: (name, summary) => `New inquiry from ${name} — ${summary} · StudentX`,
-    subjectNoSummary: (name) => `New inquiry from ${name} · StudentX`,
-    subjectFallbackName: 'A student',
-    pricePerMonth: (n) => `€${n}/mo`,
-  },
-};
-
-function pickStrings(locale) {
-  return STRINGS[locale] || STRINGS.en;
-}
-
-export function inquiryEmailHtml({ landlordName, student, message, listing, appUrl, locale = 'en' }) {
-  const s = pickStrings(locale);
+export function inquiryEmailHtml({ landlordName, student, message, listing, appUrl }) {
   const safeName = escapeHtml(student.name);
   const safeEmail = escapeHtml(student.email);
   const safePhone = student.phone ? escapeHtml(student.phone) : '';
@@ -81,23 +18,23 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
   const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>');
   const safeAddress = listing.address ? escapeHtml(listing.address) : '';
   const safeNeighborhood = listing.neighborhood ? escapeHtml(listing.neighborhood) : '';
-  const safePrice = listing.monthly_price ? s.pricePerMonth(Number(listing.monthly_price)) : '';
-  const safeGreeting = landlordName ? escapeHtml(landlordName) : s.greetingFallback;
+  const safePrice = listing.monthly_price ? `€${Number(listing.monthly_price)}/mo` : '';
+  const safeGreeting = landlordName ? escapeHtml(landlordName) : 'there';
 
   const listingUrl = `${appUrl}/property/thessaloniki/listing/${listing.listing_id}`;
   const inboxUrl = `${appUrl}/property/thessaloniki/landlord/inquiries`;
 
   const listingSummary = [safeAddress, safeNeighborhood, safePrice].filter(Boolean).join(' · ');
   const intro = listingSummary
-    ? s.introWithSummary(safeGreeting, listingSummary)
-    : s.introNoSummary(safeGreeting);
+    ? `Hi ${safeGreeting}, a student just sent you a message about your listing <strong style="color:#0a2540;">${listingSummary}</strong>.`
+    : `Hi ${safeGreeting}, a student just sent you a message about your listing.`;
 
   return `<!DOCTYPE html>
-<html lang="${s.htmlLang}">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${s.titleTag}</title>
+  <title>New inquiry on your listing</title>
 </head>
 <body style="margin:0;padding:0;background:#f6f4ff;font-family:Georgia,serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4ff;padding:40px 16px;">
@@ -108,13 +45,13 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
           <tr>
             <td style="background:#0a2540;padding:24px 32px;">
               <p style="margin:0;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#ffcb57;">StudentX</p>
-              <p style="margin:4px 0 0;font-family:'Helvetica Neue',sans-serif;font-size:11px;color:#ffffff80;">${s.headerTagline}</p>
+              <p style="margin:4px 0 0;font-family:'Helvetica Neue',sans-serif;font-size:11px;color:#ffffff80;">Student Housing · Thessaloniki</p>
             </td>
           </tr>
           <!-- Body -->
           <tr>
             <td style="padding:32px;">
-              <h1 style="margin:0 0 8px;font-family:'Helvetica Neue',sans-serif;font-size:22px;font-weight:700;color:#0a2540;">${s.headingFrom(safeName)}</h1>
+              <h1 style="margin:0 0 8px;font-family:'Helvetica Neue',sans-serif;font-size:22px;font-weight:700;color:#0a2540;">New inquiry from ${safeName}</h1>
               <p style="margin:0 0 24px;font-size:15px;color:#0a2540;line-height:1.6;">
                 ${intro}
               </p>
@@ -123,19 +60,19 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
               <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4ff;border-radius:8px;padding:20px;margin-bottom:20px;">
                 <tr>
                   <td>
-                    <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a8595;">${s.studentLabel}</p>
+                    <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a8595;">Student</p>
                     <p style="margin:0 0 4px;font-family:'Helvetica Neue',sans-serif;font-size:16px;font-weight:700;color:#0a2540;">${safeName}</p>
                     <p style="margin:0;font-size:14px;color:#0a2540;">
                       <a href="mailto:${safeEmail}" style="color:#ffcb57;text-decoration:none;">${safeEmail}</a>
                       ${safePhone ? ` · <a href="tel:${safePhone}" style="color:#ffcb57;text-decoration:none;">${safePhone}</a>` : ''}
                     </p>
-                    ${safeFaculty ? `<p style="margin:6px 0 0;font-size:13px;color:#7a8595;">${s.facultyLabel}: ${safeFaculty}</p>` : ''}
+                    ${safeFaculty ? `<p style="margin:6px 0 0;font-size:13px;color:#7a8595;">Faculty: ${safeFaculty}</p>` : ''}
                   </td>
                 </tr>
               </table>
 
               <!-- Message -->
-              <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a8595;">${s.messageLabel}</p>
+              <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a8595;">Message</p>
               <div style="font-size:15px;color:#0a2540;line-height:1.6;border-left:3px solid #ffcb57;padding:4px 16px;margin-bottom:24px;">
                 ${safeMessage}
               </div>
@@ -144,17 +81,17 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
               <table cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="background:#0a2540;border-radius:8px;padding:0;">
-                    <a href="mailto:${safeEmail}" style="display:inline-block;padding:12px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">${s.replyButton}</a>
+                    <a href="mailto:${safeEmail}" style="display:inline-block;padding:12px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">Reply to student</a>
                   </td>
                   <td style="width:8px;"></td>
                   <td style="border:1px solid #0a2540;border-radius:8px;padding:0;">
-                    <a href="${inboxUrl}" style="display:inline-block;padding:11px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#0a2540;text-decoration:none;">${s.inboxButton}</a>
+                    <a href="${inboxUrl}" style="display:inline-block;padding:11px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#0a2540;text-decoration:none;">Open inbox</a>
                   </td>
                 </tr>
               </table>
 
               <p style="margin:24px 0 0;font-size:13px;color:#7a8595;">
-                <a href="${listingUrl}" style="color:#7a8595;">${s.viewListing}</a>
+                <a href="${listingUrl}" style="color:#7a8595;">View listing →</a>
               </p>
             </td>
           </tr>
@@ -162,9 +99,9 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
           <tr>
             <td style="background:#f6f4ff;padding:20px 32px;border-top:1px solid #e6eaef;">
               <p style="margin:0;font-size:12px;color:#7a8595;">
-                ${s.footerLine1}<br/>
-                ${s.footerLine2}<br/>
-                ${s.footerLine3}
+                StudentX · Student housing directory and services<br/>
+                A student contacted you about your listing on StudentX!<br/>
+                Just hit Reply to respond — your message will go straight to the student.
               </p>
             </td>
           </tr>
@@ -176,13 +113,12 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
 </html>`;
 }
 
-export function inquiryEmailSubject(studentName, listingSummary, locale = 'en') {
-  const s = pickStrings(locale);
-  const trimmedName = (studentName || '').trim() || s.subjectFallbackName;
+export function inquiryEmailSubject(studentName, listingSummary) {
+  const trimmedName = (studentName || '').trim() || 'A student';
   if (listingSummary) {
-    return s.subjectWithSummary(trimmedName, listingSummary);
+    return `New inquiry from ${trimmedName} — ${listingSummary} · StudentX`;
   }
-  return s.subjectNoSummary(trimmedName);
+  return `New inquiry from ${trimmedName} · StudentX`;
 }
 
 function escapeHtml(value) {

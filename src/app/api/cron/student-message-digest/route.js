@@ -36,13 +36,6 @@ function isCronAuthorized(request) {
   return searchParams.get('secret') === secret;
 }
 
-function resolveLocale(studentLocale) {
-  if (studentLocale === 'el' || studentLocale === 'en') return studentLocale;
-  // Default English (2026-05-11 product call: emails go in English by
-  // default; explicit 'el' preference still honored if set in settings).
-  return 'en';
-}
-
 export async function POST(request) {
   if (!isCronAuthorized(request)) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -105,8 +98,6 @@ export async function POST(request) {
       // From here on the claim is committed: a Resend failure means
       // this digest is lost for this period. Same tradeoff as the
       // landlord digest — missing one email beats double-sending.
-      const locale = resolveLocale(row.student_locale);
-
       if (await isEmailSuppressed(row.student_email)) {
         console.warn(
           `[student-digest] skipping send — ${row.student_email} is suppressed`,
@@ -120,7 +111,6 @@ export async function POST(request) {
         subject: studentMessageDigestSubject(
           row.landlord_display_name,
           row.unread_count,
-          locale,
         ),
         html: studentMessageDigestHtml({
           studentName: row.student_name,
@@ -135,7 +125,6 @@ export async function POST(request) {
           snippet: row.latest_message_body,
           appUrl,
           inquiryId: row.inquiry_id,
-          locale,
         }),
       });
 

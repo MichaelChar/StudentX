@@ -19,7 +19,7 @@ export async function sendSubscriptionWelcomeEmail({ supabase, landlordId, tier 
   try {
     const { data: landlord } = await supabase
       .from('landlords')
-      .select('name, email, preferred_locale')
+      .select('name, email')
       .eq('landlord_id', landlordId)
       .single();
 
@@ -33,10 +33,6 @@ export async function sendSubscriptionWelcomeEmail({ supabase, landlordId, tier 
       return;
     }
 
-    // English-only post-Step-B (issue #158). Any DB drift to 'el' is
-    // ignored — the API now rejects 'el' writes and the column will be
-    // dropped in the schema cleanup follow-up.
-    const locale = 'en';
     const tierName = TIER_DISPLAY_NAMES[tier] || 'SuperLandlord';
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
     const verificationUrl = `${appUrl}/property/thessaloniki/landlord/verification`;
@@ -44,12 +40,11 @@ export async function sendSubscriptionWelcomeEmail({ supabase, landlordId, tier 
     await getResend().emails.send({
       from: FROM_ADDRESS,
       to: landlord.email,
-      subject: subscriptionWelcomeSubject(tierName, locale),
+      subject: subscriptionWelcomeSubject(tierName),
       html: subscriptionWelcomeHtml({
         landlordName: landlord.name,
         tierName,
         verificationUrl,
-        locale,
       }),
     });
   } catch (err) {

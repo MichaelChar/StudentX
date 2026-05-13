@@ -139,7 +139,6 @@ export async function POST(request) {
         studentName: student.display_name,
         studentEmail: student.email,
         message,
-        request,
       });
     }
   }
