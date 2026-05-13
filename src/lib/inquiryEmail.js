@@ -1,7 +1,15 @@
+import { createClient } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { inquiryEmailHtml, inquiryEmailSubject } from '@/templates/email/inquiry';
+
+function getServiceSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+  );
+}
 
 const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
@@ -111,7 +119,7 @@ export async function sendLandlordInquiryEmail({
       }),
     });
 
-    await supabase.rpc('mark_inquiry_email_sent', { p_inquiry_id: inquiryId });
+    await getServiceSupabase().rpc('mark_inquiry_email_sent', { p_inquiry_id: inquiryId });
   } catch (err) {
     console.error('Failed to send landlord notification email:', err);
   }
