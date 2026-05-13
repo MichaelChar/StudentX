@@ -17,7 +17,10 @@ import { getResend } from '@/lib/resend';
 // sanity checks.
 
 const DEFAULT_LISTING_ID = '0100006';
-const FETCH_TIMEOUT_MS = 10_000;
+// 15s gives Supabase cold starts (off-peak hours) room to complete the
+// 9-table listing query. The cron handler's 25s outer timeout still has
+// margin since page-render checks skip instantly on 522.
+const FETCH_TIMEOUT_MS = 15_000;
 
 const EN_MARKERS_REQUIRED = [
   '<html lang="en"',
