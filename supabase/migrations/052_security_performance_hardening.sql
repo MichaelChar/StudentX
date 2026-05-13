@@ -22,13 +22,23 @@
 -- ============================================================
 
 DROP VIEW IF EXISTS listing_rating_summary;
-CREATE VIEW listing_rating_summary WITH (security_invoker = true) AS
-  SELECT listing_id,
-         round(avg(rating), 1) AS avg_rating,
-         count(*)              AS review_count
-    FROM reviews
-   WHERE moderated = false
-   GROUP BY listing_id;
+DO $$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM pg_class
+     WHERE relname = 'reviews'
+       AND relnamespace = 'public'::regnamespace
+  ) THEN
+    CREATE VIEW listing_rating_summary WITH (security_invoker = true) AS
+      SELECT listing_id,
+             round(avg(rating), 1) AS avg_rating,
+             count(*)              AS review_count
+        FROM reviews
+       WHERE moderated = false
+       GROUP BY listing_id;
+  END IF;
+END;
+$$;
 
 
 -- ============================================================
