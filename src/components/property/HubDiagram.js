@@ -9,21 +9,15 @@ import { COUNTRIES, propertyHref } from '@/lib/cityRoutes';
 const GlobeLoader = dynamic(() => import('@/components/GlobeLoader'), { ssr: false });
 const CityGlobeLoader = dynamic(() => import('@/components/CityGlobeLoader'), { ssr: false });
 
-// Multi-country hub diagram — port of `NeuralNetLanding` (stripe theme
-// only) from the Claude Design wireframe bundle. Renders the
-// hub → country → city neural-net SVG over the animated globe canvas
-// (mounted by the parent), with a search input below.
-//
-// Interaction:
-//   • Hover a city → its hub→country→city path highlights, everything
-//     else dims; the search row swaps for a "→ Country / City" hint.
-//   • Click a real city → router.push to /property/<slug>.
-//   • Type in the search → first city matching by startsWith (then
-//     includes) on its normalised name highlights.
-//   • Diagram-only ghost rows (one per non-Greek country, "coming
-//     soon…") render dashed and ignore clicks.
+// Multi-country hub diagram — renders the hub → country → city neural-net
+// SVG on desktop (≥768 px) and a touch-friendly vertical city list on
+// mobile (<768 px). Both layouts are always in the DOM; CSS media queries
+// toggle visibility so the correct layout shows from first paint with no
+// hydration flash. The animated globe canvas (HubBackground) sits behind
+// the diagram in the parent; per-city sub-trees keep their own Propylaea
+// aesthetic untouched.
 
-// ── Stripe theme (only theme we ship — see plan #4 'Out of scope') ──
+// ── Stripe theme ──
 const T = {
   bg: '#ffffff',
   ink: '#0a2540',
@@ -55,8 +49,6 @@ const COL_X = [60, 520, 980];
 // Stable country ordering for the diagram (GR top → IE bottom).
 const COUNTRY_ORDER = ['GR', 'CY', 'UK', 'IE'];
 
-// Global stat — hardcoded to match the design exactly. Replace with a
-// real student-count API in a follow-up (see plan 'Out of scope').
 const GLOBAL_STUDENTS = 364;
 
 function normalize(s) {
@@ -68,6 +60,300 @@ function curve(x1, y1, x2, y2) {
   return `M ${x1} ${y1} C ${mx} ${y1}, ${mx} ${y2}, ${x2} ${y2}`;
 }
 
+function SearchBar({ search, setSearch, activeCity, searchedCity, t, mobile }) {
+  if (activeCity) {
+    return (
+      <div style={{ flex: 'none', whiteSpace: 'nowrap' }}>
+        <span
+          style={{
+            fontFamily: 'monospace',
+            fontSize: 12,
+            color: T.edgeActiveSolid,
+          }}
+        >
+          → {activeCity.country.name} / {activeCity.name}
+        </span>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      style={{
+        flex: 1,
+        display: 'flex',
+        alignItems: 'center',
+        gap: 8,
+        padding: '10px 14px',
+        background: T.inputBg,
+        border: `1px solid ${searchedCity ? T.edgeActiveSolid : T.inputBorder}`,
+        borderRadius: 8,
+        transition: 'border-color 0.2s, background 0.2s',
+      }}
+    >
+      <span style={{ fontSize: 14, opacity: 0.5 }} aria-hidden="true">⌕</span>
+      <input
+        type="text"
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
+        placeholder={mobile ? t('searchPlaceholderMobile') : t('searchPlaceholder')}
+        style={{
+          flex: 1,
+          border: 'none',
+          outline: 'none',
+          background: 'transparent',
+          color: T.ink,
+          fontSize: mobile ? 16 : 13,
+          fontFamily: 'inherit',
+        }}
+      />
+      {search && (
+        <button
+          type="button"
+          onClick={() => setSearch('')}
+          style={{
+            background: 'transparent',
+            border: 'none',
+            color: T.inkDim,
+            cursor: 'pointer',
+            fontSize: 14,
+            padding: 0,
+            lineHeight: 1,
+          }}
+          aria-label={t('clearSearch')}
+        >
+          ×
+        </button>
+      )}
+    </div>
+  );
+}
+
+function MobileHubList({
+  orderedCountries,
+  activeCity,
+  anyActive,
+  isCountryCityActive,
+  setHovered,
+  onCityClick,
+  search,
+  setSearch,
+  searchedCity,
+  t,
+}) {
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+      <div
+        style={{
+          fontSize: 13,
+          color: T.inkSoft,
+          lineHeight: 1.6,
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 8,
+          width: '100%',
+        }}
+      >
+        <SearchBar
+          search={search}
+          setSearch={setSearch}
+          activeCity={activeCity}
+          searchedCity={searchedCity}
+          t={t}
+          mobile
+        />
+      </div>
+
+      {orderedCountries.map((country) => (
+        <div key={country.code} style={{ marginTop: 8 }}>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: 8,
+              padding: '8px 0',
+              borderBottom: '1px solid rgba(99,91,255,0.12)',
+            }}
+          >
+            <span style={{ fontSize: 20 }}>{country.flag}</span>
+            <span
+              style={{
+                fontSize: 15,
+                fontWeight: 600,
+                color: T.nodeText,
+                fontFamily: T.font,
+                flex: 1,
+              }}
+            >
+              {country.name}
+            </span>
+            <span
+              style={{
+                fontFamily: 'monospace',
+                fontSize: 11,
+                fontWeight: 600,
+                color: T.inkSoft,
+                background: 'rgba(99,91,255,0.08)',
+                padding: '2px 8px',
+                borderRadius: 4,
+                letterSpacing: 1,
+              }}
+            >
+              {country.code}
+            </span>
+          </div>
+
+          {country.cities.map((city) => {
+            const key = `${city.slug}-${country.code}`;
+            const isActive = isCountryCityActive(country.code, city.slug);
+            const isGhost = !!city.ghost;
+            const isSoon = city.status === 'coming-soon';
+            const dim = anyActive && !isActive;
+
+            if (isGhost) {
+              return (
+                <div
+                  key={key}
+                  aria-hidden="true"
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    width: '100%',
+                    minHeight: 48,
+                    padding: '10px 4px 10px 15px',
+                    opacity: 0.4,
+                    fontFamily: T.font,
+                    gap: 12,
+                  }}
+                >
+                  <svg
+                    width="24"
+                    height="24"
+                    viewBox="0 0 24 24"
+                    style={{ flexShrink: 0 }}
+                  >
+                    <circle
+                      cx="12"
+                      cy="12"
+                      r="10"
+                      fill="transparent"
+                      stroke={T.nodeSoonStroke}
+                      strokeWidth={1.2}
+                      strokeDasharray="3 3"
+                    />
+                  </svg>
+                  <span
+                    style={{
+                      fontSize: 16,
+                      color: T.nodeSoonText,
+                      fontStyle: 'italic',
+                    }}
+                  >
+                    {city.name}
+                  </span>
+                </div>
+              );
+            }
+
+            return (
+              <button
+                key={key}
+                type="button"
+                onClick={() => onCityClick(city)}
+                onMouseEnter={() => setHovered(key)}
+                onMouseLeave={() => setHovered((h) => (h === key ? null : h))}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  width: '100%',
+                  minHeight: 48,
+                  padding: '10px 4px 10px 12px',
+                  background: isActive
+                    ? 'rgba(99,91,255,0.06)'
+                    : 'transparent',
+                  border: 'none',
+                  borderLeft: isActive
+                    ? `3px solid ${T.edgeActiveSolid}`
+                    : '3px solid transparent',
+                  cursor: 'pointer',
+                  opacity: dim ? 0.4 : 1,
+                  transition: 'opacity 0.25s, background 0.25s',
+                  fontFamily: T.font,
+                  gap: 12,
+                  textAlign: 'left',
+                }}
+              >
+                <svg
+                  width="24"
+                  height="24"
+                  viewBox="0 0 24 24"
+                  style={{ flexShrink: 0 }}
+                >
+                  <circle
+                    cx="12"
+                    cy="12"
+                    r="10"
+                    fill={
+                      isActive
+                        ? T.edgeActiveSolid
+                        : isSoon
+                          ? 'transparent'
+                          : T.node
+                    }
+                    stroke={
+                      isActive
+                        ? T.ink
+                        : isSoon
+                          ? T.nodeSoonStroke
+                          : T.nodeStroke
+                    }
+                    strokeWidth={isActive ? 1.5 : 1.2}
+                    strokeDasharray={isSoon ? '3 3' : undefined}
+                  />
+                </svg>
+
+                <span
+                  style={{
+                    flex: 1,
+                    fontSize: 16,
+                    fontWeight: isActive ? 600 : 400,
+                    color: isSoon ? T.nodeSoonText : T.nodeText,
+                  }}
+                >
+                  {city.name}
+                </span>
+
+                {isSoon ? (
+                  <span
+                    style={{
+                      fontSize: 12,
+                      color: T.nodeSoonText,
+                      fontStyle: 'italic',
+                      whiteSpace: 'nowrap',
+                    }}
+                  >
+                    {t('comingSoonLabel')}
+                  </span>
+                ) : (
+                  <span
+                    style={{
+                      fontSize: 16,
+                      color: isActive ? T.edgeActiveSolid : T.inkDim,
+                      fontWeight: 300,
+                    }}
+                  >
+                    →
+                  </span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      ))}
+    </div>
+  );
+}
+
 export default function HubDiagram() {
   const t = useTranslations('propylaea.hub');
   const router = useRouter();
@@ -75,11 +361,6 @@ export default function HubDiagram() {
   const [search, setSearch] = useState('');
   const [globeLoading, setGlobeLoading] = useState(null);
 
-  // Order countries; append per-country ghost row ("coming soon…") for
-  // any non-Greek country with no second city yet. Ghost rows are
-  // diagram-only — they aren't in cityRoutes, so they 404 if the user
-  // typed the URL directly. Their `clickable: false` flag drops the
-  // click handler at the SVG level.
   const orderedCountries = useMemo(() => {
     const ordered = COUNTRY_ORDER.map((code) =>
       COUNTRIES.find((c) => c.code === code),
@@ -174,21 +455,11 @@ export default function HubDiagram() {
       }}
     >
       {/* Header row — wordmark + global student count */}
-      <div
-        style={{
-          padding: '32px 56px 0',
-          display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'space-between',
-          gap: 40,
-          flexWrap: 'wrap',
-        }}
-      >
+      <div className="px-5 pt-5 md:px-14 md:pt-8 flex items-end justify-between flex-wrap gap-4 md:gap-10">
         <h1
+          className="text-[40px] md:text-[72px] tracking-[-1.5px] md:tracking-[-2.5px]"
           style={{
-            fontSize: 72,
             fontWeight: 700,
-            letterSpacing: '-2.5px',
             margin: 0,
             lineHeight: 1,
             background: T.wordmarkFill,
@@ -213,10 +484,10 @@ export default function HubDiagram() {
             X
           </span>
         </h1>
-        <div style={{ textAlign: 'right', paddingBottom: 6 }}>
+        <div className="text-right pb-0.5 md:pb-1.5">
           <div
+            className="text-xs md:text-[13px]"
             style={{
-              fontSize: 13,
               fontWeight: 400,
               color: T.nodeText,
               lineHeight: 1.4,
@@ -225,12 +496,11 @@ export default function HubDiagram() {
             {t('headerStat')}
           </div>
           <div
+            className="text-4xl md:text-[56px] mt-1 md:mt-1.5"
             style={{
-              fontSize: 56,
               fontWeight: 700,
               color: T.nodeText,
               lineHeight: 1,
-              marginTop: 6,
               fontVariantNumeric: 'tabular-nums',
               letterSpacing: '-1.5px',
             }}
@@ -240,18 +510,26 @@ export default function HubDiagram() {
         </div>
       </div>
 
-      {/* Diagram */}
-      <div
-        style={{
-          padding: '32px 56px 32px',
-          flex: 1,
-          minHeight: 0,
-          display: 'flex',
-          flexDirection: 'column',
-          gap: 16,
-        }}
-      >
-        <div style={{ flex: 1, position: 'relative', minHeight: 0 }}>
+      {/* Diagram / city list container */}
+      <div className="px-5 pt-4 pb-6 md:px-14 md:py-8 flex-1 min-h-0 flex flex-col gap-4">
+        {/* ── Mobile: touch-friendly city list (<768 px) ── */}
+        <div className="md:hidden">
+          <MobileHubList
+            orderedCountries={orderedCountries}
+            activeCity={activeCity}
+            anyActive={anyActive}
+            isCountryCityActive={isCountryCityActive}
+            setHovered={setHovered}
+            onCityClick={onCityClick}
+            search={search}
+            setSearch={setSearch}
+            searchedCity={searchedCity}
+            t={t}
+          />
+        </div>
+
+        {/* ── Desktop: neural-net SVG diagram (≥768 px) ── */}
+        <div className="hidden md:block" style={{ flex: 1, position: 'relative', minHeight: 0 }}>
           <svg
             viewBox={`0 0 ${VB_W} ${VB_H}`}
             preserveAspectRatio="xMinYMid meet"
@@ -464,13 +742,13 @@ export default function HubDiagram() {
           </svg>
         </div>
 
-        {/* Hint + search — left-aligned with the StudentX header. */}
+        {/* Desktop search bar */}
         <div
+          className="hidden md:flex"
           style={{
             fontSize: 13,
             color: T.inkSoft,
             lineHeight: 1.6,
-            display: 'flex',
             alignItems: 'center',
             gap: 20,
             width: '100%',
@@ -478,68 +756,14 @@ export default function HubDiagram() {
             alignSelf: 'flex-start',
           }}
         >
-          {activeCity ? (
-            <div style={{ flex: 'none', whiteSpace: 'nowrap' }}>
-              <span
-                style={{
-                  fontFamily: 'monospace',
-                  fontSize: 12,
-                  color: T.edgeActiveSolid,
-                }}
-              >
-                → {activeCity.country.name} / {activeCity.name}
-              </span>
-            </div>
-          ) : (
-            <div
-              style={{
-                flex: 1,
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                padding: '10px 14px',
-                background: T.inputBg,
-                border: `1px solid ${searchedCity ? T.edgeActiveSolid : T.inputBorder}`,
-                borderRadius: 8,
-                transition: 'border-color 0.2s, background 0.2s',
-              }}
-            >
-              <span style={{ fontSize: 14, opacity: 0.5 }}>⌕</span>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder={t('searchPlaceholder')}
-                style={{
-                  flex: 1,
-                  border: 'none',
-                  outline: 'none',
-                  background: 'transparent',
-                  color: T.ink,
-                  fontSize: 13,
-                  fontFamily: 'inherit',
-                }}
-              />
-              {search && (
-                <button
-                  type="button"
-                  onClick={() => setSearch('')}
-                  style={{
-                    background: 'transparent',
-                    border: 'none',
-                    color: T.inkDim,
-                    cursor: 'pointer',
-                    fontSize: 14,
-                    padding: 0,
-                    lineHeight: 1,
-                  }}
-                  aria-label={t('clearSearch')}
-                >
-                  ×
-                </button>
-              )}
-            </div>
-          )}
+          <SearchBar
+            search={search}
+            setSearch={setSearch}
+            activeCity={activeCity}
+            searchedCity={searchedCity}
+            t={t}
+            mobile={false}
+          />
         </div>
       </div>
       {globeLoading === 'thessaloniki' && <GlobeLoader onComplete={handleGlobeComplete} />}

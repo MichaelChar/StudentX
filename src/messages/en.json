@@ -457,7 +457,9 @@
       "description": "Curated student housing across Greece, Cyprus, the UK and Ireland. Pick a city to begin.",
       "headerStat": "Global students empowered by StudentX:",
       "searchPlaceholder": "Hover over your city or find it below",
+      "searchPlaceholderMobile": "Search for your city",
       "comingSoonGhost": "coming soon…",
+      "comingSoonLabel": "coming soon",
       "clearSearch": "Clear search"
     },
     "comingSoon": {
