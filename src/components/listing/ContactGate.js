@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import Pill from '@/components/ui/Pill';
+import AuthGateRescue from '@/components/AuthGateRescue';
 
 export default async function ContactGate({ listing, locale, fromRaw }) {
   const t = await getTranslations({ locale, namespace: 'propylaea.listing' });
@@ -11,14 +12,14 @@ export default async function ContactGate({ listing, locale, fromRaw }) {
   const tGate = await getTranslations({ locale, namespace: 'student.gate' });
 
   const fromQs = fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : '';
-  const localePrefix = locale === 'el' ? '' : `/${locale}`;
-  const nextPath = `${localePrefix}/property/thessaloniki/listing/${listing.listing_id}${fromQs}`;
+  const nextPath = `/property/thessaloniki/listing/${listing.listing_id}${fromQs}`;
   const nextQuery = `?next=${encodeURIComponent(nextPath)}`;
 
   return (
     <aside>
       <div className="lg:sticky lg:top-6">
         <Card tone="white" className="p-6">
+          <AuthGateRescue />
           <p className="font-display text-3xl text-blue">
             {listing.monthly_price != null ? (
               <>
