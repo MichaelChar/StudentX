@@ -47,6 +47,34 @@ describe('evaluateBody', () => {
     expect(result.ok).toBe(false);
     expect(result.reason).toMatch(/forbidden EL marker/);
   });
+
+  // Cloudflare "couldn't reach origin"-class 5xx is treated as inconclusive
+  // (skipped) so transient infra noise doesn't fire alerts. 521 (web server
+  // down) and 500 stay as real failures — those are NOT in the skip set.
+  // The 2026-05-17 16:00 alert (en-listing-locale: non-200 status: 523)
+  // is what prompted broadening the set beyond 522.
+  describe('inconclusive CF 5xx → skipped', () => {
+    for (const status of [520, 522, 523, 524]) {
+      it(`treats ${status} as inconclusive`, () => {
+        const result = evaluateBody({ status, body: '' });
+        expect(result.ok).toBe(true);
+        expect(result.skipped).toBe(true);
+        expect(result.reason).toMatch(new RegExp(`Cloudflare ${status}`));
+      });
+    }
+
+    it('still fails on 521 (real outage signal)', () => {
+      const result = evaluateBody({ status: 521, body: '' });
+      expect(result.ok).toBe(false);
+      expect(result.reason).toMatch(/non-200 status: 521/);
+    });
+
+    it('still fails on generic 500 (app-level error)', () => {
+      const result = evaluateBody({ status: 500, body: '' });
+      expect(result.ok).toBe(false);
+      expect(result.reason).toMatch(/non-200 status: 500/);
+    });
+  });
 });
 
 describe('evaluateAnonCacheHeader', () => {
