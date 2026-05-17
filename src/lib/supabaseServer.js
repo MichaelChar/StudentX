@@ -26,19 +26,17 @@ export function getSupabaseWithToken(token) {
  * requireStudent / requireLandlord and every authenticated API route
  * funnel through here.
  *
- * Fallback: when the secret is missing (local dev without the env var,
- * or CI), falls back to supabase.auth.getUser(token) so behaviour stays
- * identical — just slower. Production must have SUPABASE_JWT_SECRET set
- * to get the speedup; the fallback exists so the change doesn't
- * dark-launch when the secret isn't propagated yet.
+ * Fallback: any time local verification doesn't return a user — secret
+ * unset, secret rotated, secret drifted from the Supabase project — we
+ * fall back to supabase.auth.getUser(token). This means a misconfigured
+ * or rotated secret causes a slow login, not a mass 401, and prod is
+ * safe to merge before the Worker secret is propagated. The only
+ * additional cost is one Supabase round-trip on genuinely invalid
+ * tokens, which is fine — that's the same cost as before the change.
  */
 export async function getUserFromToken(token) {
   const local = await verifyAccessTokenLocal(token);
   if (local) return local;
-  // Either the secret isn't configured, or verification failed. The
-  // common case is the former in dev; fall through to the network so
-  // missing-secret doesn't 401 every user.
-  if (process.env.SUPABASE_JWT_SECRET) return null;
 
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,

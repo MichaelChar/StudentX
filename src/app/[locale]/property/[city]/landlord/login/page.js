@@ -44,13 +44,13 @@ function LandlordLoginInner() {
     setStage('auth');
     try {
       const supabase = getSupabaseBrowser();
-      // Defensive clear of a stale session — a hung _recoverAndRefresh on the
-      // cached browser client can saturate the HTTP/2 connection to Supabase
-      // and queue the login POST behind a stuck token-refresh request (PR #138).
-      // Only run it when there actually IS a prior session: getSession() reads
-      // from localStorage synchronously, so the guard is free in the common
-      // "no prior session" case and avoids a ~200–1000 ms Supabase round-trip
-      // on every login.
+      // PR #138's defence: when a cached browser client has a session
+      // whose token refresh is hung, the next signInWithPassword can
+      // queue behind the stuck refresh on the same HTTP/2 connection.
+      // Clearing first cancels the refresh. getSession() reads from
+      // localStorage synchronously, so when there's no prior session we
+      // skip the signOut and save a ~200–1000 ms Supabase round-trip —
+      // the hung-refresh scenario can only happen when there IS one.
       const { data: { session: existing } } = await supabase.auth.getSession();
       if (existing) {
         await withTimeout(supabase.auth.signOut(), 5000).catch(() => {});
