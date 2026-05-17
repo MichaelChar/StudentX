@@ -1,6 +1,6 @@
 'use client';
 
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
@@ -32,20 +32,35 @@ function StudentLoginInner() {
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  // stage: '' | 'auth' | 'redirect' — drives the multi-step button label so
+  // the user gets a moving signal instead of a frozen "Signing in…" string.
+  const [stage, setStage] = useState('');
+  const loading = stage !== '';
+
+  // Warm the Cloudflare Worker isolate while the user is typing. The
+  // login POST then doesn't pay cold-start latency on top of the
+  // Supabase round-trip. Fire-and-forget; cheap GET, no auth.
+  useEffect(() => {
+    fetch('/api/health', { cache: 'no-store' }).catch(() => {});
+  }, []);
 
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
-    setLoading(true);
+    setStage('auth');
     try {
       const supabase = getSupabaseBrowser();
-      // Clear any stale session first — a hung _recoverAndRefresh on the
-      // cached browser client can saturate the HTTP/2 connection to Supabase
-      // and queue the login POST behind a stuck token-refresh request.
-      // Short 5s timeout (vs. the 15s default elsewhere): this is best-effort
-      // cleanup; if it hangs we shouldn't block the actual login on it.
-      await withTimeout(supabase.auth.signOut(), 5000).catch(() => {});
+      // PR #138's defence: when a cached browser client has a session
+      // whose token refresh is hung, the next signInWithPassword can
+      // queue behind the stuck refresh on the same HTTP/2 connection.
+      // Clearing first cancels the refresh. getSession() reads from
+      // localStorage synchronously, so when there's no prior session we
+      // skip the signOut and save a ~200–1000 ms Supabase round-trip —
+      // the hung-refresh scenario can only happen when there IS one.
+      const { data: { session: existing } } = await supabase.auth.getSession();
+      if (existing) {
+        await withTimeout(supabase.auth.signOut(), 5000).catch(() => {});
+      }
 
       let lastErr;
       for (let attempt = 0; attempt < 2; attempt++) {
@@ -57,6 +72,8 @@ function StudentLoginInner() {
             setError(authError.message);
             return;
           }
+
+          setStage('redirect');
 
           // Sync cookie eagerly so the next navigation's RSC sees auth without
           // waiting for SessionSync's onAuthStateChange to fire.
@@ -120,7 +137,7 @@ function StudentLoginInner() {
       }
       setError(lastErr?.message || 'Something went wrong. Please try again.');
     } finally {
-      setLoading(false);
+      setStage('');
     }
   }
 
@@ -189,7 +206,11 @@ function StudentLoginInner() {
           disabled={loading}
           className="w-full justify-center"
         >
-          {loading ? t('submitting') : t('submit')}
+          {stage === 'redirect'
+            ? t('submittingRedirect')
+            : stage === 'auth'
+              ? t('submittingAuth')
+              : t('submit')}
         </Button>
       </form>
 

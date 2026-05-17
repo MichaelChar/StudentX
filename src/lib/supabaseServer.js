@@ -1,4 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
+import { verifyAccessTokenLocal } from '@/lib/verifyJwt';
 
 /**
  * Server-side Supabase client that uses the caller's JWT.
@@ -17,8 +18,26 @@ export function getSupabaseWithToken(token) {
 
 /**
  * Validates a JWT and returns the Supabase user, or null if invalid.
+ *
+ * Fast path: when SUPABASE_JWT_SECRET is set (Worker secret in prod),
+ * verifies the JWT signature locally with jose. No network call — a few
+ * microseconds of crypto vs. a ~200–1000 ms round-trip to Supabase's
+ * /auth/v1/user. This is the single biggest sign-in latency win because
+ * requireStudent / requireLandlord and every authenticated API route
+ * funnel through here.
+ *
+ * Fallback: any time local verification doesn't return a user — secret
+ * unset, secret rotated, secret drifted from the Supabase project — we
+ * fall back to supabase.auth.getUser(token). This means a misconfigured
+ * or rotated secret causes a slow login, not a mass 401, and prod is
+ * safe to merge before the Worker secret is propagated. The only
+ * additional cost is one Supabase round-trip on genuinely invalid
+ * tokens, which is fine — that's the same cost as before the change.
  */
 export async function getUserFromToken(token) {
+  const local = await verifyAccessTokenLocal(token);
+  if (local) return local;
+
   const supabase = createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
