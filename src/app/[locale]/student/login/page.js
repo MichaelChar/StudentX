@@ -68,6 +68,37 @@ function StudentLoginInner() {
                 body: JSON.stringify({ access_token: data.session.access_token }),
               }),
             );
+
+            // Idempotent profile probe — ensures a students row exists
+            // even if the signup trigger was skipped (e.g. pre-seeded
+            // landlord email collision). Returns the existing row when
+            // one is already present, so this is a no-op on happy path.
+            try {
+              const profileRes = await withTimeout(
+                fetch('/api/student/profile', {
+                  method: 'POST',
+                  headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${data.session.access_token}`,
+                  },
+                  body: JSON.stringify({ preferred_locale: 'en' }),
+                }),
+              );
+              if (profileRes.status === 409) {
+                const profileBody = await profileRes.json().catch(() => ({}));
+                if (profileBody.conflict_role === 'landlord') {
+                  const conflictUrl = new URL(window.location.href);
+                  conflictUrl.searchParams.set('roleConflict', 'landlord');
+                  if (data.session.user?.email) {
+                    conflictUrl.searchParams.set('email', data.session.user.email);
+                  }
+                  window.location.assign(conflictUrl.toString());
+                  return;
+                }
+              }
+            } catch {
+              // Best-effort — proceed with redirect.
+            }
           }
 
           if (safeNext) {

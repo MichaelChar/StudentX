@@ -3,6 +3,7 @@ import { Link } from '@/i18n/navigation';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import AuthGateRescue from '@/components/AuthGateRescue';
+import { hasAuthCookie } from '@/lib/requireStudent';
 
 /**
  * Server-rendered gate shown when requireStudent() blocks listing access.
@@ -25,6 +26,7 @@ import AuthGateRescue from '@/components/AuthGateRescue';
  */
 export default async function AuthGate({ next, locale, mode = 'guest' }) {
   const t = await getTranslations({ locale, namespace: 'student.gate' });
+  const cookiePresent = await hasAuthCookie();
   const safeNext = typeof next === 'string' && next.startsWith('/') ? next : '';
   const nextQuery = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
 
@@ -32,7 +34,7 @@ export default async function AuthGate({ next, locale, mode = 'guest' }) {
 
   return (
     <div className="min-h-[calc(100vh-12rem)] flex items-center justify-center px-5 py-16 bg-stone">
-      <AuthGateRescue />
+      <AuthGateRescue cookiePresent={cookiePresent} />
 
       <Card tone="white" className="w-full max-w-md p-8 md:p-10 text-center relative overflow-hidden">
         <div
