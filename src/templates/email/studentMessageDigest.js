@@ -5,10 +5,7 @@
  *
  * Mirror of landlordMessageDigest.js, inverted: that one notifies the
  * landlord about student messages; this one notifies the student about
- * landlord replies. Strings live under `landlord.notifications.*` —
- * the namespace tracks the *actor* writing the message (the landlord
- * here), not the recipient. Same convention as the landlord-bound
- * template using `student.notifications.*`.
+ * landlord replies.
  *
  * @param {object} params
  * @param {string} params.studentName
@@ -18,79 +15,7 @@
  * @param {string} params.snippet - Most recent unread message body
  * @param {string} params.appUrl
  * @param {string} params.inquiryId
- * @param {'el'|'en'} [params.locale='el']
  */
-
-const STRINGS = {
-  el: {
-    htmlLang: 'el',
-    'landlord.notifications.titleTag': 'Νέα μηνύματα στη συνομιλία σου',
-    'landlord.notifications.headerTagline': 'Φοιτητική στέγαση · Θεσσαλονίκη',
-    'landlord.notifications.heading': (count, name) =>
-      count === 1
-        ? `Νέο μήνυμα από ${name}`
-        : `${count} νέα μηνύματα από ${name}`,
-    'landlord.notifications.greetingFallback': 'εσένα',
-    'landlord.notifications.intro': (greeting, count, name, summary) => {
-      const noun = count === 1 ? 'ένα αδιάβαστο μήνυμα' : `${count} αδιάβαστα μηνύματα`;
-      const tail = summary
-        ? ` σχετικά με την αγγελία <strong style="color:#0a2540;">${summary}</strong>`
-        : '';
-      return `Γεια ${greeting}, έχεις ${noun} από τον/την ιδιοκτήτη/τρια ${name}${tail}.`;
-    },
-    'landlord.notifications.snippetLabel': 'Πιο πρόσφατο μήνυμα',
-    'landlord.notifications.cta': 'Άνοιγμα συνομιλίας',
-    'landlord.notifications.inboxButton': 'Όλες οι συνομιλίες μου',
-    'landlord.notifications.viewListing': 'Δες την αγγελία →',
-    'landlord.notifications.footerLine1':
-      'StudentX · Κατάλογος φοιτητικής στέγης για τη Θεσσαλονίκη',
-    'landlord.notifications.footerLine2':
-      'Λαμβάνεις αυτό το email επειδή ένας ιδιοκτήτης σου απάντησε στο StudentX.',
-    'landlord.notifications.footerLine3':
-      'Ανοίγουμε ένα email κάθε λίγα λεπτά όταν έχεις αδιάβαστα μηνύματα — όχι ένα ανά μήνυμα.',
-    'landlord.notifications.subjectOne': (name) => `Νέο μήνυμα από ${name} · StudentX`,
-    'landlord.notifications.subjectMany': (count, name) =>
-      `${count} νέα μηνύματα από ${name} · StudentX`,
-    'landlord.notifications.subjectFallbackName': 'τον ιδιοκτήτη',
-    'landlord.notifications.pricePerMonth': (n) => `€${n}/μήνα`,
-  },
-  en: {
-    htmlLang: 'en',
-    'landlord.notifications.titleTag': 'New messages in your conversation',
-    'landlord.notifications.headerTagline': 'Student Housing · Thessaloniki',
-    'landlord.notifications.heading': (count, name) =>
-      count === 1
-        ? `New message from ${name}`
-        : `${count} new messages from ${name}`,
-    'landlord.notifications.greetingFallback': 'there',
-    'landlord.notifications.intro': (greeting, count, name, summary) => {
-      const noun = count === 1 ? 'one unread message' : `${count} unread messages`;
-      const tail = summary
-        ? ` about <strong style="color:#0a2540;">${summary}</strong>`
-        : '';
-      return `Hi ${greeting}, you have ${noun} from your landlord ${name}${tail}.`;
-    },
-    'landlord.notifications.snippetLabel': 'Latest message',
-    'landlord.notifications.cta': 'Open conversation',
-    'landlord.notifications.inboxButton': 'All my inquiries',
-    'landlord.notifications.viewListing': 'View listing →',
-    'landlord.notifications.footerLine1':
-      'StudentX · Student housing directory for Thessaloniki, Greece',
-    'landlord.notifications.footerLine2':
-      "You're receiving this because a landlord replied to you on StudentX.",
-    'landlord.notifications.footerLine3':
-      'We bundle messages into one email every few minutes instead of one per message.',
-    'landlord.notifications.subjectOne': (name) => `New message from ${name} · StudentX`,
-    'landlord.notifications.subjectMany': (count, name) =>
-      `${count} new messages from ${name} · StudentX`,
-    'landlord.notifications.subjectFallbackName': 'your landlord',
-    'landlord.notifications.pricePerMonth': (n) => `€${n}/mo`,
-  },
-};
-
-function pickStrings(locale) {
-  return STRINGS[locale] || STRINGS.en;
-}
 
 function escapeHtml(value) {
   return String(value)
@@ -101,16 +26,11 @@ function escapeHtml(value) {
     .replace(/'/g, '&#39;');
 }
 
-function localePrefix(locale) {
-  return locale === 'en' ? '/en' : '';
-}
-
-export function studentMessageDigestSubject(landlordName, unreadCount, locale = 'en') {
-  const s = pickStrings(locale);
-  const trimmed = (landlordName || '').trim() || s['landlord.notifications.subjectFallbackName'];
+export function studentMessageDigestSubject(landlordName, unreadCount) {
+  const trimmed = (landlordName || '').trim() || 'your landlord';
   return unreadCount === 1
-    ? s['landlord.notifications.subjectOne'](trimmed)
-    : s['landlord.notifications.subjectMany'](unreadCount, trimmed);
+    ? `New message from ${trimmed} · StudentX`
+    : `${unreadCount} new messages from ${trimmed} · StudentX`;
 }
 
 export function studentMessageDigestHtml({
@@ -121,42 +41,37 @@ export function studentMessageDigestHtml({
   snippet,
   appUrl,
   inquiryId,
-  locale = 'en',
 }) {
-  const s = pickStrings(locale);
-  const safeLandlord = escapeHtml(landlordName || s['landlord.notifications.subjectFallbackName']);
-  const safeGreeting = studentName
-    ? escapeHtml(studentName)
-    : s['landlord.notifications.greetingFallback'];
+  const safeLandlord = escapeHtml(landlordName || 'your landlord');
+  const safeGreeting = studentName ? escapeHtml(studentName) : 'there';
   const safeAddress = listing?.address ? escapeHtml(listing.address) : '';
   const safeNeighborhood = listing?.neighborhood ? escapeHtml(listing.neighborhood) : '';
-  const safePrice = listing?.monthly_price
-    ? s['landlord.notifications.pricePerMonth'](Number(listing.monthly_price))
-    : '';
+  const safePrice = listing?.monthly_price ? `€${Number(listing.monthly_price)}/mo` : '';
   const listingSummary = [safeAddress, safeNeighborhood, safePrice].filter(Boolean).join(' · ');
   const safeSnippet = snippet ? escapeHtml(snippet).replace(/\n/g, '<br/>') : '';
 
-  const prefix = localePrefix(locale);
-  const chatUrl = `${appUrl}${prefix}/student/inquiries/${inquiryId}`;
-  const inboxUrl = `${appUrl}${prefix}/student/account`;
+  const chatUrl = `${appUrl}/student/inquiries/${inquiryId}`;
+  const inboxUrl = `${appUrl}/student/account`;
   const listingUrl = listing?.listing_id
-    ? `${appUrl}${prefix}/property/thessaloniki/listing/${listing.listing_id}`
+    ? `${appUrl}/property/thessaloniki/listing/${listing.listing_id}`
     : null;
 
-  const heading = s['landlord.notifications.heading'](unreadCount, safeLandlord);
-  const intro = s['landlord.notifications.intro'](
-    safeGreeting,
-    unreadCount,
-    safeLandlord,
-    listingSummary,
-  );
+  const heading = unreadCount === 1
+    ? `New message from ${safeLandlord}`
+    : `${unreadCount} new messages from ${safeLandlord}`;
+
+  const noun = unreadCount === 1 ? 'one unread message' : `${unreadCount} unread messages`;
+  const tail = listingSummary
+    ? ` about <strong style="color:#0a2540;">${listingSummary}</strong>`
+    : '';
+  const intro = `Hi ${safeGreeting}, you have ${noun} from your landlord ${safeLandlord}${tail}.`;
 
   return `<!DOCTYPE html>
-<html lang="${s.htmlLang}">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>${s['landlord.notifications.titleTag']}</title>
+  <title>New messages in your conversation</title>
 </head>
 <body style="margin:0;padding:0;background:#f6f4ff;font-family:Georgia,serif;">
   <table width="100%" cellpadding="0" cellspacing="0" style="background:#f6f4ff;padding:40px 16px;">
@@ -167,7 +82,7 @@ export function studentMessageDigestHtml({
           <tr>
             <td style="background:#0a2540;padding:24px 32px;">
               <p style="margin:0;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.15em;text-transform:uppercase;color:#ffcb57;">StudentX</p>
-              <p style="margin:4px 0 0;font-family:'Helvetica Neue',sans-serif;font-size:11px;color:#ffffff80;">${s['landlord.notifications.headerTagline']}</p>
+              <p style="margin:4px 0 0;font-family:'Helvetica Neue',sans-serif;font-size:11px;color:#ffffff80;">Student Housing · Thessaloniki</p>
             </td>
           </tr>
           <!-- Body -->
@@ -182,7 +97,7 @@ export function studentMessageDigestHtml({
                 safeSnippet
                   ? `
               <!-- Snippet -->
-              <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a8595;">${s['landlord.notifications.snippetLabel']}</p>
+              <p style="margin:0 0 6px;font-family:'Helvetica Neue',sans-serif;font-size:11px;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#7a8595;">Latest message</p>
               <div style="font-size:15px;color:#0a2540;line-height:1.6;border-left:3px solid #ffcb57;padding:4px 16px;margin-bottom:24px;">
                 ${safeSnippet}
               </div>`
@@ -193,11 +108,11 @@ export function studentMessageDigestHtml({
               <table cellpadding="0" cellspacing="0">
                 <tr>
                   <td style="background:#0a2540;border-radius:8px;padding:0;">
-                    <a href="${chatUrl}" style="display:inline-block;padding:12px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">${s['landlord.notifications.cta']}</a>
+                    <a href="${chatUrl}" style="display:inline-block;padding:12px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">Open conversation</a>
                   </td>
                   <td style="width:8px;"></td>
                   <td style="border:1px solid #0a2540;border-radius:8px;padding:0;">
-                    <a href="${inboxUrl}" style="display:inline-block;padding:11px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#0a2540;text-decoration:none;">${s['landlord.notifications.inboxButton']}</a>
+                    <a href="${inboxUrl}" style="display:inline-block;padding:11px 22px;font-family:'Helvetica Neue',sans-serif;font-size:14px;font-weight:700;color:#0a2540;text-decoration:none;">All my inquiries</a>
                   </td>
                 </tr>
               </table>
@@ -205,7 +120,7 @@ export function studentMessageDigestHtml({
               ${
                 listingUrl
                   ? `<p style="margin:24px 0 0;font-size:13px;color:#7a8595;">
-                <a href="${listingUrl}" style="color:#7a8595;">${s['landlord.notifications.viewListing']}</a>
+                <a href="${listingUrl}" style="color:#7a8595;">View listing →</a>
               </p>`
                   : ''
               }
@@ -215,9 +130,9 @@ export function studentMessageDigestHtml({
           <tr>
             <td style="background:#f6f4ff;padding:20px 32px;border-top:1px solid #e6eaef;">
               <p style="margin:0;font-size:12px;color:#7a8595;">
-                ${s['landlord.notifications.footerLine1']}<br/>
-                ${s['landlord.notifications.footerLine2']}<br/>
-                ${s['landlord.notifications.footerLine3']}
+                StudentX · Student housing directory and services<br/>
+                A landlord replied to you on StudentX!<br/>
+                 We do not send you an email per message. Instead, we bundle messages every few minutes.
               </p>
             </td>
           </tr>

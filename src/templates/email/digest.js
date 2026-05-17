@@ -80,7 +80,7 @@ export function digestEmailHtml({ label, listings, manageUrl, appUrl }) {
           <tr>
             <td style="background:#ffffff;padding:20px 32px;border-top:1px solid #e6eaef;">
               <p style="margin:0;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:12px;color:#7a8595;">
-                StudentX · Student housing directory for Thessaloniki, Greece<br/>
+                StudentX · Student housing directory and services<br/>
                 You're receiving this because you saved a search alert.<br/>
                 <a href="${manageUrl}" style="color:#7a8595;">Manage alerts</a> · <a href="${manageUrl}" style="color:#7a8595;">Unsubscribe</a>
               </p>

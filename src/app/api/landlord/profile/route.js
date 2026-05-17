@@ -177,7 +177,6 @@ export async function POST(request) {
     landlordName: landlord.name,
     email: landlord.email,
     foundingRank: landlord.founding_rank,
-    request,
   });
 
   return NextResponse.json({ landlord }, { status: 201 });

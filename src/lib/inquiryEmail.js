@@ -5,25 +5,6 @@ import { inquiryEmailHtml, inquiryEmailSubject } from '@/templates/email/inquiry
 
 const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
-function resolveLandlordEmailLocale(request, landlord) {
-  if (landlord?.preferred_locale === 'el' || landlord?.preferred_locale === 'en') {
-    return landlord.preferred_locale;
-  }
-  const header = request?.headers.get?.('accept-language') || '';
-  const tags = header
-    .split(',')
-    .map((t) => t.split(';')[0].trim().toLowerCase())
-    .filter(Boolean);
-  for (const tag of tags) {
-    if (tag === 'el' || tag.startsWith('el-')) return 'el';
-    if (tag === 'en' || tag.startsWith('en-')) return 'en';
-  }
-  // Default English (2026-05-11 product call). Note: header-based 'el'
-  // is still honored above so a browser explicitly requesting Greek
-  // still gets Greek — only the absent/unknown fallback changed.
-  return 'en';
-}
-
 /**
  * Sends the landlord notification email for a new inquiry. Extracted from
  * the (now removed) anonymous /api/inquiries route so the authenticated
@@ -42,7 +23,6 @@ export async function sendLandlordInquiryEmail({
   studentPhone = null,
   message,
   facultyId = null,
-  request = null,
 }) {
   try {
     const supabase = getSupabase();
@@ -53,7 +33,7 @@ export async function sendLandlordInquiryEmail({
         listing_id,
         location ( address, neighborhood ),
         rent ( monthly_price ),
-        landlords ( name, email, preferred_locale )
+        landlords ( name, email )
       `)
       .eq('listing_id', listingId)
       .single();
@@ -84,13 +64,12 @@ export async function sendLandlordInquiryEmail({
 
     const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
     const listingSummary = [location?.address, location?.neighborhood].filter(Boolean).join(' · ');
-    const emailLocale = resolveLandlordEmailLocale(request, landlord);
 
     await getResend().emails.send({
       from: FROM_ADDRESS,
       to: landlord.email,
       replyTo: studentEmail,
-      subject: inquiryEmailSubject(studentName, listingSummary, emailLocale),
+      subject: inquiryEmailSubject(studentName, listingSummary),
       html: inquiryEmailHtml({
         landlordName: landlord.name,
         student: {
@@ -107,7 +86,6 @@ export async function sendLandlordInquiryEmail({
           monthly_price: rent?.monthly_price,
         },
         appUrl,
-        locale: emailLocale,
       }),
     });
 
