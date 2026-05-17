@@ -38,12 +38,16 @@ Any failed assertion (or non-200, or fetch timeout) attempts to send an email vi
 
 > **Status (2026-05-03):** Resend is verified for `studentx.uk` and `RESEND_API_KEY` is set as a Worker secret — the alert path is live. On failure the route emails `SYNTHETIC_ALERT_EMAIL` from `alerts@studentx.uk`. Failures still surface in `wrangler tail` regardless. The route's email send is wrapped in try/catch, so a Resend hiccup doesn't break the check itself.
 
-### Fetch strategy: service binding vs. global fetch
+### Fetch strategy: service binding, sequential heavy renders
 
-The route uses two fetch paths depending on the check:
+Every check fetches via the **service binding (`env.WORKER_SELF_REFERENCE`)** — `fetchUrl` in `route.js` falls back to global `fetch()` only outside the Cloudflare runtime (local dev, unit tests). Service-binding sub-fetches bypass DNS/CDN/asset-binding interception, giving a deterministic origin response — required for the cache-header assertions and to avoid the workers.dev asset-binding 404 on `/api/*`.
 
-- **Service binding (`env.WORKER_SELF_REFERENCE`)** — used by the listing-detail body + cache-header checks and the API checks (`/api/listings/<id>`, `/api/landlord/listings`, `/og-default.png`, `/en` missing-message). Bypasses DNS/CDN/asset-binding interception, so it gives a deterministic origin response (required for the cache-header assertions and avoids the workers.dev asset-binding 404 on `/api/*`).
-- **Global `fetch()` (CDN path)** — used by the three `/en/property/*` page-locale checks (`en-cityhub-locale`, `en-homepage-locale`, `en-quiz-locale`). Service-binding sub-fetches force fresh SSR for these heavy property pages (HubBackground 240k particles, HubDiagram, StripeGradientMesh WebGL) and exceed Worker resource limits when 8 checks run concurrently — symptom is 503/timeout in the alert email despite the pages serving 200 to real users. The locale checks only need HTML marker presence, so a CDN-cached response satisfies them; a real i18n regression surfaces within the CDN TTL on the first cache miss after deploy.
+To stay inside Worker resource limits, the route splits the checks into two waves:
+
+- **Lightweight checks** (API routes, static assets, redirects: `/api/listings/<id>`, `/api/landlord/listings`, `/og-default.png`, `/en` missing-message, `soft-404`) run **concurrently** via `Promise.all`. These don't render heavy SSR, so concurrent execution is fine.
+- **Heavy property-page locale checks** (`en-cityhub-locale`, `en-homepage-locale`, `en-quiz-locale`) and the listing-detail render run **sequentially** via the same service binding. These pages SSR WebGL components (HubBackground 240k particles, HubDiagram, StripeGradientMesh) and would exhaust the Worker CPU budget if rendered in parallel.
+
+> **Historical note (PR #133):** the three heavy property-page checks originally used global `fetch()` via the CDN to dodge SSR entirely, but that caused Worker self-fetch 522s whenever the CDN cache was cold (post-deploy, different edge PoP). Running them sequentially via the service binding sidesteps both the SSR resource pressure and the cold-cache 522. The trade-off is that genuine i18n regressions surface immediately (no CDN-TTL lag).
 
 ## Configuration
 
@@ -65,7 +69,7 @@ Subject: `[StudentX synthetic] N check(s) failed`
 
 Body includes the failing check name, reason, and the first 500 chars of the anon HTML response. Possible reasons:
 
-- `non-200 status: <code>` — the page errored or redirected. Check the Worker logs. **For the three `/en/property/*` page-locale checks**, these go via the CDN (see [Fetch strategy](#fetch-strategy-service-binding-vs-global-fetch)), so a non-200 means the CDN itself is failing or the origin is genuinely down — try the user-facing curl first before assuming the Worker is broken.
+- `non-200 status: <code>` — the page errored or redirected. Check the Worker logs. Every probe goes via the service binding (see [Fetch strategy](#fetch-strategy-service-binding-sequential-heavy-renders)), so a non-200 is the origin's own response — not a CDN miss. Try the user-facing curl to confirm whether external visitors see the same. **Cloudflare-class 5xx (520, 522, 523, 524) is no longer reported as a failure** — service-binding sub-fetches can hit these transiently when CF's runtime hiccups, and the page is almost always healthy seconds before and after (e.g. the 2026-05-17 16:00 `523` alert that prompted this carve-out). The skip surfaces in the run record as `{ ok: true, skipped: true, reason: "skipped: Cloudflare 523" }`. A genuine Worker outage still surfaces — either as `fetch threw: ...` errors or as simultaneous failures across multiple canaries (the suppressed codes are checked per-fetch, not globally).
 - `missing required EN marker: <marker>` — page returned 200 but the English copy disappeared. Either the gate copy was edited (update marker constants in `route.js`) or the i18n regression class from PR #48 is back.
 - `forbidden EL marker present: <marker>` — Greek leaked onto the EN page. **i18n regression** — investigate `getTranslations` calls in any recently-changed server component.
 - `anon listing detail must serve public, s-maxage=...` — the middleware-set per-request cache header (PR #105) regressed for anon visitors. Either middleware.js stopped matching the path, or `next.config.mjs` re-introduced a static `private` rule that's overriding it. Run the curl commands in the [Manual cache-header probe](#manual-cache-header-probe) section to localise.

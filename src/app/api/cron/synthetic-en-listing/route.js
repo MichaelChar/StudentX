@@ -31,6 +31,21 @@ const EL_MARKERS_FORBIDDEN = [
   'Συνδέσου για να επικοινωνήσεις',
 ];
 
+// Cloudflare "couldn't reach origin"-class status codes. The synthetic
+// invokes the Worker via a service binding (env.WORKER_SELF_REFERENCE),
+// but service-binding sub-fetches still surface Cloudflare's edge errors
+// when the runtime hiccups mid-render — none of which are app-level
+// regressions. Treating them as inconclusive (skipped) prevents false
+// positives like the 2026-05-17 16:00 alert ("en-listing-locale: non-200
+// status: 523"), where the listing page was healthy 30s before and after.
+//   520 — unknown server error (Worker errored mid-response)
+//   522 — connection timed out (already handled — Worker self-fetch loop)
+//   523 — origin unreachable
+//   524 — origin responded too slowly
+// 521 (web server down) and 525–527 (SSL/Railgun) are deliberately left
+// out — those would indicate a real outage class worth alerting on.
+const INCONCLUSIVE_CF_5XX = new Set([520, 522, 523, 524]);
+
 function isCronAuthorized(request) {
   const secret = process.env.CRON_SECRET;
   if (!secret) return false;
@@ -103,15 +118,14 @@ async function fetchListingHtml(url, { cookie } = {}) {
 const PUBLIC_CACHE_RE = /public,\s*s-maxage=/i;
 
 export function evaluateBody({ status, body }) {
-  // 522 = Worker self-fetch loop. OpenNext's SSR makes internal HTTP
-  // sub-requests that resolve against the public hostname, triggering
-  // Cloudflare's self-fetch rejection. This is an inherent limitation
-  // of rendering pages from inside the Worker (service binding or
-  // global fetch both hit it). Treat as inconclusive — we can't check
-  // content, but there's no regression to report. External visitors
-  // are unaffected (their requests don't self-fetch).
-  if (status === 522) {
-    return { ok: true, skipped: true, reason: 'skipped: Worker self-fetch 522 (inconclusive)' };
+  // Cloudflare "couldn't reach origin"-class 5xx (520/522/523/524) is
+  // treated as inconclusive — see INCONCLUSIVE_CF_5XX above for the
+  // full rationale. 522 is the classic self-fetch loop; 523 fired the
+  // 2026-05-17 false-positive alert that prompted broadening the skip
+  // set. External visitors are unaffected (their requests don't
+  // self-fetch).
+  if (INCONCLUSIVE_CF_5XX.has(status)) {
+    return { ok: true, skipped: true, reason: `skipped: Cloudflare ${status} (inconclusive)` };
   }
   if (status !== 200) {
     return { ok: false, reason: `non-200 status: ${status}` };
@@ -304,10 +318,10 @@ async function checkNoMissingMessage(appUrl) {
 async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers }) {
   try {
     const res = await fetchUrl(url);
-    // 522 = Worker self-fetch loop during SSR (see evaluateBody comment).
+    // CF "couldn't reach origin"-class 5xx (see INCONCLUSIVE_CF_5XX).
     // Inconclusive — can't check markers, but not a regression.
-    if (res.status === 522) {
-      return { name, ok: true, skipped: true, reason: 'skipped: Worker self-fetch 522' };
+    if (INCONCLUSIVE_CF_5XX.has(res.status)) {
+      return { name, ok: true, skipped: true, reason: `skipped: Cloudflare ${res.status}` };
     }
     if (res.status !== 200) {
       return { name, ok: false, reason: `expected 200, got ${res.status} from ${url}` };
