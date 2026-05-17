@@ -4,12 +4,14 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import Pill from '@/components/ui/Pill';
 import AuthGateRescue from '@/components/AuthGateRescue';
+import { hasAuthCookie } from '@/lib/requireStudent';
 
 export default async function ContactGate({ listing, locale, fromRaw }) {
   const t = await getTranslations({ locale, namespace: 'propylaea.listing' });
   const tListing = await getTranslations({ locale, namespace: 'listing' });
   const tContact = await getTranslations({ locale, namespace: 'student.contact' });
   const tGate = await getTranslations({ locale, namespace: 'student.gate' });
+  const cookiePresent = await hasAuthCookie();
 
   const fromQs = fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : '';
   const nextPath = `/property/thessaloniki/listing/${listing.listing_id}${fromQs}`;
@@ -19,7 +21,7 @@ export default async function ContactGate({ listing, locale, fromRaw }) {
     <aside>
       <div className="lg:sticky lg:top-6">
         <Card tone="white" className="p-6">
-          <AuthGateRescue />
+          <AuthGateRescue cookiePresent={cookiePresent} />
           <p className="font-display text-3xl text-blue">
             {listing.monthly_price != null ? (
               <>

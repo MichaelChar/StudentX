@@ -15,8 +15,10 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
  * Keep this side-effect-only and silent — if no session exists, the
  * gate is correct and nothing should change.
  */
-export default function AuthGateRescue() {
+export default function AuthGateRescue({ cookiePresent = false }) {
   useEffect(() => {
+    if (cookiePresent) return;
+
     let cancelled = false;
     (async () => {
       const supabase = getSupabaseBrowser();
@@ -40,7 +42,7 @@ export default function AuthGateRescue() {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [cookiePresent]);
 
   return null;
 }
