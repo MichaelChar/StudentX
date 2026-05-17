@@ -11,16 +11,12 @@ export default async function StudentInquiryThreadPage({ params }) {
 
   const auth = await requireStudent();
   if (!auth || auth.kind === 'wrong-role') {
-    const next =
-      locale === 'el'
-        ? `/student/inquiries/${inquiryId}`
-        : `/${locale}/student/inquiries/${inquiryId}`;
-    const loginParams = new URLSearchParams({ next });
+    const loginParams = new URLSearchParams({ next: `/student/inquiries/${inquiryId}` });
     if (auth?.kind === 'wrong-role' && auth.conflict_role) {
       loginParams.set('roleConflict', auth.conflict_role);
       if (auth.email) loginParams.set('email', auth.email);
     }
-    redirect(`${locale === 'el' ? '' : `/${locale}`}/student/login?${loginParams.toString()}`);
+    redirect(`/student/login?${loginParams.toString()}`);
   }
 
   const t = await getTranslations({ locale, namespace: 'student.chat' });
