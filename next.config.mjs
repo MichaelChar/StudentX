@@ -156,7 +156,6 @@ const nextConfig = {
       ['/about', '/property/thessaloniki/about'],
     ];
     return [
-      { source: '/', destination: '/property', permanent: true },
       ...directoryPaths.map(([from, to]) => ({ source: from, destination: to, permanent: true })),
       { source: '/listing/:id', destination: '/property/thessaloniki/listing/:id', permanent: true },
       // `:path*` matches one or more segments — the zero-segment case
@@ -170,9 +169,9 @@ const nextConfig = {
       // /en/* and /el/* catch-alls. These come LAST so the explicit
       // directoryPaths and /listing/:id rules win. The :path* segment
       // captures the rest of the URL verbatim.
-      { source: '/en', destination: '/property', permanent: true },
+      { source: '/en', destination: '/', permanent: true },
       { source: '/en/:path*', destination: '/:path*', permanent: true },
-      { source: '/el', destination: '/property', permanent: true },
+      { source: '/el', destination: '/', permanent: true },
       { source: '/el/:path*', destination: '/:path*', permanent: true },
     ];
   },

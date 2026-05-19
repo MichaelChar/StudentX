@@ -857,5 +857,17 @@
     "verifyingCycle": ["Verifying your link", "Almost ready"],
     "signingInCycle": ["Signing you in", "Almost ready"],
     "loadingCycle": ["Loading"]
+  },
+  "home": {
+    "tagline": "For students, by students",
+    "blog": "Blog",
+    "blogSub": "Insights & tactical strategies",
+    "directory": "Directory",
+    "directorySub": "Verified housing",
+    "services": "Student Services",
+    "servicesSub": "Setting you up in your city",
+    "about": "About Us",
+    "aboutSub": "Mission statement",
+    "copyright": "© {year} StudentX"
   }
 }
