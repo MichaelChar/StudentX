@@ -1,4 +1,4 @@
-import { Inter } from 'next/font/google';
+import { Inter, Inter_Tight } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -21,6 +21,13 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 const inter = Inter({
   subsets: ['latin', 'greek'],
   variable: '--font-inter',
+  weight: ['400', '500', '600', '700'],
+  display: 'swap',
+});
+
+const interTight = Inter_Tight({
+  subsets: ['latin'],
+  variable: '--font-inter-tight',
   weight: ['400', '500', '600', '700'],
   display: 'swap',
 });
@@ -71,7 +78,7 @@ export default async function LocaleLayout({ children, params }) {
   return (
     <html
       lang={locale}
-      className={`${inter.variable} h-full antialiased`}
+      className={`${inter.variable} ${interTight.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-stone text-night">
         <NextIntlClientProvider locale={locale} messages={messages}>
