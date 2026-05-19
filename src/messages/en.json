@@ -860,14 +860,16 @@
   },
   "home": {
     "tagline": "For students, by students",
+    "descriptor": "Curated student housing for Aristotle University, Thessaloniki.",
     "blog": "Blog",
     "blogSub": "Insights & tactical strategies",
     "directory": "Directory",
-    "directorySub": "Verified housing",
+    "directorySub": "Curated rentals, filtered by your commute",
     "services": "Student Services",
     "servicesSub": "Setting you up in your city",
     "about": "About Us",
-    "aboutSub": "Mission statement",
+    "aboutSub": "Our story and why we built this",
+    "comingSoon": "Soon",
     "copyright": "© {year} StudentX"
   }
 }

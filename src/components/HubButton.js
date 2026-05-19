@@ -16,8 +16,10 @@ function ArrowUpRight({ style }) {
   );
 }
 
-export default function HubButton({ label, subtext, href, external = false }) {
+export default function HubButton({ label, subtext, href, external = false, comingSoon = false }) {
   const [hover, setHover] = useState(false);
+
+  const active = !comingSoon && hover;
 
   const cardStyle = {
     position: 'relative',
@@ -26,34 +28,53 @@ export default function HubButton({ label, subtext, href, external = false }) {
     justifyContent: 'space-between',
     textAlign: 'left',
     borderRadius: 22,
-    padding: '26px 28px',
-    minHeight: 168,
+    padding: '22px 24px',
+    minHeight: 124,
     textDecoration: 'none',
-    border: `1px solid ${hover ? ACCENT : 'rgba(10,37,64,0.08)'}`,
-    background: '#ffffff',
+    border: `1px solid ${active ? ACCENT : 'rgba(10,37,64,0.08)'}`,
+    background: comingSoon ? 'rgba(255,255,255,0.6)' : '#ffffff',
     color: INK,
-    boxShadow: hover
+    boxShadow: active
       ? '0 22px 48px -18px rgba(99,91,255,0.30), 0 6px 18px -10px rgba(10,37,64,0.10)'
       : '0 4px 14px -8px rgba(10,37,64,0.08)',
-    transform: hover ? 'translateY(-2px)' : 'translateY(0)',
+    transform: active ? 'translateY(-2px)' : 'translateY(0)',
     transition: 'transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms ease, border-color 220ms ease',
-    cursor: 'pointer',
+    cursor: comingSoon ? 'default' : 'pointer',
     overflow: 'hidden',
+    opacity: comingSoon ? 0.65 : 1,
+  };
+
+  const badgeStyle = {
+    position: 'absolute',
+    top: 16,
+    right: 16,
+    height: 24,
+    padding: '0 10px',
+    borderRadius: 999,
+    display: 'inline-flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'rgba(10,37,64,0.06)',
+    color: 'rgba(10,37,64,0.45)',
+    fontSize: 11,
+    fontWeight: 600,
+    letterSpacing: '0.06em',
+    textTransform: 'uppercase',
   };
 
   const arrowStyle = {
     position: 'absolute',
-    top: 22,
-    right: 22,
+    top: 16,
+    right: 16,
     width: 36,
     height: 36,
     borderRadius: 999,
     display: 'inline-flex',
     alignItems: 'center',
     justifyContent: 'center',
-    background: hover ? ACCENT : 'rgba(10,37,64,0.05)',
-    color: hover ? '#ffffff' : INK,
-    transform: hover ? 'translate(2px,-2px)' : 'translate(0,0)',
+    background: active ? ACCENT : 'rgba(10,37,64,0.05)',
+    color: active ? '#ffffff' : INK,
+    transform: active ? 'translate(2px,-2px)' : 'translate(0,0)',
     transition: 'all 240ms cubic-bezier(.2,.7,.2,1)',
     flexShrink: 0,
   };
@@ -61,22 +82,26 @@ export default function HubButton({ label, subtext, href, external = false }) {
   const labelStyle = {
     fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
     fontWeight: 600,
-    fontSize: 24,
+    fontSize: 22,
     letterSpacing: '-0.4px',
     lineHeight: 1.1,
-    color: hover ? ACCENT : INK,
+    color: active ? ACCENT : INK,
     transition: 'color 220ms ease',
   };
 
   const inner = (
     <>
-      <span aria-hidden="true" style={arrowStyle}>
-        <ArrowUpRight style={{ width: 16, height: 16, strokeWidth: 2 }} />
-      </span>
+      {comingSoon ? (
+        <span aria-label="Coming soon" style={badgeStyle}>Soon</span>
+      ) : (
+        <span aria-hidden="true" style={arrowStyle}>
+          <ArrowUpRight style={{ width: 16, height: 16, strokeWidth: 2 }} />
+        </span>
+      )}
       <div style={{ flex: 1 }} />
       <div>
         <div style={labelStyle}>{label}</div>
-        <div style={{ marginTop: 6, fontSize: 14, lineHeight: 1.4, color: 'rgba(10,37,64,0.6)' }}>
+        <div style={{ marginTop: 5, fontSize: 13.5, lineHeight: 1.4, color: 'rgba(10,37,64,0.6)' }}>
           {subtext}
         </div>
       </div>
@@ -87,6 +112,14 @@ export default function HubButton({ label, subtext, href, external = false }) {
     onMouseEnter: () => setHover(true),
     onMouseLeave: () => setHover(false),
   };
+
+  if (comingSoon) {
+    return (
+      <div style={cardStyle} aria-disabled="true" {...handlers}>
+        {inner}
+      </div>
+    );
+  }
 
   if (external) {
     return (

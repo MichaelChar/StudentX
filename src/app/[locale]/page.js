@@ -8,10 +8,10 @@ export default async function HomePage({ params }) {
   const t = await getTranslations({ locale, namespace: 'home' });
 
   const buttons = [
-    { id: 'blog',      label: t('blog'),      subtext: t('blogSub'),      href: 'https://blog.studentx.uk', external: true },
     { id: 'directory', label: t('directory'), subtext: t('directorySub'), href: '/property' },
-    { id: 'services',  label: t('services'),  subtext: t('servicesSub'),  href: '/services' },
-    { id: 'about',     label: t('about'),     subtext: t('aboutSub'),     href: '/about' },
+    { id: 'services',  label: t('services'),  subtext: t('servicesSub'),  href: '/services',                comingSoon: true },
+    { id: 'blog',      label: t('blog'),      subtext: t('blogSub'),      href: 'https://blog.studentx.uk', external: true },
+    { id: 'about',     label: t('about'),     subtext: t('aboutSub'),     href: '/about',                   comingSoon: true },
   ];
 
   return (
@@ -36,18 +36,28 @@ export default async function HomePage({ params }) {
         style={{ height: 88, width: 'auto' }}
       />
 
-      <p
-        style={{
-          margin: 0,
-          color: 'rgba(10,37,64,0.7)',
-          fontSize: 'clamp(14px, 1.4vw, 17px)',
-          textAlign: 'center',
-          maxWidth: 520,
-          lineHeight: 1.55,
-        }}
-      >
-        {t('tagline')}
-      </p>
+      <div style={{ textAlign: 'center', maxWidth: 520 }}>
+        <p
+          style={{
+            margin: 0,
+            color: 'rgba(10,37,64,0.7)',
+            fontSize: 'clamp(14px, 1.4vw, 17px)',
+            lineHeight: 1.55,
+          }}
+        >
+          {t('tagline')}
+        </p>
+        <p
+          style={{
+            margin: '6px 0 0',
+            color: 'rgba(10,37,64,0.5)',
+            fontSize: 'clamp(12px, 1.1vw, 14px)',
+            lineHeight: 1.5,
+          }}
+        >
+          {t('descriptor')}
+        </p>
+      </div>
 
       <div
         style={{
@@ -59,7 +69,7 @@ export default async function HomePage({ params }) {
         }}
       >
         {buttons.map((b) => (
-          <HubButton key={b.id} label={b.label} subtext={b.subtext} href={b.href} external={b.external} />
+          <HubButton key={b.id} label={b.label} subtext={b.subtext} href={b.href} external={b.external} comingSoon={b.comingSoon} />
         ))}
       </div>
 
