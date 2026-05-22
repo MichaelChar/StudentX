@@ -153,7 +153,6 @@ const nextConfig = {
     const directoryPaths = [
       ['/results', '/property/thessaloniki/results'],
       ['/quiz', '/property/thessaloniki/quiz'],
-      ['/about', '/property/thessaloniki/about'],
     ];
     return [
       ...directoryPaths.map(([from, to]) => ({ source: from, destination: to, permanent: true })),

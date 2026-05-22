@@ -11,7 +11,7 @@ export default async function HomePage({ params }) {
     { id: 'directory', label: t('directory'), subtext: t('directorySub'), href: '/property' },
     { id: 'services',  label: t('services'),  subtext: t('servicesSub'),  href: '/services',                comingSoon: true },
     { id: 'blog',      label: t('blog'),      subtext: t('blogSub'),      href: 'https://blog.studentx.uk', external: true },
-    { id: 'about',     label: t('about'),     subtext: t('aboutSub'),     href: '/about',                   comingSoon: true },
+    { id: 'about',     label: t('about'),     subtext: t('aboutSub'),     href: '/about' },
   ];
 
   return (
