@@ -31,12 +31,12 @@ export default function HubButton({ label, subtext, href, external = false, comi
     padding: '22px 24px',
     minHeight: 124,
     textDecoration: 'none',
-    border: `1px solid ${active ? ACCENT : 'rgba(10,37,64,0.08)'}`,
+    border: `1px solid ${active ? ACCENT : 'rgba(10,37,64,0.12)'}`,
     background: comingSoon ? 'rgba(255,255,255,0.6)' : '#ffffff',
     color: INK,
     boxShadow: active
       ? '0 22px 48px -18px rgba(99,91,255,0.30), 0 6px 18px -10px rgba(10,37,64,0.10)'
-      : '0 4px 14px -8px rgba(10,37,64,0.08)',
+      : '0 1px 3px rgba(10,37,64,0.06), 0 10px 28px -12px rgba(10,37,64,0.16)',
     transform: active ? 'translateY(-2px)' : 'translateY(0)',
     transition: 'transform 220ms cubic-bezier(.2,.7,.2,1), box-shadow 220ms ease, border-color 220ms ease',
     cursor: comingSoon ? 'default' : 'pointer',
