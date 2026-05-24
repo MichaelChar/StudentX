@@ -131,15 +131,12 @@ const PILL_CLASS =
   'fixed top-5 right-5 z-50 flex items-center gap-3 bg-stone/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-sm';
 
 function AuthMenu({ t, authState, accountHref, inquiriesHref, landlordLoginHref, unreadCount, onSignOut }) {
-  if (!authState.ready) {
-    return (
-      <nav className={PILL_CLASS}>
-        <span className="label-caps text-night/30">{t('signIn')}</span>
-      </nav>
-    );
-  }
-
-  if (authState.role) {
+  // Signed-in chrome (account + sign out) renders only once a role is
+  // CONFIRMED. While auth is still resolving — or for anonymous visitors —
+  // fall through to the interactive SignInDropdown immediately. The sign-in
+  // entry point must never be gated behind the getSession() round-trip, which
+  // can hang ~15s and otherwise leaves a dead, non-clickable "Sign in" pill.
+  if (authState.ready && authState.role) {
     return (
       <nav className={PILL_CLASS}>
         <UnreadBadge count={unreadCount} href={inquiriesHref} />
