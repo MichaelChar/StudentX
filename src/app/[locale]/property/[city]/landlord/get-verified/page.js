@@ -204,7 +204,7 @@ function TierCard({ tier, onChoose, ctaLabel, badgeLabel, disabled = false, load
       <div className="mt-8">
         <Button
           onClick={onChoose}
-          variant={tier.highlight ? 'gold' : 'primary'}
+          variant={tier.highlight ? 'onDark' : 'primary'}
           className="w-full justify-center"
           disabled={disabled}
         >

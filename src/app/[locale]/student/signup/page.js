@@ -8,7 +8,7 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
-import Button from '@/components/ui/Button';
+import EncryptButton from '@/components/ui/EncryptButton';
 import OAuthProviders from '@/components/student/OAuthProviders';
 
 export default function StudentSignupPage() {
@@ -157,14 +157,12 @@ export default function StudentSignupPage() {
           </div>
         )}
 
-        <Button
+        <EncryptButton
           type="submit"
-          animated
           disabled={loading}
-          className="w-full justify-center"
-        >
-          {loading ? t('submitting') : t('submit')}
-        </Button>
+          className="w-full"
+          text={loading ? t('submitting') : t('submit')}
+        />
       </form>
 
       <div className="my-6 flex items-center gap-3">
