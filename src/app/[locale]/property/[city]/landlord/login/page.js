@@ -22,7 +22,10 @@ function LandlordLoginInner() {
   // redirect when the auth user has a students row) — render a banner
   // with a CTA to student login instead of silently bouncing.
   const roleConflict = searchParams.get('roleConflict');
-  const showStudentConflict = roleConflict === 'student';
+  // Shown when a non-landlord (e.g. a student) signs in here. Seeded from the
+  // ?roleConflict=student redirect requireLandlord emits on server-guarded
+  // pages, and also set by the post-auth role probe in handleSubmit below.
+  const [studentConflict, setStudentConflict] = useState(roleConflict === 'student');
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -59,13 +62,45 @@ function LandlordLoginInner() {
       let lastErr;
       for (let attempt = 0; attempt < 2; attempt++) {
         try {
-          const { error: authError } = await withTimeout(
+          const { data, error: authError } = await withTimeout(
             supabase.auth.signInWithPassword({ email, password }),
           );
           if (authError) {
             setError(authError.message);
             return;
           }
+
+          // Supabase auth is role-agnostic — it accepts any valid credentials,
+          // a student's included. Confirm this account is actually a landlord
+          // before entering the landlord area; otherwise sign back out and tell
+          // them their email is a student account (one role per email). Stage
+          // stays 'auth' through the probe so the button doesn't flash
+          // "redirecting" when it's actually about to show the conflict banner.
+          const token = data.session?.access_token;
+          let role = 'landlord'; // unknown probe → defer to the dashboard's own guards
+          if (token) {
+            try {
+              const meRes = await withTimeout(
+                fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } }),
+              );
+              if (meRes.ok) {
+                const { user } = await meRes.json();
+                role = user?.role ?? null;
+              }
+            } catch {
+              /* transient probe failure shouldn't block a real landlord */
+            }
+          }
+
+          if (role === 'student') {
+            await supabase.auth.signOut().catch(() => {});
+            setStudentConflict(true);
+            return;
+          }
+
+          // role 'landlord', or a null orphan / probe-unavailable: proceed. A
+          // null orphan is bounced safely by the dashboard's server-side
+          // requireLandlord guard, so it needn't be special-cased here.
           setStage('redirect');
           router.push('/property/thessaloniki/landlord/dashboard');
           return;
@@ -83,14 +118,14 @@ function LandlordLoginInner() {
 
   return (
     <AuthShell eyebrow="Sign in" title={t('title')} subtitle={t('subtitle')}>
-      {showStudentConflict && (
+      {studentConflict && (
         <div className="mb-6 rounded-sm border border-yellow/40 bg-yellow/10 px-4 py-3 text-sm text-night">
           <p className="font-medium">{t('roleConflictStudentTitle')}</p>
           <p className="mt-1 text-night/70">{t('roleConflictStudentBody')}</p>
           <Link
             href={{
               pathname: '/student/login',
-              query: initialEmail ? { email: initialEmail } : {},
+              query: email ? { email } : {},
             }}
             className="mt-2 inline-block text-blue font-medium hover:text-night"
           >
