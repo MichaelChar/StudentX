@@ -10,10 +10,19 @@ import UnreadBadge from './UnreadBadge';
 import TabTitleFlash from './TabTitleFlash';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
 
+// Routes under /property/{city}/landlord/ that have their own LandlordShell
+// (sidebar + topbar). The Navbar pill is invisible and redundant there.
+// Auth-only pages (login, signup, etc.) are excluded from this pattern so
+// the pill still appears on those centered forms.
+const LANDLORD_SHELL_RE =
+  /\/property\/[^/]+\/landlord\/(?!(login|signup|forgot-password|reset-password|verify-email|onboarding|charter)([/?]|$))/;
+
 export default function Navbar() {
   const t = useTranslations('nav');
   const router = useRouter();
   const pathname = usePathname();
+
+  if (LANDLORD_SHELL_RE.test(pathname)) return null;
   const [authState, setAuthState] = useState({ ready: false, role: null, name: null });
   const [unread, setUnread] = useState({ count: 0, role: null });
 
