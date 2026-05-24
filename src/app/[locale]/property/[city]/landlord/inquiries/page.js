@@ -6,7 +6,6 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
 import Card from '@/components/ui/Card';
-import Button from '@/components/ui/Button';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
@@ -22,8 +21,6 @@ export default function LandlordInquiriesPage() {
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [updating, setUpdating] = useState(null);
-  const [token, setToken] = useState('');
 
   const fetchInquiries = useCallback(async (accessToken) => {
     try {
@@ -47,42 +44,10 @@ export default function LandlordInquiriesPage() {
       const supabase = getSupabaseBrowser();
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) return;
-      setToken(session.access_token);
       await fetchInquiries(session.access_token);
       setLoading(false);
     })();
   }, [fetchInquiries]);
-
-  async function handleStatusChange(inquiryId, newStatus) {
-    setUpdating(inquiryId);
-    try {
-      const res = await fetch(`/api/landlord/inquiries/${inquiryId}`, {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ status: newStatus }),
-      });
-      if (!res.ok) {
-        const { error: e } = await res.json();
-        alert(e || t('updateError'));
-        return;
-      }
-      const { inquiry: updated } = await res.json();
-      setInquiries((prev) =>
-        prev.map((inq) =>
-          inq.inquiry_id === inquiryId
-            ? { ...inq, status: updated.status, replied_at: updated.replied_at }
-            : inq
-        )
-      );
-    } catch {
-      alert(t('updateError'));
-    } finally {
-      setUpdating(null);
-    }
-  }
 
   return (
     <LandlordShell eyebrow="Inbox" title={t('title')}>
@@ -111,8 +76,6 @@ export default function LandlordInquiriesPage() {
             <InquiryCard
               key={inq.inquiry_id}
               inquiry={inq}
-              updating={updating === inq.inquiry_id}
-              onStatusChange={handleStatusChange}
               t={t}
             />
           ))}
@@ -128,7 +91,7 @@ function statusVariant(status) {
   return 'amenity';
 }
 
-function InquiryCard({ inquiry, updating, onStatusChange, t }) {
+function InquiryCard({ inquiry, t }) {
   const address = inquiry.listings?.location?.address || `#${inquiry.listing_id}`;
 
   return (
@@ -143,15 +106,11 @@ function InquiryCard({ inquiry, updating, onStatusChange, t }) {
               {t(`status_${inquiry.status}`)}
             </Pill>
           </div>
-          <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-night/60">
-            <a
-              href={`mailto:${inquiry.student_email}`}
-              className="hover:text-blue transition-colors"
-            >
-              {inquiry.student_email}
-            </a>
-            {inquiry.student_phone && <span>{inquiry.student_phone}</span>}
-          </div>
+          {inquiry.student_phone && (
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-night/60">
+              <span>{inquiry.student_phone}</span>
+            </div>
+          )}
         </div>
         <div className="text-right text-xs text-night/50 shrink-0">
           <p className="label-caps">{formatDate(inquiry.created_at)}</p>
@@ -171,36 +130,6 @@ function InquiryCard({ inquiry, updating, onStatusChange, t }) {
           <Icon name="message" className="w-3.5 h-3.5" />
           {t('openChat')}
         </Link>
-        {inquiry.status === 'pending' && (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={updating}
-            onClick={() => onStatusChange(inquiry.inquiry_id, 'replied')}
-          >
-            {updating ? '…' : t('markReplied')}
-          </Button>
-        )}
-        {inquiry.status !== 'closed' && (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={updating}
-            onClick={() => onStatusChange(inquiry.inquiry_id, 'closed')}
-          >
-            {updating ? '…' : t('markClosed')}
-          </Button>
-        )}
-        {inquiry.status === 'closed' && (
-          <Button
-            size="sm"
-            variant="outline"
-            disabled={updating}
-            onClick={() => onStatusChange(inquiry.inquiry_id, 'pending')}
-          >
-            {updating ? '…' : t('reopen')}
-          </Button>
-        )}
       </div>
     </Card>
   );

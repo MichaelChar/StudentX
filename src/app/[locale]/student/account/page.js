@@ -173,8 +173,9 @@ async function InquiriesSection({ locale }) {
                         <span className="text-xs text-night/50">/mo</span>
                       </p>
                     )}
-                    <span className="mt-3 inline-flex items-center label-caps text-blue group-hover:text-night">
-                      {t('openThread')} →
+                    <span className="mt-3 inline-flex items-center justify-center gap-1 bg-blue text-white text-xs font-sans font-semibold uppercase tracking-[0.08em] px-3 py-1.5 rounded group-hover:bg-night transition-colors">
+                      <Icon name="message" className="w-3.5 h-3.5" />
+                      {t('openThread')}
                     </span>
                   </div>
                 </div>
