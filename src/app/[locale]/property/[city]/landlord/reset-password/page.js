@@ -7,7 +7,7 @@ import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
-import Button from '@/components/ui/Button';
+import EncryptButton from '@/components/ui/EncryptButton';
 import BauhausLoader from '@/components/BauhausLoader';
 
 export default function ResetPasswordPage() {
@@ -153,14 +153,12 @@ export default function ResetPasswordPage() {
           </p>
         )}
 
-        <Button
+        <EncryptButton
           type="submit"
-          variant="primary"
           disabled={loading}
-          className="w-full justify-center"
-        >
-          {loading ? t('submitting') : t('submit')}
-        </Button>
+          className="w-full"
+          text={loading ? t('submitting') : t('submit')}
+        />
       </form>
     </AuthShell>
   );

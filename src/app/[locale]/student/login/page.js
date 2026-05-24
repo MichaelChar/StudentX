@@ -9,7 +9,7 @@ import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
-import Button from '@/components/ui/Button';
+import EncryptButton from '@/components/ui/EncryptButton';
 import OAuthProviders from '@/components/student/OAuthProviders';
 
 function StudentLoginInner() {
@@ -200,18 +200,18 @@ function StudentLoginInner() {
           </p>
         )}
 
-        <Button
+        <EncryptButton
           type="submit"
-          animated
           disabled={loading}
-          className="w-full justify-center"
-        >
-          {stage === 'redirect'
-            ? t('submittingRedirect')
-            : stage === 'auth'
-              ? t('submittingAuth')
-              : t('submit')}
-        </Button>
+          className="w-full"
+          text={
+            stage === 'redirect'
+              ? t('submittingRedirect')
+              : stage === 'auth'
+                ? t('submittingAuth')
+                : t('submit')
+          }
+        />
       </form>
 
       <div className="my-6 flex items-center gap-3">

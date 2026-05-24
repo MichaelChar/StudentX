@@ -4,38 +4,45 @@ import { Link } from '@/i18n/navigation';
 import StripeGradientMesh from '@/components/property/StripeGradientMesh';
 
 /*
-  Propylaea Button.
-  Variants:
-    - primary  : AUTh blue filled (default CTA)
-    - gold     : Seal gold filled — reserved for verified/primary conversion CTAs
-    - outline  : Blue outline on stone
-    - ghost    : No background, subtle hover
-    - onDark   : Stone fill on Night surface (for dark hero)
-  Sizes: sm | md | lg
+  Neo-brutalist Button — brand palette (iris #635BFF on a #0a2540 hard shadow).
+
+  Two visual looks; the legacy six-variant API is preserved by mapping each
+  old variant name onto one of the two looks so all ~41 call sites render
+  unchanged:
+    - solid   : iris fill, white label, hard offset shadow that collapses on
+                hover. Maps: primary, gold, onDark, animated, default.
+    - outline : transparent fill, night border + ink label, same hard shadow
+                + hover-collapse. Maps: outline, outlineOnDark, ghost.
+  Sizes: sm | md | lg (unchanged padding/rounded).
 
   Pass `animated` to render the WebGL StripeGradientMesh as the button
-  background instead of the variant's flat fill — used on the primary
-  conversion CTAs (quiz, sign in, create account).
+  background instead of the flat iris fill — used on the primary conversion
+  CTAs (quiz, sign in, create account). Its base look matches "solid".
 */
 const BASE =
-  'inline-flex items-center justify-center gap-2 font-sans font-semibold tracking-[0.08em] uppercase transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed';
+  'inline-flex items-center justify-center gap-2 font-sans font-semibold tracking-[0.08em] uppercase transition-all cursor-pointer hover:shadow-none hover:translate-x-[3px] hover:translate-y-[3px] disabled:opacity-50 disabled:cursor-not-allowed';
 
-const VARIANTS = {
-  primary:
-    'bg-brand text-white hover:opacity-90',
-  gold:
-    'bg-yellow text-white hover:opacity-90',
+// Two brutalist looks in the brand palette. The 3px night offset shadow
+// collapses on hover (handled in BASE) for the press-into-the-page feel.
+const LOOKS = {
+  solid:
+    'bg-blue text-white font-medium shadow-[3px_3px_0px_#0a2540]',
   outline:
-    'border border-blue text-blue bg-transparent hover:bg-blue hover:text-white',
-  outlineOnDark:
-    'border border-white/80 text-white bg-transparent hover:bg-white hover:text-night',
-  ghost:
-    'text-night hover:text-blue',
-  onDark:
-    'bg-stone text-night hover:bg-white',
+    'bg-transparent border border-night text-night shadow-[3px_3px_0px_#0a2540]',
 };
 
-const ANIMATED_VARIANT = 'relative overflow-hidden text-white shadow-md hover:opacity-95';
+// Map the historical variant names onto the two looks.
+const VARIANT_LOOK = {
+  primary: 'solid',
+  gold: 'solid',
+  onDark: 'solid',
+  outline: 'outline',
+  outlineOnDark: 'outline',
+  ghost: 'outline',
+};
+
+// `animated` keeps the iris/solid base look; the gradient mesh layers on top.
+const ANIMATED_LOOK = `relative overflow-hidden ${LOOKS.solid}`;
 
 const SIZES = {
   sm: 'text-xs px-3 py-1.5 rounded',
@@ -54,8 +61,10 @@ export default function Button({
   type,
   ...rest
 }) {
-  const variantClasses = animated ? ANIMATED_VARIANT : (VARIANTS[variant] || VARIANTS.primary);
-  const classes = `${BASE} ${variantClasses} ${SIZES[size] || SIZES.md} ${className}`;
+  const lookClasses = animated
+    ? ANIMATED_LOOK
+    : LOOKS[VARIANT_LOOK[variant] || 'solid'];
+  const classes = `${BASE} ${lookClasses} ${SIZES[size] || SIZES.md} ${className}`;
 
   const content = animated ? (
     <>

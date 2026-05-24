@@ -8,7 +8,7 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
-import Button from '@/components/ui/Button';
+import EncryptButton from '@/components/ui/EncryptButton';
 
 export default function LandlordSignupPage() {
   const t = useTranslations('landlord.signup');
@@ -130,14 +130,12 @@ export default function LandlordSignupPage() {
           </div>
         )}
 
-        <Button
+        <EncryptButton
           type="submit"
-          animated
           disabled={loading}
-          className="w-full justify-center"
-        >
-          {loading ? t('submitting') : t('submit')}
-        </Button>
+          className="w-full"
+          text={loading ? t('submitting') : t('submit')}
+        />
       </form>
 
       <p className="mt-8 text-sm text-night/60">
