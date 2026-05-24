@@ -129,7 +129,7 @@ export default function LandlordOnboardingPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center px-4 py-12">
+    <div className="min-h-screen bg-stone flex flex-col items-center justify-center px-4 py-12">
       <h1 className="font-heading text-3xl font-bold text-navy mb-2 text-center">
         Choose your plan
       </h1>

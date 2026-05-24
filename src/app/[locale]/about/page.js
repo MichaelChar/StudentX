@@ -86,8 +86,6 @@ function Body({ children, style }) {
 
 function AboutContent() {
   return (
-    <>
-      <style>{`body { background: #fff8f0 !important; }`}</style>
     <div>
       {/* Back link */}
       <div style={{ maxWidth: 680, margin: '0 auto', padding: '32px 24px 0' }}>
@@ -157,6 +155,5 @@ function AboutContent() {
         © {new Date().getFullYear()} StudentX
       </div>
     </div>
-    </>
   );
 }

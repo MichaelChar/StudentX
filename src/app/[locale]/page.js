@@ -19,6 +19,7 @@ export default async function HomePage({ params }) {
       <HomeHero />
 
       <section
+        className="bg-stone"
         style={{
           minHeight: '100dvh',
           display: 'flex',
@@ -27,7 +28,6 @@ export default async function HomePage({ params }) {
           justifyContent: 'center',
           padding: '64px 24px',
           gap: 28,
-          background: '#ffffff',
         }}
       >
         <div style={{ textAlign: 'center', maxWidth: 520 }}>
