@@ -109,7 +109,7 @@ export default function Navbar() {
 
   // All hooks above run unconditionally; only the rendered output is gated
   // (React Rules of Hooks). Landlord shell pages have their own chrome.
-  if (LANDLORD_SHELL_RE.test(pathname)) return null;
+  if (pathname && LANDLORD_SHELL_RE.test(pathname)) return null;
 
   return (
     <>
