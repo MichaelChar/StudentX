@@ -70,12 +70,12 @@ function LandlordLoginInner() {
             return;
           }
 
-          setStage('redirect');
-
           // Supabase auth is role-agnostic — it accepts any valid credentials,
           // a student's included. Confirm this account is actually a landlord
           // before entering the landlord area; otherwise sign back out and tell
-          // them their email is a student account (one role per email).
+          // them their email is a student account (one role per email). Stage
+          // stays 'auth' through the probe so the button doesn't flash
+          // "redirecting" when it's actually about to show the conflict banner.
           const token = data.session?.access_token;
           let role = 'landlord'; // unknown probe → defer to the dashboard's own guards
           if (token) {
@@ -98,6 +98,10 @@ function LandlordLoginInner() {
             return;
           }
 
+          // role 'landlord', or a null orphan / probe-unavailable: proceed. A
+          // null orphan is bounced safely by the dashboard's server-side
+          // requireLandlord guard, so it needn't be special-cased here.
+          setStage('redirect');
           router.push('/property/thessaloniki/landlord/dashboard');
           return;
         } catch (err) {
@@ -121,7 +125,7 @@ function LandlordLoginInner() {
           <Link
             href={{
               pathname: '/student/login',
-              query: initialEmail ? { email: initialEmail } : {},
+              query: email ? { email } : {},
             }}
             className="mt-2 inline-block text-blue font-medium hover:text-night"
           >
