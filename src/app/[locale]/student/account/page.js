@@ -131,56 +131,55 @@ async function InquiriesSection({ locale }) {
 
         return (
           <li key={inq.inquiry_id}>
-            <Link
-              href={`/student/inquiries/${inq.inquiry_id}`}
-              className="block group"
-            >
-              <Card
-                tone="white"
-                className="p-5 md:p-6 hover:border-blue transition-colors"
-              >
-                <div className="flex items-start justify-between gap-4">
-                  <div className="min-w-0 flex-1">
-                    <div className="flex flex-wrap items-center gap-2 mb-1">
-                      <p className="font-display text-xl text-night truncate">{address}</p>
-                      {unread > 0 && (
-                        <span
-                          aria-label={t('unread', { count: unread })}
-                          className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-yellow text-white text-[11px] font-sans font-semibold px-1.5"
-                        >
-                          {unread}
-                        </span>
-                      )}
-                    </div>
-                    {neighborhood && (
-                      <p className="label-caps text-night/50">{neighborhood}</p>
+            <Card tone="white" className="p-5 md:p-6">
+              <div className="flex items-start justify-between gap-4 mb-4">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2 mb-1">
+                    <p className="font-display text-xl text-night truncate">{address}</p>
+                    {unread > 0 && (
+                      <span
+                        aria-label={t('unread', { count: unread })}
+                        className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-yellow text-white text-[11px] font-sans font-semibold px-1.5"
+                      >
+                        {unread}
+                      </span>
                     )}
-                    {inq.message && (
-                      <p className="mt-3 text-sm text-night/70 line-clamp-2">
-                        {inq.message}
-                      </p>
-                    )}
-                    <p className="mt-3 label-caps text-night/40">
-                      {lastWhen
-                        ? t('lastMessageAt', { when: lastWhen })
-                        : t('lastMessageNever')}
-                    </p>
                   </div>
-                  <div className="text-right shrink-0">
-                    {price != null && (
-                      <p className="font-display text-xl text-blue">
-                        €{price}
-                        <span className="text-xs text-night/50">/mo</span>
-                      </p>
-                    )}
-                    <span className="mt-3 inline-flex items-center justify-center gap-1 bg-blue text-white text-xs font-sans font-semibold uppercase tracking-[0.08em] px-3 py-1.5 rounded group-hover:bg-night transition-colors">
-                      <Icon name="message" className="w-3.5 h-3.5" />
-                      {t('openThread')}
-                    </span>
-                  </div>
+                  {neighborhood && (
+                    <p className="label-caps text-night/50">{neighborhood}</p>
+                  )}
                 </div>
-              </Card>
-            </Link>
+                <div className="text-right shrink-0">
+                  {price != null && (
+                    <p className="font-display text-xl text-blue">
+                      €{price}
+                      <span className="text-xs text-night/50">/mo</span>
+                    </p>
+                  )}
+                  <p className="mt-1 label-caps text-night/40">
+                    {lastWhen
+                      ? t('lastMessageAt', { when: lastWhen })
+                      : t('lastMessageNever')}
+                  </p>
+                </div>
+              </div>
+
+              {inq.message && (
+                <blockquote className="bg-parchment rounded-sm px-5 py-4 text-night/80 leading-relaxed mb-4 font-sans text-sm md:text-base">
+                  {inq.message}
+                </blockquote>
+              )}
+
+              <div className="flex flex-wrap items-center gap-2">
+                <Link
+                  href={`/student/inquiries/${inq.inquiry_id}`}
+                  className="inline-flex items-center justify-center gap-1 bg-blue text-white text-xs font-sans font-semibold uppercase tracking-[0.08em] px-3 py-1.5 rounded hover:bg-night transition-colors"
+                >
+                  <Icon name="message" className="w-3.5 h-3.5" />
+                  {t('openThread')}
+                </Link>
+              </div>
+            </Card>
           </li>
         );
       })}
