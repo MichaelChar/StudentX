@@ -10,6 +10,13 @@ import UnreadBadge from './UnreadBadge';
 import TabTitleFlash from './TabTitleFlash';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
 
+// Routes under /property/{city}/landlord/ that render their own LandlordShell
+// (sidebar + topbar) — the floating Navbar pill is redundant there. Auth-only
+// pages (login, signup, etc.) are excluded so the pill still shows on those
+// centered forms.
+const LANDLORD_SHELL_RE =
+  /\/property\/[^/]+\/landlord\/(?!(login|signup|forgot-password|reset-password|verify-email|onboarding|charter)([/?]|$))/;
+
 export default function Navbar() {
   const t = useTranslations('nav');
   const router = useRouter();
@@ -99,6 +106,10 @@ export default function Navbar() {
 
   const inquiriesHref =
     authState.role === 'landlord' ? `/property/${currentCity}/landlord/inquiries` : '/student/account';
+
+  // All hooks above run unconditionally; only the rendered output is gated
+  // (React Rules of Hooks). Landlord shell pages have their own chrome.
+  if (pathname && LANDLORD_SHELL_RE.test(pathname)) return null;
 
   return (
     <>
