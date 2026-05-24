@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useEffect, useCallback, useRef } from 'react';
+import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { Link, useRouter, usePathname } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
@@ -151,9 +152,55 @@ function AuthMenu({ t, authState, accountHref, inquiriesHref, landlordLoginHref,
   return <SignInDropdown t={t} landlordLoginHref={landlordLoginHref} />;
 }
 
+// Staggered dropdown animation. Functions of `reduced` so prefers-reduced-motion
+// collapses the stagger/scale to an instant show/hide.
+const menuVariants = (reduced) => ({
+  open: {
+    scaleY: 1,
+    transition: {
+      when: 'beforeChildren',
+      staggerChildren: reduced ? 0 : 0.06,
+      duration: reduced ? 0 : 0.2,
+    },
+  },
+  closed: {
+    scaleY: 0,
+    transition: {
+      when: 'afterChildren',
+      staggerChildren: reduced ? 0 : 0.06,
+      duration: reduced ? 0 : 0.2,
+    },
+  },
+});
+
+const menuItemVariants = (reduced) => ({
+  open: { opacity: 1, y: 0, transition: { duration: reduced ? 0 : 0.2 } },
+  closed: { opacity: 0, y: reduced ? 0 : -12, transition: { duration: reduced ? 0 : 0.2 } },
+});
+
+// Inline Feather "chevron-down" (no react-icons dependency).
+function ChevronDown() {
+  return (
+    <svg
+      width="14"
+      height="14"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <polyline points="6 9 12 15 18 9" />
+    </svg>
+  );
+}
+
 function SignInDropdown({ t, landlordLoginHref }) {
   const [open, setOpen] = useState(false);
   const wrapperRef = useRef(null);
+  const prefersReduced = useReducedMotion();
 
   useEffect(() => {
     if (!open) return undefined;
@@ -176,6 +223,11 @@ function SignInDropdown({ t, landlordLoginHref }) {
     };
   }, [open]);
 
+  const items = [
+    { href: '/student/login', label: t('signInAsStudent') },
+    { href: landlordLoginHref, label: t('signInAsLandlord') },
+  ];
+
   return (
     <div ref={wrapperRef} className="fixed top-5 right-5 z-50">
       <button
@@ -183,33 +235,45 @@ function SignInDropdown({ t, landlordLoginHref }) {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="label-caps rounded-full bg-blue text-stone px-5 py-2 shadow-sm hover:bg-night transition-colors"
+        className="label-caps flex items-center gap-2 rounded-full bg-blue text-stone px-5 py-2 shadow-sm hover:bg-night transition-colors"
       >
-        {t('signIn')}
-      </button>
-      {open && (
-        <div
-          role="menu"
-          className="absolute right-0 top-full mt-2 w-52 rounded-lg bg-stone shadow-lg ring-1 ring-night/10 overflow-hidden"
+        <span>{t('signIn')}</span>
+        <motion.span
+          className="inline-flex"
+          initial={false}
+          animate={{ rotate: open ? 180 : 0 }}
+          transition={{ duration: prefersReduced ? 0 : 0.2 }}
         >
-          <Link
-            href="/student/login"
-            role="menuitem"
-            onClick={() => setOpen(false)}
-            className="block px-4 py-2.5 text-sm text-night hover:bg-night/5"
+          <ChevronDown />
+        </motion.span>
+      </button>
+
+      <AnimatePresence>
+        {open && (
+          <motion.ul
+            role="menu"
+            initial="closed"
+            animate="open"
+            exit="closed"
+            variants={menuVariants(prefersReduced)}
+            style={{ originY: 0 }}
+            className="absolute right-0 top-full mt-2 w-52 overflow-hidden rounded-lg bg-stone p-1 shadow-lg ring-1 ring-night/10"
           >
-            {t('signInAsStudent')}
-          </Link>
-          <Link
-            href={landlordLoginHref}
-            role="menuitem"
-            onClick={() => setOpen(false)}
-            className="block px-4 py-2.5 text-sm text-night hover:bg-night/5"
-          >
-            {t('signInAsLandlord')}
-          </Link>
-        </div>
-      )}
+            {items.map((item) => (
+              <motion.li key={item.href} role="none" variants={menuItemVariants(prefersReduced)}>
+                <Link
+                  href={item.href}
+                  role="menuitem"
+                  onClick={() => setOpen(false)}
+                  className="block rounded-md px-4 py-2.5 text-sm text-night transition-colors hover:bg-blue/10 hover:text-blue"
+                >
+                  {item.label}
+                </Link>
+              </motion.li>
+            ))}
+          </motion.ul>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
