@@ -6,13 +6,14 @@ import StripeGradientMesh from '@/components/property/StripeGradientMesh';
 /*
   Neo-brutalist Button — brand palette (iris #635BFF on a #0a2540 hard shadow).
 
-  Two visual looks; the legacy six-variant API is preserved by mapping each
-  old variant name onto one of the two looks so all ~41 call sites render
-  unchanged:
+  Three visual looks; the legacy six-variant API is preserved by mapping each
+  old variant name onto a look so all call sites render unchanged:
     - solid   : iris fill, white label, hard offset shadow that collapses on
-                hover. Maps: primary, gold, onDark, animated, default.
+                hover. Maps: primary, gold, animated, default.
     - outline : transparent fill, night border + ink label, same hard shadow
                 + hover-collapse. Maps: outline, outlineOnDark, ghost.
+    - onDark  : white fill, ink label, iris offset shadow — the inverted solid
+                for night-toned surfaces. Maps: onDark.
   Sizes: sm | md | lg (unchanged padding/rounded).
 
   Pass `animated` to render the WebGL StripeGradientMesh as the button
@@ -29,13 +30,17 @@ const LOOKS = {
     'bg-blue text-white font-medium shadow-[3px_3px_0px_#0a2540]',
   outline:
     'bg-transparent border border-night text-night shadow-[3px_3px_0px_#0a2540]',
+  // Inverted solid for dark surfaces: white face + iris offset shadow so the
+  // brutalist edge stays visible against a night-toned card.
+  onDark:
+    'bg-white text-night font-medium shadow-[3px_3px_0px_#635BFF]',
 };
 
 // Map the historical variant names onto the two looks.
 const VARIANT_LOOK = {
   primary: 'solid',
   gold: 'solid',
-  onDark: 'solid',
+  onDark: 'onDark',
   outline: 'outline',
   outlineOnDark: 'outline',
   ghost: 'outline',
