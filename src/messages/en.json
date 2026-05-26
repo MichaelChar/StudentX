@@ -718,6 +718,7 @@
       "submitting": "Signing in…",
       "submittingAuth": "Signing you in…",
       "submittingRedirect": "Loading your account…",
+      "sessionError": "We signed you in, but couldn't start your session. Please try again.",
       "or": "or",
       "noAccount": "Don't have an account?",
       "signupLink": "Create one",
