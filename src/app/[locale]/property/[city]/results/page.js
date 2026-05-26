@@ -369,6 +369,7 @@ function ResultsContent() {
                       key={listing.listing_id}
                       listing={listing}
                       fromQuery={searchParams.toString()}
+                      groundFloorDealbreaker={filters.dealbreakers.includes('ground_floor')}
                     />
                   ))}
                 </div>
