@@ -323,6 +323,7 @@
       "photosUploading": "Uploading…",
       "photosRemove": "Remove",
       "photosError": "Some files could not be uploaded.",
+      "photosPartialError": "{succeeded} of {total} photos uploaded. Failed: {names}",
       "photosFileTooLarge": "File too large (max {max} MB): {names}",
       "photosInvalidType": "Only JPG, PNG and WebP are allowed.",
       "photosTooMany": "Photo limit reached.",

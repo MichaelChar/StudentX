@@ -192,7 +192,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       const CONCURRENCY = 3;
       const queue = [...toUpload];
       const uploaded = [];
-      let anyFailure = false;
+      const failed = [];
 
       async function worker() {
         while (queue.length > 0) {
@@ -202,7 +202,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
             const cardUrl = await processOne(file);
             uploaded.push(cardUrl);
           } catch (err) {
-            anyFailure = true;
+            failed.push(file.name);
             console.error('[ListingForm] photo processing failed:', file.name, err);
           }
         }
@@ -210,8 +210,16 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       await Promise.all(
         Array.from({ length: Math.min(CONCURRENCY, toUpload.length) }, worker)
       );
-      if (anyFailure) {
-        setPhotoError(t('photosError'));
+      if (failed.length > 0) {
+        // Name the failed files (capped so a whole-batch failure doesn't wall
+        // the toast) so the landlord knows which to re-add, not just "some".
+        const MAX_NAMES = 5;
+        const names =
+          failed.slice(0, MAX_NAMES).join(', ') +
+          (failed.length > MAX_NAMES ? `, +${failed.length - MAX_NAMES} more` : '');
+        setPhotoError(
+          t('photosPartialError', { succeeded: uploaded.length, total: toUpload.length, names })
+        );
       }
 
       if (uploaded.length > 0) {
