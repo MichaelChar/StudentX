@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
+import { signOutSafely } from '@/lib/authHelpers';
 import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -59,7 +60,7 @@ function StudentLoginInner() {
       // the hung-refresh scenario can only happen when there IS one.
       const { data: { session: existing } } = await supabase.auth.getSession();
       if (existing) {
-        await withTimeout(supabase.auth.signOut(), 5000).catch(() => {});
+        await signOutSafely(supabase);
       }
 
       let lastErr;

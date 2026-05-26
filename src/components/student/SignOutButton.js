@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { signOutSafely } from '@/lib/authHelpers';
 
 import Icon from '@/components/ui/Icon';
 
@@ -12,7 +13,7 @@ export default function SignOutButton() {
 
   async function handleSignOut() {
     const supabase = getSupabaseBrowser();
-    await supabase.auth.signOut();
+    await signOutSafely(supabase);
     router.push('/');
   }
 
