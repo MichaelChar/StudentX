@@ -17,6 +17,35 @@ export async function hasAuthCookie() {
   return cookieHeader.includes(`${SB_ACCESS_TOKEN_COOKIE}=`);
 }
 
+// Escape ILIKE wildcards so an email matches literally — a `_` or `%` in an
+// address must not act as a wildcard.
+function escapeLikePattern(value) {
+  return value.replace(/[\\%_]/g, (ch) => `\\${ch}`);
+}
+
+// Resolve the landlord row that conflicts with the current auth user, for the
+// wrong-role banner. Match by auth_user_id first, then by email: orphan
+// landlord rows (auth_user_id NULL, from pre-linked / seeded data) only match
+// by email, mirroring the prevent_dual_role trigger which keys on
+// lower(email). landlords is public-read (migration 006), so the email probe
+// is not RLS-filtered. Extra round-trip only on the unhappy path.
+async function findConflictingLandlord(supabase, user) {
+  const byId = await supabase
+    .from('landlords')
+    .select('email')
+    .eq('auth_user_id', user.id)
+    .maybeSingle();
+  if (byId.data) return byId.data;
+  if (!user.email) return null;
+  const byEmail = await supabase
+    .from('landlords')
+    .select('email')
+    .ilike('email', escapeLikePattern(user.email))
+    .limit(1)
+    .maybeSingle();
+  return byEmail.data ?? null;
+}
+
 /**
  * Server-side helper that resolves the current student account from
  * the sb-access-token cookie set by SessionSync. Returns one of:
@@ -58,14 +87,9 @@ export const requireStudent = cache(async function requireStudent() {
     .maybeSingle();
 
   if (error || !student) {
-    // Wrong-role: probe the landlords table so the redirect can carry
-    // the conflict context. One extra round-trip only on the unhappy
-    // path; the cache wrapper still amortises across layout + page.
-    const { data: landlord } = await supabase
-      .from('landlords')
-      .select('email')
-      .eq('auth_user_id', user.id)
-      .maybeSingle();
+    // Wrong-role: probe landlords so the redirect can carry the conflict
+    // context. The cache wrapper amortises this across layout + page.
+    const landlord = await findConflictingLandlord(supabase, user);
     return {
       kind: 'wrong-role',
       conflict_role: landlord ? 'landlord' : null,
@@ -104,6 +128,10 @@ export const requireLandlord = cache(async function requireLandlord() {
     .maybeSingle();
 
   if (error || !landlord) {
+    // No email fallback here (unlike requireStudent → landlords): students
+    // .auth_user_id is NOT NULL (migration 026), so orphan student rows
+    // can't exist, and students are not public-read — a cross-user email
+    // probe would be RLS-filtered anyway. The auth_user_id match is enough.
     const { data: student } = await supabase
       .from('students')
       .select('email')

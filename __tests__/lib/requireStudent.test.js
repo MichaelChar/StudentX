@@ -36,18 +36,32 @@ beforeEach(() => {
   vi.mocked(supabaseServer.getSupabaseWithToken).mockReset();
 });
 
-// Build a fake token-scoped supabase client whose chained
-// `.from(table).select().eq().maybeSingle()` returns the table-keyed
-// fixture. Used by both requireStudent and requireLandlord tests.
+// Build a fake token-scoped supabase client. Supports both the
+// `.select().eq().maybeSingle()` chain and the orphan-landlord email probe's
+// `.select().ilike().limit().maybeSingle()` chain.
+//
+// A table fixture is either a row object (returned for any lookup) or a
+// `{ byAuth, byEmail }` split so a test can make the auth_user_id lookup miss
+// while the email lookup hits (the orphan-landlord case).
 function buildFakeSupabase(fixtures) {
   return {
-    from: (table) => ({
-      select: () => ({
-        eq: () => ({
-          maybeSingle: async () => ({ data: fixtures[table] ?? null, error: null }),
-        }),
-      }),
-    }),
+    from: (table) => {
+      const entry = table in fixtures ? fixtures[table] : null;
+      let mode = 'auth';
+      const builder = {
+        select: () => builder,
+        eq: () => ((mode = 'auth'), builder),
+        ilike: () => ((mode = 'email'), builder),
+        limit: () => builder,
+        maybeSingle: async () => {
+          const split =
+            entry && typeof entry === 'object' && ('byAuth' in entry || 'byEmail' in entry);
+          const data = split ? (mode === 'email' ? entry.byEmail ?? null : entry.byAuth ?? null) : entry;
+          return { data, error: null };
+        },
+      };
+      return builder;
+    },
   };
 }
 
@@ -122,6 +136,30 @@ describe('requireStudent wrong-role shape', () => {
       kind: 'wrong-role',
       conflict_role: 'landlord',
       email: 'duo@example.com',
+    });
+  });
+
+  it('returns wrong-role with conflict_role=landlord for an orphan landlord matched by email', async () => {
+    cookieHeader = 'sb-access-token=jwt';
+    tokenValue = 'jwt';
+    vi.mocked(supabaseServer.getUserFromToken).mockResolvedValue({
+      id: 'auth-user-orphan',
+      email: 'orphan-landlord@example.com',
+    });
+    vi.mocked(supabaseServer.getSupabaseWithToken).mockReturnValue(
+      buildFakeSupabase({
+        students: null,
+        // auth_user_id lookup misses (orphan row has NULL auth_user_id); the
+        // email lookup is the one that finds it.
+        landlords: { byAuth: null, byEmail: { email: 'orphan-landlord@example.com' } },
+      })
+    );
+
+    const auth = await requireStudent();
+    expect(auth).toEqual({
+      kind: 'wrong-role',
+      conflict_role: 'landlord',
+      email: 'orphan-landlord@example.com',
     });
   });
 
