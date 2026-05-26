@@ -4,6 +4,7 @@ import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { digestEmailHtml, digestEmailSubject } from '@/templates/email/digest';
 import { transformListing } from '@/lib/transformListing';
+import { applyDealbreakers } from '@/lib/dealbreakers';
 
 // Service-role client: claim_digest_send is GRANTed only to service_role
 // (migration 049). The CRON_SECRET check above gates the route; this
@@ -21,6 +22,7 @@ const LISTING_SELECT = `
   is_featured,
   description,
   photos,
+  floor,
   min_duration_months,
   created_at,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
@@ -79,6 +81,10 @@ async function fetchMatchingListings(supabase, filters, since) {
       return filters.amenities.every((a) => has.includes(a.toLowerCase()));
     });
   }
+
+  // Re-apply the student's dealbreakers (#101) — without this a digest could
+  // email listings that violate filters they explicitly set in the quiz.
+  results = applyDealbreakers(results, filters.dealbreakers);
 
   return results;
 }
