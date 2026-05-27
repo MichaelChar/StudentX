@@ -234,8 +234,9 @@ Runbook: `docs/runbooks/synthetic-en-listing.md`.
 each soft-failing into a per-check report:
 
 1. `en-listing-locale` — `/en/listing/<SYNTHETIC_LISTING_ID>` contains
-   `EN_MARKERS_REQUIRED` and none of `EL_MARKERS_FORBIDDEN`. Update those
-   constants at the top of `route.js` whenever gate copy changes.
+   `EN_MARKERS_REQUIRED`. Update that constant at the top of `route.js`
+   whenever gate copy changes. (The Greek-leak forbidden-marker check was
+   dropped when the site went English-only — #158.)
 2. `listing-api-distances` — `/api/listings/<id>` returns ≥2 distinct
    `walk_minutes` across `faculty_distances`.
 3. `soft-404` — `/listing/does-not-exist` returns HTTP 404.
