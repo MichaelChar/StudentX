@@ -30,6 +30,10 @@ jobs:
     # with no migration gate, so merging ahead of the migration darks
     # any route that SELECTs the new column (incident 2026-05-02, PR #85).
     # See CLAUDE.md > Database (Supabase) > Migration ordering.
+    # Fail-closed: if the gate can't verify (missing creds, empty API
+    # response), it FAILS rather than warn-and-pass (#173). Steps only run
+    # when the PR actually adds a new migration file, so non-migration PRs
+    # are unaffected.
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -67,9 +71,8 @@ jobs:
         run: |
           set -euo pipefail
           if [ -z "${SUPABASE_ACCESS_TOKEN:-}" ] || [ -z "${SUPABASE_PROJECT_REF:-}" ]; then
-            echo "::warning::SUPABASE_ACCESS_TOKEN secret or SUPABASE_PROJECT_REF variable not configured — gate will warn-but-pass until they're set. See PR description for setup."
-            : > /tmp/applied-names.txt
-            exit 0
+            echo "::error::This PR adds a migration but the gate cannot verify it: the SUPABASE_ACCESS_TOKEN secret and/or SUPABASE_PROJECT_REF variable are not configured. Set both under Settings → Secrets and variables → Actions. The gate is fail-closed and will not pass an unverifiable migration. See CLAUDE.md > Database (Supabase) > Migration ordering."
+            exit 1
           fi
           # Tolerate both response shapes: bare array (REST API) or
           # { migrations: [...] } envelope (some clients/proxies).
@@ -92,8 +95,8 @@ jobs:
         run: |
           set -euo pipefail
           if [ ! -s /tmp/applied-names.txt ]; then
-            echo "::warning::No applied-migration list available — skipping enforcement (see prior step)."
-            exit 0
+            echo "::error::Could not read the list of migrations applied to prod (empty API response). Refusing to pass — the gate is fail-closed. Inspect the Supabase API response in the previous step."
+            exit 1
           fi
           missing=0
           while IFS= read -r f; do
