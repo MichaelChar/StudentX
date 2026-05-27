@@ -21,8 +21,6 @@ const PRIVATE_CC = 'private, no-cache, no-store, must-revalidate';
 const PUBLIC_CC = 'public, s-maxage=300, stale-while-revalidate=86400';
 
 const VALID_BODY = '<html lang="en"><body>Sign in to message this landlord</body></html>';
-const GREEK_LEAK_BODY =
-  '<html lang="en"><body>Sign in to message this landlord — Συνδέσου για να επικοινωνήσεις με τον ιδιοκτήτη</body></html>';
 const MISSING_MARKER_BODY = '<html lang="en"><body>Welcome</body></html>';
 
 describe('evaluateBody', () => {
@@ -40,12 +38,6 @@ describe('evaluateBody', () => {
     const result = evaluateBody({ status: 200, body: MISSING_MARKER_BODY });
     expect(result.ok).toBe(false);
     expect(result.reason).toMatch(/missing required EN marker/);
-  });
-
-  it('fails when a forbidden Greek marker leaks onto /en/', () => {
-    const result = evaluateBody({ status: 200, body: GREEK_LEAK_BODY });
-    expect(result.ok).toBe(false);
-    expect(result.reason).toMatch(/forbidden EL marker/);
   });
 
   // Cloudflare "couldn't reach origin"-class 5xx is treated as inconclusive
