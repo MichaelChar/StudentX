@@ -303,6 +303,57 @@ async function checkNoMissingMessage(appUrl) {
   }
 }
 
+// Anon listing detail must actually be edge-cached, not merely advertise a
+// cacheable Cache-Control. The header probe (en-listing-anon-cache) stayed
+// green even when the deployed Cache Rule matched the wrong path and nothing
+// was cached (#130). This warms the edge, then asserts a repeat fetch reports
+// cf-cache-status: HIT (#131).
+//
+// Uses GLOBAL fetch — the public URL through Cloudflare's edge — NOT the
+// WORKER_SELF_REFERENCE binding, which bypasses the CDN cache and would never
+// report HIT. To avoid false alarms it skips (treats as inconclusive) on:
+// an absent cf-cache-status header (local dev / not behind CF), a CF
+// "couldn't reach origin" 5xx, and request timeouts/aborts. It only fails on
+// a definitive non-HIT status across warmed repeats — the #130 signal.
+async function checkCfCacheStatusHit(appUrl, listingId) {
+  const name = 'cf-cache-status-hit';
+  const url = `${appUrl}/property/thessaloniki/listing/${listingId}`;
+  const probe = () =>
+    fetch(url, {
+      headers: { 'user-agent': 'StudentX-synthetic/1.0' },
+      signal: AbortSignal.timeout(6000),
+      redirect: 'manual',
+    });
+  try {
+    await probe(); // warm the edge
+    let last = '';
+    // Sample twice — successive requests can land on different PoPs, so a
+    // HIT on either pass is enough.
+    for (let i = 0; i < 2; i++) {
+      const res = await probe();
+      if (INCONCLUSIVE_CF_5XX.has(res.status)) {
+        return { name, ok: true, skipped: true, reason: `skipped: Cloudflare ${res.status}` };
+      }
+      const cacheStatus = (res.headers.get('cf-cache-status') || '').toUpperCase();
+      if (!cacheStatus) {
+        return { name, ok: true, skipped: true, reason: 'skipped: no cf-cache-status header (not behind CDN)' };
+      }
+      if (cacheStatus === 'HIT') return { name, ok: true };
+      last = cacheStatus;
+    }
+    return {
+      name,
+      ok: false,
+      reason: `expected cf-cache-status: HIT on a warmed repeat fetch, got "${last}" — anon listing isn't edge-cached (see #130/#131)`,
+    };
+  } catch (err) {
+    if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+      return { name, ok: true, skipped: true, reason: `skipped: ${err.name}` };
+    }
+    return { name, ok: false, reason: `fetch threw: ${err.message || err.name}` };
+  }
+}
+
 // Page-render check: assert at least one expected EN marker is present
 // (forgiving against copy tweaks). The Greek-leak half was dropped when the
 // site went English-only (#158).
@@ -405,6 +456,7 @@ export async function POST(request) {
     checkOgDefault(appUrl),
     checkLandlordListingsApi(appUrl),
     checkNoMissingMessage(appUrl),
+    checkCfCacheStatusHit(appUrl, listingId),
   ]);
 
   // Heavy property-page locale checks run sequentially via service binding.
