@@ -16,11 +16,15 @@ function isValidPhotoUrl(url) {
   return typeof url === 'string' && url.startsWith('http');
 }
 
-export default function ListingCard({ listing, fromQuery = '' }) {
+export default function ListingCard({ listing, fromQuery = '', groundFloorDealbreaker = false }) {
   const t = useTranslations('propylaea.results');
   const tCard = useTranslations('listingCard');
   const locale = useLocale();
   const photo = listing.photos?.find(isValidPhotoUrl);
+  // When the student set "no ground floor" but this listing has no recorded
+  // floor, flag it so they ask before viewing rather than discovering on the
+  // day (NULL floors are kept in results, not filtered out — see #100).
+  const floorUnspecified = groundFloorDealbreaker && listing.floor == null;
   const isVerified =
     listing.verified_tier &&
     listing.verified_tier !== 'none' &&
@@ -94,6 +98,9 @@ export default function ListingCard({ listing, fromQuery = '' }) {
         </div>
 
         <div className="mt-4 flex flex-wrap gap-1.5">
+          {floorUnspecified && (
+            <Pill variant="info">{t('floorNotSpecified')}</Pill>
+          )}
           {listing.bills_included && (
             <Pill variant="amenity">{t('billsIncluded')}</Pill>
           )}
