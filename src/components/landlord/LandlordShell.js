@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { signOutSafely } from '@/lib/authHelpers';
 
 import Icon from '@/components/ui/Icon';
 import BauhausLoader from '@/components/BauhausLoader';
@@ -70,7 +71,7 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
 
   async function handleSignOut() {
     const supabase = getSupabaseBrowser();
-    await supabase.auth.signOut();
+    await signOutSafely(supabase);
     router.push('/property/thessaloniki/landlord/login');
   }
 

@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
+import { signOutSafely } from '@/lib/authHelpers';
 import { useLocale, useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -62,7 +63,7 @@ export default function LandlordSignupPage() {
           }),
         );
         if (!res.ok) {
-          await supabase.auth.signOut();
+          await signOutSafely(supabase);
           const body = await res.json().catch(() => ({}));
           if (res.status === 409 && body?.error === 'role_conflict') {
             setError(t('roleConflict'));

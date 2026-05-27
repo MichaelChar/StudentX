@@ -4,8 +4,9 @@ import { getResend } from '@/lib/resend';
 
 // Synthetic uptime check guarding against the regression class fixed in PR #48
 // (see issue #49 + docs/runbooks/synthetic-en-listing.md). Originally just
-// asserted that /en/listing/<id> renders English markers + no Greek leakage;
-// now also runs four production-canary checks (listing API distance variety,
+// asserted that /en/listing/<id> renders English markers (the Greek-leak
+// half was dropped when the site went English-only, #158); now also runs
+// several production-canary checks (listing API distance variety,
 // 404 status on missing listings, og-default.png served as PNG, no
 // MISSING_MESSAGE next-intl placeholders on /en).
 //
@@ -25,10 +26,6 @@ const FETCH_TIMEOUT_MS = 15_000;
 const EN_MARKERS_REQUIRED = [
   '<html lang="en"',
   'Sign in to message this landlord',
-];
-const EL_MARKERS_FORBIDDEN = [
-  'lang="el"',
-  'Συνδέσου για να επικοινωνήσεις',
 ];
 
 // Cloudflare "couldn't reach origin"-class status codes. The synthetic
@@ -133,11 +130,6 @@ export function evaluateBody({ status, body }) {
   for (const marker of EN_MARKERS_REQUIRED) {
     if (!body.includes(marker)) {
       return { ok: false, reason: `missing required EN marker: ${marker}` };
-    }
-  }
-  for (const marker of EL_MARKERS_FORBIDDEN) {
-    if (body.includes(marker)) {
-      return { ok: false, reason: `forbidden EL marker present: ${marker}` };
     }
   }
   return { ok: true };
@@ -355,8 +347,6 @@ async function checkCfCacheStatusHit(appUrl, listingId) {
       reason: `expected cf-cache-status: HIT on a warmed repeat fetch, got "${last}" — anon listing isn't edge-cached (see #130/#131)`,
     };
   } catch (err) {
-    // Transient slowness must not page anyone — only a definitive non-HIT
-    // through the CDN is a regression.
     if (err.name === 'TimeoutError' || err.name === 'AbortError') {
       return { name, ok: true, skipped: true, reason: `skipped: ${err.name}` };
     }
@@ -364,11 +354,10 @@ async function checkCfCacheStatusHit(appUrl, listingId) {
   }
 }
 
-// Generic locale check: assert at least one EN-only marker is present and no
-// EL-only marker leaks through. Caller passes a list of EN markers any of
-// which is sufficient (forgiving against copy tweaks) and a list of EL
-// forbidden markers all of which must be absent.
-async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers }) {
+// Page-render check: assert at least one expected EN marker is present
+// (forgiving against copy tweaks). The Greek-leak half was dropped when the
+// site went English-only (#158).
+async function checkEnLocale({ name, url, anyEnMarker }) {
   try {
     const res = await fetchUrl(url);
     // CF "couldn't reach origin"-class 5xx (see INCONCLUSIVE_CF_5XX).
@@ -383,10 +372,6 @@ async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers }) {
     const hasEn = anyEnMarker.some((m) => body.includes(m));
     if (!hasEn) {
       return { name, ok: false, reason: `missing all EN markers: ${anyEnMarker.join(', ')}` };
-    }
-    const leakedEl = forbidElMarkers.find((m) => body.includes(m));
-    if (leakedEl) {
-      return { name, ok: false, reason: `forbidden EL marker present: ${leakedEl}` };
     }
     return { name, ok: true };
   } catch (err) {
@@ -489,19 +474,16 @@ export async function POST(request) {
         'Global students empowered',
         'Curated student housing',
       ],
-      forbidElMarkers: [],
     },
     {
       name: 'en-homepage-locale',
       url: `${appUrl}/property/thessaloniki`,
       anyEnMarker: ['Take the quiz', 'See all listings', 'How it works'],
-      forbidElMarkers: [],
     },
     {
       name: 'en-quiz-locale',
       url: `${appUrl}/property/thessaloniki/quiz`,
       anyEnMarker: ['One minute', "That's it"],
-      forbidElMarkers: [],
     },
   ];
   for (const check of heavyPageChecks) {

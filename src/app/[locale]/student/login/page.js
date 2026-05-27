@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
+import { signOutSafely } from '@/lib/authHelpers';
 import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -59,7 +60,7 @@ function StudentLoginInner() {
       // the hung-refresh scenario can only happen when there IS one.
       const { data: { session: existing } } = await supabase.auth.getSession();
       if (existing) {
-        await withTimeout(supabase.auth.signOut(), 5000).catch(() => {});
+        await signOutSafely(supabase);
       }
 
       let lastErr;
@@ -78,13 +79,21 @@ function StudentLoginInner() {
           // Sync cookie eagerly so the next navigation's RSC sees auth without
           // waiting for SessionSync's onAuthStateChange to fire.
           if (data.session?.access_token) {
-            await withTimeout(
+            const sessionRes = await withTimeout(
               fetch('/api/auth/session', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ access_token: data.session.access_token }),
               }),
             );
+            // If the cookie sync returns non-2xx (401 bad token, 500, …), the
+            // destination RSC sees a guest and bounces straight back to login —
+            // which reads to the user as "my correct password didn't work".
+            // Surface it instead of navigating into a silent loop.
+            if (!sessionRes.ok) {
+              setError(t('sessionError'));
+              return;
+            }
 
             // Idempotent profile probe — ensures a students row exists
             // even if the signup trigger was skipped (e.g. pre-seeded

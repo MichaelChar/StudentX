@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Link, useRouter, usePathname } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
+import { signOutSafely } from '@/lib/authHelpers';
 import UnreadBadge from './UnreadBadge';
 import TabTitleFlash from './TabTitleFlash';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
@@ -97,7 +98,7 @@ export default function Navbar() {
 
   async function handleSignOut() {
     const supabase = getSupabaseBrowser();
-    await supabase.auth.signOut();
+    await signOutSafely(supabase);
     router.push('/');
   }
 

@@ -32,6 +32,7 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
       neighborhoods: filters.selectedNeighborhoods?.length > 0 ? filters.selectedNeighborhoods : undefined,
       amenities: filters.selectedAmenities?.length > 0 ? filters.selectedAmenities : undefined,
       minDuration: filters.minDuration || undefined,
+      dealbreakers: filters.dealbreakers?.length > 0 ? filters.dealbreakers : undefined,
     };
 
     try {
