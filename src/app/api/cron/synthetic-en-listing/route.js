@@ -341,6 +341,61 @@ async function checkEnLocale({ name, url, anyEnMarker, forbidElMarkers }) {
   }
 }
 
+// The cron expressions we INTEND Cloudflare to have registered. MUST stay in
+// sync with wrangler.jsonc `triggers.crons` (and cf/worker-entry.mjs
+// CRON_ROUTES). This canary exists because the deploy pipeline does NOT sync
+// trigger changes to the live Worker, and the Free plan silently rejects a
+// 6th trigger (API error 10072) — which dropped student-message-digest for 3
+// days before anyone noticed (#152, PR #150).
+const EXPECTED_CRONS = [
+  '0 9 * * *',
+  '15 9 * * *',
+  '*/5 * * * *',
+  '2-58/5 * * * *',
+  '*/15 * * * *',
+];
+
+// Diff EXPECTED_CRONS against the schedules Cloudflare actually has registered
+// for the Worker (the `/schedules` API the runbook curls by hand). Skips
+// (inconclusive) when the CF API creds aren't configured, so it's a no-op
+// until CLOUDFLARE_API_TOKEN + CLOUDFLARE_ACCOUNT_ID are set as Worker secrets.
+async function checkCronScheduleDrift() {
+  const name = 'cron-schedule-drift';
+  const token = process.env.CLOUDFLARE_API_TOKEN;
+  const accountId = process.env.CLOUDFLARE_ACCOUNT_ID;
+  const scriptName = process.env.CLOUDFLARE_WORKER_NAME || 'studentx';
+  if (!token || !accountId) {
+    return { name, ok: true, skipped: true, reason: 'skipped: CLOUDFLARE_API_TOKEN/ACCOUNT_ID not configured' };
+  }
+  const url = `https://api.cloudflare.com/client/v4/accounts/${accountId}/workers/scripts/${scriptName}/schedules`;
+  try {
+    const res = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+      signal: AbortSignal.timeout(6000),
+    });
+    if (res.status !== 200) {
+      return { name, ok: false, reason: `CF schedules API returned ${res.status}` };
+    }
+    const json = await res.json();
+    const live = (json?.result?.schedules || []).map((s) => s.cron);
+    const liveSet = new Set(live);
+    const missing = EXPECTED_CRONS.filter((c) => !liveSet.has(c));
+    if (missing.length > 0) {
+      return {
+        name,
+        ok: false,
+        reason: `crons not registered on Cloudflare: ${missing.join(' | ')} (live: ${live.join(' | ') || 'none'})`,
+      };
+    }
+    return { name, ok: true };
+  } catch (err) {
+    if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+      return { name, ok: true, skipped: true, reason: `skipped: ${err.name}` };
+    }
+    return { name, ok: false, reason: `fetch threw: ${err.message || err.name}` };
+  }
+}
+
 async function sendAlert({ to, subject, lines }) {
   const resend = getResend();
   const from = process.env.RESEND_FROM_EMAIL || 'StudentX Alerts <alerts@studentx.uk>';
@@ -453,6 +508,7 @@ export async function POST(request) {
   for (const check of heavyPageChecks) {
     additional.push(await checkEnLocale(check));
   }
+  additional.push(await checkCronScheduleDrift());
   for (const r of additional) {
     checks.push(r);
     if (!r.ok) failures.push(r);
