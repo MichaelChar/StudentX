@@ -375,9 +375,14 @@ curl -X POST -H "x-cron-secret: $CRON_SECRET" \
 - **Functional React + server components by default.** Add `'use client'`
   only when the file needs hooks, browser APIs, or event handlers.
 - **Path alias `@/...`** maps to `src/...` (e.g. `@/lib/requireStudent`).
-- **Tailwind v4** with custom palette: `gold`, `blue`, `night`, `parchment`,
-  `stone`. Display face EB Garamond, body face Source Sans 3 (both Greek +
-  Latin subsets, self-hosted via `next/font/google`).
+- **Tailwind v4** with a Stripe-style iris palette (tokens in
+  `src/app/globals.css`): `blue` #635BFF (primary / CTAs / logo), `night`
+  #0a2540 (ink / dark surfaces), `stone` #fff (canvas), `parchment` #f6f4ff
+  (cards / surfaces), plus accents `magenta` #ff5fa2 and `yellow` #ffcb57.
+  Legacy aliases (`navy`, `gray-dark`, `gray-light`, `font-heading`) still
+  resolve via `globals.css` but new code should use the canonical tokens
+  (`night`, `parchment`, `blue`, `font-display`). Inter for both display and
+  body (Latin + Greek subsets, self-hosted via `next/font/google`).
 - **next-intl** for all user-visible strings. Greek strings stay in
   `src/messages/el.json`, English in `src/messages/en.json`. Adding a key
   to one without the other will fire the `missing-message` synthetic canary.

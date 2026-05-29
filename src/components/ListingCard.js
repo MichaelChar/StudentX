@@ -9,7 +9,7 @@ import { formatPropertyType } from '@/lib/propertyType';
 /*
   Propylaea listing card — matches page 06 of the reference design.
   Parchment frame, photo with gold verified seal overlay, small-caps
-  neighborhood, EB Garamond address, type + price row, programme pills.
+  neighborhood, EB Garamond address, type + price row, amenity pills.
 */
 
 function isValidPhotoUrl(url) {
@@ -104,7 +104,6 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
           {listing.bills_included && (
             <Pill variant="amenity">{t('billsIncluded')}</Pill>
           )}
-          {isVerified && <Pill variant="programme">{t('authProgramme')}</Pill>}
         </div>
       </div>
     </Link>

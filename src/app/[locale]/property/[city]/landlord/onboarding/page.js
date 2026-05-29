@@ -121,8 +121,8 @@ export default function LandlordOnboardingPage() {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-pulse space-y-4 w-full max-w-md px-4">
-          <div className="h-8 w-48 bg-gray-light rounded mx-auto" />
-          <div className="h-32 bg-gray-light rounded-xl" />
+          <div className="h-8 w-48 bg-parchment rounded mx-auto" />
+          <div className="h-32 bg-parchment rounded-sm" />
         </div>
       </div>
     );
@@ -130,10 +130,10 @@ export default function LandlordOnboardingPage() {
 
   return (
     <div className="min-h-screen bg-stone flex flex-col items-center justify-center px-4 py-12">
-      <h1 className="font-heading text-3xl font-bold text-navy mb-2 text-center">
+      <h1 className="font-display text-3xl font-bold text-night mb-2 text-center">
         Choose your plan
       </h1>
-      <p className="text-sm text-gray-dark/60 text-center mb-10">
+      <p className="text-sm text-night/60 text-center mb-10">
         Pick the tier that fits your needs. You can upgrade anytime.
       </p>
 
@@ -155,11 +155,11 @@ export default function LandlordOnboardingPage() {
               )}
 
               <div className="p-6 border-b border-gray-100">
-                <h2 className="font-heading text-xl font-bold text-navy mb-1">{tier.name}</h2>
+                <h2 className="font-display text-xl font-bold text-night mb-1">{tier.name}</h2>
                 <div className="flex items-baseline gap-0.5">
-                  <span className="font-heading text-3xl font-bold text-navy">{tier.price}</span>
+                  <span className="font-display text-3xl font-bold text-night">{tier.price}</span>
                   {tier.period && (
-                    <span className="text-gray-dark/50 text-sm">{tier.period}</span>
+                    <span className="text-night/50 text-sm">{tier.period}</span>
                   )}
                 </div>
               </div>
@@ -167,8 +167,8 @@ export default function LandlordOnboardingPage() {
               <ul className="p-6 space-y-3 flex-1">
                 {tier.features.map((f) => (
                   <li key={f.label} className="flex flex-col gap-0.5">
-                    <span className="text-xs text-gray-dark/50 uppercase tracking-wide">{f.label}</span>
-                    <span className="text-sm font-medium text-navy">{f.value}</span>
+                    <span className="text-xs text-night/50 uppercase tracking-wide">{f.label}</span>
+                    <span className="text-sm font-medium text-night">{f.value}</span>
                   </li>
                 ))}
               </ul>
@@ -177,9 +177,9 @@ export default function LandlordOnboardingPage() {
                 <button
                   onClick={() => handleChoose(tier.key)}
                   disabled={pendingTier !== null}
-                  className={`w-full py-3 rounded-xl font-heading font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
+                  className={`w-full py-3 rounded-sm font-display font-semibold transition-colors disabled:opacity-50 disabled:cursor-not-allowed ${
                     tier.key === 'free'
-                      ? 'bg-navy text-white hover:bg-navy/90'
+                      ? 'bg-night text-white hover:bg-night/90'
                       : 'bg-yellow text-white hover:bg-yellow/90'
                   }`}
                 >
@@ -197,7 +197,7 @@ export default function LandlordOnboardingPage() {
         </p>
       )}
 
-      <p className="text-xs text-gray-dark/40 mt-8">
+      <p className="text-xs text-night/40 mt-8">
         Paid plans use secure checkout via Stripe. Cancel anytime.
       </p>
     </div>

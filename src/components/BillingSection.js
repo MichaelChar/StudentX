@@ -7,7 +7,7 @@ import { useAccessToken } from '@/lib/useAccessToken';
 const TIER_STYLES = {
   none: 'bg-gray-100 text-gray-700',
   verified: 'bg-emerald-100 text-emerald-700',
-  verified_pro: 'bg-navy/10 text-navy',
+  verified_pro: 'bg-night/10 text-night',
 };
 
 export default function BillingSection() {
@@ -95,8 +95,8 @@ export default function BillingSection() {
   if (loading) {
     return (
       <div className="animate-pulse space-y-3">
-        <div className="h-6 w-32 bg-gray-light rounded" />
-        <div className="h-24 bg-gray-light rounded-xl" />
+        <div className="h-6 w-32 bg-parchment rounded" />
+        <div className="h-24 bg-parchment rounded-sm" />
       </div>
     );
   }
@@ -108,7 +108,7 @@ export default function BillingSection() {
     <div className="space-y-6">
       {/* Subscription status for verified landlords */}
       {sub && (
-        <div className="border border-gray-200 rounded-xl p-5 bg-white">
+        <div className="border border-gray-200 rounded-sm p-5 bg-white">
           <div className="flex items-center justify-between">
             <div>
               <div className="flex items-center gap-2">
@@ -116,7 +116,7 @@ export default function BillingSection() {
                   {currentTier === 'verified_pro' ? t('tierVerifiedPro') : t('tierVerified')}
                 </span>
               </div>
-              <p className="text-sm text-gray-dark/60 mt-1">
+              <p className="text-sm text-night/60 mt-1">
                 {t('billingAnnual')} {t('billingSuffix')}
                 {sub.cancelAtPeriodEnd && ` — ${t('cancelAtPeriodEnd')}`}
                 {sub.currentPeriodEnd && (
@@ -127,7 +127,7 @@ export default function BillingSection() {
             <button
               onClick={handleManageBilling}
               disabled={actionLoading}
-              className="text-sm px-4 py-2 rounded-lg border border-gray-200 text-gray-dark/70 hover:border-navy hover:text-navy transition-colors disabled:opacity-50"
+              className="text-sm px-4 py-2 rounded-lg border border-gray-200 text-night/70 hover:border-night hover:text-night transition-colors disabled:opacity-50"
             >
               {t('manageBilling')}
             </button>
@@ -140,7 +140,7 @@ export default function BillingSection() {
         <div>
           <div className="grid gap-4 sm:grid-cols-2">
             {/* Verified */}
-            <div className="border border-gray-200 rounded-xl p-5 bg-white">
+            <div className="border border-gray-200 rounded-sm p-5 bg-white">
               <div className="flex items-center gap-2 mb-2">
                 <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500 text-white">
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
@@ -148,10 +148,10 @@ export default function BillingSection() {
                 </span>
               </div>
               <div className="mt-2">
-                <span className="text-2xl font-bold text-navy">&euro;49</span>
-                <span className="text-sm text-gray-dark/60">{t('perYear')}</span>
+                <span className="text-2xl font-bold text-night">&euro;49</span>
+                <span className="text-sm text-night/60">{t('perYear')}</span>
               </div>
-              <ul className="mt-3 space-y-1.5 text-sm text-gray-dark/70">
+              <ul className="mt-3 space-y-1.5 text-sm text-night/70">
                 <li>{t('benefitBadge')}</li>
                 <li>{t('benefitSearchBoost')}</li>
               </ul>
@@ -165,18 +165,18 @@ export default function BillingSection() {
             </div>
 
             {/* Verified Pro */}
-            <div className="border-2 border-navy rounded-xl p-5 bg-navy/5">
+            <div className="border-2 border-night rounded-sm p-5 bg-night/5">
               <div className="flex items-center gap-2 mb-2">
-                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-navy text-white">
+                <span className="inline-flex items-center gap-1 text-xs font-semibold px-2 py-0.5 rounded-full bg-night text-white">
                   <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M6.267 3.455a3.066 3.066 0 001.745-.723 3.066 3.066 0 013.976 0 3.066 3.066 0 001.745.723 3.066 3.066 0 012.812 2.812c.051.643.304 1.254.723 1.745a3.066 3.066 0 010 3.976 3.066 3.066 0 00-.723 1.745 3.066 3.066 0 01-2.812 2.812 3.066 3.066 0 00-1.745.723 3.066 3.066 0 01-3.976 0 3.066 3.066 0 00-1.745-.723 3.066 3.066 0 01-2.812-2.812 3.066 3.066 0 00-.723-1.745 3.066 3.066 0 010-3.976 3.066 3.066 0 00.723-1.745 3.066 3.066 0 012.812-2.812zm7.44 5.252a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd" /></svg>
                   {t('tierVerifiedPro')}
                 </span>
               </div>
               <div className="mt-2">
-                <span className="text-2xl font-bold text-navy">&euro;99</span>
-                <span className="text-sm text-gray-dark/60">{t('perYear')}</span>
+                <span className="text-2xl font-bold text-night">&euro;99</span>
+                <span className="text-sm text-night/60">{t('perYear')}</span>
               </div>
-              <ul className="mt-3 space-y-1.5 text-sm text-gray-dark/70">
+              <ul className="mt-3 space-y-1.5 text-sm text-night/70">
                 <li>{t('benefitBadge')}</li>
                 <li>{t('benefitPriorityPlacement')}</li>
                 <li>{t('benefitAnalytics')}</li>
@@ -184,7 +184,7 @@ export default function BillingSection() {
               <button
                 onClick={() => handleCheckout('verified_pro')}
                 disabled={actionLoading}
-                className="mt-4 w-full text-sm px-3 py-2 rounded-lg bg-navy text-white font-medium hover:bg-navy/90 transition-colors disabled:opacity-50"
+                className="mt-4 w-full text-sm px-3 py-2 rounded-lg bg-night text-white font-medium hover:bg-night/90 transition-colors disabled:opacity-50"
               >
                 {t('getVerifiedPro')}
               </button>
@@ -195,19 +195,19 @@ export default function BillingSection() {
 
       {/* Upgrade option for Verified → Verified Pro */}
       {currentTier === 'verified' && (
-        <div className="border-2 border-navy rounded-xl p-5 bg-navy/5">
-          <h3 className="font-heading font-semibold text-navy text-base mb-2">
+        <div className="border-2 border-night rounded-sm p-5 bg-night/5">
+          <h3 className="font-display font-semibold text-night text-base mb-2">
             {t('upgradeToVerifiedPro')}
           </h3>
-          <p className="text-sm text-gray-dark/60 mb-3">{t('upgradeProDescription')}</p>
-          <ul className="mb-4 space-y-1.5 text-sm text-gray-dark/70">
+          <p className="text-sm text-night/60 mb-3">{t('upgradeProDescription')}</p>
+          <ul className="mb-4 space-y-1.5 text-sm text-night/70">
             <li>{t('benefitPriorityPlacement')}</li>
             <li>{t('benefitAnalytics')}</li>
           </ul>
           <button
             onClick={() => handleCheckout('verified_pro')}
             disabled={actionLoading}
-            className="text-sm px-4 py-2 rounded-lg bg-navy text-white font-medium hover:bg-navy/90 transition-colors disabled:opacity-50"
+            className="text-sm px-4 py-2 rounded-lg bg-night text-white font-medium hover:bg-night/90 transition-colors disabled:opacity-50"
           >
             {t('upgradeButton99')}
           </button>

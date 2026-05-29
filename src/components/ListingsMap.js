@@ -33,7 +33,7 @@ export default function ListingsMap({ listings }) {
   );
 
   return (
-    <div className="h-full w-full rounded-xl overflow-hidden border border-gray-200">
+    <div className="h-full w-full rounded-sm overflow-hidden border border-gray-200">
       <MapContainer
         center={THESSALONIKI_CENTER}
         zoom={DEFAULT_ZOOM}
@@ -48,7 +48,7 @@ export default function ListingsMap({ listings }) {
           <Marker key={listing.listing_id} position={[listing.lat, listing.lng]}>
             <Popup>
               <div className="text-sm min-w-[160px] max-w-[220px]">
-                <p className="font-semibold text-navy mb-0.5 line-clamp-2">
+                <p className="font-semibold text-night mb-0.5 line-clamp-2">
                   {listing.title || listing.address}
                 </p>
                 <p className="text-gray-600 text-xs mb-1">

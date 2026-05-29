@@ -20,11 +20,11 @@ function FilterSummary({ filters }) {
   if (filters.amenities?.length > 0) parts.push(filters.amenities.join(', '));
   if (filters.faculty) parts.push(`Faculty: ${filters.faculty}`);
 
-  if (parts.length === 0) return <span className="text-gray-dark/50 italic">All listings</span>;
+  if (parts.length === 0) return <span className="text-night/50 italic">All listings</span>;
   return (
     <div className="flex flex-wrap gap-1.5 mt-1">
       {parts.map((p, i) => (
-        <span key={i} className="inline-block text-xs px-2.5 py-1 rounded-full border border-gray-200 bg-gray-light text-gray-dark/70">
+        <span key={i} className="inline-block text-xs px-2.5 py-1 rounded-full border border-gray-200 bg-parchment text-night/70">
           {p}
         </span>
       ))}
@@ -89,8 +89,8 @@ function ManageContent() {
   if (loading) {
     return (
       <div className="mx-auto max-w-lg px-4 py-16 text-center">
-        <div className="h-6 w-48 bg-gray-light rounded animate-pulse mx-auto mb-4" />
-        <div className="h-4 w-32 bg-gray-light rounded animate-pulse mx-auto" />
+        <div className="h-6 w-48 bg-parchment rounded animate-pulse mx-auto mb-4" />
+        <div className="h-4 w-32 bg-parchment rounded animate-pulse mx-auto" />
       </div>
     );
   }
@@ -98,9 +98,9 @@ function ManageContent() {
   if (notFound) {
     return (
       <div className="mx-auto max-w-lg px-4 py-16 text-center">
-        <h1 className="font-heading text-2xl font-bold text-navy mb-3">{t('notFound')}</h1>
-        <p className="text-gray-dark/60 mb-6">{t('notFoundDesc')}</p>
-        <Link href="/property/thessaloniki/results" className="inline-block bg-yellow text-white font-heading font-semibold px-6 py-3 rounded-lg hover:bg-yellow/90 transition-colors">
+        <h1 className="font-display text-2xl font-bold text-night mb-3">{t('notFound')}</h1>
+        <p className="text-night/60 mb-6">{t('notFoundDesc')}</p>
+        <Link href="/property/thessaloniki/results" className="inline-block bg-yellow text-white font-display font-semibold px-6 py-3 rounded-lg hover:bg-yellow/90 transition-colors">
           {t('browseListings')}
         </Link>
       </div>
@@ -115,9 +115,9 @@ function ManageContent() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h1 className="font-heading text-2xl font-bold text-navy mb-3">{t('unsubscribed')}</h1>
-        <p className="text-gray-dark/60 mb-6">{t('unsubscribedDesc')}</p>
-        <Link href="/property/thessaloniki/results" className="inline-block bg-navy text-white font-heading font-semibold px-6 py-3 rounded-lg hover:bg-navy/90 transition-colors">
+        <h1 className="font-display text-2xl font-bold text-night mb-3">{t('unsubscribed')}</h1>
+        <p className="text-night/60 mb-6">{t('unsubscribedDesc')}</p>
+        <Link href="/property/thessaloniki/results" className="inline-block bg-night text-white font-display font-semibold px-6 py-3 rounded-lg hover:bg-night/90 transition-colors">
           {t('browseListings')}
         </Link>
       </div>
@@ -130,33 +130,33 @@ function ManageContent() {
 
   return (
     <div className="mx-auto max-w-lg px-4 py-12">
-      <h1 className="font-heading text-2xl md:text-3xl font-bold text-navy mb-2">{t('title')}</h1>
-      <p className="text-gray-dark/60 mb-8">{t('desc')}</p>
+      <h1 className="font-display text-2xl md:text-3xl font-bold text-night mb-2">{t('title')}</h1>
+      <p className="text-night/60 mb-8">{t('desc')}</p>
 
-      <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
+      <div className="bg-white rounded-sm border border-gray-200 p-6 space-y-5">
         {/* Label */}
         <div>
-          <p className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/40 mb-1">{t('alertName')}</p>
-          <p className="text-navy font-medium">{alert?.label || t('unnamedAlert')}</p>
+          <p className="uppercase tracking-wider text-xs font-display font-semibold text-night/40 mb-1">{t('alertName')}</p>
+          <p className="text-night font-medium">{alert?.label || t('unnamedAlert')}</p>
         </div>
 
         {/* Frequency */}
         <div>
-          <p className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/40 mb-1">{t('frequency')}</p>
-          <p className="text-navy font-medium capitalize">{alert?.frequency || 'daily'}</p>
+          <p className="uppercase tracking-wider text-xs font-display font-semibold text-night/40 mb-1">{t('frequency')}</p>
+          <p className="text-night font-medium capitalize">{alert?.frequency || 'daily'}</p>
         </div>
 
         {/* Filters */}
         <div>
-          <p className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/40 mb-1">{t('filters')}</p>
+          <p className="uppercase tracking-wider text-xs font-display font-semibold text-night/40 mb-1">{t('filters')}</p>
           <FilterSummary filters={alert?.filters || {}} />
         </div>
 
         {/* Created */}
         {createdDate && (
           <div>
-            <p className="uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/40 mb-1">{t('createdOn')}</p>
-            <p className="text-gray-dark/60 text-sm">{createdDate}</p>
+            <p className="uppercase tracking-wider text-xs font-display font-semibold text-night/40 mb-1">{t('createdOn')}</p>
+            <p className="text-night/60 text-sm">{createdDate}</p>
           </div>
         )}
 
@@ -179,7 +179,7 @@ export default function ManageAlertsPage() {
   return (
     <Suspense fallback={
       <div className="mx-auto max-w-lg px-4 py-16 text-center">
-        <div className="h-6 w-48 bg-gray-light rounded animate-pulse mx-auto" />
+        <div className="h-6 w-48 bg-parchment rounded animate-pulse mx-auto" />
       </div>
     }>
       <ManageContent />

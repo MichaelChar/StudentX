@@ -13,6 +13,7 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
+import ConfirmDialog from '@/components/ui/ConfirmDialog';
 
 /*
   Propylaea landlord listings index. Shows full list of the landlord's
@@ -26,6 +27,8 @@ export default function LandlordListingsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [deleting, setDeleting] = useState(null);
+  // The listing pending delete-confirmation, or null when the dialog is closed.
+  const [confirmTarget, setConfirmTarget] = useState(null);
   useEffect(() => {
     (async () => {
       const supabase = getSupabaseBrowser();
@@ -49,12 +52,13 @@ export default function LandlordListingsPage() {
     })();
   }, []);
 
-  async function handleDelete(listingId) {
-    if (!confirm(t('deleteConfirm'))) return;
+  async function performDelete(listingId) {
+    setError('');
     setDeleting(listingId);
     try {
       if (!accessToken) {
         setDeleting(null);
+        setConfirmTarget(null);
         router.replace('/property/thessaloniki/landlord/login');
         return;
       }
@@ -65,12 +69,15 @@ export default function LandlordListingsPage() {
       if (res.ok) {
         setListings((prev) => prev.filter((l) => l.listing_id !== listingId));
       } else {
-        alert(t('deleteError'));
+        setError(t('deleteError'));
       }
     } catch (err) {
       console.error('[LandlordListings] delete failed:', err);
-      alert(t('deleteError'));
+      setError(t('deleteError'));
     } finally {
+      // Close the dialog regardless of outcome — on failure the page-level
+      // error banner surfaces the reason.
+      setConfirmTarget(null);
       setDeleting(null);
     }
   }
@@ -115,13 +122,30 @@ export default function LandlordListingsPage() {
                 <ListingRow
                   listing={listing}
                   deleting={deleting === listing.listing_id}
-                  onDelete={() => handleDelete(listing.listing_id)}
+                  onDelete={() => setConfirmTarget(listing)}
                   t={t}
                 />
               </li>
             ))}
           </ul>
         </Card>
+      )}
+
+      {confirmTarget && (
+        <ConfirmDialog
+          title={t('deleteTitle')}
+          body={t('deleteBody', {
+            address: confirmTarget.location?.address || t('noAddress'),
+          })}
+          confirmLabel={
+            deleting === confirmTarget.listing_id ? t('deleting') : t('delete')
+          }
+          cancelLabel={t('cancel')}
+          busy={deleting === confirmTarget.listing_id}
+          destructive
+          onConfirm={() => performDelete(confirmTarget.listing_id)}
+          onCancel={() => setConfirmTarget(null)}
+        />
       )}
     </LandlordShell>
   );

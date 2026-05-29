@@ -10,7 +10,7 @@ import { useEffect, useState } from 'react';
   where GlobeLoader still runs.
 
   Geometry (200×200 box):
-   - navy square inset 30 (rotates over dur*2)
+   - night square inset 30 (rotates over dur*2)
    - gold circle 32×32 orbiting around the square (dur)
    - white diamond pulsing in the centre (dur)
 
@@ -113,7 +113,7 @@ export default function BauhausLoader({
 
         <div
           className={`mt-9 min-h-[22px] text-center text-sm ${
-            dim ? 'text-gray-dark/60' : 'text-gray-dark'
+            dim ? 'text-night/60' : 'text-night'
           }`}
         >
           {status}

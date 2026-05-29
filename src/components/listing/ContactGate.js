@@ -2,7 +2,6 @@ import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
-import Pill from '@/components/ui/Pill';
 import AuthGateRescue from '@/components/AuthGateRescue';
 import { hasAuthCookie } from '@/lib/requireStudent';
 
@@ -34,9 +33,6 @@ export default async function ContactGate({ listing, locale, fromRaw }) {
               </span>
             )}
           </p>
-          <div className="mt-2">
-            <Pill variant="programme">{t('authMedicalProgramme')}</Pill>
-          </div>
           <p className="mt-5 text-night/70 text-sm leading-relaxed">
             {t('directTagline')}
           </p>

@@ -80,7 +80,7 @@ export default function AdminVerificationsPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-gray-dark/50">Loading…</p>
+        <p className="text-night/50">Loading…</p>
       </div>
     );
   }
@@ -96,14 +96,14 @@ export default function AdminVerificationsPage() {
   return (
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex items-center justify-between mb-8">
-        <h1 className="font-heading text-2xl font-bold text-navy">Verification Requests</h1>
+        <h1 className="font-display text-2xl font-bold text-night">Verification Requests</h1>
         <div className="flex gap-2">
           {['pending', 'approved', 'rejected'].map((s) => (
             <button
               key={s}
               onClick={() => handleFilterChange(s)}
               className={`text-sm px-3 py-1.5 rounded-lg border transition-colors capitalize ${
-                statusFilter === s ? 'bg-navy text-white border-navy' : 'border-gray-200 text-gray-dark/60 hover:border-navy/40'
+                statusFilter === s ? 'bg-night text-white border-night' : 'border-gray-200 text-night/60 hover:border-night/40'
               }`}
             >
               {s}
@@ -113,29 +113,29 @@ export default function AdminVerificationsPage() {
       </div>
 
       {requests.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-xl">
-          <p className="text-gray-dark/50">No {statusFilter} verification requests.</p>
+        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-sm">
+          <p className="text-night/50">No {statusFilter} verification requests.</p>
         </div>
       ) : (
         <div className="space-y-5">
           {requests.map((req) => (
-            <div key={req.id} className="border border-gray-200 rounded-xl p-5 bg-white">
+            <div key={req.id} className="border border-gray-200 rounded-sm p-5 bg-white">
               <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className="font-heading font-semibold text-navy">{req.landlord_name}</span>
+                    <span className="font-display font-semibold text-night">{req.landlord_name}</span>
                     <StatusBadge status={req.status} />
                   </div>
-                  <p className="text-xs text-gray-dark/50 mb-1">
+                  <p className="text-xs text-night/50 mb-1">
                     Submitted {new Date(req.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                   {req.reviewed_at && (
-                    <p className="text-xs text-gray-dark/40">
+                    <p className="text-xs text-night/40">
                       Reviewed {new Date(req.reviewed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
                   )}
                   {req.review_notes && (
-                    <p className="text-sm text-gray-dark/60 mt-1 italic">{req.review_notes}</p>
+                    <p className="text-sm text-night/60 mt-1 italic">{req.review_notes}</p>
                   )}
                 </div>
 
@@ -144,7 +144,7 @@ export default function AdminVerificationsPage() {
                     href={req.document_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="shrink-0 text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-gray-dark/70 hover:border-navy hover:text-navy transition-colors"
+                    className="shrink-0 text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-night/70 hover:border-night hover:text-night transition-colors"
                   >
                     View document ↗
                   </a>
@@ -158,7 +158,7 @@ export default function AdminVerificationsPage() {
                     value={notesMap[req.id] || ''}
                     onChange={(e) => setNotesMap((prev) => ({ ...prev, [req.id]: e.target.value }))}
                     rows={2}
-                    className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow resize-none"
+                    className="w-full rounded-lg border border-gray-200 bg-parchment px-3 py-2 text-sm text-night focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow resize-none"
                   />
                   <div className="flex gap-2">
                     <button

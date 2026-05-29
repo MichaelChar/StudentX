@@ -69,7 +69,7 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
     >
       {/* Backdrop */}
       <div
-        className="absolute inset-0 bg-navy/40 backdrop-blur-sm"
+        className="absolute inset-0 bg-night/40 backdrop-blur-sm"
         onClick={onClose}
         aria-hidden="true"
       />
@@ -78,12 +78,12 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
       <div className="relative bg-white rounded-2xl shadow-xl w-full max-w-md p-6 z-10">
         <div className="flex items-start justify-between mb-5">
           <div>
-            <h2 className="font-heading text-xl font-bold text-navy">{t('title')}</h2>
-            <p className="text-sm text-gray-dark/60 mt-0.5">{t('desc')}</p>
+            <h2 className="font-display text-xl font-bold text-night">{t('title')}</h2>
+            <p className="text-sm text-night/60 mt-0.5">{t('desc')}</p>
           </div>
           <button
             onClick={onClose}
-            className="text-gray-dark/40 hover:text-gray-dark/70 transition-colors cursor-pointer ml-4 shrink-0"
+            className="text-night/40 hover:text-night/70 transition-colors cursor-pointer ml-4 shrink-0"
             aria-label="Close"
           >
             <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -99,11 +99,11 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
               </svg>
             </div>
-            <p className="font-heading text-lg font-semibold text-navy mb-1">{t('successTitle')}</p>
-            <p className="text-sm text-gray-dark/60">{t('successDesc')}</p>
+            <p className="font-display text-lg font-semibold text-night mb-1">{t('successTitle')}</p>
+            <p className="text-sm text-night/60">{t('successDesc')}</p>
             <button
               onClick={onClose}
-              className="mt-5 w-full py-2.5 rounded-lg bg-navy text-white font-heading font-semibold text-sm hover:bg-navy/90 transition-colors cursor-pointer"
+              className="mt-5 w-full py-2.5 rounded-lg bg-night text-white font-display font-semibold text-sm hover:bg-night/90 transition-colors cursor-pointer"
             >
               {t('done')}
             </button>
@@ -111,7 +111,7 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
         ) : (
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className="block uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-1.5">
+              <label className="block uppercase tracking-wider text-xs font-display font-semibold text-night/50 mb-1.5">
                 {t('emailLabel')} <span className="text-red-400">*</span>
               </label>
               <input
@@ -120,12 +120,12 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
                 value={form.email}
                 onChange={(e) => setForm((p) => ({ ...p, email: e.target.value }))}
                 placeholder={t('emailPlaceholder')}
-                className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2.5 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow"
+                className="w-full rounded-lg border border-gray-200 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow"
               />
             </div>
 
             <div>
-              <label className="block uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-1.5">
+              <label className="block uppercase tracking-wider text-xs font-display font-semibold text-night/50 mb-1.5">
                 {t('labelLabel')}
               </label>
               <input
@@ -134,12 +134,12 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
                 onChange={(e) => setForm((p) => ({ ...p, label: e.target.value }))}
                 placeholder={t('labelPlaceholder')}
                 maxLength={80}
-                className="w-full rounded-lg border border-gray-200 bg-gray-light px-3 py-2.5 text-sm text-gray-dark focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow"
+                className="w-full rounded-lg border border-gray-200 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow"
               />
             </div>
 
             <div>
-              <label className="block uppercase tracking-wider text-xs font-heading font-semibold text-gray-dark/50 mb-1.5">
+              <label className="block uppercase tracking-wider text-xs font-display font-semibold text-night/50 mb-1.5">
                 {t('frequencyLabel')}
               </label>
               <div className="flex gap-2">
@@ -148,7 +148,7 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
                     key={freq}
                     type="button"
                     onClick={() => setForm((p) => ({ ...p, frequency: freq }))}
-                    className={`flex-1 py-2 rounded-lg text-sm border transition-colors cursor-pointer ${form.frequency === freq ? 'border-yellow bg-yellow/10 text-yellow font-medium' : 'border-gray-200 text-gray-dark/60 hover:border-yellow/40'}`}
+                    className={`flex-1 py-2 rounded-lg text-sm border transition-colors cursor-pointer ${form.frequency === freq ? 'border-yellow bg-yellow/10 text-yellow font-medium' : 'border-gray-200 text-night/60 hover:border-yellow/40'}`}
                   >
                     {t(freq)}
                   </button>
@@ -163,7 +163,7 @@ export default function SaveSearchModal({ filters, faculty, onClose }) {
             <button
               type="submit"
               disabled={submitting}
-              className="w-full py-3 rounded-lg bg-yellow text-white font-heading font-semibold text-sm hover:bg-yellow/90 transition-colors cursor-pointer disabled:opacity-60"
+              className="w-full py-3 rounded-lg bg-yellow text-white font-display font-semibold text-sm hover:bg-yellow/90 transition-colors cursor-pointer disabled:opacity-60"
             >
               {submitting ? t('saving') : t('submit')}
             </button>

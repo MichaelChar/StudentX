@@ -274,7 +274,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
 
   const inputClass =
     'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow/40 focus:border-yellow';
-  const labelClass = 'block text-sm font-medium text-gray-dark mb-1';
+  const labelClass = 'block text-sm font-medium text-night mb-1';
 
   return (
     <>
@@ -288,7 +288,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       <form onSubmit={handleSubmit} className="space-y-8">
       {/* Location */}
       <section>
-        <h2 className="font-heading font-semibold text-navy mb-4 text-sm uppercase tracking-wider">
+        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
           {t('locationSection')}
         </h2>
         <div className="space-y-4">
@@ -312,10 +312,10 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               placeholder={t('titlePlaceholder')}
             />
             <div className="mt-1.5 flex justify-between items-start gap-3">
-              <p className="text-xs text-gray-dark/50 leading-relaxed">
+              <p className="text-xs text-night/50 leading-relaxed">
                 {t('titleHint')}
               </p>
-              <span className="text-xs text-gray-dark/40 tabular-nums shrink-0">
+              <span className="text-xs text-night/40 tabular-nums shrink-0">
                 {codepointLength(form.title)}/{TITLE_MAX_LENGTH}
               </span>
             </div>
@@ -390,7 +390,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               />
             </div>
           </div>
-          <p className="text-xs text-gray-dark/50">
+          <p className="text-xs text-night/50">
             {t('coordsOptional')}
             {' '}
             {t.rich('coordsHelp', {
@@ -411,7 +411,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
 
       {/* Property details */}
       <section>
-        <h2 className="font-heading font-semibold text-navy mb-4 text-sm uppercase tracking-wider">
+        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
           {t('detailsSection')}
         </h2>
         <div className="space-y-4">
@@ -474,7 +474,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               className={inputClass + ' resize-none'}
               placeholder={t('descriptionPlaceholder')}
             />
-            <p className="mt-1.5 text-xs text-gray-dark/50 leading-relaxed">
+            <p className="mt-1.5 text-xs text-night/50 leading-relaxed">
               {t('descriptionTip')}
             </p>
           </div>
@@ -483,7 +483,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
 
       {/* Pricing */}
       <section>
-        <h2 className="font-heading font-semibold text-navy mb-4 text-sm uppercase tracking-wider">
+        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
           {t('pricingSection')}
         </h2>
         <div className="space-y-4">
@@ -519,7 +519,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               onChange={(e) => set('bills_included', e.target.checked)}
               className="w-4 h-4 accent-yellow"
             />
-            <span className="text-sm text-gray-dark">{t('billsIncluded')}</span>
+            <span className="text-sm text-night">{t('billsIncluded')}</span>
           </label>
 
         </div>
@@ -527,7 +527,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
 
       {/* Availability */}
       <section>
-        <h2 className="font-heading font-semibold text-navy mb-4 text-sm uppercase tracking-wider">
+        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
           {t('availabilitySection')}
         </h2>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -564,7 +564,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
 
       {/* Photos */}
       <section>
-        <h2 className="font-heading font-semibold text-navy mb-4 text-sm uppercase tracking-wider">
+        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
           {t('photosSection')}
         </h2>
         <div className="space-y-4">
@@ -605,7 +605,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                         setDragIndex(null);
                         setDragOverIndex(null);
                       }}
-                      className={`relative group aspect-[4/3] rounded-lg overflow-hidden bg-gray-light cursor-grab active:cursor-grabbing transition-all ${
+                      className={`relative group aspect-[4/3] rounded-lg overflow-hidden bg-parchment cursor-grab active:cursor-grabbing transition-all ${
                         i === 0 ? 'col-span-2' : ''
                       } ${isDragging ? 'opacity-40' : ''} ${
                         isDragOver ? 'ring-2 ring-yellow ring-offset-2' : ''
@@ -628,7 +628,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                           type="button"
                           onClick={() => reorderPhoto(i, i - 1)}
                           disabled={i === 0}
-                          className="bg-white/95 hover:bg-white text-gray-dark rounded-full w-9 h-9 flex items-center justify-center shadow disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="bg-white/95 hover:bg-white text-night rounded-full w-9 h-9 flex items-center justify-center shadow disabled:opacity-40 disabled:cursor-not-allowed"
                           aria-label={t('photosMoveLeft')}
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -639,7 +639,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                           type="button"
                           onClick={() => reorderPhoto(i, i + 1)}
                           disabled={i === total - 1}
-                          className="bg-white/95 hover:bg-white text-gray-dark rounded-full w-9 h-9 flex items-center justify-center shadow disabled:opacity-40 disabled:cursor-not-allowed"
+                          className="bg-white/95 hover:bg-white text-night rounded-full w-9 h-9 flex items-center justify-center shadow disabled:opacity-40 disabled:cursor-not-allowed"
                           aria-label={t('photosMoveRight')}
                         >
                           <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -650,7 +650,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                       <button
                         type="button"
                         onClick={() => removePhoto(url)}
-                        className="absolute top-2 right-2 bg-white/95 hover:bg-white text-gray-dark rounded-full w-9 h-9 flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100 transition-opacity shadow [@media(hover:none)]:opacity-100"
+                        className="absolute top-2 right-2 bg-white/95 hover:bg-white text-night rounded-full w-9 h-9 flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100 transition-opacity shadow [@media(hover:none)]:opacity-100"
                         aria-label={t('photosRemove')}
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -662,7 +662,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                 })}
               </div>
               {(form.photos || []).length > 1 && (
-                <p className="text-xs text-gray-dark/50">{t('photosReorderHint')}</p>
+                <p className="text-xs text-night/50">{t('photosReorderHint')}</p>
               )}
             </>
           )}
@@ -670,12 +670,12 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
           {/* Imported external photos (read-only) */}
           {(form.external_photo_urls || []).length > 0 && (
             <div>
-              <p className="text-xs font-medium text-gray-dark/60 mb-2">
+              <p className="text-xs font-medium text-night/60 mb-2">
                 {t('importedPhotos', { count: form.external_photo_urls.length })}
               </p>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                 {form.external_photo_urls.map((url, i) => (
-                  <div key={url} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-gray-light">
+                  <div key={url} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-parchment">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
                       src={url}
@@ -704,7 +704,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               />
               <label
                 htmlFor="photo-upload"
-                className={`inline-flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-200 rounded-lg text-sm text-gray-dark/60 hover:border-yellow/60 hover:text-navy cursor-pointer transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
+                className={`inline-flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-200 rounded-lg text-sm text-night/60 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
               >
                 {uploading ? (
                   <>
@@ -723,7 +723,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                   </>
                 )}
               </label>
-              <p className="mt-1.5 text-xs text-gray-dark/50">
+              <p className="mt-1.5 text-xs text-night/50">
                 {photoLimit === null ? t('photosHintUnlimited') : t('photosHint')}
               </p>
             </div>
@@ -738,7 +738,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       {/* Amenities */}
       {amenities.length > 0 && (
         <section>
-          <h2 className="font-heading font-semibold text-navy mb-4 text-sm uppercase tracking-wider">
+          <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
             {t('amenitiesSection')}
           </h2>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
@@ -750,7 +750,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                   onChange={() => toggleAmenity(amenity.amenity_id)}
                   className="w-4 h-4 accent-yellow"
                 />
-                <span className="text-sm text-gray-dark">{amenity.name}</span>
+                <span className="text-sm text-night">{amenity.name}</span>
               </label>
             ))}
           </div>
@@ -766,7 +766,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       <button
         type="submit"
         disabled={loading}
-        className="w-full sm:w-auto bg-yellow text-white font-heading font-semibold px-8 py-3 rounded-lg hover:bg-yellow/90 transition-colors disabled:opacity-50"
+        className="w-full sm:w-auto bg-yellow text-white font-display font-semibold px-8 py-3 rounded-lg hover:bg-yellow/90 transition-colors disabled:opacity-50"
       >
         {loading ? t('saving') : (submitLabel || t('saveListing'))}
       </button>

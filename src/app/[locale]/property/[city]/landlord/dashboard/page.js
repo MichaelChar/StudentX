@@ -320,7 +320,7 @@ function ListingRow({ listing }) {
 function InquiryRow({ inquiry }) {
   const status = inquiry.status || 'pending';
   const statusVariant =
-    status === 'pending' ? 'verified'
+    status === 'pending' ? 'pending'
     : status === 'replied' ? 'info'
     : 'amenity';
   const statusLabel =
@@ -330,10 +330,11 @@ function InquiryRow({ inquiry }) {
   const date = inquiry.created_at
     ? new Date(inquiry.created_at).toLocaleDateString()
     : '';
+  const inquiryId = inquiry.inquiry_id || inquiry.id;
 
   return (
     <Link
-      href="/property/thessaloniki/landlord/inquiries"
+      href={`/property/thessaloniki/landlord/inquiries/${inquiryId}/chat`}
       className="block rounded-sm border border-night/10 p-3 hover:border-blue transition-colors"
     >
       <div className="flex items-start justify-between gap-3 mb-1">

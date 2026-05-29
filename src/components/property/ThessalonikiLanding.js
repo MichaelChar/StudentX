@@ -65,9 +65,7 @@ export default function ThessalonikiLanding() {
         <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 md:pt-28 md:pb-32">
           <p className="label-caps text-yellow mb-8">{t('eyebrow')}</p>
           <h1 className="font-display text-4xl md:text-6xl lg:text-[4.5rem] leading-[1.05] max-w-3xl text-night">
-            {t('heroBefore')}{' '}
-            <span className="italic text-yellow">{t('heroItalic')}</span>{' '}
-            {t('heroAfter')}
+            {t('headline')}
           </h1>
           <p className="mt-6 max-w-xl text-night/70 text-lg md:text-xl leading-relaxed">
             {t('subtitle')}
