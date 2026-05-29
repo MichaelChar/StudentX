@@ -90,14 +90,15 @@ export default async function ListingPage({ params, searchParams }) {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10">
         {/* Left column */}
         <div>
-          {/* Hero stripe — verified seal + programme tag + address */}
+          {/* Hero stripe — verified seal + address */}
           <div className="flex flex-col md:flex-row md:items-start gap-5 mb-8">
             {isVerified && <VerifiedSeal size={52} />}
             <div className="flex-1">
-              <div className="flex flex-wrap items-center gap-2 mb-3">
-                {isVerified && <Pill variant="verified">{t('verified')}</Pill>}
-                <Pill variant="programme">{t('authMedicalProgramme')}</Pill>
-              </div>
+              {isVerified && (
+                <div className="flex flex-wrap items-center gap-2 mb-3">
+                  <Pill variant="verified">{t('verified')}</Pill>
+                </div>
+              )}
               <p className="label-caps text-night/50">
                 {listing.neighborhood} &middot; Thessaloniki
               </p>

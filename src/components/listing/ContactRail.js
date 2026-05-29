@@ -7,7 +7,6 @@ import { useAccessToken } from '@/lib/useAccessToken';
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 
 const ERROR_TO_KEY = {
@@ -102,9 +101,6 @@ export default function ContactRail({ listing }) {
                 </span>
               )}
             </p>
-            <div className="mt-2">
-              <Pill variant="programme">{t('authMedicalProgramme')}</Pill>
-            </div>
             <p className="mt-5 text-night/70 text-sm leading-relaxed">
               {t('directTagline')}
             </p>

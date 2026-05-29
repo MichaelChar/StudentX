@@ -86,7 +86,7 @@ export default function LandlordInquiriesPage() {
 }
 
 function statusVariant(status) {
-  if (status === 'pending') return 'verified';
+  if (status === 'pending') return 'pending';
   if (status === 'replied') return 'info';
   return 'amenity';
 }

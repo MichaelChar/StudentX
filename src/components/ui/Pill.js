@@ -1,17 +1,17 @@
 /*
-  Propylaea Pill — small labels for amenities, programme tags, verified seals.
+  Propylaea Pill — small labels for amenities, statuses, verified seals.
   Variants:
     - verified  : Gold seal pill, reserved for VERIFIED and Aristotle partner marks
-    - programme : Blue outline — AUTH PROGRAMME tag
-    - amenity   : Parchment chip, used for amenities and bills-included
-    - info      : Blue filled info chip
+    - pending   : Magenta fill — unactioned state (e.g. a new, unanswered inquiry)
+    - amenity   : Parchment chip, used for amenities, bills-included, closed states
+    - info      : Blue filled info chip, used for replied/answered states
     - onDark    : Stone outline for dark surfaces
 */
 const VARIANTS = {
   verified:
     'bg-yellow text-white border border-yellow',
-  programme:
-    'border border-blue text-blue bg-transparent',
+  pending:
+    'bg-magenta text-white border border-magenta',
   amenity:
     'bg-parchment text-night border border-parchment',
   info:

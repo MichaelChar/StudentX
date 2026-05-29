@@ -258,6 +258,9 @@
       "listingColumn": "Listing",
       "view": "View",
       "deleteConfirm": "Delete this listing? This cannot be undone.",
+      "deleteTitle": "Delete listing",
+      "deleteBody": "Delete {address}? This permanently removes the listing and its inquiries. This cannot be undone.",
+      "cancel": "Cancel",
       "deleteError": "Failed to delete listing. Please try again.",
       "featuredError": "Failed to update featured status.",
       "noAddress": "No address",
@@ -430,9 +433,7 @@
   "propylaea": {
     "landing": {
       "eyebrow": "Ἀριστοτέλειον",
-      "heroBefore": "your home",
-      "heroItalic": "near",
-      "heroAfter": "campus.",
+      "headline": "Curated student housing in Thessaloniki.",
       "subtitle": "Curated student housing for medical students. Tell us what you need and we match you.",
       "ctaPrimary": "Take the quiz",
       "ctaSecondary": "Browse all listings",
@@ -545,8 +546,8 @@
       "minDurationAcademicName": "Academic year",
       "minDurationAcademicMonths": "9 mo",
       "verified": "Verified",
+      "verifiedLandlordsOnly": "Verified landlords only",
       "billsIncluded": "Bills included",
-      "authProgramme": "AUTh programme",
       "floorNotSpecified": "Floor not specified",
       "dealbreakers": "Your dealbreakers",
       "removeDealbreaker": "Remove {label}",
@@ -556,7 +557,6 @@
     },
     "listing": {
       "back": "Back to results",
-      "authMedicalProgramme": "AUTh Medical Programme",
       "verified": "Verified",
       "streetAddressA11y": "Street address",
       "rentGreek": "Ενοίκιο",

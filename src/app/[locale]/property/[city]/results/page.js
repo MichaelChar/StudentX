@@ -25,7 +25,9 @@ const PROPERTY_TYPE_GROUPS = [
   { labelKey: 'type2Bed', values: ['2-Bedroom'] },
   { labelKey: 'typePrivateRoom', values: ['Room in shared apartment'] },
 ];
-const BUDGET_MIN = 150;
+// Floor matches the quiz slider (src/app/.../quiz/page.js) so the two
+// surfaces agree on the minimum selectable budget.
+const BUDGET_MIN = 250;
 const BUDGET_MAX = 1200;
 const DEFAULT_BUDGET = 900;
 
@@ -647,7 +649,7 @@ function FilterPanel({
           }`}
         >
           <Icon name="shieldCheck" className="w-4 h-4" />
-          {t('verified')} only
+          {t('verifiedLandlordsOnly')}
         </button>
       </section>
 
