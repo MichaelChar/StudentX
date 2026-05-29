@@ -71,8 +71,7 @@ export async function POST(request) {
     try {
       // Claim BEFORE Resend send: conditional UPSERT, only one caller
       // per (inquiry, period) advances last_notified_at. Concurrent /
-      // retried callers get false and skip silently. Mirrors
-      // claim_digest_send (migration 022).
+      // retried callers get false and skip silently.
       const { data: claimed, error: claimError } = await supabase.rpc(
         'claim_landlord_message_notification',
         {
@@ -96,8 +95,8 @@ export async function POST(request) {
       }
 
       // From here on the claim is committed: a Resend failure means
-      // this digest is lost for this period. Same tradeoff as the
-      // saved-searches digest — missing one email beats double-sending.
+      // this digest is lost for this period — missing one email beats
+      // double-sending.
       if (await isEmailSuppressed(row.landlord_email)) {
         console.warn(
           `[landlord-digest] skipping send — ${row.landlord_email} is suppressed`,

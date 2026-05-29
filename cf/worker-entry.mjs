@@ -18,12 +18,11 @@ export { DOQueueHandler, DOShardedTagCache, BucketCachePurge };
 // NEXT_PUBLIC_APP_URL; `query` is appended verbatim if present. Adding a new
 // scheduled route is a one-line addition here plus the cron pattern in
 // wrangler.jsonc.
-// NB: this map has 5 entries to stay under Cloudflare's Free-plan limit of
-// 5 cron triggers per Worker. The saved-searches-digest route picks daily
-// vs weekly internally (daily every day, weekly also on Mondays UTC) so a
-// single 09:00 UTC trigger covers both cadences.
+// NB: this map must stay under Cloudflare's Free-plan limit of 5 cron
+// triggers per Worker. It currently has 4 entries (the saved-searches-digest
+// route was removed with the saved-searches/alerts feature), leaving one
+// free slot.
 const CRON_ROUTES = {
-  "0 9 * * *":      { name: "saved-searches-digest",   path: "/api/cron/saved-searches-digest",   query: null },
   "15 9 * * *":     { name: "recompute-distances",     path: "/api/cron/recompute-distances",     query: null },
   "*/5 * * * *":    { name: "landlord-message-digest", path: "/api/cron/landlord-message-digest", query: null },
   "2-58/5 * * * *": { name: "student-message-digest",  path: "/api/cron/student-message-digest",  query: null },

@@ -163,8 +163,6 @@ const nextConfig = {
       // placeholder and the user lands on a broken URL.
       { source: '/landlord', destination: '/property/thessaloniki/landlord', permanent: true },
       { source: '/landlord/:path*', destination: '/property/thessaloniki/landlord/:path*', permanent: true },
-      { source: '/alerts', destination: '/property/thessaloniki/alerts', permanent: true },
-      { source: '/alerts/:path*', destination: '/property/thessaloniki/alerts/:path*', permanent: true },
       // /en/* and /el/* catch-alls. These come LAST so the explicit
       // directoryPaths and /listing/:id rules win. The :path* segment
       // captures the rest of the URL verbatim.

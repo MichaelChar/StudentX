@@ -49,7 +49,7 @@ const LISTING_DETAIL_PATH = /^\/property\/[^/]+\/listing\/[^/]+\/?$/;
 // city sub-route — /property itself is intentionally excluded because it's
 // now the central city-hub landing.
 const OLD_PROPERTY_PATH =
-  /^(\/property)\/(results|quiz|listing|landlord|about|alerts)(\/.*)?$/;
+  /^(\/property)\/(results|quiz|listing|landlord|about)(\/.*)?$/;
 
 const intlMiddleware = createMiddleware(routing);
 

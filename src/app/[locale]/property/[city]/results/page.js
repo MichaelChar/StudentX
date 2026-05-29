@@ -7,7 +7,6 @@ import dynamic from 'next/dynamic';
 import { useTranslations } from 'next-intl';
 
 import ListingCard from '@/components/ListingCard';
-import SaveSearchModal from '@/components/SaveSearchModal';
 import Button from '@/components/ui/Button';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
@@ -97,7 +96,6 @@ function ResultsContent() {
     searchParams.get('view') === 'map' ? 'map' : 'list'
   );
   const [neighborhoodOptions, setNeighborhoodOptions] = useState([]);
-  const [saveSearchOpen, setSaveSearchOpen] = useState(false);
   const [filtersMobileOpen, setFiltersMobileOpen] = useState(false);
 
   const [filters, setFilters] = useState(() => {
@@ -320,7 +318,6 @@ function ResultsContent() {
                   dealbreakers: p.dealbreakers.filter((x) => x !== db),
                 }))
               }
-              onSaveSearch={() => setSaveSearchOpen(true)}
             />
           </div>
         </aside>
@@ -447,18 +444,9 @@ function ResultsContent() {
                   dealbreakers: p.dealbreakers.filter((x) => x !== db),
                 }))
               }
-              onSaveSearch={() => setSaveSearchOpen(true)}
             />
           </aside>
         </div>
-      )}
-
-      {saveSearchOpen && (
-        <SaveSearchModal
-          filters={filters}
-          faculty={''}
-          onClose={() => setSaveSearchOpen(false)}
-        />
       )}
     </div>
   );
@@ -487,7 +475,6 @@ function FilterPanel({
   onToggleVerified,
   onSetMinDuration,
   onRemoveDealbreaker,
-  onSaveSearch,
 }) {
   const tQuiz = useTranslations('propylaea.quiz');
   const neighborhoods = neighborhoodOptions.length > 0
@@ -652,14 +639,6 @@ function FilterPanel({
           {t('verifiedLandlordsOnly')}
         </button>
       </section>
-
-      <button
-        type="button"
-        onClick={onSaveSearch}
-        className="label-caps text-blue hover:text-night transition-colors"
-      >
-        + Save this search
-      </button>
     </div>
   );
 }

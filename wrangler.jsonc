@@ -57,13 +57,10 @@
   //
   // NB: Cloudflare's Free plan caps a Worker at 5 cron triggers — Cloudflare
   // silently rejects the 6th at registration time (error 10072), so keep
-  // this list at ≤5. The saved-searches digest runs daily and also handles
-  // its weekly cadence on Mondays inside the route, so we don't need a
-  // separate weekly trigger.
+  // this list at ≤5. Currently 4 are used (the saved-searches digest was
+  // retired when the saved-searches/alerts feature was removed), leaving
+  // one free slot.
   //
-  //   0 9 * * *      → /api/cron/saved-searches-digest (daily every day +
-  //                    weekly on Mondays, picked by day-of-week inside the
-  //                    route)
   //   15 9 * * *     → /api/cron/recompute-distances (heals missing
   //                    faculty_distances pairs for new/edited listings;
   //                    no-op when fully populated)
@@ -81,7 +78,6 @@
   ],
   "triggers": {
     "crons": [
-      "0 9 * * *",      // saved-searches digest (daily, with weekly on Mondays handled in-route)
       "15 9 * * *",     // nightly faculty_distances backfill
       "*/5 * * * *",    // landlord message digest (every 5 min)
       "2-58/5 * * * *", // student message digest (every 5 min, offset 2 min from landlord)
