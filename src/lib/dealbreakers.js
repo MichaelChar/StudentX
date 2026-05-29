@@ -7,9 +7,11 @@
 //                            specified" badge)
 //   - bills_not_included   → require bills_included
 //
-// Used by the saved-searches digest so a digest never emails a listing the
-// student explicitly ruled out (#101). Operates on the flat transformListing
-// shape, so it needs `floor`, `bills_included`, and `amenities` populated.
+// Operates on the flat transformListing shape, so it needs `floor`,
+// `bills_included`, and `amenities` populated. Introduced for the
+// saved-searches digest (#101); that digest has since been removed, so this
+// helper is currently unused by app code but retained (with its test) as the
+// canonical dealbreaker filter for reuse.
 const REQUIRED_AMENITY = { unfurnished: 'Furnished', no_ac: 'AC' };
 
 export function applyDealbreakers(listings, dealbreakers) {

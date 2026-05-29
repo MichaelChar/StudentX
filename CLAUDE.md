@@ -188,9 +188,10 @@ silently rejected at registration time with API error 10072 (confirmed in
 PR #150 after the student-message-digest trigger had been silently dropped
 for 3 days). Keep `triggers.crons` at ≤5; if you need more, either upgrade
 to Workers Paid ($5/mo, 250-trigger cap) or consolidate cadences into a
-single trigger with day-of-week branching inside the route (saved-searches
-is the canonical example — see `frequenciesToProcess` in
-`src/app/api/cron/saved-searches-digest/route.js`).
+single trigger with day-of-week branching inside the route (read the wall
+clock with `getUTCDay()` and run the matching cadence). The retired
+saved-searches digest used to be the canonical example of this; as of its
+removal, 4 of the 5 slots are in use.
 
 **The deploy pipeline does NOT sync trigger changes.**
 `opennextjs-cloudflare deploy` pushes the script bundle but leaves
@@ -214,7 +215,6 @@ Current crons (verified against `wrangler.jsonc` and `cf/worker-entry.mjs`):
 
 | Cron expression | Route | Purpose |
 |---|---|---|
-| `0 9 * * *`     | `/api/cron/saved-searches-digest`                  | Saved-search digest. Daily every day; weekly subscribers are also processed on Mondays via `getUTCDay() === 1` inside the route (consolidated in PR #150 to free a trigger slot under CF's 5-trigger cap). Explicit `?frequency=daily\|weekly` still works for manual curl. |
 | `15 9 * * *`    | `/api/cron/recompute-distances`                    | Heal missing `faculty_distances` rows (PR #60). |
 | `*/5 * * * *`   | `/api/cron/landlord-message-digest`                | Per-message landlord digest. |
 | `2-58/5 * * * *` | `/api/cron/student-message-digest`                | Per-message student digest (mirror of landlord, offset 2 min). |
@@ -223,8 +223,9 @@ Current crons (verified against `wrangler.jsonc` and `cf/worker-entry.mjs`):
 Adding a new cron is a one-line entry in each of `wrangler.jsonc.triggers.crons`
 and `cf/worker-entry.mjs`'s `CRON_ROUTES`, **plus** a manual schedule sync
 (see "Cron architecture" above — deploy pipeline doesn't sync triggers).
-If this would push the count above 5, consolidate an existing cron first
-(saved-searches is the template) or upgrade to Workers Paid.
+If this would push the count above 5, consolidate two cadences into one
+trigger (day-of-week branching inside the route) or upgrade to Workers Paid.
+Currently 4 of the 5 slots are used.
 
 ## Synthetic monitoring
 
@@ -293,7 +294,6 @@ records on the CF zone) and `RESEND_API_KEY` is set as a Worker secret.
 Outbound paths sending from `alerts@studentx.uk`:
 
 - Synthetic check alerts (`/api/cron/synthetic-en-listing`)
-- Saved-searches digest (`/api/cron/saved-searches-digest`)
 - Landlord message digest (`/api/cron/landlord-message-digest`)
 - Student message digest (`/api/cron/student-message-digest`)
 - Inquiry notifications (`src/lib/inquiryEmail.js`)
