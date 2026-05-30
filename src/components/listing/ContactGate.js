@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
+import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import AuthGateRescue from '@/components/AuthGateRescue';
@@ -17,6 +18,7 @@ export default async function ContactGate({ listing, locale, fromRaw }) {
   const nextQuery = `?next=${encodeURIComponent(nextPath)}`;
 
   return (
+    <>
     <aside>
       <div className="lg:sticky lg:top-6">
         <Card tone="white" className="p-6">
@@ -74,5 +76,35 @@ export default async function ContactGate({ listing, locale, fromRaw }) {
         </Card>
       </div>
     </aside>
+
+      {/* Mobile sticky inquire bar — phones only; routes guests into the
+          same sign-in gate the desktop card offers. */}
+      <div
+        role="region"
+        aria-label={t('stickyBarLabel')}
+        className="sm:hidden fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-night/10 bg-white/95 px-5 py-3 backdrop-blur"
+        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+      >
+        <p className="font-display text-2xl text-blue leading-none">
+          {listing.monthly_price != null ? (
+            <>
+              €{listing.monthly_price}
+              <span className="text-sm text-night/50">/mo</span>
+            </>
+          ) : (
+            <span className="text-sm text-night/50">
+              {tListing('priceOnRequest')}
+            </span>
+          )}
+        </p>
+        <Button
+          href={`/student/signup${nextQuery}`}
+          variant="gold"
+          className="shrink-0"
+        >
+          {t('inquire')}
+        </Button>
+      </div>
+    </>
   );
 }
