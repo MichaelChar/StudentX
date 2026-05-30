@@ -50,6 +50,7 @@ export async function GET(request) {
     const minDuration = searchParams.get("min_duration");
     const excludeGroundFloor = searchParams.get("exclude_ground_floor") === "true";
     const requireBillsIncluded = searchParams.get("require_bills_included") === "true";
+    const availableFrom = searchParams.get("available_from");
 
     // Validate min_duration: must be 1, 5, or 9 (or absent)
     const ALLOWED_MIN_DURATIONS = [1, 5, 9];
@@ -63,6 +64,25 @@ export async function GET(request) {
         );
       }
       minDurationN = n;
+    }
+
+    // Validate available_from: must be a real YYYY-MM-DD date (or absent).
+    // Mirrors the budget validators — a malformed value is a client error (400).
+    let availableFromDate = null;
+    if (availableFrom) {
+      const isShape = /^\d{4}-\d{2}-\d{2}$/.test(availableFrom);
+      const parsed = isShape ? new Date(`${availableFrom}T00:00:00Z`) : new Date("invalid");
+      // Reject both bad shapes and impossible dates (e.g. 2026-02-31, which JS
+      // would otherwise roll over to March).
+      const roundTrips = !Number.isNaN(parsed.getTime()) &&
+        parsed.toISOString().slice(0, 10) === availableFrom;
+      if (!isShape || !roundTrips) {
+        return NextResponse.json(
+          { error: "available_from must be a valid date in YYYY-MM-DD format" },
+          { status: 400 }
+        );
+      }
+      availableFromDate = availableFrom;
     }
 
     // Validate sort params
@@ -218,6 +238,14 @@ export async function GET(request) {
       query = query.or("floor.is.null,floor.neq.0");
     }
 
+    // Filter: available on or before the chosen move-in date. A listing matches
+    // when available_from IS NULL (always available) OR available_from <= date.
+    // Pushed to SQL via PostgREST .or() — `available_from` lives on the base
+    // listings table so the top-level filter applies cleanly.
+    if (availableFromDate) {
+      query = query.or(`available_from.is.null,available_from.lte.${availableFromDate}`);
+    }
+
     // SQL-level sort: tier rank → featured → user-chosen metric
     query = query
       .order('landlords(verified_tier_rank)', { ascending: true })
@@ -249,6 +277,7 @@ export async function GET(request) {
       if (faculty) fallbackQuery = fallbackQuery.eq("faculty_distances.faculty_id", faculty);
       if (requireBillsIncluded) fallbackQuery = fallbackQuery.eq("rent.bills_included", true);
       if (excludeGroundFloor) fallbackQuery = fallbackQuery.or("floor.is.null,floor.neq.0");
+      if (availableFromDate) fallbackQuery = fallbackQuery.or(`available_from.is.null,available_from.lte.${availableFromDate}`);
 
       const fallbackResult = await fallbackQuery;
       if (fallbackResult.error) {
