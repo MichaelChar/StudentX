@@ -11,6 +11,11 @@ import Button from '@/components/ui/Button';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import BauhausLoader from '@/components/BauhausLoader';
+import {
+  buildPriceHistogram,
+  maxBucketCount,
+  isBucketInBudget,
+} from '@/lib/priceHistogram';
 
 /*
   Propylaea results page — matches page 06 of the reference design.
@@ -29,6 +34,17 @@ const PROPERTY_TYPE_GROUPS = [
 const BUDGET_MIN = 250;
 const BUDGET_MAX = 1200;
 const DEFAULT_BUDGET = 900;
+// Number of bars in the budget-distribution histogram (see src/lib/priceHistogram.js).
+const HISTOGRAM_BUCKETS = 12;
+
+// Accepts a real YYYY-MM-DD date string; rejects bad shapes and impossible
+// dates (e.g. 2026-02-31). Mirrors the API's available_from validator so the
+// client never seeds state or fires a request the route would 400.
+function isValidDateString(value) {
+  if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
+  const parsed = new Date(`${value}T00:00:00Z`);
+  return !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+}
 
 function MapLoadingFallback() {
   return (
@@ -105,6 +121,7 @@ function ResultsContent() {
     const minDurationRaw = Number(searchParams.get('min_duration'));
     const minDuration = [1, 5, 9].includes(minDurationRaw) ? minDurationRaw : null;
     const dealbreakersRaw = searchParams.get('dealbreakers');
+    const availableFromRaw = searchParams.get('available_from');
     return {
       maxBudget: Number.isFinite(budget) && budget > 0 ? budget : DEFAULT_BUDGET,
       selectedTypes: types ? types.split(',').filter(Boolean) : [],
@@ -112,6 +129,7 @@ function ResultsContent() {
       verifiedOnly: searchParams.get('verified_only') === 'true',
       minDuration,
       dealbreakers: dealbreakersRaw ? dealbreakersRaw.split(',').filter(Boolean) : [],
+      availableFrom: isValidDateString(availableFromRaw) ? availableFromRaw : '',
     };
   });
 
@@ -142,6 +160,7 @@ function ResultsContent() {
     if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
     if (filters.dealbreakers.length > 0)
       params.set('dealbreakers', filters.dealbreakers.join(','));
+    if (filters.availableFrom) params.set('available_from', filters.availableFrom);
     if (sortBy !== 'match') params.set('sort_by', sortBy);
     if (viewMode === 'map') params.set('view', 'map');
     const next = params.toString();
@@ -174,6 +193,7 @@ function ResultsContent() {
         if (filters.dealbreakers.includes('bills_not_included'))
           params.set('require_bills_included', 'true');
       }
+      if (filters.availableFrom) params.set('available_from', filters.availableFrom);
       // 'match' is the UI default; the API enforces verified/featured tier
       // priority in route.js regardless of sort_by, so 'match' collapses to
       // 'price' asc.
@@ -214,6 +234,15 @@ function ResultsContent() {
   }
 
   const loaderVisible = showLoader && loading;
+
+  // Derived (pure) — bucket the fetched listings' monthly prices for the
+  // budget-distribution histogram. Cheap for the result-set sizes we deal with,
+  // so a plain derivation rather than useMemo. Recomputes when listings change.
+  const priceHistogram = buildPriceHistogram(listings, {
+    min: BUDGET_MIN,
+    max: BUDGET_MAX,
+    buckets: HISTOGRAM_BUCKETS,
+  });
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 md:py-14">
@@ -293,7 +322,9 @@ function ResultsContent() {
               t={t}
               filters={filters}
               neighborhoodOptions={neighborhoodOptions}
+              histogram={priceHistogram}
               onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
+              onAvailableFrom={(v) => setFilters((p) => ({ ...p, availableFrom: v }))}
               onToggleType={(vals) => {
                 setFilters((prev) => {
                   const allPresent = vals.every((v) => prev.selectedTypes.includes(v));
@@ -419,7 +450,9 @@ function ResultsContent() {
               t={t}
               filters={filters}
               neighborhoodOptions={neighborhoodOptions}
+              histogram={priceHistogram}
               onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
+              onAvailableFrom={(v) => setFilters((p) => ({ ...p, availableFrom: v }))}
               onToggleType={(vals) => {
                 setFilters((prev) => {
                   const allPresent = vals.every((v) => prev.selectedTypes.includes(v));
@@ -465,11 +498,76 @@ const DEALBREAKER_LABEL_KEYS = {
   bills_not_included: 'dbBillsNotIncluded',
 };
 
+/*
+  Compact price-distribution histogram shown above the budget slider. Bars are
+  bucketed client-side from the fetched listings (see src/lib/priceHistogram.js).
+  Bars within budget render in blue; bars above the chosen budget are greyed,
+  and a vertical marker shows where the budget cut lands. Pure presentation —
+  all bucketing happens in the helper.
+*/
+function PriceHistogram({ t, histogram, budget }) {
+  const buckets = histogram || [];
+  const peak = maxBucketCount(buckets);
+
+  // Position the budget marker across the chart as a fraction of the range the
+  // buckets span. Falls back to the full range so the line never overflows.
+  const first = buckets[0];
+  const last = buckets[buckets.length - 1];
+  const lo = first ? first.from : BUDGET_MIN;
+  const hi = last ? last.to : BUDGET_MAX;
+  const clamped = Math.min(Math.max(budget, lo), hi);
+  const markerPct = hi > lo ? ((clamped - lo) / (hi - lo)) * 100 : 100;
+
+  if (peak === 0) {
+    return (
+      <p className="mt-3 text-[11px] text-night/40 font-sans">
+        {t('priceHistogramEmpty')}
+      </p>
+    );
+  }
+
+  return (
+    <div className="mt-3">
+      <div className="relative h-12 flex items-end gap-0.5" aria-hidden="true">
+        {buckets.map((b, i) => {
+          const inBudget = isBucketInBudget(b, budget);
+          // Floor non-empty bars at a sliver so they stay visible.
+          const heightPct = b.count > 0 ? Math.max((b.count / peak) * 100, 8) : 0;
+          return (
+            <div
+              key={i}
+              title={t('priceHistogramBarLabel', {
+                count: b.count,
+                from: Math.round(b.from),
+                to: Math.round(b.to),
+              })}
+              className={`flex-1 rounded-t-[2px] transition-colors ${
+                inBudget ? 'bg-blue' : 'bg-night/15'
+              }`}
+              style={{ height: `${heightPct}%` }}
+            />
+          );
+        })}
+        {/* Budget threshold marker */}
+        <div
+          className="absolute top-0 bottom-0 w-px bg-night/40"
+          style={{ left: `${markerPct}%` }}
+        />
+      </div>
+      <p className="mt-1.5 text-[11px] text-night/50 font-sans">
+        {t('priceHistogramCaption')}
+      </p>
+    </div>
+  );
+}
+
 function FilterPanel({
   t,
   filters,
   neighborhoodOptions,
+  histogram,
   onBudget,
+  onAvailableFrom,
   onToggleType,
   onToggleNeighborhood,
   onToggleVerified,
@@ -497,6 +595,11 @@ function FilterPanel({
           {t('upTo')} €{filters.maxBudget}
           <span className="text-sm text-night/50">/mo</span>
         </p>
+        <PriceHistogram
+          t={t}
+          histogram={histogram}
+          budget={filters.maxBudget}
+        />
         <input
           type="range"
           min={BUDGET_MIN}
@@ -507,6 +610,33 @@ function FilterPanel({
           className="w-full mt-3"
           aria-label={t('maxPrice')}
         />
+      </section>
+
+      {/* Available from (move-in date) */}
+      <section className="mb-8">
+        <p className="label-caps text-night/60 mb-3">{t('availableFrom')}</p>
+        <div className="flex items-center gap-2">
+          <input
+            type="date"
+            value={filters.availableFrom || ''}
+            onChange={(e) => onAvailableFrom(e.target.value)}
+            className="flex-1 rounded-sm border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
+            aria-label={t('availableFrom')}
+          />
+          {filters.availableFrom && (
+            <button
+              type="button"
+              onClick={() => onAvailableFrom('')}
+              aria-label={t('availableFromClear')}
+              className="p-2 text-night/50 hover:text-night transition-colors"
+            >
+              <Icon name="x" className="w-4 h-4" aria-hidden="true" />
+            </button>
+          )}
+        </div>
+        <p className="mt-2 text-[11px] text-night/50 font-sans">
+          {t('availableFromHint')}
+        </p>
       </section>
 
       {/* Neighborhood */}
