@@ -35,6 +35,7 @@ export default function LandlordDashboardPage() {
   const [recentInquiries, setRecentInquiries] = useState([]);
   const [pendingInquiryCount, setPendingInquiryCount] = useState(0);
   const [analytics, setAnalytics] = useState(null);
+  const [responseTime, setResponseTime] = useState(null);
   const [verifiedTier, setVerifiedTier] = useState('none');
   const [isVerified, setIsVerified] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -83,6 +84,18 @@ export default function LandlordDashboardPage() {
     } catch {}
   }
 
+  async function fetchResponseTime(token) {
+    try {
+      const res = await fetch('/api/landlord/response-time', {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (res.ok) {
+        const { responseTime: data } = await res.json();
+        setResponseTime(data);
+      }
+    } catch {}
+  }
+
   async function fetchSubscription(token) {
     try {
       const res = await fetch('/api/landlord/billing/subscription', {
@@ -105,6 +118,7 @@ export default function LandlordDashboardPage() {
         fetchListings(session.access_token),
         fetchAnalytics(session.access_token),
         fetchInquiries(session.access_token),
+        fetchResponseTime(session.access_token),
         fetchSubscription(session.access_token),
       ]);
       setLoading(false);
@@ -114,6 +128,8 @@ export default function LandlordDashboardPage() {
   const activeListings = listings.length;
   const conversionPct = analytics?.conversion_rate ?? 0;
   const views30d = analytics?.views_last_30_days ?? 0;
+  const hasReplies = (responseTime?.count ?? 0) > 0;
+  const responseTimeValue = hasReplies ? responseTime.formatted : '—';
 
   return (
     <LandlordShell
@@ -134,7 +150,7 @@ export default function LandlordDashboardPage() {
       )}
 
       {/* Stats row */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">
+      <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
         <StatTile
           label={t('statListings')}
           value={activeListings}
@@ -155,6 +171,12 @@ export default function LandlordDashboardPage() {
           label={t('statConversion')}
           value={`${conversionPct}%`}
           loading={loading}
+        />
+        <StatTile
+          label={t('statResponseTime')}
+          value={responseTimeValue}
+          loading={loading}
+          caption={!loading && !hasReplies ? t('statResponseTimeEmpty') : undefined}
         />
       </section>
 
@@ -244,7 +266,7 @@ export default function LandlordDashboardPage() {
   );
 }
 
-function StatTile({ label, value, loading, accent }) {
+function StatTile({ label, value, loading, accent, caption }) {
   return (
     <Card
       tone={accent ? 'night' : 'parchment'}
@@ -267,6 +289,11 @@ function StatTile({ label, value, loading, accent }) {
           value
         )}
       </p>
+      {!loading && caption && (
+        <p className={`mt-2 text-xs ${accent ? 'text-stone/60' : 'text-night/40'}`}>
+          {caption}
+        </p>
+      )}
     </Card>
   );
 }
