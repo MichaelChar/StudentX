@@ -528,7 +528,7 @@
       "maxPrice": "Max price",
       "upTo": "up to",
       "priceDistribution": "Price distribution",
-      "priceHistogramCaption": "All listings by price — the line marks your budget. Bars to its right cost more than your max.",
+      "priceHistogramCaption": "Matching listings by price — the line marks your budget. Bars to its right cost more than your max.",
       "priceHistogramEmpty": "No price data to chart",
       "priceHistogramBarLabel": "{count, plural, =0 {No listings} one {# listing} other {# listings}} between €{from} and €{to}",
       "priceHistogramAboveBudget": "{count, plural, one {# listing above your budget} other {# listings above your budget}}",
