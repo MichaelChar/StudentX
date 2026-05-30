@@ -601,6 +601,28 @@
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out"
     },
+    "report": {
+      "trigger": "Report this listing",
+      "title": "Report this listing",
+      "subtitle": "Tell us what's wrong and our team will review it.",
+      "reasonLegend": "Reason",
+      "reason_already_rented": "Already rented or no longer available",
+      "reason_scam_fraud": "Scam or fraud",
+      "reason_inaccurate_info": "Inaccurate information",
+      "reason_inappropriate": "Inappropriate content",
+      "reason_other": "Something else",
+      "noteLabel": "Add a note (optional)",
+      "notePlaceholder": "Anything else we should know?",
+      "submit": "Submit report",
+      "submitting": "Submitting…",
+      "successTitle": "Report received",
+      "successBody": "Thanks — our team will take a look. You can close this now.",
+      "done": "Close",
+      "closeAriaLabel": "Close report dialog",
+      "errorNoReason": "Please choose a reason.",
+      "errorRateLimited": "You've sent a few reports already. Please try again later.",
+      "errorGeneric": "Something went wrong. Please try again."
+    },
     "landlord": {
       "nav": {
         "dashboard": "Dashboard",

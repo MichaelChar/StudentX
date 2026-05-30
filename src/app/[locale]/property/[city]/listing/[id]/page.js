@@ -9,6 +9,7 @@ import ListingGallery from '@/components/listing/ListingGallery';
 import ContactRail from '@/components/listing/ContactRail';
 import ContactGate from '@/components/listing/ContactGate';
 import ViewTracker from '@/components/listing/ViewTracker';
+import ReportListingModal from '@/components/listing/ReportListingModal';
 import FavoriteButton from '@/components/FavoriteButton';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
@@ -224,6 +225,13 @@ export default async function ListingPage({ params, searchParams }) {
               </tbody>
             </table>
           </section>
+
+          {/* Subtle "report this listing" trigger — opens a client modal that
+              emails the ops inbox (email-only v1, no DB). Rendered here on the
+              page, not inside a shared detail component. */}
+          <div className="mt-4">
+            <ReportListingModal listingId={listing.listing_id} />
+          </div>
         </div>
 
         {/* Right column — sticky inquiry rail (client-side for modal state) */}
