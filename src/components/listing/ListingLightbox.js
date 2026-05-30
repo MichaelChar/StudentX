@@ -101,7 +101,7 @@ export default function ListingLightbox({ photos, title, startIndex = 0, onClose
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       transition={{ duration: 0.18 }}
-      className="fixed inset-0 z-[70] flex flex-col bg-night/95"
+      className="fixed inset-0 z-[70] flex flex-col bg-blue/95"
     >
       {/* Top bar — counter + close */}
       <div className="flex items-center justify-between px-5 py-4 text-white">
