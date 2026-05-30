@@ -304,7 +304,22 @@
       "amenitiesSection": "Amenities",
       "saving": "Saving…",
       "saveListing": "Save listing",
-      "errorGeneric": "Something went wrong"
+      "errorGeneric": "Something went wrong",
+      "previewAsStudent": "Preview as student",
+      "previewBanner": "Preview — this is how students will see your listing",
+      "previewClose": "Close preview",
+      "previewUntitled": "Untitled listing",
+      "previewDirectTagline": "Direct with the landlord. No brokers, no fees.",
+      "previewInquire": "Inquire",
+      "previewInquireNote": "Students message you directly — disabled in preview",
+      "previewDistanceTitle": "Distance to the School",
+      "previewDistanceHint": "Walk and transit times are calculated automatically once your listing is published.",
+      "previewDestination": "Destination",
+      "previewWalk": "Walk",
+      "previewTransit": "Transit",
+      "previewDestSchool": "School of Medicine · AUTh",
+      "previewDestHospital": "AHEPA Hospital",
+      "previewDestLibrary": "Central Library"
     },
     "newListing": {
       "backToDashboard": "Back to dashboard",
