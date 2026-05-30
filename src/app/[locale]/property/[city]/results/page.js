@@ -141,16 +141,60 @@ function ResultsContent() {
       .catch(() => {});
   }, []);
 
-  // Full city price distribution for the budget histogram — fetched once and
-  // independent of the budget filter (cheap: prices only, no listing payload),
-  // so the chart shows how much supply sits ABOVE the student's budget rather
-  // than collapsing to the in-budget slice already visible in the list.
+  // Price distribution for the budget histogram — reflects the student's
+  // current search EXCEPT budget (issue #218). Budget stays a purely
+  // client-side marker overlay (see aboveBudgetCount + the histogram below),
+  // so this refetches only when a NON-budget filter changes, never when the
+  // budget slider moves. Prices-only + cached per filter-combo at the edge, so
+  // re-fetching on each narrow is cheap, and the chart shows how much supply
+  // sits ABOVE the student's budget within their current search.
+  const fetchDistribution = useCallback(async () => {
+    try {
+      const params = new URLSearchParams();
+      if (filters.selectedTypes.length > 0)
+        params.set('types', filters.selectedTypes.join(','));
+      if (filters.selectedNeighborhoods.length > 0)
+        params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
+      if (filters.verifiedOnly) params.set('verified_only', 'true');
+      if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
+      if (filters.dealbreakers.length > 0) {
+        const requiredAmenities = [];
+        if (filters.dealbreakers.includes('unfurnished')) requiredAmenities.push('Furnished');
+        if (filters.dealbreakers.includes('no_ac')) requiredAmenities.push('AC');
+        if (requiredAmenities.length > 0)
+          params.set('exclude_amenities', requiredAmenities.join(','));
+        if (filters.dealbreakers.includes('ground_floor'))
+          params.set('exclude_ground_floor', 'true');
+        if (filters.dealbreakers.includes('bills_not_included'))
+          params.set('require_bills_included', 'true');
+      }
+      if (filters.availableFrom) params.set('available_from', filters.availableFrom);
+      // Budget (max_budget/min_budget) is deliberately omitted — the histogram
+      // must keep above-budget supply visible behind the marker.
+      const qs = params.toString();
+      const res = await fetch(`/api/listings/price-distribution${qs ? `?${qs}` : ''}`);
+      if (!res.ok) return; // keep the last good distribution on error
+      const d = await res.json();
+      setPriceDistribution(Array.isArray(d.prices) ? d.prices : []);
+    } catch {
+      // Network error — keep the last good distribution.
+    }
+  }, [
+    filters.selectedTypes,
+    filters.selectedNeighborhoods,
+    filters.verifiedOnly,
+    filters.minDuration,
+    filters.dealbreakers,
+    filters.availableFrom,
+  ]);
+
+  // Debounced refetch when the non-budget filters change (coalesces rapid
+  // multi-toggles), mirroring the listings fetch. fetchDistribution's identity
+  // is stable across budget-only changes, so dragging the slider never fires.
   useEffect(() => {
-    fetch('/api/listings/price-distribution')
-      .then((r) => r.json())
-      .then((d) => setPriceDistribution(Array.isArray(d.prices) ? d.prices : []))
-      .catch(() => {});
-  }, []);
+    const id = setTimeout(fetchDistribution, 300);
+    return () => clearTimeout(id);
+  }, [fetchDistribution]);
 
   // Sync filter/sort/view state INTO the URL so refresh + share + back
   // preserve what the user picked. The initial state is seeded from the
@@ -247,11 +291,12 @@ function ResultsContent() {
 
   const loaderVisible = showLoader && loading;
 
-  // Derived (pure) — bucket the FULL city price distribution (every listing,
-  // independent of the budget filter) so the chart shows how much supply sits
-  // ABOVE the student's budget, not just the in-budget slice already in the
-  // list below. Falls back to the fetched (budget-filtered) listings only while
-  // the distribution endpoint hasn't answered yet / if it failed.
+  // Derived (pure) — bucket the price distribution for the current search
+  // (all non-budget filters applied, budget ignored) so the chart shows how
+  // much supply sits ABOVE the student's budget within what they're browsing,
+  // not just the in-budget slice already in the list below. Falls back to the
+  // fetched (budget-filtered) listings only while the distribution endpoint
+  // hasn't answered yet / if it failed.
   const histogramSource = priceDistribution.length > 0
     ? priceDistribution.map((p) => ({ monthly_price: p }))
     : listings;
@@ -260,8 +305,9 @@ function ResultsContent() {
     max: BUDGET_MAX,
     buckets: HISTOGRAM_BUCKETS,
   });
-  // How many listings across the city cost more than the current budget —
-  // surfaced as an explicit line under the chart so the tradeoff is legible.
+  // How many listings in the current search cost more than the budget —
+  // recomputed client-side against the (filtered) distribution as the slider
+  // moves, surfaced as an explicit line under the chart so the tradeoff is legible.
   const aboveBudgetCount = priceDistribution.filter((p) => p > filters.maxBudget).length;
 
   return (
@@ -522,11 +568,12 @@ const DEALBREAKER_LABEL_KEYS = {
 
 /*
   Compact price-distribution histogram shown above the budget slider. Bars are
-  bucketed client-side from the FULL city price distribution — every listing,
-  not just the in-budget result set (see src/lib/priceHistogram.js). Bars within
-  budget render in blue; bars above the chosen budget are greyed, and a vertical
-  marker shows where the budget cut lands, so above-budget supply is visible.
-  Pure presentation — all bucketing happens in the helper.
+  bucketed client-side from the current search's price distribution — all
+  non-budget filters applied, budget ignored, not just the in-budget result set
+  (see src/lib/priceHistogram.js). Bars within budget render in blue; bars above
+  the chosen budget are greyed, and a vertical marker shows where the budget cut
+  lands, so above-budget supply is visible. Pure presentation — all bucketing
+  happens in the helper.
 */
 function PriceHistogram({ t, histogram, budget, aboveCount }) {
   const buckets = histogram || [];

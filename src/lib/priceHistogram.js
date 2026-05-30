@@ -3,11 +3,12 @@
  *
  * Given a set of price-bearing rows ({ monthly_price }), these functions bucket
  * the monthly prices into a fixed set of bars so a compact chart can show where
- * the current budget cut lands. The results page feeds them the FULL city price
- * distribution (see /api/listings/price-distribution) — NOT just the in-budget
- * result set — so bars to the right of the budget marker represent supply
- * priced above the student's max. Kept dependency-free and side-effect-free so
- * it's trivially unit-testable.
+ * the current budget cut lands. The results page feeds them the current
+ * search's price distribution (see /api/listings/price-distribution) — every
+ * non-budget filter applied, budget ignored, NOT just the in-budget result set
+ * — so bars to the right of the budget marker represent supply priced above the
+ * student's max. Kept dependency-free and side-effect-free so it's trivially
+ * unit-testable.
  */
 
 /**

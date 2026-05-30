@@ -1,6 +1,13 @@
 import { NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabase";
 import { transformListing } from "@/lib/transformListing";
+import {
+  parseListingFilters,
+  resolveRequiredAmenityIds,
+  applyListingFilters,
+  hasGroundFloorTag,
+  hasAllRequiredAmenities,
+} from "@/lib/listingFilters";
 
 const LISTING_SELECT = `
   listing_id,
@@ -37,132 +44,38 @@ export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
 
-    const faculty = searchParams.get("faculty");
-    const maxBudget = searchParams.get("max_budget");
+    // Shared (non-budget) filter parsing + validation. Budget is handled inline
+    // below — it's the one filter the price-distribution route drops (issue #218).
+    const f = parseListingFilters(searchParams);
+    if (f.error) {
+      return NextResponse.json({ error: f.error }, { status: 400 });
+    }
+
     const minBudget = searchParams.get("min_budget");
-    const types = searchParams.get("types");
-    const neighborhoods = searchParams.get("neighborhoods");
-    const amenities = searchParams.get("amenities");
-    const excludeAmenities = searchParams.get("exclude_amenities");
-    const sortBy = searchParams.get("sort_by") || "price";
-    const sortOrder = searchParams.get("sort_order") || "asc";
-    const verifiedOnly = searchParams.get("verified_only") === "true";
-    const minDuration = searchParams.get("min_duration");
-    const excludeGroundFloor = searchParams.get("exclude_ground_floor") === "true";
-    const requireBillsIncluded = searchParams.get("require_bills_included") === "true";
-    const availableFrom = searchParams.get("available_from");
+    const maxBudget = searchParams.get("max_budget");
 
-    // Validate min_duration: must be 1, 5, or 9 (or absent)
-    const ALLOWED_MIN_DURATIONS = [1, 5, 9];
-    let minDurationN = null;
-    if (minDuration) {
-      const n = Number(minDuration);
-      if (!ALLOWED_MIN_DURATIONS.includes(n)) {
-        return NextResponse.json(
-          { error: "min_duration must be 1, 5, or 9" },
-          { status: 400 }
-        );
-      }
-      minDurationN = n;
-    }
-
-    // Validate available_from: must be a real YYYY-MM-DD date (or absent).
-    // Mirrors the budget validators — a malformed value is a client error (400).
-    let availableFromDate = null;
-    if (availableFrom) {
-      const isShape = /^\d{4}-\d{2}-\d{2}$/.test(availableFrom);
-      const parsed = isShape ? new Date(`${availableFrom}T00:00:00Z`) : new Date("invalid");
-      // Reject both bad shapes and impossible dates (e.g. 2026-02-31, which JS
-      // would otherwise roll over to March).
-      const roundTrips = !Number.isNaN(parsed.getTime()) &&
-        parsed.toISOString().slice(0, 10) === availableFrom;
-      if (!isShape || !roundTrips) {
-        return NextResponse.json(
-          { error: "available_from must be a valid date in YYYY-MM-DD format" },
-          { status: 400 }
-        );
-      }
-      availableFromDate = availableFrom;
-    }
-
-    // Validate sort params
-    const validSortBy = ["price", "walk_minutes", "transit_minutes"];
-    if (!validSortBy.includes(sortBy)) {
-      return NextResponse.json(
-        { error: `sort_by must be one of: ${validSortBy.join(", ")}` },
-        { status: 400 }
-      );
-    }
-    if (sortOrder !== "asc" && sortOrder !== "desc") {
-      return NextResponse.json(
-        { error: "sort_order must be 'asc' or 'desc'" },
-        { status: 400 }
-      );
-    }
-
-    // Validate: sorting by walk/transit requires a faculty param
-    if ((sortBy === "walk_minutes" || sortBy === "transit_minutes") && !faculty) {
-      return NextResponse.json(
-        { error: `sort_by '${sortBy}' requires a faculty param` },
-        { status: 400 }
-      );
-    }
-
-    // Validate: faculty ID format (lowercase alphanumeric with dashes)
-    if (faculty && !/^[a-z0-9-]+$/.test(faculty)) {
-      return NextResponse.json(
-        { error: "faculty must be a valid faculty ID (e.g. 'auth-main')" },
-        { status: 400 }
-      );
-    }
-
-    // Validate: types — non-empty items
-    if (types !== null && types.trim() === "") {
-      return NextResponse.json(
-        { error: "types must be a non-empty comma-separated list of property type names" },
-        { status: 400 }
-      );
-    }
-
-    // Validate: exclude_amenities — non-empty items
-    if (excludeAmenities !== null && excludeAmenities.trim() === "") {
-      return NextResponse.json(
-        { error: "exclude_amenities must be a non-empty comma-separated list" },
-        { status: 400 }
-      );
-    }
+    const supabase = getSupabase();
 
     // Amenity AND-filter: resolve qualifying listing_ids via SQL RPC
-    let amenityListingIds = null;
-    let amenityRpcFailed = false;
+    const {
+      listingIds: amenityListingIds,
+      failed: amenityRpcFailed,
+      empty: amenityEmpty,
+    } = await resolveRequiredAmenityIds(supabase, f.excludeAmenities);
 
-    if (excludeAmenities) {
-      const required = excludeAmenities.split(",").map((a) => a.trim());
-      const { data: rows, error: rpcErr } = await getSupabase()
-        .rpc("listings_with_all_amenities", { p_amenity_names: required });
-
-      if (rpcErr) {
-        console.warn("listings_with_all_amenities RPC unavailable, falling back to JS:", rpcErr.message);
-        amenityRpcFailed = true;
-      } else if (!rows || rows.length === 0) {
-        const response = NextResponse.json({ listings: [] });
-        response.headers.set(
-          "Cache-Control",
-          "public, s-maxage=300, stale-while-revalidate=600"
-        );
-        return response;
-      } else {
-        amenityListingIds = rows.map((r) => r.listing_id);
-      }
+    if (amenityEmpty) {
+      const response = NextResponse.json({ listings: [] });
+      response.headers.set(
+        "Cache-Control",
+        "public, s-maxage=300, stale-while-revalidate=600"
+      );
+      return response;
     }
 
     // Build query
     let usedFallback = false;
-    let query = getSupabase().from("listings").select(LISTING_SELECT);
-
-    if (amenityListingIds) {
-      query = query.in("listing_id", amenityListingIds);
-    }
+    let query = supabase.from("listings").select(LISTING_SELECT);
+    query = applyListingFilters(query, f, { amenityListingIds });
 
     // Filter: min budget
     if (minBudget) {
@@ -188,72 +101,14 @@ export async function GET(request) {
       query = query.lte("rent.monthly_price", budget);
     }
 
-    // Filter: neighborhoods (comma-separated)
-    if (neighborhoods) {
-      const neighborhoodList = neighborhoods.split(",").map((n) => n.trim()).filter(Boolean);
-      if (neighborhoodList.length > 0) {
-        query = query.in("location.neighborhood", neighborhoodList);
-      }
-    }
-
-    // Filter: property types (comma-separated)
-    if (types) {
-      const typeList = types.split(",").map((t) => t.trim());
-      query = query.in("property_types.name", typeList);
-    }
-
-    // Filter: faculty distances to selected faculty only
-    if (faculty) {
-      query = query.eq("faculty_distances.faculty_id", faculty);
-    }
-
-    // Filter: minimum-duration commitment. A student picking N months sees
-    // listings whose min_duration_months <= N (i.e. they accept that
-    // commitment level or shorter). Listings with NULL min_duration_months
-    // are excluded when a filter is active.
-    if (minDurationN !== null) {
-      query = query.lte("min_duration_months", minDurationN);
-    }
-
-    // Filter: verified only — requires both a paid tier AND admin-approved ID
-    if (verifiedOnly) {
-      query = query
-        .neq("landlords.verified_tier", "none")
-        .eq("landlords.is_verified", true);
-    }
-
-    // Filter: bills included. Pushed to SQL so Supabase only returns
-    // matching rows instead of the route filtering them in JS post-fetch.
-    if (requireBillsIncluded) {
-      query = query.eq("rent.bills_included", true);
-    }
-
-    // Filter: exclude ground-floor units. The `floor === 0` half is
-    // handled in SQL here. The complementary "ground floor" amenity-tag
-    // check stays in JS below because amenities live behind a join we
-    // can't AND-filter cleanly via PostgREST. NULL floors are kept (not
-    // every listing has a recorded floor) — `WHERE floor != 0` would
-    // drop them since NULL <> 0 is NULL, not TRUE.
-    if (excludeGroundFloor) {
-      query = query.or("floor.is.null,floor.neq.0");
-    }
-
-    // Filter: available on or before the chosen move-in date. A listing matches
-    // when available_from IS NULL (always available) OR available_from <= date.
-    // Pushed to SQL via PostgREST .or() — `available_from` lives on the base
-    // listings table so the top-level filter applies cleanly.
-    if (availableFromDate) {
-      query = query.or(`available_from.is.null,available_from.lte.${availableFromDate}`);
-    }
-
     // SQL-level sort: tier rank → featured → user-chosen metric
     query = query
       .order('landlords(verified_tier_rank)', { ascending: true })
       .order('is_featured', { ascending: false });
 
-    if (sortBy === 'price') {
+    if (f.sortBy === 'price') {
       query = query.order('rent(monthly_price)', {
-        ascending: sortOrder === 'asc',
+        ascending: f.sortOrder === 'asc',
         nullsFirst: false,
       });
     }
@@ -264,20 +119,10 @@ export async function GET(request) {
     if (error) {
       console.warn("Listings query failed, retrying without verified_tier:", error.message);
       usedFallback = true;
-      let fallbackQuery = getSupabase().from("listings").select(LISTING_SELECT_FALLBACK);
-
-      if (amenityListingIds) fallbackQuery = fallbackQuery.in("listing_id", amenityListingIds);
+      let fallbackQuery = supabase.from("listings").select(LISTING_SELECT_FALLBACK);
+      fallbackQuery = applyListingFilters(fallbackQuery, f, { fallback: true, amenityListingIds });
       if (minBudget) fallbackQuery = fallbackQuery.gte("rent.monthly_price", Number(minBudget));
       if (maxBudget) fallbackQuery = fallbackQuery.lte("rent.monthly_price", Number(maxBudget));
-      if (neighborhoods) {
-        const neighborhoodList = neighborhoods.split(",").map((n) => n.trim()).filter(Boolean);
-        if (neighborhoodList.length > 0) fallbackQuery = fallbackQuery.in("location.neighborhood", neighborhoodList);
-      }
-      if (types) fallbackQuery = fallbackQuery.in("property_types.name", types.split(",").map((t) => t.trim()));
-      if (faculty) fallbackQuery = fallbackQuery.eq("faculty_distances.faculty_id", faculty);
-      if (requireBillsIncluded) fallbackQuery = fallbackQuery.eq("rent.bills_included", true);
-      if (excludeGroundFloor) fallbackQuery = fallbackQuery.or("floor.is.null,floor.neq.0");
-      if (availableFromDate) fallbackQuery = fallbackQuery.or(`available_from.is.null,available_from.lte.${availableFromDate}`);
 
       const fallbackResult = await fallbackQuery;
       if (fallbackResult.error) {
@@ -296,28 +141,20 @@ export async function GET(request) {
     // Residual amenity-tag check for excludeGroundFloor — the `floor != 0`
     // half is now in SQL above, so this only catches listings whose floor
     // is unset/non-zero but carry the "ground floor" amenity tag anyway.
-    if (excludeGroundFloor) {
-      results = results.filter((listing) => {
-        const tagged = (listing.amenities || []).some(
-          (a) => a.toLowerCase() === "ground floor"
-        );
-        return !tagged;
-      });
+    if (f.excludeGroundFloor) {
+      results = results.filter((listing) => !hasGroundFloorTag(listing.amenities));
     }
 
     // Amenity AND-filter fallback: only needed when the SQL RPC was unavailable
-    if (excludeAmenities && amenityRpcFailed) {
-      const required = excludeAmenities.split(",").map((a) => a.trim().toLowerCase());
-      results = results.filter((listing) => {
-        const has = listing.amenities.map((a) => a.toLowerCase());
-        return required.every((r) => has.includes(r));
-      });
+    if (f.excludeAmenities && amenityRpcFailed) {
+      const required = f.excludeAmenities.split(",").map((a) => a.trim());
+      results = results.filter((listing) => hasAllRequiredAmenities(listing.amenities, required));
     }
 
     // Sort: SQL handles tier rank → featured → price for sortBy=price.
     // Walk/transit need JS because faculty_distances is a to-many join.
     // Fallback path always needs JS (no .order() was applied).
-    if (usedFallback || sortBy !== "price") {
+    if (usedFallback || f.sortBy !== "price") {
       const tierRank = { verified_pro: 0, verified: 1, none: 2 };
       results.sort((a, b) => {
         const rankA = tierRank[a.verified_tier] ?? 2;
@@ -329,13 +166,13 @@ export async function GET(request) {
 
         let valA, valB;
 
-        if (sortBy === "price") {
+        if (f.sortBy === "price") {
           valA = a.monthly_price;
           valB = b.monthly_price;
-        } else if (sortBy === "walk_minutes") {
+        } else if (f.sortBy === "walk_minutes") {
           valA = a.faculty_distances[0]?.walk_minutes ?? null;
           valB = b.faculty_distances[0]?.walk_minutes ?? null;
-        } else if (sortBy === "transit_minutes") {
+        } else if (f.sortBy === "transit_minutes") {
           valA = a.faculty_distances[0]?.transit_minutes ?? null;
           valB = b.faculty_distances[0]?.transit_minutes ?? null;
         }
@@ -344,7 +181,7 @@ export async function GET(request) {
         if (valA == null) return 1;
         if (valB == null) return -1;
 
-        return sortOrder === "desc" ? valB - valA : valA - valB;
+        return f.sortOrder === "desc" ? valB - valA : valA - valB;
       });
     }
 
