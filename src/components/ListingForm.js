@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import BauhausLoader from '@/components/BauhausLoader';
+import ListingPreview from '@/components/listing/ListingPreview';
 import { TITLE_MAX_LENGTH, codepointLength } from '@/lib/listingTitle';
 import { arrayMove } from '@/lib/arrayMove';
 import { resizeToVariants } from '@/lib/imageResize';
@@ -55,6 +56,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   const [dragIndex, setDragIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [isDirty, setIsDirty] = useState(false);
+  const [showPreview, setShowPreview] = useState(false);
 
   function reorderPhoto(from, to) {
     setForm((prev) => ({ ...prev, photos: arrayMove(prev.photos || [], from, to) }));
@@ -763,14 +765,34 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
         </p>
       )}
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full sm:w-auto bg-yellow text-white font-display font-semibold px-8 py-3 rounded-lg hover:bg-yellow/90 transition-colors disabled:opacity-50"
-      >
-        {loading ? t('saving') : (submitLabel || t('saveListing'))}
-      </button>
+      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
+        <button
+          type="submit"
+          disabled={loading}
+          className="w-full sm:w-auto bg-yellow text-white font-display font-semibold px-8 py-3 rounded-lg hover:bg-yellow/90 transition-colors disabled:opacity-50"
+        >
+          {loading ? t('saving') : (submitLabel || t('saveListing'))}
+        </button>
+        <button
+          type="button"
+          onClick={() => setShowPreview(true)}
+          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-night/20 text-night font-display font-semibold px-8 py-3 rounded-lg hover:border-night hover:bg-parchment transition-colors"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <circle cx="11" cy="11" r="7" strokeWidth={2} />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m20 20-3.5-3.5" />
+          </svg>
+          {t('previewAsStudent')}
+        </button>
+      </div>
     </form>
+    {showPreview && (
+      <ListingPreview
+        form={form}
+        amenities={amenities}
+        onClose={() => setShowPreview(false)}
+      />
+    )}
     </>
   );
 }
