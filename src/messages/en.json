@@ -600,6 +600,8 @@
         "statInquiries": "Pending inquiries",
         "statViews": "Views this month",
         "statConversion": "Conversion rate",
+        "statResponseTime": "Avg. response time",
+        "statResponseTimeEmpty": "No replies yet",
         "quickNewListing": "+ New listing",
         "quickInquiries": "View inquiries",
         "quickVerify": "Get verified",
