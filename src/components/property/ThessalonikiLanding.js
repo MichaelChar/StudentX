@@ -6,6 +6,7 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import OrnamentRule from '@/components/ui/OrnamentRule';
 import StripeGradientMesh from '@/components/property/StripeGradientMesh';
+import DirectoryCarousel from '@/components/property/DirectoryCarousel';
 
 /*
   Propylaea landing — the Thessaloniki city home at /property/thessaloniki.
@@ -92,6 +93,9 @@ export default function ThessalonikiLanding() {
           <StatTile value={t('statBrokerageValue')} label={t('statBrokerage')} />
         </div>
       </section>
+
+      {/* Featured listings carousel */}
+      <DirectoryCarousel />
 
       <div className="mx-auto max-w-6xl px-5">
         <OrnamentRule />

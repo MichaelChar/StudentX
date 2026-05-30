@@ -120,6 +120,31 @@ export default function ContactRail({ listing }) {
         </div>
       </aside>
 
+      {/* Mobile sticky inquire bar — phones only; opens the same composer.
+          Hidden once the composer modal (z-50) is open, which sits above it. */}
+      <div
+        role="region"
+        aria-label={t('stickyBarLabel')}
+        className="sm:hidden fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-night/10 bg-white/95 px-5 py-3 backdrop-blur"
+        style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
+      >
+        <p className="font-display text-2xl text-blue leading-none">
+          {listing.monthly_price != null ? (
+            <>
+              €{listing.monthly_price}
+              <span className="text-sm text-night/50">/mo</span>
+            </>
+          ) : (
+            <span className="text-sm text-night/50">
+              {tListing('priceOnRequest')}
+            </span>
+          )}
+        </p>
+        <Button variant="gold" onClick={() => setOpen(true)} className="shrink-0">
+          {t('inquire')}
+        </Button>
+      </div>
+
       {open && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div

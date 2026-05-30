@@ -425,6 +425,17 @@
       "step3English": "Reach out directly",
       "step3Body": "No brokers. No hidden fees."
     },
+    "carousel": {
+      "eyebrow": "Επιλεγμένες αγγελίες",
+      "title": "Featured",
+      "titleItalic": "homes.",
+      "viewAll": "Browse all listings",
+      "regionLabel": "Featured listings",
+      "slidePosition": "Listing {index} of {total}",
+      "prev": "Previous listings",
+      "next": "Next listings",
+      "goToSlide": "Go to slide {number}"
+    },
     "hub": {
       "description": "Curated student housing across Greece, Cyprus, the UK and Ireland. Pick a city to begin.",
       "headerStat": "Global students empowered by StudentX:",
@@ -546,10 +557,26 @@
       "directTagline": "Direct with the landlord. No brokers, no fees.",
       "sendInquiry": "Send inquiry",
       "replyWithin24h": "Usually replies within 24 hours",
+      "inquire": "Inquire",
+      "stickyBarLabel": "Listing inquiry",
       "notFound": {
         "title": "Listing not found",
         "description": "This student housing listing could not be found."
       }
+    },
+    "gallery": {
+      "openLightbox": "Open photo gallery",
+      "photoAlt": "{title} — photo {number}",
+      "thumbnailAlt": "{title} — thumbnail {number}",
+      "moreCount": "+{count}",
+      "moreLabel": "View {count} more photos",
+      "lightboxLabel": "Photo gallery",
+      "counter": "{current} / {total}",
+      "prev": "Previous photo",
+      "next": "Next photo",
+      "close": "Close gallery",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out"
     },
     "landlord": {
       "nav": {

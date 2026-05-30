@@ -1,11 +1,11 @@
 import { notFound } from 'next/navigation';
-import Image from 'next/image';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
 import { getListingForRender } from '@/lib/listingForRender';
 import { requireStudent } from '@/lib/requireStudent';
 
+import ListingGallery from '@/components/listing/ListingGallery';
 import ContactRail from '@/components/listing/ContactRail';
 import ContactGate from '@/components/listing/ContactGate';
 import ViewTracker from '@/components/listing/ViewTracker';
@@ -14,7 +14,6 @@ import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
-import { variantUrl } from '@/lib/photoVariants';
 import { formatPropertyType } from '@/lib/propertyType';
 import OrnamentRule from '@/components/ui/OrnamentRule';
 
@@ -53,7 +52,7 @@ export default async function ListingPage({ params, searchParams }) {
   const distances = deriveDestinations(listing.faculty_distances || [], t);
 
   return (
-    <div className="mx-auto max-w-6xl px-5 py-8 md:py-12">
+    <div className="mx-auto max-w-6xl px-5 pt-8 pb-28 sm:pb-12 md:py-12">
       {isAuthed && <ViewTracker listingId={listing.listing_id} />}
 
       {/* Back link — server-rendered Link. Threads the prior /results
@@ -67,19 +66,13 @@ export default async function ListingPage({ params, searchParams }) {
         {t('back')}
       </Link>
 
-      {/* Photo gallery — responsive grid showing every uploaded photo */}
+      {/* Photo gallery — inline main image + thumbnail strip → lightbox */}
       <section className="mb-10">
         {photos.length > 0 ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            {photos.map((src, i) => (
-              <PhotoTile
-                key={src}
-                src={src}
-                alt={`${listing.address} — photo ${i + 1}`}
-                priority={i === 0}
-              />
-            ))}
-          </div>
+          <ListingGallery
+            photos={photos}
+            title={listing.title || listing.address || 'Listing'}
+          />
         ) : (
           <div className="aspect-[16/9] rounded-sm bg-parchment flex items-center justify-center">
             <Icon name="photo" className="w-16 h-16 text-night/20" />
@@ -109,7 +102,7 @@ export default async function ListingPage({ params, searchParams }) {
               {listing.address && (
                 <p
                   className="mt-2 label-caps text-night/60"
-                  aria-label={tListing('streetAddressA11y')}
+                  aria-label={t('streetAddressA11y')}
                 >
                   {listing.address}
                 </p>
@@ -240,21 +233,6 @@ export default async function ListingPage({ params, searchParams }) {
           <ContactGate listing={listing} locale={locale} fromRaw={fromRaw} />
         )}
       </div>
-    </div>
-  );
-}
-
-function PhotoTile({ src, alt, priority = false }) {
-  return (
-    <div className="relative aspect-[4/3] rounded-sm overflow-hidden bg-parchment">
-      <Image
-        src={variantUrl(src, 'full')}
-        alt={alt}
-        fill
-        className="object-cover"
-        sizes="(max-width: 768px) 100vw, 50vw"
-        priority={priority}
-      />
     </div>
   );
 }
