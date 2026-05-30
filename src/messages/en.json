@@ -751,6 +751,7 @@
     },
     "account": {
       "portal": "Student portal",
+      "heading": "Your account",
       "title": "My inquiries",
       "eyebrow": "Account",
       "empty": "You haven't sent any inquiries yet.",
@@ -814,6 +815,19 @@
       "errorListingMissing": "This listing is no longer available.",
       "errorCapExceeded": "This listing has reached its inquiry limit. Try another.",
       "errorNotStudent": "Your account isn't set up as a student. Sign out and create a student account."
+    },
+    "favorites": {
+      "save": "Save",
+      "saved": "Saved",
+      "saveAria": "Save this listing",
+      "removeAria": "Remove from saved listings",
+      "panelTitle": "Saved listings",
+      "empty": "You haven't saved any listings yet.",
+      "emptyCta": "Browse listings",
+      "loadError": "Couldn't load your saved listings. Try refreshing the page.",
+      "gateTitle": "Sign in to save listings",
+      "gateBody": "Create a free student account to build your shortlist and pick up right where you left off — it takes about a minute.",
+      "close": "Close"
     }
   },
   "loaders": {
