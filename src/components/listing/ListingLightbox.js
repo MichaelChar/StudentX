@@ -103,8 +103,10 @@ export default function ListingLightbox({ photos, title, startIndex = 0, onClose
       transition={{ duration: 0.18 }}
       className="fixed inset-0 z-[70] flex flex-col bg-blue/95"
     >
-      {/* Top bar — counter + close */}
-      <div className="flex items-center justify-between px-5 py-4 text-white">
+      {/* Top bar — counter + close. Overlaid (absolute) so it doesn't consume
+          flow height; the photo track reserves matching room via its top
+          padding, keeping the image centered in the full viewport. */}
+      <div className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-5 py-4 text-white">
         <span className="font-display text-lg tabular-nums" aria-live="polite">
           {t('counter', { current: index + 1, total: photos.length })}
         </span>
@@ -119,8 +121,11 @@ export default function ListingLightbox({ photos, title, startIndex = 0, onClose
         </button>
       </div>
 
-      {/* Photo track */}
-      <div className="relative flex-1 overflow-hidden">
+      {/* Photo track — full viewport height with symmetric vertical padding
+          (~72px, matching the overlaid top bar) so the object-contain image
+          and the prev/next arrows both center in the full viewport with equal
+          head/foot whitespace. */}
+      <div className="relative flex-1 overflow-hidden py-18">
         <motion.div
           className="flex h-full"
           drag={zoomed ? false : 'x'}
