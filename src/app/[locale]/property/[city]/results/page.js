@@ -112,6 +112,7 @@ function ResultsContent() {
     searchParams.get('view') === 'map' ? 'map' : 'list'
   );
   const [neighborhoodOptions, setNeighborhoodOptions] = useState([]);
+  const [priceDistribution, setPriceDistribution] = useState([]);
   const [filtersMobileOpen, setFiltersMobileOpen] = useState(false);
 
   const [filters, setFilters] = useState(() => {
@@ -137,6 +138,17 @@ function ResultsContent() {
     fetch('/api/neighborhoods')
       .then((r) => r.json())
       .then((d) => setNeighborhoodOptions(d.neighborhoods || []))
+      .catch(() => {});
+  }, []);
+
+  // Full city price distribution for the budget histogram — fetched once and
+  // independent of the budget filter (cheap: prices only, no listing payload),
+  // so the chart shows how much supply sits ABOVE the student's budget rather
+  // than collapsing to the in-budget slice already visible in the list.
+  useEffect(() => {
+    fetch('/api/listings/price-distribution')
+      .then((r) => r.json())
+      .then((d) => setPriceDistribution(Array.isArray(d.prices) ? d.prices : []))
       .catch(() => {});
   }, []);
 
@@ -235,14 +247,22 @@ function ResultsContent() {
 
   const loaderVisible = showLoader && loading;
 
-  // Derived (pure) — bucket the fetched listings' monthly prices for the
-  // budget-distribution histogram. Cheap for the result-set sizes we deal with,
-  // so a plain derivation rather than useMemo. Recomputes when listings change.
-  const priceHistogram = buildPriceHistogram(listings, {
+  // Derived (pure) — bucket the FULL city price distribution (every listing,
+  // independent of the budget filter) so the chart shows how much supply sits
+  // ABOVE the student's budget, not just the in-budget slice already in the
+  // list below. Falls back to the fetched (budget-filtered) listings only while
+  // the distribution endpoint hasn't answered yet / if it failed.
+  const histogramSource = priceDistribution.length > 0
+    ? priceDistribution.map((p) => ({ monthly_price: p }))
+    : listings;
+  const priceHistogram = buildPriceHistogram(histogramSource, {
     min: BUDGET_MIN,
     max: BUDGET_MAX,
     buckets: HISTOGRAM_BUCKETS,
   });
+  // How many listings across the city cost more than the current budget —
+  // surfaced as an explicit line under the chart so the tradeoff is legible.
+  const aboveBudgetCount = priceDistribution.filter((p) => p > filters.maxBudget).length;
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 md:py-14">
@@ -323,6 +343,7 @@ function ResultsContent() {
               filters={filters}
               neighborhoodOptions={neighborhoodOptions}
               histogram={priceHistogram}
+              aboveCount={aboveBudgetCount}
               onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
               onAvailableFrom={(v) => setFilters((p) => ({ ...p, availableFrom: v }))}
               onToggleType={(vals) => {
@@ -451,6 +472,7 @@ function ResultsContent() {
               filters={filters}
               neighborhoodOptions={neighborhoodOptions}
               histogram={priceHistogram}
+              aboveCount={aboveBudgetCount}
               onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
               onAvailableFrom={(v) => setFilters((p) => ({ ...p, availableFrom: v }))}
               onToggleType={(vals) => {
@@ -500,12 +522,13 @@ const DEALBREAKER_LABEL_KEYS = {
 
 /*
   Compact price-distribution histogram shown above the budget slider. Bars are
-  bucketed client-side from the fetched listings (see src/lib/priceHistogram.js).
-  Bars within budget render in blue; bars above the chosen budget are greyed,
-  and a vertical marker shows where the budget cut lands. Pure presentation —
-  all bucketing happens in the helper.
+  bucketed client-side from the FULL city price distribution — every listing,
+  not just the in-budget result set (see src/lib/priceHistogram.js). Bars within
+  budget render in blue; bars above the chosen budget are greyed, and a vertical
+  marker shows where the budget cut lands, so above-budget supply is visible.
+  Pure presentation — all bucketing happens in the helper.
 */
-function PriceHistogram({ t, histogram, budget }) {
+function PriceHistogram({ t, histogram, budget, aboveCount }) {
   const buckets = histogram || [];
   const peak = maxBucketCount(buckets);
 
@@ -557,6 +580,11 @@ function PriceHistogram({ t, histogram, budget }) {
       <p className="mt-1.5 text-[11px] text-night/50 font-sans">
         {t('priceHistogramCaption')}
       </p>
+      {aboveCount > 0 && (
+        <p className="mt-0.5 text-[11px] font-sans text-night/70">
+          {t('priceHistogramAboveBudget', { count: aboveCount })}
+        </p>
+      )}
     </div>
   );
 }
@@ -566,6 +594,7 @@ function FilterPanel({
   filters,
   neighborhoodOptions,
   histogram,
+  aboveCount,
   onBudget,
   onAvailableFrom,
   onToggleType,
@@ -599,6 +628,7 @@ function FilterPanel({
           t={t}
           histogram={histogram}
           budget={filters.maxBudget}
+          aboveCount={aboveCount}
         />
         <input
           type="range"
