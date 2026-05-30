@@ -3,9 +3,11 @@ import { redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { requireStudent } from '@/lib/requireStudent';
+import { transformListing } from '@/lib/transformListing';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import SignOutButton from '@/components/student/SignOutButton';
+import SavedListings from '@/components/student/SavedListings';
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -41,26 +43,112 @@ export default async function StudentAccountPage({ params }) {
   }
 
   const t = await getTranslations({ locale, namespace: 'student.account' });
+  const tFav = await getTranslations({ locale, namespace: 'student.favorites' });
   const { student } = auth;
 
   // Page shell renders synchronously — the user sees their name and the
-  // chrome on the first byte. The inquiry SELECT streams in via the
-  // <Suspense> boundary below; the inquiries query joins listings →
-  // location, rent and is the single slowest thing on this page, so
-  // moving it off the critical path noticeably cuts perceived post-login
-  // latency.
+  // chrome on the first byte. The saved-listings and inquiry SELECTs each
+  // stream in via their own <Suspense> boundary below; both join listings →
+  // location, rent and are the slowest things on this page, so keeping them
+  // off the critical path cuts perceived post-login latency.
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
       <div className="flex items-start justify-between gap-4 mb-2">
         <p className="label-caps text-yellow">{t('eyebrow')}</p>
         <SignOutButton />
       </div>
-      <h1 className="font-display text-3xl md:text-4xl text-night mb-2">{t('title')}</h1>
+      <h1 className="font-display text-3xl md:text-4xl text-night mb-2">{t('heading')}</h1>
       <p className="text-night/60 mb-10">{student.display_name} · {student.email}</p>
 
-      <Suspense fallback={<InquiriesSkeleton />}>
-        <InquiriesSection locale={locale} />
-      </Suspense>
+      {/* Saved / shortlist */}
+      <section className="mb-12">
+        <h2 className="font-display text-2xl text-night mb-5">{tFav('panelTitle')}</h2>
+        <Suspense fallback={<SavedSkeleton />}>
+          <SavedSection locale={locale} />
+        </Suspense>
+      </section>
+
+      {/* Inquiries */}
+      <section>
+        <h2 className="font-display text-2xl text-night mb-5">{t('title')}</h2>
+        <Suspense fallback={<InquiriesSkeleton />}>
+          <InquiriesSection locale={locale} />
+        </Suspense>
+      </section>
+    </div>
+  );
+}
+
+async function SavedSection({ locale }) {
+  // requireStudent is React.cache()'d, so this resolves from the
+  // per-request cache populated by the page shell — no extra round-trip.
+  const auth = await requireStudent();
+  if (!auth || auth.kind === 'wrong-role') return null;
+
+  const t = await getTranslations({ locale, namespace: 'student.favorites' });
+  const { supabase, student } = auth;
+
+  // RLS already restricts student_favorites to the caller's rows; the
+  // explicit student_id eq makes intent clear and uses the PK index. The
+  // nested embed pulls everything ListingCard needs in one query, matching
+  // transformListing's expected shape.
+  const { data, error } = await supabase
+    .from('student_favorites')
+    .select(`
+      listing_id,
+      created_at,
+      listings (
+        listing_id,
+        is_featured,
+        title,
+        description,
+        photos,
+        floor,
+        min_duration_months,
+        rent ( monthly_price, currency, bills_included, deposit ),
+        location ( address, neighborhood, lat, lng ),
+        property_types ( name ),
+        landlords ( name, contact_info, verified_tier, is_verified ),
+        listing_amenities ( amenities ( amenity_id, name ) ),
+        faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
+      )
+    `)
+    .eq('student_id', student.student_id)
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    return (
+      <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3">
+        {t('loadError')}
+      </p>
+    );
+  }
+
+  // PostgREST returns the to-one listings embed as an object; guard for an
+  // array form and for rows whose listing was removed mid-flight.
+  const listings = (data ?? [])
+    .map((row) => (Array.isArray(row.listings) ? row.listings[0] : row.listings))
+    .filter(Boolean)
+    .map(transformListing);
+
+  return <SavedListings listings={listings} />;
+}
+
+function SavedSkeleton() {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" aria-busy="true">
+      {[0, 1].map((i) => (
+        <div
+          key={i}
+          className="rounded-sm border border-night/10 bg-white overflow-hidden"
+        >
+          <div className="aspect-[4/3] bg-parchment animate-pulse" />
+          <div className="p-5 space-y-3">
+            <div className="h-3 w-28 bg-parchment rounded animate-pulse" />
+            <div className="h-5 w-3/4 bg-parchment rounded animate-pulse" />
+          </div>
+        </div>
+      ))}
     </div>
   );
 }

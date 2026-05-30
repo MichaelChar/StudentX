@@ -9,6 +9,7 @@ import { requireStudent } from '@/lib/requireStudent';
 import ContactRail from '@/components/listing/ContactRail';
 import ContactGate from '@/components/listing/ContactGate';
 import ViewTracker from '@/components/listing/ViewTracker';
+import FavoriteButton from '@/components/FavoriteButton';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
@@ -114,6 +115,14 @@ export default async function ListingPage({ params, searchParams }) {
                 </p>
               )}
             </div>
+
+            {/* Save / shortlist toggle. Renders for everyone — a
+                signed-out tap opens the sign-in gate (FavoritesProvider). */}
+            <FavoriteButton
+              listingId={listing.listing_id}
+              withLabel
+              className="md:self-start shrink-0"
+            />
           </div>
 
           {/* Bilingual field grid */}
