@@ -3,11 +3,23 @@
  * into the flat API response shape defined in docs/api-contracts.md.
  */
 export function transformListing(row) {
+  // The three inputs to SuperLandlord status. SuperLandlord is the single
+  // elevated tier: a landlord who is BOTH currently paying (`is_featured` —
+  // an active/trialing subscription, kept in sync by the Stripe webhook) AND
+  // verified (a paid verified tier + admin ID approval). `is_superlandlord`
+  // is the one flag every public surface keys off — the golden halo, priority
+  // ranking, the "SuperLandlord" pill, and the public landlord profile.
+  const is_featured = row.is_featured ?? false;
+  const verified_tier = row.landlords?.verified_tier ?? 'none';
+  const is_verified = row.landlords?.is_verified ?? false;
+  const is_superlandlord = is_featured && is_verified && verified_tier !== 'none';
+
   return {
     listing_id: row.listing_id,
-    is_featured: row.is_featured ?? false,
-    verified_tier: row.landlords?.verified_tier ?? 'none',
-    is_verified: row.landlords?.is_verified ?? false,
+    is_featured,
+    verified_tier,
+    is_verified,
+    is_superlandlord,
     title: row.title ?? null,
     address: row.location?.address ?? null,
     neighborhood: row.location?.neighborhood ?? null,

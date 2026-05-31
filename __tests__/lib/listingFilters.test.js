@@ -86,6 +86,8 @@ describe('applyListingFilters', () => {
     expect(b._calls).toContainEqual(['lte', 'min_duration_months', 5]);
     expect(b._calls).toContainEqual(['neq', 'landlords.verified_tier', 'none']);
     expect(b._calls).toContainEqual(['eq', 'landlords.is_verified', true]);
+    // SuperLandlord = verified half (above) + paying half (is_featured).
+    expect(b._calls).toContainEqual(['eq', 'is_featured', true]);
     expect(b._calls).toContainEqual(['eq', 'rent.bills_included', true]);
     expect(b._calls).toContainEqual(['or', 'floor.is.null,floor.neq.0']);
     expect(b._calls).toContainEqual(['or', 'available_from.is.null,available_from.lte.2026-09-01']);
@@ -104,6 +106,7 @@ describe('applyListingFilters', () => {
     expect(b._calls).toContainEqual(['in', 'property_types.name', ['Studio']]);
     // ...but the two fallback-incompatible clauses are skipped.
     expect(b._calls.some(([name, col]) => name === 'neq' && col === 'landlords.verified_tier')).toBe(false);
+    expect(b._calls.some(([name, col]) => name === 'eq' && col === 'is_featured')).toBe(false);
     expect(b._calls.some(([name, col]) => name === 'lte' && col === 'min_duration_months')).toBe(false);
   });
 });

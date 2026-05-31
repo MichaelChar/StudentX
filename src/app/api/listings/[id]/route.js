@@ -19,6 +19,7 @@ export async function GET(request, { params }) {
       .select(
         `
         listing_id,
+        is_featured,
         title,
         description,
         photos,

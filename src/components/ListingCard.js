@@ -32,10 +32,10 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
   // floor, flag it so they ask before viewing rather than discovering on the
   // day (NULL floors are kept in results, not filtered out — see #100).
   const floorUnspecified = groundFloorDealbreaker && listing.floor == null;
-  const isVerified =
-    listing.verified_tier &&
-    listing.verified_tier !== 'none' &&
-    listing.is_verified === true;
+  // SuperLandlord = the single elevated status (paying AND verified), computed
+  // once in transformListing. Drives the golden frame, the badge, and the
+  // landlord chip below.
+  const isSuper = listing.is_superlandlord;
 
   // Thread current results search-state into the listing URL so the
   // detail page's back link returns to the same filtered view. Caller
@@ -46,22 +46,22 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
 
   // landlord_id is the first 4 chars of every listing_id (LLLLNNN — see
   // docs/schema.md), so the profile link needs no extra field. The chip only
-  // renders for verified landlords (profiles are a verified-tier perk).
+  // renders for SuperLandlords (public profiles are a SuperLandlord perk).
   const landlordId = listing.listing_id?.slice(0, 4);
   const landlordName = listing.landlord?.name;
-  const showLandlord = isVerified && landlordId && landlordName;
+  const showLandlord = isSuper && landlordId && landlordName;
 
   return (
     <div
       className={`group relative bg-white rounded-sm overflow-hidden transition-all ${
-        isVerified
+        isSuper
           ? 'border-2 border-yellow/60 shadow-[0_0_12px_-2px_rgba(255,203,87,0.4)] hover:shadow-[0_0_18px_-2px_rgba(255,203,87,0.55)]'
           : 'border border-night/10 hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)]'
       }`}
     >
       {/* Photo */}
       <div className="relative aspect-[4/3] bg-parchment">
-        {isVerified && (
+        {isSuper && (
           <span className="absolute top-3 right-3 z-10">
             <Pill variant="verified">{tCard('verified')}</Pill>
           </span>

@@ -64,7 +64,7 @@
     "noResultsHint": "Try adjusting your filters.",
     "loadingMap": "Loading map…",
     "to": "to",
-    "verifiedOnly": "Verified only"
+    "verifiedOnly": "SuperLandlords only"
   },
   "listing": {
     "backToResults": "Back to results",
@@ -88,8 +88,8 @@
     "listingNotFound": "Listing not found",
     "listingNotFoundDesc": "The listing you're looking for may have been removed or doesn't exist.",
     "backToSearchBtn": "Back to search",
-    "verified": "Verified",
-    "verifiedPro": "Verified",
+    "verified": "SuperLandlord",
+    "verifiedPro": "SuperLandlord",
     "minutes": "{n} min",
     "somethingWentWrong": "Something went wrong",
     "failedToLoad": "Failed to load listing"
@@ -122,8 +122,8 @@
   },
   "listingCard": {
     "featured": "Featured",
-    "verified": "Verified",
-    "verifiedPro": "Verified",
+    "verified": "SuperLandlord",
+    "verifiedPro": "SuperLandlord",
     "priceOnRequest": "Price on request",
     "perMonth": "/mo",
     "estimated": "est ",
@@ -215,6 +215,7 @@
       "delete": "Delete",
       "deleting": "Deleting…",
       "featured": "Featured",
+      "superLandlord": "SuperLandlord",
       "unfeatured": "Set as featured",
       "noListings": "No listings yet.",
       "addFirst": "Add your first listing",
@@ -552,8 +553,8 @@
       "minDurationSemesterMonths": "5 mo",
       "minDurationAcademicName": "Academic year",
       "minDurationAcademicMonths": "9 mo",
-      "verified": "Verified",
-      "verifiedLandlordsOnly": "Verified landlords only",
+      "verified": "SuperLandlord",
+      "verifiedLandlordsOnly": "SuperLandlords only",
       "billsIncluded": "Bills included",
       "floorNotSpecified": "Floor not specified",
       "dealbreakers": "Your dealbreakers",
@@ -564,7 +565,7 @@
     },
     "listing": {
       "back": "Back to results",
-      "verified": "Verified",
+      "verified": "SuperLandlord",
       "listedBy": "Listed by",
       "streetAddressA11y": "Street address",
       "rentGreek": "Ενοίκιο",
@@ -597,12 +598,12 @@
     },
     "landlordProfile": {
       "back": "Back to listings",
-      "verified": "Verified landlord",
+      "verified": "SuperLandlord",
       "memberSince": "Member since {date}",
       "propertyCount": "{count, plural, =0 {No properties listed} one {# property} other {# properties}}",
       "emptyState": "This landlord has no listings at the moment.",
-      "metaTitle": "{name} — Verified landlord",
-      "metaDescription": "Browse all student housing listed by {name}, a verified landlord on StudentX Thessaloniki."
+      "metaTitle": "{name} — SuperLandlord",
+      "metaDescription": "Browse all student housing listed by {name}, a SuperLandlord on StudentX Thessaloniki."
     },
     "gallery": {
       "openLightbox": "Open photo gallery",

@@ -29,6 +29,9 @@ export default function LandlordListingsPage() {
   const [deleting, setDeleting] = useState(null);
   // The listing pending delete-confirmation, or null when the dialog is closed.
   const [confirmTarget, setConfirmTarget] = useState(null);
+  // SuperLandlord status (the verified half — is_featured per listing supplies
+  // the paying half). Gates the per-listing "SuperLandlord" badge.
+  const [isSuper, setIsSuper] = useState(false);
   useEffect(() => {
     (async () => {
       const supabase = getSupabaseBrowser();
@@ -44,6 +47,20 @@ export default function LandlordListingsPage() {
         } else {
           setError('Failed to load listings');
         }
+
+        // SuperLandlord status (verified half). Non-fatal: if this read fails
+        // the badge just stays hidden — it must never dark the listings table.
+        try {
+          const subRes = await fetch('/api/landlord/billing/subscription', {
+            headers: { Authorization: `Bearer ${session.access_token}` },
+          });
+          if (subRes.ok) {
+            const sub = await subRes.json();
+            setIsSuper(
+              sub.isVerified === true && sub.verifiedTier && sub.verifiedTier !== 'none'
+            );
+          }
+        } catch { /* non-fatal */ }
       } catch {
         setError('Failed to load listings');
       } finally {
@@ -123,6 +140,7 @@ export default function LandlordListingsPage() {
                   listing={listing}
                   deleting={deleting === listing.listing_id}
                   onDelete={() => setConfirmTarget(listing)}
+                  isSuper={isSuper}
                   t={t}
                 />
               </li>
@@ -151,7 +169,7 @@ export default function LandlordListingsPage() {
   );
 }
 
-function ListingRow({ listing, deleting, onDelete, t }) {
+function ListingRow({ listing, deleting, onDelete, isSuper, t }) {
   const photo = listing.photos?.find((url) => typeof url === 'string' && url.startsWith('http'));
   const address = listing.location?.address || t('noAddress');
   const heading = listing.title || address;
@@ -181,7 +199,9 @@ function ListingRow({ listing, deleting, onDelete, t }) {
           <p className="font-display text-xl text-night truncate">
             {heading}
           </p>
-          {listing.is_featured && <Pill variant="verified">{t('featured')}</Pill>}
+          {isSuper && listing.is_featured && (
+            <Pill variant="verified">{t('superLandlord')}</Pill>
+          )}
         </div>
         {/* Address always rendered on this internal surface — landlords
             identify their own listings by street most reliably. For

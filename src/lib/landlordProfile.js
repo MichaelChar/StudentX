@@ -49,8 +49,11 @@ const LISTINGS_SELECT_FALLBACK = `
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
 
-// A profile is a verified-tier perk. Same predicate the listing detail page and
-// ListingCard use to decide the verified styling, kept in one place here.
+// The "verified half" of SuperLandlord status: a paid verified tier + admin ID
+// approval. getLandlordProfile combines this with the "paying half" (an active
+// subscription, read from is_featured on the landlord's listings) to gate the
+// public profile, which is a SuperLandlord perk. Kept here so the verified
+// predicate lives in one place.
 export function isVerifiedLandlord(landlord) {
   return Boolean(
     landlord &&
@@ -64,11 +67,12 @@ export function isVerifiedLandlord(landlord) {
  * Public landlord-profile fetch for the student-facing
  * /property/[city]/landlords/[landlordId] page.
  *
- * Returns `{ landlord, listings }` for a VERIFIED landlord, or `null` when the
- * landlord doesn't exist or isn't verified (profiles are verified-only — the
- * page calls notFound() on null). Reads through the anon client and selects
- * only public-safe columns. Memoized per-request like getListingForRender so a
- * layout's metadata pass and the page body share one round-trip.
+ * Returns `{ landlord, listings }` for a SuperLandlord (paying AND verified),
+ * or `null` when the landlord doesn't exist or isn't a SuperLandlord (public
+ * profiles are a SuperLandlord perk — the page calls notFound() on null).
+ * Reads through the anon client and selects only public-safe columns. Memoized
+ * per-request like getListingForRender so a layout's metadata pass and the
+ * page body share one round-trip.
  *
  * @param {string} landlordId 4-digit landlord identifier (the LLLL prefix of a listing_id)
  */
@@ -104,6 +108,7 @@ export const getLandlordProfile = cache(async (landlordId) => {
     // Single landlord ⇒ verified_tier_rank is constant, so order is just
     // featured-first then newest (listing_id's per-landlord sequence increases
     // with recency — see the LLLLNNN format in docs/schema.md).
+    let listingsUsedFallback = false;
     let { data: rows, error: listErr } = await supabase
       .from('listings')
       .select(LISTINGS_SELECT)
@@ -112,6 +117,7 @@ export const getLandlordProfile = cache(async (landlordId) => {
       .order('listing_id', { ascending: false });
 
     if (listErr) {
+      listingsUsedFallback = true;
       const fb = await supabase
         .from('listings')
         .select(LISTINGS_SELECT_FALLBACK)
@@ -120,6 +126,17 @@ export const getLandlordProfile = cache(async (landlordId) => {
       rows = fb.data;
       listErr = fb.error;
     }
+
+    // SuperLandlord = verified (gated above) AND currently paying. is_featured
+    // mirrors paying status across all of a landlord's listings (the Stripe
+    // webhook keeps them in lockstep), so any featured listing ⇒ the landlord
+    // is paying. A lapsed landlord (or one with no listings to prove payment)
+    // 404s — the "drop immediately" rule. On the column-less fallback path we
+    // can't read is_featured, so we degrade to the verified-only gate rather
+    // than 404 every profile during a migration window.
+    const isPaying =
+      listingsUsedFallback || (rows || []).some((r) => r.is_featured === true);
+    if (!isPaying) return null;
 
     const listings = (rows || []).map(transformListing);
 

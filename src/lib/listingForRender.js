@@ -4,6 +4,7 @@ import { transformListing } from '@/lib/transformListing';
 
 const LISTING_SELECT = `
   listing_id,
+  is_featured,
   title,
   description,
   photos,
