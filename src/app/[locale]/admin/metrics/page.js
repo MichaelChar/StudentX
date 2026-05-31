@@ -110,7 +110,7 @@ export default function AdminMetricsPage() {
           />
           <KpiCard label="Cancelled (mo)" value={metrics.cancelledThisMonth} />
           <KpiCard label="Total Listings" value={metrics.totalListings} />
-          <KpiCard label="Featured" value={metrics.featuredListings} />
+          <KpiCard label="SuperLandlords" value={metrics.superLandlordListings} />
         </div>
       </section>
 

@@ -3,7 +3,7 @@
  */
 export function computeMetrics(stripeMetrics, supabaseMetrics) {
   const { mrrCents, arrCents, activeSubscriptionCount, trialingCount, cancelledThisMonthCount } = stripeMetrics;
-  const { totalLandlords, paidLandlords, freeLandlords, byPlan, totalListings, featuredListings, inquiriesThisMonth, inquiriesLastMonth } = supabaseMetrics;
+  const { totalLandlords, paidLandlords, freeLandlords, byPlan, totalListings, superLandlordListings, inquiriesThisMonth, inquiriesLastMonth } = supabaseMetrics;
 
   // Free-to-paid conversion rate
   const conversionRate = totalLandlords > 0
@@ -43,7 +43,7 @@ export function computeMetrics(stripeMetrics, supabaseMetrics) {
     cancelledThisMonth: cancelledThisMonthCount,
     byPlan,
     totalListings,
-    featuredListings,
+    superLandlordListings,
     inquiriesThisMonth,
     inquiriesLastMonth,
     inquiryTrend,
