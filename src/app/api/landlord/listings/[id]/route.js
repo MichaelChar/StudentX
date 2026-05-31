@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { extractToken, getUserFromToken, getSupabaseWithToken, getSupabaseAsService } from '@/lib/supabaseServer';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { normalizeTitle } from '@/lib/listingTitle';
 import { normalizeSingleLine, normalizeMultiLine } from '@/lib/textNormalize';
@@ -254,7 +254,10 @@ export async function PATCH(request, { params }) {
   // coords didn't change and rows already exist, this is a cheap DB read with
   // no OSRM call. Non-fatal: swallowed so a flaky OSRM never fails edit.
   try {
-    await recomputeMissingDistances({ listingIds: [id], supabase: authedSupabase });
+    // Service-role client: faculty_distances writes are locked to the service
+    // role (migration 055) so signed-in users can't tamper with commute data.
+    // Ownership of this listing was already enforced by the PATCH above.
+    await recomputeMissingDistances({ listingIds: [id], supabase: getSupabaseAsService() });
   } catch (err) {
     console.error('[landlord/listings PATCH] inline distance recompute failed:', err);
   }
