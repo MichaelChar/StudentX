@@ -11,8 +11,21 @@
 --    write policies. The moderated-read policy (`reviews_read_public`,
 --    USING moderated = false) is intentionally kept. Proper owner/auth-scoped
 --    write policies should be added when reviews actually launch.
-drop policy if exists "reviews_insert_public" on public.reviews;
-drop policy if exists "reviews_update_reported" on public.reviews;
+-- reviews exists on prod (migration 015_reviews) but the repo's migration set
+-- can't recreate it in a clean `supabase start` stack (prod/repo drift), and
+-- `drop policy if exists` still errors when the *table* is missing (42P01).
+-- Guard behind a table-exists check: a no-op in the clean CI stack, the real
+-- drop on prod where the table + permissive policies actually exist.
+do $$
+begin
+  if exists (
+    select 1 from information_schema.tables
+    where table_schema = 'public' and table_name = 'reviews'
+  ) then
+    drop policy if exists "reviews_insert_public" on public.reviews;
+    drop policy if exists "reviews_update_reported" on public.reviews;
+  end if;
+end $$;
 
 -- 2. storage listing-photos — the INSERT policy only checked the bucket, not
 --    the object path, so any authenticated user could upload (and, with
