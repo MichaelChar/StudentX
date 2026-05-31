@@ -20,7 +20,7 @@ const LISTING_SELECT = `
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
-  landlords!inner ( name, verified_tier, is_verified, verified_tier_rank ),
+  landlords!inner ( name, verified_tier, is_verified, verified_tier_rank, profile_photo_url ),
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
