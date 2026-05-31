@@ -6,6 +6,7 @@ import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
+import { safeNextPath } from '@/lib/safeNext';
 import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -20,7 +21,7 @@ function StudentLoginInner() {
   // ?next=<encoded path> takes priority over the default account
   // redirect — set by AuthGate when it pushes a guest to login.
   const nextRaw = searchParams.get('next') || '';
-  const safeNext = nextRaw.startsWith('/') ? nextRaw : '';
+  const safeNext = safeNextPath(nextRaw);
   // ?email=<addr> prefill — used by the landlord-signup roleConflict CTA
   // to deep-link a dual-role student straight back to their own login.
   const initialEmail = searchParams.get('email') || '';

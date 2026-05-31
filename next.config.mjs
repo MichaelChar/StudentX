@@ -23,6 +23,13 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.js');
 //     load" UI when ChatThread tried to subscribe.
 //   - font-src: next/font/google self-hosts at build time; fonts.gstatic.com
 //     kept defensively in case any subset still pulls there.
+//   - object-src: 'none' — no <object>/<embed>/<applet> anywhere in the app.
+//   - 'unsafe-eval': DEV-ONLY. No app code or dependency (Leaflet, d3-geo,
+//     topojson, next-intl) evals at runtime — verified by audit. The Turbopack
+//     dev server / React Refresh do use eval for HMR, so it's kept in dev and
+//     dropped from the enforced prod policy.
+//   - upgrade-insecure-requests: belt-and-braces; every subresource is https.
+const isDev = process.env.NODE_ENV !== 'production';
 const SECURITY_HEADERS = [
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'X-Frame-Options', value: 'DENY' },
@@ -39,14 +46,16 @@ const SECURITY_HEADERS = [
     key: 'Content-Security-Policy',
     value: [
       "default-src 'self'",
-      "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org https://unpkg.com",
       "font-src 'self' data: https://fonts.gstatic.com",
       "connect-src 'self' https://ecluqurlfbvkxrnoyhaq.supabase.co wss://ecluqurlfbvkxrnoyhaq.supabase.co",
+      "object-src 'none'",
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
+      'upgrade-insecure-requests',
     ].join('; '),
   },
 ];
