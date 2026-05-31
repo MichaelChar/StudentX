@@ -168,12 +168,15 @@ export function applyListingFilters(query, f, { fallback = false, amenityListing
     query = query.lte("min_duration_months", f.minDurationN);
   }
 
-  // Verified only — requires both a paid tier AND admin-approved ID. Skipped on
-  // the fallback path (the verified columns are what triggered the fallback).
+  // SuperLandlords only — requires the verified half (a paid verified tier AND
+  // admin-approved ID) PLUS the paying half (`is_featured` — an active/trialing
+  // subscription). Skipped on the fallback path (the verified columns are what
+  // triggered the fallback).
   if (!fallback && f.verifiedOnly) {
     query = query
       .neq("landlords.verified_tier", "none")
-      .eq("landlords.is_verified", true);
+      .eq("landlords.is_verified", true)
+      .eq("is_featured", true);
   }
 
   // Bills included

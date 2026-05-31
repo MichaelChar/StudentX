@@ -48,9 +48,9 @@ export default function DirectoryCarousel() {
 
   const dragX = useMotionValue(0);
 
-  // Fetch the featured slice. /api/listings already returns verified-tier
-  // → featured → price-ordered rows, so the head of the list is the
-  // "featured" set we want to surface.
+  // Fetch the head of the directory. /api/listings already returns
+  // SuperLandlords first (the single elevated status), so the head of the
+  // list is the elevated set we want to surface in the carousel.
   useEffect(() => {
     let cancelled = false;
     fetch('/api/listings')

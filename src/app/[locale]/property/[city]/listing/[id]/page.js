@@ -46,10 +46,10 @@ export default async function ListingPage({ params, searchParams }) {
   const photos = (listing.photos || []).filter(
     (url) => typeof url === 'string' && url.startsWith('http'),
   );
-  const isVerified =
-    listing.verified_tier &&
-    listing.verified_tier !== 'none' &&
-    listing.is_verified === true;
+  // SuperLandlord = the single elevated status (paying AND verified), computed
+  // once in transformListing. Drives the seal, the badge, and the "listed by"
+  // profile link below.
+  const isSuper = listing.is_superlandlord;
 
   const distances = deriveDestinations(listing.faculty_distances || [], t);
 
@@ -88,9 +88,9 @@ export default async function ListingPage({ params, searchParams }) {
         <div>
           {/* Hero stripe — verified seal + address */}
           <div className="flex flex-col md:flex-row md:items-start gap-5 mb-8">
-            {isVerified && <VerifiedSeal size={52} />}
+            {isSuper && <VerifiedSeal size={52} />}
             <div className="flex-1">
-              {isVerified && (
+              {isSuper && (
                 <div className="flex flex-wrap items-center gap-2 mb-3">
                   <Pill variant="verified">{t('verified')}</Pill>
                 </div>
@@ -120,9 +120,9 @@ export default async function ListingPage({ params, searchParams }) {
             />
           </div>
 
-          {/* Listed by — verified landlords link to their public profile.
+          {/* Listed by — SuperLandlords link to their public profile.
               landlord_id is the first 4 chars of the listing_id (see schema). */}
-          {isVerified && listing.landlord?.name && (
+          {isSuper && listing.landlord?.name && (
             <Link
               href={`/property/thessaloniki/landlords/${listing.listing_id.slice(0, 4)}`}
               className="group inline-flex items-center gap-3 mb-10 rounded-sm focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"

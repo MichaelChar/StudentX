@@ -20,7 +20,7 @@ const LISTING_SELECT = `
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
-  landlords!inner ( name, verified_tier, is_verified, verified_tier_rank, profile_photo_url ),
+  landlords!inner ( name, verified_tier, is_verified, profile_photo_url ),
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
@@ -73,7 +73,6 @@ export async function GET(request) {
     }
 
     // Build query
-    let usedFallback = false;
     let query = supabase.from("listings").select(LISTING_SELECT);
     query = applyListingFilters(query, f, { amenityListingIds });
 
@@ -101,24 +100,15 @@ export async function GET(request) {
       query = query.lte("rent.monthly_price", budget);
     }
 
-    // SQL-level sort: tier rank → featured → user-chosen metric
-    query = query
-      .order('landlords(verified_tier_rank)', { ascending: true })
-      .order('is_featured', { ascending: false });
-
-    if (f.sortBy === 'price') {
-      query = query.order('rent(monthly_price)', {
-        ascending: f.sortOrder === 'asc',
-        nullsFirst: false,
-      });
-    }
-
+    // No DB-level ordering: ranking is computed in JS after transform (see the
+    // sort below). The SuperLandlord predicate spans listing + joined landlord
+    // columns, which a single .order() can't express cleanly.
     let { data, error } = await query;
 
-    // If query fails (e.g. verified_tier_rank column not yet migrated), retry without it
+    // If query fails (e.g. the verified columns aren't migrated yet), retry
+    // with the reduced SELECT that omits them.
     if (error) {
-      console.warn("Listings query failed, retrying without verified_tier:", error.message);
-      usedFallback = true;
+      console.warn("Listings query failed, retrying without verified columns:", error.message);
       let fallbackQuery = supabase.from("listings").select(LISTING_SELECT_FALLBACK);
       fallbackQuery = applyListingFilters(fallbackQuery, f, { fallback: true, amenityListingIds });
       if (minBudget) fallbackQuery = fallbackQuery.gte("rent.monthly_price", Number(minBudget));
@@ -151,39 +141,36 @@ export async function GET(request) {
       results = results.filter((listing) => hasAllRequiredAmenities(listing.amenities, required));
     }
 
-    // Sort: SQL handles tier rank → featured → price for sortBy=price.
-    // Walk/transit need JS because faculty_distances is a to-many join.
-    // Fallback path always needs JS (no .order() was applied).
-    if (usedFallback || f.sortBy !== "price") {
-      const tierRank = { verified_pro: 0, verified: 1, none: 2 };
-      results.sort((a, b) => {
-        const rankA = tierRank[a.verified_tier] ?? 2;
-        const rankB = tierRank[b.verified_tier] ?? 2;
-        if (rankA !== rankB) return rankA - rankB;
+    // Ranking: SuperLandlords (the single elevated status — paying AND
+    // verified) float to the top, then the student's chosen metric within each
+    // group, then newest-first as a deterministic tiebreaker. Done in JS for
+    // every sort mode because the SuperLandlord predicate spans listing +
+    // joined landlord columns and faculty_distances is a to-many join — neither
+    // expressible as a single .order(). (The old verified_tier_rank → featured
+    // gradient collapsed to this binary predicate in the SuperLandlord merge,
+    // so verified_pro no longer outranks verified.)
+    const metricValue = (listing) => {
+      if (f.sortBy === "price") return listing.monthly_price;
+      if (f.sortBy === "walk_minutes") return listing.faculty_distances[0]?.walk_minutes ?? null;
+      if (f.sortBy === "transit_minutes") return listing.faculty_distances[0]?.transit_minutes ?? null;
+      return null; // 'match'/default: SuperLandlord-first, then newest
+    };
 
-        if (a.is_featured && !b.is_featured) return -1;
-        if (!a.is_featured && b.is_featured) return 1;
+    results.sort((a, b) => {
+      if (a.is_superlandlord !== b.is_superlandlord) return a.is_superlandlord ? -1 : 1;
 
-        let valA, valB;
-
-        if (f.sortBy === "price") {
-          valA = a.monthly_price;
-          valB = b.monthly_price;
-        } else if (f.sortBy === "walk_minutes") {
-          valA = a.faculty_distances[0]?.walk_minutes ?? null;
-          valB = b.faculty_distances[0]?.walk_minutes ?? null;
-        } else if (f.sortBy === "transit_minutes") {
-          valA = a.faculty_distances[0]?.transit_minutes ?? null;
-          valB = b.faculty_distances[0]?.transit_minutes ?? null;
-        }
-
-        if (valA == null && valB == null) return 0;
+      const valA = metricValue(a);
+      const valB = metricValue(b);
+      if (valA != null || valB != null) {
         if (valA == null) return 1;
         if (valB == null) return -1;
+        if (valA !== valB) return f.sortOrder === "desc" ? valB - valA : valA - valB;
+      }
 
-        return f.sortOrder === "desc" ? valB - valA : valA - valB;
-      });
-    }
+      // Deterministic tiebreaker: newest first (listing_id grows with recency).
+      if (a.listing_id === b.listing_id) return 0;
+      return a.listing_id < b.listing_id ? 1 : -1;
+    });
 
     const response = NextResponse.json({ listings: results });
     response.headers.set(

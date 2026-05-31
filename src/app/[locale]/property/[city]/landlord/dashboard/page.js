@@ -212,7 +212,10 @@ export default function LandlordDashboardPage() {
               <ul className="divide-y divide-night/10">
                 {listings.slice(0, 5).map((listing) => (
                   <li key={listing.listing_id} className="py-4 first:pt-0 last:pb-0">
-                    <ListingRow listing={listing} />
+                    <ListingRow
+                      listing={listing}
+                      isSuper={isVerified && verifiedTier !== 'none'}
+                    />
                   </li>
                 ))}
               </ul>
@@ -298,12 +301,14 @@ function StatTile({ label, value, loading, accent, caption }) {
   );
 }
 
-function ListingRow({ listing }) {
+function ListingRow({ listing, isSuper }) {
   const photo = listing.photos?.find((url) => typeof url === 'string' && url.startsWith('http'));
   const address = listing.location?.address || 'Untitled listing';
   const neighborhood = listing.location?.neighborhood;
   const price = listing.rent?.monthly_price;
-  const status = listing.is_featured ? 'Featured' : null;
+  // is_featured (paying) alone is not enough — a subscribed-but-unverified
+  // landlord isn't a SuperLandlord and gets no halo/ranking, so don't imply it.
+  const status = isSuper && listing.is_featured ? 'SuperLandlord' : null;
 
   return (
     <div className="flex items-center gap-4">

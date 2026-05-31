@@ -40,6 +40,7 @@ describe('transformListing', () => {
       is_featured: true,
       verified_tier: 'gold',
       is_verified: true,
+      is_superlandlord: true,
       title: 'Sunny studio near Medical School',
       address: '12 Egnatias',
       neighborhood: 'Center',
@@ -127,5 +128,26 @@ describe('transformListing', () => {
     const row = { ...fullRow };
     delete row.is_featured;
     expect(transformListing(row).is_featured).toBe(false);
+  });
+
+  describe('is_superlandlord (paying AND verified)', () => {
+    it('is true when the landlord is paying and fully verified', () => {
+      // fullRow: is_featured + verified_tier 'gold' + is_verified true
+      expect(transformListing(fullRow).is_superlandlord).toBe(true);
+    });
+
+    it('is false when verified but not paying (is_featured false)', () => {
+      expect(transformListing({ ...fullRow, is_featured: false }).is_superlandlord).toBe(false);
+    });
+
+    it('is false when paying but ID not approved (is_verified false)', () => {
+      const row = { ...fullRow, landlords: { ...fullRow.landlords, is_verified: false } };
+      expect(transformListing(row).is_superlandlord).toBe(false);
+    });
+
+    it('is false when paying and ID-approved but verified_tier is "none"', () => {
+      const row = { ...fullRow, landlords: { ...fullRow.landlords, verified_tier: 'none' } };
+      expect(transformListing(row).is_superlandlord).toBe(false);
+    });
   });
 });
