@@ -15,7 +15,7 @@ const supabaseBase = {
   freeLandlords: 40,
   byPlan: { basic: 6, pro: 4 },
   totalListings: 120,
-  featuredListings: 8,
+  superLandlordListings: 8,
   inquiriesThisMonth: 60,
   inquiriesLastMonth: 50,
 };
@@ -35,7 +35,7 @@ describe('computeMetrics', () => {
     const out = computeMetrics(stripeBase, supabaseBase);
     expect(out.byPlan).toEqual({ basic: 6, pro: 4 });
     expect(out.totalListings).toBe(120);
-    expect(out.featuredListings).toBe(8);
+    expect(out.superLandlordListings).toBe(8);
     expect(out.trialingCount).toBe(2);
     expect(out.cancelledThisMonth).toBe(1);
     expect(out.cac).toBeNull();

@@ -41,11 +41,18 @@ export async function getSupabaseMetrics() {
     .from('listings')
     .select('listing_id', { count: 'exact', head: true });
 
-  // Featured listings
-  const { count: featuredListings } = await supabase
+  // SuperLandlord listings — the single public elevated status (see
+  // transformListing.js: is_superlandlord = is_featured && is_verified &&
+  // verified_tier !== 'none'). A listing counts only when it is paying
+  // (is_featured on the listing) AND its landlord is verified (is_verified +
+  // a paid verified_tier). `landlords!inner` makes the embedded landlord
+  // filters restrict the listing count rather than just nulling the embed.
+  const { count: superLandlordListings } = await supabase
     .from('listings')
-    .select('listing_id', { count: 'exact', head: true })
-    .eq('is_featured', true);
+    .select('listing_id, landlords!inner(verified_tier,is_verified)', { count: 'exact', head: true })
+    .eq('is_featured', true)
+    .eq('landlords.is_verified', true)
+    .neq('landlords.verified_tier', 'none');
 
   // Inquiries this month
   const now = new Date();
@@ -70,7 +77,7 @@ export async function getSupabaseMetrics() {
     freeLandlords: (totalLandlords || 0) - (paidLandlords || 0),
     byPlan,
     totalListings: totalListings || 0,
-    featuredListings: featuredListings || 0,
+    superLandlordListings: superLandlordListings || 0,
     inquiriesThisMonth: inquiriesThisMonth || 0,
     inquiriesLastMonth: inquiriesLastMonth || 0,
   };
