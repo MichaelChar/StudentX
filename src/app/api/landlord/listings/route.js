@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { extractToken, getUserFromToken, getSupabaseWithToken, getSupabaseAsService } from '@/lib/supabaseServer';
 import { canCreateListing } from '@/lib/stripe';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { normalizeTitle } from '@/lib/listingTitle';
@@ -311,7 +311,10 @@ export async function POST(request) {
   // UTC cron tick. Non-fatal: swallowed so a flaky OSRM never fails create —
   // the daily cron remains the safety net.
   try {
-    await recomputeMissingDistances({ listingIds: [listingId], supabase: authedSupabase });
+    // Service-role client: faculty_distances writes are locked to the service
+    // role (migration 055) so signed-in users can't tamper with commute data.
+    // This landlord is already authorized for the listing they just created.
+    await recomputeMissingDistances({ listingIds: [listingId], supabase: getSupabaseAsService() });
   } catch (err) {
     console.error('[landlord/listings POST] inline distance recompute failed:', err);
   }

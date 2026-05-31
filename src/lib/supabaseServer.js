@@ -60,10 +60,12 @@ export function extractToken(request) {
 /**
  * Service-role admin client. Bypasses RLS — use ONLY for operations
  * that genuinely need it (e.g. deleting orphan auth.users rows after
- * a dual-role signup conflict). Never expose anywhere callers can
- * supply arbitrary user IDs without prior JWT validation.
+ * a dual-role signup conflict, or writing faculty_distances from the
+ * inline listing-create/edit recompute now that those writes are locked
+ * to the service role). Never expose anywhere callers can supply
+ * arbitrary user IDs without prior JWT validation.
  */
-function getSupabaseAsService() {
+export function getSupabaseAsService() {
   const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
   if (!url || !key) {
