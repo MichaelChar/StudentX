@@ -139,22 +139,38 @@ export default function ListingLightbox({ photos, title, startIndex = 0, onClose
             else if (x >= DRAG_BUFFER) go(index - 1);
           }}
         >
-          {photos.map((src, i) => (
-            <div
-              key={src}
-              className="relative shrink-0 w-full h-full"
-              aria-hidden={i === index ? undefined : 'true'}
-            >
-              <ZoomableImage
-                src={variantUrl(src, 'full')}
-                alt={t('photoAlt', { title, number: i + 1 })}
-                active={i === index}
-                scale={i === index ? scale : 1}
-                setScale={setScale}
-                t={t}
-              />
-            </div>
-          ))}
+          {photos.map((src, i) => {
+            // Window the heavy full-res <Image> to the active slide ±1. Opening
+            // the lightbox on a 20–30 photo listing was fetching EVERY photo at
+            // the `full` variant at once (measured: 31 images ≈ 2 MB on a
+            // 31-photo listing) because next/image doesn't defer the
+            // transform-translated off-screen slides. The slide <div>s are all
+            // kept so the track geometry and the `-index * 100%` swipe transform
+            // stay exact; only the off-window image is swapped for a same-size
+            // placeholder. The window follows `index`, so the next/prev slide is
+            // always already mounted before a single-step swipe/arrow lands.
+            const inWindow = Math.abs(i - index) <= 1;
+            return (
+              <div
+                key={src}
+                className="relative shrink-0 w-full h-full"
+                aria-hidden={i === index ? undefined : 'true'}
+              >
+                {inWindow ? (
+                  <ZoomableImage
+                    src={variantUrl(src, 'full')}
+                    alt={t('photoAlt', { title, number: i + 1 })}
+                    active={i === index}
+                    scale={i === index ? scale : 1}
+                    setScale={setScale}
+                    t={t}
+                  />
+                ) : (
+                  <div className="w-full h-full" aria-hidden="true" />
+                )}
+              </div>
+            );
+          })}
         </motion.div>
 
         {/* Prev / next — hidden while zoomed so panning isn't obstructed */}
