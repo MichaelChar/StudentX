@@ -244,11 +244,11 @@
     },
     "getVerified": {
       "title": "Get Verified",
-      "description": "Verification is central to the safety of the StudentX community. It lets students know that you are a genuine account holder. The verified badge appears publicly over your property, and also gives you priority search placement.",
+      "description": "Verification is central to the safety of the StudentX community. It lets students know that you are a genuine account holder. The SuperLandlord badge appears publicly over your property, and also gives you priority search placement.",
       "chooseTier": "Choose this plan",
       "stripeNote": "Secure checkout via Stripe. Cancel anytime.",
       "backToDashboard": "Back to dashboard",
-      "tierBadge": "Verified"
+      "tierBadge": "SuperLandlord"
     },
     "listingForm": {
       "locationSection": "Location",
@@ -354,7 +354,7 @@
       "boostListings": "Boost your listings",
       "verifiedDescription": "Verified landlords get a badge, search boost, and more inquiries.",
       "perYear": "/year",
-      "benefitBadge": "Verified badge on all listings",
+      "benefitBadge": "SuperLandlord badge on all listings",
       "benefitSearchBoost": "Higher ranking in search results",
       "benefitPriorityPlacement": "Priority placement in results",
       "benefitAnalytics": "Advanced analytics dashboard",
@@ -692,7 +692,7 @@
         "unverifiedTitle": "Get verified",
         "unverifiedBody": "Show students you're a real landlord — seal, priority, more inquiries.",
         "subscribedAwaitingIdTitle": "Welcome to SuperLandlord",
-        "subscribedAwaitingIdBody": "One last step — upload an ID to activate the Verified badge on your listings.",
+        "subscribedAwaitingIdBody": "One last step — upload an ID to activate the SuperLandlord badge on your listings.",
         "submitIdCta": "Upload ID",
         "idApprovedAwaitingSubscriptionTitle": "Your ID is approved",
         "idApprovedAwaitingSubscriptionBody": "Last step — subscribe to become a publicly verified landlord.",
