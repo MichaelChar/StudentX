@@ -4,6 +4,7 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import AuthGateRescue from '@/components/AuthGateRescue';
 import { hasAuthCookie } from '@/lib/requireStudent';
+import { safeNextPath } from '@/lib/safeNext';
 
 /**
  * Server-rendered gate shown when requireStudent() blocks listing access.
@@ -27,7 +28,7 @@ import { hasAuthCookie } from '@/lib/requireStudent';
 export default async function AuthGate({ next, locale, mode = 'guest' }) {
   const t = await getTranslations({ locale, namespace: 'student.gate' });
   const cookiePresent = await hasAuthCookie();
-  const safeNext = typeof next === 'string' && next.startsWith('/') ? next : '';
+  const safeNext = safeNextPath(next);
   const nextQuery = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
 
   const isWrongRole = mode === 'wrong-role';

@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { safeNextPath } from '@/lib/safeNext';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import Button from '@/components/ui/Button';
@@ -16,7 +17,7 @@ function StudentOAuthCallbackInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const nextRaw = searchParams.get('next') || '';
-  const safeNext = nextRaw.startsWith('/') ? nextRaw : '';
+  const safeNext = safeNextPath(nextRaw);
 
   const [error, setError] = useState('');
 

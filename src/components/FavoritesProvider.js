@@ -14,6 +14,7 @@ import { Link } from '@/i18n/navigation';
 import { useAccessToken } from '@/lib/useAccessToken';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
+import { safeNextPath } from '@/lib/safeNext';
 
 /*
   Client context backing the favourites / shortlist heart toggles.
@@ -181,7 +182,7 @@ function FavoriteAuthGate({ open, onClose }) {
     typeof window !== 'undefined'
       ? window.location.pathname + window.location.search
       : '';
-  const safeNext = raw.startsWith('/') ? raw : '';
+  const safeNext = safeNextPath(raw);
   const nextQuery = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
 
   return (
