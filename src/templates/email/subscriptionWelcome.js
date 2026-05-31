@@ -1,6 +1,6 @@
 /**
  * Welcome email sent when a landlord activates SuperLandlord or
- * SuperLandlord Heavy. Reminds them that the public Verified badge
+ * SuperLandlord Heavy. Reminds them that the public SuperLandlord badge
  * also requires submitting an ID for admin review.
  *
  * @param {object} params
@@ -39,7 +39,7 @@ export function subscriptionWelcomeHtml({ landlordName, tierName, verificationUr
                 Your ${tierName} subscription is active. Together with StudentX, you'll reach right students for your properties.
               </p>
               <p style="margin:0 0 24px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;color:#0a2540;line-height:1.6;">
-                <strong>One last step:</strong> To display the Verified badge on your listings, upload a government-issued ID for review. Our team will verify shortly.
+                <strong>One last step:</strong> To display the SuperLandlord badge on your listings, upload a government-issued ID for review. Our team will verify shortly.
               </p>
               <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
                 <tr>
