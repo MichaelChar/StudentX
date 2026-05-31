@@ -10,6 +10,8 @@ import { useLocale, useTranslations } from 'next-intl';
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
 import EncryptButton from '@/components/ui/EncryptButton';
+import Icon from '@/components/ui/Icon';
+import { uploadLandlordPhoto, validateProfilePhoto } from '@/lib/uploadLandlordPhoto';
 
 export default function LandlordSignupPage() {
   const t = useTranslations('landlord.signup');
@@ -21,6 +23,25 @@ export default function LandlordSignupPage() {
   const [error, setError] = useState('');
   const [conflictRole, setConflictRole] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [photoFile, setPhotoFile] = useState(null);
+  const [photoPreview, setPhotoPreview] = useState('');
+  const [photoError, setPhotoError] = useState('');
+
+  function handlePhotoChange(e) {
+    setPhotoError('');
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const errKey = validateProfilePhoto(file);
+    if (errKey) {
+      setPhotoError(t(errKey));
+      return;
+    }
+    setPhotoFile(file);
+    setPhotoPreview((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -52,6 +73,16 @@ export default function LandlordSignupPage() {
 
       const session = authData.session;
       if (session?.access_token) {
+        // Optional avatar — best-effort. A storage hiccup must never block
+        // signup; the landlord can always add/replace the photo in Settings.
+        let profilePhotoUrl;
+        if (photoFile) {
+          try {
+            profilePhotoUrl = await uploadLandlordPhoto(photoFile, session.user.id);
+          } catch (err) {
+            console.error('[signup] profile photo upload failed:', err);
+          }
+        }
         const res = await withTimeout(
           fetch('/api/landlord/profile', {
             method: 'POST',
@@ -59,7 +90,9 @@ export default function LandlordSignupPage() {
               'Content-Type': 'application/json',
               Authorization: `Bearer ${session.access_token}`,
             },
-            body: JSON.stringify({ name }),
+            body: JSON.stringify(
+              profilePhotoUrl ? { name, profile_photo_url: profilePhotoUrl } : { name },
+            ),
           }),
         );
         if (!res.ok) {
@@ -114,6 +147,48 @@ export default function LandlordSignupPage() {
           onChange={setPassword}
           placeholder={t('passwordPlaceholder')}
         />
+
+        {/* Optional profile photo — appears on the landlord's public profile
+            and listing cards once they're verified. Skippable here; editable
+            any time in Settings. */}
+        <div>
+          <span className="block text-sm font-medium text-night/80 mb-2">
+            {t('photoLabel')}
+          </span>
+          <div className="flex items-center gap-4">
+            {photoPreview ? (
+              // eslint-disable-next-line @next/next/no-img-element -- transient blob: preview, not a remote asset
+              <img
+                src={photoPreview}
+                alt=""
+                className="w-14 h-14 rounded-full object-cover border border-night/10"
+              />
+            ) : (
+              <span className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-parchment text-night/30 shrink-0">
+                <Icon name="photo" className="w-6 h-6" />
+              </span>
+            )}
+            <div>
+              <input
+                id="photo"
+                type="file"
+                accept="image/jpeg,image/png,image/webp"
+                className="hidden"
+                onChange={handlePhotoChange}
+              />
+              <label
+                htmlFor="photo"
+                className="inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-gray-200 rounded-lg text-sm text-night/60 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors"
+              >
+                {photoPreview ? t('photoReplace') : t('photoChoose')}
+              </label>
+              <p className="text-xs text-night/40 mt-1.5">{t('photoHelp')}</p>
+            </div>
+          </div>
+          {photoError && (
+            <p className="text-sm text-red-700 mt-2">{photoError}</p>
+          )}
+        </div>
 
         {error && (
           <div className="space-y-2">

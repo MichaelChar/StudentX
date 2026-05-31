@@ -11,6 +11,7 @@ import ContactGate from '@/components/listing/ContactGate';
 import ViewTracker from '@/components/listing/ViewTracker';
 import ReportListingModal from '@/components/listing/ReportListingModal';
 import FavoriteButton from '@/components/FavoriteButton';
+import LandlordAvatar from '@/components/landlord/LandlordAvatar';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
@@ -118,6 +119,29 @@ export default async function ListingPage({ params, searchParams }) {
               className="md:self-start shrink-0"
             />
           </div>
+
+          {/* Listed by — verified landlords link to their public profile.
+              landlord_id is the first 4 chars of the listing_id (see schema). */}
+          {isVerified && listing.landlord?.name && (
+            <Link
+              href={`/property/thessaloniki/landlords/${listing.listing_id.slice(0, 4)}`}
+              className="group inline-flex items-center gap-3 mb-10 rounded-sm focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
+            >
+              <LandlordAvatar
+                name={listing.landlord.name}
+                photoUrl={listing.landlord.profile_photo_url}
+                size={48}
+              />
+              <span className="leading-tight">
+                <span className="label-caps text-night/50 block">
+                  {t('listedBy')}
+                </span>
+                <span className="font-display text-xl text-night group-hover:text-blue transition-colors">
+                  {listing.landlord.name}
+                </span>
+              </span>
+            </Link>
+          )}
 
           {/* Bilingual field grid */}
           <Card tone="parchment" border={false} className="p-6 md:p-8 mb-10">

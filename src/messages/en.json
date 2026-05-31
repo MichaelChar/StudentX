@@ -131,7 +131,8 @@
     "transitMin": "min transit",
     "to": "to",
     "billsIncluded": "Bills included",
-    "billsNotIncluded": "Bills not included"
+    "billsNotIncluded": "Bills not included",
+    "listedBy": "Listed by {name}"
   },
   "about": {
     "metaTitle": "About StudentX",
@@ -197,7 +198,13 @@
       "priceOriginal": "€49",
       "priceDiscounted": "€9.80",
       "pricePeriod": "/ yr",
-      "founderBlurb": "The first five landlords to sign up lock in this price for Year 1. No auto-renewal at full price."
+      "founderBlurb": "The first five landlords to sign up lock in this price for Year 1. No auto-renewal at full price.",
+      "photoLabel": "Profile photo (optional)",
+      "photoChoose": "Choose a photo",
+      "photoReplace": "Choose a different photo",
+      "photoHelp": "Shown on your public profile and listings once you're verified. JPG, PNG or WebP, up to 8 MB.",
+      "photoInvalidType": "Please choose a JPG, PNG or WebP image.",
+      "photoTooLarge": "That image is too large. Please choose one under 8 MB."
     },
     "dashboard": {
       "welcome": "Welcome back, {name}!",
@@ -558,6 +565,7 @@
     "listing": {
       "back": "Back to results",
       "verified": "Verified",
+      "listedBy": "Listed by",
       "streetAddressA11y": "Street address",
       "rentGreek": "Ενοίκιο",
       "rentEnglish": "Rent",
@@ -586,6 +594,15 @@
         "title": "Listing not found",
         "description": "This student housing listing could not be found."
       }
+    },
+    "landlordProfile": {
+      "back": "Back to listings",
+      "verified": "Verified landlord",
+      "memberSince": "Member since {date}",
+      "propertyCount": "{count, plural, =0 {No properties listed} one {# property} other {# properties}}",
+      "emptyState": "This landlord has no listings at the moment.",
+      "metaTitle": "{name} — Verified landlord",
+      "metaDescription": "Browse all student housing listed by {name}, a verified landlord on StudentX Thessaloniki."
     },
     "gallery": {
       "openLightbox": "Open photo gallery",
@@ -636,7 +653,19 @@
       "settings": {
         "eyebrow": "Settings",
         "title": "Account preferences",
-        "emptyState": "No settings to configure yet. Future preferences (notifications, billing contact, display name) will live here."
+        "emptyState": "No settings to configure yet. Future preferences (notifications, billing contact, display name) will live here.",
+        "photoTitle": "Profile photo",
+        "photoDescription": "Shown on your public profile and listing cards once your account is verified.",
+        "photoChoose": "Upload a photo",
+        "photoReplace": "Replace photo",
+        "photoRemove": "Remove photo",
+        "photoHelp": "JPG, PNG or WebP, up to 8 MB.",
+        "photoSaving": "Saving…",
+        "photoSaved": "Profile photo updated.",
+        "photoRemoved": "Profile photo removed.",
+        "photoSaveError": "Couldn't save your photo. Please try again.",
+        "photoInvalidType": "Please choose a JPG, PNG or WebP image.",
+        "photoTooLarge": "That image is too large. Please choose one under 8 MB."
       },
       "dashboard": {
         "welcomeEyebrow": "Landlord dashboard",

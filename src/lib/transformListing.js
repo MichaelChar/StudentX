@@ -32,6 +32,10 @@ export function transformListing(row) {
     // inquiry flow keyed on listing_id, never the raw contact string.
     landlord: {
       name: row.landlords?.name ?? null,
+      // Public-safe: the avatar shown on listing cards and the landlord
+      // profile page. Unlike contact_info (see the note above), this is
+      // intentionally public — it's a photo the landlord uploads for display.
+      profile_photo_url: row.landlords?.profile_photo_url ?? null,
     },
     faculty_distances: (row.faculty_distances ?? []).map((fd) => ({
       faculty_id: fd.faculty_id,

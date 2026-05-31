@@ -22,7 +22,7 @@ export async function GET(request) {
   // authenticated role. RLS already lets a landlord read their own row.
   const { data: landlord, error } = await getSupabaseWithToken(token)
     .from('landlords')
-    .select('landlord_id, name, email, contact_info, onboarding_completed, preferred_locale')
+    .select('landlord_id, name, email, contact_info, onboarding_completed, preferred_locale, profile_photo_url')
     .eq('auth_user_id', user.id)
     .single();
 
@@ -63,6 +63,17 @@ export async function PATCH(request) {
     updates.preferred_locale = body.preferred_locale;
   }
 
+  // Profile photo: a landlord sets/replaces/clears their public avatar. The
+  // URL must point at our own landlord-photos bucket (the browser uploader's
+  // getPublicUrl output) — see normalizeProfilePhotoUrl. null/'' clears it.
+  if (body.profile_photo_url !== undefined) {
+    const photoRes = normalizeProfilePhotoUrl(body.profile_photo_url);
+    if (!photoRes.ok) {
+      return NextResponse.json({ error: 'Invalid profile_photo_url' }, { status: 400 });
+    }
+    updates.profile_photo_url = photoRes.value;
+  }
+
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: 'No updatable fields supplied' }, { status: 400 });
   }
@@ -74,7 +85,7 @@ export async function PATCH(request) {
     .from('landlords')
     .update(updates)
     .eq('auth_user_id', user.id)
-    .select('landlord_id, name, email, contact_info, onboarding_completed, preferred_locale')
+    .select('landlord_id, name, email, contact_info, onboarding_completed, preferred_locale, profile_photo_url')
     .single();
 
   if (error || !landlord) {
@@ -146,6 +157,14 @@ export async function POST(request) {
   // already trimmed and lowercased upstream.
   const name = normalizeSingleLine(body.name) || user.email.split('@')[0];
 
+  // Optional avatar captured on the signup form. Validate it points at our own
+  // bucket (same rule as PATCH) rather than storing an arbitrary URL; absent is
+  // fine (most signups have no photo — they add one later in Settings).
+  const photoRes = normalizeProfilePhotoUrl(body.profile_photo_url);
+  if (!photoRes.ok) {
+    return NextResponse.json({ error: 'Invalid profile_photo_url' }, { status: 400 });
+  }
+
   const authedSupabase = getSupabaseWithToken(token);
   const { data: landlord, error } = await authedSupabase
     .from('landlords')
@@ -155,6 +174,7 @@ export async function POST(request) {
       contact_info: user.email,
       auth_user_id: user.id,
       email: user.email,
+      profile_photo_url: photoRes.value,
     })
     // founding_rank is set by a BEFORE INSERT trigger (migration 043) — return
     // it here so the welcome-email path can branch on it (rank 1–5 = founding
@@ -190,5 +210,24 @@ export async function POST(request) {
 // (migration 036) — the same email/auth user already has a students row.
 function isRoleConflict(err) {
   return err?.code === '23505' && /already registered as a student/i.test(err?.message || '');
+}
+
+// Validate/normalize a landlord profile photo URL. It must be a public URL on
+// our own Supabase storage `landlord-photos` bucket — exactly what the browser
+// uploader's getPublicUrl() returns. Rejecting arbitrary URLs keeps a landlord
+// from pointing their PUBLIC avatar at an off-site image (tracking/abuse) and
+// keeps stored data consistent with the bucket the uploader writes to.
+// `undefined` / null / '' all mean "no photo" → stored as NULL.
+// Returns { ok: boolean, value?: string|null }.
+function normalizeProfilePhotoUrl(value) {
+  if (value === undefined || value === null || value === '') {
+    return { ok: true, value: null };
+  }
+  if (typeof value !== 'string') return { ok: false };
+  const base = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  if (!base) return { ok: false };
+  const prefix = `${base.replace(/\/+$/, '')}/storage/v1/object/public/landlord-photos/`;
+  if (!value.startsWith(prefix) || value.length > 1024) return { ok: false };
+  return { ok: true, value };
 }
 

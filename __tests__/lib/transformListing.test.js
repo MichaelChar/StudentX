@@ -12,7 +12,13 @@ const fullRow = {
   rent: { monthly_price: 450, currency: 'EUR', bills_included: true, deposit: 900 },
   location: { address: '12 Egnatias', neighborhood: 'Center', lat: 40.63, lng: 22.94 },
   property_types: { name: 'Studio' },
-  landlords: { name: 'Alice', contact_info: 'a@example.com', verified_tier: 'gold', is_verified: true },
+  landlords: {
+    name: 'Alice',
+    contact_info: 'a@example.com',
+    verified_tier: 'gold',
+    is_verified: true,
+    profile_photo_url: 'https://cdn.example/landlord-photos/uid/alice.webp',
+  },
   listing_amenities: [
     { amenities: { name: 'wifi' } },
     { amenities: { name: 'heating' } },
@@ -49,7 +55,10 @@ describe('transformListing', () => {
       floor: 3,
       photos: ['a.jpg', 'b.jpg'],
       min_duration_months: 9,
-      landlord: { name: 'Alice' },
+      landlord: {
+        name: 'Alice',
+        profile_photo_url: 'https://cdn.example/landlord-photos/uid/alice.webp',
+      },
       faculty_distances: [
         {
           faculty_id: 'auth-cs',
@@ -66,7 +75,10 @@ describe('transformListing', () => {
     // Regression guard for security audit #1: contact_info is owner-only PII
     // and must never leak into the public listing API / SSR shape.
     const out = transformListing(fullRow);
-    expect(out.landlord).toEqual({ name: 'Alice' });
+    expect(out.landlord).toEqual({
+      name: 'Alice',
+      profile_photo_url: 'https://cdn.example/landlord-photos/uid/alice.webp',
+    });
     expect(out.landlord).not.toHaveProperty('contact_info');
   });
 
