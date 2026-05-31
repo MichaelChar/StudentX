@@ -23,9 +23,15 @@ export function transformListing(row) {
     floor: row.floor ?? null,
     photos: row.photos ?? [],
     min_duration_months: row.min_duration_months ?? null,
+    // `contact_info` is deliberately NOT exposed here. It is owner-only PII
+    // (the landlord's email / external contact URL) and this shape feeds the
+    // public, unauthenticated /api/listings, /api/listings/[id], and SSR
+    // render paths — returning it leaked every landlord's contact channel to
+    // anonymous callers (security audit #1). The owner reads/edits it via
+    // /api/landlord/profile; students reach landlords through the in-app
+    // inquiry flow keyed on listing_id, never the raw contact string.
     landlord: {
       name: row.landlords?.name ?? null,
-      contact_info: row.landlords?.contact_info ?? null,
     },
     faculty_distances: (row.faculty_distances ?? []).map((fd) => ({
       faculty_id: fd.faculty_id,

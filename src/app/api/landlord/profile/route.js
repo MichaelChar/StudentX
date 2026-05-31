@@ -16,7 +16,11 @@ export async function GET(request) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const { data: landlord, error } = await getSupabase()
+  // Token-scoped (authenticated) client, not the anon client: this row
+  // carries owner-only PII (email, contact_info). A follow-up migration
+  // revokes anon SELECT on contact_info, so the owner read must run as the
+  // authenticated role. RLS already lets a landlord read their own row.
+  const { data: landlord, error } = await getSupabaseWithToken(token)
     .from('landlords')
     .select('landlord_id, name, email, contact_info, onboarding_completed, preferred_locale')
     .eq('auth_user_id', user.id)

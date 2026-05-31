@@ -49,7 +49,7 @@ describe('transformListing', () => {
       floor: 3,
       photos: ['a.jpg', 'b.jpg'],
       min_duration_months: 9,
-      landlord: { name: 'Alice', contact_info: 'a@example.com' },
+      landlord: { name: 'Alice' },
       faculty_distances: [
         {
           faculty_id: 'auth-cs',
@@ -60,6 +60,14 @@ describe('transformListing', () => {
         },
       ],
     });
+  });
+
+  it('never exposes landlord contact_info, even when present on the row', () => {
+    // Regression guard for security audit #1: contact_info is owner-only PII
+    // and must never leak into the public listing API / SSR shape.
+    const out = transformListing(fullRow);
+    expect(out.landlord).toEqual({ name: 'Alice' });
+    expect(out.landlord).not.toHaveProperty('contact_info');
   });
 
   it('defaults title to null when the row lacks one', () => {
