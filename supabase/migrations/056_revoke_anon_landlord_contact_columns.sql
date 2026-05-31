@@ -30,19 +30,23 @@
 --
 -- Verify after applying: an anon GET /api/listings must still return listings
 -- (landlord name + verified tier present) and contain no contact_info.
-revoke select on public.landlords from anon;
-grant select (
-  landlord_id,
-  name,
-  auth_user_id,
-  email,
-  created_at,
-  updated_at,
-  stripe_customer_id,
-  is_verified,
-  verified_tier,
-  onboarding_completed,
-  preferred_locale,
-  verified_tier_rank,
-  founding_rank
-) on public.landlords to anon;
+--
+-- The grant is built DYNAMICALLY from the columns that actually exist: the
+-- repo's clean-stack `landlords` table is missing columns prod has
+-- (is_verified, verified_tier, … — prod/repo drift), so a hardcoded column
+-- list fails `supabase start`. Granting "every existing column except
+-- contact_info" produces the same result on prod and stays portable.
+do $$
+declare
+  cols text;
+begin
+  select string_agg(quote_ident(column_name), ', ' order by ordinal_position)
+    into cols
+  from information_schema.columns
+  where table_schema = 'public'
+    and table_name = 'landlords'
+    and column_name <> 'contact_info';
+
+  revoke select on public.landlords from anon;
+  execute format('grant select (%s) on public.landlords to anon', cols);
+end $$;
