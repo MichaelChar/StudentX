@@ -88,7 +88,7 @@ export default function LandlordVerificationPage() {
     <LandlordShell eyebrow="Verification" title="Get verified">
       <div className="max-w-lg">
         <p className="text-night/60 text-sm mb-8">
-          Upload a government-issued ID to receive a free Verified badge shown on all your listings.
+          Upload a government-issued ID to receive a free SuperLandlord badge shown on all your listings.
         </p>
 
         {loading ? (
@@ -108,8 +108,8 @@ export default function LandlordVerificationPage() {
               </p>
               <p className="text-sm text-night/70">
                 {verifiedTier && verifiedTier !== 'none'
-                  ? 'Your listings display the Verified badge automatically.'
-                  : 'Subscribe to SuperLandlord to display the Verified badge on your listings.'}
+                  ? 'Your listings display the SuperLandlord badge automatically.'
+                  : 'Subscribe to SuperLandlord to display the SuperLandlord badge on your listings.'}
               </p>
             </div>
           </Card>
@@ -180,7 +180,7 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
           <p className="text-sm text-night/70">
             {subscribed
               ? <>We&apos;ll review your ID within 1–2 business days and notify you when your badge is activated.</>
-              : <>We&apos;ll review your ID within 1–2 business days. A SuperLandlord subscription is also required for the Verified badge to appear publicly on your listings — you can subscribe at any time, before or after your ID is approved.</>}
+              : <>We&apos;ll review your ID within 1–2 business days. A SuperLandlord subscription is also required for the SuperLandlord badge to appear publicly on your listings — you can subscribe at any time, before or after your ID is approved.</>}
           </p>
         </div>
       </Card>
