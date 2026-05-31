@@ -27,7 +27,7 @@ const PAID_TIERS = [
     features: [
       { label: 'Listing cap', value: 'Up to 5' },
       { label: 'Photos per listing', value: 'Unlimited' },
-      { label: 'Verified badge', value: 'Yes' },
+      { label: 'SuperLandlord badge', value: 'Yes' },
       { label: 'Priority placement', value: 'Yes' },
       { label: 'Analytics', value: 'Full' },
       { label: 'Support', value: 'Email' },
@@ -43,7 +43,7 @@ const PAID_TIERS = [
     features: [
       { label: 'Listing cap', value: 'Up to 12 (+€5/mo overage)' },
       { label: 'Photos per listing', value: 'Unlimited' },
-      { label: 'Verified badge', value: 'Yes' },
+      { label: 'SuperLandlord badge', value: 'Yes' },
       { label: 'Priority placement', value: 'Yes' },
       { label: 'Analytics', value: 'Full' },
       { label: 'Support', value: 'Priority' },
