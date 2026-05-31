@@ -3,32 +3,42 @@
 -- Completes security audit finding #1 at the database layer. The application
 -- no longer selects landlord contact_info on any public/anon path (PR #223),
 -- but the public anon key can still read it directly through PostgREST
--- (GET /rest/v1/landlords?select=contact_info,email) because `anon` holds
--- table-level SELECT on every column.
+-- (GET /rest/v1/landlords?select=contact_info) because `anon` holds
+-- table-level SELECT on every column. Postgres can't column-restrict via RLS,
+-- so we revoke the table-wide SELECT and re-grant a safe subset.
 --
--- Restrict `anon` to the non-sensitive columns the public listing join needs,
--- hiding contact_info, email, auth_user_id, and stripe_customer_id. This is
--- the standard Postgres mechanism for column-level read control (RLS cannot
--- restrict columns): revoke the table-wide SELECT, then grant the safe subset.
+-- SCOPE: only `contact_info` is removed from `anon`. Several server-side reads
+-- legitimately go through the ANON client (getSupabase()) keyed by
+-- `.eq('auth_user_id', …)` after verifying the JWT — getLandlordId across the
+-- landlord API, billing checkout (selects email), billing portal (selects
+-- stripe_customer_id), and the profile-create POST (selects email). Postgres
+-- requires SELECT on any column named in a WHERE filter, so revoking
+-- auth_user_id / email / stripe_customer_id from anon would break the landlord
+-- portal, billing, and signup. After PR #223, NO anon read selects
+-- contact_info, so revoking just that column is safe.
 --
--- `authenticated` keeps full SELECT for now — the landlord owner reads their
--- own contact_info/email via the token-scoped client, and RLS already limits
--- which rows they see. Fully closing the authenticated-role residual (a
--- signed-in user reading *other* landlords' contact columns) needs an
--- owner-only column split or a service-role owner-read path; tracked as a
--- follow-up, lower priority than the no-auth anon vector closed here.
+-- RESIDUAL (documented, not closed here): `email` is still anon-readable via
+-- the raw endpoint, and for many landlords contact_info == email — so this
+-- does not fully stop email harvesting. Fully closing it means migrating the
+-- handful of anon-client landlord reads above to the service-role/token client
+-- so anon never touches landlords except the public listing join (name,
+-- verified_tier, is_verified, verified_tier_rank), then revoking the rest.
+-- That touches auth/billing/signup hot paths and is tracked as a follow-up.
 --
 -- ⚠️ APPLY ONLY AFTER PR #223 is DEPLOYED. Applying earlier 500s the current
 --    code, which still selects contact_info via the anon client.
 --
 -- Verify after applying: an anon GET /api/listings must still return listings
--- (landlord name + verified tier present) and contain no contact_info / email.
+-- (landlord name + verified tier present) and contain no contact_info.
 revoke select on public.landlords from anon;
 grant select (
   landlord_id,
   name,
+  auth_user_id,
+  email,
   created_at,
   updated_at,
+  stripe_customer_id,
   is_verified,
   verified_tier,
   onboarding_completed,
