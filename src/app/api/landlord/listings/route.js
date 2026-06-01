@@ -70,7 +70,7 @@ function parseMinDuration(value) {
 }
 
 async function getLandlordId(userId) {
-  const { data } = await getSupabase()
+  const { data } = await getSupabaseAsService()
     .from('landlords')
     .select('landlord_id')
     .eq('auth_user_id', userId)

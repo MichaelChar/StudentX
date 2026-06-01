@@ -15,7 +15,7 @@ function getServiceSupabase() {
 }
 
 async function getLandlordId(userId) {
-  const { data } = await getSupabase()
+  const { data } = await getServiceSupabase()
     .from('landlords')
     .select('landlord_id, verified_tier, is_verified')
     .eq('auth_user_id', userId)

@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
+import { extractToken, getUserFromToken, getSupabaseAsService } from '@/lib/supabaseServer';
 import { getActiveSubscription } from '@/lib/stripe';
 
 async function getLandlord(userId) {
-  const { data } = await getSupabase()
+  const { data } = await getSupabaseAsService()
     .from('landlords')
     .select('landlord_id, verified_tier, is_verified')
     .eq('auth_user_id', userId)

@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { extractToken, getUserFromToken, getSupabaseWithToken, getSupabaseAsService } from '@/lib/supabaseServer';
 import { getLandlordResponseTime } from '@/lib/landlordResponseTime';
 
 async function getLandlordId(userId) {
-  const { data } = await getSupabase()
+  const { data } = await getSupabaseAsService()
     .from('landlords')
     .select('landlord_id')
     .eq('auth_user_id', userId)
