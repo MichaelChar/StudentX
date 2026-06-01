@@ -59,12 +59,23 @@
 --   • Anon GET /api/listings returns listing cards with landlord name + tier
 --   • A landlord can sign in, view billing, and access the portal without 500s
 
-revoke select on public.landlords from anon;
+-- Grant is built dynamically: intersect the 5-column safe allowlist with
+-- columns that actually exist in this stack. The clean-stack repo is missing
+-- `is_verified` (it exists in prod via APPLY_004_to_012.sql but no numbered
+-- migration adds it — same prod/repo drift documented in migration 056).
+-- The dynamic approach grants what exists and is safe, on both stacks.
+do $$
+declare
+  safe_cols text[] := ARRAY['landlord_id', 'name', 'verified_tier', 'is_verified', 'verified_tier_rank'];
+  cols text;
+begin
+  select string_agg(quote_ident(column_name), ', ' order by ordinal_position)
+    into cols
+  from information_schema.columns
+  where table_schema = 'public'
+    and table_name  = 'landlords'
+    and column_name = ANY(safe_cols);
 
-grant select (
-  landlord_id,
-  name,
-  verified_tier,
-  is_verified,
-  verified_tier_rank
-) on public.landlords to anon;
+  revoke select on public.landlords from anon;
+  execute format('grant select (%s) on public.landlords to anon', cols);
+end $$;
