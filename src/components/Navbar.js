@@ -16,7 +16,7 @@ import { DEFAULT_CITY } from '@/lib/cityRoutes';
 // pages (login, signup, etc.) are excluded so the pill still shows on those
 // centered forms.
 const LANDLORD_SHELL_RE =
-  /\/property\/[^/]+\/landlord\/(?!(login|signup|forgot-password|reset-password|verify-email|onboarding|charter)([/?]|$))/;
+  /\/property\/[^/]+\/landlord\/(?!(login|signup|forgot-password|reset-password|verify-email|onboarding)([/?]|$))/;
 
 export default function Navbar() {
   const t = useTranslations('nav');

@@ -118,7 +118,6 @@ export default function LandlordSignupPage() {
 
   return (
     <AuthShell eyebrow="Sign up" title={t('title')} subtitle={t('subtitle')}>
-      <FoundingOfferBanner t={t} />
       <form onSubmit={handleSubmit} className="space-y-5">
         <FormField
           id="name"
@@ -224,28 +223,5 @@ export default function LandlordSignupPage() {
         </Link>
       </p>
     </AuthShell>
-  );
-}
-
-function FoundingOfferBanner({ t }) {
-  return (
-    <div className="mb-6 rounded-sm border border-yellow/40 bg-night px-5 py-4">
-      <p className="label-caps text-yellow mb-1">{t('founderTierLabel')}</p>
-      <p className="font-display text-stone text-lg leading-tight mb-3">
-        {t('founderTierName')}
-      </p>
-      <p className="flex items-baseline gap-2">
-        <span className="text-stone/40 line-through text-sm">
-          {t('priceOriginal')}
-        </span>
-        <span className="font-display text-3xl text-yellow leading-none">
-          {t('priceDiscounted')}
-        </span>
-        <span className="text-stone/60 text-sm">{t('pricePeriod')}</span>
-      </p>
-      <p className="text-stone/70 text-xs mt-3 leading-relaxed">
-        {t('founderBlurb')}
-      </p>
-    </div>
   );
 }
