@@ -7,7 +7,6 @@ import {
   cleanupFreshOrphanAuthUser,
 } from '@/lib/supabaseServer';
 import { normalizeSingleLine } from '@/lib/textNormalize';
-import { sendFoundingWelcomeEmail } from '@/lib/foundingWelcomeEmail';
 
 export async function GET(request) {
   const token = extractToken(request);
@@ -176,10 +175,7 @@ export async function POST(request) {
       email: user.email,
       profile_photo_url: photoRes.value,
     })
-    // founding_rank is set by a BEFORE INSERT trigger (migration 043) — return
-    // it here so the welcome-email path can branch on it (rank 1–5 = founding
-    // five, rank 6–50 = founding cohort, 51+ = standard).
-    .select('landlord_id, name, email, founding_rank')
+    .select('landlord_id, name, email')
     .single();
 
   if (error) {
@@ -193,15 +189,6 @@ export async function POST(request) {
     console.error('Failed to create landlord profile:', error);
     return NextResponse.json({ error: 'Failed to create profile' }, { status: 500 });
   }
-
-  // Fire-and-forget: founding-five (ranks 2–5) get the 80%-off promo; ranks
-  // 6–50 get the Founding Member badge offer. Errors are swallowed by the
-  // helper so a Resend hiccup never blocks the signup response.
-  sendFoundingWelcomeEmail({
-    landlordName: landlord.name,
-    email: landlord.email,
-    foundingRank: landlord.founding_rank,
-  });
 
   return NextResponse.json({ landlord }, { status: 201 });
 }

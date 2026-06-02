@@ -5,9 +5,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 //      the prevent_dual_role trigger's UPDATE-of-auth_user_id branch).
 //   2. The new-insert path (INSERT raises 23505 via the BEFORE INSERT
 //      branch).
-// This file exercises both. Out of scope: the auto-numbering, founding-
-// rank welcome-email path, and orphan-landlord fixture seeding — those
-// belong in their own suite.
+// This file exercises both. Out of scope: the auto-numbering and
+// orphan-landlord fixture seeding — those belong in their own suite.
 
 const extractToken = vi.fn();
 const getUserFromToken = vi.fn();
@@ -26,9 +25,6 @@ vi.mock('@/lib/supabase', () => ({
 }));
 vi.mock('@/lib/textNormalize', () => ({
   normalizeSingleLine: (s) => (typeof s === 'string' ? s.trim() : ''),
-}));
-vi.mock('@/lib/foundingWelcomeEmail', () => ({
-  sendFoundingWelcomeEmail: vi.fn(),
 }));
 
 const { POST } = await import('@/app/api/landlord/profile/route');

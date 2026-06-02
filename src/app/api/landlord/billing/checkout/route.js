@@ -60,7 +60,7 @@ export async function POST(request) {
       lineItems.push({ price: plan.stripe_overage_price_id });
     }
 
-    // Founding-cohort promo: if promoCode is supplied, resolve it to a Stripe
+    // Promo code: if promoCode is supplied, resolve it to a Stripe
     // promotion_code id and attach as a discount. Invalid/expired codes are
     // ignored silently — checkout proceeds at full price rather than 400ing.
     let discounts;
