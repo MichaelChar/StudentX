@@ -7,7 +7,6 @@ import ListingGallery from '@/components/listing/ListingGallery';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
-import OrnamentRule from '@/components/ui/OrnamentRule';
 import { formatPropertyType } from '@/lib/propertyType';
 
 /*
@@ -19,39 +18,23 @@ import { formatPropertyType } from '@/lib/propertyType';
   write. The landlord clicks "Preview as student" in ListingForm and
   this opens a full-screen modal mirroring the detail page's section
   order: gallery → hero stripe → rent/deposit/type grid → description →
-  amenities → distance table, plus a static inquiry rail.
+  amenities, plus a static inquiry rail.
 
   Reuse vs replicate:
   - ListingGallery (client component) is reused verbatim, so the photo
     strip + lightbox match production exactly.
-  - The UI primitives (Card, Pill, Icon, OrnamentRule) and
+  - The UI primitives (Card, Pill, Icon) and
     formatPropertyType are reused.
   - The detail page itself is a SERVER component and its inquiry rail
     (ContactRail/ContactGate) fires live inquiry network calls and needs
     request-scoped auth, so the page structure and a *static* inquiry
     rail are replicated here rather than imported.
 
-  Data the form doesn't carry (computed faculty_distances, server ids)
-  is shown as graceful placeholders — the distance table renders its
-  three destination rows with em-dashes, same as the live page does
-  before distances are computed.
-
   Accessibility mirrors the app's modal convention (ConfirmDialog /
   ListingLightbox): Esc closes, backdrop click closes, body scroll is
   locked, focus moves to the close button on open and is restored on
   unmount, and Tab is trapped within the dialog.
 */
-
-// Three destination reference points, mirroring deriveDestinations() in
-// the live detail page. The form has no computed distances, so walk /
-// transit always render as placeholders here.
-function destinationRows(t) {
-  return [
-    { name: t('previewDestSchool') },
-    { name: t('previewDestHospital') },
-    { name: t('previewDestLibrary') },
-  ];
-}
 
 export default function ListingPreview({ form, amenities = [], onClose }) {
   const t = useTranslations('landlord.listingForm');
@@ -131,7 +114,6 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
   );
 
   const headline = title || address || t('previewUntitled');
-  const destinations = destinationRows(t);
 
   return (
     <div className="fixed inset-0 z-[60] overflow-y-auto bg-stone">
@@ -245,38 +227,6 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
               </section>
             )}
 
-            <OrnamentRule className="my-8" />
-
-            {/* Distance table — placeholders (computed server-side, not in
-                the form). Mirrors the live table's three destination rows. */}
-            <section className="mb-10">
-              <p className="label-caps text-night/80 mb-2">
-                {t('previewDistanceTitle')}
-              </p>
-              <p className="text-xs text-night/50 mb-5">
-                {t('previewDistanceHint')}
-              </p>
-              <table className="w-full text-left">
-                <thead>
-                  <tr className="label-caps text-night/50 border-b border-night/10">
-                    <th className="py-3 font-normal">{t('previewDestination')}</th>
-                    <th className="py-3 font-normal text-right">{t('previewWalk')}</th>
-                    <th className="py-3 font-normal text-right">{t('previewTransit')}</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {destinations.map((d) => (
-                    <tr key={d.name} className="border-b border-night/5">
-                      <td className="py-4 font-display text-lg text-night">
-                        {d.name}
-                      </td>
-                      <td className="py-4 text-right font-sans text-night/80">—</td>
-                      <td className="py-4 text-right font-sans text-night/80">—</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </section>
           </div>
 
           {/* Static inquiry rail — replicates ContactRail's card visually.
