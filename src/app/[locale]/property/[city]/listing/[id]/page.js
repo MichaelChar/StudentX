@@ -17,7 +17,6 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import { formatPropertyType } from '@/lib/propertyType';
-import OrnamentRule from '@/components/ui/OrnamentRule';
 
 // Cap on the untrusted ?from= URL param. Real /results querystrings are
 // well under this; anything bigger is almost certainly an attempt to
@@ -50,8 +49,6 @@ export default async function ListingPage({ params, searchParams }) {
   // once in transformListing. Drives the seal, the badge, and the "listed by"
   // profile link below.
   const isSuper = listing.is_superlandlord;
-
-  const distances = deriveDestinations(listing.faculty_distances || [], t);
 
   return (
     <div className="mx-auto max-w-6xl px-5 pt-8 pb-28 sm:pb-12 md:py-12">
@@ -213,43 +210,6 @@ export default async function ListingPage({ params, searchParams }) {
             </section>
           )}
 
-          <OrnamentRule className="my-8" />
-
-          {/* Distance table */}
-          <section className="mb-10">
-            <p className="font-display italic text-night/60">
-              {t('distanceGreek')}
-            </p>
-            <p className="label-caps text-night/80 mt-1 mb-5">
-              {t('distanceEnglish')}
-            </p>
-
-            <table className="w-full text-left">
-              <thead>
-                <tr className="label-caps text-night/50 border-b border-night/10">
-                  <th className="py-3 font-normal">{t('destination')}</th>
-                  <th className="py-3 font-normal text-right">{t('walk')}</th>
-                  <th className="py-3 font-normal text-right">{t('transit')}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {distances.map((d) => (
-                  <tr key={d.name} className="border-b border-night/5">
-                    <td className="py-4 font-display text-lg text-night">
-                      {d.name}
-                    </td>
-                    <td className="py-4 text-right font-sans text-night/80">
-                      {d.walk != null ? `${d.walk} min` : '—'}
-                    </td>
-                    <td className="py-4 text-right font-sans text-night/80">
-                      {d.transit != null ? `${d.transit} min` : '—'}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </section>
-
           {/* Subtle "report this listing" trigger — opens a client modal that
               emails the ops inbox (email-only v1, no DB). Rendered here on the
               page, not inside a shared detail component. */}
@@ -285,34 +245,4 @@ function BilingualField({ greek, english, value }) {
       </dd>
     </div>
   );
-}
-
-// Pick the three destination rows for the listing detail's distance
-// table. Each row maps to a dedicated reference point seeded in
-// migration 035: auth-medical (School of Medicine), ahepa-hospital
-// (AHEPA University Hospital), auth-library (AUTH Central Library).
-// compute_distances.py populates faculty_distances rows for every
-// listing × faculty pair, so a simple by-id lookup is sufficient.
-function deriveDestinations(facultyDistances, t) {
-  const byId = (id) => facultyDistances.find((f) => f.faculty_id === id);
-  const medicine = byId('auth-medical');
-  const ahepa = byId('ahepa-hospital');
-  const library = byId('auth-library');
-  return [
-    {
-      name: t('destSchool'),
-      walk: medicine?.walk_minutes,
-      transit: medicine?.transit_minutes,
-    },
-    {
-      name: t('destHospital'),
-      walk: ahepa?.walk_minutes,
-      transit: ahepa?.transit_minutes,
-    },
-    {
-      name: t('destLibrary'),
-      walk: library?.walk_minutes,
-      transit: library?.transit_minutes,
-    },
-  ];
 }
