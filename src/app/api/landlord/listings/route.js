@@ -261,14 +261,17 @@ export async function POST(request) {
   }
   const listingId = landlordId + String(nextSeq).padStart(3, '0');
 
-  // Auto-feature listings for landlords with an active subscription
-  const { data: activeSub } = await supabase
+  // Auto-feature listings for landlords with a paying subscription. Must match
+  // the webhook's shouldFeature predicate (handleSubscriptionUpdated treats
+  // 'active' OR 'trialing' as paying) — otherwise a listing added mid-trial is
+  // left un-featured while the landlord's other listings carry the badge.
+  const { data: payingSub } = await supabase
     .from('subscriptions')
     .select('subscription_id')
     .eq('landlord_id', landlordId)
-    .eq('status', 'active')
+    .in('status', ['active', 'trialing'])
     .limit(1);
-  const isFeatured = activeSub && activeSub.length > 0;
+  const isFeatured = payingSub && payingSub.length > 0;
 
   // Insert listing row
   const { data: listing, error: listingError } = await authedSupabase
