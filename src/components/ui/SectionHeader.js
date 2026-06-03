@@ -1,7 +1,7 @@
 /*
-  Propylaea section header — bilingual eyebrow pattern used on the landing
-  page, listing detail, and landlord pages. Greek or caps eyebrow above,
-  English display title in EB Garamond below, optional short lede.
+  Section header — eyebrow + display-title pattern used on the landing
+  page, listing detail, and landlord pages. Caps eyebrow above, English
+  display title in EB Garamond below, optional short lede.
 */
 export default function SectionHeader({
   eyebrow,

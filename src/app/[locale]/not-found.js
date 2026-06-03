@@ -1,22 +1,13 @@
-import { getLocale } from 'next-intl/server';
 import Button from '@/components/ui/Button';
 
 const COPY = {
-  el: {
-    title: 'Δεν βρέθηκε η σελίδα',
-    body: 'Η αγγελία ή η σελίδα που έψαχνες δεν υπάρχει ή έχει αφαιρεθεί.',
-    cta: 'Πίσω στις αναζητήσεις',
-  },
-  en: {
-    title: 'Page not found',
-    body: "The listing or page you're looking for doesn't exist or has been removed.",
-    cta: 'Back to search',
-  },
+  title: 'Page not found',
+  body: "The listing or page you're looking for doesn't exist or has been removed.",
+  cta: 'Back to search',
 };
 
-export default async function LocaleNotFound() {
-  const locale = await getLocale().catch(() => 'el');
-  const t = COPY[locale] || COPY.el;
+export default function LocaleNotFound() {
+  const t = COPY;
 
   return (
     <div className="mx-auto max-w-2xl px-5 py-24 text-center">
