@@ -19,7 +19,7 @@ import {
 
 /*
   Propylaea results page — matches page 06 of the reference design.
-  Left sticky filter panel ("Φίλτρα / FILTERS — Refine"), right column
+  Left sticky filter panel ("Filters — Refine"), right column
   with Best match sort + LIST|MAP toggle, grid of ListingCard, and a
   featured programme banner at top when applicable.
 */
@@ -657,10 +657,7 @@ function FilterPanel({
 
   return (
     <div>
-      <p className="font-display italic text-night/60 text-base">
-        {t('filtersGreek')}
-      </p>
-      <p className="label-caps text-night/80 mt-1 mb-6">
+      <p className="label-caps text-night/80 mb-6">
         {t('filtersEnglish')} &middot; {t('filtersRefine')}
       </p>
 

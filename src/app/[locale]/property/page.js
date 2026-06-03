@@ -6,25 +6,19 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
 // Override the locale layout's Thessaloniki-anchored title/description
 // for the multi-country hub. The parent [locale]/layout.js sets a default
-// like "StudentX — Φοιτητικές Κατοικίες Θεσσαλονίκη" which is correct
-// for the Thessaloniki city landing but contradicts the hub's
+// of "StudentX — Student Housing in Thessaloniki" which is correct for
+// the Thessaloniki city landing but contradicts the hub's
 // "across Greece, UK, Ireland, Cyprus" promise. Use title.absolute to
 // bypass the parent's "%s — StudentX" template.
 const HUB_META = {
-  el: {
-    title: 'StudentX — Φοιτητική στέγη σε όλη την Ευρώπη',
-    ogAlt: 'StudentX — επιμελημένη φοιτητική στέγη σε ευρωπαϊκές πόλεις',
-  },
-  en: {
-    title: 'StudentX — Curated student housing across Europe',
-    ogAlt: 'StudentX — curated student housing across European cities',
-  },
+  title: 'StudentX — Curated student housing across Europe',
+  ogAlt: 'StudentX — curated student housing across European cities',
 };
 
 export async function generateMetadata({ params }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: 'propylaea.hub' });
-  const meta = HUB_META[locale] || HUB_META.el;
+  const meta = HUB_META;
   const description = t('description');
   return {
     title: { absolute: meta.title },

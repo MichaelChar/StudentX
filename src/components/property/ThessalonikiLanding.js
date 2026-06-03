@@ -40,19 +40,16 @@ export default function ThessalonikiLanding() {
   const steps = [
     {
       numeral: 'Ⅰ',
-      greek: t('step1Greek'),
       english: t('step1English'),
       body: t('step1Body'),
     },
     {
       numeral: 'Ⅱ',
-      greek: t('step2Greek'),
       english: t('step2English'),
       body: t('step2Body'),
     },
     {
       numeral: 'Ⅲ',
-      greek: t('step3Greek'),
       english: t('step3English'),
       body: t('step3Body'),
     },
@@ -64,13 +61,9 @@ export default function ThessalonikiLanding() {
       <section className="relative overflow-hidden">
         <StripeGradientMesh />
         <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 md:pt-28 md:pb-32">
-          <p className="label-caps text-yellow mb-8">{t('eyebrow')}</p>
           <h1 className="font-display text-4xl md:text-6xl lg:text-[4.5rem] leading-[1.05] max-w-3xl text-night">
             {t('headline')}
           </h1>
-          <p className="mt-6 max-w-xl text-night/70 text-lg md:text-xl leading-relaxed">
-            {t('subtitle')}
-          </p>
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Button href="/property/thessaloniki/quiz" animated size="lg">
               {t('ctaPrimary')}
@@ -118,7 +111,6 @@ export default function ThessalonikiLanding() {
               >
                 {step.numeral}
               </span>
-              <p className="label-caps text-night/50 mb-2">{step.greek}</p>
               <h3 className="font-display text-2xl text-night leading-tight mb-3">
                 {step.english}
               </h3>

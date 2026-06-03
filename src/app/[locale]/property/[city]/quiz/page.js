@@ -146,10 +146,7 @@ export default function QuizPage() {
 function BudgetStep({ t, budget, setBudget }) {
   return (
     <div>
-      <p className="font-display italic text-night/60 text-base">
-        {t('budgetGreek')}
-      </p>
-      <p className="label-caps text-night/80 mt-1">{t('budgetEnglish')}</p>
+      <p className="label-caps text-night/80">{t('budgetEnglish')}</p>
       <h2 className="mt-5 font-display text-2xl md:text-3xl text-night leading-tight">
         {t('budgetQuestion')}
       </h2>
@@ -184,10 +181,7 @@ function BudgetStep({ t, budget, setBudget }) {
 function TypeStep({ t, types, onToggleType }) {
   return (
     <div>
-      <p className="font-display italic text-night/60 text-base">
-        {t('typeAreaGreek')}
-      </p>
-      <p className="label-caps text-night/80 mt-1">{t('typeAreaEnglish')}</p>
+      <p className="label-caps text-night/80">{t('typeAreaEnglish')}</p>
       <h2 className="mt-5 font-display text-2xl md:text-3xl text-night leading-tight">
         {t('typeQuestion')}
       </h2>
@@ -220,10 +214,7 @@ function TypeStep({ t, types, onToggleType }) {
 function DealbreakersStep({ t, dealbreakers, onToggle }) {
   return (
     <div>
-      <p className="font-display italic text-night/60 text-base">
-        {t('dealbreakersGreek')}
-      </p>
-      <p className="label-caps text-night/80 mt-1">
+      <p className="label-caps text-night/80">
         {t('dealbreakersEnglish')}
       </p>
       <h2 className="mt-5 font-display text-2xl md:text-3xl text-night leading-tight">

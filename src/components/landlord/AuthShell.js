@@ -3,7 +3,7 @@
 /*
   Auth shell — centered form layout for login/signup/reset pages.
   The brand panel was stripped as part of the Stripe-modern rebrand;
-  the floating Navbar pill carries the locale switcher + auth links.
+  the floating Navbar pill carries the auth links.
 */
 export default function AuthShell({ eyebrow, title, subtitle, children }) {
   return (

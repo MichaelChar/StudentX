@@ -11,7 +11,7 @@ import Icon from '@/components/ui/Icon';
 import BauhausLoader from '@/components/BauhausLoader';
 
 /*
-  Propylaea landlord shell — fixed sidebar + topbar wrapper.
+  Landlord shell — fixed sidebar + topbar wrapper.
   Used by every authenticated landlord page (dashboard, listings, inquiries,
   verification, billing). Auth pages (login/signup/etc.) skip this shell.
 
@@ -171,10 +171,7 @@ function SidebarContent({ t, pathname, onSignOut, onNavigate }) {
     <>
       {/* Brand */}
       <div className="px-6 pt-7 pb-8">
-        <p className="font-display text-xl text-stone">
-          StudentX <span className="text-stone/40">×</span>{' '}
-          <span className="italic text-yellow">AUSOM</span>
-        </p>
+        <p className="font-display text-xl text-stone">StudentX</p>
         <p className="label-caps text-stone/40 mt-1">Landlord portal</p>
       </div>
 
@@ -219,9 +216,6 @@ function SidebarContent({ t, pathname, onSignOut, onNavigate }) {
           <Icon name="logout" className="w-4 h-4" />
           {t('signOut')}
         </button>
-        <p className="mt-4 text-stone/30 text-[10px] font-display italic">
-          Propylaea · v2
-        </p>
       </div>
     </>
   );

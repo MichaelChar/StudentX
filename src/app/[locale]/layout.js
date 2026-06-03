@@ -51,12 +51,22 @@ export function generateMetadata() {
     openGraph: {
       siteName: 'StudentX',
       locale: 'en_GB',
+      title: 'StudentX',
+      description: 'Browse student services by city.',
       images: [
         {
           url: `${SITE_URL}/og-default.png`,
-          alt: 'StudentX — student housing in Thessaloniki',
+          width: 1200,
+          height: 630,
+          alt: 'StudentX — curated student housing',
         },
       ],
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: 'StudentX',
+      description: 'Browse student services by city.',
+      images: [`${SITE_URL}/og-default.png`],
     },
     robots: { index: true, follow: true },
   };

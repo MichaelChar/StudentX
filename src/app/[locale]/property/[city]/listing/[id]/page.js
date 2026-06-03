@@ -144,7 +144,6 @@ export default async function ListingPage({ params, searchParams }) {
           <Card tone="parchment" border={false} className="p-6 md:p-8 mb-10">
             <dl className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <BilingualField
-                greek={t('rentGreek')}
                 english={t('rentEnglish')}
                 value={
                   listing.monthly_price != null ? (
@@ -160,7 +159,6 @@ export default async function ListingPage({ params, searchParams }) {
                 }
               />
               <BilingualField
-                greek={t('depositGreek')}
                 english={t('depositEnglish')}
                 value={
                   listing.deposit != null && listing.deposit > 0
@@ -169,7 +167,6 @@ export default async function ListingPage({ params, searchParams }) {
                 }
               />
               <BilingualField
-                greek={t('typeGreek')}
                 english={t('typeEnglish')}
                 value={formatPropertyType(listing.property_type, locale)}
               />
@@ -179,10 +176,7 @@ export default async function ListingPage({ params, searchParams }) {
           {/* Description */}
           {listing.description && (
             <section className="mb-10">
-              <p className="font-display italic text-night/60">
-                {t('descriptionGreek')}
-              </p>
-              <p className="label-caps text-night/80 mt-1 mb-4">
+              <p className="label-caps text-night/80 mb-4">
                 {t('descriptionEnglish')}
               </p>
               <p className="text-night/80 leading-relaxed text-lg font-sans">
@@ -194,10 +188,7 @@ export default async function ListingPage({ params, searchParams }) {
           {/* Amenities */}
           {listing.amenities?.length > 0 && (
             <section className="mb-10">
-              <p className="font-display italic text-night/60">
-                {t('amenitiesGreek')}
-              </p>
-              <p className="label-caps text-night/80 mt-1 mb-4">
+              <p className="label-caps text-night/80 mb-4">
                 {t('amenitiesEnglish')}
               </p>
               <div className="flex flex-wrap gap-2">
@@ -229,14 +220,11 @@ export default async function ListingPage({ params, searchParams }) {
   );
 }
 
-function BilingualField({ greek, english, value }) {
+function BilingualField({ english, value }) {
   return (
     <div>
       <dt>
-        <span className="font-display italic text-night/60 block text-sm">
-          {greek}
-        </span>
-        <span className="label-caps text-night/80 block mt-0.5">
+        <span className="label-caps text-night/80 block">
           {english}
         </span>
       </dt>
