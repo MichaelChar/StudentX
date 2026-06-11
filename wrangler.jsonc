@@ -12,6 +12,13 @@
   "main": "cf/worker-entry.mjs",
   "compatibility_date": "2025-04-01",
   "compatibility_flags": ["nodejs_compat"],
+  // Workers AI binding — powers site-agnostic listing extraction
+  // (@cf/meta/llama-3.1-8b-instruct) in the pending-listings ingest pipeline.
+  // No external API keys. Only bound on the Worker (preview/deploy), NOT in
+  // `next dev`; route handlers read it via getCloudflareContext().env.AI.
+  // NB: the pending tables + photos live in Supabase Postgres + a `pending-photos`
+  // Storage bucket (migration 059), so no D1/R2 bindings are needed here.
+  "ai": { "binding": "AI" },
   "assets": {
     "directory": ".open-next/assets",
     "binding": "ASSETS"
