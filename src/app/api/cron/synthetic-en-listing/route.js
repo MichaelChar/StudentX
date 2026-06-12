@@ -17,11 +17,21 @@ import { getResend } from '@/lib/resend';
 // */15 * * * * cron. Also callable manually with the CRON_SECRET for local
 // sanity checks.
 
-const DEFAULT_LISTING_ID = '0100006';
+const DEFAULT_LISTING_ID = '0106002';
 // 15s gives Supabase cold starts (off-peak hours) room to complete the
-// 9-table listing query. The cron handler's 25s outer timeout still has
-// margin since page-render checks skip instantly on 522.
+// 9-table listing query. Heavy WebGL page renders get a longer cap below
+// (HEAVY_PAGE_TIMEOUT_MS); the cron dispatcher's outer timeout
+// (cf/worker-entry.mjs, 60s) is sized to cover the sum of these sequential
+// inner caps so a slow-but-recovering render never aborts the whole run.
 const FETCH_TIMEOUT_MS = 15_000;
+// The three heavy property-page checks SSR WebGL components (HubBackground
+// 240k particles, HubDiagram, StripeGradientMesh) via the self service
+// binding — a fresh render every run, no CDN cache to lean on. On a cold
+// isolate that legitimately exceeds the 15s default and tripped the
+// "aborted due to timeout" alerts on en-cityhub-locale / en-quiz-locale.
+// They run sequentially (one SSR at a time), so a longer per-fetch cap here
+// doesn't stack concurrent resource pressure.
+const HEAVY_PAGE_TIMEOUT_MS = 22_000;
 
 const EN_MARKERS_REQUIRED = [
   '<html lang="en"',
@@ -78,13 +88,13 @@ async function getSelfFetcher() {
   }
 }
 
-async function fetchUrl(url, { method = 'GET', cookie = '' } = {}) {
+async function fetchUrl(url, { method = 'GET', cookie = '', timeoutMs = FETCH_TIMEOUT_MS } = {}) {
   const headers = { 'user-agent': 'StudentX-synthetic/1.0' };
   if (cookie) headers.cookie = cookie;
   const init = {
     method,
     headers,
-    signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+    signal: AbortSignal.timeout(timeoutMs),
     redirect: 'manual',
   };
   const self = await getSelfFetcher();
@@ -357,9 +367,9 @@ async function checkCfCacheStatusHit(appUrl, listingId) {
 // Page-render check: assert at least one expected EN marker is present
 // (forgiving against copy tweaks). The Greek-leak half was dropped when the
 // site went English-only (#158).
-async function checkEnLocale({ name, url, anyEnMarker }) {
+async function checkEnLocale({ name, url, anyEnMarker, timeoutMs }) {
   try {
-    const res = await fetchUrl(url);
+    const res = await fetchUrl(url, { timeoutMs });
     // CF "couldn't reach origin"-class 5xx (see INCONCLUSIVE_CF_5XX).
     // Inconclusive — can't check markers, but not a regression.
     if (INCONCLUSIVE_CF_5XX.has(res.status)) {
@@ -529,16 +539,19 @@ export async function POST(request) {
         'Global students empowered',
         'Curated student housing',
       ],
+      timeoutMs: HEAVY_PAGE_TIMEOUT_MS,
     },
     {
       name: 'en-homepage-locale',
       url: `${appUrl}/property/thessaloniki`,
       anyEnMarker: ['Take the quiz', 'See all listings', 'How it works'],
+      timeoutMs: HEAVY_PAGE_TIMEOUT_MS,
     },
     {
       name: 'en-quiz-locale',
       url: `${appUrl}/property/thessaloniki/quiz`,
       anyEnMarker: ['One minute', "That's it"],
+      timeoutMs: HEAVY_PAGE_TIMEOUT_MS,
     },
   ];
   for (const check of heavyPageChecks) {

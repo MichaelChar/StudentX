@@ -54,7 +54,7 @@
     // in PR #48 (Greek copy leaking onto /en/listing/<id>). The */15 cron POSTs
     // to /api/cron/synthetic-en-listing, which fetches /en/listing/<id> and
     // emails alerts on locale-marker mismatches. See docs/runbooks/synthetic-en-listing.md.
-    "SYNTHETIC_LISTING_ID": "0100006",
+    "SYNTHETIC_LISTING_ID": "0106002",
     "SYNTHETIC_ALERT_EMAIL": "michaeltubehd007@gmail.com"
   },
   // Cron triggers. Dispatched via cf/worker-entry.mjs's `scheduled` handler,

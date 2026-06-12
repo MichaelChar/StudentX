@@ -62,7 +62,15 @@ async function runCron(event, env, ctx) {
     const request = new Request(url, {
       method: "POST",
       headers: { "x-cron-secret": secret },
-      signal: AbortSignal.timeout(25_000),
+      // 60s, not 25s: the synthetic-en-listing handler runs several checks
+      // whose per-fetch caps sum well past 25s in the worst case (two 15s
+      // listing fetches plus three sequential heavy-page SSRs that can take
+      // ~20s each on a cold isolate). The old 25s cap could abort the WHOLE
+      // run — yielding no alert email and no per-check results — exactly when
+      // a heavy page was legitimately slow-but-recovering. These checks are
+      // I/O-bound (sub-fetches), so the extra wall-clock is waiting, not CPU.
+      // Other cron routes finish in <2s, so the higher ceiling never bites them.
+      signal: AbortSignal.timeout(60_000),
     });
     const res = await openNextWorker.fetch(request, env, ctx);
     const elapsed = Date.now() - startedAt;
