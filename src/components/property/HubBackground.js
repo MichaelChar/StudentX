@@ -431,16 +431,33 @@ export default function HubBackground() {
         zIndex: 0,
       }}
     >
-      <canvas
-        ref={canvasRef}
+      {/* Fixed viewport frame: on phones/tablets the hub content (city
+          list) is much taller than the viewport, and sizing the canvas to
+          the full scroll height breaks the sphere geometry (R/cyS derive
+          from canvas height) — the dome degenerates into scattered dot
+          noise behind the list. A position:fixed frame keeps the dome
+          composed against the visible viewport at every page height and
+          scroll offset (sticky can't work here: the page wrapper's
+          overflow:hidden would become its scrollport). The canvas drops to
+          30% opacity below lg so the city list stays readable over it. */}
+      <div
         style={{
-          position: 'absolute',
+          position: 'fixed',
           inset: 0,
-          width: '100%',
-          height: '100%',
-          opacity: 0.9,
+          pointerEvents: 'none',
         }}
-      />
+      >
+        <canvas
+          ref={canvasRef}
+          className="opacity-30 lg:opacity-90"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            width: '100%',
+            height: '100%',
+          }}
+        />
+      </div>
     </div>
   );
 }
