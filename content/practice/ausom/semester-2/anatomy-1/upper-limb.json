@@ -1,0 +1,96 @@
+{
+  "id": "upper-limb",
+  "subject": "anatomy-1",
+  "title": "[FIXTURE] Upper Limb",
+  "kind": "topic",
+  "description": "Fixture topic test exercising mcq + tf, image and text explanations, and both yield tiers.",
+  "version": 1,
+  "updatedAt": "2026-06-12",
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "stem": "A patient cannot abduct the arm through the 15°–90° mid-range, and the rounded contour of the shoulder is flattened. Which nerve is most likely injured?",
+      "options": [
+        "Axillary nerve",
+        "Suprascapular nerve",
+        "Long thoracic nerve",
+        "Musculocutaneous nerve",
+        "Radial nerve"
+      ],
+      "correct": 0,
+      "explanation": {
+        "image": "/practice/ausom/semester-2/anatomy-1/upper-limb/q01.png",
+        "imageAlt": "Diagram of the deltoid and its axillary nerve supply over the shoulder.",
+        "caption": "The deltoid drives mid-range abduction (15–90°) and is supplied by the axillary nerve; injury flattens the shoulder contour.",
+        "source": "Lecture 4 — slide 23",
+        "text": "The deltoid is the prime mover for abduction between 15° and 90° and is innervated by the axillary nerve (C5–C6)."
+      },
+      "topic": "upper-limb",
+      "yield": "high"
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "stem": "Which muscle initiates abduction of the arm over the first 0–15° before the deltoid takes over?",
+      "options": [
+        "Supraspinatus",
+        "Infraspinatus",
+        "Teres minor",
+        "Subscapularis"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Supraspinatus initiates the first ~15° of abduction; the deltoid then dominates the mid-range. Both are commonly tested together."
+      },
+      "topic": "upper-limb",
+      "yield": "medium"
+    },
+    {
+      "id": "q03",
+      "type": "tf",
+      "stem": "The musculocutaneous nerve supplies the biceps brachii.",
+      "options": ["True", "False"],
+      "correct": 0,
+      "explanation": {
+        "text": "True. The musculocutaneous nerve (C5–C7) innervates the anterior compartment of the arm — biceps brachii, brachialis, and coracobrachialis."
+      },
+      "topic": "upper-limb",
+      "yield": "high"
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "stem": "Which muscle is the workhorse flexor of the elbow regardless of forearm position, since it inserts on the ulna and is unaffected by pronation/supination?",
+      "options": [
+        "Brachialis",
+        "Biceps brachii",
+        "Brachioradialis",
+        "Pronator teres"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Brachialis flexes the elbow in every forearm position because it inserts on the ulnar tuberosity. The biceps loses leverage when the forearm is pronated."
+      },
+      "topic": "upper-limb",
+      "yield": "medium"
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "stem": "A patient develops a winged scapula after axillary lymph-node surgery. Which nerve was most likely injured?",
+      "options": [
+        "Long thoracic nerve",
+        "Axillary nerve",
+        "Dorsal scapular nerve",
+        "Thoracodorsal nerve"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "The long thoracic nerve supplies serratus anterior; its loss un-anchors the scapula, producing medial winging. It is vulnerable during axillary dissection."
+      },
+      "topic": "upper-limb",
+      "yield": "medium"
+    }
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "subject": "anatomy-1",
+  "title": "Anatomy I",
+  "school": "ausom",
+  "semester": "semester-2",
+  "tests": [
+    {
+      "id": "upper-limb",
+      "title": "[FIXTURE] Upper Limb",
+      "kind": "topic",
+      "questionCount": 5
+    },
+    {
+      "id": "mock-exam",
+      "title": "[FIXTURE] Mock Exam",
+      "kind": "mock",
+      "questionCount": 3
+    }
+  ]
+}
