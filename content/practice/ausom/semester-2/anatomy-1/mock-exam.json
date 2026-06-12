@@ -1,0 +1,60 @@
+{
+  "id": "mock-exam",
+  "subject": "anatomy-1",
+  "title": "[FIXTURE] Mock Exam",
+  "kind": "mock",
+  "description": "Fixture mock exam — every question carries a pastPaperRef as the schema requires for mock tests.",
+  "version": 1,
+  "updatedAt": "2026-06-12",
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "stem": "A fall on an outstretched hand fractures the surgical neck of the humerus. Which structure is most at risk in this fracture?",
+      "options": [
+        "Axillary nerve",
+        "Median nerve",
+        "Ulnar nerve",
+        "Radial nerve"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "The axillary nerve and posterior circumflex humeral vessels wrap the surgical neck of the humerus, so a fracture there classically injures the axillary nerve."
+      },
+      "topic": "upper-limb",
+      "yield": "high",
+      "pastPaperRef": "2024-Q3"
+    },
+    {
+      "id": "q02",
+      "type": "tf",
+      "stem": "The radial nerve passes through the cubital fossa alongside the brachial artery.",
+      "options": ["True", "False"],
+      "correct": 1,
+      "explanation": {
+        "text": "False. The cubital fossa contains (lateral to medial) the biceps tendon, brachial artery, and median nerve. The radial nerve lies lateral to the fossa, between brachialis and brachioradialis."
+      },
+      "topic": "upper-limb",
+      "yield": "high",
+      "pastPaperRef": "2024-Q7"
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "stem": "A patient reports numbness over the medial one-and-a-half fingers and weak finger abduction. Which nerve is affected?",
+      "options": [
+        "Ulnar nerve",
+        "Median nerve",
+        "Radial nerve",
+        "Axillary nerve"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "The ulnar nerve supplies sensation to the medial 1.5 fingers and motor to most intrinsic hand muscles, including the interossei that abduct/adduct the fingers."
+      },
+      "topic": "upper-limb",
+      "yield": "medium",
+      "pastPaperRef": "2023-Q11"
+    }
+  ]
+}

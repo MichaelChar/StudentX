@@ -266,8 +266,10 @@ description: >
   and omit the image.
 
 ## Phase 6 — Validate and hand off
-- Write test JSON + index.json per the repo's lib/practice/types.ts.
-- Run `npm run validate:tests` in the repo; fix every error.
+- Write test JSON + index.json per the repo's src/lib/practice/schema.js.
+- Run `npm run practice:manifest` (regenerates the static-import manifest —
+  required whenever content JSON is added/removed), then
+  `npm run validate:tests`; fix every error.
 - Output a summary: tests created, question counts, yield coverage,
   questions with text-only explanations (for manual screenshot review).
 - Do NOT commit — Michael reviews first.
@@ -311,52 +313,76 @@ convention, different router). Do not modify any existing file. Finish with a
 ### P1 — Data model, fixture, validation (Opus, medium)
 
 ```text
-Read docs/practice-tests/PLAN.md (sections 2 and 4) and
-docs/practice-tests/CONVENTIONS.md. Where they conflict, CONVENTIONS.md wins on
-file locations; PLAN.md wins on names and schema shape.
+Read docs/practice-tests/PLAN.md (sections 0.5, 2, 4) and
+docs/practice-tests/CONVENTIONS.md. Section 0.5 amendments override the rest
+of PLAN.md; CONVENTIONS.md wins on file locations; PLAN.md wins on names and
+schema shape.
 
-Build the data layer for practice tests:
+Build the data layer for practice tests. This repo is plain JavaScript — no
+TypeScript anywhere:
 
-1. lib/practice/types.ts — exactly the types in PLAN.md §2.2.
-2. lib/practice/content.ts — loaders per PLAN.md §2.3 (server-only).
-3. Content fixture: content/practice/ausom/semester-2/anatomy-1/ with
+1. src/lib/practice/schema.js — zod schemas as the canonical definition of
+   SubjectIndex, PracticeTest, Question, Explanation, exactly the names and
+   fields of PLAN.md §2.2 (zod instead of TS). Add JSDoc typedefs alongside
+   for editor completion. Add zod if it isn't already a dependency.
+2. src/lib/practice/content.js — getSubjectIndex(subject),
+   getTest(subject, testId), listSubjectsWithContent(). IMPORTANT: deploy
+   target is Cloudflare Workers via OpenNext — no runtime fs. Load the JSON
+   bundler-safe: static imports assembled in a generated manifest module, or
+   build-time fs behind force-static + generateStaticParams. Pick the simplest
+   approach that works on Workers and document the choice in a comment.
+3. Fixture content: content/practice/ausom/semester-2/anatomy-1/ with
    index.json, one topic test (upper-limb.json, 5 questions) and one mock
-   (mock-exam.json, 3 questions, each with pastPaperRef). Between them the
-   fixture must exercise: mcq, tf, image explanation (use a placeholder PNG you
-   generate into public/practice/ausom/semester-2/anatomy-1/...), text-only
-   explanation, and both yield values. Mark fixture tests clearly as
-   "[FIXTURE]" in their titles.
-4. scripts/validate-tests.ts + npm script "validate:tests" implementing every
-   check in PLAN.md §2.4 with zod. Human-readable errors, nonzero exit on fail.
+   (mock-exam.json, 3 questions, each with pastPaperRef). Between them,
+   exercise: mcq, tf, image explanation (generate a placeholder PNG into
+   public/practice/ausom/semester-2/anatomy-1/...), text-only explanation,
+   and both yield values. Mark fixture tests "[FIXTURE]" in their titles.
+4. scripts/validate-tests.mjs + npm script "validate:tests" implementing every
+   check in PLAN.md §2.4. This script runs in Node (CI/build time) and may use
+   fs freely. Human-readable errors, nonzero exit on failure.
 
 Acceptance: npm run validate:tests passes on the fixture; temporarily breaking
 a correct index or deleting the placeholder PNG makes it fail with a clear
-message; lint and build pass. Show me the validator output.
+message; lint passes; the production build passes using the same build path CI
+uses (OpenNext/Workers build, not just next build). Show me the validator
+output and which JSON-loading approach you chose.
 ```
 
 ### P2 — Subject page + test list (Opus, medium)
 
 ```text
-Read docs/practice-tests/PLAN.md (sections 1, 4) and
-docs/practice-tests/CONVENTIONS.md. Reuse existing UI components and design
+Read docs/practice-tests/PLAN.md (sections 0.5, 1, 4) and
+docs/practice-tests/CONVENTIONS.md. Section 0.5 overrides the rest of PLAN.md.
+Reuse the HubButton (Stripe-modern) component family and the globals.css
 tokens — the new pages must be indistinguishable in style from the rest of
 studentx.uk.
 
-1. New route /student/ausom/semester-2/[subject]: server component using
-   getSubjectIndex(). Header (subject title, back link to semester page), then
-   a card per test: title, kind badge ("Topic test" / "Mock exam"), question
-   count. Mock exam visually distinct and listed last. Unknown subject → 404.
-2. Update the existing /student/ausom/semester-2 page minimally: subjects that
-   have content (use listSubjectsWithContent()) become links to their subject
-   page; subjects without content keep the current "Soon" treatment. Do not
+1. Slug reconciliation: the semester-2 page's hardcoded SUBJECTS array uses
+   ids med-informatics, histology, physiology; PLAN §1 uses
+   medical-informatics, general-histology, general-physiology. Adopt PLAN's
+   slugs as the single source of truth and update the SUBJECTS array ids
+   (these subjects are comingSoon badges today, so no public URLs break).
+   Before renaming, grep the repo for the old ids and report any other
+   usages; if any exist outside that page, stop and ask me.
+2. New route src/app/[locale]/student/ausom/semester-2/[subject]/page.js:
+   server component using getSubjectIndex(). Header (subject title, back link
+   to the semester page using the locale-aware next-intl Link), then a card
+   per test: title, kind badge ("Topic test" / "Mock exam"), question count.
+   Mock exam visually distinct and listed last. Unknown subject → notFound().
+3. Update the existing semester-2 page minimally: subjects that have content
+   (listSubjectsWithContent()) render as links to their subject page;
+   subjects without content keep the current comingSoon treatment. Do not
    restyle the page.
-3. Empty state: subject with index.json but zero tests shows "Tests coming
+4. Empty state: subject with index.json but zero tests shows "Tests coming
    soon" in the site's style.
+5. UI chrome strings go through next-intl messages per repo convention
+   (en.json only — a missing key trips the missing-message synthetic canary).
 
 Acceptance: with the P1 fixture, /student/ausom/semester-2 shows Anatomy I as
-a live link, the other four still "Soon"; the anatomy-1 page lists 2 tests;
-direct navigation to /student/ausom/semester-2/general-histology 404s or shows
-the Soon state; build passes; mobile layout checked at 375px.
+a live link and the other four still "Soon"; the anatomy-1 page lists the
+topic test and the mock exam (mock last, visually distinct); an unknown
+subject 404s; npm run validate:tests, lint, and npm run cf:build all pass;
+layout checked at 375px. Show me the list of changed files.
 ```
 
 ### P3 — Test player (Opus, **high**)
@@ -539,7 +565,8 @@ Package the skill folder so I can install it. Do not include any test content.
 
 Per subject: gather materials + past papers into folders → run the skill
 (strongest model, high effort) → approve the yield-table checkpoint → review
-generated JSON and screenshots → `npm run validate:tests` → commit → deploy.
+generated JSON and screenshots → `npm run practice:manifest` →
+`npm run validate:tests` → commit → deploy.
 
 Per report batch: open /admin/practice-reports → accept/reject → apply accepted
 fixes to the JSON (bump `version`, update `updatedAt`) → validate → commit →

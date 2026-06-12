@@ -12,7 +12,9 @@
     "test:coverage": "vitest run --coverage",
     "cf:build": "opennextjs-cloudflare build",
     "deploy": "npm run cf:build && opennextjs-cloudflare deploy",
-    "preview": "npm run cf:build && opennextjs-cloudflare preview"
+    "preview": "npm run cf:build && opennextjs-cloudflare preview",
+    "practice:manifest": "node scripts/generate-practice-manifest.mjs",
+    "validate:tests": "node scripts/validate-tests.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.101.0",
@@ -27,7 +29,8 @@
     "react-leaflet": "^5.0.0",
     "resend": "^4.0.0",
     "stripe": "^22.0.0",
-    "topojson-client": "^3.1.0"
+    "topojson-client": "^3.1.0",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@opennextjs/cloudflare": "^1.18.0",
