@@ -55,7 +55,7 @@ Vars in [`wrangler.jsonc`](../../wrangler.jsonc):
 
 | Var | Default | Purpose |
 |---|---|---|
-| `SYNTHETIC_LISTING_ID` | `0100006` | Listing ID to probe. Must be permanently published. |
+| `SYNTHETIC_LISTING_ID` | `0106002` | Listing ID to probe. Must be permanently published. |
 | `SYNTHETIC_ALERT_EMAIL` | `michaeltubehd007@gmail.com` | Where alerts go. |
 
 Secrets (set via `wrangler secret put`, not in `wrangler.jsonc`):
@@ -83,7 +83,7 @@ Body includes the failing check name, reason, and the first 500 chars of the ano
 - `EN_MARKERS_REQUIRED` — must be a unique string from the EN gate copy
 - `EL_MARKERS_FORBIDDEN` — must be a unique string from the EL gate copy that has no English equivalent
 
-**Stable listing ID.** `0100006` is the default. If it ever gets unpublished or removed, swap `SYNTHETIC_LISTING_ID` in `wrangler.jsonc` to another permanently-published listing ID.
+**Stable listing ID.** `0106002` is the default. It must point at a permanently-published listing; the old `0100006` seed ID was retired when prod was reseeded to the `01060xx` scheme, which silently 404'd the API probe (and skipped the four listing-page checks as inconclusive 522s). If it ever gets unpublished or removed, swap `SYNTHETIC_LISTING_ID` in `wrangler.jsonc` to another permanently-published listing ID — confirm it returns 200 from `/api/listings/<id>` with ≥2 distinct `walk_minutes` first.
 
 **Silence temporarily.** Comment out `"*/15 * * * *"` in `wrangler.jsonc` and the matching entry in `cf/worker-entry.mjs` `CRON_ROUTES`, then `npm run cf:build && wrangler deploy`. Re-enable when ready.
 
