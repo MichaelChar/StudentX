@@ -10,10 +10,11 @@ const GlobeLoader = dynamic(() => import('@/components/GlobeLoader'), { ssr: fal
 const CityGlobeLoader = dynamic(() => import('@/components/CityGlobeLoader'), { ssr: false });
 
 // Multi-country hub diagram — renders the hub → country → city neural-net
-// SVG on desktop (≥768 px) and a touch-friendly vertical city list on
-// mobile (<768 px). Both layouts are always in the DOM; CSS media queries
-// toggle visibility so the correct layout shows from first paint with no
-// hydration flash. The animated globe canvas (HubBackground) sits behind
+// SVG on desktop (≥1024 px) and a touch-friendly vertical city list below
+// that (phones AND portrait tablets / landscape phones — the SVG's fixed
+// 1180×620 viewBox shrinks to unreadable label sizes under ~1024 px wide).
+// Both layouts are always in the DOM; CSS media queries toggle visibility
+// so the correct layout shows from first paint with no hydration flash. The animated globe canvas (HubBackground) sits behind
 // the diagram in the parent; per-city sub-trees keep their own Propylaea
 // aesthetic untouched.
 
@@ -512,8 +513,8 @@ export default function HubDiagram() {
 
       {/* Diagram / city list container */}
       <div className="px-5 pt-4 pb-6 md:px-14 md:py-8 flex-1 min-h-0 flex flex-col gap-4">
-        {/* ── Mobile: touch-friendly city list (<768 px) ── */}
-        <div className="md:hidden">
+        {/* ── Mobile / tablet: touch-friendly city list (<1024 px) ── */}
+        <div className="lg:hidden">
           <MobileHubList
             orderedCountries={orderedCountries}
             activeCity={activeCity}
@@ -528,8 +529,8 @@ export default function HubDiagram() {
           />
         </div>
 
-        {/* ── Desktop: neural-net SVG diagram (≥768 px) ── */}
-        <div className="hidden md:block" style={{ flex: 1, position: 'relative', minHeight: 0 }}>
+        {/* ── Desktop: neural-net SVG diagram (≥1024 px) ── */}
+        <div className="hidden lg:block" style={{ flex: 1, position: 'relative', minHeight: 0 }}>
           <svg
             viewBox={`0 0 ${VB_W} ${VB_H}`}
             preserveAspectRatio="xMinYMid meet"
@@ -744,7 +745,7 @@ export default function HubDiagram() {
 
         {/* Desktop search bar */}
         <div
-          className="hidden md:flex"
+          className="hidden lg:flex"
           style={{
             fontSize: 13,
             color: T.inkSoft,
