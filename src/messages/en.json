@@ -909,6 +909,52 @@
       }
     }
   },
+  "admin": {
+    "practiceReports": {
+      "title": "Practice-test reports",
+      "subtitle": "Error reports and edit proposals filed from the question player.",
+      "filterStatus": "Status",
+      "filterSubject": "Subject",
+      "allSubjects": "All subjects",
+      "status": {
+        "open": "Open",
+        "accepted": "Accepted",
+        "rejected": "Rejected",
+        "resolved": "Resolved"
+      },
+      "kind": {
+        "error": "Error",
+        "edit": "Edit"
+      },
+      "empty": "No {status} reports.",
+      "columns": {
+        "date": "Date",
+        "subject": "Subject",
+        "test": "Test",
+        "question": "Question",
+        "kind": "Kind",
+        "status": "Status",
+        "message": "Message"
+      },
+      "expand": "Toggle details",
+      "fields": {
+        "message": "Full message",
+        "proposedChange": "Proposed change",
+        "reporterEmail": "Reporter email",
+        "testVersion": "Test version",
+        "adminNote": "Admin note"
+      },
+      "adminNotePlaceholder": "Internal note (saved with the next status change)…",
+      "viewQuestion": "View question ↗",
+      "actions": {
+        "accept": "Accept",
+        "reject": "Reject",
+        "resolve": "Mark resolved"
+      },
+      "saving": "Saving…",
+      "saveError": "Couldn't save the change. Please try again."
+    }
+  },
   "loaders": {
     "uploading": "Uploading",
     "processing": "Processing",
