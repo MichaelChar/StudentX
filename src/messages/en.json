@@ -845,7 +845,37 @@
       "topicTest": "Topic test",
       "mockExam": "Mock exam",
       "questionCount": "{count, plural, one {# question} other {# questions}}",
-      "emptyState": "Tests coming soon"
+      "emptyState": "Tests coming soon",
+      "player": {
+        "progress": "Question {current} of {total}",
+        "progressBarLabel": "Test progress",
+        "reportIssue": "Report an issue",
+        "next": "Next question",
+        "seeResults": "See results",
+        "resultCorrect": "Correct",
+        "resultIncorrect": "Not quite",
+        "correctAnswer": "Correct answer",
+        "yourAnswer": "Your answer",
+        "optionPosition": "Option {number}",
+        "viewFullSize": "View full-size image",
+        "lightboxLabel": "Explanation image",
+        "closeLightbox": "Close image",
+        "results": {
+          "title": "Your results",
+          "scoreValue": "{score} / {total}",
+          "percent": "{percent}%",
+          "byTopic": "By topic",
+          "topicScore": "{correct} / {total}",
+          "reviewMistakes": "Review your mistakes",
+          "allCorrect": "Perfect score — nothing to review.",
+          "retry": "Retry test"
+        },
+        "review": {
+          "label": "Review",
+          "backToResults": "Back to results",
+          "backToTests": "Back to tests"
+        }
+      }
     }
   },
   "loaders": {
