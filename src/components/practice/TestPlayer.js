@@ -9,6 +9,7 @@ import QuestionCard from './QuestionCard';
 import FeedbackPanel from './FeedbackPanel';
 import ScoreSummary from './ScoreSummary';
 import Lightbox from './Lightbox';
+import ReportIssueModal from './ReportIssueModal';
 import { PrimaryButton, TextButton } from './PlayerButton';
 
 const ACCENT = '#635BFF';
@@ -250,8 +251,10 @@ function ResumeBanner({ current, total, onContinue, onStartOver, t }) {
 
 /* ---------- player ---------- */
 
-// `onReportIssue` is the stable hook P5 will pass to wire up the ReportIssueModal.
-// In P3 it is left undefined, so the "Report an issue" button renders but is inert.
+// `onReportIssue` is the stable hook from P3. P5 wires it to the ReportIssueModal:
+// when no explicit handler is passed (the normal case), the player owns its own
+// modal state and the "Report an issue" button opens it. A parent may still
+// override by passing `onReportIssue` (e.g. for testing).
 export default function TestPlayer(props) {
   return (
     <Suspense fallback={<PlayerSkeleton />}>
@@ -271,6 +274,27 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
   const [lightbox, setLightbox] = useState(null); // { src, alt } | null
   const openLightbox = useCallback((src, alt) => setLightbox({ src, alt }), []);
   const closeLightbox = useCallback(() => setLightbox(null), []);
+
+  // Report-issue modal. The P3 hook passes { subject, testId, questionId, version };
+  // store it as the modal's context (mapping version → testVersion). A parent-
+  // supplied `onReportIssue` wins; otherwise we open our own modal.
+  const [reportCtx, setReportCtx] = useState(null);
+  const handleReportIssue = useCallback(
+    (ctx) => {
+      if (onReportIssue) {
+        onReportIssue(ctx);
+        return;
+      }
+      setReportCtx({
+        subject: ctx.subject,
+        testId: ctx.testId,
+        questionId: ctx.questionId,
+        testVersion: ctx.version,
+      });
+    },
+    [onReportIssue],
+  );
+  const closeReport = useCallback(() => setReportCtx(null), []);
 
   // Live attempt state.
   const [attempt, setAttempt] = useState(() => buildAttempt(test));
@@ -404,7 +428,7 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
   // Keyboard: 1–5 selects an option while ANSWERING; Enter advances once
   // ANSWERED. Disabled in finished / review / lightbox-open states.
   useEffect(() => {
-    if (!mounted || finished || deepLinkQuestion || lightbox || resume) return undefined;
+    if (!mounted || finished || deepLinkQuestion || lightbox || resume || reportCtx) return undefined;
     function onKey(e) {
       const el = e.target;
       if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) {
@@ -425,7 +449,17 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [mounted, finished, deepLinkQuestion, lightbox, resume, answers, current, attempt, handleSelect, handleAdvance]);
+  }, [mounted, finished, deepLinkQuestion, lightbox, resume, reportCtx, answers, current, attempt, handleSelect, handleAdvance]);
+
+  const reportEl = reportCtx ? (
+    <ReportIssueModal
+      subject={reportCtx.subject}
+      testId={reportCtx.testId}
+      questionId={reportCtx.questionId}
+      testVersion={reportCtx.testVersion}
+      onClose={closeReport}
+    />
+  ) : null;
 
   const lightboxEl = lightbox ? (
     <Lightbox
@@ -581,7 +615,7 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
         >
           <TextButton
             onClick={() =>
-              onReportIssue?.({ subject, testId: test.id, questionId: aq.id, version: test.version })
+              handleReportIssue({ subject, testId: test.id, questionId: aq.id, version: test.version })
             }
           >
             {t('reportIssue')}
@@ -594,6 +628,7 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
         </div>
       </Shell>
       {lightboxEl}
+      {reportEl}
     </>
   );
 }

@@ -885,6 +885,27 @@
           "backToResults": "Back to results",
           "backToTests": "Back to tests"
         }
+      },
+      "report": {
+        "title": "Report an issue",
+        "close": "Close",
+        "kindError": "Report an error",
+        "kindEdit": "Propose an edit",
+        "messageLabel": "What's wrong?",
+        "messagePlaceholder": "Describe the problem with this question…",
+        "messageHint": "At least 5 characters",
+        "charCount": "{count} / {max}",
+        "proposedChangeLabel": "Suggested fix (optional)",
+        "proposedChangePlaceholder": "How should it read instead?",
+        "emailLabel": "Your email (optional)",
+        "emailPlaceholder": "you@example.com",
+        "emailHint": "Only if you'd like us to follow up.",
+        "submit": "Send report",
+        "submitting": "Sending…",
+        "successTitle": "Thanks — we review every report.",
+        "successBody": "We read every report and use it to fix and improve these questions.",
+        "error": "Something went wrong and your report wasn't sent. Please try again.",
+        "done": "Done"
       }
     }
   },
