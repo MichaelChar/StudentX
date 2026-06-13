@@ -10,6 +10,10 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    // OpenNext/Cloudflare build output (gitignored, like .next/). Generated
+    // by `npm run cf:build`; not ours to lint. CI runs lint before build so
+    // it never sees this, but a local cf:build leaves it behind.
+    ".open-next/**",
     // Sub-agent worktrees (PR #53 gitignore). Each agent worktree is a
     // full copy of the repo including its own .next/ build artifacts;
     // without this ignore, eslint walks them and duplicates every
