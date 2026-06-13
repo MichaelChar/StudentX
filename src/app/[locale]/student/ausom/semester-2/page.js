@@ -1,6 +1,7 @@
 import { setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import HubButton from '@/components/HubButton';
+import { listSubjectsWithContent } from '@/lib/practice/content';
 
 export function generateMetadata() {
   return { title: 'Semester 2 — AUSoM Practice Tests' };
@@ -12,15 +13,19 @@ export default async function Semester2Page({ params }) {
   return <Semester2Content />;
 }
 
+// Slugs are the single source of truth shared with content/practice/... and
+// PLAN.md §1. Subjects that have published tests (listSubjectsWithContent)
+// link to their subject page; the rest keep the "Soon" treatment.
 const SUBJECTS = [
-  { id: 'med-informatics', label: 'Medical Informatics' },
-  { id: 'anatomy-1',       label: 'Anatomy I' },
-  { id: 'histology',       label: 'General Histology' },
-  { id: 'biochemistry-1',  label: 'Biochemistry I' },
-  { id: 'physiology',      label: 'General Physiology' },
+  { id: 'medical-informatics', label: 'Medical Informatics' },
+  { id: 'anatomy-1',           label: 'Anatomy I' },
+  { id: 'general-histology',   label: 'General Histology' },
+  { id: 'biochemistry-1',      label: 'Biochemistry I' },
+  { id: 'general-physiology',  label: 'General Physiology' },
 ];
 
 function Semester2Content() {
+  const withContent = new Set(listSubjectsWithContent());
   return (
     <div>
       <div style={{ maxWidth: 460, margin: '0 auto', padding: '32px 24px 0' }}>
@@ -58,14 +63,23 @@ function Semester2Content() {
             maxWidth: 460,
           }}
         >
-          {SUBJECTS.map((s) => (
-            <HubButton
-              key={s.id}
-              label={s.label}
-              subtext=""
-              comingSoon
-            />
-          ))}
+          {SUBJECTS.map((s) =>
+            withContent.has(s.id) ? (
+              <HubButton
+                key={s.id}
+                label={s.label}
+                subtext=""
+                href={`/student/ausom/semester-2/${s.id}`}
+              />
+            ) : (
+              <HubButton
+                key={s.id}
+                label={s.label}
+                subtext=""
+                comingSoon
+              />
+            )
+          )}
         </div>
       </section>
     </div>

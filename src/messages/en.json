@@ -839,6 +839,13 @@
       "gateTitle": "Sign in to save listings",
       "gateBody": "Create a free student account to build your shortlist and pick up right where you left off — it takes about a minute.",
       "close": "Close"
+    },
+    "practice": {
+      "back": "Semester 2",
+      "topicTest": "Topic test",
+      "mockExam": "Mock exam",
+      "questionCount": "{count, plural, one {# question} other {# questions}}",
+      "emptyState": "Tests coming soon"
     }
   },
   "loaders": {
