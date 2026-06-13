@@ -846,6 +846,8 @@
       "mockExam": "Mock exam",
       "questionCount": "{count, plural, one {# question} other {# questions}}",
       "emptyState": "Tests coming soon",
+      "bestScore": "Best {percent}%",
+      "attemptCount": "{count, plural, one {# attempt} other {# attempts}}",
       "player": {
         "progress": "Question {current} of {total}",
         "progressBarLabel": "Test progress",
@@ -860,6 +862,12 @@
         "viewFullSize": "View full-size image",
         "lightboxLabel": "Explanation image",
         "closeLightbox": "Close image",
+        "resume": {
+          "title": "Resume your attempt?",
+          "description": "Pick up where you left off, from question {current} of {total}.",
+          "continue": "Continue",
+          "startOver": "Start over"
+        },
         "results": {
           "title": "Your results",
           "scoreValue": "{score} / {total}",
@@ -868,7 +876,9 @@
           "topicScore": "{correct} / {total}",
           "reviewMistakes": "Review your mistakes",
           "allCorrect": "Perfect score — nothing to review.",
-          "retry": "Retry test"
+          "retry": "Retry test",
+          "previousAttempts": "Previous attempts",
+          "previousAttemptScore": "{score} / {total} · {percent}%"
         },
         "review": {
           "label": "Review",

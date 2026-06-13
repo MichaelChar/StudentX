@@ -89,7 +89,62 @@ function WrongRow({ position, stem, onClick, t }) {
   );
 }
 
-export default function ScoreSummary({ attempt, answers, t, onReview, onRetry }) {
+// Past attempts for this test (the current completion excluded — the parent
+// reads them before saving the new attempt), most recent first.
+function PreviousAttempts({ attempts, t }) {
+  const rows = [...attempts]
+    .sort((a, b) => String(b.finishedAt).localeCompare(String(a.finishedAt)))
+    .map((a) => {
+      const pct = a.total ? Math.round((a.score / a.total) * 100) : 0;
+      const when = a.finishedAt ? new Date(a.finishedAt) : null;
+      const date =
+        when && !Number.isNaN(when.getTime())
+          ? when.toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' })
+          : '';
+      return { key: a.finishedAt, date, score: a.score, total: a.total, pct };
+    });
+
+  return (
+    <section style={{ marginTop: 28 }}>
+      <h2 style={sectionHeading}>{t('results.previousAttempts')}</h2>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+        {rows.map((row) => (
+          <div
+            key={row.key}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: 12,
+              padding: '11px 15px',
+              borderRadius: 12,
+              border: '1px solid rgba(10,37,64,0.08)',
+              background: '#ffffff',
+            }}
+          >
+            <span style={{ fontSize: 14, color: 'rgba(10,37,64,0.6)' }}>{row.date}</span>
+            <span
+              style={{
+                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontSize: 14.5,
+                fontWeight: 600,
+                color: INK,
+              }}
+            >
+              {t('results.previousAttemptScore', {
+                score: row.score,
+                total: row.total,
+                percent: row.pct,
+              })}
+            </span>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+export default function ScoreSummary({ attempt, answers, t, onReview, onRetry, previousAttempts = [] }) {
   const questions = attempt.questions;
   const total = questions.length;
   const score = questions.reduce((acc, q, i) => acc + (answers[i] === q.correct ? 1 : 0), 0);
@@ -200,6 +255,8 @@ export default function ScoreSummary({ attempt, answers, t, onReview, onRetry })
           </div>
         )}
       </section>
+
+      {previousAttempts.length > 0 && <PreviousAttempts attempts={previousAttempts} t={t} />}
 
       <div style={{ marginTop: 32 }}>
         <PrimaryButton onClick={onRetry}>{t('results.retry')}</PrimaryButton>

@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import TestCard from '@/components/practice/TestCard';
+import TestCardProgress from '@/components/practice/TestCardProgress';
 import { getSubjectIndex, listSubjectsWithContent } from '@/lib/practice/content';
 
 // Content lives in the bundled manifest (no runtime fs on Workers), so we can
@@ -90,14 +91,16 @@ export default async function SubjectPage({ params }) {
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
               {tests.map((test) => (
-                <TestCard
-                  key={test.id}
-                  href={`/student/ausom/semester-2/${subject}/${test.id}`}
-                  title={test.title}
-                  kind={test.kind}
-                  kindLabel={test.kind === 'mock' ? t('mockExam') : t('topicTest')}
-                  countLabel={t('questionCount', { count: test.questionCount })}
-                />
+                <div key={test.id} style={{ position: 'relative' }}>
+                  <TestCard
+                    href={`/student/ausom/semester-2/${subject}/${test.id}`}
+                    title={test.title}
+                    kind={test.kind}
+                    kindLabel={test.kind === 'mock' ? t('mockExam') : t('topicTest')}
+                    countLabel={t('questionCount', { count: test.questionCount })}
+                  />
+                  <TestCardProgress subject={subject} testId={test.id} />
+                </div>
               ))}
             </div>
           )}
