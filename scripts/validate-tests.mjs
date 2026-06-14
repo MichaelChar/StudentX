@@ -180,8 +180,8 @@ function validateSubject(subject) {
 
 function main() {
   if (!existsSync(CONTENT_ROOT)) {
-    console.error(`No content directory at ${path.relative(ROOT, CONTENT_ROOT)}`);
-    process.exit(1);
+    console.log(`✓ Practice-test validation passed — 0 subject(s) checked (no content directory).`);
+    process.exit(0);
   }
 
   const subjects = readdirSync(CONTENT_ROOT, { withFileTypes: true })

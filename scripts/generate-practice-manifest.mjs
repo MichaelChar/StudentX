@@ -39,15 +39,12 @@ function importPath(absJsonPath) {
 }
 
 function main() {
-  if (!existsSync(CONTENT_ROOT)) {
-    console.error(`No content directory at ${CONTENT_ROOT}`);
-    process.exit(1);
-  }
-
-  const subjects = readdirSync(CONTENT_ROOT, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
-    .map((d) => d.name)
-    .sort();
+  const subjects = existsSync(CONTENT_ROOT)
+    ? readdirSync(CONTENT_ROOT, { withFileTypes: true })
+        .filter((d) => d.isDirectory())
+        .map((d) => d.name)
+        .sort()
+    : [];
 
   const imports = [];
   const entries = [];
