@@ -4,17 +4,9 @@
 // Static imports make practice-test JSON part of the bundle, so the loaders in
 // content.js need no runtime fs (required for Cloudflare Workers / OpenNext).
 
-import anatomy1Index from '../../../content/practice/ausom/semester-2/anatomy-1/index.json';
-import anatomy1TestMockExam from '../../../content/practice/ausom/semester-2/anatomy-1/mock-exam.json';
-import anatomy1TestUpperLimb from '../../../content/practice/ausom/semester-2/anatomy-1/upper-limb.json';
+
 
 /** @type {Record<string, { index: import('./schema.js').SubjectIndex, tests: Record<string, import('./schema.js').PracticeTest> }>} */
 export const MANIFEST = {
-  "anatomy-1": {
-    index: anatomy1Index,
-    tests: {
-      "mock-exam": anatomy1TestMockExam,
-      "upper-limb": anatomy1TestUpperLimb,
-    },
-  },
+
 };
