@@ -16,7 +16,7 @@ function ArrowUpRight({ style }) {
   );
 }
 
-export default function HubButton({ label, subtext, href, external = false, comingSoon = false }) {
+export default function HubButton({ label, subtext, href, external = false, comingSoon = false, illustration }) {
   const [hover, setHover] = useState(false);
 
   const active = !comingSoon && hover;
@@ -91,6 +91,20 @@ export default function HubButton({ label, subtext, href, external = false, comi
 
   const inner = (
     <>
+      {/* Decorative illustration — bleeds off the right edge */}
+      {illustration && (
+        <div style={{
+          position: 'absolute',
+          top: -15,
+          left: 150,
+          opacity: 0.28,
+          pointerEvents: 'none',
+          zIndex: 1,
+        }}>
+          {illustration}
+        </div>
+      )}
+
       {comingSoon ? (
         <span aria-label="Coming soon" style={badgeStyle}>Soon</span>
       ) : (
