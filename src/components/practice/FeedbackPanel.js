@@ -13,7 +13,10 @@
 
 const INK = '#0a2540';
 
-const SUCCESS = { text: '#0f7a3d', bg: 'rgba(22,163,74,0.12)', border: 'rgba(22,163,74,0.32)' };
+// Green darkened from #0f7a3d → #0d7038 so the "Correct" pill text clears WCAG
+// AA (4.5:1): on this 0.12-alpha green pill over parchment the lighter green was
+// 4.38:1. #0d7038 is 5.0:1 and visually near-identical. (QA, P7.)
+const SUCCESS = { text: '#0d7038', bg: 'rgba(22,163,74,0.12)', border: 'rgba(22,163,74,0.32)' };
 const DANGER = { text: '#b42318', bg: 'rgba(220,38,38,0.10)', border: 'rgba(220,38,38,0.30)' };
 
 function CheckIcon() {

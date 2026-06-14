@@ -370,7 +370,9 @@ const inputStyle = {
   fontFamily: 'var(--font-inter, system-ui, sans-serif)',
   color: INK,
   background: '#ffffff',
-  outline: 'none',
+  // No `outline: 'none'` — inline styles beat the stylesheet, so it would
+  // suppress the global :focus-visible iris ring and leave keyboard users with
+  // no visible focus on these fields (WCAG 2.4.7). Let the global ring show. (QA, P7.)
 };
 
 const textareaStyle = {
