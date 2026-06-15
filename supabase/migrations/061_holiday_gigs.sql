@@ -125,3 +125,19 @@ VALUES
   ('00000000-0000-4000-a000-000000000005', 'Marine Conservation Volunteer', 'Costa Azul Trust', 'Join beach clean-ups and sea-turtle nesting surveys along the Valencia coast. Food and lodging covered.', false, NULL, 'month', 'EUR', 'ES', 'Valencia', 39.4699, -0.3763, '2026-07-05', 4, 'apply@costaazultrust.example'),
   ('00000000-0000-4000-a000-000000000006', 'Summer Camp Counsellor', 'Thames Adventure Camps', 'Lead outdoor activities for 8–14 year-olds at a residential camp outside London. Training provided.', true, 1600, 'month', 'GBP', 'UK', 'London', 51.5074, -0.1278, '2026-07-10', 6, 'recruit@thamescamps.example')
 ON CONFLICT (gig_id) DO NOTHING;
+
+-- Real listing sourced from Caritas Bergeinsatz (project F12023), translated to
+-- English. Photos are hotlinked from the org's public asset CDN (allow-listed in
+-- next.config.mjs img-src + images.remotePatterns).
+INSERT INTO gigs (gig_id, title, employer_name, description, is_paid, pay_amount, pay_period, currency, country_code, city, lat, lng, available_from, min_duration_weeks, photos, contact_info)
+VALUES
+  (
+    '00000000-0000-4000-a000-000000000007',
+    'Mountain Farm Volunteer',
+    'Caritas Mountain Aid (Bergeinsatz)',
+    E'A family-run mountain farm at the foot of the Jura in canton Vaud (780 m) needs volunteer help. The farm raises cattle and turkeys and produces forage in mountain zone I, and the family also keeps poultry, sheep, horses, dogs and cats, living largely self-sufficiently. The parents and their adult son share the work — the son looks after the cattle and the machinery, while the mother handles the administration, the horses, the vegetable garden and the non-mechanised jobs. After the son was recently injured, the family urgently needs an extra pair of hands.\n\nYou would help with a real mix of mountain-farm life: garden and household chores, stable and farm work, forestry and woodcutting, pasture maintenance and clearing, and looking after fences and paddocks. Good physical fitness is important, and some French is a plus.\n\nYou will have your own bedroom with a private bathroom and share meals with the family. This is unpaid volunteer work — board and lodging are provided.',
+    false, NULL, 'month', 'CHF', 'CH', 'Canton Vaud (Jura foothills)', 46.6500, 6.5000, NULL, 4,
+    '["https://assets.bergeinsatz.ch/sites/default/files/styles/gatsby_header_landscape_xl/public/2026-04/f12023_photo009_2026.jpg?h=a0af407e&itok=QzIKnYTE","https://assets.bergeinsatz.ch/sites/default/files/styles/gatsby_carousel_xl/public/2026-04/f12023_photo001_2026_0.jpg?h=d08a7c6c&itok=kkkpjK_U","https://assets.bergeinsatz.ch/sites/default/files/styles/gatsby_carousel_xl/public/2026-04/f12023_photo002_2026_0.jpg?h=0ba8175b&itok=LNWHSJnV","https://assets.bergeinsatz.ch/sites/default/files/styles/gatsby_carousel_xl/public/2026-04/f12023_photo003_2026_0.jpg?h=cb88ca33&itok=FbBSfQCv","https://assets.bergeinsatz.ch/sites/default/files/styles/gatsby_carousel_xl/public/2026-04/f12023_photo004_2026_0.jpg?h=e5eaf244&itok=KhQuWKet"]'::jsonb,
+    'https://www.bergeinsatz.ch/fr/f12023/'
+  )
+ON CONFLICT (gig_id) DO NOTHING;

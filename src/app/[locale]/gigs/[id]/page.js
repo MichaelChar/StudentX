@@ -1,5 +1,5 @@
+import Image from 'next/image';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
-import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { getSupabase } from '@/lib/supabase';
 import { transformGig } from '@/lib/transformGig';
@@ -45,6 +45,9 @@ export default async function GigDetailPage({ params }) {
   }
 
   const gig = transformGig(data);
+  const photos = (gig.photos || []).filter(
+    (p) => typeof p === 'string' && p.startsWith('http')
+  );
   const periodLabels = {
     hour: '/hr',
     week: '/wk',
@@ -63,7 +66,37 @@ export default async function GigDetailPage({ params }) {
           ← {t('back')}
         </Link>
 
-        <div className="mt-4 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
+        {photos.length > 0 && (
+          <div className="mt-4 overflow-hidden rounded-sm">
+            <div className="relative aspect-[16/9] w-full bg-parchment">
+              <Image
+                src={photos[0]}
+                alt={gig.title}
+                fill
+                priority
+                sizes="(max-width: 1024px) 100vw, 896px"
+                className="object-cover"
+              />
+            </div>
+            {photos.length > 1 && (
+              <div className="mt-2 grid grid-cols-4 gap-2">
+                {photos.slice(1, 5).map((src, i) => (
+                  <div key={i} className="relative aspect-[4/3] bg-parchment">
+                    <Image
+                      src={src}
+                      alt={`${gig.title} ${i + 2}`}
+                      fill
+                      sizes="(max-width: 1024px) 25vw, 220px"
+                      className="rounded-sm object-cover"
+                    />
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
           <article>
             <p className="label-caps text-night/50">
               {gig.country_flag ? `${gig.country_flag} ` : ''}

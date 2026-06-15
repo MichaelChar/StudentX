@@ -14,7 +14,8 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.js');
 //     covered by 'unsafe-inline'.
 //   - img-src: static.wixstatic.com (listing photos), Supabase storage
 //     (uploaded photos), *.tile.openstreetmap.org (map tiles), unpkg.com
-//     (Leaflet marker PNGs); all listed below.
+//     (Leaflet marker PNGs), assets.bergeinsatz.ch (Holiday Gigs seed
+//     photos); all listed below.
 //   - connect-src: Supabase REST/Auth (https) + Realtime (wss). The wss
 //     scheme is required separately — Safari (and CSP3 spec) treat
 //     `https://x` as scheme-pinned and block `wss://x` without an explicit
@@ -56,7 +57,7 @@ const SECURITY_HEADERS = [
       "default-src 'self'",
       `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org https://unpkg.com",
+      "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org https://unpkg.com https://assets.bergeinsatz.ch",
       "font-src 'self' data: https://fonts.gstatic.com",
       "connect-src 'self' https://ecluqurlfbvkxrnoyhaq.supabase.co wss://ecluqurlfbvkxrnoyhaq.supabase.co",
       "object-src 'none'",
@@ -202,6 +203,11 @@ const nextConfig = {
         protocol: "https",
         hostname: "ecluqurlfbvkxrnoyhaq.supabase.co",
         pathname: "/storage/v1/object/public/**",
+      },
+      {
+        // Holiday Gigs seed photos (Caritas Bergeinsatz listings).
+        protocol: "https",
+        hostname: "assets.bergeinsatz.ch",
       },
     ],
   },

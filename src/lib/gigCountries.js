@@ -45,6 +45,13 @@ export const GIG_COUNTRIES = [
     center: [46.2276, 2.2137],
     zoom: 5,
   },
+  {
+    code: 'CH',
+    name: 'Switzerland',
+    flag: '🇨🇭',
+    center: [46.8182, 8.2275],
+    zoom: 7,
+  },
 ];
 
 const BY_CODE = new Map(GIG_COUNTRIES.map((c) => [c.code, c]));
