@@ -115,9 +115,11 @@ export default function HubButton({ label, subtext, href, external = false, comi
       <div style={{ flex: 1 }} />
       <div>
         <div style={labelStyle}>{label}</div>
-        <div style={{ marginTop: 5, fontSize: 13.5, lineHeight: 1.4, color: 'rgba(10,37,64,0.6)' }}>
-          {subtext}
-        </div>
+        {subtext && (
+          <div style={{ marginTop: 5, fontSize: 13.5, lineHeight: 1.4, color: 'rgba(10,37,64,0.6)' }}>
+            {subtext}
+          </div>
+        )}
       </div>
     </>
   );
