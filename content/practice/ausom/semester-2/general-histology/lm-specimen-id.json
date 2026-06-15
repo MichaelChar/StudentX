@@ -4,8 +4,8 @@
   "title": "Laboratory test, Light Microscope",
   "kind": "topic",
   "description": "Flashcards: study each light-microscopy lab specimen, then hit Answer to reveal the features to identify. Slides from the General Histology review slideshow; features from the GH specimen notes.",
-  "version": 1,
-  "updatedAt": "2026-06-14",
+  "version": 2,
+  "updatedAt": "2026-06-15",
   "questions": [
     {
       "id": "q01",
@@ -28,7 +28,9 @@
       "imageCaption": "Light micrographs — H&E (left) and elastic / Weigert stain (right)",
       "explanation": {
         "text": "Artery vs vein.\nARTERY: thick muscular wall (tunica media); round lumen; internal & external elastic laminae (best seen with elastic stain); thin adventitia; no valves.\nVEIN: thin media; wider, slit-like lumen; less elastin; abundant adventitia; valves (paired intimal folds).\nThe round lumen + thick media + elastic laminae give it away as the artery.",
-        "source": "GH Notes on specimens #11 · slideshow p.4"
+        "source": "GH Notes on specimens #11 · slideshow p.4",
+        "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q02-answer.jpg",
+        "imageAlt": "Annotated light micrographs (H&E and elastic stain) comparing artery and vein."
       },
       "topic": "cardiovascular",
       "yield": "high"
@@ -54,7 +56,9 @@
       "imageCaption": "Light micrographs, H&E",
       "explanation": {
         "text": "Large intestine (colon) — no villi, abundant goblet cells.\n• Mucosa: simple columnar epithelium with many goblet cells; flat luminal surface (no villi)\n• Lamina propria: straight, simple tubular glands (crypts of Lieberkühn)\n• Muscularis: smooth muscle (spindle cells, one oval central nucleus, no striations)\nSmall intestine would show villi; stomach shows gastric pits.",
-        "source": "GH Notes on specimens #3 · slideshow p.7"
+        "source": "GH Notes on specimens #3 · slideshow p.7",
+        "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q04-answer.jpg",
+        "imageAlt": "Annotated light micrograph of large intestine labelling mucosa, submucosa and muscularis propria."
       },
       "topic": "digestive",
       "yield": "high"
@@ -67,7 +71,9 @@
       "imageCaption": "Light micrographs, H&E",
       "explanation": {
         "text": "Palatine tonsil — surface epithelium + crypts is the key.\n• Stratified squamous non-keratinized epithelium lining the surface and the crypts, densely infiltrated by lymphocytes\n• Many secondary lymphoid nodules (with germinal centers) around the crypts\n• Underlying dense connective tissue forms a partial capsule\nUnlike a lymph node, a tonsil has surface epithelium/crypts and no subcapsular sinus.",
-        "source": "GH Notes on specimens #21 · slideshow p.8"
+        "source": "GH Notes on specimens #21 · slideshow p.8",
+        "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q05-answer.jpg",
+        "imageAlt": "Annotated light micrograph of palatine tonsil: epithelium, crypts, secondary lymphoid nodules and hemicapsule."
       },
       "topic": "lymphoid",
       "yield": "medium"
@@ -80,7 +86,9 @@
       "imageCaption": "Light micrographs, H&E",
       "explanation": {
         "text": "Heart — cardiac muscle.\n• Branching cells joined by intercalated discs; ONE central nucleus per cell; cross-striations (seen longitudinally, not in transverse)\n• Pale, swollen Purkinje fibres in the sub-endocardium (few myofibrils, much glycogen, no T-tubules) — the conduction system\n• Wall layers: endocardium / myocardium / epicardium\nSkeletal muscle has peripheral, multiple nuclei and no branching; smooth muscle has no striations.",
-        "source": "GH Notes on specimens #14 · slideshow p.10"
+        "source": "GH Notes on specimens #14 · slideshow p.10",
+        "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q06-answer.jpg",
+        "imageAlt": "Annotated light micrograph of cardiac muscle labelling nuclei (N) and intercalated discs (I)."
       },
       "topic": "muscle",
       "yield": "high"
@@ -106,7 +114,9 @@
       "imageCaption": "Light micrographs, H&E",
       "explanation": {
         "text": "Thymus — lobules with cortex/medulla and Hassall corpuscles, no nodules.\n• Capsule sends septa that divide it into incompletely separated lobules\n• Cortex: darker, packed immature T-lymphoblasts (thymocytes); fewer epithelial cells\n• Medulla: paler; fewer, larger, more mature lymphocytes; more thymic epithelial cells; Hassall (thymic) corpuscles (whorls of epithelial cells)\n• No lymphoid nodules and no subcapsular sinus (vs lymph node).",
-        "source": "GH Notes on specimens #22 · slideshow p.13"
+        "source": "GH Notes on specimens #22 · slideshow p.13",
+        "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q08-answer.jpg",
+        "imageAlt": "Annotated light micrograph of thymus lobules with a Hassall's corpuscle inset."
       },
       "topic": "lymphoid",
       "yield": "medium"
@@ -119,7 +129,9 @@
       "imageCaption": "Light micrograph, H&E",
       "explanation": {
         "text": "Lymph node.\n• Dense CT capsule with trabeculae; subcapsular (marginal) sinus just beneath\n• Cortex: lymphoid nodules (B cells; with/without germinal centers)\n• Paracortex: T cells + high endothelial venules\n• Medulla: medullary cords (B cells, plasma cells) + medullary sinuses\nThe capsule + subcapsular sinus + cortex/medulla pattern (and no central arterioles) separate it from spleen and thymus.",
-        "source": "GH Notes on specimens #23 · slideshow p.14"
+        "source": "GH Notes on specimens #23 · slideshow p.14",
+        "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q09-answer.jpg",
+        "imageAlt": "Annotated light micrograph of a lymph node: capsule, cortex, paracortex and medulla."
       },
       "topic": "lymphoid",
       "yield": "high"
@@ -132,7 +144,9 @@
       "imageCaption": "Light micrograph, H&E",
       "explanation": {
         "text": "Spleen — the central arteriole in the white pulp is the clue.\n• Capsule + trabeculae of dense CT; reticular stroma\n• White pulp (immune): periarteriolar lymphoid sheaths (T cells) around central arterioles + lymphoid nodules (B cells)\n• Red pulp (blood filtration): splenic (Billroth) cords + blood-filled venous sinusoids\nNo cortex/medulla and no subcapsular sinus (vs lymph node); the central arteriole within lymphoid tissue is diagnostic.",
-        "source": "GH Notes on specimens #24 · slideshow p.15"
+        "source": "GH Notes on specimens #24 · slideshow p.15",
+        "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q10-answer.jpg",
+        "imageAlt": "Annotated light micrograph of spleen labelling capsule, trabecula and white/red pulp."
       },
       "topic": "lymphoid",
       "yield": "medium"
@@ -145,7 +159,9 @@
       "imageCaption": "Light micrographs, H&E",
       "explanation": {
         "text": "Hyaline cartilage.\n• Chondrocytes sit in lacunae; isogenous (cell-nest) groups lie deeper in the matrix\n• Peripheral chondroblasts beneath a perichondrium (dense irregular CT)\n• Matrix rich in collagen II & GAGs; basophilic territorial matrix rings each lacuna\n• Avascular — no Haversian systems, which distinguishes it from bone.",
-        "source": "GH Notes on specimens #8 · slideshow p.22"
+        "source": "GH Notes on specimens #8 · slideshow p.22",
+        "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q11-answer.jpg",
+        "imageAlt": "Annotated light micrograph of hyaline cartilage: perichondrium, chondroblasts, isogenous groups and matrix."
       },
       "topic": "skeletal-tissue",
       "yield": "high"
@@ -158,7 +174,9 @@
       "imageCaption": "Undecalcified ground section, transmitted light",
       "explanation": {
         "text": "Compact (lamellar) bone — ground preparation.\n• Osteons (Haversian systems): concentric lamellae around a central Haversian canal (vessels, nerves)\n• Osteocytes in lacunae, interconnected by canaliculi; interstitial & circumferential lamellae between osteons\n• Volkmann (perforating) canals link Haversian canals; cement lines outline each osteon\n• Cells: osteoblasts (build matrix), osteoclasts (resorb, in Howship lacunae).",
-        "source": "GH Notes on specimens #9 · slideshow p.23"
+        "source": "GH Notes on specimens #9 · slideshow p.23",
+        "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q12-answer.jpg",
+        "imageAlt": "Annotated light micrograph of lamellar bone: osteon, osteocyte and calcified matrix."
       },
       "topic": "skeletal-tissue",
       "yield": "high"
