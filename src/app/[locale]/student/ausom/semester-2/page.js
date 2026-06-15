@@ -1,6 +1,7 @@
 import { setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import HubButton from '@/components/HubButton';
+import { listSubjectsWithContent } from '@/lib/practice/content';
 
 export function generateMetadata() {
   return { title: 'Semester 2 — AUSoM Practice Tests' };
@@ -94,6 +95,11 @@ const SUBJECTS = [
 ];
 
 function Semester2Content() {
+  // A subject becomes clickable the moment it has published content (an
+  // index.json in the manifest); the rest keep the "Soon" treatment. This is
+  // the single gate — adding content is all it takes to light a card up.
+  const published = new Set(listSubjectsWithContent());
+
   return (
     <div>
       <div style={{ maxWidth: 460, margin: '0 auto', padding: '32px 24px 0' }}>
@@ -131,15 +137,19 @@ function Semester2Content() {
             maxWidth: 460,
           }}
         >
-          {SUBJECTS.map((s) => (
-            <HubButton
-              key={s.id}
-              label={s.label}
-              subtext=""
-              comingSoon
-              illustration={s.illustration}
-            />
-          ))}
+          {SUBJECTS.map((s) => {
+            const live = published.has(s.id);
+            return (
+              <HubButton
+                key={s.id}
+                label={s.label}
+                subtext=""
+                href={live ? `/student/ausom/semester-2/${s.id}` : undefined}
+                comingSoon={!live}
+                illustration={s.illustration}
+              />
+            );
+          })}
         </div>
       </section>
     </div>
