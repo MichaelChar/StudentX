@@ -15,9 +15,11 @@
 import { z } from 'zod';
 
 /**
- * @typedef {'mcq' | 'tf'} QuestionType
+ * @typedef {'mcq' | 'tf' | 'reveal'} QuestionType
+ * 'reveal' = a flashcard: fixed prompt + image, no options; the feature list is
+ * revealed from `explanation` on demand.
  */
-export const QuestionTypeSchema = z.enum(['mcq', 'tf']);
+export const QuestionTypeSchema = z.enum(['mcq', 'tf', 'reveal']);
 
 /**
  * @typedef {Object} Explanation
@@ -49,9 +51,12 @@ export const ExplanationSchema = z
  * @typedef {Object} Question
  * @property {string} id            Stable slug, e.g. "q03"; never renumber after publishing.
  * @property {QuestionType} type
- * @property {string} stem
- * @property {string[]} options     4–5 for mcq; ["True","False"] for tf.
- * @property {number} correct       Index into `options`.
+ * @property {string} [stem]        Required for mcq/tf; omitted for 'reveal' (fixed prompt shown).
+ * @property {string} [image]       Question image (slide/EM); required for 'reveal'.
+ * @property {string} [imageAlt]    Required when `image` is set.
+ * @property {string} [imageCaption] Optional neutral caption under the image (no spoilers).
+ * @property {string[]} [options]   4–5 for mcq; ["True","False"] for tf; omitted for 'reveal'.
+ * @property {number} [correct]     Index into `options` (mcq/tf only).
  * @property {Explanation} explanation
  * @property {string} topic         e.g. "upper-limb".
  * @property {'high' | 'medium'} yield
@@ -61,18 +66,42 @@ export const QuestionSchema = z
   .object({
     id: z.string().min(1),
     type: QuestionTypeSchema,
-    stem: z.string().min(1),
-    options: z.array(z.string().min(1)).min(2),
-    correct: z.number().int().nonnegative(),
+    // `stem`, `options` and `correct` are required for 'mcq'/'tf' (refine below).
+    // A 'reveal' (flashcard) question omits them: it shows a fixed prompt + image
+    // and reveals the feature list from `explanation`.
+    stem: z.string().min(1).optional(),
+    // Question-level image (a histology slide or EM micrograph), rendered above
+    // the options (mcq) or as the flashcard (reveal). `imageAlt` is required when
+    // set; `imageCaption` is an optional neutral line beneath it (no spoilers).
+    image: z.string().min(1).optional(),
+    imageAlt: z.string().min(1).optional(),
+    imageCaption: z.string().optional(),
+    options: z.array(z.string().min(1)).min(2).optional(),
+    correct: z.number().int().nonnegative().optional(),
     explanation: ExplanationSchema,
     topic: z.string().min(1),
     yield: z.enum(['high', 'medium']),
     pastPaperRef: z.string().min(1).optional(),
   })
-  // `correct` must index a real option
-  .refine((q) => q.correct < q.options.length, {
+  // mcq / tf must carry a stem, options and a correct index
+  .refine(
+    (q) => q.type === 'reveal' || (Boolean(q.stem) && Array.isArray(q.options) && typeof q.correct === 'number'),
+    { message: "'mcq'/'tf' questions require `stem`, `options` and `correct`" },
+  )
+  // `correct` must index a real option (when present)
+  .refine((q) => q.options == null || q.correct == null || q.correct < q.options.length, {
     message: '`correct` index is out of range for `options`',
     path: ['correct'],
+  })
+  // a 'reveal' (flashcard) question needs an image to identify
+  .refine((q) => q.type !== 'reveal' || Boolean(q.image), {
+    message: "'reveal' questions require an `image`",
+    path: ['image'],
+  })
+  // a question image requires alt text
+  .refine((q) => !q.image || Boolean(q.imageAlt), {
+    message: '`image` requires `imageAlt`',
+    path: ['imageAlt'],
   });
 
 /**

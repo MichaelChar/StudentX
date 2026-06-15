@@ -1,0 +1,20 @@
+{
+  "subject": "general-histology",
+  "title": "General Histology",
+  "school": "ausom",
+  "semester": "semester-2",
+  "tests": [
+    {
+      "id": "lm-specimen-id",
+      "title": "Laboratory test, Light Microscope",
+      "kind": "topic",
+      "questionCount": 14
+    },
+    {
+      "id": "em-structure-id",
+      "title": "Laboratory test, Electron Microscope",
+      "kind": "topic",
+      "questionCount": 9
+    }
+  ]
+}

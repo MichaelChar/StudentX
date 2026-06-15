@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import TestPlayer from '@/components/practice/TestPlayer';
+import FlashcardPlayer from '@/components/practice/FlashcardPlayer';
 import { getSubjectIndex, getTest, listSubjectsWithContent } from '@/lib/practice/content';
 
 // Every test lives in the bundled manifest (no runtime fs on Workers), so both
@@ -33,6 +34,12 @@ export default async function TestPage({ params }) {
 
   // The player is a client component: it reads ?review client-side and owns the
   // attempt state machine. The plain JSON test object is serializable, so it
-  // crosses the server→client boundary as-is.
-  return <TestPlayer test={test} subject={subject} />;
+  // crosses the server→client boundary as-is. A deck whose questions are all
+  // 'reveal' is a flashcard deck (no options/score) → the FlashcardPlayer.
+  const isFlashcard = test.questions.length > 0 && test.questions.every((q) => q.type === 'reveal');
+  return isFlashcard ? (
+    <FlashcardPlayer test={test} subject={subject} />
+  ) : (
+    <TestPlayer test={test} subject={subject} />
+  );
 }

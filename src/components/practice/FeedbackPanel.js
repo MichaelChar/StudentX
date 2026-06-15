@@ -131,6 +131,9 @@ export default function FeedbackPanel({ explanation, result, onZoom, t }) {
             fontSize: 14.5,
             lineHeight: 1.55,
             color: INK,
+            // Authored newlines render as line breaks so a feature checklist
+            // (one structure per line) reads as a list, not a run-on paragraph.
+            whiteSpace: 'pre-line',
           }}
         >
           {text}

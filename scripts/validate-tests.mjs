@@ -70,8 +70,8 @@ function validateTest(rel, test, expectedSubject) {
       if (!ok) err(rel, `question "${q.id}": tf options must be exactly ["True","False"]`);
     }
 
-    // correct index in range (also enforced by schema; kept as a clear message)
-    if (q.correct < 0 || q.correct >= q.options.length) {
+    // correct index in range — mcq/tf only ('reveal' has no options/correct)
+    if (Array.isArray(q.options) && (q.correct < 0 || q.correct >= q.options.length)) {
       err(rel, `question "${q.id}": correct index ${q.correct} out of range for ${q.options.length} options`);
     }
 
@@ -80,6 +80,14 @@ function validateTest(rel, test, expectedSubject) {
       const imgPath = path.join(PUBLIC_ROOT, q.explanation.image.replace(/^\//, ''));
       if (!existsSync(imgPath)) {
         err(rel, `question "${q.id}": image "${q.explanation.image}" not found under public/`);
+      }
+    }
+
+    // question image path (slide / EM micrograph) must exist under public/
+    if (q.image) {
+      const imgPath = path.join(PUBLIC_ROOT, q.image.replace(/^\//, ''));
+      if (!existsSync(imgPath)) {
+        err(rel, `question "${q.id}": image "${q.image}" not found under public/`);
       }
     }
 
