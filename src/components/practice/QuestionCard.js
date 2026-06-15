@@ -41,7 +41,7 @@ function AnswerTag({ tone, children }) {
   );
 }
 
-export default function QuestionCard({ question, chosen, locked, onSelect, t }) {
+export default function QuestionCard({ question, chosen, locked, onSelect, onZoom, t }) {
   const [hover, setHover] = useState(-1);
 
   return (
@@ -77,6 +77,50 @@ export default function QuestionCard({ question, chosen, locked, onSelect, t }) 
       >
         {question.stem}
       </h2>
+
+      {question.image && (
+        <figure style={{ margin: '0 0 22px' }}>
+          <button
+            type="button"
+            onClick={() => onZoom?.(question.image, question.imageAlt || '')}
+            aria-label={t('viewFullSize')}
+            style={{
+              display: 'block',
+              width: '100%',
+              padding: 0,
+              border: '1px solid rgba(10,37,64,0.10)',
+              borderRadius: 12,
+              overflow: 'hidden',
+              background: '#ffffff',
+              cursor: 'zoom-in',
+              lineHeight: 0,
+            }}
+          >
+            <img
+              src={question.image}
+              alt={question.imageAlt || ''}
+              style={{
+                display: 'block',
+                width: '100%',
+                maxHeight: 380,
+                objectFit: 'contain',
+                background: '#ffffff',
+              }}
+            />
+          </button>
+          {question.imageCaption && (
+            <figcaption
+              style={{
+                margin: '8px 0 0',
+                fontSize: 12.5,
+                color: 'rgba(10,37,64,0.5)',
+              }}
+            >
+              {question.imageCaption}
+            </figcaption>
+          )}
+        </figure>
+      )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
         {question.displayOptions.map((opt, i) => {

@@ -129,7 +129,7 @@ export default function Navbar() {
 }
 
 const PILL_CLASS =
-  'fixed top-5 right-5 z-50 flex items-center gap-3 bg-stone/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-sm';
+  'fixed top-11 right-5 z-50 flex items-center gap-3 bg-stone/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-sm';
 
 function AuthMenu({ t, authState, accountHref, inquiriesHref, landlordLoginHref, unreadCount, onSignOut }) {
   // Signed-in chrome (account + sign out) renders only once a role is
@@ -238,7 +238,7 @@ function SignInDropdown({ t, landlordLoginHref }) {
   ];
 
   return (
-    <div ref={wrapperRef} className="fixed top-5 right-5 z-50">
+    <div ref={wrapperRef} className="fixed top-11 right-5 z-50">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}

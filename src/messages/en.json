@@ -884,6 +884,17 @@
           "label": "Review",
           "backToResults": "Back to results",
           "backToTests": "Back to tests"
+        },
+        "flashcard": {
+          "prompt": "Identify the relevant features",
+          "answer": "Answer",
+          "next": "Next",
+          "finish": "Finish",
+          "cardProgress": "Card {current} of {total}",
+          "completeTitle": "Deck complete",
+          "completeBody": "You've been through all {total} cards.",
+          "restart": "Start over",
+          "imageLabel": "Specimen image"
         }
       },
       "report": {

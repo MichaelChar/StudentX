@@ -37,6 +37,9 @@ function toDisplayQuestion(q, originalIndex, shuffleOptions) {
     id: q.id,
     type: q.type,
     stem: q.stem,
+    image: q.image,
+    imageAlt: q.imageAlt,
+    imageCaption: q.imageCaption,
     topic: q.topic,
     explanation: q.explanation,
     displayOptions,
@@ -481,7 +484,7 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
     return (
       <>
         <Shell back={<BackRow href={listHref} label={t('review.backToTests')} />}>
-          <QuestionCard question={dq} chosen={null} locked t={t} />
+          <QuestionCard question={dq} chosen={null} locked onZoom={openLightbox} t={t} />
           <FeedbackPanel explanation={dq.explanation} result={null} onZoom={openLightbox} t={t} />
         </Shell>
         {lightboxEl}
@@ -496,7 +499,7 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
     return (
       <>
         <Shell back={<BackRow onClick={() => setReviewIndex(null)} label={t('review.backToResults')} />}>
-          <QuestionCard question={rq} chosen={answers[reviewIndex]} locked t={t} />
+          <QuestionCard question={rq} chosen={answers[reviewIndex]} locked onZoom={openLightbox} t={t} />
           <FeedbackPanel explanation={rq.explanation} result={result} onZoom={openLightbox} t={t} />
         </Shell>
         {lightboxEl}
@@ -591,6 +594,7 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
           chosen={answers[current]}
           locked={answered}
           onSelect={handleSelect}
+          onZoom={openLightbox}
           t={t}
         />
 

@@ -1,0 +1,193 @@
+{
+  "id": "lm-specimen-id",
+  "subject": "general-histology",
+  "title": "Laboratory test, Light Microscope",
+  "kind": "topic",
+  "description": "Flashcards: study each light-microscopy lab specimen, then hit Answer to reveal the features to identify. Slides from the General Histology review slideshow; features from the GH specimen notes.",
+  "version": 1,
+  "updatedAt": "2026-06-14",
+  "questions": [
+    {
+      "id": "q01",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q01.jpg",
+      "imageAlt": "Transverse section of a tubular organ: a folded, star-shaped lumen lined by several layers of rounded epithelial cells, wrapped by pink smooth muscle.",
+      "imageCaption": "Light micrograph, H&E — low & high power",
+      "explanation": {
+        "text": "Ureter — identified by the urothelium.\n• Mucosa lined by transitional epithelium (urothelium): rounded, dome-shaped 'umbrella' surface cells; a folded, star-shaped lumen\n• Lamina propria — no glands\n• Muscularis: smooth muscle — spindle cells, one oval central nucleus, no cross-striations, indistinct cell borders\nNot esophagus (stratified squamous) or trachea (respiratory epithelium + cartilage).",
+        "source": "GH Notes on specimens #1 · slideshow p.3"
+      },
+      "topic": "epithelia",
+      "yield": "high"
+    },
+    {
+      "id": "q02",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q02.jpg",
+      "imageAlt": "Cross-sections of blood vessels; one with a thick muscular wall and round lumen, plus an elastic-stained panel showing wavy black laminae within the wall.",
+      "imageCaption": "Light micrographs — H&E (left) and elastic / Weigert stain (right)",
+      "explanation": {
+        "text": "Artery vs vein.\nARTERY: thick muscular wall (tunica media); round lumen; internal & external elastic laminae (best seen with elastic stain); thin adventitia; no valves.\nVEIN: thin media; wider, slit-like lumen; less elastin; abundant adventitia; valves (paired intimal folds).\nThe round lumen + thick media + elastic laminae give it away as the artery.",
+        "source": "GH Notes on specimens #11 · slideshow p.4"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q03",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q03.jpg",
+      "imageAlt": "Surface tissue with a layered squamous epithelium over connective tissue containing hair follicles, small glands and fat.",
+      "imageCaption": "Light micrographs, H&E",
+      "explanation": {
+        "text": "Skin (thin / hairy skin) — the appendages are the clue.\n• Epidermis: stratified squamous keratinized epithelium\n• Dermis: papillary layer (loose, vascular CT) over reticular layer (dense irregular CT)\n• Appendages: hair follicles with sebaceous glands (simple alveolar) and sweat glands (simple coiled tubular)\n• Hypodermis: adipose tissue (subcutaneous fat), lobulated by CT septa\nOther stratified-squamous organs (esophagus, vagina, cornea) lack hair follicles & skin glands.",
+        "source": "GH Notes on specimens #2 · slideshow p.6"
+      },
+      "topic": "surfaces",
+      "yield": "high"
+    },
+    {
+      "id": "q04",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q04.jpg",
+      "imageAlt": "Mucosa with a flat surface and densely packed straight tubular glands lined by columnar cells with many goblet cells; smooth muscle beneath.",
+      "imageCaption": "Light micrographs, H&E",
+      "explanation": {
+        "text": "Large intestine (colon) — no villi, abundant goblet cells.\n• Mucosa: simple columnar epithelium with many goblet cells; flat luminal surface (no villi)\n• Lamina propria: straight, simple tubular glands (crypts of Lieberkühn)\n• Muscularis: smooth muscle (spindle cells, one oval central nucleus, no striations)\nSmall intestine would show villi; stomach shows gastric pits.",
+        "source": "GH Notes on specimens #3 · slideshow p.7"
+      },
+      "topic": "digestive",
+      "yield": "high"
+    },
+    {
+      "id": "q05",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q05.jpg",
+      "imageAlt": "Mucosa with a stratified squamous epithelium dipping into crypts, over numerous lymphoid nodules with pale germinal centers.",
+      "imageCaption": "Light micrographs, H&E",
+      "explanation": {
+        "text": "Palatine tonsil — surface epithelium + crypts is the key.\n• Stratified squamous non-keratinized epithelium lining the surface and the crypts, densely infiltrated by lymphocytes\n• Many secondary lymphoid nodules (with germinal centers) around the crypts\n• Underlying dense connective tissue forms a partial capsule\nUnlike a lymph node, a tonsil has surface epithelium/crypts and no subcapsular sinus.",
+        "source": "GH Notes on specimens #21 · slideshow p.8"
+      },
+      "topic": "lymphoid",
+      "yield": "medium"
+    },
+    {
+      "id": "q06",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q06.jpg",
+      "imageAlt": "Branching muscle fibers with single central nuclei and faint cross-striations; a paler group of large clear cells lies beneath the lining.",
+      "imageCaption": "Light micrographs, H&E",
+      "explanation": {
+        "text": "Heart — cardiac muscle.\n• Branching cells joined by intercalated discs; ONE central nucleus per cell; cross-striations (seen longitudinally, not in transverse)\n• Pale, swollen Purkinje fibres in the sub-endocardium (few myofibrils, much glycogen, no T-tubules) — the conduction system\n• Wall layers: endocardium / myocardium / epicardium\nSkeletal muscle has peripheral, multiple nuclei and no branching; smooth muscle has no striations.",
+        "source": "GH Notes on specimens #14 · slideshow p.10"
+      },
+      "topic": "muscle",
+      "yield": "high"
+    },
+    {
+      "id": "q07",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q07.jpg",
+      "imageAlt": "A rounded CNS section with central butterfly-shaped gray matter around a small central canal, surrounded by paler white matter.",
+      "imageCaption": "Light micrograph, H&E (whole section + detail)",
+      "explanation": {
+        "text": "Spinal cord (CNS).\n• Central, butterfly-shaped gray matter (neuronal cell bodies with Nissl bodies; large motor neurons in the ventral horns) around a central canal lined by ependyma\n• Surrounding white matter: myelinated axons (myelin from oligodendrocytes), with fibrous astrocytes & microglia\n• Cerebellum/cortex have gray matter on the OUTSIDE; a peripheral nerve has no central canal.",
+        "source": "GH Notes on specimens #17 · slideshow p.11"
+      },
+      "topic": "nervous-tissue",
+      "yield": "high"
+    },
+    {
+      "id": "q08",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q08.jpg",
+      "imageAlt": "An organ divided into lobules, each with a dark outer zone and a paler central zone; no lymphoid nodules.",
+      "imageCaption": "Light micrographs, H&E",
+      "explanation": {
+        "text": "Thymus — lobules with cortex/medulla and Hassall corpuscles, no nodules.\n• Capsule sends septa that divide it into incompletely separated lobules\n• Cortex: darker, packed immature T-lymphoblasts (thymocytes); fewer epithelial cells\n• Medulla: paler; fewer, larger, more mature lymphocytes; more thymic epithelial cells; Hassall (thymic) corpuscles (whorls of epithelial cells)\n• No lymphoid nodules and no subcapsular sinus (vs lymph node).",
+        "source": "GH Notes on specimens #22 · slideshow p.13"
+      },
+      "topic": "lymphoid",
+      "yield": "medium"
+    },
+    {
+      "id": "q09",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q09.jpg",
+      "imageAlt": "A bean-shaped organ with a connective-tissue capsule, a peripheral sinus, and cortical nodules over a paler medulla.",
+      "imageCaption": "Light micrograph, H&E",
+      "explanation": {
+        "text": "Lymph node.\n• Dense CT capsule with trabeculae; subcapsular (marginal) sinus just beneath\n• Cortex: lymphoid nodules (B cells; with/without germinal centers)\n• Paracortex: T cells + high endothelial venules\n• Medulla: medullary cords (B cells, plasma cells) + medullary sinuses\nThe capsule + subcapsular sinus + cortex/medulla pattern (and no central arterioles) separate it from spleen and thymus.",
+        "source": "GH Notes on specimens #23 · slideshow p.14"
+      },
+      "topic": "lymphoid",
+      "yield": "high"
+    },
+    {
+      "id": "q10",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q10.jpg",
+      "imageAlt": "Lymphoid tissue forming a sheath and a nodule around a small central artery, set in a diffuse cell-rich background.",
+      "imageCaption": "Light micrograph, H&E",
+      "explanation": {
+        "text": "Spleen — the central arteriole in the white pulp is the clue.\n• Capsule + trabeculae of dense CT; reticular stroma\n• White pulp (immune): periarteriolar lymphoid sheaths (T cells) around central arterioles + lymphoid nodules (B cells)\n• Red pulp (blood filtration): splenic (Billroth) cords + blood-filled venous sinusoids\nNo cortex/medulla and no subcapsular sinus (vs lymph node); the central arteriole within lymphoid tissue is diagnostic.",
+        "source": "GH Notes on specimens #24 · slideshow p.15"
+      },
+      "topic": "lymphoid",
+      "yield": "medium"
+    },
+    {
+      "id": "q11",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q11.jpg",
+      "imageAlt": "Rounded cells sitting singly and in small nests within lacunae of a homogeneous matrix, bounded by a fibrous layer; no vessels.",
+      "imageCaption": "Light micrographs, H&E",
+      "explanation": {
+        "text": "Hyaline cartilage.\n• Chondrocytes sit in lacunae; isogenous (cell-nest) groups lie deeper in the matrix\n• Peripheral chondroblasts beneath a perichondrium (dense irregular CT)\n• Matrix rich in collagen II & GAGs; basophilic territorial matrix rings each lacuna\n• Avascular — no Haversian systems, which distinguishes it from bone.",
+        "source": "GH Notes on specimens #8 · slideshow p.22"
+      },
+      "topic": "skeletal-tissue",
+      "yield": "high"
+    },
+    {
+      "id": "q12",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q12.jpg",
+      "imageAlt": "Hard tissue with concentric rings of matrix arranged around central vascular canals, with small lacunae between the rings.",
+      "imageCaption": "Undecalcified ground section, transmitted light",
+      "explanation": {
+        "text": "Compact (lamellar) bone — ground preparation.\n• Osteons (Haversian systems): concentric lamellae around a central Haversian canal (vessels, nerves)\n• Osteocytes in lacunae, interconnected by canaliculi; interstitial & circumferential lamellae between osteons\n• Volkmann (perforating) canals link Haversian canals; cement lines outline each osteon\n• Cells: osteoblasts (build matrix), osteoclasts (resorb, in Howship lacunae).",
+        "source": "GH Notes on specimens #9 · slideshow p.23"
+      },
+      "topic": "skeletal-tissue",
+      "yield": "high"
+    },
+    {
+      "id": "q13",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q13.jpg",
+      "imageAlt": "Long, parallel, unbranched fibers with cross-striations and flattened nuclei at the fiber periphery; a transverse section alongside.",
+      "imageCaption": "Light micrographs, H&E (longitudinal & transverse)",
+      "explanation": {
+        "text": "Skeletal muscle.\n• Long, cylindrical, unbranched fibres; MULTIPLE nuclei at the PERIPHERY (just under the sarcolemma)\n• Cross-striations of the sarcoplasm (visible longitudinally; not in transverse section)\n• Connective tissue sheaths: endomysium (around fibres), perimysium (around fascicles), epimysium (around the whole muscle)\nCardiac muscle has central nuclei + branching + intercalated discs; smooth muscle is spindle-shaped with no striations.",
+        "source": "GH Notes on specimens #13 · slideshow p.24"
+      },
+      "topic": "muscle",
+      "yield": "high"
+    },
+    {
+      "id": "q14",
+      "type": "reveal",
+      "image": "/practice/ausom/semester-2/general-histology/lm-specimen-id/q14.jpg",
+      "imageAlt": "A smear: countless pale biconcave red cells with a few larger purple-nucleated white cells and tiny platelets.",
+      "imageCaption": "Giemsa-stained smear",
+      "explanation": {
+        "text": "Blood smear (Giemsa).\n• Mostly erythrocytes (RBCs): biconcave, anucleate, central pallor, packed with hemoglobin\n• Leukocytes (WBCs): granulocytes (neutrophil, eosinophil, basophil) + agranulocytes (lymphocyte, monocyte) — recall N-L-M-E-B\n• Platelets: small, anucleate cytoplasmic fragments\n• Plasma is the (unstained) background matrix\nA bone-marrow smear would be dominated by developing/precursor cells, not mature RBCs.",
+        "source": "GH Notes on specimens #10 · slideshow p.26"
+      },
+      "topic": "hematology",
+      "yield": "high"
+    }
+  ]
+}

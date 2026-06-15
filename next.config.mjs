@@ -38,10 +38,18 @@ const SECURITY_HEADERS = [
     key: 'Permissions-Policy',
     value: 'camera=(), microphone=(), geolocation=(), interest-cohort=()',
   },
-  {
-    key: 'Strict-Transport-Security',
-    value: 'max-age=63072000; includeSubDomains; preload',
-  },
+  // HSTS is an HTTPS-only directive. In dev the server is plain
+  // http://localhost, and sending HSTS makes browsers (notably Safari) cache a
+  // force-upgrade of localhost to https and then fail to connect ("can't
+  // establish a secure connection"). Emit it in production only.
+  ...(isDev
+    ? []
+    : [
+        {
+          key: 'Strict-Transport-Security',
+          value: 'max-age=63072000; includeSubDomains; preload',
+        },
+      ]),
   {
     key: 'Content-Security-Policy',
     value: [
@@ -55,7 +63,9 @@ const SECURITY_HEADERS = [
       "frame-ancestors 'none'",
       "base-uri 'self'",
       "form-action 'self'",
-      'upgrade-insecure-requests',
+      // HTTPS-only: omit in dev so http://localhost subresources/navigations
+      // aren't auto-upgraded to a port the dev server can't serve over TLS.
+      ...(isDev ? [] : ['upgrade-insecure-requests']),
     ].join('; '),
   },
 ];
