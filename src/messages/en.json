@@ -978,16 +978,9 @@
     "loadingCycle": ["Loading"]
   },
   "home": {
-    "tagline": "For students, by students",
-    "descriptor": "Curated student housing and services.",
     "blog": "Blog",
-    "blogSub": "Insights & tactical strategies",
-    "directory": "Directory",
-    "directorySub": "Curated rentals, filtered by your commute",
-    "services": "Student Services",
-    "servicesSub": "Setting you up in your city",
-    "about": "About Us",
-    "aboutSub": "Our story and why we built this",
+    "directory": "Accommodation",
+    "services": "Services",
     "comingSoon": "Soon",
     "copyright": "© {year} StudentX"
   }

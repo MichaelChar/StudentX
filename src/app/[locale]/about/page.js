@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 
@@ -20,7 +21,7 @@ export function generateMetadata() {
 export default async function AboutPage({ params }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <AboutContent />;
+  redirect(`/${locale}`);
 }
 
 function Section({ eyebrow, heading, children, style }) {
