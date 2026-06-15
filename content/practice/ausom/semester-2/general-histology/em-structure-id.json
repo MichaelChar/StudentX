@@ -4,8 +4,8 @@
   "title": "Laboratory test, Electron Microscope",
   "kind": "topic",
   "description": "Flashcards: study each transmission electron micrograph and its numbered structures, then hit Answer to reveal them. Micrographs from the General Histology slideshow; annotations from the GH specimen notes.",
-  "version": 1,
-  "updatedAt": "2026-06-14",
+  "version": 2,
+  "updatedAt": "2026-06-15",
   "questions": [
     {
       "id": "q01",
@@ -15,7 +15,9 @@
       "imageCaption": "TEM, tracheal epithelium",
       "explanation": {
         "text": "Goblet (mucous) cell + ciliated cell, trachea.\n(1) Goblet / mucous cell — cytoplasm full of large, pale (electron-lucent) mucus vesicles\n(2) Adjacent ciliated cell — cilia projecting from the free (apical) surface, here cut in cross-section\nThe pale, lucent vesicles distinguish the mucous cell from the serous cell's dense granules.",
-        "source": "GH Notes on specimens #4 · slideshow p.28"
+        "source": "GH Notes on specimens #4 · slideshow p.28",
+        "image": "/practice/ausom/semester-2/general-histology/em-structure-id/q01-answer.jpg",
+        "imageAlt": "Annotated TEM: goblet/mucous cell (1) beside a ciliated cell (2), free surface labelled."
       },
       "topic": "secretory-epithelium",
       "yield": "high"
@@ -28,7 +30,9 @@
       "imageCaption": "TEM",
       "explanation": {
         "text": "Serous (secretory / zymogenic) cell.\n(1) Abundant, electron-DENSE secretory (zymogen) granules filling the apical cytoplasm\n(2) Rough endoplasmic reticulum (basal)\n(3) Prominent, rounded, euchromatic nucleus\nContrast with the mucous cell, whose secretory vesicles are pale and electron-lucent.",
-        "source": "GH Notes on specimens #5 · slideshow p.29"
+        "source": "GH Notes on specimens #5 · slideshow p.29",
+        "image": "/practice/ausom/semester-2/general-histology/em-structure-id/q02-answer.jpg",
+        "imageAlt": "Annotated TEM of a serous cell labelling secretory granules, RER, nucleus and nuclear membrane."
       },
       "topic": "secretory-epithelium",
       "yield": "high"
@@ -41,7 +45,9 @@
       "imageCaption": "TEM (×75 000)",
       "explanation": {
         "text": "Fibroblast (active).\n(1) Large, euchromatic (pale) nucleus\n(2) Abundant mitochondria / organelles — a cell actively synthesising matrix\n(3) Collagen fibrils in longitudinal section, showing alternating dark/light banding (procollagen periodicity)\n(4) Collagen fibrils in transverse section\nCollagen lies OUTSIDE the cell, embedded in ground substance. A fibrocyte is smaller with a dark, heterochromatic nucleus.",
-        "source": "GH Notes on specimens #6 · slideshow p.30"
+        "source": "GH Notes on specimens #6 · slideshow p.30",
+        "image": "/practice/ausom/semester-2/general-histology/em-structure-id/q03-answer.jpg",
+        "imageAlt": "Annotated TEM of an active fibroblast: euchromatic nucleus, mitochondria, longitudinal and transverse collagen fibrils."
       },
       "topic": "connective-tissue",
       "yield": "high"
@@ -54,7 +60,9 @@
       "imageCaption": "TEM (×75 000)",
       "explanation": {
         "text": "Fibrocyte (quiescent fibroblast).\n(1) Elongated, heterochromatic (dark) nucleus with little surrounding cytoplasm — smaller and less active than a fibroblast\n(2) Collagen fibrils in transverse section\n(3) Collagen fibrils in oblique section\n(4) Collagen fibrils in longitudinal section\nGround substance surrounds the extracellular collagen.",
-        "source": "GH Notes on specimens #7 · slideshow p.31"
+        "source": "GH Notes on specimens #7 · slideshow p.31",
+        "image": "/practice/ausom/semester-2/general-histology/em-structure-id/q04-answer.jpg",
+        "imageAlt": "Annotated TEM of a fibrocyte: heterochromatic nucleus with collagen fibrils in longitudinal, oblique and transverse section."
       },
       "topic": "connective-tissue",
       "yield": "medium"
@@ -67,7 +75,9 @@
       "imageCaption": "TEM",
       "explanation": {
         "text": "Neuron cell body (perikaryon).\n(1) Large nucleus with nuclear envelope (arrows), typically a prominent nucleolus\n(2) Abundant rough ER = Nissl substance / bodies\n(3) Lysosomes\n(4) Mitochondria\n(5) Surrounding neuropil — the felt-work of fine neuronal and glial processes\n(The plasma membrane is marked by double arrows.)",
-        "source": "GH Notes on specimens #18 · slideshow p.32"
+        "source": "GH Notes on specimens #18 · slideshow p.32",
+        "image": "/practice/ausom/semester-2/general-histology/em-structure-id/q05-answer.jpg",
+        "imageAlt": "Annotated TEM of a neuron cell body: nucleus, RER/Nissl, lysosomes, mitochondria and surrounding neuropil."
       },
       "topic": "nervous-tissue",
       "yield": "high"
@@ -80,7 +90,9 @@
       "imageCaption": "TEM (×25 000)",
       "explanation": {
         "text": "Sarcomere — the contractile unit, Z-disc to Z-disc.\n• Z-disc sits in the middle of the light I-band (thin / actin filaments only)\n• A-band (dark): the full length of the thick / myosin filaments plus their overlap with actin\n• H-zone: lighter central part of the A-band (myosin only); the M-line runs through its centre\n• Also visible: mitochondria, part of the muscle-cell nucleus, and T-tubules (T)",
-        "source": "GH Notes on specimens #16 · slideshow p.33"
+        "source": "GH Notes on specimens #16 · slideshow p.33",
+        "image": "/practice/ausom/semester-2/general-histology/em-structure-id/q06-answer.jpg",
+        "imageAlt": "Annotated TEM of a sarcomere labelling Z, A, I and H bands, M-line, mitochondria and nucleus."
       },
       "topic": "muscle",
       "yield": "high"
@@ -93,7 +105,9 @@
       "imageCaption": "TEM (×30 000)",
       "explanation": {
         "text": "Continuous (non-fenestrated) capillary.\n(1) Capillary lumen\n(2) Endothelial cell nucleus — a continuous wall with minimal permeability\n(3) Collagen fibrils\n(4) Pericyte cytoplasm wrapping the endothelium\n(5) Myelinated nerve fibres in the surrounding CNS parenchyma\nThe continuous, unbroken endothelium (no fenestrae) fits the blood–brain barrier.",
-        "source": "GH Notes on specimens #12 · slideshow p.34"
+        "source": "GH Notes on specimens #12 · slideshow p.34",
+        "image": "/practice/ausom/semester-2/general-histology/em-structure-id/q07-answer.jpg",
+        "imageAlt": "Annotated TEM of a continuous CNS capillary: lumen, endothelial nucleus, pericyte and nearby myelinated fibres."
       },
       "topic": "microcirculation",
       "yield": "high"
@@ -106,7 +120,9 @@
       "imageCaption": "TEM",
       "explanation": {
         "text": "A chemical synapse (with nearby myelinated and unmyelinated fibres).\n(1) Presynaptic axon terminal (bouton) packed with synaptic vesicles (neurotransmitter)\n(2) Postsynaptic element — e.g. a dendritic spine\n(3) Synaptic cleft — electron-dense\n(4) Two myelinated axons (thick, dark myelin sheaths)\n(5) Two unmyelinated fibres (or dendrites)",
-        "source": "GH Notes on specimens #19 · slideshow p.35"
+        "source": "GH Notes on specimens #19 · slideshow p.35",
+        "image": "/practice/ausom/semester-2/general-histology/em-structure-id/q08-answer.jpg",
+        "imageAlt": "Annotated TEM of a chemical synapse: pre- and post-synaptic elements, synaptic cleft and myelinated axons."
       },
       "topic": "nervous-tissue",
       "yield": "medium"
@@ -119,7 +135,9 @@
       "imageCaption": "TEM",
       "explanation": {
         "text": "Unmyelinated nerve fibres.\n• Several axons enclosed within the cytoplasm of one non-myelinating Schwann cell (2) — no myelin sheath\n• Axoplasm contains microtubules (double arrows) and neurofilaments (arrowheads)\n(1) Mitochondria within the axons\nMyelinated fibres, by contrast, are wrapped by thick concentric myelin.",
-        "source": "GH Notes on specimens #20 · slideshow p.36"
+        "source": "GH Notes on specimens #20 · slideshow p.36",
+        "image": "/practice/ausom/semester-2/general-histology/em-structure-id/q09-answer.jpg",
+        "imageAlt": "Annotated TEM of unmyelinated nerve fibres: Schwann cell cytoplasm, neurofilaments, microtubules and mitochondria."
       },
       "topic": "nervous-tissue",
       "yield": "medium"
