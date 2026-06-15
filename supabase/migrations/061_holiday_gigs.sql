@@ -113,22 +113,11 @@ GRANT SELECT ON gigs TO anon, authenticated;
 GRANT INSERT ON gig_inquiries TO authenticated;
 
 -- ---------------------------------------------------------------------------
--- 4. Demo seed (idempotent) — gives the live page real content across 3
---    countries. Safe to re-run: keyed on stable UUIDs.
+-- 4. Seed: real listing sourced from Caritas Bergeinsatz (project F12023),
+--    translated to English. Photos are hotlinked from the org's public asset
+--    CDN (allow-listed in next.config.mjs img-src + images.remotePatterns).
+--    Idempotent — keyed on a stable UUID.
 -- ---------------------------------------------------------------------------
-INSERT INTO gigs (gig_id, title, employer_name, description, is_paid, pay_amount, pay_period, currency, country_code, city, lat, lng, available_from, min_duration_weeks, contact_info)
-VALUES
-  ('00000000-0000-4000-a000-000000000001', 'Beach Bar Staff', 'Sunset Beach Bar', 'Serve drinks and run the bar on a busy Halkidiki beach through the summer season. Tips on top of base pay.', true, 1100, 'month', 'EUR', 'GR', 'Halkidiki', 40.1610, 23.4500, '2026-06-20', 8, 'jobs@sunsetbeachbar.example'),
-  ('00000000-0000-4000-a000-000000000002', 'Resort Activities Animator', 'Aegean Resorts', 'Run daytime sports and evening entertainment for guests at a seaside resort. Accommodation included.', true, 900, 'month', 'EUR', 'GR', 'Thessaloniki', 40.6301, 22.9439, '2026-07-01', 10, 'careers@aegeanresorts.example'),
-  ('00000000-0000-4000-a000-000000000003', 'NGO Communications Intern', 'Open Aegean', 'Support social media and event logistics for a small Athens-based NGO. Great portfolio experience.', false, NULL, 'month', 'EUR', 'GR', 'Athens', 37.9838, 23.7275, '2026-06-15', 6, 'volunteer@openaegean.example'),
-  ('00000000-0000-4000-a000-000000000004', 'Hostel Reception', 'Barcelona Backpackers', 'Front-desk shifts at a lively city-centre hostel. Conversational English required, Spanish a plus.', true, 1300, 'month', 'EUR', 'ES', 'Barcelona', 41.3851, 2.1734, '2026-06-25', 8, 'work@bcnbackpackers.example'),
-  ('00000000-0000-4000-a000-000000000005', 'Marine Conservation Volunteer', 'Costa Azul Trust', 'Join beach clean-ups and sea-turtle nesting surveys along the Valencia coast. Food and lodging covered.', false, NULL, 'month', 'EUR', 'ES', 'Valencia', 39.4699, -0.3763, '2026-07-05', 4, 'apply@costaazultrust.example'),
-  ('00000000-0000-4000-a000-000000000006', 'Summer Camp Counsellor', 'Thames Adventure Camps', 'Lead outdoor activities for 8–14 year-olds at a residential camp outside London. Training provided.', true, 1600, 'month', 'GBP', 'UK', 'London', 51.5074, -0.1278, '2026-07-10', 6, 'recruit@thamescamps.example')
-ON CONFLICT (gig_id) DO NOTHING;
-
--- Real listing sourced from Caritas Bergeinsatz (project F12023), translated to
--- English. Photos are hotlinked from the org's public asset CDN (allow-listed in
--- next.config.mjs img-src + images.remotePatterns).
 INSERT INTO gigs (gig_id, title, employer_name, description, is_paid, pay_amount, pay_period, currency, country_code, city, lat, lng, available_from, min_duration_weeks, photos, contact_info)
 VALUES
   (
