@@ -981,7 +981,81 @@
     "blog": "Blog",
     "directory": "Accommodation",
     "services": "Services",
+    "holidayGigs": "Holiday Gigs",
     "comingSoon": "Soon",
     "copyright": "© {year} StudentX"
+  },
+  "gigs": {
+    "choice": {
+      "title": "Holiday Gigs",
+      "subtitle": "Find a summer job that fits your break. First, what are you after?",
+      "paid": "Paid",
+      "paidSub": "Earn while you travel or stay",
+      "unpaid": "Unpaid",
+      "unpaidSub": "Internships, volunteering & experience",
+      "back": "Back to StudentX"
+    },
+    "results": {
+      "title": "Holiday Gigs",
+      "backToChoice": "Back",
+      "filters": "Filters",
+      "payType": "Pay",
+      "paid": "Paid",
+      "unpaid": "Unpaid",
+      "country": "Country",
+      "allCountries": "All countries",
+      "availability": "Available from",
+      "availabilityHint": "Show gigs starting on or before",
+      "duration": "Minimum length",
+      "anyDuration": "Any length",
+      "weeksPlus": "{weeks}+ weeks",
+      "payDistribution": "Pay distribution",
+      "payDistributionHint": "Monthly pay across paid gigs",
+      "list": "List",
+      "map": "Map",
+      "resultCount": "{count, plural, =0 {No gigs} one {# gig} other {# gigs}}",
+      "noResults": "No gigs match these filters yet.",
+      "noResultsHint": "Try clearing a filter or switching pay type.",
+      "clearFilters": "Clear filters",
+      "loading": "Loading gigs…"
+    },
+    "card": {
+      "paid": "Paid",
+      "unpaid": "Unpaid",
+      "perHour": "/hr",
+      "perWeek": "/wk",
+      "perMonth": "/mo",
+      "total": " total",
+      "payOnApplication": "Pay on application",
+      "startsFrom": "From {date}",
+      "weeks": "{weeks, plural, one {# week} other {# weeks}}",
+      "viewGig": "View gig →"
+    },
+    "detail": {
+      "back": "Back to gigs",
+      "unpaid": "Unpaid",
+      "payOnApplication": "Pay on application",
+      "employer": "Employer",
+      "pay": "Pay",
+      "location": "Location",
+      "starts": "Starts",
+      "duration": "Length",
+      "weeks": "{weeks, plural, one {# week} other {# weeks}}",
+      "about": "About this gig",
+      "notFound": "This gig is no longer available.",
+      "browseAll": "Browse all gigs"
+    },
+    "inquiry": {
+      "heading": "Interested in this gig?",
+      "subheading": "Send a short note and we'll connect you with the employer.",
+      "placeholder": "Tell them why you're a great fit (a sentence or two is plenty)…",
+      "submit": "Express interest",
+      "submitting": "Sending…",
+      "signInPrompt": "Sign in to express interest in this gig.",
+      "signIn": "Sign in",
+      "success": "Sent! We'll be in touch about next steps.",
+      "errorGeneric": "Something went wrong. Please try again.",
+      "tooShort": "Please write at least 10 characters."
+    }
   }
 }
