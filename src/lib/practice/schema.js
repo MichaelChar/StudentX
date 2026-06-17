@@ -117,6 +117,11 @@ export const QuestionSchema = z
  * @property {number} version      Bump on every edit (feeds the edit loop).
  * @property {string} updatedAt    ISO date.
  * @property {Question[]} questions
+ * @property {{ video: string, poster?: string, title?: string, description?: string }} [intro]
+ *           Optional intro screen shown before the first card/question. `video`
+ *           is a public-root path (e.g. "/practice/.../intro.mp4"); the player
+ *           renders it with native controls (no autoplay) behind a "Start"
+ *           button on every fresh start.
  */
 export const PracticeTestSchema = z.object({
   id: z.string().min(1),
@@ -127,6 +132,14 @@ export const PracticeTestSchema = z.object({
   version: z.number().int().positive(),
   updatedAt: z.string().min(1),
   questions: z.array(QuestionSchema).min(1),
+  intro: z
+    .object({
+      video: z.string().min(1),
+      poster: z.string().optional(),
+      title: z.string().optional(),
+      description: z.string().optional(),
+    })
+    .optional(),
 });
 
 /**

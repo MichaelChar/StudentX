@@ -89,6 +89,54 @@ function AnswerButton({ children, onClick }) {
   );
 }
 
+// Intro gate shown before the first card on every fresh start (see the
+// `started` flag below). Native <video> controls, no autoplay — it plays once
+// when the student hits play and never loops. The "Start the exam" button
+// dismisses the gate and drops them onto card 1.
+function IntroGate({ intro, onStart, startLabel, videoLabel }) {
+  return (
+    <>
+      {intro.title && (
+        <h2
+          style={{
+            fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+            fontWeight: 600,
+            fontSize: 26,
+            letterSpacing: '-0.01em',
+            lineHeight: 1.2,
+            color: INK,
+            margin: '0 0 12px',
+          }}
+        >
+          {intro.title}
+        </h2>
+      )}
+      {intro.description && (
+        <p style={{ margin: '0 0 20px', fontSize: 15, lineHeight: 1.55, color: 'rgba(10,37,64,0.6)' }}>
+          {intro.description}
+        </p>
+      )}
+      <video
+        src={intro.video}
+        poster={intro.poster}
+        controls
+        playsInline
+        preload="metadata"
+        aria-label={videoLabel}
+        style={{
+          display: 'block',
+          width: '100%',
+          borderRadius: 14,
+          border: '1px solid rgba(10,37,64,0.10)',
+          background: '#000',
+          marginBottom: 26,
+        }}
+      />
+      <PrimaryButton onClick={onStart}>{startLabel}</PrimaryButton>
+    </>
+  );
+}
+
 export default function FlashcardPlayer({ test, subject, onReportIssue }) {
   const t = useTranslations('student.practice.player');
   const listHref = `/student/ausom/semester-2/${subject}`;
@@ -97,6 +145,10 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
   const [current, setCurrent] = useState(0);
   const [revealed, setRevealed] = useState(false);
   const [finished, setFinished] = useState(false);
+  // Intro gate: shown before card 1 on every fresh start (initial load and
+  // after Start-over). `started` flips once the student hits "Start the exam".
+  const [started, setStarted] = useState(false);
+  const showIntro = Boolean(test.intro?.video) && !started && !finished;
   const [lightbox, setLightbox] = useState(null); // { src, alt } | null
   const [reportCtx, setReportCtx] = useState(null);
 
@@ -122,7 +174,10 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
     setCurrent(0);
     setRevealed(false);
     setFinished(false);
+    setStarted(false); // re-show the intro on a fresh start
   }, []);
+
+  const handleStart = useCallback(() => setStarted(true), []);
 
   const handleReport = useCallback(() => {
     const ctx = { subject, testId: test.id, questionId: q.id, version: test.version };
@@ -136,7 +191,7 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
   // Keyboard: Enter / Space reveals the card, then advances. Disabled while a
   // modal or the lightbox is open, on the completion screen, or when typing.
   useEffect(() => {
-    if (finished || lightbox || reportCtx) return undefined;
+    if (showIntro || finished || lightbox || reportCtx) return undefined;
     function onKey(e) {
       const el = e.target;
       if (el && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' || el.isContentEditable)) return;
@@ -148,7 +203,7 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
     }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
-  }, [finished, lightbox, reportCtx, revealed, handleNext, handleReveal]);
+  }, [showIntro, finished, lightbox, reportCtx, revealed, handleNext, handleReveal]);
 
   const lightboxEl = lightbox ? (
     <Lightbox
@@ -169,6 +224,20 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
       onClose={closeReport}
     />
   ) : null;
+
+  // Intro gate — before card 1 on every fresh start.
+  if (showIntro) {
+    return (
+      <Shell back={<BackRow href={listHref} label={t('review.backToTests')} />}>
+        <IntroGate
+          intro={test.intro}
+          onStart={handleStart}
+          startLabel={t('intro.start')}
+          videoLabel={t('intro.videoLabel')}
+        />
+      </Shell>
+    );
+  }
 
   // Completion screen.
   if (finished) {
