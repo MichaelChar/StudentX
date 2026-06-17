@@ -910,6 +910,10 @@
           "completeBody": "You've been through all {total} cards.",
           "restart": "Start over",
           "imageLabel": "Specimen image"
+        },
+        "intro": {
+          "videoLabel": "Introduction video",
+          "start": "Start the exam"
         }
       },
       "report": {
