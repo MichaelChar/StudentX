@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
+import GigFavoriteButton from '@/components/GigFavoriteButton';
 
 /*
   Holiday Gigs card — sibling of ListingCard, trimmed for jobs. Shows role,
@@ -111,6 +112,10 @@ export default function GigCard({ gig, fromQuery = '' }) {
         aria-label={gig.title}
         className="absolute inset-0 z-0 rounded-sm focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
       />
+
+      {/* Save toggle — over the photo's top-left, above the stretched link.
+          The right corner is reserved for the Paid/Unpaid badge. */}
+      <GigFavoriteButton gigId={gig.gig_id} className="absolute top-3 left-3 z-10" />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import { routing } from '@/i18n/routing';
 import Navbar from '@/components/Navbar';
 import SessionSync from '@/components/SessionSync';
 import FavoritesProvider from '@/components/FavoritesProvider';
+import GigFavoritesProvider from '@/components/GigFavoritesProvider';
 import '../globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
@@ -95,8 +96,10 @@ export default async function LocaleLayout({ children, params }) {
         <NextIntlClientProvider locale={locale} messages={messages}>
           <SessionSync />
           <FavoritesProvider>
-            <Navbar />
-            <main className="flex-1">{children}</main>
+            <GigFavoritesProvider>
+              <Navbar />
+              <main className="flex-1">{children}</main>
+            </GigFavoritesProvider>
           </FavoritesProvider>
         </NextIntlClientProvider>
       </body>

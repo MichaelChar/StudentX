@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { getSupabase } from '@/lib/supabase';
 import { transformGig } from '@/lib/transformGig';
 import GigInquiryForm from '@/components/GigInquiryForm';
+import GigFavoriteButton from '@/components/GigFavoriteButton';
 
 const CURRENCY_SYMBOL = { EUR: '€', GBP: '£', USD: '$' };
 
@@ -138,7 +139,8 @@ export default async function GigDetailPage({ params }) {
             )}
           </article>
 
-          <aside className="lg:sticky lg:top-6 lg:self-start">
+          <aside className="lg:sticky lg:top-6 lg:self-start space-y-4">
+            <GigFavoriteButton gigId={gig.gig_id} withLabel className="w-full justify-center" />
             <GigInquiryForm gigId={gig.gig_id} />
           </aside>
         </div>
