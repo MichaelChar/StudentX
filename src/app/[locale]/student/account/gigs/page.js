@@ -7,7 +7,7 @@ import { transformGig } from '@/lib/transformGig';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import AccountChrome from '@/components/student/AccountChrome';
-import GigCard from '@/components/GigCard';
+import SavedGigs from '@/components/student/SavedGigs';
 
 /*
   Holiday Gigs section of the student account — mirrors the accommodation
@@ -101,28 +101,9 @@ async function SavedGigsSection({ locale }) {
     .filter(Boolean)
     .map(transformGig);
 
-  if (gigs.length === 0) {
-    return (
-      <Card tone="parchment" className="p-12 text-center">
-        <Icon name="heart" className="w-12 h-12 mx-auto text-night/30 mb-3" />
-        <p className="font-display text-xl text-night/60 mb-5">{tFav('empty')}</p>
-        <Link
-          href="/gigs"
-          className="inline-flex items-center justify-center bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
-        >
-          {tFav('browse')}
-        </Link>
-      </Card>
-    );
-  }
-
-  return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-      {gigs.map((gig) => (
-        <GigCard key={gig.gig_id} gig={gig} />
-      ))}
-    </div>
-  );
+  // Client wrapper handles the empty state + optimistic unsave (mirrors
+  // SavedListings on the accommodation section).
+  return <SavedGigs gigs={gigs} />;
 }
 
 async function InterestsSection({ locale }) {
