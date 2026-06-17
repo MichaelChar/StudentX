@@ -65,10 +65,14 @@ export default function LandlordShell({
         router.replace('/property/thessaloniki/landlord/verify-email');
         return;
       }
-      // Best-effort profile name fetch so topbar can greet. GET (not POST):
-      // the shell only reads, and POST-on-every-mount would attempt to
-      // create a landlord row for any authed user — including students,
-      // which now hits the prevent_dual_role trigger from migration 036.
+      setSessionReady(true); // ← unblock the page now; the greeting is cosmetic (#256)
+
+      // Best-effort profile name fetch so topbar can greet. Fire-and-forget —
+      // it updates state whenever it lands and the greeting renders
+      // conditionally, so a late name just pops in (no full-screen wait).
+      // GET (not POST): the shell only reads, and POST-on-every-mount would
+      // attempt to create a landlord row for any authed user — including
+      // students, which now hits the prevent_dual_role trigger (migration 036).
       if (!landlordNameProp) {
         try {
           const profileRes = await fetch('/api/landlord/profile', {
@@ -80,7 +84,6 @@ export default function LandlordShell({
           }
         } catch {}
       }
-      setSessionReady(true);
     })();
   }, [router, gated, landlordNameProp]);
 
