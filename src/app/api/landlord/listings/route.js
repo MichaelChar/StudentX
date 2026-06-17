@@ -5,53 +5,7 @@ import { canCreateListing } from '@/lib/stripe';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { normalizeTitle } from '@/lib/listingTitle';
 import { normalizeSingleLine, normalizeMultiLine } from '@/lib/textNormalize';
-
-const LANDLORD_LISTING_SELECT = `
-  listing_id,
-  landlord_id,
-  is_featured,
-  title,
-  rent_id,
-  location_id,
-  property_type_id,
-  description,
-  photos,
-  sqm,
-  floor,
-  available_from,
-  min_duration_months,
-  created_at,
-  updated_at,
-  rent ( rent_id, monthly_price, currency, bills_included, deposit ),
-  location ( location_id, address, neighborhood, lat, lng ),
-  property_types ( property_type_id, name ),
-  listing_amenities ( amenities ( amenity_id, name ) )
-`;
-
-// Pre-migration fallback: identical to LANDLORD_LISTING_SELECT minus columns
-// that may not yet exist in prod. When adding a column to LANDLORD_LISTING_SELECT
-// that ships ahead of its migration, also omit it here so the GET handler can
-// degrade gracefully instead of darking the landlord portal.
-const LANDLORD_LISTING_SELECT_FALLBACK = `
-  listing_id,
-  landlord_id,
-  is_featured,
-  title,
-  rent_id,
-  location_id,
-  property_type_id,
-  description,
-  photos,
-  sqm,
-  floor,
-  available_from,
-  created_at,
-  updated_at,
-  rent ( rent_id, monthly_price, currency, bills_included, deposit ),
-  location ( location_id, address, neighborhood, lat, lng ),
-  property_types ( property_type_id, name ),
-  listing_amenities ( amenities ( amenity_id, name ) )
-`;
+import { selectLandlordListings } from '@/lib/landlordListingSelect';
 
 const ALLOWED_MIN_DURATIONS = [1, 5, 9];
 
@@ -89,25 +43,11 @@ export async function GET(request) {
   if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
   const authedSupabase = getSupabaseWithToken(token);
-  let { data, error } = await authedSupabase
-    .from('listings')
-    .select(LANDLORD_LISTING_SELECT)
-    .eq('landlord_id', landlordId)
-    .order('created_at', { ascending: false });
+  const { data, error } = await selectLandlordListings(authedSupabase, landlordId);
 
   if (error) {
-    console.warn('Landlord listings query failed, retrying without min_duration_months:', error.message);
-    const fallback = await authedSupabase
-      .from('listings')
-      .select(LANDLORD_LISTING_SELECT_FALLBACK)
-      .eq('landlord_id', landlordId)
-      .order('created_at', { ascending: false });
-
-    if (fallback.error) {
-      console.error('Failed to fetch landlord listings:', fallback.error);
-      return NextResponse.json({ error: 'Failed to fetch listings' }, { status: 500 });
-    }
-    data = fallback.data;
+    console.error('Failed to fetch landlord listings:', error);
+    return NextResponse.json({ error: 'Failed to fetch listings' }, { status: 500 });
   }
 
   return NextResponse.json({ listings: data });
