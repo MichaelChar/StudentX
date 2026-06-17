@@ -52,14 +52,14 @@ function LandlordLoginInner() {
     setError('');
     setStage('auth');
 
-    // Per-stage timing (#265). t0 marks the start; tAuth/tProbe are filled as
-    // each leg resolves so emit() can report per-stage deltas. Beacon is
+    // Per-stage timing (#265). t0 marks the start; tAuth/tBootstrap are filled
+    // as each leg resolves so emit() can report per-stage deltas. Beacon is
     // fire-and-forget (keepalive) and never affects control flow.
     const t0 = performance.now();
     const coldHint = firstLandlordSubmitSinceLoad;
     firstLandlordSubmitSinceLoad = false;
     let tAuth = 0;
-    let tProbe = 0;
+    let tBootstrap = 0;
     let lastAttempt = 0;
     const emit = (extra = {}) =>
       reportLoginTiming({
@@ -67,7 +67,7 @@ function LandlordLoginInner() {
         attempt: lastAttempt,
         coldHint,
         auth: tAuth ? Math.round(tAuth - t0) : 0,
-        probe: tProbe && tAuth ? Math.round(tProbe - tAuth) : 0,
+        bootstrap: tBootstrap && tAuth ? Math.round(tBootstrap - tAuth) : 0,
         total: Math.round(performance.now() - t0),
         ...extra,
       });
@@ -116,33 +116,46 @@ function LandlordLoginInner() {
           // stays 'auth' through the probe so the button doesn't flash
           // "redirecting" when it's actually about to show the conflict banner.
           const token = data.session?.access_token;
-          let role = 'landlord'; // unknown probe → defer to the dashboard's own guards
+          // One server-side round-trip (#253): bootstrap validates the token,
+          // confirms the role, and — for a real landlord — sets the auth cookie
+          // BEFORE navigation. That eager cookie is what lets the dashboard
+          // server-render instead of gating on a client probe (#254).
+          let bootstrap = null;
           if (token) {
             try {
-              const meRes = await withTimeout(
-                fetch('/api/auth/me', { headers: { Authorization: `Bearer ${token}` } }),
+              const bootstrapRes = await withTimeout(
+                fetch('/api/auth/bootstrap', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({ access_token: token, role: 'landlord' }),
+                }),
                 8000,
               );
-              if (meRes.ok) {
-                const { user } = await meRes.json();
-                role = user?.role ?? null;
-              }
+              bootstrap = {
+                status: bootstrapRes.status,
+                body:
+                  bootstrapRes.status === 409
+                    ? await bootstrapRes.json().catch(() => ({}))
+                    : null,
+              };
             } catch {
-              /* transient probe failure shouldn't block a real landlord */
+              /* transient bootstrap failure shouldn't block a real landlord */
             }
           }
-          tProbe = performance.now();
+          tBootstrap = performance.now();
 
-          if (role === 'student') {
+          // 409 student-conflict → sign out and show the banner. Stage stays
+          // 'auth' so the button doesn't flash "redirecting".
+          if (bootstrap?.status === 409 && bootstrap.body?.conflict_role === 'student') {
             emit({ conflict: 'student' });
             await signOutSafely(supabase);
             setStudentConflict(true);
             return;
           }
 
-          // role 'landlord', or a null orphan / probe-unavailable: proceed. A
-          // null orphan is bounced safely by the dashboard's server-side
-          // requireLandlord guard, so it needn't be special-cased here.
+          // 200, a null orphan, or a transient/5xx bootstrap failure: proceed.
+          // The dashboard's server-side requireLandlord guard bounces bad
+          // sessions, so a failed probe needn't block a real landlord.
           emit();
           setStage('redirect');
           router.push('/property/thessaloniki/landlord/dashboard');
