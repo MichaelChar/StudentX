@@ -16,8 +16,9 @@ import { z } from 'zod';
 
 /**
  * @typedef {'mcq' | 'tf' | 'reveal'} QuestionType
- * 'reveal' = a flashcard: fixed prompt + image, no options; the feature list is
- * revealed from `explanation` on demand.
+ * 'reveal' = a flashcard: no options; the answer is revealed from `explanation`
+ * on demand. The prompt is either an `image` to identify (e.g. a histology
+ * specimen) or a text `stem` (e.g. an open-ended exam question).
  */
 export const QuestionTypeSchema = z.enum(['mcq', 'tf', 'reveal']);
 
@@ -93,9 +94,11 @@ export const QuestionSchema = z
     message: '`correct` index is out of range for `options`',
     path: ['correct'],
   })
-  // a 'reveal' (flashcard) question needs an image to identify
-  .refine((q) => q.type !== 'reveal' || Boolean(q.image), {
-    message: "'reveal' questions require an `image`",
+  // a 'reveal' (flashcard) question needs something to show as the prompt:
+  // either an `image` to identify (e.g. a histology specimen) or a text `stem`
+  // (e.g. an open-ended exam question). The answer is revealed from `explanation`.
+  .refine((q) => q.type !== 'reveal' || Boolean(q.image) || Boolean(q.stem), {
+    message: "'reveal' questions require an `image` or a `stem`",
     path: ['image'],
   })
   // a question image requires alt text

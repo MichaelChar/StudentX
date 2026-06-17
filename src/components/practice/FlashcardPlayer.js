@@ -10,9 +10,10 @@ import { PrimaryButton, TextButton } from './PlayerButton';
 
 // Flashcard player for 'reveal'-type decks (e.g. the histology lab specimen and
 // EM tests). Unlike the scored MCQ TestPlayer there are no options, no score and
-// no resume: each card shows a fixed prompt + image and a big "Answer" button
-// that reveals the feature list from `explanation`. Kept deliberately separate
-// so the scored player stays untouched.
+// no resume: each card shows a prompt (the question's `stem`, or a fixed
+// fallback for image-ID decks) with an optional image, and a big "Answer" button
+// that reveals the answer from `explanation`. Kept deliberately separate so the
+// scored player stays untouched.
 
 const ACCENT = '#635BFF';
 const INK = '#0a2540';
@@ -258,7 +259,7 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
             margin: '0 0 20px',
           }}
         >
-          {t('flashcard.prompt')}
+          {q.stem || t('flashcard.prompt')}
         </h2>
 
         {q.image && (
