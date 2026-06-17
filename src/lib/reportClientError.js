@@ -23,3 +23,26 @@ export function reportClientError(context, detail) {
     // Reporting must never break the calling flow.
   }
 }
+
+// Fire-and-forget timing beacon for the login flow (#265). `stages` is a flat
+// object of millisecond durations plus context flags, e.g.
+// { auth: 312, sync: 141, total: 685, flow: 'student', attempt: 0 }.
+// Same transport + guarantees as reportClientError: never throws, never
+// blocks, and `keepalive` lets it survive the navigation that follows login.
+export function reportLoginTiming(stages) {
+  if (typeof window === 'undefined') return;
+  try {
+    fetch('/api/log-client-error', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        context: 'login-timing',
+        message: JSON.stringify(stages).slice(0, 500),
+        detail: '',
+      }),
+      keepalive: true,
+    }).catch(() => {});
+  } catch {
+    // Reporting must never break the calling flow.
+  }
+}

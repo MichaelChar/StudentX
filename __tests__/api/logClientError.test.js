@@ -21,6 +21,19 @@ describe('log-client-error route', () => {
     expect(spy.mock.calls[0][0]).toContain('boom');
   });
 
+  it('accepts the login-timing context (#265)', async () => {
+    const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    const res = await POST(
+      makeReq({ context: 'login-timing', message: '{"auth":312,"total":685,"flow":"student"}' }),
+    );
+    expect(res.status).toBe(204);
+    expect(spy.mock.calls[0][0]).toContain('context=login-timing');
+    // The route JSON.stringifies the message string, so inner quotes are
+    // escaped in the log line — assert on the stage names, not exact quoting.
+    expect(spy.mock.calls[0][0]).toContain('flow');
+    expect(spy.mock.calls[0][0]).toContain('student');
+  });
+
   it('coerces an unknown context to "unknown"', async () => {
     const spy = vi.spyOn(console, 'error').mockImplementation(() => {});
     const res = await POST(makeReq({ context: 'evil<script>', message: 'x' }));
