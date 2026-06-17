@@ -1,9 +1,10 @@
-import Image from 'next/image';
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import { getSupabase } from '@/lib/supabase';
 import { transformGig } from '@/lib/transformGig';
 import GigInquiryForm from '@/components/GigInquiryForm';
+import GigFavoriteButton from '@/components/GigFavoriteButton';
+import ListingGallery from '@/components/listing/ListingGallery';
 
 const CURRENCY_SYMBOL = { EUR: '€', GBP: '£', USD: '$' };
 
@@ -67,32 +68,11 @@ export default async function GigDetailPage({ params }) {
         </Link>
 
         {photos.length > 0 && (
-          <div className="mt-4 overflow-hidden rounded-sm">
-            <div className="relative aspect-[16/9] w-full bg-parchment">
-              <Image
-                src={photos[0]}
-                alt={gig.title}
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 896px"
-                className="object-cover"
-              />
-            </div>
-            {photos.length > 1 && (
-              <div className="mt-2 grid grid-cols-4 gap-2">
-                {photos.slice(1, 5).map((src, i) => (
-                  <div key={i} className="relative aspect-[4/3] bg-parchment">
-                    <Image
-                      src={src}
-                      alt={`${gig.title} ${i + 2}`}
-                      fill
-                      sizes="(max-width: 1024px) 25vw, 220px"
-                      className="rounded-sm object-cover"
-                    />
-                  </div>
-                ))}
-              </div>
-            )}
+          <div className="mt-4">
+            {/* Same gallery + full-screen lightbox (zoom / swipe / keyboard)
+                as the property listing pages. variantUrl passes the gig CDN
+                URLs through unchanged, so it works on raw photo URLs too. */}
+            <ListingGallery photos={photos} title={gig.title} />
           </div>
         )}
 
@@ -138,7 +118,8 @@ export default async function GigDetailPage({ params }) {
             )}
           </article>
 
-          <aside className="lg:sticky lg:top-6 lg:self-start">
+          <aside className="lg:sticky lg:top-6 lg:self-start space-y-4">
+            <GigFavoriteButton gigId={gig.gig_id} withLabel className="w-full justify-center" />
             <GigInquiryForm gigId={gig.gig_id} />
           </aside>
         </div>

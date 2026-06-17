@@ -665,8 +665,8 @@
     "signup": {
       "portal": "Student portal",
       "title": "Create your StudentX account",
-      "subtitle": "One account to message landlords, save searches, and track inquiries.",
-      "brandBlurb": "Verified student housing in Thessaloniki — message landlords directly without leaving StudentX.",
+      "subtitle": "One account for accommodation, holiday gigs, and everything StudentX offers.",
+      "brandBlurb": "Everything you need as a student — accommodation, holiday gigs, and more — in one place.",
       "nameLabel": "Full name",
       "namePlaceholder": "Maria Papadopoulou",
       "emailLabel": "Email address",
@@ -686,8 +686,8 @@
     "login": {
       "portal": "Student portal",
       "title": "Welcome back",
-      "subtitle": "Sign in to continue messaging landlords and tracking inquiries.",
-      "brandBlurb": "Pick up your conversations with landlords right where you left off.",
+      "subtitle": "Sign in to your StudentX account.",
+      "brandBlurb": "Your student life — accommodation, holiday gigs, and more — all in one place.",
       "emailLabel": "Email address",
       "emailPlaceholder": "you@example.com",
       "passwordLabel": "Password",
@@ -772,7 +772,22 @@
       "lastMessageAt": "Last message {when}",
       "openThread": "Open chat",
       "loadError": "Couldn't load your inquiries. Try refreshing the page.",
-      "signOut": "Sign out"
+      "signOut": "Sign out",
+      "hubSubtitle": "Everything you've saved and started, in one place.",
+      "hubAccommodation": "Accommodation",
+      "hubAccommodationSub": "Saved listings and your landlord conversations",
+      "hubHolidayGigs": "Holiday Gigs",
+      "hubHolidayGigsSub": "Saved gigs and the ones you've applied to",
+      "tabAccommodation": "Accommodation",
+      "tabHolidayGigs": "Holiday Gigs",
+      "backToAccount": "Account",
+      "gigsInterestsTitle": "My gig interests",
+      "gigsInterestsEmpty": "You haven't expressed interest in any gigs yet.",
+      "gigsInterestsCta": "Browse Holiday Gigs",
+      "interestStatusSent": "Sent",
+      "interestSentOn": "Sent {when}",
+      "viewGig": "View gig",
+      "unpaidLabel": "Unpaid"
     },
     "chat": {
       "title": "Conversation",
@@ -1056,6 +1071,19 @@
       "success": "Sent! We'll be in touch about next steps.",
       "errorGeneric": "Something went wrong. Please try again.",
       "tooShort": "Please write at least 10 characters."
+    },
+    "favorites": {
+      "save": "Save gig",
+      "saved": "Saved",
+      "saveAria": "Save this gig",
+      "removeAria": "Remove from saved gigs",
+      "close": "Close",
+      "gateTitle": "Save this gig",
+      "gateBody": "Sign in to save gigs and keep track of the ones you've applied to.",
+      "panelTitle": "Saved gigs",
+      "empty": "You haven't saved any gigs yet.",
+      "browse": "Browse Holiday Gigs",
+      "loadError": "Couldn't load your saved gigs. Try refreshing the page."
     }
   }
 }
