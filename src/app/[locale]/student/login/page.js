@@ -1,7 +1,7 @@
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useRouter as useNativeRouter } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
@@ -22,6 +22,9 @@ let firstStudentSubmitSinceLoad = true;
 function StudentLoginInner() {
   const t = useTranslations('student.login');
   const router = useRouter();
+  // Plain next/navigation router — used only for ?next= redirects, which may
+  // carry a query string the i18n wrapper's push rejects (#258).
+  const nativeRouter = useNativeRouter();
   const searchParams = useSearchParams();
   // ?next=<encoded path> takes priority over the default account
   // redirect — set by AuthGate when it pushes a guest to login.
@@ -165,11 +168,14 @@ function StudentLoginInner() {
 
           emit();
           if (safeNext) {
-            // useRouter.push with a locale-prefixed path won't accept ?, so we
-            // hand a raw URL to window.location for paths that include query
-            // strings (the common case when AuthGate threads search/results
-            // state back into the next URL).
-            window.location.assign(safeNext);
+            // Client-side navigation (#258): a full-page window.location.assign
+            // re-downloads + re-hydrates the whole JS payload (~0.5–1.5 s on
+            // mobile). safeNext is validated internal-path-only by safeNextPath,
+            // and the plain next/navigation router handles the query strings the
+            // i18n wrapper rejects — so push() reuses what's already in memory.
+            // The cookie sync above has already completed, so the destination
+            // RSC reads auth on first render.
+            nativeRouter.push(safeNext);
             return;
           }
 
