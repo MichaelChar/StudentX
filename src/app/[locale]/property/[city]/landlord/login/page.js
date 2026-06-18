@@ -45,6 +45,10 @@ function LandlordLoginInner() {
   // Supabase round-trip. Fire-and-forget; cheap GET, no auth.
   useEffect(() => {
     fetch('/api/health', { cache: 'no-store' }).catch(() => {});
+    // Warm the dashboard RSC payload + route chunks too (#257), so the
+    // post-auth navigation is a cache hit. No-op in `next dev`.
+    router.prefetch('/property/thessaloniki/landlord/dashboard');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleSubmit(e) {
