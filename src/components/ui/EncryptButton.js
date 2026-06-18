@@ -1,7 +1,6 @@
 'use client';
 
 import { useRef, useState } from 'react';
-import { motion } from 'motion/react';
 
 /*
   EncryptButton — scramble-on-hover submit button, re-skinned to the brand
@@ -70,26 +69,26 @@ export default function EncryptButton({
   };
 
   return (
-    <motion.button
+    // Motion replaced with CSS (#260) to keep `motion/react` off the auth-page
+    // bundle: the scale press is Tailwind transform utilities, the gradient
+    // sweep is the `.encrypt-sweep` keyframe in globals.css (reduced-motion
+    // aware). The scramble effect is plain setInterval — untouched.
+    <button
       type={type}
       disabled={disabled}
-      whileHover={disabled ? undefined : { scale: 1.025 }}
-      whileTap={disabled ? undefined : { scale: 0.975 }}
       onMouseEnter={scramble}
       onMouseLeave={stopScramble}
-      className={`group relative overflow-hidden rounded-lg border-[1px] border-night bg-night px-4 py-2 font-mono font-medium uppercase text-stone/80 transition-colors hover:text-white disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
+      className={`group relative overflow-hidden rounded-lg border-[1px] border-night bg-night px-4 py-2 font-mono font-medium uppercase text-stone/80 transition-[color,transform] hover:text-white enabled:hover:scale-[1.025] enabled:active:scale-[0.975] disabled:cursor-not-allowed disabled:opacity-60 ${className}`}
       {...rest}
     >
       <div className="relative z-10 flex items-center justify-center gap-2">
         <LockIcon />
         <span>{display}</span>
       </div>
-      <motion.span
-        initial={{ y: '100%' }}
-        animate={{ y: '-100%' }}
-        transition={{ repeat: Infinity, repeatType: 'mirror', duration: 1, ease: 'linear' }}
-        className="duration-300 absolute inset-0 z-0 scale-125 bg-gradient-to-t from-blue/0 from-40% via-blue/100 to-blue/0 to-60% opacity-0 transition-opacity group-hover:opacity-100"
+      <span
+        aria-hidden="true"
+        className="encrypt-sweep absolute inset-0 z-0 scale-125 bg-gradient-to-t from-blue/0 from-40% via-blue/100 to-blue/0 to-60% opacity-0 transition-opacity group-hover:opacity-100"
       />
-    </motion.button>
+    </button>
   );
 }
