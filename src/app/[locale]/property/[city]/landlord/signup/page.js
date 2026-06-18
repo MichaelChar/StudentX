@@ -58,6 +58,8 @@ export default function LandlordSignupPage() {
       const supabase = getSupabaseBrowser();
       const siteUrl = window.location.origin;
       const { data: authData, error: authError } = await withTimeout(
+        // 8 s: healthy auth legs finish <1 s; bounds a hung flow instead of a
+        // 15 s freeze (#264).
         supabase.auth.signUp({
           email,
           password,
@@ -65,6 +67,7 @@ export default function LandlordSignupPage() {
             emailRedirectTo: `${siteUrl}/${locale}/property/thessaloniki/landlord/login`,
           },
         }),
+        8000,
       );
       if (authError) {
         setError(authError.message);
@@ -94,6 +97,7 @@ export default function LandlordSignupPage() {
               profilePhotoUrl ? { name, profile_photo_url: profilePhotoUrl } : { name },
             ),
           }),
+          8000,
         );
         if (!res.ok) {
           await signOutSafely(supabase);

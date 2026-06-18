@@ -52,23 +52,32 @@ function StudentLoginInner() {
     setStage('auth');
     try {
       const supabase = getSupabaseBrowser();
-      // PR #138's defence: when a cached browser client has a session
-      // whose token refresh is hung, the next signInWithPassword can
-      // queue behind the stuck refresh on the same HTTP/2 connection.
-      // Clearing first cancels the refresh. getSession() reads from
-      // localStorage synchronously, so when there's no prior session we
-      // skip the signOut and save a ~200–1000 ms Supabase round-trip —
-      // the hung-refresh scenario can only happen when there IS one.
-      const { data: { session: existing } } = await supabase.auth.getSession();
-      if (existing) {
-        await signOutSafely(supabase);
+      // PR #138's defence: when a cached browser client has a session whose
+      // token refresh is hung, the next signInWithPassword can queue behind
+      // the stuck refresh on gotrue's shared auth lock. Clearing first cancels
+      // it. Local scope wipes the session WITHOUT a network /logout, so it adds
+      // no latency on the sign-in path and only runs when a session exists.
+      // If getSession itself contends on the lock, treat that as "a session may
+      // exist" and clear anyway.
+      let hasStaleSession = false;
+      try {
+        const { data: { session: existing } } = await supabase.auth.getSession();
+        hasStaleSession = Boolean(existing);
+      } catch {
+        hasStaleSession = true;
+      }
+      if (hasStaleSession) {
+        await signOutSafely(supabase, { scope: 'local' });
       }
 
       let lastErr;
       for (let attempt = 0; attempt < 2; attempt++) {
         try {
           const { data, error: authError } = await withTimeout(
+            // 8 s: healthy legs finish <1 s; with the one timeout-retry this
+            // bounds a hung flow at ~16 s instead of ~30 s (#264).
             supabase.auth.signInWithPassword({ email, password }),
+            8000,
           );
           if (authError) {
             setError(authError.message);
@@ -86,6 +95,7 @@ function StudentLoginInner() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ access_token: data.session.access_token }),
               }),
+              8000,
             );
             // If the cookie sync returns non-2xx (401 bad token, 500, …), the
             // destination RSC sees a guest and bounces straight back to login —
@@ -110,6 +120,7 @@ function StudentLoginInner() {
                   },
                   body: JSON.stringify({ preferred_locale: 'en' }),
                 }),
+                8000,
               );
               if (profileRes.status === 409) {
                 const profileBody = await profileRes.json().catch(() => ({}));

@@ -38,6 +38,8 @@ export default function StudentSignupPage() {
       const supabase = getSupabaseBrowser();
       const siteUrl = window.location.origin;
       const { data: authData, error: authError } = await withTimeout(
+        // 8 s: healthy auth legs finish <1 s; bounds a hung flow instead of a
+        // 15 s freeze (#264).
         supabase.auth.signUp({
           email,
           password,
@@ -46,6 +48,7 @@ export default function StudentSignupPage() {
             data: { display_name: name, role: 'student' },
           },
         }),
+        8000,
       );
       if (authError) {
         setError(authError.message);
@@ -64,6 +67,7 @@ export default function StudentSignupPage() {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ access_token: session.access_token }),
           }),
+          8000,
         );
 
         const res = await withTimeout(
@@ -79,6 +83,7 @@ export default function StudentSignupPage() {
             // they signed up through.
             body: JSON.stringify({ display_name: name, preferred_locale: 'en' }),
           }),
+          8000,
         );
         if (!res.ok) {
           await signOutSafely(supabase);
