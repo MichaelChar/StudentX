@@ -28,17 +28,30 @@ const NAV_ITEMS = [
   { key: 'settings', href: '/property/thessaloniki/landlord/settings', icon: 'cog' },
 ];
 
-export default function LandlordShell({ title, eyebrow, actions, children }) {
+export default function LandlordShell({
+  title,
+  eyebrow,
+  actions,
+  children,
+  // gated (default true): client pages let the shell run the Supabase auth
+  // gate + greeting fetch. A server-gated page (the dashboard, #254) passes
+  // gated={false} so the shell renders immediately — its own requireLandlord()
+  // already guarded auth, and landlordName is supplied as a prop.
+  gated = true,
+  landlordName: landlordNameProp = '',
+}) {
   const t = useTranslations('propylaea.landlord.nav');
   const tLoaders = useTranslations('loaders');
   const router = useRouter();
   const pathname = usePathname();
   const [drawerOpen, setDrawerOpen] = useState(false);
-  const [landlordName, setLandlordName] = useState('');
-  const [sessionReady, setSessionReady] = useState(false);
+  const [landlordName, setLandlordName] = useState(landlordNameProp);
+  // When ungated, there is nothing to wait for — paint on first render.
+  const [sessionReady, setSessionReady] = useState(!gated);
 
-  // Auth gate — centralized here, so each page doesn't re-check.
+  // Auth gate — centralized here, so each gated page doesn't re-check.
   useEffect(() => {
+    if (!gated) return; // server-gated page owns auth + greeting
     (async () => {
       const supabase = getSupabaseBrowser();
       const {
@@ -56,18 +69,20 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
       // the shell only reads, and POST-on-every-mount would attempt to
       // create a landlord row for any authed user — including students,
       // which now hits the prevent_dual_role trigger from migration 036.
-      try {
-        const profileRes = await fetch('/api/landlord/profile', {
-          headers: { Authorization: `Bearer ${session.access_token}` },
-        });
-        if (profileRes.ok) {
-          const { landlord } = await profileRes.json();
-          if (landlord?.name) setLandlordName(landlord.name);
-        }
-      } catch {}
+      if (!landlordNameProp) {
+        try {
+          const profileRes = await fetch('/api/landlord/profile', {
+            headers: { Authorization: `Bearer ${session.access_token}` },
+          });
+          if (profileRes.ok) {
+            const { landlord } = await profileRes.json();
+            if (landlord?.name) setLandlordName(landlord.name);
+          }
+        } catch {}
+      }
       setSessionReady(true);
     })();
-  }, [router]);
+  }, [router, gated, landlordNameProp]);
 
   async function handleSignOut() {
     const supabase = getSupabaseBrowser();
@@ -75,8 +90,8 @@ export default function LandlordShell({ title, eyebrow, actions, children }) {
     router.push('/property/thessaloniki/landlord/login');
   }
 
-  // Loading state while auth gate is resolving
-  if (!sessionReady) {
+  // Loading state while the gated auth check resolves (never shown when ungated)
+  if (gated && !sessionReady) {
     return (
       <div className="min-h-screen bg-stone flex items-center justify-center">
         <BauhausLoader
