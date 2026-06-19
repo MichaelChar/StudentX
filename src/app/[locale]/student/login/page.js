@@ -56,15 +56,14 @@ function StudentLoginInner() {
     setError('');
     setStage('auth');
 
-    // Per-stage timing (#265). t0 marks the start; tAuth/tSync/tProbe are
+    // Per-stage timing (#265). t0 marks the start; tAuth/tBootstrap are
     // filled as each leg resolves so emit() can report per-stage deltas.
     // Beacon is fire-and-forget (keepalive) and never affects control flow.
     const t0 = performance.now();
     const coldHint = firstStudentSubmitSinceLoad;
     firstStudentSubmitSinceLoad = false;
     let tAuth = 0;
-    let tSync = 0;
-    let tProbe = 0;
+    let tBootstrap = 0;
     let lastAttempt = 0;
     const emit = (extra = {}) =>
       reportLoginTiming({
@@ -72,8 +71,7 @@ function StudentLoginInner() {
         attempt: lastAttempt,
         coldHint,
         auth: tAuth ? Math.round(tAuth - t0) : 0,
-        sync: tSync && tAuth ? Math.round(tSync - tAuth) : 0,
-        probe: tProbe && tSync ? Math.round(tProbe - tSync) : 0,
+        bootstrap: tBootstrap && tAuth ? Math.round(tBootstrap - tAuth) : 0,
         total: Math.round(performance.now() - t0),
         ...extra,
       });
@@ -117,60 +115,46 @@ function StudentLoginInner() {
 
           setStage('redirect');
 
-          // Sync cookie eagerly so the next navigation's RSC sees auth without
-          // waiting for SessionSync's onAuthStateChange to fire.
+          // One server-side round-trip (#253): validate the token, provision
+          // the students row (idempotent), and set the auth cookie — replacing
+          // the old sequential /api/auth/session + /api/student/profile hops.
           if (data.session?.access_token) {
-            const sessionRes = await withTimeout(
-              fetch('/api/auth/session', {
+            const bootstrapRes = await withTimeout(
+              fetch('/api/auth/bootstrap', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ access_token: data.session.access_token }),
+                body: JSON.stringify({
+                  access_token: data.session.access_token,
+                  role: 'student',
+                }),
               }),
               8000,
             );
-            tSync = performance.now();
-            // If the cookie sync returns non-2xx (401 bad token, 500, …), the
-            // destination RSC sees a guest and bounces straight back to login —
-            // which reads to the user as "my correct password didn't work".
-            // Surface it instead of navigating into a silent loop.
-            if (!sessionRes.ok) {
-              emit({ error: true, stage: 'sync' });
-              setError(t('sessionError'));
-              return;
+            tBootstrap = performance.now();
+
+            // 409 → this email is already a landlord. Deep-link back to login
+            // with the conflict banner (same UX as the old profile-probe path).
+            if (bootstrapRes.status === 409) {
+              const bootstrapBody = await bootstrapRes.json().catch(() => ({}));
+              if (bootstrapBody.conflict_role === 'landlord') {
+                emit({ conflict: 'landlord' });
+                const conflictUrl = new URL(window.location.href);
+                conflictUrl.searchParams.set('roleConflict', 'landlord');
+                if (data.session.user?.email) {
+                  conflictUrl.searchParams.set('email', data.session.user.email);
+                }
+                window.location.assign(conflictUrl.toString());
+                return;
+              }
             }
 
-            // Idempotent profile probe — ensures a students row exists
-            // even if the signup trigger was skipped (e.g. pre-seeded
-            // landlord email collision). Returns the existing row when
-            // one is already present, so this is a no-op on happy path.
-            try {
-              const profileRes = await withTimeout(
-                fetch('/api/student/profile', {
-                  method: 'POST',
-                  headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${data.session.access_token}`,
-                  },
-                  body: JSON.stringify({ preferred_locale: 'en' }),
-                }),
-                8000,
-              );
-              tProbe = performance.now();
-              if (profileRes.status === 409) {
-                const profileBody = await profileRes.json().catch(() => ({}));
-                if (profileBody.conflict_role === 'landlord') {
-                  emit({ conflict: 'landlord' });
-                  const conflictUrl = new URL(window.location.href);
-                  conflictUrl.searchParams.set('roleConflict', 'landlord');
-                  if (data.session.user?.email) {
-                    conflictUrl.searchParams.set('email', data.session.user.email);
-                  }
-                  window.location.assign(conflictUrl.toString());
-                  return;
-                }
-              }
-            } catch {
-              // Best-effort — proceed with redirect.
+            // Any other non-2xx (401 bad token, 500, …): the destination RSC
+            // would see a guest and bounce back to login — which reads as "my
+            // password didn't work". Surface it instead of looping silently.
+            if (!bootstrapRes.ok) {
+              emit({ error: true, stage: 'bootstrap' });
+              setError(t('sessionError'));
+              return;
             }
           }
 
