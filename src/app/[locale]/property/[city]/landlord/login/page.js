@@ -6,11 +6,16 @@ import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
+import { reportLoginTiming } from '@/lib/reportClientError';
 import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
 import EncryptButton from '@/components/ui/EncryptButton';
+
+// The first submit since page load pays Worker cold-start latency the most;
+// tag the timing beacon (#265) with that so warm vs cold samples separate.
+let firstLandlordSubmitSinceLoad = true;
 
 function LandlordLoginInner() {
   const t = useTranslations('landlord.login');
@@ -46,6 +51,27 @@ function LandlordLoginInner() {
     e.preventDefault();
     setError('');
     setStage('auth');
+
+    // Per-stage timing (#265). t0 marks the start; tAuth/tProbe are filled as
+    // each leg resolves so emit() can report per-stage deltas. Beacon is
+    // fire-and-forget (keepalive) and never affects control flow.
+    const t0 = performance.now();
+    const coldHint = firstLandlordSubmitSinceLoad;
+    firstLandlordSubmitSinceLoad = false;
+    let tAuth = 0;
+    let tProbe = 0;
+    let lastAttempt = 0;
+    const emit = (extra = {}) =>
+      reportLoginTiming({
+        flow: 'landlord',
+        attempt: lastAttempt,
+        coldHint,
+        auth: tAuth ? Math.round(tAuth - t0) : 0,
+        probe: tProbe && tAuth ? Math.round(tProbe - tAuth) : 0,
+        total: Math.round(performance.now() - t0),
+        ...extra,
+      });
+
     try {
       const supabase = getSupabaseBrowser();
       // PR #138's defence: when a cached browser client has a session whose
@@ -68,6 +94,7 @@ function LandlordLoginInner() {
 
       let lastErr;
       for (let attempt = 0; attempt < 2; attempt++) {
+        lastAttempt = attempt;
         try {
           const { data, error: authError } = await withTimeout(
             // 8 s: healthy legs finish <1 s; with the one timeout-retry this
@@ -75,7 +102,9 @@ function LandlordLoginInner() {
             supabase.auth.signInWithPassword({ email, password }),
             8000,
           );
+          tAuth = performance.now();
           if (authError) {
+            emit({ error: true, stage: 'auth' });
             setError(authError.message);
             return;
           }
@@ -102,8 +131,10 @@ function LandlordLoginInner() {
               /* transient probe failure shouldn't block a real landlord */
             }
           }
+          tProbe = performance.now();
 
           if (role === 'student') {
+            emit({ conflict: 'student' });
             await signOutSafely(supabase);
             setStudentConflict(true);
             return;
@@ -112,6 +143,7 @@ function LandlordLoginInner() {
           // role 'landlord', or a null orphan / probe-unavailable: proceed. A
           // null orphan is bounced safely by the dashboard's server-side
           // requireLandlord guard, so it needn't be special-cased here.
+          emit();
           setStage('redirect');
           router.push('/property/thessaloniki/landlord/dashboard');
           return;
@@ -121,6 +153,7 @@ function LandlordLoginInner() {
           break;
         }
       }
+      emit({ error: true, stage: 'exception' });
       setError(lastErr?.message || 'Something went wrong. Please try again.');
     } finally {
       setStage('');

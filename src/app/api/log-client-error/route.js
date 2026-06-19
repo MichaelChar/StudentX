@@ -16,6 +16,9 @@ const ALLOWED_CONTEXTS = new Set([
   'login-session-sync',
   'login',
   'signup',
+  // Per-stage login timing beacon (#265). Payload is a JSON stage map of
+  // millisecond durations; logged here so it surfaces in `wrangler tail`.
+  'login-timing',
 ]);
 const MAX_MESSAGE = 500;
 const MAX_DETAIL = 200;

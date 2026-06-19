@@ -7,12 +7,17 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
 import { safeNextPath } from '@/lib/safeNext';
+import { reportLoginTiming } from '@/lib/reportClientError';
 import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
 import EncryptButton from '@/components/ui/EncryptButton';
 import OAuthProviders from '@/components/student/OAuthProviders';
+
+// The first submit since page load pays Worker cold-start latency the most;
+// tag the timing beacon (#265) with that so warm vs cold samples separate.
+let firstStudentSubmitSinceLoad = true;
 
 function StudentLoginInner() {
   const t = useTranslations('student.login');
@@ -50,6 +55,29 @@ function StudentLoginInner() {
     e.preventDefault();
     setError('');
     setStage('auth');
+
+    // Per-stage timing (#265). t0 marks the start; tAuth/tSync/tProbe are
+    // filled as each leg resolves so emit() can report per-stage deltas.
+    // Beacon is fire-and-forget (keepalive) and never affects control flow.
+    const t0 = performance.now();
+    const coldHint = firstStudentSubmitSinceLoad;
+    firstStudentSubmitSinceLoad = false;
+    let tAuth = 0;
+    let tSync = 0;
+    let tProbe = 0;
+    let lastAttempt = 0;
+    const emit = (extra = {}) =>
+      reportLoginTiming({
+        flow: 'student',
+        attempt: lastAttempt,
+        coldHint,
+        auth: tAuth ? Math.round(tAuth - t0) : 0,
+        sync: tSync && tAuth ? Math.round(tSync - tAuth) : 0,
+        probe: tProbe && tSync ? Math.round(tProbe - tSync) : 0,
+        total: Math.round(performance.now() - t0),
+        ...extra,
+      });
+
     try {
       const supabase = getSupabaseBrowser();
       // PR #138's defence: when a cached browser client has a session whose
@@ -72,6 +100,7 @@ function StudentLoginInner() {
 
       let lastErr;
       for (let attempt = 0; attempt < 2; attempt++) {
+        lastAttempt = attempt;
         try {
           const { data, error: authError } = await withTimeout(
             // 8 s: healthy legs finish <1 s; with the one timeout-retry this
@@ -79,7 +108,9 @@ function StudentLoginInner() {
             supabase.auth.signInWithPassword({ email, password }),
             8000,
           );
+          tAuth = performance.now();
           if (authError) {
+            emit({ error: true, stage: 'auth' });
             setError(authError.message);
             return;
           }
@@ -97,11 +128,13 @@ function StudentLoginInner() {
               }),
               8000,
             );
+            tSync = performance.now();
             // If the cookie sync returns non-2xx (401 bad token, 500, …), the
             // destination RSC sees a guest and bounces straight back to login —
             // which reads to the user as "my correct password didn't work".
             // Surface it instead of navigating into a silent loop.
             if (!sessionRes.ok) {
+              emit({ error: true, stage: 'sync' });
               setError(t('sessionError'));
               return;
             }
@@ -122,9 +155,11 @@ function StudentLoginInner() {
                 }),
                 8000,
               );
+              tProbe = performance.now();
               if (profileRes.status === 409) {
                 const profileBody = await profileRes.json().catch(() => ({}));
                 if (profileBody.conflict_role === 'landlord') {
+                  emit({ conflict: 'landlord' });
                   const conflictUrl = new URL(window.location.href);
                   conflictUrl.searchParams.set('roleConflict', 'landlord');
                   if (data.session.user?.email) {
@@ -139,6 +174,7 @@ function StudentLoginInner() {
             }
           }
 
+          emit();
           if (safeNext) {
             // useRouter.push with a locale-prefixed path won't accept ?, so we
             // hand a raw URL to window.location for paths that include query
@@ -156,6 +192,7 @@ function StudentLoginInner() {
           break;
         }
       }
+      emit({ error: true, stage: 'exception' });
       setError(lastErr?.message || 'Something went wrong. Please try again.');
     } finally {
       setStage('');
