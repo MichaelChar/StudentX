@@ -152,10 +152,26 @@ input[type="range"]::-moz-range-thumb {
   0%, 100% { transform: translate(-50%, -50%) rotate(45deg) scale(1); }
   50%      { transform: translate(-50%, -50%) rotate(45deg) scale(1.6); }
 }
+
+/*
+  EncryptButton gradient sweep (#260) — replaces the motion/react motion.span
+  so the auth pages don't ship an animation library. The scale(1.25) keeps the
+  element's `scale-125` while the keyframe drives translateY; the wrapper's
+  group-hover opacity still gates it to hover only.
+*/
+@keyframes encrypt-sweep {
+  from { transform: translateY(100%) scale(1.25); }
+  to   { transform: translateY(-100%) scale(1.25); }
+}
+.encrypt-sweep {
+  animation: encrypt-sweep 1s linear infinite alternate;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .bauhaus-rotate,
   .bauhaus-orbit,
-  .bauhaus-pulse {
+  .bauhaus-pulse,
+  .encrypt-sweep {
     animation: none !important;
   }
 }
