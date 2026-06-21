@@ -49,6 +49,11 @@ function StudentLoginInner() {
   // Supabase round-trip. Fire-and-forget; cheap GET, no auth.
   useEffect(() => {
     fetch('/api/health', { cache: 'no-store' }).catch(() => {});
+    // Warm the destination RSC payload + route chunks too (#257), so the
+    // post-auth navigation is a cache hit instead of a 100–300 ms fetch.
+    // safeNext is validated internal-path-only; no-op in `next dev`.
+    router.prefetch(safeNext || '/student/account');
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function handleSubmit(e) {
