@@ -4,6 +4,7 @@ import {
   extractToken,
   getUserFromToken,
   getSupabaseWithToken,
+  getSupabaseAsService,
   cleanupFreshOrphanAuthUser,
 } from '@/lib/supabaseServer';
 import { normalizeSingleLine } from '@/lib/textNormalize';
@@ -102,8 +103,9 @@ export async function POST(request) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  // Return existing profile if already created
-  const { data: existing } = await getSupabase()
+  // Return existing profile if already created. Service-role client needed
+  // because auth_user_id is revoked from anon (migration 058).
+  const { data: existing } = await getSupabaseAsService()
     .from('landlords')
     .select('landlord_id, name, email, onboarding_completed')
     .eq('auth_user_id', user.id)
@@ -111,8 +113,9 @@ export async function POST(request) {
 
   if (existing) return NextResponse.json({ landlord: existing });
 
-  // Check if a landlord exists with the same email but no auth_user_id (e.g. seeded data)
-  const { data: orphan } = await getSupabase()
+  // Check if a landlord exists with the same email but no auth_user_id (e.g. seeded data).
+  // Service-role client needed because email and auth_user_id are revoked from anon.
+  const { data: orphan } = await getSupabaseAsService()
     .from('landlords')
     .select('landlord_id, name, email, onboarding_completed')
     .eq('email', user.email)

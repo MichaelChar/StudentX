@@ -1,10 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
+import { extractToken, getUserFromToken, getSupabaseAsService } from '@/lib/supabaseServer';
 import { getStripe, getOrCreateCustomer } from '@/lib/stripe';
 
 async function getLandlord(userId) {
-  const { data } = await getSupabase()
+  const { data } = await getSupabaseAsService()
     .from('landlords')
     .select('landlord_id, name, email')
     .eq('auth_user_id', userId)
@@ -49,7 +49,7 @@ export async function POST(request) {
   }
 
   try {
-    const customerId = await getOrCreateCustomer(supabase, landlord.landlord_id, landlord.email, landlord.name);
+    const customerId = await getOrCreateCustomer(getSupabaseAsService(), landlord.landlord_id, landlord.email, landlord.name);
     const stripe = getStripe();
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';

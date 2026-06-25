@@ -11,6 +11,7 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const extractToken = vi.fn();
 const getUserFromToken = vi.fn();
 const getSupabaseWithToken = vi.fn();
+const getSupabaseAsService = vi.fn();
 const cleanupFreshOrphanAuthUser = vi.fn();
 const getSupabase = vi.fn();
 
@@ -18,6 +19,7 @@ vi.mock('@/lib/supabaseServer', () => ({
   extractToken: (...args) => extractToken(...args),
   getUserFromToken: (...args) => getUserFromToken(...args),
   getSupabaseWithToken: (...args) => getSupabaseWithToken(...args),
+  getSupabaseAsService: (...args) => getSupabaseAsService(...args),
   cleanupFreshOrphanAuthUser: (...args) => cleanupFreshOrphanAuthUser(...args),
 }));
 vi.mock('@/lib/supabase', () => ({
@@ -33,6 +35,7 @@ beforeEach(() => {
   extractToken.mockReset();
   getUserFromToken.mockReset();
   getSupabaseWithToken.mockReset();
+  getSupabaseAsService.mockReset();
   cleanupFreshOrphanAuthUser.mockReset();
   getSupabase.mockReset();
 });
@@ -52,12 +55,21 @@ function table(terminal) {
   return chain;
 }
 
-function fakeAnonSupabase({ existing = null, orphan = null, maxRow = null } = {}) {
-  // The route makes 3 anon reads in this order: existing landlord, orphan
-  // landlord, max landlord_id for auto-numbering. Return them in sequence.
+// The route POST uses service-role for the first two landlord reads
+// (existing-profile check + orphan-link check) and anon for the third
+// (max landlord_id for auto-numbering). Set up each client separately.
+function fakeServiceSupabase({ existing = null, orphan = null } = {}) {
   const sequence = [
     table({ data: existing, error: existing ? null : { code: 'PGRST116' } }),
     table({ data: orphan, error: orphan ? null : { code: 'PGRST116' } }),
+  ];
+  return {
+    from: vi.fn(() => sequence.shift() ?? table({ data: null, error: null })),
+  };
+}
+
+function fakeAnonSupabase({ maxRow = null } = {}) {
+  const sequence = [
     table({ data: maxRow ? [maxRow] : [], error: null }),
   ];
   return {
@@ -83,11 +95,12 @@ describe('POST /api/landlord/profile — role-conflict cleanup', () => {
   it('orphan-link branch: returns 409 + delegates to cleanupFreshOrphanAuthUser', async () => {
     extractToken.mockReturnValue('jwt');
     getUserFromToken.mockResolvedValue(FRESH_USER());
-    getSupabase.mockReturnValue(
-      fakeAnonSupabase({
+    getSupabaseAsService.mockReturnValue(
+      fakeServiceSupabase({
         orphan: { landlord_id: 'L42', email: 'fresh@example.com' },
       })
     );
+    getSupabase.mockReturnValue(fakeAnonSupabase());
     getSupabaseWithToken.mockReturnValue({
       rpc: vi.fn(async () => ({
         error: {
@@ -111,6 +124,7 @@ describe('POST /api/landlord/profile — role-conflict cleanup', () => {
   it('new-insert branch: returns 409 + delegates to cleanupFreshOrphanAuthUser', async () => {
     extractToken.mockReturnValue('jwt');
     getUserFromToken.mockResolvedValue(FRESH_USER());
+    getSupabaseAsService.mockReturnValue(fakeServiceSupabase());
     getSupabase.mockReturnValue(fakeAnonSupabase({ maxRow: { landlord_id: '0041' } }));
 
     const insertChain = {
