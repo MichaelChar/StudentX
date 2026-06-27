@@ -131,21 +131,13 @@ const nextConfig = {
         source: '/student/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
-      // EXPERIMENT (#261): the login/signup SHELLS are identical for every
-      // visitor — both are 'use client' forms whose auth + ?next=/?roleConflict=
-      // behavior is entirely client-side (useSearchParams in Suspense), and
-      // neither page nor its layout chain reads cookies()/headers() server-side
-      // (verified). Let the edge cache them so first paint doesn't pay a Worker
-      // render + cold start. These come AFTER the PRIVATE rules above so the
-      // public value wins for these exact paths (last match wins — VERIFY with
-      // the curl in the PR, don't trust it). Everything else under /student/* and
-      // /landlord/* stays private. ABORT: if a deploy still returns
-      // `private, no-cache` (OpenNext force-privates request-scoped routes —
-      // CLAUDE.md quirk #1), revert these four rules and close #261 wontfix.
-      { source: '/student/login', headers: PUBLIC_CACHE_HEADERS },
-      { source: '/student/signup', headers: PUBLIC_CACHE_HEADERS },
-      { source: '/property/:city/landlord/login', headers: PUBLIC_CACHE_HEADERS },
-      { source: '/property/:city/landlord/signup', headers: PUBLIC_CACHE_HEADERS },
+      // (#261 reverted) An experiment to mark the login/signup shells
+      // `public, s-maxage=300` was merged then reverted: custom-domain Worker
+      // responses bypass Cloudflare's CDN cache, so the header changed nothing
+      // (verified — TTFB on /student/login was identical to the private routes,
+      // no cf-cache-status). Edge-caching these would require a Cloudflare Cache
+      // Rule (dashboard), not a Cache-Control header. The login pages stay on
+      // the PRIVATE rule above.
       // Vary: Cookie on listing detail responses so Cloudflare's edge
       // treats anon (no sb-access-token) and authed (with cookie)
       // requests as separate cache entries — prevents serving the
