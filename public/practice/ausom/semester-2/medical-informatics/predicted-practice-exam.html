@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Medical Informatics — Predicted Practice Exams</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: #ffffff;
+      color: #0a2540;
+      -webkit-font-smoothing: antialiased;
+      min-height: 100vh;
+    }
+
+    /* ── Back row ── */
+    .back-row {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 32px 24px 0;
+    }
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      color: rgba(10,37,64,0.45);
+      text-decoration: none;
+      letter-spacing: -0.1px;
+      background: none;
+      border: none;
+      padding: 0;
+      cursor: pointer;
+    }
+    .back-link:hover { color: rgba(10,37,64,0.72); }
+    .back-arrow { font-size: 16px; line-height: 1; }
+
+    /* ── Shell ── */
+    .shell-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 28px 24px 64px;
+    }
+    .shell-inner { width: 100%; max-width: 560px; }
+
+    /* ── Progress ── */
+    .progress-label {
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+      color: rgba(10,37,64,0.55);
+      margin-bottom: 10px;
+    }
+    .progress-track {
+      height: 6px;
+      border-radius: 999px;
+      background: rgba(10,37,64,0.08);
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+    .progress-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: #635BFF;
+      transition: width 280ms cubic-bezier(.2,.7,.2,1);
+    }
+
+    /* ── Topic badge ── */
+    .topic-badge {
+      display: inline-flex;
+      align-items: center;
+      height: 24px;
+      padding: 0 11px;
+      border-radius: 999px;
+      background: rgba(99,91,255,0.10);
+      color: #635BFF;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── Question stem ── */
+    .question-stem {
+      font-weight: 600;
+      font-size: 22px;
+      letter-spacing: -0.01em;
+      line-height: 1.3;
+      color: #0a2540;
+      margin: 16px 0 22px;
+    }
+    .stem-desc { /* part before code block */ }
+    .code-block {
+      display: block;
+      font-family: 'Courier New', Courier, monospace;
+      font-size: 13.5px;
+      font-weight: 400;
+      line-height: 1.65;
+      background: rgba(10,37,64,0.04);
+      border: 1px solid rgba(10,37,64,0.10);
+      border-radius: 8px;
+      padding: 12px 14px;
+      margin-top: 12px;
+      white-space: pre;
+      overflow-x: auto;
+    }
+
+    /* ── Option buttons ── */
+    .options-list { display: flex; flex-direction: column; gap: 10px; }
+
+    .option-btn {
+      display: flex;
+      align-items: center;
+      gap: 13px;
+      width: 100%;
+      text-align: left;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1.5px solid rgba(10,37,64,0.14);
+      background: #ffffff;
+      color: #0a2540;
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease, opacity 160ms ease;
+      font-size: 15.5px;
+      line-height: 1.4;
+      font-family: inherit;
+    }
+    .option-btn:hover:not(.locked) {
+      border-color: #635BFF;
+      background: #f6f4ff;
+    }
+    .option-btn.locked { cursor: default; }
+    .option-btn.opt-correct {
+      border-color: rgba(22,163,74,0.45);
+      background: rgba(22,163,74,0.10);
+    }
+    .option-btn.opt-wrong {
+      border-color: rgba(220,38,38,0.45);
+      background: rgba(220,38,38,0.08);
+    }
+    .option-btn.opt-faded { opacity: 0.6; }
+
+    .option-badge {
+      flex-shrink: 0;
+      width: 28px;
+      height: 28px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10,37,64,0.06);
+      color: #0a2540;
+      font-size: 13.5px;
+      font-weight: 700;
+    }
+    .opt-correct .option-badge { background: #16a34a; color: #ffffff; }
+    .opt-wrong .option-badge   { background: #dc2626; color: #ffffff; }
+
+    .option-text { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+
+    .answer-tag {
+      margin-left: auto;
+      flex-shrink: 0;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 0.02em;
+      white-space: nowrap;
+    }
+    .answer-tag-correct {
+      background: rgba(22,163,74,0.10);
+      color: #0f7a3d;
+      border: 1px solid rgba(22,163,74,0.45);
+    }
+    .answer-tag-wrong {
+      background: rgba(220,38,38,0.08);
+      color: #b42318;
+      border: 1px solid rgba(220,38,38,0.45);
+    }
+
+    /* ── Feedback panel ── */
+    .feedback-panel {
+      margin-top: 18px;
+      border-radius: 18px;
+      border: 1px solid rgba(10,37,64,0.08);
+      background: #f6f4ff;
+      padding: 18px;
+    }
+    .result-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      font-weight: 600;
+      font-size: 13px;
+      margin-bottom: 14px;
+    }
+    .result-pill.correct {
+      background: rgba(22,163,74,0.12);
+      border: 1px solid rgba(22,163,74,0.32);
+      color: #0d7038;
+    }
+    .result-pill.incorrect {
+      background: rgba(220,38,38,0.10);
+      border: 1px solid rgba(220,38,38,0.30);
+      color: #b42318;
+    }
+    .explanation-text {
+      font-size: 14.5px;
+      line-height: 1.55;
+      color: #0a2540;
+      white-space: pre-line;
+    }
+
+    /* ── T/F statement rows ── */
+    .stmt-row {
+      padding: 16px;
+      border-radius: 12px;
+      border: 1px solid rgba(10,37,64,0.10);
+      background: #ffffff;
+      margin-bottom: 10px;
+    }
+    .stmt-text {
+      font-size: 15px;
+      line-height: 1.45;
+      color: #0a2540;
+      margin-bottom: 12px;
+    }
+    .tf-btns { display: flex; gap: 8px; }
+
+    .tf-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 18px;
+      border-radius: 14px;
+      border: 1.5px solid rgba(10,37,64,0.14);
+      background: #ffffff;
+      color: #0a2540;
+      cursor: pointer;
+      transition: border-color 160ms ease, background 160ms ease, opacity 160ms ease;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: inherit;
+    }
+    .tf-btn:hover:not(.locked) {
+      border-color: #635BFF;
+      background: #f6f4ff;
+    }
+    .tf-btn.locked { cursor: default; }
+    .tf-btn.tf-correct {
+      border-color: rgba(22,163,74,0.45);
+      background: rgba(22,163,74,0.10);
+      color: #0f7a3d;
+    }
+    .tf-btn.tf-wrong {
+      border-color: rgba(220,38,38,0.45);
+      background: rgba(220,38,38,0.08);
+      color: #b42318;
+    }
+    .tf-btn.tf-faded { opacity: 0.6; }
+
+    .tf-badge {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(10,37,64,0.06);
+      color: #0a2540;
+      font-size: 12.5px;
+      font-weight: 700;
+    }
+    .tf-correct .tf-badge { background: #16a34a; color: #ffffff; }
+    .tf-wrong .tf-badge   { background: #dc2626; color: #ffffff; }
+
+    .stmt-explanation {
+      margin-top: 10px;
+      font-size: 13px;
+      line-height: 1.5;
+      color: rgba(10,37,64,0.72);
+      padding: 9px 12px;
+      border-radius: 8px;
+      background: rgba(10,37,64,0.04);
+      white-space: pre-line;
+    }
+
+    /* ── Button row ── */
+    .button-row {
+      margin-top: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .primary-btn {
+      appearance: none;
+      border: none;
+      border-radius: 14px;
+      padding: 14px 24px;
+      background: #635BFF;
+      color: #ffffff;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 15.5px;
+      letter-spacing: -0.01em;
+      cursor: pointer;
+      box-shadow: 0 10px 26px -14px rgba(99,91,255,0.45);
+      transition: transform 200ms cubic-bezier(.2,.7,.2,1), box-shadow 200ms ease;
+    }
+    .primary-btn:hover {
+      box-shadow: 0 18px 40px -16px rgba(99,91,255,0.55), 0 6px 16px -10px rgba(10,37,64,0.18);
+      transform: translateY(-1px);
+    }
+
+    /* ── Finish card ── */
+    .finish-card {
+      border-radius: 22px;
+      border: 1px solid rgba(99,91,255,0.25);
+      background: #f6f4ff;
+      padding: 40px 32px;
+      box-shadow: 0 10px 28px -16px rgba(10,37,64,0.16);
+      text-align: center;
+    }
+    .finish-card h2 {
+      font-weight: 600;
+      font-size: 24px;
+      letter-spacing: -0.01em;
+      color: #0a2540;
+      margin: 0 0 10px;
+    }
+    .finish-card p {
+      font-size: 15px;
+      line-height: 1.55;
+      color: rgba(10,37,64,0.6);
+      margin: 0 0 28px;
+    }
+    .finish-icon {
+      font-size: 48px;
+      margin-bottom: 20px;
+      display: block;
+    }
+  </style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+/* ─────────────────────────────────────────────
+   Embedded question data
+───────────────────────────────────────────── */
+const RAW = {"title":"Medical Informatics — Predicted Practice Exams","description":"Two half-exams focused on high-frequency exam topics: Boolean logic, MATLAB/algorithm tracing, MRI, networking, binary, interoperability, telemedicine, CDSS, and image processing.","exams":[{"id":"exam1","title":"Predicted Half-Exam 1","focus":"Boolean Logic · Algorithms · MRI · Networking · Binary","questions":[{"id":"e1q1","type":"mcq","question":"Simplify the Boolean expression: E = (A·B + A') · B + A·B","options":{"A":"E = A·B","B":"E = B","C":"E = A' + B","D":"E = 1"},"answer":"B","explanation":"Expand: (A·B + A')·B + A·B = A·B·B + A'·B + A·B = A·B + A'·B + A·B = A·B + A'·B = B(A + A') = B(1) = B."},{"id":"e1q2","type":"mcq","question":"Simplify: E = (B·A' + D') · A' + D'","options":{"A":"E = A'","B":"E = D'","C":"E = A' + D'","D":"E = D' + B·A'"},"answer":"D","explanation":"Expand: B·A'·A' + D'·A' + D' = B·A' + D'·A' + D' = B·A' + D'(A' + 1) = B·A' + D'."},{"id":"e1q3","type":"mcq","question":"A retrospective study of heart failure patients examines 5-year mortality across: Group A = smokers, Group B = hypertensive, Group C = received drug X, Group D = received drug Y. Which Boolean function expresses mortality among smokers with comorbidities?","options":{"A":"F' = A·B + A·C","B":"F' = A'·B + A'·C","C":"F' = A·B' + A·C'","D":"F' = B + C + D"},"answer":"A","explanation":"Mortality is driven by smokers (A) who also have hypertension (B) OR smokers (A) who received drug X (C). Drug Y (D) is the comparison/reference group and does not appear as a mortality driver."},{"id":"e1q4","type":"mcq","question":"What is the MAXIMUM VALUE representable with 6 binary digits?","options":{"A":"64","B":"63","C":"32","D":"62"},"answer":"B","explanation":"With 6 binary digits: 2^6 - 1 = 63. (2^6 = 64 is the number of distinct values, not the maximum value.)"},{"id":"e1q5","type":"mcq","question":"How many DISTINCT VALUES can be represented with 6 binary digits?","options":{"A":"63","B":"32","C":"64","D":"62"},"answer":"C","explanation":"2^6 = 64 distinct values (0 through 63). Common trap: the maximum value is 63, but the count of representable values is 64."},{"id":"e1q6","type":"mcq","question":"What will be the value of A and i when the following MATLAB code finishes?\n\nA = 3\nfor i = 1:5\n   if (A <= i)\n      A = A + 2\n   end\nend","options":{"A":"A=5, i=5","B":"A=7, i=5","C":"A=5, i=3","D":"A=9, i=5"},"answer":"B","explanation":"Trace: i=1: 3≤1? No. i=2: 3≤2? No. i=3: 3≤3? Yes → A=5. i=4: 5≤4? No. i=5: 5≤5? Yes → A=7. Final: A=7, i=5."},{"id":"e1q7","type":"mcq","question":"A flowchart initialises N=0 and Σ=0, then loops: input X → Σ=Σ+X → N=N+1 → checks N<50. If YES, loops again; if NO, outputs μ=Σ/N and ends. How many repetitions are completed when the algorithm exits?","options":{"A":"49","B":"50","C":"51","D":"48"},"answer":"B","explanation":"N increments before the check. The loop runs while N<50. After the 50th iteration N=50, which fails N<50, so the loop exits. 50 repetitions completed. (Contrast: N<=50 would give 51 — a common exam trap with shifted boundary conditions.)"},{"id":"e1q8","type":"mcq","question":"When two Metropolitan Area Networks (MANs) are interconnected, the result is:","options":{"A":"A LAN","B":"A WAN","C":"A subnet","D":"A BAN"},"answer":"B","explanation":"LAN → MAN → WAN is the hierarchy. Connecting two MANs produces a Wide Area Network (WAN)."},{"id":"e1q9","type":"mcq","question":"Which of the following is NOT a limitation of telemedicine?","options":{"A":"Lack of broadband infrastructure in rural/mountainous areas","B":"Legal and liability uncertainties across jurisdictions","C":"Early access to patient biomedical data","D":"Absence of physical examination"},"answer":"C","explanation":"Early access to patient biomedical data is an ADVANTAGE of telemedicine, not a limitation."},{"id":"e1q10","type":"mcq","question":"Gadolinium contrast agent in cardiac MRI is primarily used to assess:","options":{"A":"Myocardial edema","B":"Myocardial viability","C":"Left ventricular wall motion","D":"Coronary artery calcification"},"answer":"B","explanation":"Gadolinium (late gadolinium enhancement) is used to assess myocardial viability — identifying scarred/non-viable tissue. Edema is assessed via water dipole movement (T2 imaging)."},{"id":"e1q11","type":"mcq","question":"Movement of water dipoles in cardiac MRI is used to image:","options":{"A":"Myocardial viability","B":"Coronary artery stenosis","C":"Myocardial edema","D":"Valve regurgitation"},"answer":"C","explanation":"Edema = fluid/water accumulation. MRI sequences sensitive to water dipole movement (T2-weighted) are used to detect myocardial edema."},{"id":"e1q12","type":"mcq","question":"Which of the following BEST describes interoperability in healthcare IT?","options":{"A":"All systems share the same hardware infrastructure","B":"Systems can exchange AND correctly interpret data regardless of vendor","C":"Hospitals are connected to the same telecommunications network","D":"Patient data is accessible to all authenticated users"},"answer":"B","explanation":"True interoperability requires both exchange AND semantic understanding of data. Being on the same network or sharing an interface is not sufficient — systems must interpret the data correctly."},{"id":"e1q13","type":"mcq","question":"An image where every pixel has a grayscale value of either 0 or 255 would appear as:","options":{"A":"A completely black image","B":"A completely white image","C":"A purely black and white (binary) image with no gray tones","D":"A high-contrast image with maximum noise"},"answer":"C","explanation":"0 = black, 255 = white. If every pixel is one of these two extremes, the image is purely black and white with no intermediate gray tones — a binary image."},{"id":"e1q14","type":"true_false","question":"For the histogram of a grayscale image, indicate whether each statement is TRUE or FALSE.","statements":[{"text":"The right side of the histogram corresponds to bright (high intensity) pixels.","answer":true,"explanation":"Higher x-values = higher brightness. The right side of the histogram = bright pixels."},{"text":"The x-value at the histogram's highest peak indicates the most common shade of gray in the image.","answer":true,"explanation":"The x-axis is the gray level; the peak shows which gray level appears most frequently."},{"text":"An overexposed image has histogram values concentrated toward the left (dark) side.","answer":false,"explanation":"Overexposed = too bright → histogram concentrated toward the RIGHT (high brightness values). Underexposed = concentrated left."},{"text":"The spatial position of pixels in the image corresponds to their position on the histogram x-axis.","answer":false,"explanation":"The histogram shows frequency of gray levels only — it has no spatial information about where pixels appear in the image."},{"text":"A histogram can be used to directly determine the noise level of an image.","answer":false,"explanation":"Histograms show tonal distribution, not noise. Noise requires other analysis methods (e.g. standard deviation of a flat region)."}]},{"id":"e1q15","type":"true_false","question":"For Boolean logic and digital systems, indicate whether each statement is TRUE or FALSE.","statements":[{"text":"X AND 0 = 0 for any value of X.","answer":true,"explanation":"AND requires both inputs to be 1. If one input is 0, the output is always 0."},{"text":"X OR 1 = X for any value of X.","answer":false,"explanation":"X OR 1 = 1 always, not X. OR with 1 is always 1 regardless of X."},{"text":"X AND X' = 1.","answer":false,"explanation":"A variable AND its complement = 0, not 1. (X AND X' = 0.)"},{"text":"In Boolean algebra, A + A·B simplifies to A.","answer":true,"explanation":"Absorption law: A + A·B = A(1 + B) = A·1 = A."},{"text":"5 binary digits can represent a maximum value of 32.","answer":false,"explanation":"5 binary digits: 2^5 = 32 distinct values, but the MAXIMUM VALUE is 31 (= 2^5 - 1)."}]}]},{"id":"exam2","title":"Predicted Half-Exam 2","focus":"Interoperability · CDSS · Telemedicine · Image Processing · Algorithms · Networking","questions":[{"id":"e2q1","type":"mcq","question":"Simplify the Boolean expression: E = (A + B') · A + B'","options":{"A":"E = A + B'","B":"E = A","C":"E = B'","D":"E = 1"},"answer":"A","explanation":"Expand: A·A + A·B' + B' = A + A·B' + B' = A + B'(A + 1) = A + B'·1 = A + B'."},{"id":"e2q2","type":"mcq","question":"What will be the output of the following MATLAB code?\n\nA = 2\nfor i = 1:5\n   if (A <= i)\n      A = A + 1\n   end\nend","options":{"A":"A=5, i=5","B":"A=6, i=5","C":"A=4, i=5","D":"A=7, i=5"},"answer":"B","explanation":"Trace: i=1: 2≤1? No. i=2: 2≤2? Yes → A=3. i=3: 3≤3? Yes → A=4. i=4: 4≤4? Yes → A=5. i=5: 5≤5? Yes → A=6. Final: A=6, i=5. (This is the code from the June 2025 exam.)"},{"id":"e2q3","type":"mcq","question":"A flowchart initialises M=A(1). It then loops from i=2 to N, comparing each A(i) to M and replacing M if A(i) < M. Given A=[7, 2, 9, 1, 5, 3], what is M after the loop completes?","options":{"A":"7","B":"2","C":"1","D":"9"},"answer":"C","explanation":"This finds the MINIMUM. M starts at 7. i=2: 2<7 → M=2. i=3: 9<2? No. i=4: 1<2 → M=1. i=5: 5<1? No. i=6: 3<1? No. Final M=1. (Trap: the original exam found the maximum with >; this version uses < to find the minimum.)"},{"id":"e2q4","type":"mcq","question":"Which of the following correctly describes the function of a Clinical Decision Support System (CDSS)?","options":{"A":"It replaces the physician's diagnosis with an automated one","B":"It is used for notifications, reminders, diagnostic support, and drug interaction alerts","C":"It supports only patient self-management and not clinical staff","D":"It is exclusively used for billing and administrative tasks"},"answer":"B","explanation":"CDSS supports clinicians (not replaces them) with notifications, reminders, diagnostic support, and alerts. It can also support patients, but its primary role is aiding clinical decision-making."},{"id":"e2q5","type":"mcq","question":"Which of the following is the PRIMARY concern when deploying telemedicine in rural and mountainous areas?","options":{"A":"Patients are unwilling to use technology","B":"Lack of reliable broadband/telecommunications infrastructure","C":"The high cost of MRI equipment in remote areas","D":"Absence of electronic patient records"},"answer":"B","explanation":"The main barrier to telemedicine in rural/mountainous areas is inadequate telecommunications infrastructure — without reliable connectivity, telemedicine cannot function."},{"id":"e2q6","type":"mcq","question":"Which of the following searching strategies would most NARROW results when searching for 'hypertension' online?","options":{"A":"hypertension OR diabetes","B":"hypertension NOT treatment","C":"hypertension AND diabetes AND obesity","D":"hypertension AND diabetes"},"answer":"C","explanation":"AND narrows results by requiring all terms to be present. Adding more AND terms narrows further. 'hypertension AND diabetes AND obesity' is the most restrictive query."},{"id":"e2q7","type":"mcq","question":"De-identification of a DICOM image refers to:","options":{"A":"Compressing the image to reduce file size","B":"Converting the image from grayscale to color","C":"Removing patient-identifying metadata (name, DOB, ID) from the image header","D":"Encrypting the pixel data to prevent unauthorized viewing"},"answer":"C","explanation":"DICOM files contain a header with patient metadata. De-identification removes or anonymises this information (name, date of birth, ID numbers) to protect patient privacy."},{"id":"e2q8","type":"mcq","question":"Web 2.0 is best characterized by:","options":{"A":"Static websites with read-only content published by institutions","B":"User-generated content, interactivity, and social collaboration (blogs, wikis, social media)","C":"Secure encrypted government health portals","D":"The transition from dial-up to broadband internet"},"answer":"B","explanation":"Web 2.0 marks the shift from static, read-only websites (Web 1.0) to interactive, user-generated content — blogs, wikis, social media, and collaborative platforms."},{"id":"e2q9","type":"mcq","question":"Which of the following is NOT a characteristic of health-related information?","options":{"A":"Large volume","B":"Continuous and uninterrupted need for availability","C":"Simplicity and low complexity","D":"Multiplicity of recipients and distribution channels"},"answer":"C","explanation":"Health information is highly complex — it spans multiple formats, sources, and requires expert interpretation. Simplicity and low complexity are NOT characteristics of health data."},{"id":"e2q10","type":"mcq","question":"The main purpose of a Hospital Information System (HIS) is:","options":{"A":"To process medical images using AI","B":"To integrate and manage all clinical, administrative, and financial data within a hospital","C":"To provide telemedicine services to outpatients","D":"To store only laboratory results and discharge summaries"},"answer":"B","explanation":"A HIS integrates all hospital functions — clinical, administrative, and financial — into a unified system to support hospital-wide operations."},{"id":"e2q11","type":"mcq","question":"Which of the following is a defining characteristic of a Personal Health Record (PHR) that differentiates it from an EHR?","options":{"A":"It is maintained by the healthcare provider","B":"It is initiated and maintained by the individual patient","C":"It is only accessible to insurance companies","D":"It is a legal medical document admissible in court"},"answer":"B","explanation":"The defining feature of a PHR is that it is initiated and maintained by the individual patient. EHR and EMR are institution-maintained records."},{"id":"e2q12","type":"mcq","question":"Which of the following is a major problem with medical information quality on the internet?","options":{"A":"There is too much peer-reviewed content freely available","B":"Search engines do not index medical content","C":"Anyone can publish medical information online without review or verification","D":"Medical websites do not support mobile devices"},"answer":"C","explanation":"A core quality problem is the lack of gatekeeping — anyone can publish medical information online, with no requirement for accuracy, peer review, or expertise."},{"id":"e2q13","type":"mcq","question":"What is Maximum Intensity Projection (MIP) primarily used for in medical imaging?","options":{"A":"Enhancing soft tissue contrast in MRI","B":"Visualising structures with high signal intensity (e.g. blood vessels) across a 3D volume","C":"Reducing image noise in CT scans","D":"Converting DICOM images to JPEG format"},"answer":"B","explanation":"MIP projects the voxel with the highest signal intensity along each ray through a 3D dataset. It is widely used for visualising bright structures like blood vessels in angiography."},{"id":"e2q14","type":"true_false","question":"Regarding analog and digital signals, indicate whether each statement is TRUE or FALSE.","statements":[{"text":"Digital signals can be derived from analog signals through sampling and quantization.","answer":true,"explanation":"Analog-to-digital conversion (ADC) samples the analog signal at regular intervals and quantizes each sample to a digital value."},{"text":"Analog signals are immune to noise, unlike digital signals.","answer":false,"explanation":"The opposite is true. Analog signals are MORE susceptible to noise and interference. Digital signals can be regenerated cleanly."},{"text":"The Nyquist theorem states the sampling rate must be at least twice the highest frequency of the signal.","answer":true,"explanation":"Nyquist-Shannon sampling theorem: sampling rate ≥ 2 × f_max. This prevents aliasing."},{"text":"Digital signals can only take two values: 0 or 1.","answer":false,"explanation":"Binary digital signals use 0 and 1, but digital signals in general can use multiple discrete levels (e.g. 256 levels in an 8-bit system)."},{"text":"Analog signals always occupy more storage space than their digital equivalents.","answer":false,"explanation":"Analog signals are continuous and not stored in the same way as digital. This comparison is not universally true — digital files can be very large depending on resolution/sampling rate."}]},{"id":"e2q15","type":"true_false","question":"For Boolean logic statements, indicate whether each statement is TRUE or FALSE.","statements":[{"text":"A + A' = 1","answer":true,"explanation":"Complement law: a variable OR its complement always equals 1."},{"text":"A · A' = 1","answer":false,"explanation":"Complement law: a variable AND its complement always equals 0, not 1."},{"text":"A + A·B = A·B  (absorption law)","answer":false,"explanation":"The absorption law states A + A·B = A, not A·B. This is a common trap."},{"text":"The expression A·B + A·C can be factored as A·(B+C).","answer":true,"explanation":"Distributive law: A·B + A·C = A·(B + C)."},{"text":"With 4 binary digits, the maximum representable value is 16.","answer":false,"explanation":"2^4 = 16 distinct values, but the maximum VALUE is 15 (= 2^4 - 1 = 1111 in binary)."}]}]}]};
+
+/* ─────────────────────────────────────────────
+   Transform raw data into a flat questions array
+───────────────────────────────────────────── */
+function buildQuestions(raw) {
+  const out = [];
+  raw.exams.forEach((exam, examIdx) => {
+    const badge = examIdx === 0 ? 'Half-Exam 1' : 'Half-Exam 2';
+    exam.questions.forEach((q) => {
+      if (q.type === 'mcq') {
+        const labels = ['A', 'B', 'C', 'D'];
+        const options = labels.map((k) => ({ label: k, text: q.options[k] }));
+        const correctIdx = labels.indexOf(q.answer);
+        out.push({ id: q.id, type: 'mcq', badge, stem: q.question, options, correctIdx, explanation: q.explanation });
+      } else if (q.type === 'true_false') {
+        out.push({ id: q.id, type: 'true_false', badge, stem: q.question, statements: q.statements });
+      }
+    });
+  });
+  return out;
+}
+
+const QUESTIONS = buildQuestions(RAW);
+const TOTAL = QUESTIONS.length;
+
+/* ─────────────────────────────────────────────
+   State
+   answers[i]:
+     MCQ       → null | chosen index (0-3)
+     true_false → null | array of (null | 'T' | 'F') per statement
+───────────────────────────────────────────── */
+let cur = 0;
+let answers = QUESTIONS.map(() => null);
+let finished = false;
+
+function isAnswered(idx) {
+  const q = QUESTIONS[idx];
+  const ans = answers[idx];
+  if (q.type === 'mcq') return ans !== null;
+  if (q.type === 'true_false') return ans !== null && ans.every((a) => a !== null);
+  return false;
+}
+
+function answeredCount() {
+  let n = 0;
+  for (let i = 0; i < TOTAL; i++) if (isAnswered(i)) n++;
+  return n;
+}
+
+/* ─────────────────────────────────────────────
+   Utilities
+───────────────────────────────────────────── */
+function esc(s) {
+  return String(s)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+const CHECK_SVG = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 6 9 17l-5-5"/></svg>`;
+const CROSS_SVG = `<svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>`;
+
+/* Render stem — splits MATLAB/code blocks out of the text */
+function renderStem(text) {
+  const nl2idx = text.indexOf('\n\n');
+  if (nl2idx !== -1) {
+    const desc = text.slice(0, nl2idx);
+    const code = text.slice(nl2idx + 2);
+    return `${esc(desc)}<pre class="code-block">${esc(code)}</pre>`;
+  }
+  return esc(text);
+}
+
+/* ─────────────────────────────────────────────
+   HTML builders
+───────────────────────────────────────────── */
+function buildProgress() {
+  const filled = answeredCount();
+  const pct = TOTAL > 0 ? (filled / TOTAL) * 100 : 0;
+  return `
+    <div class="progress-label">Question ${cur + 1} of ${TOTAL}</div>
+    <div class="progress-track" role="progressbar" aria-valuenow="${filled}" aria-valuemin="0" aria-valuemax="${TOTAL}" aria-label="Progress">
+      <div class="progress-fill" style="width:${pct}%"></div>
+    </div>`;
+}
+
+function buildMcqCard(q, ans) {
+  const locked = ans !== null;
+  let optionsHtml = '';
+  q.options.forEach((opt, i) => {
+    const isCorrect = locked && i === q.correctIdx;
+    const isWrong   = locked && i === ans && i !== q.correctIdx;
+    const isFaded   = locked && !isCorrect && !isWrong;
+    let cls = 'option-btn';
+    if (locked) cls += ' locked';
+    if (isCorrect) cls += ' opt-correct';
+    else if (isWrong) cls += ' opt-wrong';
+    else if (isFaded) cls += ' opt-faded';
+
+    const tagHtml = isCorrect
+      ? `<span class="answer-tag answer-tag-correct">Correct answer</span>`
+      : isWrong
+        ? `<span class="answer-tag answer-tag-wrong">Your answer</span>`
+        : '';
+
+    optionsHtml += `
+      <button class="${cls}" data-mcq-opt="${i}" ${locked ? 'disabled' : ''}>
+        <span class="option-badge">${esc(opt.label)}</span>
+        <span class="option-text">${esc(opt.text)}</span>
+        ${tagHtml}
+      </button>`;
+  });
+
+  return `
+    <span class="topic-badge">${esc(q.badge)}</span>
+    <h2 class="question-stem">${renderStem(q.stem)}</h2>
+    <div class="options-list">${optionsHtml}</div>`;
+}
+
+function buildMcqFeedback(q, ans) {
+  if (ans === null) return '';
+  const correct = ans === q.correctIdx;
+  const pillCls = correct ? 'result-pill correct' : 'result-pill incorrect';
+  const icon    = correct ? CHECK_SVG : CROSS_SVG;
+  const label   = correct ? 'Correct' : 'Incorrect';
+  return `
+    <div class="feedback-panel">
+      <div class="${pillCls}">${icon} ${label}</div>
+      <p class="explanation-text">${esc(q.explanation)}</p>
+    </div>`;
+}
+
+function buildTfCard(q, ans) {
+  // ans: null | array of (null | 'T' | 'F')
+  const stmtAnswers = ans || q.statements.map(() => null);
+  let stmtsHtml = '';
+
+  q.statements.forEach((stmt, si) => {
+    const chosen = stmtAnswers[si];
+    const locked = chosen !== null;
+    const correctVal = stmt.answer ? 'T' : 'F';
+
+    const tfBtns = ['T', 'F'].map((val) => {
+      const isChosen  = chosen === val;
+      const isCorrect = locked && val === correctVal && isChosen;
+      const isWrong   = locked && isChosen && val !== correctVal;
+      // dim the unchosen button once locked
+      const isFaded   = locked && !isChosen;
+
+      let cls = 'tf-btn';
+      if (locked) cls += ' locked';
+      if (isCorrect) cls += ' tf-correct';
+      else if (isWrong) cls += ' tf-wrong';
+      else if (isFaded) cls += ' tf-faded';
+
+      return `<button class="${cls}" data-tf-stmt="${si}" data-tf-val="${val}" ${locked ? 'disabled' : ''}>
+        <span class="tf-badge">${val}</span>
+        ${val === 'T' ? 'True' : 'False'}
+      </button>`;
+    }).join('');
+
+    // Show correct answer + explanation once this statement is answered
+    let stmtFeedback = '';
+    if (locked) {
+      const wasCorrect = chosen === correctVal;
+      const correctLabel = stmt.answer ? 'TRUE' : 'FALSE';
+      const feedbackPrefix = wasCorrect
+        ? `<strong style="color:#0d7038">Correct.</strong> `
+        : `<strong style="color:#b42318">Incorrect.</strong> Correct answer: <strong>${correctLabel}.</strong> `;
+      stmtFeedback = `<div class="stmt-explanation">${feedbackPrefix}${esc(stmt.explanation)}</div>`;
+    }
+
+    stmtsHtml += `
+      <div class="stmt-row">
+        <p class="stmt-text">${esc(stmt.text)}</p>
+        <div class="tf-btns">${tfBtns}</div>
+        ${stmtFeedback}
+      </div>`;
+  });
+
+  return `
+    <span class="topic-badge">${esc(q.badge)} · True / False</span>
+    <h2 class="question-stem">${esc(q.stem)}</h2>
+    ${stmtsHtml}`;
+}
+
+function buildButtonRow(q) {
+  const answered = isAnswered(cur);
+  const isLast = cur === TOTAL - 1;
+  if (!answered) return '<div class="button-row"></div>';
+  const label = isLast ? 'Finish' : 'Next →';
+  return `<div class="button-row"><button class="primary-btn" id="next-btn">${label}</button></div>`;
+}
+
+function buildFinish() {
+  return `
+    <div class="back-row">
+      <a href="/student/ausom/semester-2" class="back-link">
+        <span class="back-arrow">←</span> Back to tests
+      </a>
+    </div>
+    <section class="shell-section">
+      <div class="shell-inner">
+        <div class="finish-card">
+          <span class="finish-icon">✓</span>
+          <h2>All done!</h2>
+          <p>You've completed all ${TOTAL} questions across both Medical Informatics predicted exams. Review any question by going back and restarting, or return to the test list.</p>
+          <a href="/student/ausom/semester-2" class="primary-btn" style="text-decoration:none;display:inline-block;">Back to tests</a>
+        </div>
+      </div>
+    </section>`;
+}
+
+/* ─────────────────────────────────────────────
+   Render
+───────────────────────────────────────────── */
+const app = document.getElementById('app');
+
+function render() {
+  if (finished) {
+    app.innerHTML = buildFinish();
+    return;
+  }
+
+  const q = QUESTIONS[cur];
+  const ans = answers[cur];
+
+  let cardHtml = '';
+  let feedbackHtml = '';
+  if (q.type === 'mcq') {
+    cardHtml    = buildMcqCard(q, ans);
+    feedbackHtml = buildMcqFeedback(q, ans);
+  } else {
+    cardHtml = buildTfCard(q, ans);
+  }
+
+  app.innerHTML = `
+    <div class="back-row">
+      <a href="/student/ausom/semester-2" class="back-link">
+        <span class="back-arrow">←</span> Back to tests
+      </a>
+    </div>
+    <section class="shell-section">
+      <div class="shell-inner">
+        ${buildProgress()}
+        ${cardHtml}
+        ${feedbackHtml}
+        ${buildButtonRow(q)}
+      </div>
+    </section>`;
+
+  // ── Event listeners ──────────────────────────
+  // MCQ option buttons
+  app.querySelectorAll('[data-mcq-opt]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (answers[cur] !== null) return;
+      const idx = parseInt(btn.dataset.mcqOpt, 10);
+      answers[cur] = idx;
+      render();
+    });
+  });
+
+  // T/F buttons
+  app.querySelectorAll('[data-tf-val]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const si  = parseInt(btn.dataset.tfStmt, 10);
+      const val = btn.dataset.tfVal;
+      const q   = QUESTIONS[cur];
+      // initialise array if first answer
+      if (answers[cur] === null) {
+        answers[cur] = q.statements.map(() => null);
+      }
+      if (answers[cur][si] !== null) return; // already answered this statement
+      answers[cur][si] = val;
+      render();
+    });
+  });
+
+  // Next / Finish button
+  const nextBtn = app.querySelector('#next-btn');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      if (cur < TOTAL - 1) {
+        cur++;
+        render();
+      } else {
+        finished = true;
+        render();
+      }
+    });
+  }
+
+  // Keyboard: A/B/C/D selects MCQ option; T/F selects true_false (first unanswered); Enter advances
+  // (Attached once per render; old listeners are removed with the DOM replacement)
+}
+
+/* ─────────────────────────────────────────────
+   Keyboard shortcuts
+───────────────────────────────────────────── */
+document.addEventListener('keydown', (e) => {
+  if (finished) return;
+  const q = QUESTIONS[cur];
+
+  if (q.type === 'mcq' && answers[cur] === null) {
+    const keyMap = { a: 0, b: 1, c: 2, d: 3 };
+    const idx = keyMap[e.key.toLowerCase()];
+    if (idx !== undefined && idx < q.options.length) {
+      e.preventDefault();
+      answers[cur] = idx;
+      render();
+      return;
+    }
+  }
+
+  if (e.key === 'Enter' && isAnswered(cur)) {
+    e.preventDefault();
+    if (cur < TOTAL - 1) { cur++; render(); }
+    else { finished = true; render(); }
+  }
+});
+
+/* ─────────────────────────────────────────────
+   Boot
+───────────────────────────────────────────── */
+render();
+</script>
+</body>
+</html>
