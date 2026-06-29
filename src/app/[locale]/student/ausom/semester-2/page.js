@@ -71,6 +71,7 @@ const SUBJECTS = [
   {
     id: 'biochemistry-1',
     label: 'Biochemistry I',
+    href: '/student/ausom/semester-2/biochemistry/mega-test',
     illustration: (
       <svg width="430" height="169" viewBox="-30 0 208 82" fill="none" stroke="#9C6C10" strokeLinecap="round" strokeLinejoin="round">
         <polygon points="74,5 107,24 107,60 74,79 41,60 41,24" strokeWidth="1.8"/>
