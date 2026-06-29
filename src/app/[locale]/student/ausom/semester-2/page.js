@@ -20,6 +20,7 @@ const SUBJECTS = [
   {
     id: 'medical-informatics',
     label: 'Medical Informatics',
+    href: '/practice/ausom/semester-2/medical-informatics/predicted-practice-exam.html',
     illustration: (
       <svg width="430" height="170" viewBox="0 0 192 76" fill="none" stroke="#3260A8" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="96" cy="12" r="5.5" strokeWidth="1.7"/>
@@ -144,8 +145,8 @@ function Semester2Content() {
                 key={s.id}
                 label={s.label}
                 subtext=""
-                href={live ? `/student/ausom/semester-2/${s.id}` : undefined}
-                comingSoon={!live}
+                href={s.href ?? (live ? `/student/ausom/semester-2/${s.id}` : undefined)}
+                comingSoon={!s.href && !live}
                 illustration={s.illustration}
               />
             );
