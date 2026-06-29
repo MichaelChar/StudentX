@@ -4,6 +4,8 @@
 // Static imports make practice-test JSON part of the bundle, so the loaders in
 // content.js need no runtime fs (required for Cloudflare Workers / OpenNext).
 
+import biochemistryIndex from '../../../content/practice/ausom/semester-2/biochemistry/index.json';
+import biochemistryTestMegaTest from '../../../content/practice/ausom/semester-2/biochemistry/mega-test.json';
 import generalHistologyIndex from '../../../content/practice/ausom/semester-2/general-histology/index.json';
 import generalHistologyTestEmStructureId from '../../../content/practice/ausom/semester-2/general-histology/em-structure-id.json';
 import generalHistologyTestLmSpecimenId from '../../../content/practice/ausom/semester-2/general-histology/lm-specimen-id.json';
@@ -12,6 +14,12 @@ import generalPhysiologyTestPredictedLabExam from '../../../content/practice/aus
 
 /** @type {Record<string, { index: import('./schema.js').SubjectIndex, tests: Record<string, import('./schema.js').PracticeTest> }>} */
 export const MANIFEST = {
+  "biochemistry": {
+    index: biochemistryIndex,
+    tests: {
+      "mega-test": biochemistryTestMegaTest,
+    },
+  },
   "general-histology": {
     index: generalHistologyIndex,
     tests: {

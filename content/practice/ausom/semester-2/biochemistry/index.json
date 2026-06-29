@@ -1,0 +1,14 @@
+{
+  "subject": "biochemistry",
+  "title": "Biochemistry I",
+  "school": "ausom",
+  "semester": "semester-2",
+  "tests": [
+    {
+      "id": "mega-test",
+      "title": "MD1011 Biochemistry I — Mega Test",
+      "kind": "topic",
+      "questionCount": 48
+    }
+  ]
+}

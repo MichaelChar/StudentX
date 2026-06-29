@@ -1,0 +1,624 @@
+{
+  "meta": {
+    "title": "MD1011 Biochemistry I — Mega Test",
+    "course": "MD1011 Biochemistry I",
+    "semester": "B’ Semester 2025–26",
+    "total_questions": 48,
+    "mcq_count": 37,
+    "long_answer_count": 11,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection.",
+      "long_answer": "Type answer, submit, mark scheme bullets appear. No grade given."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "source": "T1 Q12",
+      "type": "mcq",
+      "stem": "The anaplerotic reaction that replenishes oxaloacetate in the TCA cycle is catalysed by:",
+      "options": {
+        "A": "Isocitrate dehydrogenase",
+        "B": "Malate dehydrogenase",
+        "C": "Pyruvate carboxylase",
+        "D": "Citrate synthase"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 2,
+      "source": "T1 Q14",
+      "type": "mcq",
+      "stem": "De novo fatty acid synthesis occurs in which cellular compartment?",
+      "options": {
+        "A": "Mitochondrial matrix",
+        "B": "Smooth endoplasmic reticulum",
+        "C": "Cytoplasm (cytosol)",
+        "D": "Peroxisome"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 3,
+      "source": "T1 Q15",
+      "type": "mcq",
+      "stem": "Which reaction is the committed, rate-limiting step of fatty acid synthesis?",
+      "options": {
+        "A": "Condensation of acetyl-CoA and malonyl-CoA by fatty acid synthase",
+        "B": "Formation of malonyl-CoA by acetyl-CoA carboxylase",
+        "C": "Reduction of 3-ketoacyl-ACP by 3-ketoacyl-ACP reductase",
+        "D": "Export of citrate from the mitochondrion"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 4,
+      "source": "T1 Q16",
+      "type": "mcq",
+      "stem": "Which apolipoprotein is the structural protein of LDL and is synthesised exclusively in the liver?",
+      "options": {
+        "A": "ApoB-48",
+        "B": "ApoC-II",
+        "C": "ApoE",
+        "D": "ApoB-100"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 5,
+      "source": "T1 Q17",
+      "type": "mcq",
+      "stem": "Which of the following is INCORRECT regarding cholesterol metabolism?",
+      "options": {
+        "A": "HMG-CoA reductase is the rate-limiting enzyme of cholesterol synthesis",
+        "B": "Cholesterol synthesis occurs in the cytoplasm and endoplasmic reticulum",
+        "C": "CETP esterifies cholesterol for incorporation into lipoproteins",
+        "D": "Mevalonate is an intermediate in cholesterol synthesis"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 6,
+      "source": "T1 Q18",
+      "type": "mcq",
+      "stem": "Nascent chylomicrons are produced and secreted by:",
+      "options": {
+        "A": "Hepatocytes",
+        "B": "Intestinal enterocytes",
+        "C": "Adipocytes",
+        "D": "Pancreatic beta cells"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 7,
+      "source": "T1 Q19",
+      "type": "mcq",
+      "stem": "Pancreatic lipase requires which protein cofactor to function in the presence of bile salts?",
+      "options": {
+        "A": "Colipase",
+        "B": "ApoC-II",
+        "C": "Phospholipase A₂",
+        "D": "Bile acid-binding protein"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 8,
+      "source": "T1 Q20",
+      "type": "mcq",
+      "stem": "Which lipoprotein has the highest percentage of triglyceride content?",
+      "options": {
+        "A": "VLDL",
+        "B": "LDL",
+        "C": "Chylomicrons",
+        "D": "HDL"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 9,
+      "source": "T1 Q22",
+      "type": "mcq",
+      "stem": "Which of the following is correct regarding beta-oxidation of fatty acids?",
+      "options": {
+        "A": "It occurs in the cytoplasm and requires NADPH",
+        "B": "It requires carnitine to transport short-chain fatty acids into the mitochondrion",
+        "C": "It produces FADH₂ and NADH and occurs in the mitochondrial matrix",
+        "D": "It is the same pathway as fatty acid synthesis but run in reverse"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 10,
+      "source": "T1 Q23",
+      "type": "mcq",
+      "stem": "The fatty acid synthase (FAS) complex contains how many essential sulfhydryl (-SH) groups?",
+      "options": {
+        "A": "One",
+        "B": "Two",
+        "C": "Three",
+        "D": "Four"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 11,
+      "source": "T1 Q24",
+      "type": "mcq",
+      "stem": "ApoC-II activates which enzyme to enable triglyceride hydrolysis in peripheral tissues?",
+      "options": {
+        "A": "Hepatic lipase",
+        "B": "Hormone-sensitive lipase",
+        "C": "Pancreatic lipase",
+        "D": "Extrahepatic lipoprotein lipase"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 12,
+      "source": "T1 Q26",
+      "type": "mcq",
+      "stem": "Which two nitrogen-containing compounds donate the two nitrogen atoms that appear in urea?",
+      "options": {
+        "A": "Glutamine and aspartate",
+        "B": "NH₄⁺ and aspartate",
+        "C": "Glutamate and ornithine",
+        "D": "NH₄⁺ and glutamine"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 13,
+      "source": "T1 Q27",
+      "type": "mcq",
+      "stem": "Argininosuccinate synthase catalyses the condensation of:",
+      "options": {
+        "A": "Ornithine and carbamoyl phosphate",
+        "B": "Citrulline and aspartate",
+        "C": "Arginine and succinate",
+        "D": "Ornithine and aspartate"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 14,
+      "source": "T1 Q29",
+      "type": "mcq",
+      "stem": "5-Fluorouracil (5-FU) exerts its anti-cancer effect by inhibiting:",
+      "options": {
+        "A": "Ribonucleotide reductase",
+        "B": "Dihydrofolate reductase",
+        "C": "Thymidylate synthase",
+        "D": "Carbamoyl phosphate synthetase II"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 15,
+      "source": "T1 Q33",
+      "type": "mcq",
+      "stem": "Thioredoxin participates in the reduction of ribonucleotides via its:",
+      "options": {
+        "A": "Two histidine residues at the active site",
+        "B": "Two cysteine residues that form a redox-active disulfide",
+        "C": "Iron-sulfur centre",
+        "D": "NADH-binding Rossmann fold"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 16,
+      "source": "T1 Q37",
+      "type": "mcq",
+      "stem": "Which of the following is NOT a free radical?",
+      "options": {
+        "A": "Superoxide (O₂•⁻)",
+        "B": "Hydroxyl radical (OH•)",
+        "C": "Nitric oxide (NO•)",
+        "D": "Hydrogen peroxide (H₂O₂)"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 17,
+      "source": "T1 Q38",
+      "type": "mcq",
+      "stem": "Which enzyme in the antioxidant system directly converts H₂O₂ to water and oxygen?",
+      "options": {
+        "A": "Superoxide dismutase",
+        "B": "Glutathione peroxidase",
+        "C": "Catalase",
+        "D": "Thioredoxin reductase"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 18,
+      "source": "T1 Q40",
+      "type": "mcq",
+      "stem": "Polyubiquitin attachment to a protein primarily targets it for:",
+      "options": {
+        "A": "Nuclear import",
+        "B": "Degradation by the 26S proteasome",
+        "C": "Correct folding by chaperones",
+        "D": "Membrane insertion"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 19,
+      "source": "T1 Q42",
+      "type": "mcq",
+      "stem": "Which antioxidant enzyme converts superoxide (O₂•⁻) to hydrogen peroxide?",
+      "options": {
+        "A": "Catalase",
+        "B": "Glutathione peroxidase",
+        "C": "Superoxide dismutase",
+        "D": "Thioredoxin reductase"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 20,
+      "source": "T1 LA Q1a",
+      "type": "long_answer",
+      "stem": "Define phosphofructokinase-1 (PFK-1) and its role as the key regulatory enzyme of glycolysis.",
+      "mark_scheme": [
+        "Catalyses F6P + ATP → F1,6-BP; first committed irreversible step of glycolysis",
+        "Rate-limiting / pacemaker enzyme of the pathway"
+      ]
+    },
+    {
+      "id": 21,
+      "source": "T1 LA Q1b",
+      "type": "long_answer",
+      "stem": "List and explain ALL allosteric activators of PFK-1, including the role of fructose-2,6-bisphosphate (F-2,6-BP) and how it is regulated by PFK-2.",
+      "mark_scheme": [
+        "Activators: AMP, ADP, Pi, fructose-2,6-bisphosphate (F-2,6-BP)",
+        "F-2,6-BP is the most potent activator",
+        "Produced by the kinase domain of the bifunctional enzyme PFK-2/FBPase-2",
+        "Insulin (fed state) → PFK-2 kinase active → high F-2,6-BP → PFK-1 strongly activated",
+        "Glucagon (fasting) → PKA phosphorylates PFK-2 → phosphatase domain active → F-2,6-BP degraded → PFK-1 activity falls"
+      ]
+    },
+    {
+      "id": 22,
+      "source": "T1 LA Q1c",
+      "type": "long_answer",
+      "stem": "List and explain ALL allosteric inhibitors of PFK-1.",
+      "mark_scheme": [
+        "ATP at high concentration (allosteric site distinct from substrate site; signals energy surplus)",
+        "Citrate (signals TCA saturation / acetyl-CoA surplus)",
+        "H⁺ / low pH (prevents glycolysis exacerbating lactic acidosis)"
+      ]
+    },
+    {
+      "id": 23,
+      "source": "T1 LA Q2a",
+      "type": "long_answer",
+      "stem": "Explain why long-chain fatty acids cannot freely cross the inner mitochondrial membrane.",
+      "mark_scheme": [
+        "Inner mitochondrial membrane is impermeable to CoA and fatty acyl-CoA",
+        "Long-chain fatty acids (>C12) require the carnitine shuttle",
+        "Short/medium-chain fatty acids (<C12) cross freely without carnitine"
+      ]
+    },
+    {
+      "id": 24,
+      "source": "T1 LA Q2e",
+      "type": "long_answer",
+      "stem": "Compare beta-oxidation and fatty acid synthesis in terms of: (i) cellular location, (ii) key cofactors used, (iii) carbon-carrier molecule (CoA vs ACP).",
+      "mark_scheme": [
+        "Location: beta-oxidation in the mitochondrial matrix; synthesis in the cytoplasm",
+        "Cofactors: beta-oxidation uses FAD and NAD⁺; synthesis requires NADPH, ATP, and biotin",
+        "Carbon carrier: CoA (beta-oxidation) vs ACP — acyl carrier protein (synthesis)"
+      ]
+    },
+    {
+      "id": 25,
+      "source": "T1 LA Q3a",
+      "type": "long_answer",
+      "stem": "Define a free radical and distinguish it from a non-radical reactive oxygen species, using H₂O₂ and OH• as examples.",
+      "mark_scheme": [
+        "Free radical: any species with ≥1 unpaired electron in its outer orbital; highly reactive, initiates chain reactions",
+        "OH• IS a radical — one unpaired electron; most reactive biological radical",
+        "H₂O₂ is NOT a radical — all electrons paired; it is a reactive oxygen species but not a free radical"
+      ]
+    },
+    {
+      "id": 26,
+      "source": "T1 LA Q3b",
+      "type": "long_answer",
+      "stem": "Describe three antioxidant enzyme systems (superoxide dismutase, catalase, glutathione peroxidase), including their reactions and subcellular locations.",
+      "mark_scheme": [
+        "SOD: 2O₂•⁻ + 2H⁺ → H₂O₂ + O₂; Cu/Zn-SOD in cytoplasm, Mn-SOD in mitochondria",
+        "Catalase: 2H₂O₂ → 2H₂O + O₂; located in peroxisomes",
+        "Glutathione peroxidase (GPx): H₂O₂ + 2GSH → 2H₂O + GSSG; GSSG recycled to GSH by glutathione reductase using NADPH"
+      ]
+    },
+    {
+      "id": 27,
+      "source": "T1 LA Q3c",
+      "type": "long_answer",
+      "stem": "Explain how G6PD connects the pentose phosphate pathway to antioxidant defence via glutathione.",
+      "mark_scheme": [
+        "G6PD catalyses the first step of the PPP → produces NADPH",
+        "NADPH powers glutathione reductase → regenerates GSH from GSSG",
+        "Without G6PD: insufficient NADPH → GSH depleted → ROS accumulate → oxidative damage",
+        "RBCs especially vulnerable — no mitochondria, so PPP is their ONLY source of NADPH"
+      ]
+    },
+    {
+      "id": 28,
+      "source": "T1 LA Q3d",
+      "type": "long_answer",
+      "stem": "Give one DESIRABLE and one HARMFUL role of free radicals in human physiology, with specific examples.",
+      "mark_scheme": [
+        "DESIRABLE: respiratory burst — NADPH oxidase in neutrophils/macrophages generates O₂•⁻ → kills pathogens (innate immunity)",
+        "HARMFUL: lipid peroxidation of membrane PUFAs → self-propagating chain reaction → membrane disruption; OR DNA strand breaks → mutations / carcinogenesis"
+      ]
+    },
+    {
+      "id": 29,
+      "source": "T2 Q3",
+      "type": "mcq",
+      "stem": "Which of the following statements about succinate dehydrogenase is CORRECT?",
+      "options": {
+        "A": "It is soluble in the mitochondrial matrix",
+        "B": "It produces NADH during oxidation of succinate to fumarate",
+        "C": "It is the only TCA enzyme embedded in the inner mitochondrial membrane",
+        "D": "It contains FMN as its prosthetic group"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 30,
+      "source": "T2 Q5",
+      "type": "mcq",
+      "stem": "During glycolysis, NADH is produced at which step?",
+      "options": {
+        "A": "Phosphoglucose isomerase reaction",
+        "B": "Phosphoglycerate kinase reaction",
+        "C": "Pyruvate kinase reaction",
+        "D": "Glyceraldehyde-3-phosphate dehydrogenase reaction"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 31,
+      "source": "T2 Q7",
+      "type": "mcq",
+      "stem": "Which of the following is NOT true about glycogen?",
+      "options": {
+        "A": "It is a branched polymer of glucose monomers",
+        "B": "Muscle glycogen can be exported as free glucose into the bloodstream",
+        "C": "Its breakdown is stimulated by glucagon and epinephrine",
+        "D": "It contains alpha-1,4 glycosidic bonds in its linear segments"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 32,
+      "source": "T2 Q8",
+      "type": "mcq",
+      "stem": "Which of the following correctly describes galactose metabolism?",
+      "options": {
+        "A": "Galactose is phosphorylated by hexokinase to galactose-6-phosphate",
+        "B": "The first step is phosphorylation to galactose-1-phosphate by galactokinase",
+        "C": "Galactose enters glycolysis directly as glucose-6-phosphate",
+        "D": "UDP-galactose is not involved in galactose catabolism"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 33,
+      "source": "T2 Q9",
+      "type": "mcq",
+      "stem": "During the oxidative phase of the pentose phosphate pathway, each glucose-6-phosphate molecule yields:",
+      "options": {
+        "A": "2 NADPH, 1 ribulose-5-phosphate, and 1 CO₂",
+        "B": "1 NADPH, 2 ribulose-5-phosphate, and 1 CO₂",
+        "C": "2 NADH, 1 ribulose-5-phosphate, and 1 CO₂",
+        "D": "1 FADH₂, 1 ribose-5-phosphate, and 2 CO₂"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 34,
+      "source": "T2 Q10",
+      "type": "mcq",
+      "stem": "Glycogen synthase is regulated such that:",
+      "options": {
+        "A": "It is activated by phosphorylation by PKA and GSK-3",
+        "B": "It is inactivated by phosphorylation and activated by dephosphorylation",
+        "C": "It is activated by glucagon through cAMP signalling",
+        "D": "It is activated by AMP allosterically"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 35,
+      "source": "T2 Q12",
+      "type": "mcq",
+      "stem": "Which of the following statements about PFK-1 regulation is CORRECT?",
+      "options": {
+        "A": "PFK-1 is activated by high concentrations of ATP",
+        "B": "Pyruvate kinase is allosterically inhibited by alanine",
+        "C": "Hexokinase is allosterically activated by glucose-6-phosphate",
+        "D": "PFK-1 is inhibited by fructose-2,6-bisphosphate"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 36,
+      "source": "T2 Q13",
+      "type": "mcq",
+      "stem": "The malate-aspartate shuttle:",
+      "options": {
+        "A": "Transfers cytoplasmic NADH equivalents into the mitochondria, yielding the same ATP as mitochondrial NADH",
+        "B": "Transfers FADH₂ reducing equivalents from cytoplasm to mitochondria",
+        "C": "Is used in skeletal muscle as the primary NADH transfer system",
+        "D": "Uses glycerol-3-phosphate as its key intermediate"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 37,
+      "source": "T2 Q16",
+      "type": "mcq",
+      "stem": "Which lipoprotein is the primary carrier of triglycerides from the LIVER to peripheral tissues?",
+      "options": {
+        "A": "Chylomicrons",
+        "B": "VLDL",
+        "C": "LDL",
+        "D": "HDL"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 38,
+      "source": "T2 Q17",
+      "type": "mcq",
+      "stem": "In lipoprotein metabolism, the enzyme responsible for esterifying cholesterol WITHIN HDL particles is:",
+      "options": {
+        "A": "CETP (cholesteryl ester transfer protein)",
+        "B": "HMG-CoA reductase",
+        "C": "Hepatic lipase",
+        "D": "LCAT (lecithin:cholesterol acyltransferase)"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 39,
+      "source": "T2 Q19",
+      "type": "mcq",
+      "stem": "Which of the following correctly describes chylomicron maturation?",
+      "options": {
+        "A": "Chylomicrons are assembled in the liver and secreted into the portal circulation",
+        "B": "ApoB-100 is the structural apolipoprotein of nascent chylomicrons",
+        "C": "Nascent chylomicrons acquire ApoC-II and ApoE from HDL in the circulation",
+        "D": "Chylomicron remnants are cleared by the lungs"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 40,
+      "source": "T2 Q20",
+      "type": "mcq",
+      "stem": "Ketone bodies are produced in the liver when:",
+      "options": {
+        "A": "Glycogen stores are full and glucose supply is high",
+        "B": "Acetyl-CoA from beta-oxidation exceeds the capacity of the TCA cycle due to low oxaloacetate",
+        "C": "NADPH levels are elevated in the cytoplasm",
+        "D": "Malonyl-CoA concentrations are elevated, stimulating beta-oxidation"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 41,
+      "source": "T2 Q24",
+      "type": "mcq",
+      "stem": "Complete beta-oxidation of palmitoyl-CoA (16-carbon saturated fatty acid) produces:",
+      "options": {
+        "A": "7 acetyl-CoA, 6 FADH₂, and 6 NADH",
+        "B": "8 acetyl-CoA, 7 FADH₂, and 7 NADH",
+        "C": "8 acetyl-CoA, 8 FADH₂, and 8 NADH",
+        "D": "7 acetyl-CoA, 7 FADH₂, and 7 NADH"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 42,
+      "source": "T2 Q25",
+      "type": "mcq",
+      "stem": "Which amino acid serves as the primary nitrogen carrier from peripheral tissues to the liver?",
+      "options": {
+        "A": "Glutamate",
+        "B": "Aspartate",
+        "C": "Alanine",
+        "D": "Glycine"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 43,
+      "source": "T2 Q28",
+      "type": "mcq",
+      "stem": "In pyrimidine biosynthesis, the rate-limiting first committed step in the cytoplasm is catalysed by:",
+      "options": {
+        "A": "Aspartate transcarbamylase",
+        "B": "Carbamoyl phosphate synthetase II (CPS II)",
+        "C": "Dihydroorotase",
+        "D": "Orotate phosphoribosyltransferase"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 44,
+      "source": "T2 Q32",
+      "type": "mcq",
+      "stem": "Vitamin B₁₂ absorption requires all of the following EXCEPT:",
+      "options": {
+        "A": "R-proteins (haptocorrins) in saliva for initial binding",
+        "B": "Intrinsic factor secreted by gastric parietal cells",
+        "C": "Pancreatic proteases to release B₁₂ from R-proteins in the duodenum",
+        "D": "Bile salts for micelle formation in the ileum"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 45,
+      "source": "T2 Q35",
+      "type": "mcq",
+      "stem": "Which of the following amino acids contributes the most atoms directly to the pyrimidine ring?",
+      "options": {
+        "A": "Glutamine (contributes N3 via carbamoyl phosphate)",
+        "B": "Aspartate (contributes N1, C4, C5, C6 — the bulk of the ring)",
+        "C": "Glycine (contributes C and N directly to the ring)",
+        "D": "Alanine (contributes C2 as carbamoyl phosphate)"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 46,
+      "source": "T2 Q38",
+      "type": "mcq",
+      "stem": "The respiratory burst in phagocytes uses NADPH oxidase to produce which primary reactive species for pathogen killing?",
+      "options": {
+        "A": "Hydrogen peroxide (H₂O₂)",
+        "B": "Hydroxyl radical (OH•)",
+        "C": "Superoxide (O₂•⁻)",
+        "D": "Nitric oxide (NO•)"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 47,
+      "source": "T2 LA Q1d",
+      "type": "long_answer",
+      "stem": "Briefly explain why the TCA cycle requires aerobic conditions even though it does not directly consume oxygen.",
+      "mark_scheme": [
+        "The TCA cycle does not directly consume O₂",
+        "It uses NAD⁺ and FAD as electron acceptors → produces NADH and FADH₂",
+        "NADH and FADH₂ must be continuously re-oxidised by the electron transport chain (ETC)",
+        "The ETC requires O₂ as the terminal electron acceptor (O₂ → H₂O at Complex IV)",
+        "Without O₂: ETC halts → NAD⁺/FAD fully reduced → TCA cycle arrests"
+      ]
+    },
+    {
+      "id": 48,
+      "source": "T2 LA Q2d",
+      "type": "long_answer",
+      "stem": "Explain how the fumarate produced in the urea cycle is recycled back to aspartate, and why this represents a link between the urea cycle and the TCA cycle.",
+      "mark_scheme": [
+        "Fumarate is produced by argininosuccinate lyase (step 4, cytoplasm)",
+        "Fumarate → fumarase → malate",
+        "Malate → malate dehydrogenase → oxaloacetate (OAA) + NADH",
+        "OAA + glutamate → aspartate aminotransferase (AST) → aspartate + α-ketoglutarate",
+        "Aspartate re-enters the urea cycle at argininosuccinate synthase (step 3), providing the second nitrogen atom",
+        "This is the urea cycle–TCA cycle ‘bicycle’: TCA intermediates supply the aspartate nitrogen carrier"
+      ]
+    }
+  ]
+}
