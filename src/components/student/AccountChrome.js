@@ -3,11 +3,8 @@ import { Link } from '@/i18n/navigation';
 import SignOutButton from '@/components/student/SignOutButton';
 
 /*
-  Shared shell for the student account SECTION pages (accommodation, gigs).
-  Renders the back-to-hub link, greeting, sign-out, and the discrete tab bar
-  that lets the student switch between sections without returning to the hub.
-  The hub landing (/student/account) does NOT use this — it shows the big
-  buttons instead.
+  Shared shell for the student account pages (accommodation, gigs).
+  Renders the eyebrow, heading, sign-out, and tab bar.
 */
 export default async function AccountChrome({ locale, student, active, children }) {
   const t = await getTranslations({ locale, namespace: 'student.account' });
@@ -20,9 +17,7 @@ export default async function AccountChrome({ locale, student, active, children 
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
       <div className="flex items-start justify-between gap-4 mb-2">
-        <Link href="/student/account" className="label-caps text-yellow hover:text-night transition-colors">
-          ← {t('backToAccount')}
-        </Link>
+        <p className="label-caps text-yellow">{t('eyebrow')}</p>
         <SignOutButton />
       </div>
       <h1 className="font-display text-3xl md:text-4xl text-night mb-1">{t('heading')}</h1>
