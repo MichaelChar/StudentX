@@ -1,10 +1,7 @@
 import { NextResponse } from 'next/server';
 import { SB_ACCESS_TOKEN_COOKIE, SB_ACCESS_TOKEN_MAX_AGE_SECONDS } from '@/lib/authCookies';
-import {
-  getUserFromToken,
-  getSupabaseWithToken,
-  cleanupFreshOrphanAuthUser,
-} from '@/lib/supabaseServer';
+import { getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { getExecutionCtx } from '@/lib/cloudflareEnv';
 
 // Single post-login round-trip (#253). After signInWithPassword succeeds the
 // browser used to make two sequential client→Worker hops before navigating:
@@ -15,8 +12,11 @@ import {
 // role-specific provisioning/probe, sets the auth cookie, and returns —
 // collapsing ~150–400 ms of serial latency per login into one call.
 //
-// On a 409 role conflict the cookie is deliberately NOT set (the client signs
-// out in that case); the token is never echoed back in the response body.
+// The landlord branch still probes synchronously and returns 409 on a role
+// conflict without setting the cookie. The student branch is cookie-first:
+// it sets the cookie and defers the (idempotent) provisioning RPC via
+// waitUntil, letting the destination's requireStudent guard surface any
+// wrong-role conflict. The token is never echoed back in the response body.
 
 function authCookie(value) {
   return {
@@ -58,27 +58,44 @@ export async function POST(request) {
   const supabase = getSupabaseWithToken(accessToken);
 
   if (role === 'student') {
-    // Idempotent provisioning — mirrors POST /api/student/profile. Returns the
-    // existing students row when one is present, so it's a no-op on the happy
-    // path. A prevent_dual_role 23505 means the email is already a landlord.
-    const { data: rows, error } = await supabase.rpc('create_student_profile', {
-      p_display_name: '',
-      p_preferred_locale: 'en',
-    });
-    if (error) {
-      if (error.code === '23505' && /already registered as a landlord/i.test(error.message || '')) {
-        await cleanupFreshOrphanAuthUser(user);
-        return NextResponse.json(
-          { error: 'role_conflict', conflict_role: 'landlord' },
-          { status: 409 },
-        );
-      }
-      console.error('bootstrap: create_student_profile RPC error:', error);
-      return NextResponse.json({ error: 'Failed to bootstrap session' }, { status: 500 });
-    }
-    // PostgREST returns a single object (not an array) for a record-returning fn.
-    const student = Array.isArray(rows) ? rows[0] : rows;
-    const res = NextResponse.json({ ok: true, role: 'student', name: student?.display_name ?? null });
+    // Cookie-first: the client only needs the auth cookie set before it
+    // navigates to /student/account, so don't block the response on the
+    // students-row provisioning. That RPC is idempotent and, on the login
+    // path, almost always a no-op (the row was created at signup) — running
+    // it after the response via waitUntil takes the Worker→DB round-trip off
+    // the perceived-login critical path. Edge cases stay correct without the
+    // synchronous 409:
+    //   - Landlord authenticating through the student form: the RPC hits the
+    //     prevent_dual_role guard in the background; the destination's
+    //     requireStudent guard returns wrong-role and redirects back to
+    //     /student/login?roleConflict=landlord&email=… — the same banner +
+    //     email prefill the old synchronous 409 produced.
+    //   - Orphan auth user with no students row (a signup whose profile insert
+    //     failed): the deferred RPC heals it; a sub-second navigation race
+    //     self-heals on the next request, never a permanent loop.
+    //
+    // The old synchronous path also called cleanupFreshOrphanAuthUser on the
+    // 23505 conflict; that is deliberately dropped here. On the login path
+    // getUserFromToken's local-JWKS user carries created_at = token `iat`
+    // (≈ now), so isFreshlyCreated() is always true and the cleanup would
+    // delete a real landlord's account for merely mistyping into the student
+    // form. Orphan deletion belongs to the signup flow, which does not use
+    // this route.
+    const provision = supabase
+      .rpc('create_student_profile', { p_display_name: '', p_preferred_locale: 'en' })
+      .then(({ error }) => {
+        // 23505 = prevent_dual_role (email is a landlord) — expected on a
+        // wrong-form login, handled by the destination guard, so don't log it.
+        if (error && error.code !== '23505') {
+          console.error('bootstrap: deferred create_student_profile RPC error:', error);
+        }
+      });
+
+    const exec = getExecutionCtx();
+    if (exec?.waitUntil) exec.waitUntil(provision);
+    else await provision; // dev / no execution ctx: heal inline before responding
+
+    const res = NextResponse.json({ ok: true, role: 'student' });
     res.cookies.set(authCookie(accessToken));
     return res;
   }
