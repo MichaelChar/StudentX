@@ -7,10 +7,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 // runs when local JWT verification doesn't return a user.
 const deleteUser = vi.fn();
 const getUser = vi.fn();
+const getUserById = vi.fn();
 vi.mock('@supabase/supabase-js', () => ({
   createClient: vi.fn(() => ({
     auth: {
-      admin: { deleteUser: (...args) => deleteUser(...args) },
+      admin: {
+        deleteUser: (...args) => deleteUser(...args),
+        getUserById: (...args) => getUserById(...args),
+      },
       getUser: (...args) => getUser(...args),
     },
   })),
@@ -31,8 +35,17 @@ beforeEach(() => {
   deleteUser.mockReset();
   deleteUser.mockResolvedValue({ data: null, error: null });
   getUser.mockReset();
+  getUserById.mockReset();
   verifyAccessTokenLocal.mockReset();
 });
+
+// Helper: make admin.getUserById resolve to an auth user with the given
+// created_at. The freshness decision is made against THIS row, never the
+// object passed to cleanupFreshOrphanAuthUser (which, on the local-JWKS
+// fast path, has no trustworthy created_at).
+function authUserCreatedAt(created_at) {
+  return { data: { user: { id: 'u', created_at } }, error: null };
+}
 
 const { extractToken, cleanupFreshOrphanAuthUser, getUserFromToken } = await import('@/lib/supabaseServer');
 
@@ -64,48 +77,78 @@ describe('extractToken', () => {
 });
 
 describe('cleanupFreshOrphanAuthUser — recency guard', () => {
-  it('deletes when the user was created seconds ago', async () => {
-    await cleanupFreshOrphanAuthUser({
-      id: 'u1',
-      created_at: new Date(Date.now() - 5_000).toISOString(),
-    });
+  it('deletes when the AUTHORITATIVE user was created seconds ago', async () => {
+    getUserById.mockResolvedValueOnce(authUserCreatedAt(new Date(Date.now() - 5_000).toISOString()));
+    await cleanupFreshOrphanAuthUser({ id: 'u1' });
+    expect(getUserById).toHaveBeenCalledWith('u1');
     expect(deleteUser).toHaveBeenCalledWith('u1');
   });
 
   it('deletes when the user was created near the 5-min edge (still inside)', async () => {
-    await cleanupFreshOrphanAuthUser({
-      id: 'u2',
-      created_at: new Date(Date.now() - (5 * 60 * 1000 - 1_000)).toISOString(),
-    });
+    getUserById.mockResolvedValueOnce(
+      authUserCreatedAt(new Date(Date.now() - (5 * 60 * 1000 - 1_000)).toISOString())
+    );
+    await cleanupFreshOrphanAuthUser({ id: 'u2' });
     expect(deleteUser).toHaveBeenCalledWith('u2');
   });
 
-  it('does NOT delete when the user is older than 5 minutes', async () => {
-    await cleanupFreshOrphanAuthUser({
-      id: 'u3',
-      created_at: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
-    });
+  it('does NOT delete when the authoritative user is older than 5 minutes', async () => {
+    getUserById.mockResolvedValueOnce(authUserCreatedAt(new Date(Date.now() - 10 * 60 * 1000).toISOString()));
+    await cleanupFreshOrphanAuthUser({ id: 'u3' });
     expect(deleteUser).not.toHaveBeenCalled();
   });
 
-  it('does NOT delete when created_at is missing', async () => {
+  // The core regression: a legacy/real dual-role user hits a profile
+  // endpoint with a freshly refreshed token. The passed object carries a
+  // "now"-ish created_at (what the old iat-derived local verifier would
+  // have produced), but the real account is months old. Must NOT delete.
+  it('does NOT delete a real dual-role user even when the passed object looks fresh', async () => {
+    getUserById.mockResolvedValueOnce(
+      authUserCreatedAt(new Date(Date.now() - 90 * 24 * 60 * 60 * 1000).toISOString())
+    );
+    await cleanupFreshOrphanAuthUser({
+      id: 'real-user',
+      // iat-derived timestamp ≈ now — deliberately ignored by the guard.
+      created_at: new Date().toISOString(),
+    });
+    expect(getUserById).toHaveBeenCalledWith('real-user');
+    expect(deleteUser).not.toHaveBeenCalled();
+  });
+
+  it('does NOT delete when the authoritative created_at is missing', async () => {
+    getUserById.mockResolvedValueOnce(authUserCreatedAt(undefined));
     await cleanupFreshOrphanAuthUser({ id: 'u4' });
     expect(deleteUser).not.toHaveBeenCalled();
   });
 
-  it('does NOT delete when created_at is malformed', async () => {
-    await cleanupFreshOrphanAuthUser({ id: 'u5', created_at: 'not-a-date' });
+  it('does NOT delete when the authoritative created_at is malformed', async () => {
+    getUserById.mockResolvedValueOnce(authUserCreatedAt('not-a-date'));
+    await cleanupFreshOrphanAuthUser({ id: 'u5' });
     expect(deleteUser).not.toHaveBeenCalled();
   });
 
-  it('swallows admin-API errors so the caller can still return its response', async () => {
+  it('does NOT delete (fails safe) when the admin lookup errors', async () => {
+    getUserById.mockResolvedValueOnce({ data: null, error: { message: 'admin api 500' } });
+    await cleanupFreshOrphanAuthUser({ id: 'u7' });
+    expect(deleteUser).not.toHaveBeenCalled();
+  });
+
+  it('does NOT delete (fails safe) when the admin lookup throws', async () => {
+    getUserById.mockRejectedValueOnce(new Error('network down'));
+    await cleanupFreshOrphanAuthUser({ id: 'u8' });
+    expect(deleteUser).not.toHaveBeenCalled();
+  });
+
+  it('does NOT call the admin API at all when no user id is supplied', async () => {
+    await cleanupFreshOrphanAuthUser({});
+    expect(getUserById).not.toHaveBeenCalled();
+    expect(deleteUser).not.toHaveBeenCalled();
+  });
+
+  it('swallows admin delete errors so the caller can still return its response', async () => {
+    getUserById.mockResolvedValueOnce(authUserCreatedAt(new Date().toISOString()));
     deleteUser.mockRejectedValueOnce(new Error('admin api 500'));
-    await expect(
-      cleanupFreshOrphanAuthUser({
-        id: 'u6',
-        created_at: new Date().toISOString(),
-      })
-    ).resolves.toBeUndefined();
+    await expect(cleanupFreshOrphanAuthUser({ id: 'u6' })).resolves.toBeUndefined();
   });
 });
 

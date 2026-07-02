@@ -94,19 +94,46 @@ export async function deleteAuthUserAsService(userId) {
 }
 
 /**
- * Safer wrapper around deleteAuthUserAsService: only deletes if
- * `user.created_at` is within the last 5 minutes — i.e. clearly an
- * orphan from a just-now signup whose role-row INSERT failed. Outside
- * that window, leaves the user alone (defends against accidentally
- * nuking a legacy dual-role user re-probing through SessionSync or
- * OAuth). Swallows admin-API errors and logs them — the 409 response
- * to the user is the visible signal; cleanup failures are operational.
+ * Safer wrapper around deleteAuthUserAsService: only deletes if the
+ * auth.users row's `created_at` is within the last 5 minutes — i.e.
+ * clearly an orphan from a just-now signup whose role-row INSERT failed.
+ * Outside that window, leaves the user alone (defends against
+ * accidentally nuking a legacy dual-role user re-probing through
+ * SessionSync or OAuth). Swallows admin-API errors and logs them — the
+ * 409 response to the user is the visible signal; cleanup failures are
+ * operational.
+ *
+ * IMPORTANT: the `user` handed in usually comes from getUserFromToken's
+ * local-JWKS fast path (verifyAccessTokenLocal), which does NOT populate
+ * created_at — the JWT only carries `iat` (≈ now on every refresh), not
+ * the account-creation time. So we must NOT trust any created_at on the
+ * passed object; we re-fetch the authoritative auth.users row via the
+ * admin API and gate on ITS created_at. Anything short of that would let
+ * the freshness window pass for every freshly authenticated request and
+ * delete a real dual-role account.
  *
  * Use this from any route that catches the prevent_dual_role 23505
  * and needs to roll back the auth.users row created by auth.signUp.
  */
 export async function cleanupFreshOrphanAuthUser(user) {
-  if (!isFreshlyCreated(user)) return;
+  if (!user?.id) return;
+
+  let authUser;
+  try {
+    const admin = getSupabaseAsService();
+    const { data, error } = await admin.auth.admin.getUserById(user.id);
+    if (error || !data?.user) {
+      // Can't confirm freshness authoritatively → fail safe, leave it.
+      if (error) console.error('Failed to look up auth user for orphan cleanup:', error);
+      return;
+    }
+    authUser = data.user;
+  } catch (err) {
+    console.error('Failed to look up auth user for orphan cleanup:', err);
+    return;
+  }
+
+  if (!isFreshlyCreated(authUser)) return;
   try {
     await deleteAuthUserAsService(user.id);
   } catch (err) {

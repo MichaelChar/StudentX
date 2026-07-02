@@ -84,7 +84,17 @@ export async function verifyAccessTokenLocal(token) {
       aud: payload.aud ?? null,
       app_metadata: payload.app_metadata ?? {},
       user_metadata: payload.user_metadata ?? {},
-      created_at: payload.iat ? new Date(payload.iat * 1000).toISOString() : null,
+      // Deliberately NOT set from payload.iat. `iat` is the token's
+      // issued-at time — refreshed on every sign-in / token refresh, so
+      // it is ≈ "now" for any freshly authenticated request, NOT the
+      // auth.users account-creation time. The JWT carries no real
+      // created_at claim. Populating it from iat made
+      // isFreshlyCreated() (supabaseServer.js) fire for essentially every
+      // locally-verified user, so cleanupFreshOrphanAuthUser could delete
+      // a real dual-role account. Any caller that needs the true
+      // created_at must fetch the authoritative user (admin.getUserById);
+      // cleanupFreshOrphanAuthUser now does exactly that.
+      created_at: null,
     };
   } catch {
     return null;
