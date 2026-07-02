@@ -4,12 +4,18 @@ import { SB_ACCESS_TOKEN_COOKIE } from '@/lib/authCookies';
 // Hoisted mocks for the SUT's supabaseServer dependencies (#253).
 const getUserFromToken = vi.fn();
 const getSupabaseWithToken = vi.fn();
-const cleanupFreshOrphanAuthUser = vi.fn();
 
 vi.mock('@/lib/supabaseServer', () => ({
   getUserFromToken: (...args) => getUserFromToken(...args),
   getSupabaseWithToken: (...args) => getSupabaseWithToken(...args),
-  cleanupFreshOrphanAuthUser: (...args) => cleanupFreshOrphanAuthUser(...args),
+}));
+
+// The student branch defers provisioning through the Worker ExecutionContext.
+// Force getExecutionCtx() → null so provisioning is awaited inline (the dev /
+// no-Worker path) and its outcome is deterministic in the test. This also keeps
+// @opennextjs/cloudflare out of the test import graph.
+vi.mock('@/lib/cloudflareEnv', () => ({
+  getExecutionCtx: () => null,
 }));
 
 const { POST } = await import('@/app/api/auth/bootstrap/route');
@@ -17,7 +23,6 @@ const { POST } = await import('@/app/api/auth/bootstrap/route');
 beforeEach(() => {
   getUserFromToken.mockReset();
   getSupabaseWithToken.mockReset();
-  cleanupFreshOrphanAuthUser.mockReset();
 });
 
 const USER = () => ({ id: 'auth-1', email: 'x@example.com', created_at: new Date().toISOString() });
@@ -73,21 +78,21 @@ describe('POST /api/auth/bootstrap — validation', () => {
   });
 });
 
-describe('POST /api/auth/bootstrap — student', () => {
-  it('200 + cookie on the happy path', async () => {
+describe('POST /api/auth/bootstrap — student (cookie-first)', () => {
+  it('200 + cookie on the happy path; provisioning runs, name is not echoed', async () => {
     getUserFromToken.mockResolvedValue(USER());
-    getSupabaseWithToken.mockReturnValue(
-      rpcSupabase({ data: { student_id: 'S1', display_name: 'Foo' }, error: null }),
-    );
+    const supa = rpcSupabase({ data: { student_id: 'S1', display_name: 'Foo' }, error: null });
+    getSupabaseWithToken.mockReturnValue(supa);
     const res = await POST(req({ access_token: 'jwt', role: 'student' }));
     expect(res.status).toBe(200);
-    const body = await res.json();
-    expect(body).toMatchObject({ ok: true, role: 'student', name: 'Foo' });
+    // Cookie-first: the body no longer carries the display name (the client
+    // never read it) — it only needs the cookie set before it navigates.
+    expect(await res.json()).toEqual({ ok: true, role: 'student' });
     expect(cookieValue(res)).toBe('jwt');
-    expect(cleanupFreshOrphanAuthUser).not.toHaveBeenCalled();
+    expect(supa.rpc).toHaveBeenCalledWith('create_student_profile', expect.any(Object));
   });
 
-  it('409 role_conflict + NO cookie + cleanup when email is already a landlord', async () => {
+  it('landlord-in-student-form: still 200 + cookie (23505 conflict handled by the destination guard, not a 409 here)', async () => {
     getUserFromToken.mockResolvedValue(USER());
     getSupabaseWithToken.mockReturnValue(
       rpcSupabase({
@@ -96,21 +101,24 @@ describe('POST /api/auth/bootstrap — student', () => {
       }),
     );
     const res = await POST(req({ access_token: 'jwt', role: 'student' }));
-    expect(res.status).toBe(409);
-    expect(await res.json()).toEqual({ error: 'role_conflict', conflict_role: 'landlord' });
-    expect(cookieValue(res)).toBeUndefined();
-    expect(cleanupFreshOrphanAuthUser).toHaveBeenCalledTimes(1);
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true, role: 'student' });
+    // Cookie is set; requireStudent on /student/account returns wrong-role and
+    // redirects back to login with the conflict banner + email prefill.
+    expect(cookieValue(res)).toBe('jwt');
   });
 
-  it('500 + NO cookie on a non-conflict RPC error', async () => {
+  it('a non-conflict RPC error no longer blocks login (deferred + logged, still 200 + cookie)', async () => {
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
     getUserFromToken.mockResolvedValue(USER());
     getSupabaseWithToken.mockReturnValue(
       rpcSupabase({ data: null, error: { code: '42501', message: 'permission denied' } }),
     );
     const res = await POST(req({ access_token: 'jwt', role: 'student' }));
-    expect(res.status).toBe(500);
-    expect(cookieValue(res)).toBeUndefined();
-    expect(cleanupFreshOrphanAuthUser).not.toHaveBeenCalled();
+    expect(res.status).toBe(200);
+    expect(cookieValue(res)).toBe('jwt');
+    expect(errSpy).toHaveBeenCalled(); // logged in the deferred provision
+    errSpy.mockRestore();
   });
 });
 
