@@ -68,6 +68,20 @@ describe('verifyAccessTokenLocal', () => {
     expect(user.user_metadata).toEqual({ display_name: 'Happy' });
   });
 
+  it('does NOT derive created_at from iat (iat ≈ now, not account creation)', async () => {
+    // Regression guard: iat is refreshed on every sign-in / token
+    // refresh, so trusting it as created_at made the orphan-cleanup
+    // freshness window fire for every authenticated request. The local
+    // path leaves created_at null; the true value comes from the admin
+    // API when a caller actually needs it.
+    const token = await signWith(privateKey, {
+      sub: 'auth-user-123',
+      aud: 'authenticated',
+    });
+    const user = await verifyAccessTokenLocal(token);
+    expect(user.created_at).toBeNull();
+  });
+
   it('returns null when the signature is wrong (token signed with a different key)', async () => {
     const token = await signWith(otherPrivateKey, {
       sub: 'auth-user-1',
