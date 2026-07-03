@@ -75,12 +75,15 @@ export async function POST(request) {
     //     self-heals on the next request, never a permanent loop.
     //
     // The old synchronous path also called cleanupFreshOrphanAuthUser on the
-    // 23505 conflict; that is deliberately dropped here. On the login path
-    // getUserFromToken's local-JWKS user carries created_at = token `iat`
-    // (≈ now), so isFreshlyCreated() is always true and the cleanup would
-    // delete a real landlord's account for merely mistyping into the student
-    // form. Orphan deletion belongs to the signup flow, which does not use
-    // this route.
+    // 23505 conflict; that is deliberately dropped here. Orphan deletion
+    // belongs to the signup flow (which does not use this route) — on the
+    // login path a 23505 just means a real landlord mistyped into the
+    // student form, so there is no orphan to reap and deleting would nuke a
+    // real account. (Historically this path was extra-dangerous because
+    // getUserFromToken's local-JWKS user carried created_at = token `iat`,
+    // making isFreshlyCreated() always true; that hazard was since closed by
+    // having cleanupFreshOrphanAuthUser re-fetch the authoritative
+    // created_at — but dropping the call here is correct regardless.)
     const provision = supabase
       .rpc('create_student_profile', { p_display_name: '', p_preferred_locale: 'en' })
       .then(({ error }) => {
