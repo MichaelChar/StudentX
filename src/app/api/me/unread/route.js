@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
 
 const NO_STORE = { 'Cache-Control': 'private, no-store' };
@@ -38,7 +37,10 @@ export async function GET(request) {
 
   // Landlord path — must join through listings since inquiries has no
   // direct landlord_id column (migration 026 confirms).
-  const { data: landlordRow } = await getSupabase()
+  // Token-scoped client (not anon): migration 065 drops auth_user_id from the
+  // anon column allowlist on landlords, so this filter must run as the
+  // authenticated role. RLS still restricts the caller to their own row.
+  const { data: landlordRow } = await authed
     .from('landlords')
     .select('landlord_id')
     .eq('auth_user_id', user.id)

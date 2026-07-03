@@ -1,10 +1,12 @@
 import { NextResponse } from 'next/server';
-import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
+import { extractToken, getUserFromToken, getSupabaseAsService } from '@/lib/supabaseServer';
 import { getStripe } from '@/lib/stripe';
 
+// Service-role: migration 065 drops auth_user_id and stripe_customer_id from
+// the anon column allowlist on landlords, so this self-lookup can't run on the
+// anon client. userId is JWT-derived, so it stays scoped to the caller.
 async function getLandlord(userId) {
-  const { data } = await getSupabase()
+  const { data } = await getSupabaseAsService()
     .from('landlords')
     .select('landlord_id, stripe_customer_id')
     .eq('auth_user_id', userId)
