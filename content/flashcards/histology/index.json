@@ -1,0 +1,15 @@
+{
+  "subject": "histology",
+  "title": "Histology",
+  "decks": [
+    {
+      "id": "general-histology",
+      "title": "General Histology",
+      "description": "Tissue-identification flashcards covering the four basic tissue types.",
+      "cardCount": 115,
+      "fileSizeBytes": 701491,
+      "file": "/flashcards/histology/general-histology.apkg",
+      "updated": "2026-07-03"
+    }
+  ]
+}
