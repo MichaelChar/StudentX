@@ -101,22 +101,17 @@ export default async function FlashcardsSubjectPage({ params }) {
               color: 'rgba(10,37,64,0.45)',
             }}
           >
-            {t('ankiNeeded')}{' '}
             <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>
-              {t('ankiWeb')}
+              {t('ankiApp')}
             </a>
-            {' — '}
-            <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>
-              {t('ankiDesktop')}
-            </a>
-            {', '}
+            {' ('}
             <a
               href="https://play.google.com/store/apps/details?id=com.ichi2.anki"
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: 'inherit' }}
             >
-              {t('ankiDroid')}
+              {t('ankiDroidOnAndroid')}
             </a>
             {', '}
             <a
@@ -125,8 +120,16 @@ export default async function FlashcardsSubjectPage({ params }) {
               rel="noopener noreferrer"
               style={{ color: 'inherit' }}
             >
-              {t('ankiMobile')}
+              {t('ankiMobileOnIos')}
             </a>
+            {')/ '}
+            {t('ankiWebsite')}
+            {' ('}
+            <a href="https://ankiweb.net/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>
+              {t('ankiWeb')}
+            </a>
+            {') '}
+            {t('ankiRequired')}
           </p>
         </div>
       </section>

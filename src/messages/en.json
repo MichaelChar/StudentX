@@ -947,11 +947,12 @@
       "download": "Download",
       "downloaded": "Downloaded",
       "emptyState": "Decks coming soon",
-      "ankiNeeded": "Needs the free Anki app —",
+      "ankiApp": "Anki app",
+      "ankiDroidOnAndroid": "AnkiDroid on Android",
+      "ankiMobileOnIos": "AnkiMobile on iOS",
+      "ankiWebsite": "Anki website",
       "ankiWeb": "AnkiWeb",
-      "ankiDesktop": "Anki (desktop)",
-      "ankiDroid": "AnkiDroid (Android)",
-      "ankiMobile": "AnkiMobile (iOS)"
+      "ankiRequired": "required."
     }
   },
   "admin": {
