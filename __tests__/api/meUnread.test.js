@@ -98,11 +98,17 @@ describe('GET /api/me/unread', () => {
     extractToken.mockReturnValue('t');
     getUserFromToken.mockResolvedValue({ id: 'user-456' });
     let inquiriesTable;
+    // Migration 065: the landlord_id lookup now runs on the token-scoped
+    // (authed) client, not the anon client — auth_user_id is no longer in the
+    // anon column allowlist on landlords.
     getSupabaseWithToken.mockReturnValue({
       from: (tableName) => {
         if (tableName === 'students') {
           // Not a student — return empty studentRow.
           return table({ data: null });
+        }
+        if (tableName === 'landlords') {
+          return table({ data: { landlord_id: 'l-1' } });
         }
         if (tableName === 'inquiries') {
           inquiriesTable = table({
@@ -116,18 +122,12 @@ describe('GET /api/me/unread', () => {
         throw new Error(`unexpected authed table: ${tableName}`);
       },
     });
-    getSupabase.mockReturnValue({
-      from: (tableName) => {
-        if (tableName === 'landlords') {
-          return table({ data: { landlord_id: 'l-1' } });
-        }
-        throw new Error(`unexpected unauthed table: ${tableName}`);
-      },
-    });
 
     const res = await GET(fakeRequest());
     const json = await res.json();
     expect(json).toEqual({ count: 5, role: 'landlord' });
+    // The landlord lookup must NOT touch the anon client anymore.
+    expect(getSupabase).not.toHaveBeenCalled();
 
     // Verify the route actually invoked the inner-join syntax, not a
     // looser shape. If a future agent drops `!inner` (loses the join's

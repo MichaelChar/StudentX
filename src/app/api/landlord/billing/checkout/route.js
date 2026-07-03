@@ -1,10 +1,13 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
+import { extractToken, getUserFromToken, getSupabaseAsService } from '@/lib/supabaseServer';
 import { getStripe, getOrCreateCustomer } from '@/lib/stripe';
 
+// Service-role: migration 065 drops auth_user_id + email from the anon column
+// allowlist on landlords, so this self-lookup can't run on the anon client.
+// userId is JWT-derived, so it stays scoped to the authenticated caller.
 async function getLandlord(userId) {
-  const { data } = await getSupabase()
+  const { data } = await getSupabaseAsService()
     .from('landlords')
     .select('landlord_id, name, email')
     .eq('auth_user_id', userId)
@@ -49,7 +52,10 @@ export async function POST(request) {
   }
 
   try {
-    const customerId = await getOrCreateCustomer(supabase, landlord.landlord_id, landlord.email, landlord.name);
+    // Service-role: getOrCreateCustomer reads/writes landlords.stripe_customer_id,
+    // which migration 065 removes from the anon column allowlist. (`supabase`
+    // above stays anon — it only reads the public subscription_plans table.)
+    const customerId = await getOrCreateCustomer(getSupabaseAsService(), landlord.landlord_id, landlord.email, landlord.name);
     const stripe = getStripe();
 
     const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';

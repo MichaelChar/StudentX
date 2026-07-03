@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
-import { getSupabase } from '@/lib/supabase';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
@@ -14,8 +13,11 @@ function getServiceSupabase() {
   );
 }
 
+// Service-role: migration 065 drops auth_user_id from the anon column
+// allowlist on landlords, so this self-lookup can't run on the anon client.
+// userId is JWT-derived, so it stays scoped to the authenticated caller.
 async function getLandlordId(userId) {
-  const { data } = await getSupabase()
+  const { data } = await getServiceSupabase()
     .from('landlords')
     .select('landlord_id, verified_tier, is_verified')
     .eq('auth_user_id', userId)
