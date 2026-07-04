@@ -17,6 +17,7 @@ import path from 'node:path';
 import {
   SubjectIndexSchema,
   PracticeTestSchema,
+  BiochemTestSchema,
 } from '../src/lib/practice/schema.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -43,7 +44,53 @@ function zodIssues(rel, result) {
   }
 }
 
-function validateTest(rel, test, expectedSubject) {
+// Tests authored in the simplified biochem format (letter-keyed options,
+// `answer` as a letter, `long_answer` type — see BiochemTestPlayer) carry no
+// top-level `id`/`subject`/`kind`; the filename and index.json entry are the
+// only source of truth for those, so they're passed in rather than read off
+// the parsed test the way PracticeTestSchema's `t.id`/`t.kind` are below.
+function validateBiochemTest(rel, test, fallbackId, fallbackKind) {
+  const parsed = BiochemTestSchema.safeParse(test);
+  if (!parsed.success) {
+    zodIssues(rel, parsed);
+    return null;
+  }
+  const { meta, questions } = parsed.data;
+
+  if (meta.total_questions !== questions.length) {
+    err(rel, `meta.total_questions ${meta.total_questions} != ${questions.length} questions`);
+  }
+  const mcqCount = questions.filter((q) => q.type === 'mcq').length;
+  const longAnswerCount = questions.filter((q) => q.type === 'long_answer').length;
+  if (meta.mcq_count !== mcqCount) {
+    err(rel, `meta.mcq_count ${meta.mcq_count} != ${mcqCount} actual mcq questions`);
+  }
+  if (meta.long_answer_count !== longAnswerCount) {
+    err(rel, `meta.long_answer_count ${meta.long_answer_count} != ${longAnswerCount} actual long_answer questions`);
+  }
+
+  const seen = new Set();
+  for (const q of questions) {
+    if (seen.has(q.id)) err(rel, `duplicate question id ${q.id}`);
+    seen.add(q.id);
+
+    if (q.type === 'mcq') {
+      const optionCount = q.options ? Object.keys(q.options).length : 0;
+      if (optionCount < 2) err(rel, `question ${q.id}: mcq must have at least 2 options, has ${optionCount}`);
+      if (!Object.prototype.hasOwnProperty.call(q.options ?? {}, q.answer)) {
+        err(rel, `question ${q.id}: answer "${q.answer}" is not a key in options`);
+      }
+    }
+  }
+
+  return { id: fallbackId, title: meta.title, kind: fallbackKind, questions };
+}
+
+function validateTest(rel, test, expectedSubject, fallbackId, fallbackKind) {
+  if (test && typeof test === 'object' && !Array.isArray(test) && test.meta) {
+    return validateBiochemTest(rel, test, fallbackId, fallbackKind);
+  }
+
   const parsed = PracticeTestSchema.safeParse(test);
   if (!parsed.success) {
     zodIssues(rel, parsed);
@@ -146,10 +193,11 @@ function validateSubject(subject) {
       err(rel, `invalid JSON — ${read.error}`);
       continue;
     }
-    const t = validateTest(rel, read.data, subject);
+    const expectedId = file.replace(/\.json$/, '');
+    const indexEntry = index.tests.find((e) => e.id === expectedId);
+    const t = validateTest(rel, read.data, subject, expectedId, indexEntry?.kind);
     if (!t) continue;
 
-    const expectedId = file.replace(/\.json$/, '');
     if (t.id !== expectedId) {
       err(rel, `test id "${t.id}" does not match filename "${expectedId}.json"`);
     }
