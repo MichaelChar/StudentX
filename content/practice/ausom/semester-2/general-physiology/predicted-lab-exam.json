@@ -19,7 +19,7 @@
       "explanation": {
         "text": "• Identify the gradient — external 5% > internal 0.9% → the solution is HYPERTONIC (higher non-penetrating solute outside). (1)\n• Outcome — water leaves the cell by osmosis → the cell SHRINKS / CRENATES (shrivels). (1)\n• Hypotonic case (e.g. distilled water) — water enters → the cell SWELLS → LYSES (hemolysis). (1)\n• Isotonic reference — equal non-penetrating solute → no net water movement, volume unchanged (≈0.9% NaCl, \"normal saline\"). (1)\n• Stop condition — net osmosis ceases when hydrostatic/osmotic pressures balance (dynamic equilibrium). (½ bonus)\nNote: the 2025 paper used 19% inside / 24% outside — still hypertonic outside → cell shrinks. The direction, not the exact %, is what's marked.",
         "source": "Cell Transport — slide \"TONICITY\" (PDF p.20)",
-        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q01-answer.png",
+        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q01-answer.jpg",
         "imageAlt": "Tonicity slide: an RBC in isotonic (no net movement), hypotonic (water in → swelling/lysis) and hypertonic (water out → crenation) solutions, with matching RBC photos."
       },
       "topic": "cell-transport",
@@ -32,7 +32,7 @@
       "explanation": {
         "text": "• Carrier-mediated transport moves small-to-moderate water-soluble substances (e.g. glucose) via a membrane PROTEIN CARRIER that changes shape; never open to both sides at once (unlike channels). (1)\n• Specificity — each carrier is specialised for a specific substance (or chemically similar group). (1)\n• Saturation — a finite number of binding sites → a maximum transport rate (transport maximum, Tm); rate plateaus once carriers are saturated. (1)\n• Competition — closely related compounds compete for the same carrier (e.g. glucose vs galactose). (1)\n• Facilitated diffusion — carrier-mediated, PASSIVE, down the gradient (\"downhill\"), no ATP. (1)\n• Active transport — carrier-mediated, UPHILL against the gradient, requires energy: primary (ATP directly, e.g. Na⁺-K⁺ pump) vs secondary (driven by an ion gradient — symport/antiport). (1)",
         "source": "Cell Transport — \"Competition\" (PDF p.28) + \"The 3 roles of the Na⁺-K⁺ pump\" (PDF p.34)",
-        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q02-answer.png",
+        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q02-answer.jpg",
         "imageAlt": "Top: glucose transport-rate curve plateauing (saturation) and lowered by galactose (competition). Bottom: the three roles of the Na⁺-K⁺ pump, the model primary active transporter."
       },
       "topic": "cell-transport",
@@ -45,7 +45,7 @@
       "explanation": {
         "text": "• Resting state — membrane at −70 mV; Na⁺ activation gates closed (capable of opening), inactivation gates open; K⁺ gates closed. (1)\n• Threshold — a graded potential depolarises the region to −50 to −55 mV; enough voltage-gated Na⁺ channels open to trigger a positive-feedback cycle. (1)\n• Rising phase (depolarisation) — Na⁺ activation gates fly open, Na⁺ rushes in (membrane ~600× more permeable to Na⁺); inside becomes positive. (1)\n• Peak (+30 to +40 mV) — driven toward E_Na (+60 mV); halted because Na⁺ inactivation gates close at the peak. (1)\n• Falling phase (repolarisation) — slow voltage-gated K⁺ channels open, K⁺ exits, restoring negativity. (1)\n• After-hyperpolarisation — K⁺ channels close slowly → brief overshoot to ≈ −80 mV before resting potential is restored. (1)\n• All-or-none, fixed amplitude/duration; the Na⁺-K⁺ pump restores gradients over the long run, not after each AP. (1)",
         "source": "Neurophysiology — \"Steps of the AP\" (PDF p.29–30) + \"Why do Na⁺ channels close?\" (PDF p.44)",
-        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q03-answer.png",
+        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q03-answer.jpg",
         "imageAlt": "Steps of the AP: explosive depolarisation to +30/+40 mV, repolarisation and after-hyperpolarisation to −80 mV, and the Na⁺ channel activation/inactivation gate sequence."
       },
       "topic": "neurophysiology",
@@ -58,7 +58,7 @@
       "explanation": {
         "text": "• Define MP — separation of opposite charges across the membrane (mV); only a tiny fraction of ions, near the membrane, carries it. (1)\n• Na⁺-K⁺ pump — pumps 3 Na⁺ out / 2 K⁺ in → maintains the gradients (Na⁺ high outside, K⁺ high inside); directly contributes only ~1–3 mV (electrogenic). (1)\n• Concentration gradients — Na⁺ ≈ 150 (out) / 15 (in); K⁺ ≈ 5 (out) / 150 (in). (1)\n• Selective permeability — membrane is 25–30× more permeable to K⁺ than Na⁺ → K⁺ dominates the resting MP. (1)\n• Equilibrium potentials — E_K ≈ −90 mV, E_Na ≈ +60 mV; resting −70 mV sits closer to E_K because of the higher K⁺ permeability. (1)\n• Intracellular anions — large negatively charged proteins trapped inside keep the interior negative. (1)",
         "source": "Neurophysiology — ion table (PDF p.8) + \"Concurrent K⁺ and Na⁺ effects on MP\" (PDF p.15)",
-        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q04-answer.png",
+        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q04-answer.jpg",
         "imageAlt": "Ion concentration/permeability table (Na⁺ 150/15, K⁺ 5/150, proteins 0/65; K⁺ relative permeability 25–30 vs Na⁺ 1) and why resting potential lands near E_K."
       },
       "topic": "neurophysiology",
@@ -71,7 +71,7 @@
       "explanation": {
         "text": "• Define a twitch — the mechanical response of a muscle fibre to a single action potential (single threshold stimulus). (1)\n• Latent period — delay between stimulus and force; no tension yet. Sarcolemma + T-tubules depolarise, Ca²⁺ released from the sarcoplasmic reticulum (excitation-contraction coupling). (1½)\n• Contraction phase — from end of latent period until peak tension; cross-bridges cycle, thin filaments slide, muscle shortens. (1½)\n• Relaxation phase — from peak tension back to rest; Ca²⁺ pumped back into the SR (terminal cisternae), cross-bridges detach, muscle returns to resting length. (1½)\n• Timing note — the AP (~1–2 ms) is far shorter than the twitch (~100 ms), which sets up summation. (½ bonus)",
         "source": "Skeletal Muscle — \"The three phases of muscle twitch\" (PDF p.10)",
-        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q05-answer.png",
+        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q05-answer.jpg",
         "imageAlt": "Tension-time twitch curve labelled with latent period, contraction phase and relaxation phase."
       },
       "topic": "skeletal-muscle",
@@ -84,7 +84,7 @@
       "explanation": {
         "text": "• Why it's possible — the twitch (~100 ms) outlasts the AP + absolute refractory period (~1–2 ms), so a fibre can be re-stimulated mid-twitch. (1)\n• Wave (temporal) summation — a second stimulus before relaxation adds a second Ca²⁺ release → contractions sum → greater tension than a single twitch. (1)\n• Incomplete (unfused) tetanus — higher frequency; partial relaxation still visible between contractions (bumpy plateau). (1)\n• Complete (fused) tetanus — at fusion frequency the twitches merge into a smooth, sustained maximal contraction; no relaxation between stimuli. (1)\n• Maximal tetanic tension — beyond fusion frequency, no further force is generated. (1)\n• You cannot summate the action potentials themselves — the refractory period prevents it; summation is mechanical. (1)",
         "source": "Skeletal Muscle — \"Frequency of stimulation\" (PDF p.14)",
-        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q06-answer.png",
+        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q06-answer.jpg",
         "imageAlt": "Tension tracings: treppe → wave summation → incomplete tetanus → complete (fused) tetanus → fatigue."
       },
       "topic": "skeletal-muscle",
@@ -97,7 +97,7 @@
       "explanation": {
         "text": "• Definition — production of blood cells by hematopoietic stem cells. (1)\n• Site — RED BONE MARROW: epiphyses of long bones (humerus, femur) and flat bones (pelvis, sternum, skull, ribs, vertebrae, scapula). (1)\n• Stem cells — undifferentiated progenitor cells that differentiate into erythrocytes, leukocytes, platelets. (1)\n• Main regulatory factor — ERYTHROPOIETIN (EPO); determines the number of cells released into blood. (1)\n• Control loop — low tissue O₂ → kidneys secrete EPO → acts on cells downstream of the myeloid stem cells → ↑ erythropoiesis. (1)\n• Acute demand — e.g. bleeding → early release of reticulocytes into the circulation to rapidly meet needs. (1)",
         "source": "General Physiology — \"HEMATOPOIESIS\" (PDF p.8) + \"REGULATION OF HEMATOPOIESIS\" (PDF p.12)",
-        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q07-answer.png",
+        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q07-answer.jpg",
         "imageAlt": "Top: red bone marrow → hematopoietic stem cell → RBCs / WBCs / platelets. Bottom: ↓ tissue O₂ → kidney erythropoietin → ↑ RBC production restores O₂-carrying capacity."
       },
       "topic": "blood",
@@ -110,7 +110,7 @@
       "explanation": {
         "text": "• Hematocrit — % of blood volume that is red cells (blood centrifuged; RBC column ÷ total column). Normal: men 41–53%, women 36–46%. (1)\n• Hematocrit factors — RBC number, mean cell volume, plasma volume; ↑ at altitude (Denver > Boston, via EPO), ↓ in anemia. (1)\n• ESR — distance (mm) RBCs settle in 1 hour in a vertical pipette (anticoagulant: 3.8% sodium citrate). Normal: men 3–5 mm/h, women 3–10 mm/h. (1)\n• ESR factors — ↑ when plasma fibrinogen / globulins rise (rouleaux formation); anemia ↑ ESR, polycythemia ↓ ESR; directly ∝ fibrinogen, inversely ∝ albumin. (1)\n• Clinical value — non-specific inflammation marker (↑ in MI, normal in angina; sickle cell, RA, tumors). (1)",
         "source": "General Physiology — \"HEMATOCRIT\" (PDF p.15) + \"ERYTHROCYTE SEDIMENTATION RATE (ESR)\" (PDF p.19)",
-        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q08-answer.png",
+        "image": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/q08-answer.jpg",
         "imageAlt": "Hematocrit (volume % of RBCs; men 41–53%, women 36–46%) and the ESR pipette method with rouleaux formation."
       },
       "topic": "blood",
