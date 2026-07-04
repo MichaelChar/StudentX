@@ -20,7 +20,7 @@ export default async function StudentServicesPage({ params }) {
 // placeholders.
 const SQUARES = [
   { id: 'ausom', href: '/student/ausom', image: '/services/ausom.jpg', alt: 'AUSoM', active: true },
-  { id: 'flashcards', href: '/student/flashcards', image: '/services/flashcards.svg', alt: 'Anki Flashcards', active: true },
+  { id: 'flashcards', href: '/student/flashcards', image: '/services/flashcards.jpg', alt: 'Anki Flashcards', active: true },
   { id: 'ph2', active: false },
   { id: 'ph3', active: false },
 ];
