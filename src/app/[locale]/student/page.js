@@ -16,10 +16,11 @@ export default async function StudentServicesPage({ params }) {
 }
 
 // Square service buttons — image only, no text.
-// First slot (AUSoM) is active; remaining are grey placeholders.
+// Active slots link out and render their `image`; the rest stay grey
+// placeholders.
 const SQUARES = [
-  { id: 'ausom', href: '/student/ausom', active: true },
-  { id: 'ph1', active: false },
+  { id: 'ausom', href: '/student/ausom', image: '/services/ausom.jpg', alt: 'AUSoM', active: true },
+  { id: 'flashcards', href: '/student/flashcards', image: '/services/flashcards.svg', alt: 'Anki Flashcards', active: true },
   { id: 'ph2', active: false },
   { id: 'ph3', active: false },
 ];
@@ -73,8 +74,8 @@ function ServicesContent() {
                 style={{ textDecoration: 'none' }}
               >
                 <Image
-                  src="/services/ausom.jpg"
-                  alt="AUSoM"
+                  src={sq.image}
+                  alt={sq.alt}
                   fill
                   className="object-cover"
                 />

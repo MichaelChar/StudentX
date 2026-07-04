@@ -937,6 +937,22 @@
         "error": "Something went wrong and your report wasn't sent. Please try again.",
         "done": "Done"
       }
+    },
+    "flashcards": {
+      "backToHub": "Student Services",
+      "backToSubjects": "Anki Flashcards",
+      "deckCount": "{count, plural, one {# deck} other {# decks}}",
+      "cardCount": "{count, plural, one {# card} other {# cards}}",
+      "updated": "Updated {date}",
+      "download": "Download",
+      "downloaded": "Downloaded",
+      "emptyState": "Decks coming soon",
+      "ankiApp": "Anki app",
+      "ankiDroidOnAndroid": "AnkiDroid on Android",
+      "ankiMobileOnIos": "AnkiMobile on iOS",
+      "ankiWebsite": "Anki website",
+      "ankiWeb": "AnkiWeb",
+      "ankiRequired": "required."
     }
   },
   "admin": {

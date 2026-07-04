@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "npm run validate:flashcards",
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
@@ -14,7 +15,9 @@
     "deploy": "npm run cf:build && opennextjs-cloudflare deploy",
     "preview": "npm run cf:build && opennextjs-cloudflare preview",
     "practice:manifest": "node scripts/generate-practice-manifest.mjs",
-    "validate:tests": "node scripts/validate-tests.mjs"
+    "validate:tests": "node scripts/validate-tests.mjs",
+    "flashcards:manifest": "node scripts/generate-flashcards-manifest.mjs",
+    "validate:flashcards": "node scripts/validate-flashcards.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.101.0",
