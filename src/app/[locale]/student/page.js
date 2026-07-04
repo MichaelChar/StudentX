@@ -56,6 +56,30 @@ function ServicesContent() {
           padding: '48px 24px 64px',
         }}
       >
+        {/* Intro video is a static asset behind preload="none" + poster, so
+            page load only fetches the poster JPEG; video bytes stream from
+            the CDN when the student presses play. */}
+        <video
+          src="/services/hub-intro.mp4"
+          poster="/services/hub-intro-poster.jpg"
+          controls
+          playsInline
+          preload="none"
+          width={784}
+          height={1168}
+          aria-label="What StudentX student services offer"
+          style={{
+            display: 'block',
+            width: '100%',
+            maxWidth: 320,
+            height: 'auto',
+            borderRadius: 22,
+            border: '1px solid rgba(10,37,64,0.10)',
+            background: '#000',
+            boxShadow: SHADOW_DEFAULT,
+            marginBottom: 32,
+          }}
+        />
         <div
           style={{
             display: 'grid',
