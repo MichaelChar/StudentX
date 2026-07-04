@@ -35,9 +35,19 @@ const interTight = Inter_Tight({
   display: 'swap',
 });
 
-export function generateStaticParams() {
-  return routing.locales.map((locale) => ({ locale }));
-}
+// Force every page in the locale tree to render on demand (this segment
+// config propagates to all child routes). Prerendered (SSG/ISR) routes
+// crash intermittently on OpenNext + Workers: Next's in-memory response
+// cache shares a render stream across requests in the same isolate, which
+// workerd forbids — "Cannot perform I/O on behalf of a different request
+// (RefcountedCanceler)" → Error 1101, observed at traffic peaks
+// 2026-07-01/02. Anonymous traffic is still cached at the CDN edge via
+// the s-maxage headers in next.config.mjs, so dropping prerender costs
+// little. Remove only after moving to a request-safe incremental cache
+// (R2) on @opennextjs/cloudflare ≥1.20. generateStaticParams was removed
+// from this tree for the same reason — it's what opted these routes into
+// prerendering.
+export const dynamic = 'force-dynamic';
 
 export function generateMetadata() {
   return {
