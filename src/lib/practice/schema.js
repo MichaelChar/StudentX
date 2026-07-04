@@ -143,6 +143,64 @@ export const PracticeTestSchema = z.object({
 });
 
 /**
+ * The simplified biochem format: a flat past-paper transcription with no
+ * top-level `id`/`subject`/`kind` (the filename + index.json entry are the
+ * only source of truth for those), letter-keyed `options`, an `answer`
+ * letter instead of a `correct` index, and a `long_answer` type instead of
+ * `reveal`. Detected by the presence of a top-level `meta` object and
+ * rendered by `BiochemTestPlayer` instead of `TestPlayer`/`FlashcardPlayer` —
+ * see `src/app/[locale]/student/ausom/semester-2/[subject]/[testId]/page.js`.
+ *
+ * @typedef {Object} BiochemQuestion
+ * @property {number} id
+ * @property {string} [source]        Past-paper reference badge, e.g. "T1 Q12".
+ * @property {'mcq' | 'long_answer'} type
+ * @property {string} stem
+ * @property {Object<string,string>} [options]  Letter-keyed options (mcq only).
+ * @property {string} [answer]        Correct option letter (mcq only).
+ * @property {string[]} [mark_scheme] Bullet-point mark scheme (long_answer only).
+ */
+export const BiochemQuestionSchema = z
+  .object({
+    id: z.number().int(),
+    source: z.string().min(1).optional(),
+    type: z.enum(['mcq', 'long_answer']),
+    stem: z.string().min(1),
+    options: z.record(z.string(), z.string().min(1)).optional(),
+    answer: z.string().min(1).optional(),
+    mark_scheme: z.array(z.string().min(1)).optional(),
+  })
+  .refine((q) => q.type !== 'mcq' || (q.options != null && q.answer != null), {
+    message: "'mcq' questions require `options` and `answer`",
+  })
+  .refine((q) => q.type !== 'long_answer' || (Array.isArray(q.mark_scheme) && q.mark_scheme.length > 0), {
+    message: "'long_answer' questions require a non-empty `mark_scheme`",
+    path: ['mark_scheme'],
+  });
+
+/**
+ * @typedef {Object} BiochemTest
+ * @property {Object} meta
+ * @property {string} meta.title
+ * @property {number} meta.total_questions
+ * @property {number} meta.mcq_count
+ * @property {number} meta.long_answer_count
+ * @property {BiochemQuestion[]} questions
+ */
+export const BiochemTestSchema = z.object({
+  meta: z.object({
+    title: z.string().min(1),
+    course: z.string().min(1).optional(),
+    semester: z.string().min(1).optional(),
+    total_questions: z.number().int().nonnegative(),
+    mcq_count: z.number().int().nonnegative(),
+    long_answer_count: z.number().int().nonnegative(),
+    behaviour: z.record(z.string(), z.string()).optional(),
+  }),
+  questions: z.array(BiochemQuestionSchema).min(1),
+});
+
+/**
  * @typedef {Object} SubjectIndexTest
  * @property {string} id
  * @property {string} title
