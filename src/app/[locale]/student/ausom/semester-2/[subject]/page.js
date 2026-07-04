@@ -3,12 +3,14 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import TestCard from '@/components/practice/TestCard';
 import TestCardProgress from '@/components/practice/TestCardProgress';
-import { getSubjectIndex } from '@/lib/practice/content';
+import { getSubjectIndex, listSubjectsWithContent } from '@/lib/practice/content';
 
-// Rendered on demand — force-dynamic is inherited from [locale]/layout.js
-// because prerendered routes crash intermittently on OpenNext + Workers
-// (cross-request response-cache reuse, Error 1101). Content still comes from
-// the bundled manifest; unknown subjects fall through to notFound() below.
+// Content lives in the bundled manifest (no runtime fs on Workers), so we can
+// pre-render every subject that has an index.json. Unknown subjects still fall
+// through to notFound() below.
+export function generateStaticParams() {
+  return listSubjectsWithContent().map((subject) => ({ subject }));
+}
 
 export async function generateMetadata({ params }) {
   const { subject } = await params;

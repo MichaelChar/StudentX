@@ -3,12 +3,21 @@ import { setRequestLocale } from 'next-intl/server';
 import TestPlayer from '@/components/practice/TestPlayer';
 import FlashcardPlayer from '@/components/practice/FlashcardPlayer';
 import BiochemTestPlayer from '@/components/practice/BiochemTestPlayer';
-import { getSubjectIndex, getTest } from '@/lib/practice/content';
+import { getSubjectIndex, getTest, listSubjectsWithContent } from '@/lib/practice/content';
 
-// Rendered on demand — force-dynamic is inherited from [locale]/layout.js
-// because prerendered routes crash intermittently on OpenNext + Workers
-// (cross-request response-cache reuse, Error 1101). Content still comes from
-// the bundled manifest; unknown subject/test falls through to notFound() below.
+// Every test lives in the bundled manifest (no runtime fs on Workers), so both
+// the [subject] and [testId] levels can be fully pre-rendered. The parent
+// [subject]/page.js enumerates subjects; this level enumerates that subject's
+// tests. Unknown subject/test still falls through to notFound() below.
+export function generateStaticParams({ params }) {
+  // In a deeper dynamic segment, generateStaticParams receives the parent's
+  // already-resolved params. Fall back to scanning every subject if absent.
+  const subjects = params?.subject ? [params.subject] : listSubjectsWithContent();
+  return subjects.flatMap((subject) => {
+    const index = getSubjectIndex(subject);
+    return (index?.tests ?? []).map((test) => ({ subject, testId: test.id }));
+  });
+}
 
 export async function generateMetadata({ params }) {
   const { subject, testId } = await params;
