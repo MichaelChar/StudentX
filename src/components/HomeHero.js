@@ -73,7 +73,7 @@ export default function HomeHero() {
             width={2048}
             height={183}
             priority
-            className="h-10 w-auto px-4 sm:h-14"
+            className="w-[62vw] max-w-4xl h-auto px-4"
           />
           <span style={{ color: IRIS }}>
             <ChevronDown />
@@ -107,7 +107,7 @@ export default function HomeHero() {
             width={2048}
             height={183}
             priority
-            className="h-10 w-auto px-4 sm:h-14 md:h-16"
+            className="w-[62vw] max-w-4xl h-auto px-4"
           />
           <motion.span
             style={{ color: IRIS }}
