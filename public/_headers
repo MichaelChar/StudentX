@@ -1,0 +1,10 @@
+# Served by Cloudflare Workers static assets (copied from public/ into
+# .open-next/assets by the OpenNext build). Static assets bypass
+# next.config.mjs#headers(), so per-file header overrides live here.
+
+# Anki decks: without an explicit Content-Type, browsers sniff the zip
+# container inside .apkg and save the download as a .zip. Forcing
+# octet-stream + attachment keeps the .apkg filename intact.
+/flashcards/*
+  Content-Type: application/octet-stream
+  Content-Disposition: attachment
