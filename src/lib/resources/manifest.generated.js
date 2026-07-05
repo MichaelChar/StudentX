@@ -13,7 +13,7 @@ export const RESOURCES = [
     "id": "flashcard:histology:general-histology",
     "type": "flashcard-deck",
     "title": "General Histology",
-    "description": "Tissue-identification flashcards covering the four basic tissue types.",
+    "description": "Comprehensive and high yield anki deck covering all the content.",
     "href": "/flashcards/histology/general-histology.apkg",
     "school": "ausom",
     "semester": "semester-2",
