@@ -1,7 +1,7 @@
 {
   "id": "lm-specimen-id",
   "subject": "general-histology",
-  "title": "Laboratory test, Light Microscope",
+  "title": "General Histology — Light Microscope Slide ID",
   "kind": "topic",
   "description": "Flashcards: study each light-microscopy lab specimen, then hit Answer to reveal the features to identify. Slides from the General Histology review slideshow; features from the GH specimen notes.",
   "version": 2,
@@ -207,5 +207,6 @@
       "topic": "hematology",
       "yield": "high"
     }
-  ]
+  ],
+  "year": 2026
 }

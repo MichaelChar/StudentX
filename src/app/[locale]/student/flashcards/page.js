@@ -105,7 +105,7 @@ function FlashcardsHubContent({ t }) {
     <div>
       <div style={{ maxWidth: 460, margin: '0 auto', padding: '32px 24px 0' }}>
         <Link
-          href="/student"
+          href="/resources"
           style={{
             display: 'inline-flex',
             alignItems: 'center',

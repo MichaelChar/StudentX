@@ -1,12 +1,12 @@
 {
   "id": "predicted-lab-exam",
   "subject": "general-physiology",
-  "title": "Predicted Laboratory Exam",
+  "title": "General Physiology — Predicted Lab Exam Questions",
   "kind": "topic",
   "description": "Flashcards: read each predicted open-ended question, attempt your own answer, then hit Answer to reveal a bullet-point mark scheme and the relevant slide(s). Repeat-weighted from the 2024/2025 lab papers — at least one question per lab presentation (Cell Transport, Neurophysiology, Skeletal Muscle, Blood).",
   "version": 2,
   "updatedAt": "2026-06-17",
-  "intro": {
+  "outro": {
     "video": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/intro.mp4",
     "poster": "/practice/ausom/semester-2/general-physiology/predicted-lab-exam/intro-poster.jpg",
     "title": "A word from Marcus Aurelius AI"
@@ -116,5 +116,6 @@
       "topic": "blood",
       "yield": "medium"
     }
-  ]
+  ],
+  "year": 2026
 }

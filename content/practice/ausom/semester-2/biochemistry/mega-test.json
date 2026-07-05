@@ -1,6 +1,6 @@
 {
   "meta": {
-    "title": "MD1011 Biochemistry I — Mega Test",
+    "title": "Biochemistry I — Predicted Exam Questions",
     "course": "MD1011 Biochemistry I",
     "semester": "B’ Semester 2025–26",
     "total_questions": 48,
@@ -9,7 +9,8 @@
     "behaviour": {
       "mcq": "Select one option. Answer revealed immediately on selection.",
       "long_answer": "Type answer, submit, mark scheme bullets appear. No grade given."
-    }
+    },
+    "year": 2026
   },
   "questions": [
     {

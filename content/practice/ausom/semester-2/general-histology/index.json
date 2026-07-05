@@ -3,18 +3,23 @@
   "title": "General Histology",
   "school": "ausom",
   "semester": "semester-2",
+  "country": "gr",
   "tests": [
     {
       "id": "lm-specimen-id",
-      "title": "Laboratory test, Light Microscope",
+      "title": "General Histology — Light Microscope Slide ID",
       "kind": "topic",
-      "questionCount": 14
+      "questionCount": 14,
+      "description": "Test revising the light microscope slides for the General Histology June 2026 lab exam",
+      "year": 2026
     },
     {
       "id": "em-structure-id",
-      "title": "Laboratory test, Electron Microscope",
+      "title": "General Histology — Electron Microscope Slide ID",
       "kind": "topic",
-      "questionCount": 9
+      "questionCount": 9,
+      "description": "Test revising the electron microscope slides for the General Histology June 2026 lab exam",
+      "year": 2026
     }
   ]
 }

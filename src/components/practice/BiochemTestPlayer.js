@@ -37,7 +37,7 @@ function BackButton({ href, onClick }) {
   };
   const inner = (
     <>
-      <span style={{ fontSize: 16, lineHeight: 1 }}>←</span> Biochemistry I
+      <span style={{ fontSize: 16, lineHeight: 1 }}>←</span> Resources
     </>
   );
   if (href) return <Link href={href} style={style}>{inner}</Link>;
@@ -452,7 +452,7 @@ function ScoreScreen({ score, mcqTotal, total, onRestart }) {
       </button>
 
       <Link
-        href="/student/ausom/semester-2"
+        href="/resources"
         style={{
           display: 'block',
           width: '100%',
@@ -468,7 +468,7 @@ function ScoreScreen({ score, mcqTotal, total, onRestart }) {
           textAlign: 'center',
         }}
       >
-        Back to Semester 2
+        Back to resources
       </Link>
     </div>
   );
@@ -506,9 +506,9 @@ export default function BiochemTestPlayer({ test }) {
     <div>
       <div style={{ maxWidth: COLUMN, margin: '0 auto', padding: '32px 24px 0' }}>
         {done ? (
-          <BackButton href="/student/ausom/semester-2" />
+          <BackButton href="/resources" />
         ) : (
-          <BackButton href="/student/ausom/semester-2" />
+          <BackButton href="/resources" />
         )}
       </div>
 
