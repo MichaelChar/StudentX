@@ -7,7 +7,7 @@
   "tests": [
     {
       "id": "predicted-lab-exam",
-      "title": "Predicted Laboratory Exam",
+      "title": "General Physiology — Predicted Lab Exam Questions",
       "kind": "topic",
       "questionCount": 8,
       "description": "Test predicting the long answer questions for the General Physiology June 2026 lab exam"

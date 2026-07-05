@@ -271,7 +271,10 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
   const searchParams = useSearchParams();
   const reviewId = searchParams.get('review');
 
-  const listHref = `/student/ausom/semester-2/${subject}`;
+  // Tests are only ever reached from /resources now, so "back" returns there
+  // directly rather than climbing back through the old subject/semester hub
+  // pages the student never saw.
+  const listHref = '/resources';
 
   // Shared lightbox across every mode.
   const [lightbox, setLightbox] = useState(null); // { src, alt } | null

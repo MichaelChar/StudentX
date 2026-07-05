@@ -104,7 +104,9 @@ function collectFlashcardEntries() {
         type: 'flashcard-deck',
         title: deck.title,
         description: deck.description,
-        href: `/student/flashcards/${subject}`,
+        // Decks download directly (the .apkg file), unlike practice tests
+        // which navigate to a page — see ResourceCard in ResourcesExplorer.js.
+        href: deck.file,
         school: index.school,
         semester: index.semester,
         country: index.country,

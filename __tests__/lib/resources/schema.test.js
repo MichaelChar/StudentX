@@ -4,7 +4,7 @@ import { ResourceEntrySchema } from '@/lib/resources/schema';
 const validEntry = {
   id: 'practice:biochemistry:mega-test',
   type: 'practice-test',
-  title: 'MD1011 Biochemistry I — Mega Test',
+  title: 'Biochemistry I — Predicted Exam Questions',
   description: 'Mega test predicting the contents for the exam',
   href: '/student/ausom/semester-2/biochemistry/mega-test',
   school: 'ausom',

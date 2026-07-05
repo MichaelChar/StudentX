@@ -14,7 +14,7 @@ export const RESOURCES = [
     "type": "flashcard-deck",
     "title": "General Histology",
     "description": "Tissue-identification flashcards covering the four basic tissue types.",
-    "href": "/student/flashcards/histology",
+    "href": "/flashcards/histology/general-histology.apkg",
     "school": "ausom",
     "semester": "semester-2",
     "country": "gr",
@@ -25,7 +25,7 @@ export const RESOURCES = [
   {
     "id": "practice:biochemistry:mega-test",
     "type": "practice-test",
-    "title": "MD1011 Biochemistry I — Mega Test",
+    "title": "Biochemistry I — Predicted Exam Questions",
     "description": "Mega test predicting the contents for the Biochemistry I June 2026 exam",
     "href": "/student/ausom/semester-2/biochemistry/mega-test",
     "school": "ausom",
@@ -38,7 +38,7 @@ export const RESOURCES = [
   {
     "id": "practice:general-histology:em-structure-id",
     "type": "practice-test",
-    "title": "Laboratory test, Electron Microscope",
+    "title": "General Histology — Electron Microscope Slide ID",
     "description": "Test revising the electron microscope slides for the General Histology June 2026 lab exam",
     "href": "/student/ausom/semester-2/general-histology/em-structure-id",
     "school": "ausom",
@@ -51,7 +51,7 @@ export const RESOURCES = [
   {
     "id": "practice:general-histology:lm-specimen-id",
     "type": "practice-test",
-    "title": "Laboratory test, Light Microscope",
+    "title": "General Histology — Light Microscope Slide ID",
     "description": "Test revising the light microscope slides for the General Histology June 2026 lab exam",
     "href": "/student/ausom/semester-2/general-histology/lm-specimen-id",
     "school": "ausom",
@@ -64,7 +64,7 @@ export const RESOURCES = [
   {
     "id": "practice:general-physiology:predicted-lab-exam",
     "type": "practice-test",
-    "title": "Predicted Laboratory Exam",
+    "title": "General Physiology — Predicted Lab Exam Questions",
     "description": "Test predicting the long answer questions for the General Physiology June 2026 lab exam",
     "href": "/student/ausom/semester-2/general-physiology/predicted-lab-exam",
     "school": "ausom",
