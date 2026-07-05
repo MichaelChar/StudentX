@@ -75,6 +75,7 @@ function collectPracticeEntries() {
         school: index.school,
         semester: index.semester,
         country: index.country,
+        year: test.year,
         meta: { questionCount: test.questionCount },
       });
     }
@@ -110,6 +111,7 @@ function collectFlashcardEntries() {
         school: index.school,
         semester: index.semester,
         country: index.country,
+        year: deck.year,
         meta: { cardCount: deck.cardCount },
       });
     }

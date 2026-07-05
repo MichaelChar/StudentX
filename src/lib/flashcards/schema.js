@@ -10,6 +10,7 @@
  */
 
 import { z } from 'zod';
+import { MIN_YEAR, MAX_YEAR } from '../resources/taxonomy.js';
 
 /**
  * @typedef {Object} Deck
@@ -20,6 +21,8 @@ import { z } from 'zod';
  * @property {number} fileSizeBytes
  * @property {string} file           Public root path, e.g. "/flashcards/histology/general-histology.apkg".
  * @property {string} updated        ISO date.
+ * @property {number} year           Exam/curriculum year the deck targets (see
+ *                                   src/lib/resources/taxonomy.js), e.g. 2026.
  */
 export const DeckSchema = z.object({
   id: z.string().min(1),
@@ -29,6 +32,7 @@ export const DeckSchema = z.object({
   fileSizeBytes: z.number().int().positive(),
   file: z.string().min(1),
   updated: z.string().min(1),
+  year: z.number().int().min(MIN_YEAR).max(MAX_YEAR),
 });
 
 /**

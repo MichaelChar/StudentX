@@ -7,13 +7,14 @@ describe('resources manifest', () => {
     expect(RESOURCES.length).toBeGreaterThan(0);
   });
 
-  it('every entry has id/type/title/description/href and passes schema validation', () => {
+  it('every entry has id/type/title/description/href/year and passes schema validation', () => {
     for (const entry of RESOURCES) {
       expect(entry.id).toBeTruthy();
       expect(entry.type).toBeTruthy();
       expect(entry.title).toBeTruthy();
       expect(entry.description).toBeTruthy();
       expect(entry.href).toBeTruthy();
+      expect(Number.isInteger(entry.year)).toBe(true);
       expect(ResourceEntrySchema.safeParse(entry).success).toBe(true);
     }
   });

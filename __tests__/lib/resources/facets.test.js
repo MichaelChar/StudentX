@@ -2,9 +2,9 @@ import { describe, it, expect } from 'vitest';
 import { deriveFacets, filterResources, relaxFilters } from '@/lib/resources/facets';
 
 const resources = [
-  { id: '1', type: 'practice-test', semester: 'semester-2', country: 'gr' },
-  { id: '2', type: 'practice-test', semester: 'semester-2', country: 'gr' },
-  { id: '3', type: 'flashcard-deck', semester: 'semester-2', country: 'gr' },
+  { id: '1', type: 'practice-test', semester: 'semester-2', country: 'gr', year: 2026 },
+  { id: '2', type: 'practice-test', semester: 'semester-2', country: 'gr', year: 2026 },
+  { id: '3', type: 'flashcard-deck', semester: 'semester-2', country: 'gr', year: 2026 },
 ];
 
 describe('deriveFacets', () => {
@@ -24,9 +24,18 @@ describe('deriveFacets', () => {
   });
 
   it('surfaces a facet once it gains a second distinct value', () => {
-    const varied = [...resources, { id: '4', type: 'practice-test', semester: 'semester-1', country: 'gr' }];
+    const varied = [...resources, { id: '4', type: 'practice-test', semester: 'semester-1', country: 'gr', year: 2026 }];
     const keys = deriveFacets(varied).map((f) => f.key);
     expect(keys).toContain('semester');
+  });
+
+  it('stringifies numeric facet values (e.g. year) and labels them with the value itself', () => {
+    const varied = [...resources, { id: '4', type: 'practice-test', semester: 'semester-2', country: 'gr', year: 2025 }];
+    const yearFacet = deriveFacets(varied).find((f) => f.key === 'year');
+    expect(yearFacet).toBeDefined();
+    const options = Object.fromEntries(yearFacet.options.map((o) => [o.value, o]));
+    expect(options['2026']).toMatchObject({ label: '2026', count: 3 });
+    expect(options['2025']).toMatchObject({ label: '2025', count: 1 });
   });
 });
 
@@ -42,6 +51,12 @@ describe('filterResources', () => {
 
   it('returns everything when no filters are active', () => {
     expect(filterResources(resources, {})).toHaveLength(3);
+  });
+
+  it('filters a numeric field (year) against a URL-style string value', () => {
+    const varied = [...resources, { id: '4', type: 'practice-test', semester: 'semester-2', country: 'gr', year: 2025 }];
+    const filtered = filterResources(varied, { year: '2025' });
+    expect(filtered.map((r) => r.id)).toEqual(['4']);
   });
 });
 

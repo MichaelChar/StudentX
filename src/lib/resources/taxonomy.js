@@ -31,6 +31,13 @@ export const SEMESTERS = [
 /** @type {TaxonomyValue[]} */
 export const COUNTRIES = [{ value: 'gr', label: 'Greek curriculum' }];
 
+// Year isn't a fixed enum like the facets above — it's the exam/curriculum
+// year a resource targets (e.g. 2026), and a new one is added every year.
+// Bounds only, so the generator still fails loudly on an out-of-range typo
+// (e.g. a 4-digit-year transposition).
+export const MIN_YEAR = 2020;
+export const MAX_YEAR = 2100;
+
 /** @param {TaxonomyValue[]} list */
 function toValueSet(list) {
   return new Set(list.map((v) => v.value));
@@ -52,3 +59,4 @@ export const COUNTRY_LABELS = toLabelMap(COUNTRIES);
 export const isValidResourceType = (value) => RESOURCE_TYPE_VALUES.has(value);
 export const isValidSemester = (value) => SEMESTER_VALUES.has(value);
 export const isValidCountry = (value) => COUNTRY_VALUES.has(value);
+export const isValidYear = (value) => Number.isInteger(value) && value >= MIN_YEAR && value <= MAX_YEAR;

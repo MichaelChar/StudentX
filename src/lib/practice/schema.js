@@ -13,6 +13,7 @@
  */
 
 import { z } from 'zod';
+import { MIN_YEAR, MAX_YEAR } from '../resources/taxonomy.js';
 
 /**
  * @typedef {'mcq' | 'tf' | 'reveal'} QuestionType
@@ -207,6 +208,8 @@ export const BiochemTestSchema = z.object({
  * @property {'topic' | 'mock'} kind
  * @property {number} questionCount
  * @property {string} description   Shown verbatim on the /resources card.
+ * @property {number} year          Exam/curriculum year the test targets (see
+ *                                  src/lib/resources/taxonomy.js), e.g. 2026.
  */
 /**
  * @typedef {Object} SubjectIndex
@@ -230,6 +233,7 @@ export const SubjectIndexSchema = z.object({
       kind: z.enum(['topic', 'mock']),
       questionCount: z.number().int().nonnegative(),
       description: z.string().min(1),
+      year: z.number().int().min(MIN_YEAR).max(MAX_YEAR),
     }),
   ),
 });

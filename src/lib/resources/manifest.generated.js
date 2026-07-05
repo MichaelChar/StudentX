@@ -18,6 +18,7 @@ export const RESOURCES = [
     "school": "ausom",
     "semester": "semester-2",
     "country": "gr",
+    "year": 2026,
     "meta": {
       "cardCount": 115
     }
@@ -31,6 +32,7 @@ export const RESOURCES = [
     "school": "ausom",
     "semester": "semester-2",
     "country": "gr",
+    "year": 2026,
     "meta": {
       "questionCount": 48
     }
@@ -44,6 +46,7 @@ export const RESOURCES = [
     "school": "ausom",
     "semester": "semester-2",
     "country": "gr",
+    "year": 2026,
     "meta": {
       "questionCount": 9
     }
@@ -57,6 +60,7 @@ export const RESOURCES = [
     "school": "ausom",
     "semester": "semester-2",
     "country": "gr",
+    "year": 2026,
     "meta": {
       "questionCount": 14
     }
@@ -70,6 +74,7 @@ export const RESOURCES = [
     "school": "ausom",
     "semester": "semester-2",
     "country": "gr",
+    "year": 2026,
     "meta": {
       "questionCount": 8
     }

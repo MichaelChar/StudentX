@@ -10,6 +10,7 @@ const validEntry = {
   school: 'ausom',
   semester: 'semester-2',
   country: 'gr',
+  year: 2026,
   meta: { questionCount: 48 },
 };
 
@@ -31,6 +32,11 @@ describe('ResourceEntrySchema', () => {
   it('rejects an unknown country', () => {
     const result = ResourceEntrySchema.safeParse({ ...validEntry, country: 'us' });
     expect(result.success).toBe(false);
+  });
+
+  it('rejects an out-of-range year', () => {
+    expect(ResourceEntrySchema.safeParse({ ...validEntry, year: 1999 }).success).toBe(false);
+    expect(ResourceEntrySchema.safeParse({ ...validEntry, year: 2026.5 }).success).toBe(false);
   });
 
   it('rejects a missing required field', () => {

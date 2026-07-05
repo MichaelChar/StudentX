@@ -6,8 +6,12 @@
 import { RESOURCE_TYPE_LABELS, SEMESTER_LABELS, COUNTRY_LABELS } from './taxonomy.js';
 
 /** Facet keys, in the priority order used when relaxing an empty result set. */
-export const FACET_KEYS = ['type', 'semester', 'country'];
+export const FACET_KEYS = ['type', 'semester', 'year', 'country'];
 
+// `year` has no fixed label map (see taxonomy.js) — its label is just the
+// value itself, e.g. 2026. Filter values always come from the URL query
+// string as strings, so every facet value is compared/stored as a string
+// here (r.year is a number in the data, "2026" once faceted).
 const FACET_LABELS = {
   type: RESOURCE_TYPE_LABELS,
   semester: SEMESTER_LABELS,
@@ -24,25 +28,28 @@ export function deriveFacets(resources) {
   return FACET_KEYS.map((key) => {
     const counts = new Map();
     for (const r of resources) {
-      counts.set(r[key], (counts.get(r[key]) ?? 0) + 1);
+      const value = String(r[key]);
+      counts.set(value, (counts.get(value) ?? 0) + 1);
     }
     const options = [...counts.entries()]
-      .map(([value, count]) => ({ value, label: FACET_LABELS[key][value] ?? value, count }))
-      .sort((a, b) => a.label.localeCompare(b.label));
+      .map(([value, count]) => ({ value, label: FACET_LABELS[key]?.[value] ?? value, count }))
+      .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
     return { key, options };
   }).filter((facet) => facet.options.length >= 2);
 }
 
 /**
  * AND-combine active filters over the resource list. A falsy filter value
- * means "no constraint on this facet".
+ * means "no constraint on this facet". Filter values are always strings
+ * (from the URL query string), so resource values are stringified before
+ * comparison.
  * @param {import('./schema.js').ResourceEntry[]} resources
  * @param {Record<string, string | null | undefined>} filters
  */
 export function filterResources(resources, filters) {
   const active = Object.entries(filters ?? {}).filter(([, v]) => v);
   if (!active.length) return resources;
-  return resources.filter((r) => active.every(([key, value]) => r[key] === value));
+  return resources.filter((r) => active.every(([key, value]) => String(r[key]) === value));
 }
 
 /**

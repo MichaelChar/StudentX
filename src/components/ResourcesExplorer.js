@@ -9,6 +9,7 @@ import { FACET_KEYS, deriveFacets, filterResources, relaxFilters } from '@/lib/r
 const FACET_TITLES = {
   type: 'Resource type',
   semester: 'Semester',
+  year: 'Year',
   country: 'Country',
 };
 

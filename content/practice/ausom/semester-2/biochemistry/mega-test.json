@@ -9,7 +9,8 @@
     "behaviour": {
       "mcq": "Select one option. Answer revealed immediately on selection.",
       "long_answer": "Type answer, submit, mark scheme bullets appear. No grade given."
-    }
+    },
+    "year": 2026
   },
   "questions": [
     {
