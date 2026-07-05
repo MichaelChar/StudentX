@@ -3,12 +3,14 @@
   "title": "Biochemistry I",
   "school": "ausom",
   "semester": "semester-2",
+  "country": "gr",
   "tests": [
     {
       "id": "mega-test",
       "title": "MD1011 Biochemistry I — Mega Test",
       "kind": "topic",
-      "questionCount": 48
+      "questionCount": 48,
+      "description": "Mega test predicting the contents for the Biochemistry I June 2026 exam"
     }
   ]
 }

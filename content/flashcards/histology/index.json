@@ -1,6 +1,9 @@
 {
   "subject": "histology",
   "title": "Histology",
+  "school": "ausom",
+  "semester": "semester-2",
+  "country": "gr",
   "decks": [
     {
       "id": "general-histology",

@@ -206,6 +206,7 @@ export const BiochemTestSchema = z.object({
  * @property {string} title
  * @property {'topic' | 'mock'} kind
  * @property {number} questionCount
+ * @property {string} description   Shown verbatim on the /resources card.
  */
 /**
  * @typedef {Object} SubjectIndex
@@ -213,6 +214,7 @@ export const BiochemTestSchema = z.object({
  * @property {string} title          Display name, e.g. "Anatomy I".
  * @property {'ausom'} school
  * @property {'semester-2'} semester
+ * @property {'gr'} country          Curriculum country (see src/lib/resources/taxonomy.js).
  * @property {SubjectIndexTest[]} tests
  */
 export const SubjectIndexSchema = z.object({
@@ -220,12 +222,14 @@ export const SubjectIndexSchema = z.object({
   title: z.string().min(1),
   school: z.literal('ausom'),
   semester: z.literal('semester-2'),
+  country: z.literal('gr'),
   tests: z.array(
     z.object({
       id: z.string().min(1),
       title: z.string().min(1),
       kind: z.enum(['topic', 'mock']),
       questionCount: z.number().int().nonnegative(),
+      description: z.string().min(1),
     }),
   ),
 });

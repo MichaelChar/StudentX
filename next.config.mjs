@@ -190,6 +190,10 @@ const nextConfig = {
       // placeholder and the user lands on a broken URL.
       { source: '/landlord', destination: '/property/thessaloniki/landlord', permanent: true },
       { source: '/landlord/:path*', destination: '/property/thessaloniki/landlord/:path*', permanent: true },
+      // Resources hub replaced the /student squares+video hub (docs/resources-hub-spec.md).
+      // Exact path only — /student/login, /student/ausom/**, /student/flashcards/**
+      // etc. are unrelated auth/content surfaces and must keep resolving unchanged.
+      { source: '/student', destination: '/resources', permanent: true },
       // /en/* and /el/* catch-alls. These come LAST so the explicit
       // directoryPaths and /listing/:id rules win. The :path* segment
       // captures the rest of the URL verbatim.

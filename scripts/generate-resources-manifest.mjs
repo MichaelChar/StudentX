@@ -1,0 +1,155 @@
+#!/usr/bin/env node
+/**
+ * Generate src/lib/resources/manifest.generated.js — a flat array of
+ * /resources hub cards, one per practice test and one per flashcard deck.
+ *
+ * WHY THIS EXISTS — Cloudflare Workers (OpenNext) has no runtime `fs`, so this
+ * data can't be read from content/*.json at request time. Unlike
+ * scripts/generate-practice-manifest.mjs (which imports full test JSON so the
+ * player can run), the /resources cards only need index.json metadata, so we
+ * resolve everything here at generation time and emit a plain JS array
+ * literal — no imports needed, still zero runtime fs.
+ *
+ * Fails loudly (non-zero exit) if a facet value isn't in
+ * src/lib/resources/taxonomy.js or a required field is missing, mirroring
+ * scripts/validate-tests.mjs / scripts/validate-flashcards.mjs (PR #311).
+ *
+ *   npm run resources:manifest
+ */
+
+import { readFileSync, readdirSync, writeFileSync, existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+
+import { SubjectIndexSchema as PracticeSubjectIndexSchema } from '../src/lib/practice/schema.js';
+import { SubjectIndexSchema as FlashcardsSubjectIndexSchema } from '../src/lib/flashcards/schema.js';
+import { ResourceEntrySchema } from '../src/lib/resources/schema.js';
+
+const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const PRACTICE_ROOT = path.join(ROOT, 'content/practice/ausom/semester-2');
+const FLASHCARDS_ROOT = path.join(ROOT, 'content/flashcards');
+const OUT_FILE = path.join(ROOT, 'src/lib/resources/manifest.generated.js');
+
+/** @type {string[]} */
+const errors = [];
+const err = (where, msg) => errors.push(`${where}: ${msg}`);
+
+function subjectDirs(root) {
+  return existsSync(root)
+    ? readdirSync(root, { withFileTypes: true })
+        .filter((d) => d.isDirectory())
+        .map((d) => d.name)
+        .sort()
+    : [];
+}
+
+function readIndex(dir, subject) {
+  const indexPath = path.join(dir, 'index.json');
+  if (!existsSync(indexPath)) return null;
+  return JSON.parse(readFileSync(indexPath, 'utf8'));
+}
+
+function collectPracticeEntries() {
+  const entries = [];
+  for (const subject of subjectDirs(PRACTICE_ROOT)) {
+    const dir = path.join(PRACTICE_ROOT, subject);
+    const raw = readIndex(dir, subject);
+    const rel = `content/practice/ausom/semester-2/${subject}/index.json`;
+    if (!raw) {
+      err(rel, 'missing index.json');
+      continue;
+    }
+    const parsed = PracticeSubjectIndexSchema.safeParse(raw);
+    if (!parsed.success) {
+      for (const issue of parsed.error.issues) err(rel, `${issue.message} (at ${issue.path.join('.')})`);
+      continue;
+    }
+    const index = parsed.data;
+    for (const test of index.tests) {
+      entries.push({
+        id: `practice:${subject}:${test.id}`,
+        type: 'practice-test',
+        title: test.title,
+        description: test.description,
+        href: `/student/ausom/semester-2/${subject}/${test.id}`,
+        school: index.school,
+        semester: index.semester,
+        country: index.country,
+        meta: { questionCount: test.questionCount },
+      });
+    }
+  }
+  return entries;
+}
+
+function collectFlashcardEntries() {
+  const entries = [];
+  for (const subject of subjectDirs(FLASHCARDS_ROOT)) {
+    const dir = path.join(FLASHCARDS_ROOT, subject);
+    const raw = readIndex(dir, subject);
+    const rel = `content/flashcards/${subject}/index.json`;
+    if (!raw) {
+      err(rel, 'missing index.json');
+      continue;
+    }
+    const parsed = FlashcardsSubjectIndexSchema.safeParse(raw);
+    if (!parsed.success) {
+      for (const issue of parsed.error.issues) err(rel, `${issue.message} (at ${issue.path.join('.')})`);
+      continue;
+    }
+    const index = parsed.data;
+    for (const deck of index.decks) {
+      entries.push({
+        id: `flashcard:${subject}:${deck.id}`,
+        type: 'flashcard-deck',
+        title: deck.title,
+        description: deck.description,
+        href: `/student/flashcards/${subject}`,
+        school: index.school,
+        semester: index.semester,
+        country: index.country,
+        meta: { cardCount: deck.cardCount },
+      });
+    }
+  }
+  return entries;
+}
+
+function main() {
+  const entries = [...collectPracticeEntries(), ...collectFlashcardEntries()];
+
+  for (const entry of entries) {
+    const parsed = ResourceEntrySchema.safeParse(entry);
+    if (!parsed.success) {
+      for (const issue of parsed.error.issues) err(entry.id, `${issue.message} (at ${issue.path.join('.')})`);
+    }
+  }
+
+  if (errors.length) {
+    console.error(`\n✗ Resources manifest generation failed — ${errors.length} error(s):\n`);
+    for (const e of errors) console.error(`  • ${e}`);
+    console.error('');
+    process.exit(1);
+  }
+
+  // Deterministic order regardless of filesystem readdir ordering.
+  entries.sort((a, b) => a.id.localeCompare(b.id));
+
+  const body = `// @generated by scripts/generate-resources-manifest.mjs — DO NOT EDIT BY HAND.
+// Run \`npm run resources:manifest\` to regenerate after changing
+// content/practice/ or content/flashcards/.
+//
+// Fully resolved at generation time (no imports needed) — every field is
+// already validated against src/lib/resources/schema.js, so this file is a
+// plain data literal with zero runtime fs (required for Cloudflare Workers /
+// OpenNext).
+
+/** @type {import('./schema.js').ResourceEntry[]} */
+export const RESOURCES = ${JSON.stringify(entries, null, 2)};
+`;
+
+  writeFileSync(OUT_FILE, body);
+  console.log(`Wrote ${path.relative(ROOT, OUT_FILE)} — ${entries.length} resource(s).`);
+}
+
+main();

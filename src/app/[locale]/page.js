@@ -9,7 +9,7 @@ export default async function HomePage({ params }) {
 
   const buttons = [
     { id: 'directory', label: t('directory'), href: '/property' },
-    { id: 'services',  label: t('services'),  href: '/student' },
+    { id: 'services',  label: t('services'),  href: '/resources' },
     { id: 'gigs',      label: t('holidayGigs'), href: '/gigs' },
     { id: 'blog',      label: t('blog'),      href: 'https://blog.studentx.uk', external: true },
   ];

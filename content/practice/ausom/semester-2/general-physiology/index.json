@@ -3,12 +3,14 @@
   "title": "General Physiology",
   "school": "ausom",
   "semester": "semester-2",
+  "country": "gr",
   "tests": [
     {
       "id": "predicted-lab-exam",
       "title": "Predicted Laboratory Exam",
       "kind": "topic",
-      "questionCount": 8
+      "questionCount": 8,
+      "description": "Test predicting the long answer questions for the General Physiology June 2026 lab exam"
     }
   ]
 }
