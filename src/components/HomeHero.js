@@ -68,12 +68,12 @@ export default function HomeHero() {
         />
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6">
           <Image
-            src="/logo-2048w.png"
+            src="/logo-tesla-2048w.png"
             alt="StudentX"
-            width={452}
-            height={88}
+            width={2048}
+            height={183}
             priority
-            className="h-14 w-auto sm:h-20"
+            className="h-10 w-auto px-4 sm:h-14"
           />
           <span style={{ color: IRIS }}>
             <ChevronDown />
@@ -102,12 +102,12 @@ export default function HomeHero() {
           className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6"
         >
           <Image
-            src="/logo-2048w.png"
+            src="/logo-tesla-2048w.png"
             alt="StudentX"
-            width={452}
-            height={88}
+            width={2048}
+            height={183}
             priority
-            className="h-14 w-auto sm:h-20 md:h-24"
+            className="h-10 w-auto px-4 sm:h-14 md:h-16"
           />
           <motion.span
             style={{ color: IRIS }}
