@@ -5,10 +5,14 @@
 // loaders in content.js need no runtime fs (required for Cloudflare Workers /
 // OpenNext).
 
+import generalPhysiologyIndex from '../../../content/flashcards/general-physiology/index.json';
 import histologyIndex from '../../../content/flashcards/histology/index.json';
 
 /** @type {Record<string, { index: import('./schema.js').SubjectIndex }>} */
 export const MANIFEST = {
+  "general-physiology": {
+    index: generalPhysiologyIndex,
+  },
   "histology": {
     index: histologyIndex,
   },

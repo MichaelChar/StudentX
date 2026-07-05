@@ -1,0 +1,446 @@
+{
+  "meta": {
+    "title": "General Physiology I — Predicted Exam Questions (Repeaters)",
+    "course": "General Physiology I",
+    "total_questions": 33,
+    "mcq_count": 33,
+    "long_answer_count": 0,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    },
+    "year": 2026
+  },
+  "questions": [
+    {
+      "id": 1,
+      "source": "3 past papers",
+      "type": "mcq",
+      "stem": "When the diffusion rate of a substance across the cell membrane is directly proportional to the concentration difference across the membrane, the transport is:",
+      "options": {
+        "A": "Facilitated diffusion",
+        "B": "Cotransport with sodium",
+        "C": "Active transport",
+        "D": "Simple diffusion"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 2,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "The Nernst equation applies to the case in which:",
+      "options": {
+        "A": "An ion is cotransported with sodium",
+        "B": "An ion diffuses by facilitated diffusion",
+        "C": "The current produced by the electrical gradient of an ion is equal and opposite to the current produced by its chemical gradient",
+        "D": "An ion is actively transported across the membrane"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 3,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "A basic characteristic of carrier-mediated transport is:",
+      "options": {
+        "A": "Inhibition",
+        "B": "Specificity",
+        "C": "Competition",
+        "D": "All of the above",
+        "E": "Saturation"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 4,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "The diffusion rate of a molecule across the cell membrane will increase if:",
+      "options": {
+        "A": "The chemical gradient decreases",
+        "B": "The lipid solubility of the molecule increases",
+        "C": "The size of the molecule increases",
+        "D": "Membrane surface area decreases",
+        "E": "Membrane thickness increases"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 5,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "A sample of human red blood cells is placed in a plasma solution that has become hyperosmotic. The cells will:",
+      "options": {
+        "A": "Shrink",
+        "B": "Show no change in volume",
+        "C": "Undergo rapid mitosis",
+        "D": "Swell and undergo hemolysis"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 6,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "At rest, how does the inside of the cell membrane differ from the outside?",
+      "options": {
+        "A": "It is negatively charged and contains less Na+",
+        "B": "It is negatively charged and contains more Na+",
+        "C": "It is positively charged and contains more Na+",
+        "D": "It is positively charged and contains less Na+"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 7,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "The positive shift (depolarization) of the cell membrane potential that coincides with channel 'inactivation' concerns:",
+      "options": {
+        "A": "A decrease in K+ conductance",
+        "B": "A decrease in Na+ conductance",
+        "C": "No change in Na+ conductance",
+        "D": "An increase in Na+ conductance"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 8,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "The voltage-gated potassium channel:",
+      "options": {
+        "A": "Closes when the membrane potential reaches +10 mV",
+        "B": "Opens instantly at the resting potential",
+        "C": "Is open when the membrane is at rest",
+        "D": "Is closed when the membrane is at rest"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 9,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Which of the following explains the relative refractory period of a neuron?",
+      "options": {
+        "A": "Closure of calcium channels",
+        "B": "Inactivation of sodium channels",
+        "C": "Opening of calcium channels",
+        "D": "Delayed closure of potassium channels"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 10,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "An inhibitory postsynaptic potential (IPSP) inhibits a neuron because it:",
+      "options": {
+        "A": "Decreases neurotransmitter release at excitatory synapses",
+        "B": "Hyperpolarizes the postsynaptic membrane",
+        "C": "Shortens the action potential",
+        "D": "Changes the neuron's threshold"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 11,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Physostigmine causes stimulation at the neuromuscular junction because it:",
+      "options": {
+        "A": "Facilitates generation of the end-plate potential",
+        "B": "Increases Ca2+ entry into the presynaptic neuron",
+        "C": "Inactivates acetylcholinesterase",
+        "D": "Prevents acetylcholine from binding to postsynaptic receptors"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 12,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "In contrast to striated muscle fibers, smooth muscle fibers:",
+      "options": {
+        "A": "Are larger",
+        "B": "Develop tension more rapidly",
+        "C": "Develop tension more slowly and have a more negative resting membrane potential",
+        "D": "Do not contain myosin"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 13,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "A motor unit consists of muscle fibers:",
+      "options": {
+        "A": "Of many types, innervated by several motor neurons",
+        "B": "Of many types, innervated by one motor neuron",
+        "C": "Of only one type, innervated by several motor neurons",
+        "D": "Of only one type, innervated by one motor neuron"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 14,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Slow oxidative Type I muscle fibers combine:",
+      "options": {
+        "A": "High myosin ATPase activity and low oxidative capacity",
+        "B": "Low myosin ATPase activity and high glycolytic capacity",
+        "C": "Low myosin ATPase activity and high oxidative capacity",
+        "D": "High myosin ATPase activity and high oxidative capacity"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 15,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Muscle strengthening is achieved by:",
+      "options": {
+        "A": "Testosterone only",
+        "B": "Activation of many motor units, testosterone, and exercise (all of these)",
+        "C": "Exercise only",
+        "D": "Activation of many motor units only"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 16,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "How does excitation-contraction coupling differ between skeletal and cardiac muscle?",
+      "options": {
+        "A": "Cardiac muscle contraction depends on extracellular calcium concentration, unlike skeletal muscle",
+        "B": "Skeletal muscle contraction depends on extracellular calcium, unlike cardiac muscle",
+        "C": "Cardiac muscle cells do not possess ryanodine receptors",
+        "D": "In skeletal muscle, depolarization of the T-tubule membrane is not required"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 17,
+      "source": "3 past papers",
+      "type": "mcq",
+      "stem": "The destruction of red blood cells occurs mainly:",
+      "options": {
+        "A": "In the kidneys",
+        "B": "In the liver",
+        "C": "In the small intestine",
+        "D": "In the spleen"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 18,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Erythropoietin is produced:",
+      "options": {
+        "A": "In the spleen",
+        "B": "In the kidneys",
+        "C": "In the lungs",
+        "D": "In the liver"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 19,
+      "source": "3 past papers",
+      "type": "mcq",
+      "stem": "Reticulocytes are found:",
+      "options": {
+        "A": "In greater proportion in the bone marrow and lower proportion in peripheral blood",
+        "B": "Only in peripheral blood",
+        "C": "In equal proportion in bone marrow and peripheral blood",
+        "D": "In greater proportion in peripheral blood than in bone marrow"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 20,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Which category of leukocytes mainly produces antibodies?",
+      "options": {
+        "A": "Basophils",
+        "B": "Monocytes",
+        "C": "Lymphocytes",
+        "D": "Neutrophils"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 21,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Regarding monocytes:",
+      "options": {
+        "A": "They constitute 0-1% of leukocytes in adults",
+        "B": "They do not have phagocytic properties",
+        "C": "They have phagocytic properties and activate B lymphocytes",
+        "D": "They do not activate B lymphocytes"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 22,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Which leukocytes release heparin and histamine into the blood?",
+      "options": {
+        "A": "Neutrophils",
+        "B": "Basophils",
+        "C": "Monocytes",
+        "D": "Eosinophils"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 23,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "In a normal blood sample:",
+      "options": {
+        "A": "White blood cells are more numerous than platelets",
+        "B": "Eosinophils are the most common leukocyte",
+        "C": "Lymphocytes are more numerous than neutrophils",
+        "D": "Iron is found mainly in hemoglobin"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 24,
+      "source": "3 past papers",
+      "type": "mcq",
+      "stem": "Which statement about the complement system is INCORRECT?",
+      "options": {
+        "A": "It participates in innate immunity mechanisms",
+        "B": "It promotes inflammation",
+        "C": "It consists of polysaccharides",
+        "D": "It consists of proteins"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 25,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Which of the following does NOT belong to innate immunity?",
+      "options": {
+        "A": "Natural killer (NK) cells",
+        "B": "Activated T lymphocytes",
+        "C": "The action of lysozyme",
+        "D": "The complement system"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 26,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Which statement is true regarding antibodies (immunoglobulins)?",
+      "options": {
+        "A": "They consist of one heavy chain and one light chain",
+        "B": "IgG are pentameric and constitute 20% of antibodies",
+        "C": "Each light chain carries an antigen-binding region",
+        "D": "IgM are produced in large amounts during the primary immune response"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 27,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Hemophilia occurs with:",
+      "options": {
+        "A": "Deficiency of factor VIII",
+        "B": "A sudden increase in hemoglobin",
+        "C": "Deficiency of fibrinogen",
+        "D": "A sudden decrease in platelet number"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 28,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "The extrinsic and intrinsic coagulation pathways differ in that:",
+      "options": {
+        "A": "Only the extrinsic pathway can occur in vitro",
+        "B": "The intrinsic pathway develops more slowly",
+        "C": "Only the intrinsic pathway activates prothrombin",
+        "D": "Only the extrinsic pathway requires Ca2+"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 29,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Plasmin:",
+      "options": {
+        "A": "Breaks down fibrin into peptides",
+        "B": "Assists platelet aggregation",
+        "C": "Converts fibrinogen into fibrin",
+        "D": "Acts during the initial phase of coagulation"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 30,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Reduced blood coagulability is NOT observed in:",
+      "options": {
+        "A": "Increased platelet count",
+        "B": "Thrombocytopenia",
+        "C": "Vitamin K deficiency",
+        "D": "Liver dysfunction"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 31,
+      "source": "3 past papers",
+      "type": "mcq",
+      "stem": "The exclusive purpose of metabolism is:",
+      "options": {
+        "A": "Production of energy to maintain body functions only",
+        "B": "Production of heat to maintain stable body temperature",
+        "C": "Achievement of a positive energy balance",
+        "D": "Production of energy and structural components for the function and growth of the organism"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 32,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Body temperature differs from the usual reference (set-point) temperature when:",
+      "options": {
+        "A": "Intense cold prevails",
+        "B": "A very high environmental temperature prevails",
+        "C": "Muscle tone increases",
+        "D": "The thermoregulatory centers change the reference temperature"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 33,
+      "source": "2 past papers",
+      "type": "mcq",
+      "stem": "Examples of thermoregulatory mechanisms are:",
+      "options": {
+        "A": "Air conditioning",
+        "B": "Shivering and sweating",
+        "C": "Sweating only",
+        "D": "Shivering only"
+      },
+      "answer": "B"
+    }
+  ]
+}

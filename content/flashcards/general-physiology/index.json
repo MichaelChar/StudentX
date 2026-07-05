@@ -1,0 +1,19 @@
+{
+  "subject": "general-physiology",
+  "title": "General Physiology",
+  "school": "ausom",
+  "semester": "semester-2",
+  "country": "gr",
+  "decks": [
+    {
+      "id": "general-physiology",
+      "title": "General Physiology",
+      "description": "Reviewing this Anki deck to perfection provides 100% of the knowledge necessary to get full marks for the first four past papers",
+      "cardCount": 120,
+      "fileSizeBytes": 1492315,
+      "file": "/flashcards/general-physiology/general-physiology.apkg",
+      "updated": "2026-07-05",
+      "year": 2026
+    }
+  ]
+}
