@@ -1,0 +1,367 @@
+{
+  "meta": {
+    "title": "General Physiology I — Predicted Exam Questions (One-offs)",
+    "course": "General Physiology I",
+    "total_questions": 27,
+    "mcq_count": 27,
+    "long_answer_count": 0,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    },
+    "year": 2026
+  },
+  "questions": [
+    {
+      "id": 1,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Glucose enters nerve cells by:",
+      "options": {
+        "A": "Cotransport with Na+ ions",
+        "B": "Simple diffusion through the lipid bilayer",
+        "C": "Filtration",
+        "D": "Facilitated diffusion"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 2,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "The resting membrane potential of nerve cells ranges between:",
+      "options": {
+        "A": "-65 mV and +90 mV",
+        "B": "-65 mV and +65 mV",
+        "C": "-5 mV and -35 mV",
+        "D": "-65 mV and -90 mV"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 3,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Polarization of the cell membrane is:",
+      "options": {
+        "A": "The difference in Na+ concentration between intracellular and extracellular fluid",
+        "B": "The difference in electrical potential between the inside and outside of the cell membrane",
+        "C": "The difference in osmotic pressure between the inside and outside of the cell",
+        "D": "The difference in protein concentration between intracellular and extracellular fluid"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 4,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "When the Na+ channel is 'open' (activated):",
+      "options": {
+        "A": "The m gate and the h gate are both open",
+        "B": "The m gate and h gate are both half-open",
+        "C": "The m gate is open but the h gate is closed",
+        "D": "The h gate is open but the m gate is closed"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 5,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Which statement is NOT true regarding the all-or-none response?",
+      "options": {
+        "A": "A threshold stimulus must act for it to occur",
+        "B": "Conduction of the impulse depends on the type of neuron",
+        "C": "Conduction of the impulse does not depend on stimulus intensity",
+        "D": "The phenomenon is observed only in peripheral nerves"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 6,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Neurotransmitter release into the synaptic cleft is:",
+      "options": {
+        "A": "Controlled by neuronal influx of calcium ions",
+        "B": "Controlled by neuronal influx of sodium ions",
+        "C": "Independent of ion movement",
+        "D": "Controlled by neuronal influx of potassium ions"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 7,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Acetylcholine is a neurotransmitter at:",
+      "options": {
+        "A": "Only neuromuscular junctions",
+        "B": "Only postganglionic sympathetic fibers",
+        "C": "Only preganglionic parasympathetic fibers",
+        "D": "Preganglionic parasympathetic fibers, postganglionic parasympathetic fibers, and neuromuscular junctions"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 8,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "The 'H' zone of striated muscle consists of:",
+      "options": {
+        "A": "Both actin and myosin",
+        "B": "Neither actin nor myosin",
+        "C": "Actin only",
+        "D": "Myosin only"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 9,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "A transverse section of a skeletal muscle fiber through the H zone would reveal:",
+      "options": {
+        "A": "Myosin, but not actin",
+        "B": "Actin and myosin",
+        "C": "Actin, but not myosin",
+        "D": "Actin, myosin, and titin"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 10,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "The Z disc of the sarcomere:",
+      "options": {
+        "A": "Passes transversely through each myofibril",
+        "B": "Does not move during muscle contraction",
+        "C": "Consists of myosin filaments only",
+        "D": "Consists of actin and myosin filaments"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 11,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "During contraction of striated muscle:",
+      "options": {
+        "A": "Sarcomeres shorten",
+        "B": "The width of the A band decreases",
+        "C": "Thick and thin filaments shorten",
+        "D": "The distance between Z lines increases"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 12,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Detachment of actin from the myosin cross-bridges during contraction:",
+      "options": {
+        "A": "Causes breakdown of thick filaments",
+        "B": "Occurs when Ca2+ binds to troponin",
+        "C": "Depends on the release of ACh at the synapse",
+        "D": "Requires binding of ATP to the myosin head"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 13,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Tropomyosin:",
+      "options": {
+        "A": "Acts as the Ca2+ binding site during contraction",
+        "B": "Has ATPase activity",
+        "C": "Prevents the binding of actin to myosin at rest",
+        "D": "Is a protein of the thick filaments"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 14,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "In the contraction mechanism of smooth muscle fibers, Ca2+ binds to:",
+      "options": {
+        "A": "Tropomyosin",
+        "B": "Calmodulin",
+        "C": "Troponin",
+        "D": "Myosin"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 15,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "The force of contraction a muscle can produce isometrically:",
+      "options": {
+        "A": "Increases as muscle length increases",
+        "B": "Decreases as muscle length increases",
+        "C": "Is maximal at resting length and decreases at greater or smaller lengths",
+        "D": "Is independent of muscle length"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 16,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "The sarcoplasmic reticulum:",
+      "options": {
+        "A": "Releases Ca2+ to initiate contraction and actively removes Ca2+ to achieve relaxation",
+        "B": "Conducts action potentials into the interior of the cell",
+        "C": "Only actively removes Ca2+ from the sarcoplasm",
+        "D": "Only releases Ca2+ to initiate contraction"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 17,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Smooth muscle cells begin to contract by all of the following mechanisms EXCEPT:",
+      "options": {
+        "A": "Acetylcholine binding to nicotinic receptors",
+        "B": "Norepinephrine binding to alpha-1 adrenergic receptors",
+        "C": "Movement of a food bolus in the gastrointestinal tract",
+        "D": "Excitation spreading from a neighboring cell through gap junctions"
+      },
+      "answer": "A"
+    },
+    {
+      "id": 18,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "The lifespan of red blood cells is approximately:",
+      "options": {
+        "A": "5-8 days",
+        "B": "2-3 weeks",
+        "C": "100-130 days",
+        "D": "200-210 days",
+        "E": "80-90 days"
+      },
+      "answer": "C"
+    },
+    {
+      "id": 19,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Erythropoiesis:",
+      "options": {
+        "A": "Decreases during hypoxia",
+        "B": "Increases during hypoxia",
+        "C": "Occurs mainly in the liver after age 20",
+        "D": "Is normal when reticulocytes are 50% of red cells"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 20,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "A hematocrit of 41% means:",
+      "options": {
+        "A": "41% of the total blood volume is plasma",
+        "B": "41% of the blood volume consists of red blood cells",
+        "C": "41% of red cells contain hemoglobin",
+        "D": "41% of hemoglobin is in the plasma"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 21,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Individuals with sickle-cell anemia have:",
+      "options": {
+        "A": "MetHb",
+        "B": "HbF",
+        "C": "HbA2",
+        "D": "HbS"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 22,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Tissue macrophages originate from:",
+      "options": {
+        "A": "Granulocytes",
+        "B": "Megakaryocytes",
+        "C": "Lymphocytes",
+        "D": "Monocytes"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 23,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Eosinophils:",
+      "options": {
+        "A": "Have no phagocytic ability at all",
+        "B": "Increase during allergic reactions",
+        "C": "Transform into plasma cells",
+        "D": "Do not contain granules"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 24,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "The normal proportion of polymorphonuclear (neutrophil) leukocytes among total leukocytes in adult peripheral blood is:",
+      "options": {
+        "A": "30-50%",
+        "B": "50-70%",
+        "C": "70-90%",
+        "D": "10-30%"
+      },
+      "answer": "B"
+    },
+    {
+      "id": 25,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Natural killer (NK) cells of the immune system:",
+      "options": {
+        "A": "Are not lymphocytes",
+        "B": "Are not cytotoxic",
+        "C": "Do not induce apoptosis",
+        "D": "Are cytotoxic lymphocytes that induce apoptosis in their targets (all of these)"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 26,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "Which of the following cell types is NOT part of the reticuloendothelial system?",
+      "options": {
+        "A": "Lymph node macrophages",
+        "B": "Kupffer stellate cells",
+        "C": "Splenic macrophages",
+        "D": "Purkinje cells"
+      },
+      "answer": "D"
+    },
+    {
+      "id": 27,
+      "source": "1 past paper",
+      "type": "mcq",
+      "stem": "The sequence of events in the primary hemostatic plug is:",
+      "options": {
+        "A": "Platelet adhesion, aggregation, and release of substances",
+        "B": "Platelet aggregation and fibrinolysis",
+        "C": "Vasoconstriction, fibrin formation, fibrinolysis",
+        "D": "Platelet adhesion and fibrin formation"
+      },
+      "answer": "A"
+    }
+  ]
+}

@@ -12,6 +12,22 @@
       "questionCount": 8,
       "description": "Test predicting the long answer questions for the General Physiology June 2026 lab exam",
       "year": 2026
+    },
+    {
+      "id": "predicted-mcq-repeaters",
+      "title": "General Physiology I — Predicted Exam Questions (Repeaters)",
+      "kind": "topic",
+      "questionCount": 33,
+      "description": "33 MCQ repeated across 2+ past papers. Obviously important content",
+      "year": 2026
+    },
+    {
+      "id": "predicted-mcq-oneoffs",
+      "title": "General Physiology I — Predicted Exam Questions (One-offs)",
+      "kind": "topic",
+      "questionCount": 27,
+      "description": "27 high yield MCQs on previous papers. High probability of being reused.",
+      "year": 2026
     }
   ]
 }

@@ -11,6 +11,8 @@ import generalHistologyTestEmStructureId from '../../../content/practice/ausom/s
 import generalHistologyTestLmSpecimenId from '../../../content/practice/ausom/semester-2/general-histology/lm-specimen-id.json';
 import generalPhysiologyIndex from '../../../content/practice/ausom/semester-2/general-physiology/index.json';
 import generalPhysiologyTestPredictedLabExam from '../../../content/practice/ausom/semester-2/general-physiology/predicted-lab-exam.json';
+import generalPhysiologyTestPredictedMcqOneoffs from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-oneoffs.json';
+import generalPhysiologyTestPredictedMcqRepeaters from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-repeaters.json';
 
 /** @type {Record<string, { index: import('./schema.js').SubjectIndex, tests: Record<string, import('./schema.js').PracticeTest> }>} */
 export const MANIFEST = {
@@ -31,6 +33,8 @@ export const MANIFEST = {
     index: generalPhysiologyIndex,
     tests: {
       "predicted-lab-exam": generalPhysiologyTestPredictedLabExam,
+      "predicted-mcq-oneoffs": generalPhysiologyTestPredictedMcqOneoffs,
+      "predicted-mcq-repeaters": generalPhysiologyTestPredictedMcqRepeaters,
     },
   },
 };

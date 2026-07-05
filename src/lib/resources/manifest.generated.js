@@ -10,6 +10,20 @@
 /** @type {import('./schema.js').ResourceEntry[]} */
 export const RESOURCES = [
   {
+    "id": "flashcard:general-physiology:general-physiology",
+    "type": "flashcard-deck",
+    "title": "General Physiology",
+    "description": "Reviewing this Anki deck to perfection provides 100% of the knowledge necessary to get full marks for the first four past papers",
+    "href": "/flashcards/general-physiology/general-physiology.apkg",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "cardCount": 120
+    }
+  },
+  {
     "id": "flashcard:histology:general-histology",
     "type": "flashcard-deck",
     "title": "General Histology",
@@ -77,6 +91,34 @@ export const RESOURCES = [
     "year": 2026,
     "meta": {
       "questionCount": 8
+    }
+  },
+  {
+    "id": "practice:general-physiology:predicted-mcq-oneoffs",
+    "type": "practice-test",
+    "title": "General Physiology I — Predicted Exam Questions (One-offs)",
+    "description": "27 high yield MCQs on previous papers. High probability of being reused.",
+    "href": "/student/ausom/semester-2/general-physiology/predicted-mcq-oneoffs",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "questionCount": 27
+    }
+  },
+  {
+    "id": "practice:general-physiology:predicted-mcq-repeaters",
+    "type": "practice-test",
+    "title": "General Physiology I — Predicted Exam Questions (Repeaters)",
+    "description": "33 MCQ repeated across 2+ past papers. Obviously important content",
+    "href": "/student/ausom/semester-2/general-physiology/predicted-mcq-repeaters",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "questionCount": 33
     }
   }
 ];
