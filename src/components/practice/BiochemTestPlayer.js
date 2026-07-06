@@ -265,6 +265,32 @@ function McqCard({ question, onNext, isLast }) {
         })}
       </div>
 
+      {locked && question.explanation && (
+        <div
+          style={{
+            marginTop: 14,
+            borderRadius: 18,
+            border: '1px solid rgba(10,37,64,0.08)',
+            background: '#f6f4ff',
+            padding: '16px 18px',
+          }}
+        >
+          <p
+            style={{
+              margin: '0 0 8px',
+              fontSize: 12,
+              fontWeight: 700,
+              letterSpacing: '0.06em',
+              textTransform: 'uppercase',
+              color: 'rgba(10,37,64,0.45)',
+            }}
+          >
+            Explanation
+          </p>
+          <p style={{ margin: 0, fontSize: 15, lineHeight: 1.5, color: INK }}>{question.explanation}</p>
+        </div>
+      )}
+
       {locked && <NextButton onClick={onNext} label={isLast ? 'See results' : 'Next →'} />}
     </div>
   );

@@ -38,6 +38,20 @@ export const RESOURCES = [
     }
   },
   {
+    "id": "practice:anatomy-1:mega-test",
+    "type": "practice-test",
+    "title": "Anatomy I — Comprehensive Review",
+    "description": "Cumulative review of every presentation, including vertebral column, pectoral/pelvic girdles, limb bones, skull, joints, and head/neck/thorax/back/limb muscles.",
+    "href": "/student/ausom/semester-2/anatomy-1/mega-test",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "questionCount": 80
+    }
+  },
+  {
     "id": "practice:biochemistry:mega-test",
     "type": "practice-test",
     "title": "Biochemistry I — Predicted Exam Questions",
