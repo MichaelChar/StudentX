@@ -1,0 +1,17 @@
+{
+  "subject": "anatomy-1",
+  "title": "Anatomy I",
+  "school": "ausom",
+  "semester": "semester-2",
+  "country": "gr",
+  "tests": [
+    {
+      "id": "mega-test",
+      "title": "Anatomy I — Comprehensive Review",
+      "kind": "topic",
+      "questionCount": 80,
+      "description": "Cumulative review of every presentation, including vertebral column, pectoral/pelvic girdles, limb bones, skull, joints, and head/neck/thorax/back/limb muscles.",
+      "year": 2026
+    }
+  ]
+}

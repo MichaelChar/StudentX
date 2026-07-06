@@ -1,0 +1,1237 @@
+{
+  "meta": {
+    "title": "Anatomy I — Comprehensive Review",
+    "course": "Anatomy I",
+    "semester": "B’ Semester 2025–26",
+    "total_questions": 80,
+    "mcq_count": 80,
+    "long_answer_count": 0,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection, with an explanation of the correct concept."
+    },
+    "year": 2026
+  },
+  "questions": [
+    {
+      "id": 1,
+      "source": "class",
+      "topic": "Vertebral Column & Thorax",
+      "type": "mcq",
+      "stem": "The vertebral (spinal) canal is enclosed posteriorly by which bony structures?",
+      "options": {
+        "A": "The vertebral bodies",
+        "B": "The dorsal bony (vertebral) arches",
+        "C": "The transverse processes",
+        "D": "The intervertebral discs"
+      },
+      "answer": "B",
+      "explanation": "The vertebral canal is enclosed posteriorly by the dorsal (vertebral) arches; the bodies form the anterior wall."
+    },
+    {
+      "id": 2,
+      "source": "class",
+      "topic": "Vertebral Column & Thorax",
+      "type": "mcq",
+      "stem": "The intervertebral foramen, through which spinal nerves exit, is formed by the:",
+      "options": {
+        "A": "Superior and inferior vertebral notches of adjacent pedicles",
+        "B": "Laminae of adjacent vertebrae",
+        "C": "Spinous processes",
+        "D": "Articular facets only"
+      },
+      "answer": "A",
+      "explanation": "The intervertebral foramen is formed by the superior and inferior vertebral notches of adjacent pedicles."
+    },
+    {
+      "id": 3,
+      "source": "class",
+      "topic": "Vertebral Column & Thorax",
+      "type": "mcq",
+      "stem": "The carotid tubercle (of Chassaignac) is found on the transverse process of which vertebra?",
+      "options": {
+        "A": "C4",
+        "B": "C5",
+        "C": "C6",
+        "D": "C7"
+      },
+      "answer": "C",
+      "explanation": "The carotid (Chassaignac) tubercle is on the transverse process of C6."
+    },
+    {
+      "id": 4,
+      "source": "class",
+      "topic": "Vertebral Column & Thorax",
+      "type": "mcq",
+      "stem": "The median sacral crest is formed by the fused:",
+      "options": {
+        "A": "Transverse processes",
+        "B": "Spinous processes",
+        "C": "Pedicles",
+        "D": "Laminae only"
+      },
+      "answer": "B",
+      "explanation": "The median sacral crest = fused spinous processes of the sacral vertebrae."
+    },
+    {
+      "id": 5,
+      "source": "class",
+      "topic": "Vertebral Column & Thorax",
+      "type": "mcq",
+      "stem": "From superior to inferior, the three parts of the sternum are:",
+      "options": {
+        "A": "Body, manubrium, xiphoid process",
+        "B": "Manubrium, body, xiphoid process",
+        "C": "Xiphoid process, body, manubrium",
+        "D": "Manubrium, xiphoid process, body"
+      },
+      "answer": "B",
+      "explanation": "Top to bottom: manubrium, body, xiphoid process."
+    },
+    {
+      "id": 6,
+      "source": "grok",
+      "topic": "Vertebral Column & Thorax",
+      "type": "mcq",
+      "stem": "Regarding the intervertebral discs, which statement is most accurate?",
+      "options": {
+        "A": "The nucleus pulposus is rich in type I collagen and sits at the centre of the disc.",
+        "B": "The intervertebral disc is vascularized into adulthood by branches of the segmental arteries.",
+        "C": "Disc height is greatest in the cervical region and least in the lumbar region.",
+        "D": "The annulus fibrosus fibres cross in an \"X\" pattern and are mainly type I collagen, while the nucleus pulposus is rich in proteoglycans and water.",
+        "E": "The annulus fibrosus consists of concentric lamellae of type II collagen set at a 30° angle to the horizontal plane."
+      },
+      "answer": "D",
+      "explanation": "The annulus fibrosus is made of crossed (X-pattern) lamellae of type I collagen; the nucleus pulposus is gelatinous, rich in water and proteoglycans. The other options err on collagen type, fibre angle, vascularity (the adult disc is avascular), or disc height (greatest lumbar, least cervical/thoracic)."
+    },
+    {
+      "id": 7,
+      "source": "grok",
+      "topic": "Vertebral Column & Thorax",
+      "type": "mcq",
+      "stem": "Regarding the atlas (C1) and axis (C2), which statement is correct?",
+      "options": {
+        "A": "The alar ligament joins the dens of the axis to the occiput and mainly limits flexion.",
+        "B": "The atlanto-axial joint is a trochoid (pivot) joint allowing head rotation, with the transverse ligament of the atlas holding the dens of the axis.",
+        "C": "The atlas has a well-developed vertebral body and an odontoid process.",
+        "D": "The axis has lateral masses that articulate with the occipital condyles.",
+        "E": "The atlas has no perforated transverse process."
+      },
+      "answer": "B",
+      "explanation": "The atlanto-axial joint is a trochoid (pivot) joint; the transverse ligament holds the dens against the anterior arch of C1. The atlas has no body or dens (those belong to the axis), and the alar ligament chiefly limits rotation."
+    },
+    {
+      "id": 8,
+      "source": "grok",
+      "topic": "Vertebral Column & Thorax",
+      "type": "mcq",
+      "stem": "What is the most distinctive feature of a typical cervical vertebra (C3–C6)?",
+      "options": {
+        "A": "A transverse foramen carrying the vertebral artery and the vertebral venous plexus.",
+        "B": "A long, bifid, downward-sloping spinous process.",
+        "C": "A broad, kidney-shaped vertebral body.",
+        "D": "Costal facets on the body and the transverse process.",
+        "E": "A superior articular process facing backward and upward."
+      },
+      "answer": "A",
+      "explanation": "The transverse foramen (carrying the vertebral artery, except at C7, plus the venous plexus and sympathetic fibres) is the defining feature of a cervical vertebra. The bifid spinous process and kidney-shaped body are features too, but the transverse foramen is the single most distinctive."
+    },
+    {
+      "id": 9,
+      "source": "grok",
+      "topic": "Vertebral Column & Thorax",
+      "type": "mcq",
+      "stem": "Regarding the thoraco-lumbar junction and the spinal curvatures, which statement is correct?",
+      "options": {
+        "A": "The cervical and lumbar lordoses are primary curvatures present at birth.",
+        "B": "The lumbar lordosis is absent in the newborn and develops with walking.",
+        "C": "The thoraco-lumbar junction (T11–L2) is an important biomechanical transition zone where facet orientation changes, raising the risk of fracture and disc herniation.",
+        "D": "All spinal curvatures are primary curvatures.",
+        "E": "The thoracic kyphosis is a secondary curvature that develops once a child begins to sit."
+      },
+      "answer": "C",
+      "explanation": "The thoraco-lumbar junction (T11–L2) is a biomechanical transition where facet orientation shifts (coronal → sagittal), making it a site of weakness. Primary curvatures = thoracic and sacral kyphoses (present at birth); secondary = cervical and lumbar lordoses (develop with posture)."
+    },
+    {
+      "id": 10,
+      "source": "class",
+      "topic": "Pectoral Girdle & Upper Limb Bones",
+      "type": "mcq",
+      "stem": "How many bones are there in one upper limb (including the pectoral girdle)?",
+      "options": {
+        "A": "28",
+        "B": "30",
+        "C": "32",
+        "D": "26"
+      },
+      "answer": "B",
+      "explanation": "Each upper limb has 30 bones (clavicle + scapula + humerus + radius + ulna + 8 carpals + 5 metacarpals + 14 phalanges)."
+    },
+    {
+      "id": 11,
+      "source": "class",
+      "topic": "Pectoral Girdle & Upper Limb Bones",
+      "type": "mcq",
+      "stem": "Teres major attaches to which feature of the scapula?",
+      "options": {
+        "A": "Coracoid process",
+        "B": "Inferior angle",
+        "C": "Medial border at the spine",
+        "D": "Supraglenoid tubercle"
+      },
+      "answer": "B",
+      "explanation": "Teres major attaches at the inferior angle of the scapula (origin), running to the crest of the lesser tubercle."
+    },
+    {
+      "id": 12,
+      "source": "class",
+      "topic": "Pectoral Girdle & Upper Limb Bones",
+      "type": "mcq",
+      "stem": "Which three rotator cuff muscles attach to the greater tubercle of the humerus?",
+      "options": {
+        "A": "Supraspinatus, infraspinatus, teres minor",
+        "B": "Subscapularis, supraspinatus, teres major",
+        "C": "Infraspinatus, teres major, subscapularis",
+        "D": "Supraspinatus, subscapularis, teres minor"
+      },
+      "answer": "A",
+      "explanation": "Greater tubercle = supraspinatus, infraspinatus, teres minor (superior, middle, inferior facets). Subscapularis is the lone lesser-tubercle muscle."
+    },
+    {
+      "id": 13,
+      "source": "grok",
+      "topic": "Pectoral Girdle & Upper Limb Bones",
+      "type": "mcq",
+      "stem": "Regarding the clavicle, which statement is most accurate?",
+      "options": {
+        "A": "The clavicle articulates with the sternum medially and the acromion laterally by synovial joints.",
+        "B": "The clavicle is the only long bone that ossifies by intramembranous ossification.",
+        "C": "The conoid and trapezoid tubercles lie on the inferior surface of the lateral end and give attachment to the coracoclavicular ligaments.",
+        "D": "The most frequent clavicular fracture occurs at the medial third.",
+        "E": "The clavicle is a long bone that ossifies by endochondral ossification only."
+      },
+      "answer": "C",
+      "explanation": "The conoid and trapezoid tubercles sit on the inferior surface of the lateral clavicle for the coracoclavicular ligaments. The clavicle ossifies mainly by intramembranous ossification (so E is wrong; B is true in isolation but the question asks the most accurate attachment statement). The commonest fracture is at the middle third, and both its joints are synovial but that is not the most precise/complete statement here."
+    },
+    {
+      "id": 14,
+      "source": "grok",
+      "topic": "Pectoral Girdle & Upper Limb Bones",
+      "type": "mcq",
+      "stem": "Regarding the humerus, which statement is correct?",
+      "options": {
+        "A": "The olecranon fossa lies on the anterior surface of the medial epicondyle.",
+        "B": "The radial (spiral) groove lies on the anterior surface of the shaft.",
+        "C": "The medial epicondyle is the origin site of the forearm extensor muscles.",
+        "D": "The greater tubercle gives attachment to supraspinatus, infraspinatus and teres minor.",
+        "E": "The intertubercular (bicipital) groove separates the greater and lesser tubercles and holds the long head of biceps tendon."
+      },
+      "answer": "E",
+      "explanation": "The intertubercular (bicipital) groove separates the greater and lesser tubercles and holds the long head of biceps tendon. The greater tubercle takes supraspinatus/infraspinatus/teres minor; the radial groove is postero-lateral; the medial epicondyle is the flexor origin; the olecranon fossa is posterior."
+    },
+    {
+      "id": 15,
+      "source": "class",
+      "topic": "Pelvic Girdle & Lower Limb Bones",
+      "type": "mcq",
+      "stem": "The ilium, ischium, and pubis fuse with one another at the:",
+      "options": {
+        "A": "Obturator foramen",
+        "B": "Acetabulum",
+        "C": "Pubic symphysis",
+        "D": "Greater sciatic notch"
+      },
+      "answer": "B",
+      "explanation": "The three hip-bone components fuse at the acetabulum (via the triradiate cartilage)."
+    },
+    {
+      "id": 16,
+      "source": "class",
+      "topic": "Pelvic Girdle & Lower Limb Bones",
+      "type": "mcq",
+      "stem": "The obturator foramen is formed by which two bones?",
+      "options": {
+        "A": "Ilium and ischium",
+        "B": "Ilium and pubis",
+        "C": "Pubis and ischium",
+        "D": "Pubis and sacrum"
+      },
+      "answer": "C",
+      "explanation": "The obturator foramen is bounded by the pubis and ischium."
+    },
+    {
+      "id": 17,
+      "source": "class",
+      "topic": "Pelvic Girdle & Lower Limb Bones",
+      "type": "mcq",
+      "stem": "The lunate surface of the acetabulum is best described as the:",
+      "options": {
+        "A": "Non-articular floor of the fossa",
+        "B": "Weight-bearing articular surface",
+        "C": "Site of the ligamentum teres",
+        "D": "Rim attachment of the labrum"
+      },
+      "answer": "B",
+      "explanation": "The lunate (crescentic) surface is the weight-bearing articular surface of the acetabulum; the central acetabular fossa is non-articular."
+    },
+    {
+      "id": 18,
+      "source": "class",
+      "topic": "Pelvic Girdle & Lower Limb Bones",
+      "type": "mcq",
+      "stem": "The intertrochanteric line:",
+      "options": {
+        "A": "Connects the trochanters anteriorly",
+        "B": "Connects the trochanters posteriorly",
+        "C": "Lies on the medial femoral condyle",
+        "D": "Is the attachment for the gluteus maximus"
+      },
+      "answer": "A",
+      "explanation": "The intertrochanteric line connects the trochanters anteriorly; the intertrochanteric crest connects them posteriorly."
+    },
+    {
+      "id": 19,
+      "source": "class",
+      "topic": "Pelvic Girdle & Lower Limb Bones",
+      "type": "mcq",
+      "stem": "The intercondylar fossa of the femur houses the:",
+      "options": {
+        "A": "Menisci",
+        "B": "Cruciate ligaments",
+        "C": "Patellar tendon",
+        "D": "Popliteus tendon"
+      },
+      "answer": "B",
+      "explanation": "The intercondylar fossa houses the cruciate ligaments."
+    },
+    {
+      "id": 20,
+      "source": "grok",
+      "topic": "Pelvic Girdle & Lower Limb Bones",
+      "type": "mcq",
+      "stem": "Regarding the acetabulum, which statement is most accurate?",
+      "options": {
+        "A": "The acetabulum faces laterally, anteriorly and inferiorly.",
+        "B": "The lunate surface is covered with hyaline cartilage and articulates with the femoral head; the transverse acetabular ligament closes the inferior part of the acetabulum.",
+        "C": "The acetabular fossa is cartilage-covered and takes part in the joint.",
+        "D": "The ligament of the femoral head (ligamentum teres) attaches to the acetabular fossa.",
+        "E": "The acetabulum is formed by fusion of the three bones of the hip bone: ilium, ischium and pubis."
+      },
+      "answer": "B",
+      "explanation": "The lunate surface is the hyaline-cartilage-covered articular part; the transverse acetabular ligament closes the acetabular notch inferiorly. The acetabular fossa is NOT cartilage-covered (it holds fat + ligamentum teres) and does not articulate. Options A, D and E are individually true but B is the most complete/precise statement."
+    },
+    {
+      "id": 21,
+      "source": "grok",
+      "topic": "Pelvic Girdle & Lower Limb Bones",
+      "type": "mcq",
+      "stem": "Regarding the differences between the male and female pelvis, which statement is correct?",
+      "options": {
+        "A": "The male pelvis is wider and more flared than the female pelvis.",
+        "B": "The ischial spine is more prominent and pointed in the female.",
+        "C": "The subpubic angle is larger in the male (about 70–75°) than in the female (about 90–100°).",
+        "D": "The pelvic inlet is wider and rounder in the female, whereas it is narrower and heart-shaped in the male.",
+        "E": "The sacrum is shorter and broader in the male."
+      },
+      "answer": "D",
+      "explanation": "The pelvic inlet is wider, rounder and larger in the female (obstetric adaptation); narrower and heart-shaped in the male. The subpubic angle is larger in the female (~90–100°) and the female pelvis is the wider, more flared one."
+    },
+    {
+      "id": 22,
+      "source": "grok",
+      "topic": "Pelvic Girdle & Lower Limb Bones",
+      "type": "mcq",
+      "stem": "Regarding the obturator canal and the ligaments of the pelvis, which statement is correct?",
+      "options": {
+        "A": "The sacrotuberous ligament is an intrinsic ligament of the sacro-iliac joint.",
+        "B": "The iliofemoral ligament is the weakest ligament of the hip joint.",
+        "C": "The greater sciatic foramen is divided by the sacrospinous ligament.",
+        "D": "The pubofemoral ligament limits extension of the hip.",
+        "E": "The obturator canal is formed by the obturator groove of the hip bone and the obturator membrane; it transmits the obturator nerve and vessels."
+      },
+      "answer": "E",
+      "explanation": "The obturator canal (obturator groove + obturator membrane) transmits the obturator nerve and vessels. The sacrotuberous ligament is extra-articular; the iliofemoral ligament is the strongest hip ligament."
+    },
+    {
+      "id": 23,
+      "source": "class",
+      "topic": "Skull & Cranial Base (internal)",
+      "type": "mcq",
+      "stem": "How many facial bones are there, and which unpaired bone is among them?",
+      "options": {
+        "A": "12; the mandible",
+        "B": "14; the vomer",
+        "C": "8; the ethmoid",
+        "D": "14; the sphenoid"
+      },
+      "answer": "B",
+      "explanation": "There are 14 facial bones; the vomer (and the mandible) are the unpaired ones."
+    },
+    {
+      "id": 24,
+      "source": "class",
+      "topic": "Skull & Cranial Base (internal)",
+      "type": "mcq",
+      "stem": "The pterion is the junction primarily of the parietal bone and the greater wing of the sphenoid. What lies deep to it?",
+      "options": {
+        "A": "The internal carotid artery",
+        "B": "The middle meningeal artery",
+        "C": "The transverse sinus",
+        "D": "The facial nerve"
+      },
+      "answer": "B",
+      "explanation": "The pterion overlies the anterior division of the middle meningeal artery — a clinically vulnerable spot."
+    },
+    {
+      "id": 25,
+      "source": "class",
+      "topic": "Skull & Cranial Base (internal)",
+      "type": "mcq",
+      "stem": "The middle cranial fossa is formed by the sphenoid and the:",
+      "options": {
+        "A": "Two temporal bones",
+        "B": "Occipital bone",
+        "C": "Two parietal bones",
+        "D": "Ethmoid bone"
+      },
+      "answer": "A",
+      "explanation": "The middle cranial fossa is formed by the sphenoid plus the two temporal bones."
+    },
+    {
+      "id": 26,
+      "source": "class",
+      "topic": "Skull & Cranial Base (internal)",
+      "type": "mcq",
+      "stem": "The foramen spinosum transmits the:",
+      "options": {
+        "A": "Mandibular nerve",
+        "B": "Middle meningeal artery",
+        "C": "Internal carotid artery",
+        "D": "Maxillary nerve"
+      },
+      "answer": "B",
+      "explanation": "The foramen spinosum transmits the middle meningeal artery (foramen ovale transmits CN V3)."
+    },
+    {
+      "id": 27,
+      "source": "class",
+      "topic": "Skull & Cranial Base (internal)",
+      "type": "mcq",
+      "stem": "The posterior cranial fossa is formed mainly by the:",
+      "options": {
+        "A": "Sphenoid bone",
+        "B": "Occipital bone",
+        "C": "Temporal bones",
+        "D": "Parietal bones"
+      },
+      "answer": "B",
+      "explanation": "The posterior cranial fossa is formed mainly by the occipital bone."
+    },
+    {
+      "id": 28,
+      "source": "class",
+      "topic": "Skull & Cranial Base (internal)",
+      "type": "mcq",
+      "stem": "The internal acoustic meatus and the jugular foramen open into which cranial fossa?",
+      "options": {
+        "A": "Anterior cranial fossa",
+        "B": "Middle cranial fossa",
+        "C": "Posterior cranial fossa",
+        "D": "The orbit"
+      },
+      "answer": "C",
+      "explanation": "Both the internal acoustic meatus and the jugular foramen open into the posterior cranial fossa."
+    },
+    {
+      "id": 29,
+      "source": "grok",
+      "topic": "Skull & Cranial Base (internal)",
+      "type": "mcq",
+      "stem": "Regarding the foramina of the skull base, which statement is most accurate?",
+      "options": {
+        "A": "The foramen spinosum transmits the mandibular nerve (V3).",
+        "B": "The carotid canal transmits the internal carotid artery and the vagus nerve.",
+        "C": "The jugular foramen transmits the glossopharyngeal (IX), vagus (X) and accessory (XI) nerves, plus the internal jugular vein.",
+        "D": "The foramen rotundum transmits the maxillary nerve (V2) and the middle meningeal artery.",
+        "E": "The foramen ovale transmits the mandibular nerve (V3), the middle meningeal artery and sometimes the maxillary artery."
+      },
+      "answer": "C",
+      "explanation": "The jugular foramen transmits CN IX, X, XI and the internal jugular vein. The foramen ovale carries V3 (± accessory meningeal artery, NOT the middle meningeal — that's the foramen spinosum); the carotid canal carries the ICA + sympathetic/carotid plexus, not the vagus; foramen rotundum carries V2 only."
+    },
+    {
+      "id": 30,
+      "source": "class",
+      "topic": "Skull (external view)",
+      "type": "mcq",
+      "stem": "Which is the correct full list of the seven bones forming the bony orbit?",
+      "options": {
+        "A": "Frontal, sphenoid, ethmoid, lacrimal, maxilla, zygomatic, palatine",
+        "B": "Frontal, sphenoid, ethmoid, nasal, maxilla, zygomatic, vomer",
+        "C": "Frontal, parietal, ethmoid, lacrimal, maxilla, zygomatic, palatine",
+        "D": "Frontal, sphenoid, temporal, lacrimal, maxilla, zygomatic, palatine"
+      },
+      "answer": "A",
+      "explanation": "Orbit (7 bones): Frontal, Sphenoid, Ethmoid, Lacrimal, Maxilla, Zygomatic, Palatine."
+    },
+    {
+      "id": 31,
+      "source": "class",
+      "topic": "Skull (external view)",
+      "type": "mcq",
+      "stem": "The lacrimal groove (fossa for the lacrimal sac) is formed by the lacrimal bone and the:",
+      "options": {
+        "A": "Frontal process of the maxilla",
+        "B": "Orbital plate of the frontal bone",
+        "C": "Perpendicular plate of the ethmoid",
+        "D": "Zygomatic bone"
+      },
+      "answer": "A",
+      "explanation": "The lacrimal groove = lacrimal bone + frontal process of the maxilla."
+    },
+    {
+      "id": 32,
+      "source": "class",
+      "topic": "Skull (external view)",
+      "type": "mcq",
+      "stem": "The nasolacrimal canal/duct drains tears into which structure?",
+      "options": {
+        "A": "Superior meatus",
+        "B": "Middle meatus",
+        "C": "Inferior meatus",
+        "D": "Sphenoethmoidal recess"
+      },
+      "answer": "C",
+      "explanation": "The nasolacrimal duct drains into the inferior meatus."
+    },
+    {
+      "id": 33,
+      "source": "class",
+      "topic": "Skull (external view)",
+      "type": "mcq",
+      "stem": "The inferior nasal concha is best classified as:",
+      "options": {
+        "A": "Part of the ethmoid bone",
+        "B": "A separate facial bone",
+        "C": "Part of the maxilla",
+        "D": "Part of the palatine bone"
+      },
+      "answer": "B",
+      "explanation": "The inferior nasal concha is a separate facial bone (unlike the superior/middle conchae, which are part of the ethmoid)."
+    },
+    {
+      "id": 34,
+      "source": "class",
+      "topic": "Skull (external view)",
+      "type": "mcq",
+      "stem": "The stylomastoid foramen transmits which cranial nerve?",
+      "options": {
+        "A": "CN V (trigeminal)",
+        "B": "CN VII (facial)",
+        "C": "CN IX (glossopharyngeal)",
+        "D": "CN VIII (vestibulocochlear)"
+      },
+      "answer": "B",
+      "explanation": "The stylomastoid foramen transmits the facial nerve (CN VII)."
+    },
+    {
+      "id": 35,
+      "source": "grok",
+      "topic": "Skull (external view)",
+      "type": "mcq",
+      "stem": "Regarding the sphenoid bone seen externally, which statement is correct?",
+      "options": {
+        "A": "The lesser wings of the sphenoid form the roof of the orbit.",
+        "B": "The sphenoid bone articulates with every cranial bone except the occipital.",
+        "C": "The greater wings of the sphenoid form part of the temporal fossa and contain the foramen ovale and foramen spinosum.",
+        "D": "The body of the sphenoid contains the sella turcica and the sphenoidal sinuses.",
+        "E": "The pterygoid process is formed by the lateral and medial plates and attaches to the maxilla."
+      },
+      "answer": "C",
+      "explanation": "The greater wings contain the foramina ovale and spinosum and form part of the temporal fossa. The lesser wings do form the orbital roof, but the question targets the external/temporal-fossa relationship; the sphenoid DOES articulate with the occipital."
+    },
+    {
+      "id": 36,
+      "source": "grok",
+      "topic": "Skull (external view)",
+      "type": "mcq",
+      "stem": "Regarding the occipital bone seen externally, which statement is most accurate?",
+      "options": {
+        "A": "The foramen magnum is bounded anteriorly by the clivus and posteriorly by the occipital squama.",
+        "B": "The pharyngeal tubercle lies on the external surface of the basilar part.",
+        "C": "The occipital condyles articulate with the lateral masses of the atlas.",
+        "D": "The superior nuchal line gives attachment to the trapezius and the sternocleidomastoid muscles.",
+        "E": "The occipital bone does not contribute to the posterior cranial fossa."
+      },
+      "answer": "C",
+      "explanation": "The occipital condyles articulate with the lateral masses of the atlas (atlanto-occipital joint). The superior nuchal line gives attachment chiefly to trapezius and SCM, but the condylar articulation is the fundamental, always-true relationship; the occipital clearly forms the posterior fossa."
+    },
+    {
+      "id": 37,
+      "source": "grok",
+      "topic": "Muscles of the Head & Neck",
+      "type": "mcq",
+      "stem": "Regarding the occipitofrontalis (frontal belly), which statement is correct?",
+      "options": {
+        "A": "It belongs to the group of muscles of mastication.",
+        "B": "It is a deep muscle of the face.",
+        "C": "Its insertion on the galea aponeurotica lets it act on the scalp.",
+        "D": "It is innervated by the trigeminal nerve (V).",
+        "E": "It is innervated by the facial nerve (VII) and raises the eyebrows, producing expressions of surprise."
+      },
+      "answer": "E",
+      "explanation": "The frontal belly of occipitofrontalis is a muscle of facial expression, innervated by the facial nerve (VII); it raises the eyebrows. It is not a muscle of mastication (those take V3)."
+    },
+    {
+      "id": 38,
+      "source": "grok",
+      "topic": "Muscles of the Head & Neck",
+      "type": "mcq",
+      "stem": "Regarding the buccinator muscle, which statement is most accurate?",
+      "options": {
+        "A": "It forms the lateral wall of the oral cavity, is innervated by the facial nerve (VII), and aids mastication by holding the cheek against the teeth.",
+        "B": "It is innervated by the mandibular nerve (V3).",
+        "C": "It belongs to the muscles of mastication.",
+        "D": "It inserts on the angle of the mandible.",
+        "E": "It is an elevator of the mandible."
+      },
+      "answer": "A",
+      "explanation": "The buccinator is a muscle of facial expression (VII), forming the lateral wall of the mouth and holding food against the teeth in chewing. It is NOT a muscle of mastication (masseter, temporalis, pterygoids — V3)."
+    },
+    {
+      "id": 39,
+      "source": "grok",
+      "topic": "Muscles of the Head & Neck",
+      "type": "mcq",
+      "stem": "Regarding the deep muscles of the oral region, which statement is correct?",
+      "options": {
+        "A": "They are innervated by the trigeminal nerve.",
+        "B": "The mentalis is an elevator of the upper lip.",
+        "C": "These muscles belong to the muscles of mastication.",
+        "D": "The mentalis and the incisivus muscles (superior and inferior) are deep muscles acting on the lower lip and chin, innervated by the facial nerve.",
+        "E": "The superior incisivus muscle inserts on the mandible."
+      },
+      "answer": "D",
+      "explanation": "The mentalis and incisivus muscles are deep muscles of the oral region innervated by the facial nerve (VII), acting on the lower lip/chin. They are not muscles of mastication and not trigeminal-innervated."
+    },
+    {
+      "id": 40,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "The external intercostal muscles are active during which phase, and their fibres run in which direction?",
+      "options": {
+        "A": "Expiration; downward and backward",
+        "B": "Inspiration; downward and forward",
+        "C": "Inspiration; upward and medial",
+        "D": "Expiration; transversely"
+      },
+      "answer": "B",
+      "explanation": "External intercostals = inspiratory; fibres run downward and forward."
+    },
+    {
+      "id": 41,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "The innermost intercostals are separated from the internal intercostals by the:",
+      "options": {
+        "A": "Endothoracic fascia",
+        "B": "Costal pleura",
+        "C": "Intercostal neurovascular bundle",
+        "D": "Transversus thoracis"
+      },
+      "answer": "C",
+      "explanation": "The intercostal neurovascular bundle separates the innermost from the internal intercostals."
+    },
+    {
+      "id": 42,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "Transversus thoracis is continuous inferiorly with which abdominal muscle?",
+      "options": {
+        "A": "Rectus abdominis",
+        "B": "External oblique",
+        "C": "Internal oblique",
+        "D": "Transversus abdominis"
+      },
+      "answer": "D",
+      "explanation": "Transversus thoracis is continuous with transversus abdominis."
+    },
+    {
+      "id": 43,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "The right dome of the diaphragm is 2–3 cm higher than the left because of the:",
+      "options": {
+        "A": "Spleen",
+        "B": "Stomach",
+        "C": "Liver",
+        "D": "Right kidney"
+      },
+      "answer": "C",
+      "explanation": "The right dome sits higher because of the liver beneath it."
+    },
+    {
+      "id": 44,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "All muscle fibres of the diaphragm insert onto the:",
+      "options": {
+        "A": "Xiphoid process",
+        "B": "Central tendon",
+        "C": "Costal margin",
+        "D": "Arcuate ligaments"
+      },
+      "answer": "B",
+      "explanation": "All diaphragmatic fibres converge on the central tendon."
+    },
+    {
+      "id": 45,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "The right crus of the diaphragm arises from which vertebrae (and the left crus from which)?",
+      "options": {
+        "A": "Right L1–L3; left L1–L2",
+        "B": "Right L1–L2; left L1–L3",
+        "C": "Both T11–T12",
+        "D": "Right L3–L5; left L3–L4"
+      },
+      "answer": "A",
+      "explanation": "Right crus = L1–L3; left crus = L1–L2."
+    },
+    {
+      "id": 46,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "The caval (IVC) foramen lies at which level and transmits what?",
+      "options": {
+        "A": "T10; esophagus + vagi",
+        "B": "T12; aorta + thoracic duct",
+        "C": "T8; IVC + right phrenic terminal branches",
+        "D": "T8; esophagus only"
+      },
+      "answer": "C",
+      "explanation": "Caval foramen at T8 transmits the IVC + terminal branches of the right phrenic nerve. (T8/T10/T12 — even numbers ascending.)"
+    },
+    {
+      "id": 47,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "The aortic hiatus lies at T12 and transmits the aorta, the azygos vein, and the:",
+      "options": {
+        "A": "Esophagus",
+        "B": "Vagus nerves",
+        "C": "Thoracic duct",
+        "D": "IVC"
+      },
+      "answer": "C",
+      "explanation": "Aortic hiatus (T12): aorta, thoracic duct, azygos vein."
+    },
+    {
+      "id": 48,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "Which is NOT one of the four scapulothoracic muscles?",
+      "options": {
+        "A": "Pectoralis major",
+        "B": "Pectoralis minor",
+        "C": "Latissimus dorsi",
+        "D": "Subclavius"
+      },
+      "answer": "C",
+      "explanation": "The four scapulothoracic muscles are pec major, pec minor, serratus anterior, subclavius — NOT latissimus dorsi."
+    },
+    {
+      "id": 49,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "Pectoralis minor inserts onto the:",
+      "options": {
+        "A": "Crest of the greater tubercle",
+        "B": "Medial border of the scapula",
+        "C": "Coracoid process of the scapula",
+        "D": "Subclavian groove of the clavicle"
+      },
+      "answer": "C",
+      "explanation": "Pectoralis minor inserts on the coracoid process."
+    },
+    {
+      "id": 50,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "The external oblique fibres run in which direction?",
+      "options": {
+        "A": "Upward and medially",
+        "B": "Downward and medially (\"hands in pockets\")",
+        "C": "Transversely",
+        "D": "Vertically"
+      },
+      "answer": "B",
+      "explanation": "External oblique fibres run downward and medially (\"hands in pockets\"); internal oblique runs the opposite way (up-and-medial)."
+    },
+    {
+      "id": 51,
+      "source": "class",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "In males, the lower fibres of which muscle form the cremaster?",
+      "options": {
+        "A": "External oblique",
+        "B": "Transversus abdominis",
+        "C": "Internal oblique",
+        "D": "Rectus abdominis"
+      },
+      "answer": "C",
+      "explanation": "Internal oblique's lower fibres form the cremaster muscle in males."
+    },
+    {
+      "id": 52,
+      "source": "grok",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "Regarding the intercostal muscles, which statement is most accurate?",
+      "options": {
+        "A": "The external intercostals are expiratory muscles.",
+        "B": "The internal and innermost (intimi) intercostals are separated by the intercostal neurovascular bundle.",
+        "C": "The transversus thoracis is an inspiratory muscle.",
+        "D": "The innermost intercostals lie superficial (external) to the neurovascular bundle.",
+        "E": "The external intercostals are inspiratory muscles running from the upper ribs to the lower ribs in a postero-anterior direction."
+      },
+      "answer": "B",
+      "explanation": "The internal and innermost intercostals are separated by the intercostal neurovascular bundle. External intercostals are inspiratory; internal/innermost are expiratory; transversus thoracis is expiratory. (Option E states the right phase but the wrong fibre direction — external fibres run downward-and-forward, antero-inferiorly.)"
+    },
+    {
+      "id": 53,
+      "source": "grok",
+      "topic": "Muscles of Thorax & Abdomen",
+      "type": "mcq",
+      "stem": "Regarding the diaphragm, which statement is correct?",
+      "options": {
+        "A": "The phrenic nerve innervates the diaphragm and arises from roots C4–C6.",
+        "B": "The caval (vena cava) foramen lies at the level of T10.",
+        "C": "The diaphragm is innervated by the vagus nerve.",
+        "D": "The Bochdalek and Morgagni triangles are areas of weakness in the central part of the diaphragm.",
+        "E": "The right crus inserts on the vertebral bodies of L1–L3 and the left crus on L1–L2; the esophageal hiatus is at T10 and the aortic hiatus at T12."
+      },
+      "answer": "E",
+      "explanation": "Right crus L1–L3, left crus L1–L2; esophageal hiatus T10, aortic hiatus T12. The phrenic nerve is C3–C5 (not C4–C6); the caval foramen is at T8 (not T10); Bochdalek/Morgagni triangles are postero-lateral/antero-medial weak spots, not central."
+    },
+    {
+      "id": 54,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "The extrinsic back muscles are called \"immigrant muscles\" because they:",
+      "options": {
+        "A": "Appear only after birth",
+        "B": "Represent upper-limb muscles that migrated to the back in development",
+        "C": "Arise from the gut tube",
+        "D": "Migrate during puberty"
+      },
+      "answer": "B",
+      "explanation": "\"Immigrant\" muscles are developmentally upper-limb muscles that migrated onto the back (hence ventral-ramus innervation)."
+    },
+    {
+      "id": 55,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "Intrinsic (true) back muscles are innervated by the ____, whereas extrinsic back muscles are innervated by ____:",
+      "options": {
+        "A": "Ventral rami; dorsal rami",
+        "B": "Dorsal (posterior) rami; ventral branches",
+        "C": "Accessory nerve; phrenic nerve",
+        "D": "Sympathetic chain; somatic nerves"
+      },
+      "answer": "B",
+      "explanation": "Intrinsic = dorsal (posterior) rami; extrinsic = ventral branches. This is the single most reliable discriminator."
+    },
+    {
+      "id": 56,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "What separates the intrinsic deep back muscles from the overlying extrinsic muscles?",
+      "options": {
+        "A": "Ligamentum nuchae",
+        "B": "Thoracolumbar fascia",
+        "C": "Transversalis fascia",
+        "D": "Endothoracic fascia"
+      },
+      "answer": "B",
+      "explanation": "The thoracolumbar fascia separates the deep intrinsic group from the superficial extrinsic muscles."
+    },
+    {
+      "id": 57,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "Motor innervation of the trapezius is by the:",
+      "options": {
+        "A": "Dorsal scapular nerve",
+        "B": "Spinal accessory nerve (CN XI)",
+        "C": "Long thoracic nerve",
+        "D": "Thoracodorsal nerve"
+      },
+      "answer": "B",
+      "explanation": "Trapezius motor supply = spinal accessory nerve (CN XI), with C3–C4 proprioception."
+    },
+    {
+      "id": 58,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "Latissimus dorsi inserts onto the ____, whereas pectoralis major inserts onto the ____:",
+      "options": {
+        "A": "Crest of greater tubercle; intertubercular sulcus",
+        "B": "Intertubercular (bicipital) sulcus; crest of the greater tubercle",
+        "C": "Deltoid tuberosity; coracoid process",
+        "D": "Coracoid process; lesser tubercle"
+      },
+      "answer": "B",
+      "explanation": "Latissimus dorsi → intertubercular (bicipital) sulcus (floor); pectoralis major → crest of the greater tubercle (lateral lip). Don't swap these."
+    },
+    {
+      "id": 59,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "Levator scapulae originates from the transverse processes of which vertebrae, and is innervated by which nerve?",
+      "options": {
+        "A": "C1–C4; dorsal scapular nerve",
+        "B": "T2–T5; long thoracic nerve",
+        "C": "C7–T1; accessory nerve",
+        "D": "C3–C5; phrenic nerve"
+      },
+      "answer": "A",
+      "explanation": "Levator scapulae = C1–C4 transverse processes, dorsal scapular nerve; elevates the scapula."
+    },
+    {
+      "id": 60,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "Rhomboid minor arises from ____ and rhomboid major from ____:",
+      "options": {
+        "A": "T2–T5; C7–T1",
+        "B": "C7–T1; T2–T5",
+        "C": "C1–C4; T1–T4",
+        "D": "T11–L3; T5–T8"
+      },
+      "answer": "B",
+      "explanation": "Rhomboid minor = C7–T1; rhomboid major = T2–T5 (minor is higher, smaller)."
+    },
+    {
+      "id": 61,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "Serratus posterior inferior acts as a synergist of:",
+      "options": {
+        "A": "Inspiration",
+        "B": "Expiration",
+        "C": "Trunk rotation",
+        "D": "Scapular retraction"
+      },
+      "answer": "B",
+      "explanation": "Serratus posterior inferior depresses ribs 9–12 → expiration synergist. (Serratus posterior superior = inspiration.)"
+    },
+    {
+      "id": 62,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "The transversospinales (deep layer) consist of:",
+      "options": {
+        "A": "Iliocostalis, longissimus, spinalis",
+        "B": "Splenius capitis and cervicis",
+        "C": "Semispinalis, multifidus, rotatores",
+        "D": "The four suboccipital muscles"
+      },
+      "answer": "C",
+      "explanation": "Transversospinales (deep layer) = semispinalis, multifidus, rotatores (run transverse → spinous)."
+    },
+    {
+      "id": 63,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "In addition to extension, the semispinalis also:",
+      "options": {
+        "A": "Flexes the column",
+        "B": "Contralaterally rotates the head and vertebral column",
+        "C": "Elevates the ribs",
+        "D": "Ipsilaterally rotates the head"
+      },
+      "answer": "B",
+      "explanation": "Semispinalis extends AND contralaterally rotates the head and vertebral column."
+    },
+    {
+      "id": 64,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "Which deep intrinsic muscle is strongly developed in the lumbar region, ascends 2–4 segments, and lies deep to the semispinalis?",
+      "options": {
+        "A": "Rotatores",
+        "B": "Multifidus",
+        "C": "Iliocostalis",
+        "D": "Interspinales"
+      },
+      "answer": "B",
+      "explanation": "Multifidus: deep to semispinalis, strong in the lumbar region, ascends 2–4 vertebral segments."
+    },
+    {
+      "id": 65,
+      "source": "class",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "The four suboccipital muscles are all innervated by the:",
+      "options": {
+        "A": "Greater occipital nerve",
+        "B": "Dorsal scapular nerve",
+        "C": "Suboccipital nerve",
+        "D": "Spinal accessory nerve"
+      },
+      "answer": "C",
+      "explanation": "All four suboccipital muscles are innervated by the suboccipital nerve."
+    },
+    {
+      "id": 66,
+      "source": "grok",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "Regarding the classification of the back muscles, which statement is most accurate?",
+      "options": {
+        "A": "The intrinsic (deep) back muscles are innervated by ventral branches of the spinal nerves.",
+        "B": "The trapezius is an intrinsic back muscle.",
+        "C": "The latissimus dorsi is innervated by the accessory nerve (XI).",
+        "D": "The erector spinae muscles are extrinsic muscles.",
+        "E": "The extrinsic (superficial) back muscles are innervated by ventral branches of the spinal nerves and are mainly \"immigrant\" muscles of the shoulder girdle."
+      },
+      "answer": "E",
+      "explanation": "The extrinsic (superficial) muscles — trapezius, latissimus dorsi, levator scapulae, rhomboids — are \"immigrant\" shoulder-girdle muscles innervated by ventral branches. The intrinsic muscles take dorsal rami. Trapezius is extrinsic (accessory nerve); latissimus = thoracodorsal nerve."
+    },
+    {
+      "id": 67,
+      "source": "grok",
+      "topic": "Muscles of the Back",
+      "type": "mcq",
+      "stem": "Regarding the trapezius, which statement is correct?",
+      "options": {
+        "A": "All fibres of the trapezius have the same action on the scapula.",
+        "B": "The trapezius is innervated solely by the accessory nerve (XI).",
+        "C": "The upper fibres elevate and laterally rotate the scapula, the middle fibres retract it, and the lower fibres depress and laterally rotate it; innervated by the accessory nerve (XI) plus sensory fibres from C3–C4.",
+        "D": "The lower fibres of the trapezius elevate the scapula.",
+        "E": "The trapezius belongs to the intrinsic back muscles."
+      },
+      "answer": "C",
+      "explanation": "Upper fibres elevate + laterally rotate the scapula, middle fibres retract, lower fibres depress + laterally rotate; motor = accessory nerve (XI), proprioception C3–C4. The fibres have different actions, and trapezius is extrinsic."
+    },
+    {
+      "id": 68,
+      "source": "class",
+      "topic": "Muscles of the Upper Limb",
+      "type": "mcq",
+      "stem": "Which four muscles make up the rotator cuff?",
+      "options": {
+        "A": "Supraspinatus, infraspinatus, teres major, subscapularis",
+        "B": "Supraspinatus, infraspinatus, teres minor, subscapularis",
+        "C": "Deltoid, supraspinatus, infraspinatus, teres minor",
+        "D": "Supraspinatus, infraspinatus, teres minor, coracobrachialis"
+      },
+      "answer": "B",
+      "explanation": "Rotator cuff = SITS: Supraspinatus, Infraspinatus, Teres minor, Subscapularis."
+    },
+    {
+      "id": 69,
+      "source": "class",
+      "topic": "Muscles of the Upper Limb",
+      "type": "mcq",
+      "stem": "Which rotator cuff muscle inserts on the lesser tubercle, and what is its action?",
+      "options": {
+        "A": "Supraspinatus; abduction",
+        "B": "Subscapularis; medial rotation",
+        "C": "Infraspinatus; lateral rotation",
+        "D": "Teres minor; lateral rotation"
+      },
+      "answer": "B",
+      "explanation": "Subscapularis is the only cuff muscle on the lesser tubercle; it medially rotates the arm."
+    },
+    {
+      "id": 70,
+      "source": "class",
+      "topic": "Muscles of the Upper Limb",
+      "type": "mcq",
+      "stem": "The two heads of biceps brachii arise from the:",
+      "options": {
+        "A": "Long head = coracoid process; short head = supraglenoid tubercle",
+        "B": "Long head = supraglenoid tubercle; short head = coracoid process",
+        "C": "Long head = infraglenoid tubercle; short head = coracoid process",
+        "D": "Both heads from the coracoid process"
+      },
+      "answer": "B",
+      "explanation": "Long head = supraglenoid tubercle; short head = coracoid process."
+    },
+    {
+      "id": 71,
+      "source": "class",
+      "topic": "Muscles of the Upper Limb",
+      "type": "mcq",
+      "stem": "Biceps brachii inserts via its common tendon onto the:",
+      "options": {
+        "A": "Coronoid process of the ulna",
+        "B": "Olecranon",
+        "C": "Radial tuberosity",
+        "D": "Deltoid tuberosity"
+      },
+      "answer": "C",
+      "explanation": "Biceps inserts on the radial tuberosity (plus the bicipital aponeurosis)."
+    },
+    {
+      "id": 72,
+      "source": "class",
+      "topic": "Muscles of the Upper Limb",
+      "type": "mcq",
+      "stem": "The long head of triceps brachii arises from the infraglenoid tubercle; all three heads insert onto the:",
+      "options": {
+        "A": "Coronoid process",
+        "B": "Olecranon process of the ulna",
+        "C": "Radial tuberosity",
+        "D": "Lateral epicondyle"
+      },
+      "answer": "B",
+      "explanation": "Long head of triceps = infraglenoid tubercle; all three heads insert on the olecranon."
+    },
+    {
+      "id": 73,
+      "source": "grok",
+      "topic": "Muscles of the Upper Limb",
+      "type": "mcq",
+      "stem": "Regarding the pectoralis major, which statement is most accurate?",
+      "options": {
+        "A": "It is innervated solely by the lateral pectoral nerve.",
+        "B": "It has three heads (clavicular, sternocostal and abdominal); it adducts, flexes and medially rotates the humerus; it is innervated by the lateral and medial pectoral nerves.",
+        "C": "The clavicular head is the most powerful for adduction.",
+        "D": "It inserts on the crest of the greater tubercle of the humerus.",
+        "E": "It is a muscle of the posterior compartment of the arm."
+      },
+      "answer": "B",
+      "explanation": "Pectoralis major: three heads (clavicular, sternocostal, abdominal); adducts/flexes/medially rotates the humerus; dual innervation by lateral + medial pectoral nerves. It inserts on the crest of the greater tubercle (option D is true in isolation but B is the most complete statement)."
+    },
+    {
+      "id": 74,
+      "source": "grok",
+      "topic": "Muscles of the Upper Limb",
+      "type": "mcq",
+      "stem": "Regarding the rotator cuff, which statement is correct?",
+      "options": {
+        "A": "The supraspinatus is the chief lateral rotator of the humerus.",
+        "B": "The subscapularis is a lateral rotator.",
+        "C": "All cuff muscles are innervated by the suprascapular nerve.",
+        "D": "The rotator cuff does not contribute to shoulder stability.",
+        "E": "It is formed by the supraspinatus, infraspinatus, teres minor and subscapularis (SITS); these stabilize the humeral head in the glenoid cavity and are innervated by branches of the brachial plexus."
+      },
+      "answer": "E",
+      "explanation": "The cuff (SITS) stabilizes the humeral head in the glenoid. Innervation: supra-/infraspinatus = suprascapular; teres minor = axillary; subscapularis = upper + lower subscapular — i.e., branches of the brachial plexus, not all suprascapular. Supraspinatus = abductor (not lateral rotator); subscapularis = medial rotator."
+    },
+    {
+      "id": 75,
+      "source": "class",
+      "topic": "Muscles of the Lower Limb",
+      "type": "mcq",
+      "stem": "The levator ani (pelvic diaphragm) consists of pubococcygeus, puborectalis, and:",
+      "options": {
+        "A": "Coccygeus",
+        "B": "Iliococcygeus",
+        "C": "Piriformis",
+        "D": "Obturator internus"
+      },
+      "answer": "B",
+      "explanation": "Levator ani = pubococcygeus + puborectalis + iliococcygeus. Coccygeus is separate."
+    },
+    {
+      "id": 76,
+      "source": "class",
+      "topic": "Muscles of the Lower Limb",
+      "type": "mcq",
+      "stem": "Which anterior thigh muscle is the longest muscle in the body (ASIS → pes anserinus), innervated by the femoral nerve?",
+      "options": {
+        "A": "Rectus femoris",
+        "B": "Sartorius",
+        "C": "Gracilis",
+        "D": "Pectineus"
+      },
+      "answer": "B",
+      "explanation": "Sartorius is the longest muscle in the body (ASIS → pes anserinus); femoral nerve."
+    },
+    {
+      "id": 77,
+      "source": "class",
+      "topic": "Muscles of the Lower Limb",
+      "type": "mcq",
+      "stem": "Which quadriceps head is the only one to cross the hip joint?",
+      "options": {
+        "A": "Vastus medialis",
+        "B": "Vastus lateralis",
+        "C": "Vastus intermedius",
+        "D": "Rectus femoris"
+      },
+      "answer": "D",
+      "explanation": "Rectus femoris is the only quadriceps head crossing the hip (origin AIIS) — flexes hip + extends knee."
+    },
+    {
+      "id": 78,
+      "source": "class",
+      "topic": "Muscles of the Lower Limb",
+      "type": "mcq",
+      "stem": "The three muscles forming the pes anserinus are:",
+      "options": {
+        "A": "Sartorius, gracilis, semitendinosus",
+        "B": "Sartorius, gracilis, semimembranosus",
+        "C": "Semitendinosus, semimembranosus, biceps femoris",
+        "D": "Gracilis, adductor longus, sartorius"
+      },
+      "answer": "A",
+      "explanation": "Pes anserinus = Sartorius, Gracilis, semiTendinosus (\"Say Grace before Tea\")."
+    },
+    {
+      "id": 79,
+      "source": "class",
+      "topic": "Muscles of the Lower Limb",
+      "type": "mcq",
+      "stem": "The femoral vessels pass from the thigh into the popliteal fossa through the:",
+      "options": {
+        "A": "Adductor canal",
+        "B": "Femoral triangle",
+        "C": "Adductor hiatus (of adductor magnus)",
+        "D": "Tarsal tunnel"
+      },
+      "answer": "C",
+      "explanation": "The femoral vessels pass through the adductor hiatus of adductor magnus to become the popliteal vessels."
+    },
+    {
+      "id": 80,
+      "source": "class",
+      "topic": "Muscles of the Lower Limb",
+      "type": "mcq",
+      "stem": "How do biceps femoris actions on the flexed leg differ from the other two hamstrings?",
+      "options": {
+        "A": "It medially rotates; the others laterally rotate",
+        "B": "It laterally rotates the flexed leg; the others medially rotate",
+        "C": "It only extends the hip",
+        "D": "It dorsiflexes the foot"
+      },
+      "answer": "B",
+      "explanation": "Biceps femoris (lateral hamstring → fibular head) laterally rotates the flexed leg; semitendinosus and semimembranosus (medial hamstrings) medially rotate it."
+    }
+  ]
+}

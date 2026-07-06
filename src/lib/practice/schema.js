@@ -159,6 +159,7 @@ export const PracticeTestSchema = z.object({
  * @property {string} stem
  * @property {Object<string,string>} [options]  Letter-keyed options (mcq only).
  * @property {string} [answer]        Correct option letter (mcq only).
+ * @property {string} [explanation]   Rationale shown after answering (mcq only, optional).
  * @property {string[]} [mark_scheme] Bullet-point mark scheme (long_answer only).
  */
 export const BiochemQuestionSchema = z
@@ -169,6 +170,7 @@ export const BiochemQuestionSchema = z
     stem: z.string().min(1),
     options: z.record(z.string(), z.string().min(1)).optional(),
     answer: z.string().min(1).optional(),
+    explanation: z.string().min(1).optional(),
     mark_scheme: z.array(z.string().min(1)).optional(),
   })
   .refine((q) => q.type !== 'mcq' || (q.options != null && q.answer != null), {
