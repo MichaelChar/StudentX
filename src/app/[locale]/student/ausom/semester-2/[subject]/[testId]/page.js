@@ -23,7 +23,11 @@ export async function generateMetadata({ params }) {
   const { subject, testId } = await params;
   const test = getTest(subject, testId);
   if (!test) return {};
-  return { title: `${test.title} — AUSoM Practice Tests` };
+  // Biochem-format tests (letter-keyed options, `answer` as a letter) carry
+  // their title under `meta.title`, not the top-level `title` used by the
+  // standard PracticeTestSchema — see BiochemTestPlayer detection above.
+  const title = test.title ?? test.meta?.title;
+  return { title: `${title} — AUSoM Practice Tests` };
 }
 
 export default async function TestPage({ params }) {
