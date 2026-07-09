@@ -26,7 +26,8 @@ import { SubjectIndexSchema as FlashcardsSubjectIndexSchema } from '../src/lib/f
 import { ResourceEntrySchema } from '../src/lib/resources/schema.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const PRACTICE_ROOT = path.join(ROOT, 'content/practice/ausom/semester-2');
+// Walk every semester under the AUSoM tree: content/practice/ausom/<semester-N>/<subject>/.
+const PRACTICE_ROOT = path.join(ROOT, 'content/practice/ausom');
 const FLASHCARDS_ROOT = path.join(ROOT, 'content/flashcards');
 const OUT_FILE = path.join(ROOT, 'src/lib/resources/manifest.generated.js');
 
@@ -49,35 +50,54 @@ function readIndex(dir, subject) {
   return JSON.parse(readFileSync(indexPath, 'utf8'));
 }
 
+/** Directory names that look like a semester slug ("semester-2"), sorted. */
+function semesterDirs(root) {
+  return existsSync(root)
+    ? readdirSync(root, { withFileTypes: true })
+        .filter((d) => d.isDirectory() && /^semester-\d+$/.test(d.name))
+        .map((d) => d.name)
+        .sort()
+    : [];
+}
+
 function collectPracticeEntries() {
   const entries = [];
-  for (const subject of subjectDirs(PRACTICE_ROOT)) {
-    const dir = path.join(PRACTICE_ROOT, subject);
-    const raw = readIndex(dir, subject);
-    const rel = `content/practice/ausom/semester-2/${subject}/index.json`;
-    if (!raw) {
-      err(rel, 'missing index.json');
-      continue;
-    }
-    const parsed = PracticeSubjectIndexSchema.safeParse(raw);
-    if (!parsed.success) {
-      for (const issue of parsed.error.issues) err(rel, `${issue.message} (at ${issue.path.join('.')})`);
-      continue;
-    }
-    const index = parsed.data;
-    for (const test of index.tests) {
-      entries.push({
-        id: `practice:${subject}:${test.id}`,
-        type: 'practice-test',
-        title: test.title,
-        description: test.description,
-        href: `/student/ausom/semester-2/${subject}/${test.id}`,
-        school: index.school,
-        semester: index.semester,
-        country: index.country,
-        year: test.year,
-        meta: { questionCount: test.questionCount },
-      });
+  for (const semester of semesterDirs(PRACTICE_ROOT)) {
+    const semesterDir = path.join(PRACTICE_ROOT, semester);
+    for (const subject of subjectDirs(semesterDir)) {
+      const dir = path.join(semesterDir, subject);
+      const raw = readIndex(dir, subject);
+      const rel = `content/practice/ausom/${semester}/${subject}/index.json`;
+      if (!raw) {
+        err(rel, 'missing index.json');
+        continue;
+      }
+      const parsed = PracticeSubjectIndexSchema.safeParse(raw);
+      if (!parsed.success) {
+        for (const issue of parsed.error.issues) err(rel, `${issue.message} (at ${issue.path.join('.')})`);
+        continue;
+      }
+      const index = parsed.data;
+      if (index.semester !== semester) {
+        err(rel, `semester "${index.semester}" does not match folder "${semester}"`);
+        continue;
+      }
+      for (const test of index.tests) {
+        entries.push({
+          // The card type defaults to 'practice-test'; a test can opt into
+          // 'past-paper' via `resourceType` in its index.json entry.
+          id: `practice:${subject}:${test.id}`,
+          type: test.resourceType || 'practice-test',
+          title: test.title,
+          description: test.description,
+          href: `/student/ausom/${semester}/${subject}/${test.id}`,
+          school: index.school,
+          semester: index.semester,
+          country: index.country,
+          year: test.year,
+          meta: { questionCount: test.questionCount },
+        });
+      }
     }
   }
   return entries;

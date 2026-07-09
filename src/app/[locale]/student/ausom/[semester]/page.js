@@ -1,22 +1,40 @@
+import { notFound } from 'next/navigation';
 import { setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import HubButton from '@/components/HubButton';
-import { listSubjectsWithContent } from '@/lib/practice/content';
+import {
+  getSubjectIndex,
+  listSubjectsWithContent,
+  listSemestersWithContent,
+} from '@/lib/practice/content';
+import { SEMESTER_LABELS } from '@/lib/resources/taxonomy';
 
-export function generateMetadata() {
-  return { title: 'Semester 2 — AUSoM Practice Tests' };
+// Content lives in the bundled manifest (no runtime fs on Workers), so we can
+// pre-render every semester that has published content.
+export function generateStaticParams() {
+  return listSemestersWithContent().map((semester) => ({ semester }));
 }
 
-export default async function Semester2Page({ params }) {
-  const { locale } = await params;
+export async function generateMetadata({ params }) {
+  const { semester } = await params;
+  const label = SEMESTER_LABELS[semester] ?? semester;
+  return { title: `${label} — AUSoM Practice Tests` };
+}
+
+export default async function SemesterPage({ params }) {
+  const { locale, semester } = await params;
   setRequestLocale(locale);
-  return <Semester2Content />;
+  return <SemesterContent semester={semester} />;
 }
 
+// Per-semester presentation config: labels, illustrations, and any special
+// hrefs (a static .html, or a subject card that jumps straight into a test).
 // Slugs are the single source of truth shared with content/practice/... and
-// PLAN.md §1. Subjects that have published tests (listSubjectsWithContent)
-// link to their subject page; the rest keep the "Soon" treatment.
-const SUBJECTS = [
+// PLAN.md §1. A subject becomes clickable the moment it has published content
+// (an index.json in the manifest); the rest keep the "Soon" treatment. A
+// semester with no entry in SUBJECTS_BY_SEMESTER derives its cards purely from
+// the manifest (see SemesterContent).
+const SEMESTER_2_SUBJECTS = [
   {
     id: 'medical-informatics',
     label: 'Medical Informatics',
@@ -96,11 +114,46 @@ const SUBJECTS = [
   },
 ];
 
-function Semester2Content() {
-  // A subject becomes clickable the moment it has published content (an
-  // index.json in the manifest); the rest keep the "Soon" treatment. This is
-  // the single gate — adding content is all it takes to light a card up.
-  const published = new Set(listSubjectsWithContent());
+// Semesters with a hand-authored presentation config. Everything else falls
+// back to manifest-derived cards.
+const SUBJECTS_BY_SEMESTER = {
+  'semester-2': SEMESTER_2_SUBJECTS,
+};
+
+function SemesterContent({ semester }) {
+  // Subjects that have published content (an index.json in the manifest) for
+  // THIS semester. Adding content is all it takes to light a card up.
+  const publishedInSemester = new Set(
+    listSubjectsWithContent()
+      .filter((p) => p.semester === semester)
+      .map((p) => p.subject),
+  );
+
+  const configured = SUBJECTS_BY_SEMESTER[semester];
+
+  // Use the hand-authored config when one exists (so the look is pixel-identical
+  // — illustrations, ordering, special hrefs); otherwise derive plain cards from
+  // the manifest so a new semester works as pure data.
+  const cards = configured
+    ? configured.map((s) => ({
+        key: s.id,
+        label: s.label,
+        illustration: s.illustration,
+        href: s.href ?? (publishedInSemester.has(s.id) ? `/student/ausom/${semester}/${s.id}` : undefined),
+        comingSoon: !s.href && !publishedInSemester.has(s.id),
+      }))
+    : [...publishedInSemester].sort().map((subject) => ({
+        key: subject,
+        label: getSubjectIndex(semester, subject)?.title ?? subject,
+        illustration: undefined,
+        href: `/student/ausom/${semester}/${subject}`,
+        comingSoon: false,
+      }));
+
+  // No presentation config and no published content → this semester isn't a
+  // real destination yet. 404 rather than serve an empty page (the top ausom
+  // hub only links to semesters that have content).
+  if (cards.length === 0) notFound();
 
   return (
     <div>
@@ -139,19 +192,16 @@ function Semester2Content() {
             maxWidth: 460,
           }}
         >
-          {SUBJECTS.map((s) => {
-            const live = published.has(s.id);
-            return (
-              <HubButton
-                key={s.id}
-                label={s.label}
-                subtext=""
-                href={s.href ?? (live ? `/student/ausom/semester-2/${s.id}` : undefined)}
-                comingSoon={!s.href && !live}
-                illustration={s.illustration}
-              />
-            );
-          })}
+          {cards.map((c) => (
+            <HubButton
+              key={c.key}
+              label={c.label}
+              subtext=""
+              href={c.href}
+              comingSoon={c.comingSoon}
+              illustration={c.illustration}
+            />
+          ))}
         </div>
       </section>
     </div>

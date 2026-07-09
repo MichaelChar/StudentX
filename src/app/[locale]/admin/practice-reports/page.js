@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { requireAdmin } from '@/lib/requireAdmin';
 import { getSupabaseAsService } from '@/lib/supabaseServer';
-import { getSubjectIndex } from '@/lib/practice/content';
+import { findSubjectIndexBySubject } from '@/lib/practice/content';
 import ReportsTable from './ReportsTable';
 import { updateReport } from './actions';
 
@@ -41,7 +41,7 @@ export default async function PracticeReportsPage({ params, searchParams }) {
     .select('subject');
   const subjects = [...new Set((subjectRows ?? []).map((r) => r.subject))]
     .sort()
-    .map((slug) => ({ slug, label: getSubjectIndex(slug)?.title ?? slug }));
+    .map((slug) => ({ slug, label: findSubjectIndexBySubject(slug)?.title ?? slug }));
 
   let query = supabase
     .from('question_reports')

@@ -12,16 +12,19 @@ import { getSubjectIndex, getTest, listSubjectsWithContent } from '@/lib/practic
 export function generateStaticParams({ params }) {
   // In a deeper dynamic segment, generateStaticParams receives the parent's
   // already-resolved params. Fall back to scanning every subject if absent.
-  const subjects = params?.subject ? [params.subject] : listSubjectsWithContent();
-  return subjects.flatMap((subject) => {
-    const index = getSubjectIndex(subject);
-    return (index?.tests ?? []).map((test) => ({ subject, testId: test.id }));
+  const pairs =
+    params?.semester && params?.subject
+      ? [{ semester: params.semester, subject: params.subject }]
+      : listSubjectsWithContent();
+  return pairs.flatMap(({ semester, subject }) => {
+    const index = getSubjectIndex(semester, subject);
+    return (index?.tests ?? []).map((test) => ({ semester, subject, testId: test.id }));
   });
 }
 
 export async function generateMetadata({ params }) {
-  const { subject, testId } = await params;
-  const test = getTest(subject, testId);
+  const { semester, subject, testId } = await params;
+  const test = getTest(semester, subject, testId);
   if (!test) return {};
   // Biochem-format tests (letter-keyed options, `answer` as a letter) carry
   // their title under `meta.title`, not the top-level `title` used by the
@@ -31,10 +34,10 @@ export async function generateMetadata({ params }) {
 }
 
 export default async function TestPage({ params }) {
-  const { locale, subject, testId } = await params;
+  const { locale, semester, subject, testId } = await params;
   setRequestLocale(locale);
 
-  const test = getTest(subject, testId);
+  const test = getTest(semester, subject, testId);
   if (!test) notFound();
 
   // Tests authored in the simplified biochem format (letter-keyed options object,
