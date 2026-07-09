@@ -53,6 +53,21 @@ const EN_MARKERS_REQUIRED = [
 // out — those would indicate a real outage class worth alerting on.
 const INCONCLUSIVE_CF_5XX = new Set([520, 522, 523, 524]);
 
+// A thrown fetch error is inconclusive — not an app regression — when it's a
+// timeout/abort. That's the Worker self-fetch hiccup that otherwise surfaces
+// as an INCONCLUSIVE_CF_5XX status; when the self-fetch never resolves it
+// aborts instead ("The operation was aborted due to timeout"). The
+// page-render checks (checkEnLocale) and cf-cache-status-hit already skip
+// this class; the API/asset checks below share this helper so a transient
+// origin timeout doesn't page us with a false positive (the 2026-07-07
+// listing-api-distances alert, healthy 30s before and after).
+export function skipIfInconclusiveError(name, err) {
+  if (err?.name === 'TimeoutError' || err?.name === 'AbortError') {
+    return { name, ok: true, skipped: true, reason: `skipped: ${err.name}` };
+  }
+  return null;
+}
+
 function isCronAuthorized(request) {
   const secret = process.env.CRON_SECRET;
   if (!secret) return false;
@@ -188,6 +203,9 @@ async function checkListingApiDistanceVariety(appUrl, listingId) {
   const url = `${appUrl}/api/listings/${listingId}`;
   try {
     const res = await fetchUrl(url);
+    if (INCONCLUSIVE_CF_5XX.has(res.status)) {
+      return { name: 'listing-api-distances', ok: true, skipped: true, reason: `skipped: Cloudflare ${res.status}` };
+    }
     if (res.status !== 200) {
       return { name: 'listing-api-distances', ok: false, reason: `status ${res.status} from ${url}` };
     }
@@ -207,7 +225,10 @@ async function checkListingApiDistanceVariety(appUrl, listingId) {
     }
     return { name: 'listing-api-distances', ok: true };
   } catch (err) {
-    return { name: 'listing-api-distances', ok: false, reason: `fetch threw: ${err.message || err.name}` };
+    return (
+      skipIfInconclusiveError('listing-api-distances', err) ||
+      { name: 'listing-api-distances', ok: false, reason: `fetch threw: ${err.message || err.name}` }
+    );
   }
 }
 
@@ -237,7 +258,10 @@ async function checkSoft404(appUrl) {
     }
     return { name: 'soft-404', ok: true };
   } catch (err) {
-    return { name: 'soft-404', ok: false, reason: `fetch threw: ${err.message || err.name}` };
+    return (
+      skipIfInconclusiveError('soft-404', err) ||
+      { name: 'soft-404', ok: false, reason: `fetch threw: ${err.message || err.name}` }
+    );
   }
 }
 
@@ -247,6 +271,9 @@ async function checkOgDefault(appUrl) {
   const url = `${appUrl}/og-default.png`;
   try {
     const res = await fetchUrl(url);
+    if (INCONCLUSIVE_CF_5XX.has(res.status)) {
+      return { name: 'og-default', ok: true, skipped: true, reason: `skipped: Cloudflare ${res.status}` };
+    }
     if (res.status !== 200) {
       return { name: 'og-default', ok: false, reason: `expected 200, got ${res.status} from ${url}` };
     }
@@ -256,7 +283,10 @@ async function checkOgDefault(appUrl) {
     }
     return { name: 'og-default', ok: true };
   } catch (err) {
-    return { name: 'og-default', ok: false, reason: `fetch threw: ${err.message || err.name}` };
+    return (
+      skipIfInconclusiveError('og-default', err) ||
+      { name: 'og-default', ok: false, reason: `fetch threw: ${err.message || err.name}` }
+    );
   }
 }
 
@@ -271,6 +301,12 @@ async function checkLandlordListingsApi(appUrl) {
   const url = `${appUrl}/api/landlord/listings`;
   try {
     const res = await fetchUrl(url);
+    // A CF "couldn't reach origin" 5xx is infra noise, not the route crashing
+    // before auth — must be skipped ahead of the >=500 check below, which
+    // would otherwise read a 522 as a route crash (see INCONCLUSIVE_CF_5XX).
+    if (INCONCLUSIVE_CF_5XX.has(res.status)) {
+      return { name: 'landlord-listings-api', ok: true, skipped: true, reason: `skipped: Cloudflare ${res.status}` };
+    }
     if (res.status >= 500) {
       return {
         name: 'landlord-listings-api',
@@ -287,7 +323,10 @@ async function checkLandlordListingsApi(appUrl) {
     }
     return { name: 'landlord-listings-api', ok: true };
   } catch (err) {
-    return { name: 'landlord-listings-api', ok: false, reason: `fetch threw: ${err.message || err.name}` };
+    return (
+      skipIfInconclusiveError('landlord-listings-api', err) ||
+      { name: 'landlord-listings-api', ok: false, reason: `fetch threw: ${err.message || err.name}` }
+    );
   }
 }
 
@@ -298,6 +337,9 @@ async function checkNoMissingMessage(appUrl) {
   const url = `${appUrl}/en`;
   try {
     const res = await fetchUrl(url);
+    if (INCONCLUSIVE_CF_5XX.has(res.status)) {
+      return { name: 'missing-message', ok: true, skipped: true, reason: `skipped: Cloudflare ${res.status}` };
+    }
     if (res.status !== 200 && res.status !== 307 && res.status !== 308) {
       return { name: 'missing-message', ok: false, reason: `expected 200/redirect, got ${res.status} from ${url}` };
     }
@@ -309,7 +351,10 @@ async function checkNoMissingMessage(appUrl) {
     }
     return { name: 'missing-message', ok: true };
   } catch (err) {
-    return { name: 'missing-message', ok: false, reason: `fetch threw: ${err.message || err.name}` };
+    return (
+      skipIfInconclusiveError('missing-message', err) ||
+      { name: 'missing-message', ok: false, reason: `fetch threw: ${err.message || err.name}` }
+    );
   }
 }
 
