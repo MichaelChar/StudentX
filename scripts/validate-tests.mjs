@@ -21,7 +21,8 @@ import {
 } from '../src/lib/practice/schema.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const CONTENT_ROOT = path.join(ROOT, 'content/practice/ausom/semester-2');
+// Walk every semester under the AUSoM tree: content/practice/ausom/<semester-N>/<subject>/.
+const CONTENT_ROOT = path.join(ROOT, 'content/practice/ausom');
 const PUBLIC_ROOT = path.join(ROOT, 'public');
 
 /** @type {string[]} */
@@ -150,13 +151,13 @@ function validateTest(rel, test, expectedSubject, fallbackId, fallbackKind) {
   return t;
 }
 
-function validateSubject(subject) {
-  const dir = path.join(CONTENT_ROOT, subject);
-  const indexRel = path.join(subject, 'index.json');
+function validateSubject(semester, subject) {
+  const dir = path.join(CONTENT_ROOT, semester, subject);
+  const indexRel = path.join(semester, subject, 'index.json');
   const indexPath = path.join(dir, 'index.json');
 
   if (!existsSync(indexPath)) {
-    err(subject, 'missing index.json');
+    err(path.join(semester, subject), 'missing index.json');
     return;
   }
 
@@ -176,6 +177,9 @@ function validateSubject(subject) {
   if (index.subject !== subject) {
     err(indexRel, `subject "${index.subject}" does not match folder "${subject}"`);
   }
+  if (index.semester !== semester) {
+    err(indexRel, `semester "${index.semester}" does not match folder "${semester}"`);
+  }
 
   // load every test file in the folder
   const testFiles = readdirSync(dir)
@@ -187,7 +191,7 @@ function validateSubject(subject) {
   const testIds = new Set();
 
   for (const file of testFiles) {
-    const rel = path.join(subject, file);
+    const rel = path.join(semester, subject, file);
     const read = readJson(path.join(dir, file));
     if (read.error) {
       err(rel, `invalid JSON — ${read.error}`);
@@ -240,12 +244,22 @@ function main() {
     process.exit(0);
   }
 
-  const subjects = readdirSync(CONTENT_ROOT, { withFileTypes: true })
-    .filter((d) => d.isDirectory())
+  const semesters = readdirSync(CONTENT_ROOT, { withFileTypes: true })
+    .filter((d) => d.isDirectory() && /^semester-\d+$/.test(d.name))
     .map((d) => d.name)
     .sort();
 
-  for (const subject of subjects) validateSubject(subject);
+  let subjectCount = 0;
+  for (const semester of semesters) {
+    const subjects = readdirSync(path.join(CONTENT_ROOT, semester), { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name)
+      .sort();
+    for (const subject of subjects) {
+      validateSubject(semester, subject);
+      subjectCount += 1;
+    }
+  }
 
   if (errors.length) {
     console.error(`\n✗ Practice-test validation failed — ${errors.length} error(s):\n`);
@@ -254,7 +268,7 @@ function main() {
     process.exit(1);
   }
 
-  console.log(`✓ Practice-test validation passed — ${subjects.length} subject(s) checked.`);
+  console.log(`✓ Practice-test validation passed — ${subjectCount} subject(s) checked.`);
 }
 
 main();

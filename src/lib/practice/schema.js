@@ -150,7 +150,7 @@ export const PracticeTestSchema = z.object({
  * letter instead of a `correct` index, and a `long_answer` type instead of
  * `reveal`. Detected by the presence of a top-level `meta` object and
  * rendered by `BiochemTestPlayer` instead of `TestPlayer`/`FlashcardPlayer` —
- * see `src/app/[locale]/student/ausom/semester-2/[subject]/[testId]/page.js`.
+ * see `src/app/[locale]/student/ausom/[semester]/[subject]/[testId]/page.js`.
  *
  * @typedef {Object} BiochemQuestion
  * @property {number} id
@@ -212,13 +212,15 @@ export const BiochemTestSchema = z.object({
  * @property {string} description   Shown verbatim on the /resources card.
  * @property {number} year          Exam/curriculum year the test targets (see
  *                                  src/lib/resources/taxonomy.js), e.g. 2026.
+ * @property {'practice-test' | 'past-paper'} [resourceType] Card type on the
+ *                                  /resources hub; defaults to 'practice-test'.
  */
 /**
  * @typedef {Object} SubjectIndex
  * @property {string} subject
  * @property {string} title          Display name, e.g. "Anatomy I".
  * @property {'ausom'} school
- * @property {'semester-2'} semester
+ * @property {string} semester       e.g. "semester-2"; any "semester-N".
  * @property {'gr'} country          Curriculum country (see src/lib/resources/taxonomy.js).
  * @property {SubjectIndexTest[]} tests
  */
@@ -226,7 +228,10 @@ export const SubjectIndexSchema = z.object({
   subject: z.string().min(1),
   title: z.string().min(1),
   school: z.literal('ausom'),
-  semester: z.literal('semester-2'),
+  // Any "semester-N" — the route ([semester] segment) and the manifest are
+  // keyed by whatever this value is, so subjects in other semesters work as
+  // pure data (no code change). Was z.literal('semester-2').
+  semester: z.string().regex(/^semester-\d+$/),
   country: z.literal('gr'),
   tests: z.array(
     z.object({
@@ -236,6 +241,10 @@ export const SubjectIndexSchema = z.object({
       questionCount: z.number().int().nonnegative(),
       description: z.string().min(1),
       year: z.number().int().min(MIN_YEAR).max(MAX_YEAR),
+      // Optional; defaults to 'practice-test' when the /resources card type is
+      // derived (see scripts/generate-resources-manifest.mjs). 'past-paper'
+      // surfaces the test as a past paper on the hub.
+      resourceType: z.enum(['practice-test', 'past-paper']).optional(),
     }),
   ),
 });
