@@ -52,6 +52,11 @@ export default async function PracticeReportsPage({ params, searchParams }) {
 
   const { data: reports } = await query;
 
+  const reportsWithSemester = (reports ?? []).map((r) => ({
+    ...r,
+    semester: findSubjectIndexBySubject(r.subject)?.semester ?? 'semester-2',
+  }));
+
   const t = await getTranslations({ locale, namespace: 'admin.practiceReports' });
 
   return (
@@ -62,7 +67,7 @@ export default async function PracticeReportsPage({ params, searchParams }) {
       </div>
 
       <ReportsTable
-        reports={reports ?? []}
+        reports={reportsWithSemester}
         subjects={subjects}
         activeStatus={status}
         activeSubject={subject}
