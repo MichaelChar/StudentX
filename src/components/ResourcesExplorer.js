@@ -4,7 +4,14 @@ import { useCallback, useMemo, useState } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Link, useRouter, usePathname } from '@/i18n/navigation';
 import { RESOURCES } from '@/lib/resources/manifest.generated';
-import { FACET_KEYS, deriveFacets, filterResources, relaxFilters } from '@/lib/resources/facets';
+import {
+  FACET_KEYS,
+  deriveFacets,
+  filterResources,
+  getFacetOptions,
+  relaxFilters,
+  resourcesMatchingOtherFilters,
+} from '@/lib/resources/facets';
 
 const FACET_TITLES = {
   type: 'Resource type',
@@ -27,7 +34,22 @@ export default function ResourcesExplorer() {
   const [lastChanged, setLastChanged] = useState(null);
 
   const filters = readFilters(searchParams);
-  const facets = useMemo(() => deriveFacets(RESOURCES), []);
+
+  // visibleFacets decides *which* facet rows to render (based on full dataset
+  // having >= 2 distinct values, per the original spec).
+  const visibleFacets = useMemo(() => deriveFacets(RESOURCES), []);
+
+  // displayFacets compute refined options + counts for each visible facet,
+  // using only the resources that match the *other* active filters. This is
+  // the "better UI" faceted search behavior: counts narrow, and unavailable
+  // options for the current context disappear.
+  const displayFacets = useMemo(() => {
+    return visibleFacets.map((facet) => {
+      const baseResources = resourcesMatchingOtherFilters(RESOURCES, filters, facet.key);
+      const options = getFacetOptions(baseResources, facet.key);
+      return { key: facet.key, options };
+    });
+  }, [visibleFacets, filters]);
 
   const setFilter = useCallback(
     (key, value) => {
@@ -55,7 +77,7 @@ export default function ResourcesExplorer() {
 
   return (
     <div>
-      {facets.length > 0 && (
+      {displayFacets.length > 0 && (
         <div
           style={{
             display: 'flex',
@@ -65,7 +87,7 @@ export default function ResourcesExplorer() {
             marginBottom: 20,
           }}
         >
-          {facets.map((facet) => (
+          {displayFacets.map((facet) => (
             <div key={facet.key} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
               <span
                 style={{

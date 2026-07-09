@@ -19,21 +19,41 @@ const FACET_LABELS = {
 };
 
 /**
+ * Returns the options for a single facet, computed from the provided resources.
+ * Used internally for both global derivation and context-aware refinement.
+ */
+export function getFacetOptions(resources, key) {
+  const counts = new Map();
+  for (const r of resources) {
+    const value = String(r[key]);
+    counts.set(value, (counts.get(value) ?? 0) + 1);
+  }
+  const options = [...counts.entries()]
+    .map(([value, count]) => ({ value, label: FACET_LABELS[key]?.[value] ?? value, count }))
+    .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
+  return options;
+}
+
+/**
+ * Returns the resources that match all active filters *except* the given key.
+ * This is the base used to compute available options and counts for that facet
+ * (standard faceted search refinement).
+ */
+export function resourcesMatchingOtherFilters(resources, filters, excludeKey) {
+  const otherFilters = { ...filters, [excludeKey]: null };
+  return filterResources(resources, otherFilters);
+}
+
+/**
  * Facet definitions derived from the live data. A facet is only included when
- * it has >=2 distinct values among `resources` (per spec).
+ * it has >=2 distinct values among `resources` (per spec). This is used to
+ * decide *which* facets should be rendered at all.
  * @param {import('./schema.js').ResourceEntry[]} resources
  * @returns {{ key: string, options: { value: string, label: string, count: number }[] }[]}
  */
 export function deriveFacets(resources) {
   return FACET_KEYS.map((key) => {
-    const counts = new Map();
-    for (const r of resources) {
-      const value = String(r[key]);
-      counts.set(value, (counts.get(value) ?? 0) + 1);
-    }
-    const options = [...counts.entries()]
-      .map(([value, count]) => ({ value, label: FACET_LABELS[key]?.[value] ?? value, count }))
-      .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
+    const options = getFacetOptions(resources, key);
     return { key, options };
   }).filter((facet) => facet.options.length >= 2);
 }

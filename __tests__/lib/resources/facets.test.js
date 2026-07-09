@@ -1,5 +1,11 @@
 import { describe, it, expect } from 'vitest';
-import { deriveFacets, filterResources, relaxFilters } from '@/lib/resources/facets';
+import {
+  deriveFacets,
+  filterResources,
+  getFacetOptions,
+  relaxFilters,
+  resourcesMatchingOtherFilters,
+} from '@/lib/resources/facets';
 
 const resources = [
   { id: '1', type: 'practice-test', semester: 'semester-2', country: 'gr', year: 2026 },
@@ -82,5 +88,44 @@ describe('relaxFilters', () => {
     const filters = { type: 'flashcard-deck', semester: 'semester-1', country: 'us' };
     const relaxed = relaxFilters(resources, filters, 'country');
     expect(relaxed.results.length).toBeGreaterThan(0);
+  });
+});
+
+describe('resourcesMatchingOtherFilters + getFacetOptions (refined faceting)', () => {
+  const mixed = [
+    { id: 'p-s2', type: 'practice-test', semester: 'semester-2', country: 'gr', year: 2026 },
+    { id: 'p-s6', type: 'practice-test', semester: 'semester-6', country: 'gr', year: 2026 },
+    { id: 'f-s2', type: 'flashcard-deck', semester: 'semester-2', country: 'gr', year: 2026 },
+  ];
+
+  it('excludes the target facet when building the base list', () => {
+    const baseForSemester = resourcesMatchingOtherFilters(mixed, { type: 'practice-test' }, 'semester');
+    // Should include both semesters (as long as they match the other filter)
+    expect(baseForSemester.map((r) => r.semester)).toContain('semester-2');
+    expect(baseForSemester.map((r) => r.semester)).toContain('semester-6');
+  });
+
+  it('getFacetOptions on the base produces refined counts', () => {
+    const baseForType = resourcesMatchingOtherFilters(mixed, { semester: 'semester-2' }, 'type');
+    const typeOptions = getFacetOptions(baseForType, 'type');
+    const counts = Object.fromEntries(typeOptions.map((o) => [o.value, o.count]));
+    // Only s2 resources: 1 practice + 1 flashcard
+    expect(counts['practice-test']).toBe(1);
+    expect(counts['flashcard-deck']).toBe(1);
+  });
+
+  it('semester options are narrowed when another filter is active', () => {
+    const baseForSemester = resourcesMatchingOtherFilters(mixed, { type: 'practice-test' }, 'semester');
+    const semesterOptions = getFacetOptions(baseForSemester, 'semester');
+    expect(semesterOptions).toHaveLength(2);
+    const counts = Object.fromEntries(semesterOptions.map((o) => [o.value, o.count]));
+    expect(counts['semester-2']).toBe(1); // only the practice-test in s2
+    expect(counts['semester-6']).toBe(1);
+  });
+
+  it('deriveFacets still decides visibility from the full unfiltered set', () => {
+    const keys = deriveFacets(mixed).map((f) => f.key);
+    expect(keys).toContain('type');
+    expect(keys).toContain('semester');
   });
 });
