@@ -1,0 +1,406 @@
+{
+  "meta": {
+    "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 1",
+    "course": "MD1040 Hygiene & Epidemiology",
+    "semester": "Semester 6",
+    "total_questions": 30,
+    "mcq_count": 30,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Epidemiology is best defined as the study of:",
+      "options": {
+        "A": "The molecular mechanisms of disease",
+        "B": "The distribution and determinants of disease frequency in populations, applied to disease control",
+        "C": "The treatment of individual patients",
+        "D": "The classification of pathogens"
+      },
+      "answer": "B",
+      "explanation": "Epidemiology studies distribution & determinants of disease frequency in populations and applies this to control health problems."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Who is regarded as the father of demography, having created life tables from London death records?",
+      "options": {
+        "A": "John Snow",
+        "B": "James Lind",
+        "C": "John Graunt",
+        "D": "Edward Jenner"
+      },
+      "answer": "C",
+      "explanation": "John Graunt — analysed parish death records and built the first life tables."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Which of the following is a measure of disease FREQUENCY (not association)?",
+      "options": {
+        "A": "Risk ratio",
+        "B": "Odds ratio",
+        "C": "Prevalence",
+        "D": "Risk difference"
+      },
+      "answer": "C",
+      "explanation": "Prevalence is a frequency measure; the others are measures of association."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Prevalence depends on incidence and:",
+      "options": {
+        "A": "The duration of disease",
+        "B": "The age of the population",
+        "C": "The size of the sample",
+        "D": "The mode of transmission"
+      },
+      "answer": "A",
+      "explanation": "Prevalence ≈ incidence × duration."
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "A dynamic (open) population is characterized by:",
+      "options": {
+        "A": "Permanent membership defined by an event",
+        "B": "Transient membership defined by being in a state/condition",
+        "C": "No losses to follow-up",
+        "D": "Only diseased members"
+      },
+      "answer": "B",
+      "explanation": "A dynamic/open population has transient membership (e.g. residents of a city)."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "In a town of 50,000 residents, 1,500 people currently have type 2 diabetes on 1 July. What is the point prevalence of diabetes?",
+      "options": {
+        "A": "3%",
+        "B": "0.3%",
+        "C": "30%",
+        "D": "1.5%"
+      },
+      "answer": "A",
+      "explanation": "Prevalence = existing cases ÷ total population. Worked solution: Prevalence = 1,500 / 50,000 = 0.03 = 3%"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Which study design is most efficient for studying a RARE disease?",
+      "options": {
+        "A": "Prospective cohort",
+        "B": "Case-control",
+        "C": "Cross-sectional",
+        "D": "Ecological"
+      },
+      "answer": "B",
+      "explanation": "Case-control starts from cases → efficient for rare diseases."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "In a cohort study, subjects are grouped by their:",
+      "options": {
+        "A": "Disease status, then exposure is traced backward",
+        "B": "Exposure status, then followed forward for the outcome",
+        "C": "Age only",
+        "D": "Treatment allocation by randomization"
+      },
+      "answer": "B",
+      "explanation": "Cohorts sample on exposure and follow forward to the outcome."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "The measure of association typically derived from a cohort study is:",
+      "options": {
+        "A": "Odds ratio",
+        "B": "Prevalence ratio",
+        "C": "Relative risk (risk/rate ratio)",
+        "D": "Attributable fraction only"
+      },
+      "answer": "C",
+      "explanation": "Cohorts yield relative risk (risk or rate ratio)."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "An ambidirectional (bidirectional) study contains:",
+      "options": {
+        "A": "Only prospective elements",
+        "B": "Only retrospective elements",
+        "C": "Both prospective and retrospective elements",
+        "D": "Neither — it is cross-sectional"
+      },
+      "answer": "C",
+      "explanation": "Ambidirectional cohorts have both prospective and retrospective components."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "1,200 people are screened; 200 already have the disease and are excluded. The remaining are followed for 4 years, during which 150 develop the disease (no losses). What is the 4-year cumulative incidence?",
+      "options": {
+        "A": "12.5%",
+        "B": "15%",
+        "C": "30%",
+        "D": "7.5%"
+      },
+      "answer": "B",
+      "explanation": "Cumulative incidence = new cases ÷ population AT RISK at start (exclude prevalent cases). Worked solution: Population at risk = 1,200 − 200 = 1,000 CI = 150 / 1,000 = 0.15 = 15% over 4 years"
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "The three components of the epidemiologic triangle are:",
+      "options": {
+        "A": "Host, pathogen (agent), environment",
+        "B": "Host, vaccine, environment",
+        "C": "Pathogen, immunity, treatment",
+        "D": "Host, pathogen, therapy"
+      },
+      "answer": "A",
+      "explanation": "Host · Agent (pathogen) · Environment."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "John Snow is credited with demonstrating that:",
+      "options": {
+        "A": "Scurvy is caused by vitamin deficiency",
+        "B": "Cholera is transmitted by faecally-contaminated water",
+        "C": "Smallpox can be prevented by vaccination",
+        "D": "Mortality follows statistical laws"
+      },
+      "answer": "B",
+      "explanation": "Snow linked cholera to contaminated drinking water (Broad St pump)."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Which of the following is NOT a Bradford Hill criterion for causation?",
+      "options": {
+        "A": "Strength of association",
+        "B": "Temporality",
+        "C": "Biological gradient (dose-response)",
+        "D": "Randomization"
+      },
+      "answer": "D",
+      "explanation": "Randomization is a design method, not a Hill criterion."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "The Bradford Hill criterion of 'temporality' means that:",
+      "options": {
+        "A": "The association is strong",
+        "B": "The cause must precede the effect",
+        "C": "The dose relates to the response",
+        "D": "A plausible mechanism exists"
+      },
+      "answer": "B",
+      "explanation": "Temporality: the exposure (cause) must come before the outcome."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "A study accumulates 2,500 person-years of follow-up, during which 50 new cases of disease occur. What is the incidence rate?",
+      "options": {
+        "A": "20 per 1,000 person-years",
+        "B": "2 per 1,000 person-years",
+        "C": "50 per 1,000 person-years",
+        "D": "25 per 1,000 person-years"
+      },
+      "answer": "A",
+      "explanation": "Incidence rate = new cases ÷ total person-time. Worked solution: IR = 50 / 2,500 = 0.02 per person-year = 20 per 1,000 person-years"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "A confounder must satisfy all of the following EXCEPT:",
+      "options": {
+        "A": "It is associated with the exposure",
+        "B": "It is an independent risk factor for the disease",
+        "C": "It lies on the causal pathway between exposure and disease",
+        "D": "It is not an effect of the exposure"
+      },
+      "answer": "C",
+      "explanation": "A confounder must NOT be an intermediate on the causal pathway."
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Randomization in a trial is most valuable because it:",
+      "options": {
+        "A": "Guarantees equal group sizes",
+        "B": "Balances both known AND unknown confounders (with large n)",
+        "C": "Eliminates measurement error",
+        "D": "Removes the need for a control group"
+      },
+      "answer": "B",
+      "explanation": "Randomization balances confounders you can't even measure."
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "The main bacterial indicator organism used to assess water quality is:",
+      "options": {
+        "A": "Legionella pneumophila",
+        "B": "E. coli",
+        "C": "Pseudomonas aeruginosa",
+        "D": "Rotavirus"
+      },
+      "answer": "B",
+      "explanation": "E. coli (faecal coliform) is the principal indicator of faecal contamination."
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "At a banquet, 250 people ate the buffet and 75 developed gastroenteritis within 12 hours. What is the attack rate?",
+      "options": {
+        "A": "30%",
+        "B": "3%",
+        "C": "25%",
+        "D": "33%"
+      },
+      "answer": "A",
+      "explanation": "Attack rate = new cases ÷ population at risk during the outbreak. Worked solution: Attack rate = 75 / 250 = 0.30 = 30%"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "Which of the following is NOT a method of disinfecting drinking water?",
+      "options": {
+        "A": "Chlorination",
+        "B": "Ozonation",
+        "C": "Ultraviolet radiation",
+        "D": "Addition of aluminium sulfate"
+      },
+      "answer": "D",
+      "explanation": "Aluminium sulfate is a coagulant (clarifies water) — not a disinfectant."
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Cryptosporidium, responsible for the 1993 Milwaukee outbreak, is a:",
+      "options": {
+        "A": "Bacterium",
+        "B": "Protozoan parasite",
+        "C": "Virus",
+        "D": "Fungus"
+      },
+      "answer": "B",
+      "explanation": "Cryptosporidium is a waterborne protozoan parasite (a classic trick — not a bacterium)."
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Ground-level ozone (O₃) is classified as a:",
+      "options": {
+        "A": "Primary pollutant",
+        "B": "Secondary pollutant",
+        "C": "Greenhouse gas only",
+        "D": "Bacterial indicator"
+      },
+      "answer": "B",
+      "explanation": "O₃ forms by atmospheric reactions → secondary pollutant."
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Which of the following is NOT a component of clean, unpolluted air?",
+      "options": {
+        "A": "Nitrogen",
+        "B": "Oxygen",
+        "C": "Argon",
+        "D": "Ammonia"
+      },
+      "answer": "D",
+      "explanation": "Ammonia is not a component of clean air."
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "In a cohort, 90 of 300 smokers develop disease and 30 of 300 non-smokers develop disease. What is the risk ratio for smokers?",
+      "options": {
+        "A": "3.0",
+        "B": "0.33",
+        "C": "2.0",
+        "D": "1.5"
+      },
+      "answer": "A",
+      "explanation": "Risk ratio = risk in exposed ÷ risk in unexposed. Worked solution: Risk (smokers) = 90/300 = 0.30 Risk (non-smokers) = 30/300 = 0.10 RR = 0.30 / 0.10 = 3.0"
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "The primary anthropogenic greenhouse gas is:",
+      "options": {
+        "A": "CO₂",
+        "B": "CH₄",
+        "C": "SO₂",
+        "D": "O₃"
+      },
+      "answer": "A",
+      "explanation": "CO₂ is the dominant greenhouse gas."
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Foodborne INTOXICATION (as opposed to infection) is characterized by:",
+      "options": {
+        "A": "Multiplication of the microbe in the intestine",
+        "B": "A pre-formed toxin present in the food",
+        "C": "A susceptible host only",
+        "D": "A long incubation period"
+      },
+      "answer": "B",
+      "explanation": "Intoxication is caused by a pre-formed toxin in the food (no intestinal multiplication needed)."
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "Aflatoxins, the most widespread mycotoxins, are produced by Aspergillus and found mainly in:",
+      "options": {
+        "A": "Fish and shellfish",
+        "B": "Cereal grains and nuts",
+        "C": "Citrus fruits",
+        "D": "Bottled water"
+      },
+      "answer": "B",
+      "explanation": "Aflatoxins contaminate cereal grains & nuts."
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "According to WHO, the safe occupational noise limit for an 8-hour shift is approximately:",
+      "options": {
+        "A": "< 25 dB",
+        "B": "< 50 dB",
+        "C": "< 75 dB",
+        "D": "< 100 dB"
+      },
+      "answer": "C",
+      "explanation": "WHO safe threshold ≈ < 75 dB for an 8-h shift."
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "The Nuremberg Code is best known for:",
+      "options": {
+        "A": "Establishing the Belmont principles",
+        "B": "Ten principles emphasizing voluntary informed consent",
+        "C": "Defining the Air Quality Index",
+        "D": "Introducing the odds ratio"
+      },
+      "answer": "B",
+      "explanation": "The Nuremberg Code = 10 principles stressing voluntary informed consent."
+    }
+  ]
+}

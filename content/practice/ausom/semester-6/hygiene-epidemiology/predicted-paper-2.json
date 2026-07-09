@@ -1,0 +1,406 @@
+{
+  "meta": {
+    "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 2",
+    "course": "MD1040 Hygiene & Epidemiology",
+    "semester": "Semester 6",
+    "total_questions": 30,
+    "mcq_count": 30,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Which measure counts only NEW cases of disease?",
+      "options": {
+        "A": "Prevalence",
+        "B": "Incidence",
+        "C": "Case ratio",
+        "D": "Point prevalence"
+      },
+      "answer": "B",
+      "explanation": "Incidence measures new cases; prevalence measures existing cases."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "The denominator for an incidence measure includes only:",
+      "options": {
+        "A": "The total population",
+        "B": "The population at risk",
+        "C": "Diseased individuals",
+        "D": "Immune individuals"
+      },
+      "answer": "B",
+      "explanation": "Incidence uses the population at risk (excludes existing cases & immunes)."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Person-time is the denominator used in:",
+      "options": {
+        "A": "Point prevalence",
+        "B": "Cumulative incidence",
+        "C": "Incidence rate",
+        "D": "Odds ratio"
+      },
+      "answer": "C",
+      "explanation": "Incidence rate uses person-time (time intrinsic to the denominator)."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "In a case-control study of lung cancer and asbestos: among cases, 80 were exposed and 20 unexposed; among controls, 40 were exposed and 60 unexposed. What is the odds ratio?",
+      "options": {
+        "A": "6.0",
+        "B": "0.17",
+        "C": "3.0",
+        "D": "2.4"
+      },
+      "answer": "A",
+      "explanation": "OR = cross-product ratio (ad/bc). Worked solution: OR = (80 × 60) / (20 × 40) = 4,800 / 800 = 6.0"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "The odds ratio is the characteristic measure of association derived from a:",
+      "options": {
+        "A": "Cohort study",
+        "B": "Case-control study",
+        "C": "Cross-sectional survey",
+        "D": "Randomized trial"
+      },
+      "answer": "B",
+      "explanation": "Case-control studies yield the odds ratio."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "In a double-blind randomized controlled trial:",
+      "options": {
+        "A": "Only the patient knows the allocation",
+        "B": "Only the researcher knows the allocation",
+        "C": "Neither the researcher nor the patient knows the allocation",
+        "D": "Both know the allocation"
+      },
+      "answer": "C",
+      "explanation": "Neither the researcher nor the patient knows the treatment allocation."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "'Equipoise', required for an ethical trial, refers to:",
+      "options": {
+        "A": "Equal numbers in each arm",
+        "B": "Genuine uncertainty about which treatment is superior",
+        "C": "Balanced baseline characteristics",
+        "D": "Equal doses in both arms"
+      },
+      "answer": "B",
+      "explanation": "Equipoise = genuine uncertainty about which treatment is better."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Which ethics document consists of ten principles formulated after WWII?",
+      "options": {
+        "A": "The Declaration of Helsinki",
+        "B": "The Belmont Report",
+        "C": "The Nuremberg Code",
+        "D": "The Tuskegee guidelines"
+      },
+      "answer": "C",
+      "explanation": "The Nuremberg Code — 10 principles."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "The Tuskegee Syphilis Study is chiefly remembered as an example of:",
+      "options": {
+        "A": "A well-designed randomized trial",
+        "B": "Research that was legal at the time but deeply unethical",
+        "C": "The first cohort study",
+        "D": "Proper informed consent"
+      },
+      "answer": "B",
+      "explanation": "Tuskegee — legal at the time but unethical (no informed consent, treatment withheld)."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "In a cohort, 40 of 200 exposed individuals develop disease, and 20 of 200 unexposed develop disease. What is the risk difference?",
+      "options": {
+        "A": "0.10",
+        "B": "0.05",
+        "C": "2.0",
+        "D": "0.20"
+      },
+      "answer": "A",
+      "explanation": "Risk difference = risk(exposed) − risk(unexposed). Worked solution: Risk (exposed) = 40/200 = 0.20 Risk (unexposed) = 20/200 = 0.10 RD = 0.20 − 0.10 = 0.10"
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "When two factors together produce an effect GREATER than the sum of their individual effects, this is called:",
+      "options": {
+        "A": "Antagonism",
+        "B": "Synergy",
+        "C": "Confounding",
+        "D": "Homogeneity"
+      },
+      "answer": "B",
+      "explanation": "A supra-additive combined effect = synergy."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Standardization is used to remove the ___ effect of variables such as age so populations can be compared:",
+      "options": {
+        "A": "Random",
+        "B": "Confounding",
+        "C": "Synergistic",
+        "D": "Protective"
+      },
+      "answer": "B",
+      "explanation": "Standardization removes the confounding effect (usually of age)."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Direct standardization requires knowledge of:",
+      "options": {
+        "A": "Only the standard population's rates",
+        "B": "The age-specific rates of the study population",
+        "C": "Neither population's rates",
+        "D": "Only the total counts"
+      },
+      "answer": "B",
+      "explanation": "Direct standardization uses the study population's age-specific rates applied to a standard population."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "The Standardized Mortality Ratio (SMR) is calculated as:",
+      "options": {
+        "A": "Expected ÷ observed deaths",
+        "B": "Observed ÷ expected deaths",
+        "C": "Deaths ÷ total population",
+        "D": "New cases ÷ person-years"
+      },
+      "answer": "B",
+      "explanation": "SMR = observed ÷ expected deaths (×100)."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "In an occupational cohort, 60 deaths were observed. Applying national age-specific rates, 40 deaths were expected. What is the SMR?",
+      "options": {
+        "A": "150",
+        "B": "67",
+        "C": "100",
+        "D": "120"
+      },
+      "answer": "A",
+      "explanation": "SMR = observed ÷ expected × 100. An SMR of 150 means 50% excess mortality. Worked solution: SMR = (60 / 40) × 100 = 150 → 50% higher mortality than the reference population"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Meta-analysis is best defined as:",
+      "options": {
+        "A": "A qualitative summary of studies",
+        "B": "The quantitative (statistical) synthesis of results from individual studies",
+        "C": "Analysis of a single large trial",
+        "D": "A narrative review"
+      },
+      "answer": "B",
+      "explanation": "Meta-analysis = quantitative synthesis of individual study results."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Statistical power is the ability of a study to:",
+      "options": {
+        "A": "Avoid all bias",
+        "B": "Detect an association if one truly exists",
+        "C": "Prove causation",
+        "D": "Eliminate confounding"
+      },
+      "answer": "B",
+      "explanation": "Power = probability of detecting a true association."
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Selecting controls by random-digit dialling of telephone subscribers identifies which type of controls?",
+      "options": {
+        "A": "Hospital controls",
+        "B": "Friend/relative controls",
+        "C": "Population controls",
+        "D": "Deceased controls"
+      },
+      "answer": "C",
+      "explanation": "Random-digit dialling samples the general public → population controls."
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "During an outbreak, 500 people became infected and 25 of them died. What is the case-fatality rate?",
+      "options": {
+        "A": "5%",
+        "B": "0.5%",
+        "C": "2.5%",
+        "D": "50%"
+      },
+      "answer": "A",
+      "explanation": "Case-fatality rate = deaths from the disease ÷ people with the disease. Worked solution: CFR = 25 / 500 = 0.05 = 5%"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "The 'healthy worker effect' describes the observation that:",
+      "options": {
+        "A": "Workers are exposed to more hazards",
+        "B": "Employed populations have lower morbidity/mortality than the general population",
+        "C": "Workers refuse to participate in studies",
+        "D": "Occupational exposures are always protective"
+      },
+      "answer": "B",
+      "explanation": "Workers are healthier than the general public → biases comparisons using the general population."
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "Asbestos primarily damages health via:",
+      "options": {
+        "A": "The skin",
+        "B": "The eyes",
+        "C": "The respiratory tract",
+        "D": "Ingestion"
+      },
+      "answer": "C",
+      "explanation": "Inhaled fibres harm the respiratory tract (asbestosis, mesothelioma)."
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Which of the following is NOT a recognized type of environmental pollution?",
+      "options": {
+        "A": "Noise pollution",
+        "B": "Thermal pollution",
+        "C": "Technology",
+        "D": "Light pollution"
+      },
+      "answer": "C",
+      "explanation": "Technology is not a pollution type (water, air, soil, thermal, noise, light are)."
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Thermal inversion is:",
+      "options": {
+        "A": "A type of secondary aerosol",
+        "B": "A meteorological phenomenon that traps pollutants near the ground",
+        "C": "A water-treatment step",
+        "D": "A greenhouse gas"
+      },
+      "answer": "B",
+      "explanation": "A warm air layer traps cooler air below → pollutants accumulate."
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "A clinic has 2,000 registered patients. On a given day, 300 have hypertension, 100 have diabetes, and 40 have both. What is the prevalence of hypertension?",
+      "options": {
+        "A": "15%",
+        "B": "5%",
+        "C": "18%",
+        "D": "20%"
+      },
+      "answer": "A",
+      "explanation": "Prevalence of hypertension = people with hypertension ÷ total population. (Diabetes/overlap are distractors.) Worked solution: Prevalence = 300 / 2,000 = 0.15 = 15%"
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Compared with WHO air-quality guidelines, EU limit values are generally:",
+      "options": {
+        "A": "Identical",
+        "B": "Less strict (more lenient)",
+        "C": "Much stricter",
+        "D": "Not comparable at all"
+      },
+      "answer": "B",
+      "explanation": "WHO guidelines are purely health-based & stricter; EU limits are less strict (balance feasibility/economics)."
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "The Mediterranean diet pyramid recommends:",
+      "options": {
+        "A": "Daily red meat",
+        "B": "Limited meat, roughly 200–400 g per week",
+        "C": "No vegetables",
+        "D": "Unlimited processed foods"
+      },
+      "answer": "B",
+      "explanation": "Med diet = limited meat (~200–400 g/week)."
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Which foodborne agent is notable for a high case-fatality (5–10%)?",
+      "options": {
+        "A": "Campylobacter",
+        "B": "Clostridium botulinum toxin",
+        "C": "Norovirus",
+        "D": "Bacillus cereus"
+      },
+      "answer": "B",
+      "explanation": "Botulism (C. botulinum toxin) has high case-fatality."
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "Bacterial dysentery (blood and mucus in the stool) is classically caused by:",
+      "options": {
+        "A": "Shigella",
+        "B": "Staphylococcus aureus",
+        "C": "Campylobacter",
+        "D": "Rotavirus"
+      },
+      "answer": "A",
+      "explanation": "Shigella → bacillary dysentery."
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "How is climate change most likely to affect malaria?",
+      "options": {
+        "A": "By eradicating mosquitoes",
+        "B": "Through temperature and rainfall changes favouring mosquito breeding",
+        "C": "By increasing drug resistance directly",
+        "D": "By having no effect"
+      },
+      "answer": "B",
+      "explanation": "Warming + altered rainfall favour mosquito breeding and shift malaria's range."
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "BMI classification cut-offs (e.g. 18.5–25 as normal):",
+      "options": {
+        "A": "Are valid at all ages",
+        "B": "Are not valid for all ages (children/elderly differ)",
+        "C": "Apply only to athletes",
+        "D": "Depend on blood pressure"
+      },
+      "answer": "B",
+      "explanation": "BMI cut-offs are not valid at all ages."
+    }
+  ]
+}
