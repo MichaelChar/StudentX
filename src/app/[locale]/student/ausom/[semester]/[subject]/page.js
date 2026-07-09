@@ -9,21 +9,21 @@ import { getSubjectIndex, listSubjectsWithContent } from '@/lib/practice/content
 // pre-render every subject that has an index.json. Unknown subjects still fall
 // through to notFound() below.
 export function generateStaticParams() {
-  return listSubjectsWithContent().map((subject) => ({ subject }));
+  return listSubjectsWithContent().map(({ semester, subject }) => ({ semester, subject }));
 }
 
 export async function generateMetadata({ params }) {
-  const { subject } = await params;
-  const index = getSubjectIndex(subject);
+  const { semester, subject } = await params;
+  const index = getSubjectIndex(semester, subject);
   if (!index) return {};
   return { title: `${index.title} — AUSoM Practice Tests` };
 }
 
 export default async function SubjectPage({ params }) {
-  const { locale, subject } = await params;
+  const { locale, semester, subject } = await params;
   setRequestLocale(locale);
 
-  const index = getSubjectIndex(subject);
+  const index = getSubjectIndex(semester, subject);
   if (!index) notFound();
 
   const t = await getTranslations({ locale, namespace: 'student.practice' });
@@ -38,7 +38,7 @@ export default async function SubjectPage({ params }) {
     <div>
       <div style={{ maxWidth: 460, margin: '0 auto', padding: '32px 24px 0' }}>
         <Link
-          href="/student/ausom/semester-2"
+          href={`/student/ausom/${semester}`}
           style={{
             display: 'inline-flex',
             alignItems: 'center',
@@ -93,7 +93,7 @@ export default async function SubjectPage({ params }) {
               {tests.map((test) => (
                 <div key={test.id} style={{ position: 'relative' }}>
                   <TestCard
-                    href={`/student/ausom/semester-2/${subject}/${test.id}`}
+                    href={`/student/ausom/${semester}/${subject}/${test.id}`}
                     title={test.title}
                     kind={test.kind}
                     kindLabel={test.kind === 'mock' ? t('mockExam') : t('topicTest')}

@@ -1,6 +1,7 @@
 import { setRequestLocale } from 'next-intl/server';
 import Link from 'next/link';
 import HubButton from '@/components/HubButton';
+import { listSemestersWithContent } from '@/lib/practice/content';
 
 export function generateMetadata() {
   return { title: 'AUSoM Practice Tests — StudentX' };
@@ -12,19 +13,23 @@ export default async function AusomPage({ params }) {
   return <AusomContent />;
 }
 
-// Semester 2 is available; all others are coming soon.
-const SEMESTERS = Array.from({ length: 12 }, (_, i) => {
-  const n = i + 1;
-  const active = n === 2;
-  return {
-    id: `sem-${n}`,
-    label: `Semester ${n}`,
-    href: active ? '/student/ausom/semester-2' : undefined,
-    comingSoon: !active,
-  };
-});
-
 function AusomContent() {
+  // A semester tile lights up the moment it has published content in the
+  // manifest; the rest keep the "Soon" treatment. Adding a subject under
+  // content/practice/ausom/<semester-N>/ is all it takes to activate a tile.
+  const active = new Set(listSemestersWithContent());
+  const semesters = Array.from({ length: 12 }, (_, i) => {
+    const n = i + 1;
+    const slug = `semester-${n}`;
+    const live = active.has(slug);
+    return {
+      id: `sem-${n}`,
+      label: `Semester ${n}`,
+      href: live ? `/student/ausom/${slug}` : undefined,
+      comingSoon: !live,
+    };
+  });
+
   return (
     <div>
       <div style={{ maxWidth: 480, margin: '0 auto', padding: '32px 24px 0' }}>
@@ -62,7 +67,7 @@ function AusomContent() {
             maxWidth: 480,
           }}
         >
-          {SEMESTERS.map((s) => (
+          {semesters.map((s) => (
             <HubButton
               key={s.id}
               label={s.label}

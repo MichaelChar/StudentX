@@ -22,8 +22,19 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const CONTENT_ROOT = path.join(ROOT, 'content/practice/ausom/semester-2');
+// Walk every semester under the AUSoM tree: content/practice/ausom/<semester-N>/<subject>/.
+const CONTENT_ROOT = path.join(ROOT, 'content/practice/ausom');
 const OUT_FILE = path.join(ROOT, 'src/lib/practice/manifest.generated.js');
+
+/** Directory names that look like a semester slug ("semester-2"), sorted. */
+function semesterDirs(root) {
+  return existsSync(root)
+    ? readdirSync(root, { withFileTypes: true })
+        .filter((d) => d.isDirectory() && /^semester-\d+$/.test(d.name))
+        .map((d) => d.name)
+        .sort()
+    : [];
+}
 
 /** kebab/anything -> a safe JS identifier fragment, e.g. "anatomy-1" -> "anatomy1". */
 function ident(...parts) {
@@ -39,44 +50,55 @@ function importPath(absJsonPath) {
 }
 
 function main() {
-  const subjects = existsSync(CONTENT_ROOT)
-    ? readdirSync(CONTENT_ROOT, { withFileTypes: true })
-        .filter((d) => d.isDirectory())
-        .map((d) => d.name)
-        .sort()
-    : [];
-
   const imports = [];
-  const entries = [];
+  const semesterEntries = [];
+  let subjectCount = 0;
+  let testCount = 0;
 
-  for (const subject of subjects) {
-    const dir = path.join(CONTENT_ROOT, subject);
-    const indexPath = path.join(dir, 'index.json');
-    if (!existsSync(indexPath)) {
-      console.warn(`Skipping "${subject}": no index.json`);
-      continue;
-    }
-
-    const indexVar = ident(subject, 'index');
-    imports.push(`import ${indexVar} from '${importPath(indexPath)}';`);
-
-    const testFiles = readdirSync(dir)
-      .filter((f) => f.endsWith('.json') && f !== 'index.json')
+  for (const semester of semesterDirs(CONTENT_ROOT)) {
+    const semesterDir = path.join(CONTENT_ROOT, semester);
+    const subjects = readdirSync(semesterDir, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name)
       .sort();
 
-    const testEntries = [];
-    for (const file of testFiles) {
-      const testId = file.replace(/\.json$/, '');
-      const testVar = ident(subject, 'test', testId);
-      imports.push(`import ${testVar} from '${importPath(path.join(dir, file))}';`);
-      testEntries.push(`      ${JSON.stringify(testId)}: ${testVar},`);
+    const subjectEntries = [];
+    for (const subject of subjects) {
+      const dir = path.join(semesterDir, subject);
+      const indexPath = path.join(dir, 'index.json');
+      if (!existsSync(indexPath)) {
+        console.warn(`Skipping "${semester}/${subject}": no index.json`);
+        continue;
+      }
+
+      const indexVar = ident(semester, subject, 'index');
+      imports.push(`import ${indexVar} from '${importPath(indexPath)}';`);
+
+      const testFiles = readdirSync(dir)
+        .filter((f) => f.endsWith('.json') && f !== 'index.json')
+        .sort();
+
+      const testEntries = [];
+      for (const file of testFiles) {
+        const testId = file.replace(/\.json$/, '');
+        const testVar = ident(semester, subject, 'test', testId);
+        imports.push(`import ${testVar} from '${importPath(path.join(dir, file))}';`);
+        testEntries.push(`        ${JSON.stringify(testId)}: ${testVar},`);
+        testCount += 1;
+      }
+
+      subjectEntries.push(
+        `    ${JSON.stringify(subject)}: {\n` +
+          `      index: ${indexVar},\n` +
+          `      tests: {\n${testEntries.join('\n')}\n      },\n` +
+          `    },`,
+      );
+      subjectCount += 1;
     }
 
-    entries.push(
-      `  ${JSON.stringify(subject)}: {\n` +
-        `    index: ${indexVar},\n` +
-        `    tests: {\n${testEntries.join('\n')}\n    },\n` +
-        `  },`,
+    if (subjectEntries.length === 0) continue;
+    semesterEntries.push(
+      `  ${JSON.stringify(semester)}: {\n${subjectEntries.join('\n')}\n  },`,
     );
   }
 
@@ -88,18 +110,15 @@ function main() {
 
 ${imports.join('\n')}
 
-/** @type {Record<string, { index: import('./schema.js').SubjectIndex, tests: Record<string, import('./schema.js').PracticeTest> }>} */
+/** @type {Record<string, Record<string, { index: import('./schema.js').SubjectIndex, tests: Record<string, import('./schema.js').PracticeTest> }>>} */
 export const MANIFEST = {
-${entries.join('\n')}
+${semesterEntries.join('\n')}
 };
 `;
 
   writeFileSync(OUT_FILE, body);
-  const testCount = entries.length
-    ? imports.length - subjects.filter((s) => existsSync(path.join(CONTENT_ROOT, s, 'index.json'))).length
-    : 0;
   console.log(
-    `Wrote ${path.relative(ROOT, OUT_FILE)} — ${entries.length} subject(s), ${testCount} test(s).`,
+    `Wrote ${path.relative(ROOT, OUT_FILE)} — ${semesterEntries.length} semester(s), ${subjectCount} subject(s), ${testCount} test(s).`,
   );
 }
 

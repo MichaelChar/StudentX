@@ -14,6 +14,11 @@ const eslintConfig = defineConfig([
     // by `npm run cf:build`; not ours to lint. CI runs lint before build so
     // it never sees this, but a local cf:build leaves it behind.
     ".open-next/**",
+    // Wrangler local dev/build cache (gitignored, like .open-next/).
+    // `wrangler dev` / `npm run preview` leave a bundled worker-entry.js
+    // under .wrangler/tmp/; it's generated, not ours to lint. CI runs lint
+    // before any wrangler step so it never sees this.
+    ".wrangler/**",
     // Sub-agent worktrees (PR #53 gitignore). Each agent worktree is a
     // full copy of the repo including its own .next/ build artifacts;
     // without this ignore, eslint walks them and duplicates every

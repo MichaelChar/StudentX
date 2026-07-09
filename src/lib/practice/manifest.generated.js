@@ -4,45 +4,47 @@
 // Static imports make practice-test JSON part of the bundle, so the loaders in
 // content.js need no runtime fs (required for Cloudflare Workers / OpenNext).
 
-import anatomy1Index from '../../../content/practice/ausom/semester-2/anatomy-1/index.json';
-import anatomy1TestMegaTest from '../../../content/practice/ausom/semester-2/anatomy-1/mega-test.json';
-import biochemistryIndex from '../../../content/practice/ausom/semester-2/biochemistry/index.json';
-import biochemistryTestMegaTest from '../../../content/practice/ausom/semester-2/biochemistry/mega-test.json';
-import generalHistologyIndex from '../../../content/practice/ausom/semester-2/general-histology/index.json';
-import generalHistologyTestEmStructureId from '../../../content/practice/ausom/semester-2/general-histology/em-structure-id.json';
-import generalHistologyTestLmSpecimenId from '../../../content/practice/ausom/semester-2/general-histology/lm-specimen-id.json';
-import generalPhysiologyIndex from '../../../content/practice/ausom/semester-2/general-physiology/index.json';
-import generalPhysiologyTestPredictedLabExam from '../../../content/practice/ausom/semester-2/general-physiology/predicted-lab-exam.json';
-import generalPhysiologyTestPredictedMcqOneoffs from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-oneoffs.json';
-import generalPhysiologyTestPredictedMcqRepeaters from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-repeaters.json';
+import semester2Anatomy1Index from '../../../content/practice/ausom/semester-2/anatomy-1/index.json';
+import semester2Anatomy1TestMegaTest from '../../../content/practice/ausom/semester-2/anatomy-1/mega-test.json';
+import semester2BiochemistryIndex from '../../../content/practice/ausom/semester-2/biochemistry/index.json';
+import semester2BiochemistryTestMegaTest from '../../../content/practice/ausom/semester-2/biochemistry/mega-test.json';
+import semester2GeneralHistologyIndex from '../../../content/practice/ausom/semester-2/general-histology/index.json';
+import semester2GeneralHistologyTestEmStructureId from '../../../content/practice/ausom/semester-2/general-histology/em-structure-id.json';
+import semester2GeneralHistologyTestLmSpecimenId from '../../../content/practice/ausom/semester-2/general-histology/lm-specimen-id.json';
+import semester2GeneralPhysiologyIndex from '../../../content/practice/ausom/semester-2/general-physiology/index.json';
+import semester2GeneralPhysiologyTestPredictedLabExam from '../../../content/practice/ausom/semester-2/general-physiology/predicted-lab-exam.json';
+import semester2GeneralPhysiologyTestPredictedMcqOneoffs from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-oneoffs.json';
+import semester2GeneralPhysiologyTestPredictedMcqRepeaters from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-repeaters.json';
 
-/** @type {Record<string, { index: import('./schema.js').SubjectIndex, tests: Record<string, import('./schema.js').PracticeTest> }>} */
+/** @type {Record<string, Record<string, { index: import('./schema.js').SubjectIndex, tests: Record<string, import('./schema.js').PracticeTest> }>>} */
 export const MANIFEST = {
-  "anatomy-1": {
-    index: anatomy1Index,
-    tests: {
-      "mega-test": anatomy1TestMegaTest,
+  "semester-2": {
+    "anatomy-1": {
+      index: semester2Anatomy1Index,
+      tests: {
+        "mega-test": semester2Anatomy1TestMegaTest,
+      },
     },
-  },
-  "biochemistry": {
-    index: biochemistryIndex,
-    tests: {
-      "mega-test": biochemistryTestMegaTest,
+    "biochemistry": {
+      index: semester2BiochemistryIndex,
+      tests: {
+        "mega-test": semester2BiochemistryTestMegaTest,
+      },
     },
-  },
-  "general-histology": {
-    index: generalHistologyIndex,
-    tests: {
-      "em-structure-id": generalHistologyTestEmStructureId,
-      "lm-specimen-id": generalHistologyTestLmSpecimenId,
+    "general-histology": {
+      index: semester2GeneralHistologyIndex,
+      tests: {
+        "em-structure-id": semester2GeneralHistologyTestEmStructureId,
+        "lm-specimen-id": semester2GeneralHistologyTestLmSpecimenId,
+      },
     },
-  },
-  "general-physiology": {
-    index: generalPhysiologyIndex,
-    tests: {
-      "predicted-lab-exam": generalPhysiologyTestPredictedLabExam,
-      "predicted-mcq-oneoffs": generalPhysiologyTestPredictedMcqOneoffs,
-      "predicted-mcq-repeaters": generalPhysiologyTestPredictedMcqRepeaters,
+    "general-physiology": {
+      index: semester2GeneralPhysiologyIndex,
+      tests: {
+        "predicted-lab-exam": semester2GeneralPhysiologyTestPredictedLabExam,
+        "predicted-mcq-oneoffs": semester2GeneralPhysiologyTestPredictedMcqOneoffs,
+        "predicted-mcq-repeaters": semester2GeneralPhysiologyTestPredictedMcqRepeaters,
+      },
     },
   },
 };
