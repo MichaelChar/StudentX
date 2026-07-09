@@ -1,0 +1,508 @@
+{
+  "meta": {
+    "title": "MD1040 Hygiene & Epidemiology — Recalled MCQs",
+    "course": "MD1040 Hygiene & Epidemiology",
+    "semester": "Semester 6",
+    "total_questions": 38,
+    "mcq_count": 38,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Cumulative incidence (average risk) is the measure of choice in which cohort, because there are no losses during follow-up?",
+      "options": {
+        "A": "Dynamic cohort",
+        "B": "Open cohort",
+        "C": "Closed / fixed cohort",
+        "D": "Ecological cohort"
+      },
+      "answer": "C",
+      "explanation": "Closed (fixed) cohort. Cumulative incidence assumes everyone is followed for the whole period with no loss to follow-up."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "James Lind is best known for which contribution?",
+      "options": {
+        "A": "Mapping the Broad Street pump",
+        "B": "The first recorded controlled clinical trial (scurvy → citrus)",
+        "C": "Inventing the life table",
+        "D": "Formulating the epidemiologic triangle"
+      },
+      "answer": "B",
+      "explanation": "The first recorded controlled clinical trial — HMS Salisbury, 1747, citrus fruit cures scurvy."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Bacterial indicators of water signify that:",
+      "options": {
+        "A": "Toxic chemicals are present",
+        "B": "The water has mixed with intestinal (faecal) contents",
+        "C": "The water is safe to drink",
+        "D": "Viruses are present"
+      },
+      "answer": "B",
+      "explanation": "The water has mixed with intestinal contents — faecal contamination, correlated with pathogens."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "An advantage of a matched case-control study is that:",
+      "options": {
+        "A": "Type I error increases",
+        "B": "Study power is reduced",
+        "C": "Study power is increased",
+        "D": "It removes the need for controls"
+      },
+      "answer": "C",
+      "explanation": "Study power is increased — matching improves efficiency and controls confounding."
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "A new treatment prolongs survival but doesn't cure. Effect on disease prevalence?",
+      "options": {
+        "A": "Prevalence decreases",
+        "B": "Prevalence stays the same",
+        "C": "Prevalence increases",
+        "D": "Impossible to predict"
+      },
+      "answer": "C",
+      "explanation": "Prevalence increases. Prevalence = incidence × duration; longer survival lengthens duration."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "The study of disease frequency is NOT related to which of the following?",
+      "options": {
+        "A": "Criteria to identify the disease",
+        "B": "Counting the disease cases",
+        "C": "Determining the population size",
+        "D": "None — all are necessary elements"
+      },
+      "answer": "D",
+      "explanation": "None — all of them are necessary (criteria, numerator of cases, denominator population)."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "A case-control study is characterised by:",
+      "options": {
+        "A": "Sampling by exposure and following forward",
+        "B": "Sampling by disease status and looking back at exposure, using the odds ratio",
+        "C": "Using the population as the unit of analysis",
+        "D": "Randomly allocating an intervention"
+      },
+      "answer": "B",
+      "explanation": "Sampling by disease status, looking back at exposure; measure = odds ratio. Ideal for rare diseases."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Which best describes the ecological fallacy?",
+      "options": {
+        "A": "Confusing correlation with causation in one person",
+        "B": "Inferring individual-level relationships from group-level data",
+        "C": "Losing subjects to follow-up",
+        "D": "Failing to blind the assessor"
+      },
+      "answer": "B",
+      "explanation": "Inferring individual-level associations from group (population)-level data."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "'Equipoise' in a clinical trial means:",
+      "options": {
+        "A": "Equal group sizes",
+        "B": "Genuine uncertainty about which treatment is better — required for an ethical RCT",
+        "C": "Balanced confounders after randomization",
+        "D": "Equal dosing between arms"
+      },
+      "answer": "B",
+      "explanation": "Genuine uncertainty about which treatment is superior. An RCT is only ethical when equipoise exists."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "What is added in the FINAL step of drinking-water treatment?",
+      "options": {
+        "A": "Aluminium sulfate",
+        "B": "Chlorine",
+        "C": "Iron",
+        "D": "Sulfur"
+      },
+      "answer": "B",
+      "explanation": "Chlorine (chlorination) — the final disinfection step, leaving a protective residual. Aluminium sulfate is an earlier coagulation step."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "The thalidomide disaster mainly highlighted the need for:",
+      "options": {
+        "A": "Informed consent",
+        "B": "Privacy protection",
+        "C": "Careful drug safety (teratogenicity) assessment",
+        "D": "Ethics-committee protocol review"
+      },
+      "answer": "C",
+      "explanation": "Careful drug safety assessment, especially teratogenicity testing in pregnancy."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "The main bacterial indicator organism for water is:",
+      "options": {
+        "A": "Pseudomonas",
+        "B": "E. coli",
+        "C": "Rotavirus",
+        "D": "Legionella"
+      },
+      "answer": "B",
+      "explanation": "E. coli (faecal coliform) — the principal indicator of faecal contamination."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Compared with WHO guidelines, the EU air-quality limits are:",
+      "options": {
+        "A": "Identical",
+        "B": "Less strict",
+        "C": "Stricter",
+        "D": "Not comparable"
+      },
+      "answer": "B",
+      "explanation": "Less strict. WHO guidelines are purely health-based; EU limits balance economics/feasibility, so they're more lenient."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Standardization is a method used to estimate the ___ role of certain variables so populations are comparable:",
+      "options": {
+        "A": "Synergistic",
+        "B": "Confounding",
+        "C": "Significant",
+        "D": "Random"
+      },
+      "answer": "B",
+      "explanation": "Confounding. Standardization removes the confounding effect (usually of age)."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "The Standardized Mortality Ratio (SMR) formula is:",
+      "options": {
+        "A": "Expected ÷ observed deaths",
+        "B": "Observed ÷ expected deaths (×100)",
+        "C": "Deaths ÷ population",
+        "D": "New cases ÷ person-years"
+      },
+      "answer": "B",
+      "explanation": "SMR = observed ÷ expected deaths (×100). From indirect standardization."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Meta-analysis is best defined as:",
+      "options": {
+        "A": "A qualitative summary of studies",
+        "B": "The quantitative (statistical) synthesis of results from individual studies",
+        "C": "Analysis of a single large trial",
+        "D": "A narrative literature review"
+      },
+      "answer": "B",
+      "explanation": "The quantitative synthesis of results from individual studies — an optional statistical part of a systematic review."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Thermal inversion is:",
+      "options": {
+        "A": "A pollutant",
+        "B": "A meteorological phenomenon that traps pollutants near the ground",
+        "C": "A type of secondary aerosol",
+        "D": "A water-treatment step"
+      },
+      "answer": "B",
+      "explanation": "A meteorological phenomenon — a warm air layer traps cooler air below, so pollutants accumulate."
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Which statement about RR and OR is correct?",
+      "options": {
+        "A": "Both equal 0 under the null",
+        "B": "Both equal 1 under the null; OR is the measure of case-control studies",
+        "C": "OR is used in cohort studies only",
+        "D": "RR can only be < 1"
+      },
+      "answer": "B",
+      "explanation": "RR = OR = 1 under the null (no association); the OR (cross-product ratio) is the measure of case-control studies."
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "'Genomic surveillance' refers to:",
+      "options": {
+        "A": "Sequencing pathogen genomes to track spread and variants",
+        "B": "Counting cases in a hospital",
+        "C": "Measuring air-pollutant genomes",
+        "D": "Screening humans for genetic disease"
+      },
+      "answer": "A",
+      "explanation": "Sequencing pathogen genomes to monitor transmission, evolution and emerging variants."
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "Asbestos primarily harms health through:",
+      "options": {
+        "A": "The eyes",
+        "B": "Skin exposure",
+        "C": "The respiratory tract",
+        "D": "Ingestion"
+      },
+      "answer": "C",
+      "explanation": "The respiratory tract — inhaled fibres cause asbestosis, lung cancer, mesothelioma."
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "If a relative comparison measure equals 0.81 (less than one), the exposure is:",
+      "options": {
+        "A": "Harmful",
+        "B": "Protective / prevents disease",
+        "C": "Neutral",
+        "D": "Not interpretable"
+      },
+      "answer": "B",
+      "explanation": "Protective. An RR/OR below 1 = lower disease risk (prevents disease)."
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "The Tuskegee Syphilis Study is remembered as research that was:",
+      "options": {
+        "A": "Ethical and well-consented",
+        "B": "Legal at the time but deeply unethical (no informed consent)",
+        "C": "A properly randomized trial",
+        "D": "Conducted with full IRB oversight"
+      },
+      "answer": "B",
+      "explanation": "Legal at the time but unethical — men weren't told their diagnosis or that treatment was withheld; drove modern consent/IRB rules."
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "'Excess mortality' (used for Storm Daniel, Thessaly 2023) is defined as:",
+      "options": {
+        "A": "Observed minus expected deaths",
+        "B": "Deaths from a single cause",
+        "C": "The crude death rate",
+        "D": "The case-fatality rate"
+      },
+      "answer": "A",
+      "explanation": "Observed − expected deaths — the extra deaths beyond what would normally be expected."
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Of 1,000 newborns, 100 had serious birth defects and 20 of those died in year 1; 90 of the 900 without defects also died. Cumulative incidence of mortality in the whole population?",
+      "options": {
+        "A": "2%",
+        "B": "9%",
+        "C": "11%",
+        "D": "20%"
+      },
+      "answer": "C",
+      "explanation": "11%. Total deaths = 20 + 90 = 110; 110 ÷ 1,000 = 0.11 = 11%."
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "True or False: 'Occupational risk is anything that has the potential to cause harm.'",
+      "options": {
+        "A": "True",
+        "B": "False — that defines a HAZARD, not risk"
+      },
+      "answer": "B",
+      "explanation": "False. That defines a hazard. Occupational risk = the likelihood AND severity of injury/disease from exposure to a hazard."
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "If there is NO association, the values of (risk ratio, odds ratio, risk difference) are:",
+      "options": {
+        "A": "0, 0, 1",
+        "B": "1, 1, 0",
+        "C": "1, 0, 1",
+        "D": "0, 1, 0"
+      },
+      "answer": "B",
+      "explanation": "1, 1, 0. Ratios (RR, OR) = 1 under the null; the risk difference (absolute) = 0."
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Which of these is NOT one of the Bradford Hill criteria for causation?",
+      "options": {
+        "A": "Specificity",
+        "B": "Plausibility",
+        "C": "Complexity",
+        "D": "Consistency"
+      },
+      "answer": "C",
+      "explanation": "Complexity. The nine Hill criteria: strength, consistency, specificity, temporality, biological gradient, plausibility, coherence, experiment, analogy."
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "The 1993 Milwaukee waterborne outbreak was caused by:",
+      "options": {
+        "A": "A bacterium (Salmonella)",
+        "B": "Cryptosporidium — a protozoan parasite",
+        "C": "A virus (Rotavirus)",
+        "D": "A toxin (aflatoxin)"
+      },
+      "answer": "B",
+      "explanation": "Cryptosporidium, a protozoan parasite (not a bacterium!). ~400,000 affected — largest US waterborne outbreak, following heavy rainfall."
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "In plants, increased atmospheric CO₂ tends to:",
+      "options": {
+        "A": "Increase carbohydrate content (and lower protein/micronutrients)",
+        "B": "Increase protein content",
+        "C": "Decrease carbohydrate content",
+        "D": "Have no effect on composition"
+      },
+      "answer": "A",
+      "explanation": "Increase carbohydrate content while diluting protein and micronutrients."
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "Which CANNOT be caused by waterborne infection?",
+      "options": {
+        "A": "Diarrhoea",
+        "B": "Cholera",
+        "C": "Typhoid",
+        "D": "Myocardial infarction"
+      },
+      "answer": "D",
+      "explanation": "Myocardial infarction. Diarrhoea, cholera and typhoid are waterborne; a heart attack is not an infectious waterborne disease."
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "Who developed the concept of the life table by analysing London death records?",
+      "options": {
+        "A": "John Snow",
+        "B": "John Graunt",
+        "C": "James Lind",
+        "D": "William Farr"
+      },
+      "answer": "B",
+      "explanation": "John Graunt — father of demography; first epidemiologist/statistician/demographer."
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "An ambidirectional (bidirectional) study is a type of:",
+      "options": {
+        "A": "Case-control study",
+        "B": "Cohort study with both prospective and retrospective elements",
+        "C": "Cross-sectional study",
+        "D": "Ecological study"
+      },
+      "answer": "B",
+      "explanation": "A cohort study with both prospective and retrospective components."
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "Malnutrition differs from undernutrition in that malnutrition:",
+      "options": {
+        "A": "Only means starvation",
+        "B": "Encompasses ALL forms — under-, over-nutrition and micronutrient imbalance",
+        "C": "Is the same as obesity",
+        "D": "Only refers to children"
+      },
+      "answer": "B",
+      "explanation": "Malnutrition is the umbrella term (under-, over-nutrition, micronutrient deficiency); undernutrition is specifically deficiency."
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "The odds ratio is the characteristic measure of which design?",
+      "options": {
+        "A": "Cohort study",
+        "B": "Cross-sectional study",
+        "C": "Case-control study",
+        "D": "Ecological study"
+      },
+      "answer": "C",
+      "explanation": "Case-control study."
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "Which is NOT a type of environmental pollution?",
+      "options": {
+        "A": "Noise pollution",
+        "B": "Thermal pollution",
+        "C": "Technology",
+        "D": "Light pollution"
+      },
+      "answer": "C",
+      "explanation": "Technology. Recognised types: water, air, soil, thermal, noise, light."
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "Epidemiology is best described as:",
+      "options": {
+        "A": "A branch of public health",
+        "B": "A branch of medical statistics",
+        "C": "Separate from public health",
+        "D": "A branch of clinical pharmacology"
+      },
+      "answer": "A",
+      "explanation": "A branch of public health — one of its basic sciences."
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "The Belmont Report's three core principles are:",
+      "options": {
+        "A": "Autonomy, beneficence, justice",
+        "B": "Consent, privacy, safety",
+        "C": "Randomization, blinding, follow-up",
+        "D": "Strength, consistency, plausibility"
+      },
+      "answer": "A",
+      "explanation": "Respect for autonomy, beneficence, justice. (Distinct from Nuremberg's 10 principles.)"
+    },
+    {
+      "id": 38,
+      "type": "mcq",
+      "stem": "A cross-sectional study is best described as:",
+      "options": {
+        "A": "A 'snapshot' measuring exposure and outcome at a single point in time",
+        "B": "A long forward follow-up",
+        "C": "Sampling on disease status",
+        "D": "Randomly allocating treatment"
+      },
+      "answer": "A",
+      "explanation": "A snapshot at one point in time — good for prevalence."
+    }
+  ]
+}

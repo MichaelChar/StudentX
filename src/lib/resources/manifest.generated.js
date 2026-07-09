@@ -134,5 +134,75 @@ export const RESOURCES = [
     "meta": {
       "questionCount": 33
     }
+  },
+  {
+    "id": "practice:hygiene-epidemiology:past-papers-2020-2024",
+    "type": "past-paper",
+    "title": "MD1040 Hygiene & Epidemiology — Past Papers (2020–2024)",
+    "description": "147 real MCQs from five sittings.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/past-papers-2020-2024",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "questionCount": 147
+    }
+  },
+  {
+    "id": "practice:hygiene-epidemiology:predicted-paper-1",
+    "type": "practice-test",
+    "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 1",
+    "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/predicted-paper-1",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "questionCount": 30
+    }
+  },
+  {
+    "id": "practice:hygiene-epidemiology:predicted-paper-2",
+    "type": "practice-test",
+    "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 2",
+    "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/predicted-paper-2",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "questionCount": 30
+    }
+  },
+  {
+    "id": "practice:hygiene-epidemiology:predicted-paper-3",
+    "type": "practice-test",
+    "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 3",
+    "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/predicted-paper-3",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "questionCount": 30
+    }
+  },
+  {
+    "id": "practice:hygiene-epidemiology:recalls",
+    "type": "practice-test",
+    "title": "MD1040 Hygiene & Epidemiology — Recalled MCQs",
+    "description": "38 student-recalled MCQs.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/recalls",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "questionCount": 38
+    }
   }
 ];

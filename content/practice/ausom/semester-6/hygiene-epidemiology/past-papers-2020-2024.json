@@ -1,0 +1,2076 @@
+{
+  "meta": {
+    "title": "MD1040 Hygiene & Epidemiology — Past Papers (2020–2024)",
+    "course": "MD1040 Hygiene & Epidemiology",
+    "semester": "Semester 6",
+    "total_questions": 147,
+    "mcq_count": 147,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "According to current legislation, drinking water is allowed to contain up to:",
+      "options": {
+        "A": "1 enterococcus per 100 mL",
+        "B": "100 enterococci per 100 mL",
+        "C": "0 enterococci per 100 mL",
+        "D": "10 enterococci per 100 mL"
+      },
+      "answer": "C",
+      "explanation": "Legislation requires 0 enterococci/100 mL — indicators of faecal contamination.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Water is essential for the human body for all of the following, except:",
+      "options": {
+        "A": "Provides elasticity to tissues",
+        "B": "Provides energy to muscles during initial effort",
+        "C": "Solvent/transport medium for nutrients",
+        "D": "Contributes to thermoregulation"
+      },
+      "answer": "B",
+      "explanation": "Water has no calories/energy — it cannot fuel muscles.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Which is less polluting?",
+      "options": {
+        "A": "Natural Gas",
+        "B": "Coal",
+        "C": "Oil",
+        "D": "Wood"
+      },
+      "answer": "A",
+      "explanation": "Natural gas is the cleanest-burning fossil fuel.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Which energy is non-renewable?",
+      "options": {
+        "A": "Wind",
+        "B": "Nuclear",
+        "C": "Solar",
+        "D": "Hydropower"
+      },
+      "answer": "B",
+      "explanation": "Nuclear uses finite uranium; the others are renewable.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Regarding HEALTH EDUCATION methods, which is true?",
+      "options": {
+        "A": "Social/audiovisual media improves the outcome",
+        "B": "Approach depends on characteristics & education level of trainees",
+        "C": "Small groups show the best results",
+        "D": "All are correct"
+      },
+      "answer": "B",
+      "explanation": "Tailor the approach to the audience's characteristics & education level. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Hospital epidemics must be investigated for all except:",
+      "options": {
+        "A": "The mode of transmission",
+        "B": "Determine source & reservoir",
+        "C": "Let it evolve until natural immunity",
+        "D": "Intervene with specific measures"
+      },
+      "answer": "C",
+      "explanation": "You never let an outbreak run its course.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Parasitic protozoa (emerging pathogens) include:",
+      "options": {
+        "A": "Helicobacter pylori",
+        "B": "Cryptosporidium parvum",
+        "C": "Enteroviruses",
+        "D": "E. coli"
+      },
+      "answer": "B",
+      "explanation": "Cryptosporidium parvum is the emerging protozoan.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Bottled water must contain zero cfu/mL of the following, except:",
+      "options": {
+        "A": "Pseudomonas",
+        "B": "Heterotrophic flora",
+        "C": "Enterococci",
+        "D": "E. coli"
+      },
+      "answer": "B",
+      "explanation": "Heterotrophic flora is allowed a limit; true indicators must be 0.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Waters free of microorganisms (intervention retains microbes during creation) are:",
+      "options": {
+        "A": "Rainwater",
+        "B": "Surface waters",
+        "C": "Liquids in tanks",
+        "D": "Groundwater"
+      },
+      "answer": "D",
+      "explanation": "Groundwater is soil-filtered as it forms.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Regarding BMI, which is true?",
+      "options": {
+        "A": "18.5–25 normal for all ages",
+        "B": "25–30 overweight for all ages",
+        "C": "None are correct",
+        "D": "All are correct"
+      },
+      "answer": "C",
+      "explanation": "BMI cut-offs are not valid at all ages → none hold.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "Food contamination occurs by all the following, except:",
+      "options": {
+        "A": "Intense ventilation of processing areas",
+        "B": "From rodents via feces",
+        "C": "From sick animals (salmonellosis)",
+        "D": "From food handlers"
+      },
+      "answer": "A",
+      "explanation": "Ventilation is not a contamination route.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Regarding epidemic outbreaks, which is incorrect?",
+      "options": {
+        "A": "Appropriate transmission to susceptibles",
+        "B": "A limited, clearly defined number of susceptibles",
+        "C": "Agent that has affected many",
+        "D": "Three basic characteristics needed"
+      },
+      "answer": "B",
+      "explanation": "An outbreak needs a sufficiently LARGE susceptible pool, not a limited one.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Which pollutant is secondary?",
+      "options": {
+        "A": "Hydrocarbons",
+        "B": "SO₂",
+        "C": "CO",
+        "D": "O₃"
+      },
+      "answer": "D",
+      "explanation": "Ground-level ozone (O₃) forms in the atmosphere → secondary.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Microbes found in water include all except:",
+      "options": {
+        "A": "Fungi",
+        "B": "Bacteroids",
+        "C": "Polysaccharides",
+        "D": "Algae"
+      },
+      "answer": "C",
+      "explanation": "Polysaccharides are molecules, not microbes.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "What does NOT constitute an air pollution control measure?",
+      "options": {
+        "A": "High chimneys",
+        "B": "Improvement of fuels",
+        "C": "Increasing tree coverage",
+        "D": "Renewable energy sources"
+      },
+      "answer": "A",
+      "explanation": "Tall chimneys disperse — they don't reduce emissions.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "The main reason we do not have Nuclear Energy in Greece:",
+      "options": {
+        "A": "Earthquake-prone country",
+        "B": "We don't trust the technology",
+        "C": "No uranium",
+        "D": "No plutonium"
+      },
+      "answer": "A",
+      "explanation": "Greece is highly seismic.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Regarding investigation of outbreaks, which is true?",
+      "options": {
+        "A": "Info only from affected people",
+        "B": "Confirmation precedes the outbreak",
+        "C": "Aims to identify the agent",
+        "D": "All are incorrect"
+      },
+      "answer": "C",
+      "explanation": "A central aim is identifying the causative agent.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Regarding common source epidemics, which is true?",
+      "options": {
+        "A": "Left-skewed histogram",
+        "B": "All are incorrect",
+        "C": "Right-skewed 'log distribution of outbreak'",
+        "D": "Differs from point-source when incubation is long"
+      },
+      "answer": "C",
+      "explanation": "Common/point-source curves are log-normal → right-skewed.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Two toxins, each specific for diarrhea or vomiting, are produced by:",
+      "options": {
+        "A": "Salmonella",
+        "B": "Bacillus cereus",
+        "C": "Listeria",
+        "D": "Yersinia"
+      },
+      "answer": "B",
+      "explanation": "Bacillus cereus — diarrhoeal + emetic toxins.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "Regarding foodborne infections, all apply except:",
+      "options": {
+        "A": "Microorganism present in food",
+        "B": "Multiplies in the intestinal tract",
+        "C": "Individual susceptible",
+        "D": "Multiplies in the food in high concentration"
+      },
+      "answer": "D",
+      "explanation": "In-food multiplication = intoxication.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "Which method is NOT a way to disinfect drinking water?",
+      "options": {
+        "A": "Ultraviolet radiation",
+        "B": "Chlorination",
+        "C": "Ozonation",
+        "D": "Addition of aluminum sulfate"
+      },
+      "answer": "D",
+      "explanation": "Aluminium sulfate = coagulant, not disinfectant.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Regarding changes in weight:",
+      "options": {
+        "A": "All are incorrect",
+        "B": "↑Carbs (>65%) increases weight",
+        "C": "↑Fat (>40%) increases weight",
+        "D": "Energy balance matters only with ideal macronutrients"
+      },
+      "answer": "A",
+      "explanation": "Weight = overall energy balance → the specific claims are all wrong.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "The primary greenhouse gas is:",
+      "options": {
+        "A": "CO₂",
+        "B": "CH₄",
+        "C": "SO₂",
+        "D": "NOₓ"
+      },
+      "answer": "A",
+      "explanation": "CO₂.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Stratospheric ozone is destroyed by:",
+      "options": {
+        "A": "Sulfur oxides",
+        "B": "Nitrogen oxides",
+        "C": "Dioxins",
+        "D": "Chlorofluorocarbons"
+      },
+      "answer": "D",
+      "explanation": "CFCs.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Which is correct regarding ideal intake?",
+      "options": {
+        "A": "Target macronutrients to minimize fat",
+        "B": "Vitamins have the fewest calories",
+        "C": "None are correct",
+        "D": "Micronutrients not always necessary"
+      },
+      "answer": "C",
+      "explanation": "Vitamins provide no calories; micronutrients are necessary → none correct.",
+      "source": "2020 (Feb)"
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "Regarding the risk of chemicals in food, all are correct except:",
+      "options": {
+        "A": "Antibiotics/chemotherapeutics in animals",
+        "B": "Thyrostatics & estrogens in animals",
+        "C": "Aquaculture in agriculture",
+        "D": "Pesticides/insecticides in agriculture"
+      },
+      "answer": "C",
+      "explanation": "'Aquaculture' is a farming practice, not a chemical hazard.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "A protozoan disease that can be waterborne is all except:",
+      "options": {
+        "A": "Entamoeba histolytica",
+        "B": "Cryptosporidium spp.",
+        "C": "Giardia lamblia",
+        "D": "Onchocerciasis"
+      },
+      "answer": "D",
+      "explanation": "Onchocerciasis is a nematode spread by blackflies — not a waterborne protozoan.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "Bottled water must contain zero cfu/mL of the following, except:",
+      "options": {
+        "A": "Pseudomonas",
+        "B": "E. coli",
+        "C": "Enterococci",
+        "D": "Heterotrophic flora"
+      },
+      "answer": "D",
+      "explanation": "Heterotrophic flora has an allowed limit.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "Regarding micronutrients:",
+      "options": {
+        "A": "Not necessary for the whole population",
+        "B": "Essential in small doses via supplements",
+        "C": "Vitamins more useful than minerals",
+        "D": "All are wrong"
+      },
+      "answer": "D",
+      "explanation": "Needed by everyone, best from food → all wrong.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "Drinking water is allowed to contain up to:",
+      "options": {
+        "A": "100 enterococci/100 mL",
+        "B": "0 enterococci/100 mL",
+        "C": "10 enterococci/100 mL",
+        "D": "1 enterococcus/100 mL"
+      },
+      "answer": "B",
+      "explanation": "0 enterococci/100 mL.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "Stratospheric ozone is destroyed by:",
+      "options": {
+        "A": "Dioxins",
+        "B": "Sulfur oxides",
+        "C": "Chlorofluorocarbons",
+        "D": "Nitrogen oxides"
+      },
+      "answer": "C",
+      "explanation": "CFCs.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "Regarding BMI, which is true?",
+      "options": {
+        "A": "18.5–25 normal at all ages",
+        "B": "25–30 overweight at all ages",
+        "C": "None are correct",
+        "D": "All are correct"
+      },
+      "answer": "C",
+      "explanation": "Cut-offs not valid at all ages → none.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "The most sensitive ecosystem on the planet is:",
+      "options": {
+        "A": "North America",
+        "B": "Australia",
+        "C": "Africa",
+        "D": "The Mediterranean Sea"
+      },
+      "answer": "D",
+      "explanation": "The Mediterranean.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "Which is true for low-risk areas for traveler's diarrhea?",
+      "options": {
+        "A": "None of the above",
+        "B": "Infection rate <30%",
+        "C": "Include Northern & Central Europe",
+        "D": "Include Russia"
+      },
+      "answer": "C",
+      "explanation": "Low-risk = developed regions incl. N & Central Europe.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "Respirable particles (PM10) do NOT cause:",
+      "options": {
+        "A": "Cardiovascular diseases",
+        "B": "Premature mortality",
+        "C": "Respiratory problems",
+        "D": "Dermatological alterations"
+      },
+      "answer": "D",
+      "explanation": "PM10 harms heart/lungs, not skin.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "Regarding HEALTH EDUCATION methods, which is true?",
+      "options": {
+        "A": "Small groups show best results",
+        "B": "All are correct",
+        "C": "Approach depends on characteristics/education level",
+        "D": "Media improves the outcome"
+      },
+      "answer": "C",
+      "explanation": "Tailor to the audience's characteristics & education level. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "In foodborne infection, all true except:",
+      "options": {
+        "A": "Individual susceptible",
+        "B": "Present in the food",
+        "C": "Multiplies in intestinal tract",
+        "D": "Multiplies in the food to high concentration"
+      },
+      "answer": "D",
+      "explanation": "In-food multiplication = intoxication.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 38,
+      "type": "mcq",
+      "stem": "Which disease has increased risk in livestock farmers?",
+      "options": {
+        "A": "Hepatitis A",
+        "B": "Tuberculosis",
+        "C": "Brucellosis",
+        "D": "Mumps"
+      },
+      "answer": "C",
+      "explanation": "Brucellosis.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 39,
+      "type": "mcq",
+      "stem": "What does the attack rate indicate in an outbreak?",
+      "options": {
+        "A": "Always the same for a communicable disease",
+        "B": "Describes the mode of transmission",
+        "C": "None of the above",
+        "D": "Quantitative indicator of the extent"
+      },
+      "answer": "D",
+      "explanation": "Attack rate measures how widespread the outbreak is.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 40,
+      "type": "mcq",
+      "stem": "The primary greenhouse gas is:",
+      "options": {
+        "A": "SO₂",
+        "B": "CO₂",
+        "C": "CH₄",
+        "D": "NOₓ"
+      },
+      "answer": "B",
+      "explanation": "CO₂.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 41,
+      "type": "mcq",
+      "stem": "Microbes found in water include all except:",
+      "options": {
+        "A": "Algae",
+        "B": "Bacteria",
+        "C": "Polysaccharides",
+        "D": "Fungi"
+      },
+      "answer": "C",
+      "explanation": "Polysaccharides aren't microbes.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 42,
+      "type": "mcq",
+      "stem": "Which foods are safe for preventing traveler's diarrhea?",
+      "options": {
+        "A": "Tap water",
+        "B": "Very hot, freshly cooked foods",
+        "C": "None of the above",
+        "D": "Cold salads"
+      },
+      "answer": "B",
+      "explanation": "Hot, freshly-cooked food is safest.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 43,
+      "type": "mcq",
+      "stem": "Which pollutant is secondary?",
+      "options": {
+        "A": "CO",
+        "B": "Carbohydrates",
+        "C": "O₃",
+        "D": "SO₂"
+      },
+      "answer": "C",
+      "explanation": "O₃ is secondary.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 44,
+      "type": "mcq",
+      "stem": "Which is true regarding BASIC METABOLISM?",
+      "options": {
+        "A": "Mainly influenced by external conditions",
+        "B": "Can be influenced both directions by medication",
+        "C": "Slightly increases with age in adulthood",
+        "D": "Significantly increases during pregnancy"
+      },
+      "answer": "B",
+      "explanation": "Drugs can raise or lower BMR (it falls with age). Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 45,
+      "type": "mcq",
+      "stem": "Emerging pathogenic microorganisms include all except:",
+      "options": {
+        "A": "Campylobacter",
+        "B": "Helicobacter pylori",
+        "C": "Parasitic protozoa",
+        "D": "Streptococcus pneumoniae"
+      },
+      "answer": "D",
+      "explanation": "S. pneumoniae is not emerging.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 46,
+      "type": "mcq",
+      "stem": "Which air pollution source is NOT artificial?",
+      "options": {
+        "A": "Dust from the Sahara",
+        "B": "Building heating",
+        "C": "Industry",
+        "D": "Transportation"
+      },
+      "answer": "A",
+      "explanation": "Saharan dust is natural.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 47,
+      "type": "mcq",
+      "stem": "Which method is NOT a way to disinfect drinking water?",
+      "options": {
+        "A": "Ozonolysis",
+        "B": "Ultraviolet radiation",
+        "C": "Chlorination",
+        "D": "Addition of aluminum sulfate"
+      },
+      "answer": "D",
+      "explanation": "Aluminium sulfate = coagulation.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 48,
+      "type": "mcq",
+      "stem": "Which are characteristics of traveler's diarrhea?",
+      "options": {
+        "A": "All of the above",
+        "B": "None of the above",
+        "C": "Never with fever or bloody stools",
+        "D": "≥3 unformed stools within 24 h"
+      },
+      "answer": "D",
+      "explanation": "Defined as ≥3 unformed stools/24 h.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 49,
+      "type": "mcq",
+      "stem": "Two toxins, each specific for diarrhea or vomiting, are produced by:",
+      "options": {
+        "A": "Salmonella",
+        "B": "Listeria",
+        "C": "Yersinia",
+        "D": "Bacillus cereus"
+      },
+      "answer": "D",
+      "explanation": "Bacillus cereus.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 50,
+      "type": "mcq",
+      "stem": "In the hospital, all the following are reservoirs except:",
+      "options": {
+        "A": "Inanimate hospital environment",
+        "B": "Colonized nursing staff",
+        "C": "Colonized/infected patients",
+        "D": "Visitors of hospital patients"
+      },
+      "answer": "D",
+      "explanation": "Visitors are the least-typical reservoir. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 51,
+      "type": "mcq",
+      "stem": "Asbestos harms health through:",
+      "options": {
+        "A": "The eyes",
+        "B": "The respiratory tract",
+        "C": "Skin exposure",
+        "D": "Ingestion"
+      },
+      "answer": "B",
+      "explanation": "Inhaled fibres damage the respiratory tract.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 52,
+      "type": "mcq",
+      "stem": "The most frequent cause of foodborne epidemics is:",
+      "options": {
+        "A": "Bacillus",
+        "B": "Staphylococcus",
+        "C": "Salmonella",
+        "D": "Vibrio"
+      },
+      "answer": "C",
+      "explanation": "Salmonella.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 53,
+      "type": "mcq",
+      "stem": "Regarding fluid intake, which is true?",
+      "options": {
+        "A": "BMI>30 drink less to avoid retention",
+        "B": "~2–3 L/day enough under all conditions",
+        "C": "Sugary fluids don't count",
+        "D": "Physical activity affects the amount"
+      },
+      "answer": "D",
+      "explanation": "Needs rise with physical activity.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 54,
+      "type": "mcq",
+      "stem": "Food contamination occurs from all except:",
+      "options": {
+        "A": "Rodents' feces",
+        "B": "Water used for cleaning processing areas",
+        "C": "Diseased animals (salmonellosis)",
+        "D": "Microbial carriers handling food"
+      },
+      "answer": "B",
+      "explanation": "Clean processing water isn't a source; rodents, sick animals, carriers are. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 55,
+      "type": "mcq",
+      "stem": "Which is NOT associated with occupational lung disease?",
+      "options": {
+        "A": "Silica",
+        "B": "Asbestos",
+        "C": "Coal",
+        "D": "Pollutant dust particles <10 μm"
+      },
+      "answer": "D",
+      "explanation": "Silica/asbestos/coal → specific pneumoconioses; generic ambient PM<10 μm is environmental. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 56,
+      "type": "mcq",
+      "stem": "Regarding investigation of outbreaks, which is true?",
+      "options": {
+        "A": "Aims at identifying the agent",
+        "B": "Info only from infected people",
+        "C": "Confirmation precedes the outbreak",
+        "D": "All are wrong"
+      },
+      "answer": "A",
+      "explanation": "A key aim is identifying the agent.",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 57,
+      "type": "mcq",
+      "stem": "The Minamata disease (Japan 1953) was caused by:",
+      "options": {
+        "A": "Lead",
+        "B": "Mercury",
+        "C": "Cadmium",
+        "D": "Aluminum"
+      },
+      "answer": "B",
+      "explanation": "Mercury (methylmercury).",
+      "source": "2022 (Jul)"
+    },
+    {
+      "id": 58,
+      "type": "mcq",
+      "stem": "Which is NOT true regarding BMI?",
+      "options": {
+        "A": "All are correct",
+        "B": "Higher in older individuals",
+        "C": "A valid indicator of physical health",
+        "D": "Decreases proportionally with height"
+      },
+      "answer": "D",
+      "explanation": "BMI = weight/height² — does not fall proportionally with height.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 59,
+      "type": "mcq",
+      "stem": "An epidemic outbreak requires the following, except:",
+      "options": {
+        "A": "Appropriate transmission to susceptibles",
+        "B": "Vaccination of a large part of the population",
+        "C": "Large number of exposed susceptibles",
+        "D": "Agent that has infected many"
+      },
+      "answer": "B",
+      "explanation": "Vaccination prevents outbreaks — not a requirement.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 60,
+      "type": "mcq",
+      "stem": "Which natural resource is renewable?",
+      "options": {
+        "A": "Natural gas",
+        "B": "Fertile soil",
+        "C": "Sand",
+        "D": "Copper"
+      },
+      "answer": "B",
+      "explanation": "Fertile soil is renewable if managed.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 61,
+      "type": "mcq",
+      "stem": "In foodborne infection, all true except:",
+      "options": {
+        "A": "Multiplies in the food to high concentration",
+        "B": "Individual susceptible",
+        "C": "Present in the food",
+        "D": "Multiplies in intestinal tract"
+      },
+      "answer": "A",
+      "explanation": "In-food multiplication = intoxication.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 62,
+      "type": "mcq",
+      "stem": "Meta-analysis is:",
+      "options": {
+        "A": "Qualitative synthesis",
+        "B": "Analysis of only interventional studies",
+        "C": "Simple statistical analysis of data",
+        "D": "Quantitative synthesis of results from individual studies"
+      },
+      "answer": "D",
+      "explanation": "Meta-analysis = quantitative pooling of study results.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 63,
+      "type": "mcq",
+      "stem": "Thermal inversion is:",
+      "options": {
+        "A": "A result of particle pollution",
+        "B": "A meteorological phenomenon",
+        "C": "A result of calm weather",
+        "D": "A result of acid pollution"
+      },
+      "answer": "B",
+      "explanation": "A meteorological phenomenon that then traps pollution.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 64,
+      "type": "mcq",
+      "stem": "Highest mortality (5–10%) for foodborne diseases:",
+      "options": {
+        "A": "Listeriosis",
+        "B": "Botulism (C. botulinum)",
+        "C": "Salmonellosis",
+        "D": "Campylobacteriosis"
+      },
+      "answer": "B",
+      "explanation": "Botulism — high case-fatality (listeriosis also high).",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 65,
+      "type": "mcq",
+      "stem": "Factors contributing to emergence of infectious diseases include:",
+      "options": {
+        "A": "Preventive measures taken",
+        "B": "UV solar radiation",
+        "C": "Development of modern & international transport",
+        "D": "Weakening of health care"
+      },
+      "answer": "C",
+      "explanation": "Fast international transport spreads emerging pathogens. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 66,
+      "type": "mcq",
+      "stem": "HUS (diarrhea, blood, acute renal failure) is caused by:",
+      "options": {
+        "A": "Campylobacter",
+        "B": "E. coli O157:H7",
+        "C": "Staphylococci",
+        "D": "Shigella strain C12"
+      },
+      "answer": "B",
+      "explanation": "E. coli O157:H7 (Shiga-toxin) → HUS.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 67,
+      "type": "mcq",
+      "stem": "In a double-blind RCT:",
+      "options": {
+        "A": "Researcher knows, patient doesn't",
+        "B": "Both know",
+        "C": "Neither the researcher nor the patient knows",
+        "D": "Patient knows, researcher doesn't"
+      },
+      "answer": "C",
+      "explanation": "Neither party knows.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 68,
+      "type": "mcq",
+      "stem": "All true regarding bottled waters, except:",
+      "options": {
+        "A": "Pseudomonas can be present",
+        "B": "6 °C better than 20 °C",
+        "C": "No concern for Giardia & Cryptosporidium",
+        "D": "Plastic favors microbes more than glass"
+      },
+      "answer": "C",
+      "explanation": "There IS concern for Giardia & Cryptosporidium.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 69,
+      "type": "mcq",
+      "stem": "Solar radiation does not contain:",
+      "options": {
+        "A": "Infrared",
+        "B": "Radio waves",
+        "C": "Visible radiation",
+        "D": "Ultraviolet"
+      },
+      "answer": "B",
+      "explanation": "Solar radiation = IR+visible+UV; radio waves is the 'not contained' option.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 70,
+      "type": "mcq",
+      "stem": "Which is true regarding calories consumed?",
+      "options": {
+        "A": "~25 kcal/kg ensures maintenance",
+        "B": "~1800 kcal/day enough for all",
+        "C": "Significantly affected by physical activity",
+        "D": "None are correct"
+      },
+      "answer": "C",
+      "explanation": "Needs vary with physical activity.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 71,
+      "type": "mcq",
+      "stem": "What is NOT an air pollution control measure?",
+      "options": {
+        "A": "Tall chimneys",
+        "B": "Increased tree cover",
+        "C": "Renewable energy sources",
+        "D": "Improvement of fuels"
+      },
+      "answer": "A",
+      "explanation": "Tall chimneys disperse, don't reduce.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 72,
+      "type": "mcq",
+      "stem": "Respirable particles (PM10) do NOT cause:",
+      "options": {
+        "A": "Dermatological alterations",
+        "B": "Respiratory problems",
+        "C": "Premature mortality",
+        "D": "Cardiovascular issues"
+      },
+      "answer": "A",
+      "explanation": "Not skin.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 73,
+      "type": "mcq",
+      "stem": "Which energy is non-renewable?",
+      "options": {
+        "A": "Solar",
+        "B": "Hydropower",
+        "C": "Wind",
+        "D": "Nuclear"
+      },
+      "answer": "D",
+      "explanation": "Nuclear.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 74,
+      "type": "mcq",
+      "stem": "Percentage of antibiotics worldwide that goes to animals:",
+      "options": {
+        "A": "5%",
+        "B": "50%",
+        "C": "10%",
+        "D": "2%"
+      },
+      "answer": "B",
+      "explanation": "Roughly half (≈50%+).",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 75,
+      "type": "mcq",
+      "stem": "Which disease has increased risk in livestock farmers?",
+      "options": {
+        "A": "Mumps",
+        "B": "Hepatitis A",
+        "C": "Tuberculosis",
+        "D": "Brucellosis"
+      },
+      "answer": "D",
+      "explanation": "Brucellosis.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 76,
+      "type": "mcq",
+      "stem": "Which is true regarding BASIC METABOLISM?",
+      "options": {
+        "A": "Significantly increases during pregnancy",
+        "B": "Slightly increases with age",
+        "C": "Mainly influenced by external conditions",
+        "D": "Can be influenced both directions by medication"
+      },
+      "answer": "D",
+      "explanation": "Drugs shift BMR both ways (BMR falls with age).",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 77,
+      "type": "mcq",
+      "stem": "Sulfates in water result in:",
+      "options": {
+        "A": "Indigestion",
+        "B": "Liver damage",
+        "C": "Kidney damage",
+        "D": "Laxative effect"
+      },
+      "answer": "D",
+      "explanation": "High sulfate → laxative effect.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 78,
+      "type": "mcq",
+      "stem": "Of 100 wedding guests, 11 developed gastroenteritis within 24 h. Attack rate?",
+      "options": {
+        "A": "11%",
+        "B": "0.1%",
+        "C": "1.1%",
+        "D": "80%"
+      },
+      "answer": "A",
+      "explanation": "11 ÷ 100 = 11%.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 79,
+      "type": "mcq",
+      "stem": "Which measure of association is estimated in a case-control study?",
+      "options": {
+        "A": "Inverse of relative frequency",
+        "B": "Relative risk",
+        "C": "Odds ratio",
+        "D": "Relative frequency"
+      },
+      "answer": "C",
+      "explanation": "Case-control → odds ratio.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 80,
+      "type": "mcq",
+      "stem": "All true regarding dioxins, except:",
+      "options": {
+        "A": "Produced by burning substances",
+        "B": "Effects include neoplasms",
+        "C": "Trap in animal fat via water",
+        "D": "They are hydrophilic/lipophobic"
+      },
+      "answer": "D",
+      "explanation": "Dioxins are lipophilic/hydrophobic — statement reversed.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 81,
+      "type": "mcq",
+      "stem": "Hospital epidemics investigated for all except:",
+      "options": {
+        "A": "Intervene with special measures",
+        "B": "Determine source & reservoir",
+        "C": "Allow it to progress until natural immunity",
+        "D": "Determine mode of transmission"
+      },
+      "answer": "C",
+      "explanation": "Never 'natural immunity'.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 82,
+      "type": "mcq",
+      "stem": "Emerging pathogenic microorganisms include all except:",
+      "options": {
+        "A": "Parasitic protozoa",
+        "B": "Helicobacter pylori",
+        "C": "Streptococcus pneumoniae",
+        "D": "Campylobacter"
+      },
+      "answer": "C",
+      "explanation": "S. pneumoniae is not emerging.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 83,
+      "type": "mcq",
+      "stem": "Upper acceptable noise limit for safe work:",
+      "options": {
+        "A": "25 dB",
+        "B": "75 dB",
+        "C": "50 dB",
+        "D": "100 dB"
+      },
+      "answer": "B",
+      "explanation": "WHO ≈ <75 dB for 8-h shift.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 84,
+      "type": "mcq",
+      "stem": "Which is NOT important for defining a case in an outbreak?",
+      "options": {
+        "A": "Symptoms",
+        "B": "Family history of each patient",
+        "C": "Incubation period",
+        "D": "Laboratory findings"
+      },
+      "answer": "B",
+      "explanation": "Not family history.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 85,
+      "type": "mcq",
+      "stem": "Regarding the Mediterranean diet pyramid, which is true?",
+      "options": {
+        "A": "Outdated by newer data",
+        "B": "Limited meat, ~300–400 g/week",
+        "C": "All are wrong",
+        "D": "Overeating fruits/veg increases weight"
+      },
+      "answer": "B",
+      "explanation": "Med diet = limited meat.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 86,
+      "type": "mcq",
+      "stem": "What is true about hepatitis A?",
+      "options": {
+        "A": "It is an STI",
+        "B": "Most common preventable disease in travelers developed→developing",
+        "C": "None of the above",
+        "D": "No vaccine against hepatitis A"
+      },
+      "answer": "B",
+      "explanation": "Hep A = most common vaccine-preventable travel infection (a vaccine exists). Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 87,
+      "type": "mcq",
+      "stem": "Aflatoxins can be found in:",
+      "options": {
+        "A": "Fish and shellfish",
+        "B": "Citrus fruits",
+        "C": "Fruit juices",
+        "D": "Cereal grains and nuts"
+      },
+      "answer": "D",
+      "explanation": "Aflatoxins → cereal grains & nuts.",
+      "source": "2023 (Jul B)"
+    },
+    {
+      "id": 88,
+      "type": "mcq",
+      "stem": "Which has one of the highest mortality rates (5–10%)?",
+      "options": {
+        "A": "Toxin of Clostridium botulinum",
+        "B": "Toxin of Clostridium perfringens",
+        "C": "Campylobacter",
+        "D": "Traveler's diarrhea (E. coli strain)"
+      },
+      "answer": "A",
+      "explanation": "Botulinum toxin — high case-fatality.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 89,
+      "type": "mcq",
+      "stem": "Cumulative incidence is used in which cohort, due to the absence of losses during follow-up?",
+      "options": {
+        "A": "Fixed cohort",
+        "B": "Dynamic cohort",
+        "C": "Open cohort",
+        "D": "Closed cohort"
+      },
+      "answer": "D",
+      "explanation": "CI assumes complete follow-up (no losses) → a closed cohort. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 90,
+      "type": "mcq",
+      "stem": "After initial observations, what must follow for reliable conclusions?",
+      "options": {
+        "A": "Case-control studies",
+        "B": "Cohort studies",
+        "C": "Epidemiological checks",
+        "D": "Mortality studies"
+      },
+      "answer": "C",
+      "explanation": "Descriptive observations → systematic epidemiological checks (analytic investigation). Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 91,
+      "type": "mcq",
+      "stem": "Random-digit dialling identifies what type of controls?",
+      "options": {
+        "A": "Population controls",
+        "B": "Friend/relative/spouse",
+        "C": "Hospital/clinical",
+        "D": "Deceased controls"
+      },
+      "answer": "A",
+      "explanation": "Sampling the general public → population controls.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 92,
+      "type": "mcq",
+      "stem": "A prerequisite for foodborne infection includes all EXCEPT:",
+      "options": {
+        "A": "Multiplies in the food",
+        "B": "Person susceptible",
+        "C": "Multiplies in intestinal tract",
+        "D": "Present in the food"
+      },
+      "answer": "A",
+      "explanation": "In-food multiplication = intoxication.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 93,
+      "type": "mcq",
+      "stem": "The ___ Mortality Ratio quantifies increase/decrease vs a reference population:",
+      "options": {
+        "A": "Crude",
+        "B": "Standardized",
+        "C": "Specific",
+        "D": "Standard"
+      },
+      "answer": "B",
+      "explanation": "Standardized Mortality Ratio (SMR).",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 94,
+      "type": "mcq",
+      "stem": "Which is true regarding calorie intake?",
+      "options": {
+        "A": "~25 kcal/kg maintenance",
+        "B": "~1800 kcal/day enough for all",
+        "C": "Significantly influenced by physical activity",
+        "D": "None is correct"
+      },
+      "answer": "C",
+      "explanation": "Depends heavily on physical activity.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 95,
+      "type": "mcq",
+      "stem": "Recommended daily carbohydrate intake?",
+      "options": {
+        "A": "110 g/day",
+        "B": "120 g/dl",
+        "C": "130 g/dl",
+        "D": "140 g/dl"
+      },
+      "answer": "C",
+      "explanation": "≈ 130 g/day.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 96,
+      "type": "mcq",
+      "stem": "John Snow's cholera hypothesis was that it spreads:",
+      "options": {
+        "A": "Person to person via inhaled particles",
+        "B": "Through food or water",
+        "C": "None is correct",
+        "D": "From evaporation of volatile materials"
+      },
+      "answer": "B",
+      "explanation": "Snow proved spread via faecally-contaminated water.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 97,
+      "type": "mcq",
+      "stem": "When RR of two factors together is GREATER than the product of individual RRs:",
+      "options": {
+        "A": "Effect homogeneity",
+        "B": "Effect heterogeneity",
+        "C": "Statistical interaction",
+        "D": "Departure from multiplicativity"
+      },
+      "answer": "D",
+      "explanation": "Exceeding the product = departure from multiplicativity. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 98,
+      "type": "mcq",
+      "stem": "A bidirectional cohort study:",
+      "options": {
+        "A": "Only prospective outcome, retrospective exposure",
+        "B": "Only prospective exposure, retrospective outcome",
+        "C": "Has both prospective and retrospective elements",
+        "D": "Only prospective elements"
+      },
+      "answer": "C",
+      "explanation": "Ambidirectional = both components.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 99,
+      "type": "mcq",
+      "stem": "Which measure best describes women developing hypertension during 121,600 person-years?",
+      "options": {
+        "A": "Prevalence",
+        "B": "Cumulative incidence",
+        "C": "Incidence rate",
+        "D": "None is correct"
+      },
+      "answer": "C",
+      "explanation": "Person-years → incidence rate.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 100,
+      "type": "mcq",
+      "stem": "Bacterial indicators of water signify that:",
+      "options": {
+        "A": "Toxic/chemical substances present",
+        "B": "Water mixed with intestinal contents",
+        "C": "Water suitable for use",
+        "D": "Viruses present"
+      },
+      "answer": "B",
+      "explanation": "They indicate faecal contamination.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 101,
+      "type": "mcq",
+      "stem": "What ensures impartial assignment & balances known+unknown confounders (large n)?",
+      "options": {
+        "A": "Literature review",
+        "B": "Randomization",
+        "C": "Matching",
+        "D": "Restriction"
+      },
+      "answer": "B",
+      "explanation": "Randomization balances unknown confounders.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 102,
+      "type": "mcq",
+      "stem": "Which is true?",
+      "options": {
+        "A": "PH & epi are separate branches",
+        "B": "Public health is a branch of epidemiology",
+        "C": "Both are branches of medical statistics",
+        "D": "Epidemiology is a branch of public health"
+      },
+      "answer": "D",
+      "explanation": "Epidemiology is a branch of public health.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 103,
+      "type": "mcq",
+      "stem": "Which is NOT a component of clean, unpolluted air?",
+      "options": {
+        "A": "Nitrogen",
+        "B": "Carbon dioxide",
+        "C": "Ammonia",
+        "D": "Argon"
+      },
+      "answer": "C",
+      "explanation": "Ammonia.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 104,
+      "type": "mcq",
+      "stem": "When the excess RR for two factors is LESS than the sum of individual RRs:",
+      "options": {
+        "A": "Synergy",
+        "B": "Validity",
+        "C": "Antagonism",
+        "D": "Precision"
+      },
+      "answer": "C",
+      "explanation": "Sub-additive = antagonism.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 105,
+      "type": "mcq",
+      "stem": "The 'water crisis' is likely because:",
+      "options": {
+        "A": "The water cycle remains stable",
+        "B": "Consumption is increasing",
+        "C": "Neither",
+        "D": "Both"
+      },
+      "answer": "D",
+      "explanation": "Both disrupted cycle + rising consumption.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 106,
+      "type": "mcq",
+      "stem": "Regarding weight changes:",
+      "options": {
+        "A": "Energy balance only with ideal macronutrients",
+        "B": "↑Carbs (>65%) increases weight",
+        "C": "All are false",
+        "D": "↑Fat (>40%) increases weight"
+      },
+      "answer": "C",
+      "explanation": "Weight = energy balance → specific claims false.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 107,
+      "type": "mcq",
+      "stem": "The advantage of a matched case-control study is that:",
+      "options": {
+        "A": "Type I error increased",
+        "B": "Study power reduced",
+        "C": "Study power is increased",
+        "D": "Type II error increased"
+      },
+      "answer": "C",
+      "explanation": "Matching → increases power/efficiency.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 108,
+      "type": "mcq",
+      "stem": "A new treatment prolongs survival. Effect on disease prevalence?",
+      "options": {
+        "A": "Prevalence will increase",
+        "B": "Will not change",
+        "C": "Not possible to know",
+        "D": "Will decrease"
+      },
+      "answer": "A",
+      "explanation": "Prevalence = incidence × duration → rises.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 109,
+      "type": "mcq",
+      "stem": "Which waist circumference is normal for a woman?",
+      "options": {
+        "A": "85 cm",
+        "B": "88 cm",
+        "C": "75 cm",
+        "D": "102 / 94 cm"
+      },
+      "answer": "C",
+      "explanation": "Women normal <80 cm → 75 cm.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 110,
+      "type": "mcq",
+      "stem": "Which is NOT true about Burnout (ICD-11)?",
+      "options": {
+        "A": "Reduced professional effectiveness",
+        "B": "Feelings of exhaustion",
+        "C": "Chronic unmanaged workplace stress",
+        "D": "Characterized by suicidal thoughts"
+      },
+      "answer": "D",
+      "explanation": "Burnout ≠ suicidal thoughts.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 111,
+      "type": "mcq",
+      "stem": "Which term = analyzing who/where/when patterns over time?",
+      "options": {
+        "A": "Disease frequency",
+        "B": "Disease distribution",
+        "C": "Disease determinants",
+        "D": "Disease control"
+      },
+      "answer": "B",
+      "explanation": "Who/where/when = disease distribution.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 112,
+      "type": "mcq",
+      "stem": "Epidemiology (study of disease frequency) is NOT related to:",
+      "options": {
+        "A": "Criteria for identifying the disease",
+        "B": "Cleaning the population size data",
+        "C": "Counting the disease cases",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "All three ARE needed → all of the above.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 113,
+      "type": "mcq",
+      "stem": "The 10 principles — first rules on human experimentation — were formulated in:",
+      "options": {
+        "A": "U.S. Bioethics Commission code",
+        "B": "Declaration of Helsinki",
+        "C": "U.S. PHS Declaration",
+        "D": "The Nuremberg Code"
+      },
+      "answer": "D",
+      "explanation": "Nuremberg Code = 10 principles.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 114,
+      "type": "mcq",
+      "stem": "Which waters require purification before use?",
+      "options": {
+        "A": "None",
+        "B": "Surface waters",
+        "C": "Groundwater",
+        "D": "Both"
+      },
+      "answer": "D",
+      "explanation": "Both require treatment/disinfection. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 115,
+      "type": "mcq",
+      "stem": "The three components of the epidemiologic triangle:",
+      "options": {
+        "A": "Pathogen, environment, immunity",
+        "B": "Host, environment, vaccine",
+        "C": "Host, pathogen, environment",
+        "D": "Host, pathogen, treatment"
+      },
+      "answer": "C",
+      "explanation": "Host · Pathogen · Environment.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 116,
+      "type": "mcq",
+      "stem": "Who was the first epidemiologist/statistician/demographer (London death records)?",
+      "options": {
+        "A": "James Lind",
+        "B": "David Lynch",
+        "C": "John Graunt",
+        "D": "John Snow"
+      },
+      "answer": "C",
+      "explanation": "John Graunt.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 117,
+      "type": "mcq",
+      "stem": "Enroll women with preterm birth vs normal delivery, then interview about smoking. Study type?",
+      "options": {
+        "A": "Prospective cohort",
+        "B": "Experimental",
+        "C": "Retrospective study",
+        "D": "Case-control study"
+      },
+      "answer": "D",
+      "explanation": "Sampling on outcome → case-control.",
+      "source": "2024 (Group A)"
+    },
+    {
+      "id": 118,
+      "type": "mcq",
+      "stem": "Which study identifies cases + a sample of the source population without disease as controls?",
+      "options": {
+        "A": "Ecological study",
+        "B": "Cross-sectional study",
+        "C": "Case-control study",
+        "D": "Cohort study"
+      },
+      "answer": "C",
+      "explanation": "Cases + population controls = case-control.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 119,
+      "type": "mcq",
+      "stem": "Which represents a low to moderate level of effect modification?",
+      "options": {
+        "A": "Statistical interaction",
+        "B": "Deviation from multiplicativity",
+        "C": "Deviation from additivity",
+        "D": "Outcome homogeneity"
+      },
+      "answer": "C",
+      "explanation": "Deviation from additivity = lower-scale effect modification. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 120,
+      "type": "mcq",
+      "stem": "When age-specific mortality rates in the study population are known, the appropriate method is:",
+      "options": {
+        "A": "Both direct and indirect",
+        "B": "Indirect standardization",
+        "C": "Direct standardization",
+        "D": "Neither"
+      },
+      "answer": "C",
+      "explanation": "Known study-pop rates → direct (indirect is for unknown).",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 121,
+      "type": "mcq",
+      "stem": "Which inorganic element is NOT considered a trace element?",
+      "options": {
+        "A": "Sulfur",
+        "B": "Magnesium",
+        "C": "Iron",
+        "D": "Sodium",
+        "E": "Chlorine"
+      },
+      "answer": "D",
+      "explanation": "Trace = iron. Sodium (like Cl, Mg, S) is a macromineral. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 122,
+      "type": "mcq",
+      "stem": "The three components of the epidemiological triangle:",
+      "options": {
+        "A": "Host, pathogen, treatment",
+        "B": "Host, pathogen, environment",
+        "C": "Pathogen, environment, immunity",
+        "D": "Host, environment, vaccine"
+      },
+      "answer": "B",
+      "explanation": "Host · Pathogen · Environment.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 123,
+      "type": "mcq",
+      "stem": "Epidemiology (study of disease frequency) is NOT related to:",
+      "options": {
+        "A": "Criteria to identify the disease",
+        "B": "Determining population size",
+        "C": "Counting disease cases",
+        "D": "All describe necessary elements"
+      },
+      "answer": "D",
+      "explanation": "All ARE necessary → all describe necessary elements.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 124,
+      "type": "mcq",
+      "stem": "Which are the most widespread of all mycotoxins?",
+      "options": {
+        "A": "Clostridium neurotoxin",
+        "B": "Cryptosporidium oocysts",
+        "C": "E. coli toxin",
+        "D": "Aflatoxins from Aspergillus flavus"
+      },
+      "answer": "D",
+      "explanation": "Aflatoxins (A. flavus).",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 125,
+      "type": "mcq",
+      "stem": "What is NOT true about disease determinants?",
+      "options": {
+        "A": "Identified through hypothesis testing",
+        "B": "Exclusively factors that cause disease in some people",
+        "C": "May be modifiable or non-modifiable",
+        "D": "Also referred to as exposures"
+      },
+      "answer": "B",
+      "explanation": "Determinants can be protective too — not 'exclusively' causative.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 126,
+      "type": "mcq",
+      "stem": "The ability of a study to demonstrate an association if one truly exists is:",
+      "options": {
+        "A": "Reliability",
+        "B": "Consistency",
+        "C": "Statistical power",
+        "D": "Validity"
+      },
+      "answer": "C",
+      "explanation": "Statistical power.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 127,
+      "type": "mcq",
+      "stem": "Regarding the Mediterranean diet pyramid, which is correct?",
+      "options": {
+        "A": "Outdated by newer data",
+        "B": "Excessive fruit/veg → weight gain",
+        "C": "All are wrong",
+        "D": "Limited meat, ~200–400 g/week"
+      },
+      "answer": "D",
+      "explanation": "Med diet = limited meat (~200–400 g/week).",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 128,
+      "type": "mcq",
+      "stem": "In the work environment, what is true regarding noise?",
+      "options": {
+        "A": "A biological hazard",
+        "B": "It is any sound",
+        "C": "WHO recommends 75 dB for 8-h shifts",
+        "D": "None is correct"
+      },
+      "answer": "C",
+      "explanation": "WHO ≈ 75 dB for 8-h exposure.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 129,
+      "type": "mcq",
+      "stem": "Two patients, same weight and height. Which is true?",
+      "options": {
+        "A": "Different BMIs due to age",
+        "B": "No safe conclusions without body composition",
+        "C": "Same BMI, therefore same classification",
+        "D": "Same BMI so same fat distribution",
+        "E": "Different BMIs due to sex"
+      },
+      "answer": "C",
+      "explanation": "BMI depends only on weight & height → same BMI & classification.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 130,
+      "type": "mcq",
+      "stem": "Which is NOT a component of clean, pollutant-free air?",
+      "options": {
+        "A": "Carbon dioxide",
+        "B": "Argon",
+        "C": "Nitrogen",
+        "D": "Ammonia"
+      },
+      "answer": "D",
+      "explanation": "Ammonia.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 131,
+      "type": "mcq",
+      "stem": "The thalidomide disaster mainly highlighted:",
+      "options": {
+        "A": "Need for informed consent",
+        "B": "Privacy protection",
+        "C": "Protocol review by ethics committees",
+        "D": "Careful drug safety assessment"
+      },
+      "answer": "D",
+      "explanation": "→ need for rigorous drug-safety (teratogenicity) testing.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 132,
+      "type": "mcq",
+      "stem": "Regarding fluid intake needs, which is true?",
+      "options": {
+        "A": "Sugary fluids don't count",
+        "B": "Physical activity affects fluid requirements",
+        "C": "~2–3 L/day enough for all",
+        "D": "BMI>30 drink less"
+      },
+      "answer": "B",
+      "explanation": "Needs vary with physical activity.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 133,
+      "type": "mcq",
+      "stem": "Two factors together cause disease MORE than expected:",
+      "options": {
+        "A": "Validity",
+        "B": "Antagonism",
+        "C": "Accuracy",
+        "D": "Synergy"
+      },
+      "answer": "D",
+      "explanation": "Supra-additive = synergy.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 134,
+      "type": "mcq",
+      "stem": "Bacterial dysentery (blood and mucus) is caused by:",
+      "options": {
+        "A": "Campylobacter",
+        "B": "E. coli O157:H7",
+        "C": "Staphylococcus aureus",
+        "D": "Shigella"
+      },
+      "answer": "D",
+      "explanation": "Shigella.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 135,
+      "type": "mcq",
+      "stem": "Random-digit dialling identifies what type of controls?",
+      "options": {
+        "A": "Friend/relative/spouse",
+        "B": "Hospital/clinical",
+        "C": "Population controls",
+        "D": "Death controls"
+      },
+      "answer": "C",
+      "explanation": "Population controls.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 136,
+      "type": "mcq",
+      "stem": "When RR of two factors together is GREATER than the product of individual RRs:",
+      "options": {
+        "A": "Outcome homogeneity",
+        "B": "Statistical interaction",
+        "C": "Deviation from multiplicativity",
+        "D": "Outcome heterogeneity"
+      },
+      "answer": "C",
+      "explanation": "Beating the product = deviation from multiplicativity. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 137,
+      "type": "mcq",
+      "stem": "The main bacterial indicator is:",
+      "options": {
+        "A": "Pseudomonas",
+        "B": "E. coli",
+        "C": "Rotavirus",
+        "D": "Legionella"
+      },
+      "answer": "B",
+      "explanation": "E. coli.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 138,
+      "type": "mcq",
+      "stem": "Greatest disadvantage of using the general population as a comparison group:",
+      "options": {
+        "A": "Healthy worker effect",
+        "B": "Selection bias",
+        "C": "Counterfactual ideal",
+        "D": "Confounding"
+      },
+      "answer": "A",
+      "explanation": "Workers healthier than the public → healthy worker effect.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 139,
+      "type": "mcq",
+      "stem": "The EU limits for the Air Quality Index:",
+      "options": {
+        "A": "Same as WHO",
+        "B": "Less strict than WHO",
+        "C": "Stricter than WHO",
+        "D": "Cannot be directly compared"
+      },
+      "answer": "B",
+      "explanation": "WHO stricter (health-based); EU less strict. Note: the original exam wording is ambiguous; the answer above reflects the most defensible interpretation.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 140,
+      "type": "mcq",
+      "stem": "Conducted one of the first recorded clinical trials (17th c. onward):",
+      "options": {
+        "A": "James Lind",
+        "B": "John Snow",
+        "C": "John Graunt",
+        "D": "William Farr"
+      },
+      "answer": "A",
+      "explanation": "James Lind.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 141,
+      "type": "mcq",
+      "stem": "Standardization estimates the ___ role of certain variables:",
+      "options": {
+        "A": "Confounding",
+        "B": "Different",
+        "C": "Synergistic",
+        "D": "Significant"
+      },
+      "answer": "A",
+      "explanation": "Removes the confounding role (esp. age).",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 142,
+      "type": "mcq",
+      "stem": "Which study uses the population (not the individual) as the unit of analysis?",
+      "options": {
+        "A": "Case-control",
+        "B": "Cohort",
+        "C": "Ecological study",
+        "D": "Cross-sectional"
+      },
+      "answer": "C",
+      "explanation": "Ecological studies.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 143,
+      "type": "mcq",
+      "stem": "Which is an example of incidence rate?",
+      "options": {
+        "A": "Men with high BP at annual check-up",
+        "B": "Drivers on phone per 1,000 crashes",
+        "C": "New breast cancer cases during 200 person-years",
+        "D": "Children with spina bifida per 1,000 births"
+      },
+      "answer": "C",
+      "explanation": "Person-years denominator = incidence rate.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 144,
+      "type": "mcq",
+      "stem": "Regarding management of food poisoning, all are true except:",
+      "options": {
+        "A": "Antidiarrheals not given initially",
+        "B": "Antimicrobials not administered",
+        "C": "Personal hygiene is crucial",
+        "D": "Fluids are not given orally"
+      },
+      "answer": "D",
+      "explanation": "Oral rehydration IS given → this statement is false.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 145,
+      "type": "mcq",
+      "stem": "Who was the first epidemiologist/statistician/demographer?",
+      "options": {
+        "A": "James Lind",
+        "B": "David Lynch",
+        "C": "John Graunt",
+        "D": "John Snow"
+      },
+      "answer": "C",
+      "explanation": "John Graunt.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 146,
+      "type": "mcq",
+      "stem": "A prerequisite for foodborne INTOXICATION is all except:",
+      "options": {
+        "A": "Multiplies in the intestinal tract",
+        "B": "Multiplies in the food",
+        "C": "Individual sensitive to the toxin",
+        "D": "Present in the food"
+      },
+      "answer": "A",
+      "explanation": "Intoxication is toxin-driven — does not require intestinal multiplication.",
+      "source": "2024 (Group B)"
+    },
+    {
+      "id": 147,
+      "type": "mcq",
+      "stem": "How is climate change likely to affect malaria prevalence?",
+      "options": {
+        "A": "By reducing the mosquito population",
+        "B": "Through temperature/rainfall changes favoring breeding",
+        "C": "By reducing geographic spread",
+        "D": "By increasing drug resistance"
+      },
+      "answer": "B",
+      "explanation": "Warming + rainfall shifts favour mosquito breeding.",
+      "source": "2024 (Group B)"
+    }
+  ]
+}
