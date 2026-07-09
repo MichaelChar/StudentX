@@ -291,7 +291,12 @@ function McqCard({ question, onNext, isLast }) {
         </div>
       )}
 
-      {locked && <NextButton onClick={onNext} label={isLast ? 'See results' : 'Next →'} />}
+      {locked && (
+        <NextButton
+          onClick={() => onNext(question.id, chosen === question.answer)}
+          label={isLast ? 'See results' : 'Next →'}
+        />
+      )}
     </div>
   );
 }
@@ -562,7 +567,7 @@ export default function BiochemTestPlayer({ test }) {
             <McqCard
               key={key}
               question={current}
-              onNext={() => handleNext()}
+              onNext={handleNext}
               isLast={pos === questions.length - 1}
             />
           ) : (
