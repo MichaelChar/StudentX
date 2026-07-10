@@ -78,17 +78,12 @@ export default function ResourcesExplorer() {
   return (
     <div>
       {displayFacets.length > 0 && (
-        <div
-          style={{
-            display: 'flex',
-            gap: 20,
-            overflowX: 'auto',
-            paddingBottom: 4,
-            marginBottom: 20,
-          }}
-        >
+        <div className="flex flex-col gap-3 mb-5">
           {displayFacets.map((facet) => (
-            <div key={facet.key} style={{ display: 'flex', alignItems: 'center', gap: 8, flexShrink: 0 }}>
+            <div
+              key={facet.key}
+              className="flex flex-col gap-1 md:flex-row md:items-center md:gap-2"
+            >
               <span
                 style={{
                   fontSize: 11,
@@ -100,34 +95,36 @@ export default function ResourcesExplorer() {
               >
                 {FACET_TITLES[facet.key] ?? facet.key}
               </span>
-              {facet.options.map((opt) => {
-                const active = filters[facet.key] === opt.value;
-                return (
-                  <button
-                    key={opt.value}
-                    type="button"
-                    onClick={() => setFilter(facet.key, opt.value)}
-                    className="transition-colors duration-150"
-                    style={{
-                      flexShrink: 0,
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: 6,
-                      padding: '7px 14px',
-                      borderRadius: 999,
-                      fontSize: 13,
-                      fontWeight: 600,
-                      whiteSpace: 'nowrap',
-                      border: `1px solid ${active ? '#635BFF' : 'rgba(10,37,64,0.12)'}`,
-                      background: active ? '#635BFF' : '#ffffff',
-                      color: active ? '#ffffff' : '#0a2540',
-                      cursor: 'pointer',
-                    }}
-                  >
-                    {opt.label} · {opt.count}
-                  </button>
-                );
-              })}
+              <div className="flex flex-wrap gap-1">
+                {facet.options.map((opt) => {
+                  const active = filters[facet.key] === opt.value;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      onClick={() => setFilter(facet.key, opt.value)}
+                      className="transition-colors duration-150"
+                      style={{
+                        flexShrink: 0,
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: 6,
+                        padding: '7px 14px',
+                        borderRadius: 999,
+                        fontSize: 13,
+                        fontWeight: 600,
+                        whiteSpace: 'nowrap',
+                        border: `1px solid ${active ? '#635BFF' : 'rgba(10,37,64,0.12)'}`,
+                        background: active ? '#635BFF' : '#ffffff',
+                        color: active ? '#ffffff' : '#0a2540',
+                        cursor: 'pointer',
+                      }}
+                    >
+                      {opt.label} · {opt.count}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           ))}
         </div>
