@@ -23,12 +23,15 @@ import path from 'node:path';
 
 import { SubjectIndexSchema as PracticeSubjectIndexSchema } from '../src/lib/practice/schema.js';
 import { SubjectIndexSchema as FlashcardsSubjectIndexSchema } from '../src/lib/flashcards/schema.js';
+import { NotesDocSchema } from '../src/lib/notes/schema.js';
 import { ResourceEntrySchema } from '../src/lib/resources/schema.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Walk every semester under the AUSoM tree: content/practice/ausom/<semester-N>/<subject>/.
 const PRACTICE_ROOT = path.join(ROOT, 'content/practice/ausom');
 const FLASHCARDS_ROOT = path.join(ROOT, 'content/flashcards');
+// Notes are one file per subject: content/notes/ausom/<semester-N>/<subject>.json.
+const NOTES_ROOT = path.join(ROOT, 'content/notes/ausom');
 const OUT_FILE = path.join(ROOT, 'src/lib/resources/manifest.generated.js');
 
 /** @type {string[]} */
@@ -139,8 +142,45 @@ function collectFlashcardEntries() {
   return entries;
 }
 
+function collectNotesEntries() {
+  const entries = [];
+  for (const semester of semesterDirs(NOTES_ROOT)) {
+    const semesterDir = path.join(NOTES_ROOT, semester);
+    const files = readdirSync(semesterDir)
+      .filter((f) => f.endsWith('.json'))
+      .sort();
+    for (const file of files) {
+      const subject = file.replace(/\.json$/, '');
+      const rel = `content/notes/ausom/${semester}/${file}`;
+      const parsed = NotesDocSchema.safeParse(JSON.parse(readFileSync(path.join(semesterDir, file), 'utf8')));
+      if (!parsed.success) {
+        for (const issue of parsed.error.issues) err(rel, `${issue.message} (at ${issue.path.join('.')})`);
+        continue;
+      }
+      const doc = parsed.data;
+      if (doc.semester !== semester) {
+        err(rel, `semester "${doc.semester}" does not match folder "${semester}"`);
+        continue;
+      }
+      entries.push({
+        id: `notes:${subject}`,
+        type: 'study-notes',
+        title: doc.title,
+        description: doc.description,
+        href: `/student/ausom/${semester}/${subject}/notes`,
+        school: doc.school,
+        semester: doc.semester,
+        country: doc.country,
+        year: doc.year,
+        meta: { sectionCount: doc.sections.length },
+      });
+    }
+  }
+  return entries;
+}
+
 function main() {
-  const entries = [...collectPracticeEntries(), ...collectFlashcardEntries()];
+  const entries = [...collectPracticeEntries(), ...collectFlashcardEntries(), ...collectNotesEntries()];
 
   for (const entry of entries) {
     const parsed = ResourceEntrySchema.safeParse(entry);

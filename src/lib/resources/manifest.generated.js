@@ -38,6 +38,20 @@ export const RESOURCES = [
     }
   },
   {
+    "id": "notes:hygiene-epidemiology",
+    "type": "study-notes",
+    "title": "MD1040 Hygiene & Epidemiology — High-Yield Notes",
+    "description": "Condensed revision notes across 12 topics: hygiene of water, air, food and the workplace, and outbreak investigation.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "sectionCount": 12
+    }
+  },
+  {
     "id": "practice:anatomy-1:mega-test",
     "type": "practice-test",
     "title": "Anatomy I — Comprehensive Review",
