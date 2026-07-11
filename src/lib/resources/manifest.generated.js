@@ -90,6 +90,22 @@ export const RESOURCES = [
     "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
+    "id": "notes:social-medicine",
+    "type": "study-notes",
+    "title": "Social Medicine & Public Health — High-Yield Notes",
+    "description": "Condensed revision notes across 21 topics — health & prevention, epidemiology & screening, communicable/non-communicable disease, global health, surveillance, and study methods.",
+    "href": "/student/ausom/semester-6/social-medicine/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "social-medicine",
+    "meta": {
+      "sectionCount": 21
+    },
+    "subjectLabel": "Social Medicine & Public Health (MD1041)"
+  },
+  {
     "id": "practice:anatomy-1:mega-test",
     "type": "practice-test",
     "title": "Anatomy I — Comprehensive Review",
@@ -280,5 +296,37 @@ export const RESOURCES = [
       "questionCount": 38
     },
     "subjectLabel": "Hygiene & Epidemiology (MD1040)"
+  },
+  {
+    "id": "practice:social-medicine:past-papers",
+    "type": "past-paper",
+    "title": "Social Medicine & Public Health — Past Papers",
+    "description": "105 real past-paper MCQs from four sittings (2020–2022), each tagged with its exam.",
+    "href": "/student/ausom/semester-6/social-medicine/past-papers",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "social-medicine",
+    "meta": {
+      "questionCount": 105
+    },
+    "subjectLabel": "Social Medicine & Public Health (MD1041)"
+  },
+  {
+    "id": "practice:social-medicine:recalls",
+    "type": "practice-test",
+    "title": "Social Medicine & Public Health — Recalled MCQs",
+    "description": "30 student-recalled MCQs with rationales.",
+    "href": "/student/ausom/semester-6/social-medicine/recalls",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "social-medicine",
+    "meta": {
+      "questionCount": 30
+    },
+    "subjectLabel": "Social Medicine & Public Health (MD1041)"
   }
 ];
