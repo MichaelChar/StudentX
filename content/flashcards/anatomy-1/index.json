@@ -1,0 +1,17 @@
+{
+  "subject": "anatomy-1",
+  "title": "Anatomy I (MD1009)",
+  "school": "ausom",
+  "semester": "semester-2",
+  "country": "gr",
+  "decks": [{
+    "id": "anatomy-high-yield",
+    "title": "Anatomy I — Highest yield anatomy topics",
+    "description": "Consists only of topics repeatedly examined in the past. This deck is a companion to the \"Anatomy I — Exam Study Guide. Pattern-driven revision across 13 chapters\" set of notes",
+    "cardCount": 177,
+    "fileSizeBytes": 21515,
+    "file": "/flashcards/anatomy-1/anatomy-high-yield.apkg",
+    "updated": "2026-07-11",
+    "year": 2026
+  }]
+}

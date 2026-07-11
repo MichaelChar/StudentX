@@ -18,7 +18,7 @@ import { MANIFEST } from './manifest.generated.js';
 
 /**
  * Subject index, or null if the subject has no content.
- * @param {string} subject Subject slug, e.g. "histology".
+ * @param {string} subject Subject slug, e.g. "general-histology".
  * @returns {SubjectIndex | null}
  */
 export function getSubjectIndex(subject) {
