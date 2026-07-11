@@ -19,9 +19,11 @@ export const RESOURCES = [
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-physiology",
     "meta": {
       "cardCount": 120
-    }
+    },
+    "subjectLabel": "General Physiology"
   },
   {
     "id": "flashcard:histology:general-histology",
@@ -33,9 +35,11 @@ export const RESOURCES = [
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "histology",
     "meta": {
       "cardCount": 115
-    }
+    },
+    "subjectLabel": "Histology"
   },
   {
     "id": "notes:hygiene-epidemiology",
@@ -47,9 +51,11 @@ export const RESOURCES = [
     "semester": "semester-6",
     "country": "gr",
     "year": 2026,
+    "subject": "hygiene-epidemiology",
     "meta": {
       "sectionCount": 12
-    }
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
     "id": "practice:anatomy-1:mega-test",
@@ -61,9 +67,11 @@ export const RESOURCES = [
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "anatomy-1",
     "meta": {
       "questionCount": 80
-    }
+    },
+    "subjectLabel": "Anatomy I"
   },
   {
     "id": "practice:biochemistry:mega-test",
@@ -75,9 +83,11 @@ export const RESOURCES = [
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "biochemistry",
     "meta": {
       "questionCount": 48
-    }
+    },
+    "subjectLabel": "Biochemistry I"
   },
   {
     "id": "practice:general-histology:em-structure-id",
@@ -89,9 +99,11 @@ export const RESOURCES = [
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-histology",
     "meta": {
       "questionCount": 9
-    }
+    },
+    "subjectLabel": "General Histology"
   },
   {
     "id": "practice:general-histology:lm-specimen-id",
@@ -103,9 +115,11 @@ export const RESOURCES = [
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-histology",
     "meta": {
       "questionCount": 14
-    }
+    },
+    "subjectLabel": "General Histology"
   },
   {
     "id": "practice:general-physiology:predicted-lab-exam",
@@ -117,9 +131,11 @@ export const RESOURCES = [
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-physiology",
     "meta": {
       "questionCount": 8
-    }
+    },
+    "subjectLabel": "General Physiology"
   },
   {
     "id": "practice:general-physiology:predicted-mcq-oneoffs",
@@ -131,9 +147,11 @@ export const RESOURCES = [
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-physiology",
     "meta": {
       "questionCount": 27
-    }
+    },
+    "subjectLabel": "General Physiology"
   },
   {
     "id": "practice:general-physiology:predicted-mcq-repeaters",
@@ -145,9 +163,11 @@ export const RESOURCES = [
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-physiology",
     "meta": {
       "questionCount": 33
-    }
+    },
+    "subjectLabel": "General Physiology"
   },
   {
     "id": "practice:hygiene-epidemiology:past-papers-2020-2024",
@@ -159,9 +179,11 @@ export const RESOURCES = [
     "semester": "semester-6",
     "country": "gr",
     "year": 2026,
+    "subject": "hygiene-epidemiology",
     "meta": {
       "questionCount": 147
-    }
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
     "id": "practice:hygiene-epidemiology:predicted-paper-1",
@@ -173,9 +195,11 @@ export const RESOURCES = [
     "semester": "semester-6",
     "country": "gr",
     "year": 2026,
+    "subject": "hygiene-epidemiology",
     "meta": {
       "questionCount": 30
-    }
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
     "id": "practice:hygiene-epidemiology:predicted-paper-2",
@@ -187,9 +211,11 @@ export const RESOURCES = [
     "semester": "semester-6",
     "country": "gr",
     "year": 2026,
+    "subject": "hygiene-epidemiology",
     "meta": {
       "questionCount": 30
-    }
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
     "id": "practice:hygiene-epidemiology:predicted-paper-3",
@@ -201,9 +227,11 @@ export const RESOURCES = [
     "semester": "semester-6",
     "country": "gr",
     "year": 2026,
+    "subject": "hygiene-epidemiology",
     "meta": {
       "questionCount": 30
-    }
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
     "id": "practice:hygiene-epidemiology:recalls",
@@ -215,8 +243,10 @@ export const RESOURCES = [
     "semester": "semester-6",
     "country": "gr",
     "year": 2026,
+    "subject": "hygiene-epidemiology",
     "meta": {
       "questionCount": 38
-    }
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   }
 ];

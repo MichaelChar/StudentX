@@ -11,6 +11,8 @@ const validEntry = {
   semester: 'semester-2',
   country: 'gr',
   year: 2026,
+  subject: 'biochemistry',
+  subjectLabel: 'Biochemistry I',
   meta: { questionCount: 48 },
 };
 

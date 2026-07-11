@@ -22,6 +22,8 @@ import { RESOURCE_TYPE_VALUES, SEMESTER_VALUES, COUNTRY_VALUES, MIN_YEAR, MAX_YE
  * @property {string} semester     One of SEMESTERS.
  * @property {string} country      One of COUNTRIES.
  * @property {number} year         Exam/curriculum year the resource targets, e.g. 2026.
+ * @property {string} subject
+ * @property {string} subjectLabel
  * @property {Object} [meta]       Type-specific extras for the card footer.
  */
 export const ResourceEntrySchema = z.object({
@@ -34,5 +36,7 @@ export const ResourceEntrySchema = z.object({
   semester: z.enum([...SEMESTER_VALUES]),
   country: z.enum([...COUNTRY_VALUES]),
   year: z.number().int().min(MIN_YEAR).max(MAX_YEAR),
+  subject: z.string().min(1),
+  subjectLabel: z.string().min(1),
   meta: z.record(z.string(), z.union([z.string(), z.number()])).optional(),
 });
