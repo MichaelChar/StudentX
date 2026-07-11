@@ -6,7 +6,7 @@
 import { RESOURCE_TYPE_LABELS, SEMESTER_LABELS, COUNTRY_LABELS } from './taxonomy.js';
 
 /** Facet keys, in the priority order used when relaxing an empty result set. */
-export const FACET_KEYS = ['type', 'semester', 'year', 'country'];
+export const FACET_KEYS = ['type', 'subject', 'semester', 'year', 'country'];
 
 // `year` has no fixed label map (see taxonomy.js) — its label is just the
 // value itself, e.g. 2026. Filter values always come from the URL query
@@ -24,12 +24,18 @@ const FACET_LABELS = {
  */
 export function getFacetOptions(resources, key) {
   const counts = new Map();
+  const labels = new Map();
   for (const r of resources) {
     const value = String(r[key]);
     counts.set(value, (counts.get(value) ?? 0) + 1);
+    if (!labels.has(value) && r[key + 'Label']) labels.set(value, r[key + 'Label']);
   }
   const options = [...counts.entries()]
-    .map(([value, count]) => ({ value, label: FACET_LABELS[key]?.[value] ?? value, count }))
+    .map(([value, count]) => ({
+      value,
+      label: labels.get(value) ?? FACET_LABELS[key]?.[value] ?? value,
+      count,
+    }))
     .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
   return options;
 }

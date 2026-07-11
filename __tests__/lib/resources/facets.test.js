@@ -129,3 +129,36 @@ describe('resourcesMatchingOtherFilters + getFacetOptions (refined faceting)', (
     expect(keys).toContain('semester');
   });
 });
+
+describe('subject facet (dynamic labels via subjectLabel)', () => {
+  const withSubjects = [
+    { id: 'p1', type: 'practice-test', subject: 'biochemistry', subjectLabel: 'Biochemistry I', semester: 'semester-2', country: 'gr', year: 2026 },
+    { id: 'p2', type: 'practice-test', subject: 'biochemistry', subjectLabel: 'Biochemistry I', semester: 'semester-2', country: 'gr', year: 2026 },
+    { id: 'f1', type: 'flashcard-deck', subject: 'general-physiology', subjectLabel: 'General Physiology', semester: 'semester-2', country: 'gr', year: 2026 },
+    { id: 'n1', type: 'study-notes', subject: 'hygiene-epidemiology', subjectLabel: 'Hygiene & Epidemiology (MD1040)', semester: 'semester-6', country: 'gr', year: 2026 },
+  ];
+
+  it('getFacetOptions uses subjectLabel and counts correctly', () => {
+    const options = getFacetOptions(withSubjects, 'subject');
+    const byValue = Object.fromEntries(options.map((o) => [o.value, o]));
+    expect(byValue['biochemistry']).toMatchObject({ label: 'Biochemistry I', count: 2 });
+    expect(byValue['general-physiology']).toMatchObject({ label: 'General Physiology', count: 1 });
+    expect(byValue['hygiene-epidemiology']).toMatchObject({ label: 'Hygiene & Epidemiology (MD1040)', count: 1 });
+  });
+
+  it('deriveFacets includes subject when >=2 subjects exist', () => {
+    const keys = deriveFacets(withSubjects).map((f) => f.key);
+    expect(keys).toContain('subject');
+    // only 1 type so type may hide? no, here 2 types + 2 subjects? wait  practice + flash + notes =3? but check presence
+    expect(keys).toContain('subject');
+  });
+
+  it('filterResources by subject works (AND with other facets)', () => {
+    const filtered = filterResources(withSubjects, { subject: 'biochemistry' });
+    expect(filtered.map((r) => r.id)).toEqual(['p1', 'p2']);
+
+    const filtered2 = filterResources(withSubjects, { subject: 'hygiene-epidemiology', type: 'study-notes' });
+    expect(filtered2).toHaveLength(1);
+    expect(filtered2[0].id).toBe('n1');
+  });
+});

@@ -15,6 +15,7 @@ import {
 
 const FACET_TITLES = {
   type: 'Resource type',
+  subject: 'Subject',
   semester: 'Semester',
   year: 'Year',
   country: 'Country',

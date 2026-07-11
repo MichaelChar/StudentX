@@ -34,6 +34,9 @@ const FLASHCARDS_ROOT = path.join(ROOT, 'content/flashcards');
 const NOTES_ROOT = path.join(ROOT, 'content/notes/ausom');
 const OUT_FILE = path.join(ROOT, 'src/lib/resources/manifest.generated.js');
 
+/** slug (dir or json basename) → canonical display label. Populated preferring practice index.title. */
+const subjectLabels = new Map();
+
 /** @type {string[]} */
 const errors = [];
 const err = (where, msg) => errors.push(`${where}: ${msg}`);
@@ -85,6 +88,7 @@ function collectPracticeEntries() {
         err(rel, `semester "${index.semester}" does not match folder "${semester}"`);
         continue;
       }
+      if (index.title) subjectLabels.set(subject, index.title);
       for (const test of index.tests) {
         entries.push({
           // The card type defaults to 'practice-test'; a test can opt into
@@ -98,6 +102,7 @@ function collectPracticeEntries() {
           semester: index.semester,
           country: index.country,
           year: test.year,
+          subject,
           meta: { questionCount: test.questionCount },
         });
       }
@@ -122,6 +127,7 @@ function collectFlashcardEntries() {
       continue;
     }
     const index = parsed.data;
+    if (index.title) subjectLabels.set(subject, index.title);
     for (const deck of index.decks) {
       entries.push({
         id: `flashcard:${subject}:${deck.id}`,
@@ -135,6 +141,7 @@ function collectFlashcardEntries() {
         semester: index.semester,
         country: index.country,
         year: deck.year,
+        subject,
         meta: { cardCount: deck.cardCount },
       });
     }
@@ -172,6 +179,7 @@ function collectNotesEntries() {
         semester: doc.semester,
         country: doc.country,
         year: doc.year,
+        subject,
         meta: { sectionCount: doc.sections.length },
       });
     }
@@ -181,6 +189,27 @@ function collectNotesEntries() {
 
 function main() {
   const entries = [...collectPracticeEntries(), ...collectFlashcardEntries(), ...collectNotesEntries()];
+
+  // Assign subject + subjectLabel after collectors. Build one canonical label per slug
+  // (prefer practice index.title so tests/notes/decks for same subject share a pill label).
+  for (const entry of entries) {
+    const slug = entry.subject;
+    if (!slug) {
+      err(entry.id || 'unknown', 'missing subject slug');
+      continue;
+    }
+    let label = subjectLabels.get(slug);
+    if (!label) {
+      // For NOTES, explicitly do NOT fall back to the doc.title (it's the notes resource title).
+      if (entry.id && entry.id.startsWith('notes:')) {
+        label = slug;
+      } else {
+        label = entry.title ?? slug;
+      }
+    }
+    entry.subject = slug;
+    entry.subjectLabel = label;
+  }
 
   for (const entry of entries) {
     const parsed = ResourceEntrySchema.safeParse(entry);
