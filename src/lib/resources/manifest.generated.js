@@ -90,6 +90,22 @@ export const RESOURCES = [
     "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
+    "id": "notes:pathophysiology",
+    "type": "study-notes",
+    "title": "Pathophysiology — High-Yield Notes",
+    "description": "Condensed revision notes across 10 systems — renal, electrolyte, acid–base, respiratory, cardiovascular, GI/liver, endocrine, haematology, immunity, and thermoregulation.",
+    "href": "/student/ausom/semester-6/pathophysiology/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "pathophysiology",
+    "meta": {
+      "sectionCount": 10
+    },
+    "subjectLabel": "Pathophysiology"
+  },
+  {
     "id": "notes:social-medicine",
     "type": "study-notes",
     "title": "Social Medicine & Public Health — High-Yield Notes",
@@ -296,6 +312,38 @@ export const RESOURCES = [
       "questionCount": 38
     },
     "subjectLabel": "Hygiene & Epidemiology (MD1040)"
+  },
+  {
+    "id": "practice:pathophysiology:past-papers",
+    "type": "past-paper",
+    "title": "Pathophysiology — Past Papers",
+    "description": "150 real past-paper MCQs from three sittings (Feb 2021–July 2023), each tagged with its exam.",
+    "href": "/student/ausom/semester-6/pathophysiology/past-papers",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "pathophysiology",
+    "meta": {
+      "questionCount": 150
+    },
+    "subjectLabel": "Pathophysiology"
+  },
+  {
+    "id": "practice:pathophysiology:recall-drills",
+    "type": "practice-test",
+    "title": "Pathophysiology — Recall Drills",
+    "description": "83 flip-card recall drills across 7 systems — rapid Q&A on core mechanisms.",
+    "href": "/student/ausom/semester-6/pathophysiology/recall-drills",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "pathophysiology",
+    "meta": {
+      "questionCount": 83
+    },
+    "subjectLabel": "Pathophysiology"
   },
   {
     "id": "practice:social-medicine:past-papers",
