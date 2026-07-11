@@ -5,12 +5,14 @@
 // content.js need no runtime fs (required for Cloudflare Workers / OpenNext).
 
 import semester6HygieneEpidemiologyNotes from '../../../content/notes/ausom/semester-6/hygiene-epidemiology.json';
+import semester6PathophysiologyNotes from '../../../content/notes/ausom/semester-6/pathophysiology.json';
 import semester6SocialMedicineNotes from '../../../content/notes/ausom/semester-6/social-medicine.json';
 
 /** @type {Record<string, Record<string, import('./schema.js').NotesDoc>>} */
 export const MANIFEST = {
   "semester-6": {
     "hygiene-epidemiology": semester6HygieneEpidemiologyNotes,
+    "pathophysiology": semester6PathophysiologyNotes,
     "social-medicine": semester6SocialMedicineNotes,
   },
 };

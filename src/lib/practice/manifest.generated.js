@@ -21,6 +21,9 @@ import semester6HygieneEpidemiologyTestPredictedPaper1 from '../../../content/pr
 import semester6HygieneEpidemiologyTestPredictedPaper2 from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/predicted-paper-2.json';
 import semester6HygieneEpidemiologyTestPredictedPaper3 from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/predicted-paper-3.json';
 import semester6HygieneEpidemiologyTestRecalls from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/recalls.json';
+import semester6PathophysiologyIndex from '../../../content/practice/ausom/semester-6/pathophysiology/index.json';
+import semester6PathophysiologyTestPastPapers from '../../../content/practice/ausom/semester-6/pathophysiology/past-papers.json';
+import semester6PathophysiologyTestRecallDrills from '../../../content/practice/ausom/semester-6/pathophysiology/recall-drills.json';
 import semester6SocialMedicineIndex from '../../../content/practice/ausom/semester-6/social-medicine/index.json';
 import semester6SocialMedicineTestPastPapers from '../../../content/practice/ausom/semester-6/social-medicine/past-papers.json';
 import semester6SocialMedicineTestRecalls from '../../../content/practice/ausom/semester-6/social-medicine/recalls.json';
@@ -65,6 +68,13 @@ export const MANIFEST = {
         "predicted-paper-2": semester6HygieneEpidemiologyTestPredictedPaper2,
         "predicted-paper-3": semester6HygieneEpidemiologyTestPredictedPaper3,
         "recalls": semester6HygieneEpidemiologyTestRecalls,
+      },
+    },
+    "pathophysiology": {
+      index: semester6PathophysiologyIndex,
+      tests: {
+        "past-papers": semester6PathophysiologyTestPastPapers,
+        "recall-drills": semester6PathophysiologyTestRecallDrills,
       },
     },
     "social-medicine": {
