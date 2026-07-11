@@ -37,7 +37,7 @@ export default async function SemesterPage({ params }) {
 const SEMESTER_2_SUBJECTS = [
   {
     id: 'medical-informatics',
-    label: 'Medical Informatics',
+    label: 'Medical Informatics (MD1008)',
     href: '/practice/ausom/semester-2/medical-informatics/predicted-practice-exam.html',
     illustration: (
       <svg width="430" height="170" viewBox="0 0 192 76" fill="none" stroke="#3260A8" strokeLinecap="round" strokeLinejoin="round">
@@ -59,7 +59,7 @@ const SEMESTER_2_SUBJECTS = [
   },
   {
     id: 'anatomy-1',
-    label: 'Anatomy I',
+    label: 'Anatomy I (MD1009)',
     illustration: (
       <svg width="430" height="172" viewBox="-40 0 200 80" fill="none" stroke="#A03660" strokeLinecap="round" strokeLinejoin="round">
         <ellipse cx="60" cy="40" rx="46" ry="36" strokeWidth="1.7"/>
@@ -74,7 +74,7 @@ const SEMESTER_2_SUBJECTS = [
   },
   {
     id: 'general-histology',
-    label: 'General Histology',
+    label: 'General Histology (MD1010)',
     illustration: (
       <svg width="430" height="168" viewBox="0 0 200 78" fill="none" stroke="#1E8A6C" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="68" cy="40" r="30" strokeWidth="1.7"/>
@@ -88,7 +88,7 @@ const SEMESTER_2_SUBJECTS = [
   },
   {
     id: 'biochemistry-1',
-    label: 'Biochemistry I',
+    label: 'Biochemistry I (MD1011)',
     href: '/student/ausom/semester-2/biochemistry/mega-test',
     illustration: (
       <svg width="430" height="169" viewBox="-30 0 208 82" fill="none" stroke="#9C6C10" strokeLinecap="round" strokeLinejoin="round">
@@ -105,7 +105,7 @@ const SEMESTER_2_SUBJECTS = [
   },
   {
     id: 'general-physiology',
-    label: 'General Physiology',
+    label: 'General Physiology (MD1012)',
     illustration: (
       <svg width="430" height="196" viewBox="0 -20 220 102" fill="none" stroke="#5C38A8" strokeLinecap="round" strokeLinejoin="round">
         <path d="M8 31 L62 31 L74 8 L82 56 L94 31 L212 31" strokeWidth="2"/>

@@ -10,6 +10,54 @@
 /** @type {import('./schema.js').ResourceEntry[]} */
 export const RESOURCES = [
   {
+    "id": "flashcard:anatomy-1:anatomy-high-yield",
+    "type": "flashcard-deck",
+    "title": "Anatomy I — Highest yield anatomy topics",
+    "description": "Consists only of topics repeatedly examined in the past. This deck is a companion to the \"Anatomy I — Exam Study Guide. Pattern-driven revision across 13 chapters\" set of notes",
+    "href": "/flashcards/anatomy-1/anatomy-high-yield.apkg",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "subject": "anatomy-1",
+    "meta": {
+      "cardCount": 177
+    },
+    "subjectLabel": "Anatomy I (MD1009)"
+  },
+  {
+    "id": "flashcard:biochemistry:biochemistry-high-yield",
+    "type": "flashcard-deck",
+    "title": "Biochemistry I — Highest yield biochemistry topics",
+    "description": "Topics either repeatedly tested in the past or specifically emphasised in lectures. This deck is built to be the only anki deck necessary for the course. Therefore, it is great cramming material",
+    "href": "/flashcards/biochemistry/biochemistry-high-yield.apkg",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "subject": "biochemistry",
+    "meta": {
+      "cardCount": 408
+    },
+    "subjectLabel": "Biochemistry I (MD1011)"
+  },
+  {
+    "id": "flashcard:general-histology:general-histology",
+    "type": "flashcard-deck",
+    "title": "General Histology",
+    "description": "Comprehensive and high yield anki deck covering all the content.",
+    "href": "/flashcards/general-histology/general-histology.apkg",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "subject": "general-histology",
+    "meta": {
+      "cardCount": 115
+    },
+    "subjectLabel": "General Histology (MD1010)"
+  },
+  {
     "id": "flashcard:general-physiology:general-physiology",
     "type": "flashcard-deck",
     "title": "General Physiology",
@@ -23,23 +71,7 @@ export const RESOURCES = [
     "meta": {
       "cardCount": 120
     },
-    "subjectLabel": "General Physiology"
-  },
-  {
-    "id": "flashcard:histology:general-histology",
-    "type": "flashcard-deck",
-    "title": "General Histology",
-    "description": "Comprehensive and high yield anki deck covering all the content.",
-    "href": "/flashcards/histology/general-histology.apkg",
-    "school": "ausom",
-    "semester": "semester-2",
-    "country": "gr",
-    "year": 2026,
-    "subject": "histology",
-    "meta": {
-      "cardCount": 115
-    },
-    "subjectLabel": "Histology"
+    "subjectLabel": "General Physiology (MD1012)"
   },
   {
     "id": "notes:hygiene-epidemiology",
@@ -71,7 +103,7 @@ export const RESOURCES = [
     "meta": {
       "questionCount": 80
     },
-    "subjectLabel": "Anatomy I"
+    "subjectLabel": "Anatomy I (MD1009)"
   },
   {
     "id": "practice:biochemistry:mega-test",
@@ -87,7 +119,7 @@ export const RESOURCES = [
     "meta": {
       "questionCount": 48
     },
-    "subjectLabel": "Biochemistry I"
+    "subjectLabel": "Biochemistry I (MD1011)"
   },
   {
     "id": "practice:general-histology:em-structure-id",
@@ -103,7 +135,7 @@ export const RESOURCES = [
     "meta": {
       "questionCount": 9
     },
-    "subjectLabel": "General Histology"
+    "subjectLabel": "General Histology (MD1010)"
   },
   {
     "id": "practice:general-histology:lm-specimen-id",
@@ -119,7 +151,7 @@ export const RESOURCES = [
     "meta": {
       "questionCount": 14
     },
-    "subjectLabel": "General Histology"
+    "subjectLabel": "General Histology (MD1010)"
   },
   {
     "id": "practice:general-physiology:predicted-lab-exam",
@@ -135,7 +167,7 @@ export const RESOURCES = [
     "meta": {
       "questionCount": 8
     },
-    "subjectLabel": "General Physiology"
+    "subjectLabel": "General Physiology (MD1012)"
   },
   {
     "id": "practice:general-physiology:predicted-mcq-oneoffs",
@@ -151,7 +183,7 @@ export const RESOURCES = [
     "meta": {
       "questionCount": 27
     },
-    "subjectLabel": "General Physiology"
+    "subjectLabel": "General Physiology (MD1012)"
   },
   {
     "id": "practice:general-physiology:predicted-mcq-repeaters",
@@ -167,7 +199,7 @@ export const RESOURCES = [
     "meta": {
       "questionCount": 33
     },
-    "subjectLabel": "General Physiology"
+    "subjectLabel": "General Physiology (MD1012)"
   },
   {
     "id": "practice:hygiene-epidemiology:past-papers-2020-2024",
