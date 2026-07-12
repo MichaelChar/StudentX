@@ -74,6 +74,22 @@ export const RESOURCES = [
     "subjectLabel": "General Physiology (MD1012)"
   },
   {
+    "id": "notes:anatomy-1",
+    "type": "study-notes",
+    "title": "Anatomy I — Exam Study Guide",
+    "description": "Pattern-driven revision across 13 chapters.",
+    "href": "/student/ausom/semester-2/anatomy-1/notes",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "subject": "anatomy-1",
+    "meta": {
+      "sectionCount": 13
+    },
+    "subjectLabel": "Anatomy I (MD1009)"
+  },
+  {
     "id": "notes:hygiene-epidemiology",
     "type": "study-notes",
     "title": "MD1040 Hygiene & Epidemiology — High-Yield Notes",
