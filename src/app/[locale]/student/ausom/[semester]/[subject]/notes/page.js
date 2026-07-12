@@ -120,6 +120,11 @@ const NOTES_CSS = `
   background: linear-gradient(transparent 58%, rgba(99, 91, 255, 0.22) 58%);
   padding: 0 1px; font-weight: 600; color: var(--notes-ink);
 }
+.notes-prose .hl-v {
+  background: linear-gradient(transparent 58%, rgba(255, 95, 162, 0.20) 58%);
+  padding: 0 1px; font-weight: 600; color: var(--notes-ink);
+}
+.notes-prose .abbr { font-size: 0.85em; color: var(--notes-muted); }
 /* pill badge */
 .notes-prose .pill {
   display: inline-block; padding: 1px 9px; margin: 1px 2px; border-radius: 999px;
