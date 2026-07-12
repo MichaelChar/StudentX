@@ -1,0 +1,2046 @@
+{
+  "meta": {
+    "title": "ENT Written — Past Papers",
+    "course": "MD1039 Otorhinolaryngology",
+    "semester": "Semester 6",
+    "total_questions": 145,
+    "mcq_count": 145,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "ENT question 1 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 1.",
+      "source": "2021"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "ENT question 2 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 2.",
+      "source": "2022"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "ENT question 3 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 3.",
+      "source": "2020"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "ENT question 4 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 4.",
+      "source": "2021"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "ENT question 5 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 5.",
+      "source": "2022"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "ENT question 6 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 6.",
+      "source": "2020"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "ENT question 7 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 7.",
+      "source": "2021"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "ENT question 8 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 8.",
+      "source": "2022"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "ENT question 9 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 9.",
+      "source": "2020"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "ENT question 10 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 10.",
+      "source": "2021"
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "ENT question 11 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 11.",
+      "source": "2022"
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "ENT question 12 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 12.",
+      "source": "2020"
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "ENT question 13 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 13.",
+      "source": "2021"
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "ENT question 14 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 14.",
+      "source": "2022"
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "ENT question 15 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 15.",
+      "source": "2020"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "ENT question 16 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 16.",
+      "source": "2021"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "ENT question 17 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 17.",
+      "source": "2022"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "ENT question 18 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 18.",
+      "source": "2020"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "ENT question 19 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 19.",
+      "source": "2021"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "ENT question 20 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 20.",
+      "source": "2022"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "ENT question 21 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 21.",
+      "source": "2020"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "ENT question 22 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 22.",
+      "source": "2021"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "ENT question 23 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 23.",
+      "source": "2022"
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "ENT question 24 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 24.",
+      "source": "2020"
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "ENT question 25 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 25.",
+      "source": "2021"
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "ENT question 26 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 26.",
+      "source": "2022"
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "ENT question 27 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 27.",
+      "source": "2020"
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "ENT question 28 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 28.",
+      "source": "2021"
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "ENT question 29 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 29.",
+      "source": "2022"
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "ENT question 30 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 30.",
+      "source": "2020"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "ENT question 31 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 31.",
+      "source": "2021"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "ENT question 32 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 32.",
+      "source": "2022"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "ENT question 33 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 33.",
+      "source": "2020"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "ENT question 34 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 34.",
+      "source": "2021"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "ENT question 35 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 35.",
+      "source": "2022"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "ENT question 36 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 36.",
+      "source": "2020"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "ENT question 37 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 37.",
+      "source": "2021"
+    },
+    {
+      "id": 38,
+      "type": "mcq",
+      "stem": "ENT question 38 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 38.",
+      "source": "2022"
+    },
+    {
+      "id": 39,
+      "type": "mcq",
+      "stem": "ENT question 39 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 39.",
+      "source": "2020"
+    },
+    {
+      "id": 40,
+      "type": "mcq",
+      "stem": "ENT question 40 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 40.",
+      "source": "2021"
+    },
+    {
+      "id": 41,
+      "type": "mcq",
+      "stem": "ENT question 41 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 41.",
+      "source": "2022"
+    },
+    {
+      "id": 42,
+      "type": "mcq",
+      "stem": "ENT question 42 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 42.",
+      "source": "2020"
+    },
+    {
+      "id": 43,
+      "type": "mcq",
+      "stem": "ENT question 43 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 43.",
+      "source": "2021"
+    },
+    {
+      "id": 44,
+      "type": "mcq",
+      "stem": "ENT question 44 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 44.",
+      "source": "2022"
+    },
+    {
+      "id": 45,
+      "type": "mcq",
+      "stem": "ENT question 45 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 45.",
+      "source": "2020"
+    },
+    {
+      "id": 46,
+      "type": "mcq",
+      "stem": "ENT question 46 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 46.",
+      "source": "2021"
+    },
+    {
+      "id": 47,
+      "type": "mcq",
+      "stem": "ENT question 47 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 47.",
+      "source": "2022"
+    },
+    {
+      "id": 48,
+      "type": "mcq",
+      "stem": "ENT question 48 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 48.",
+      "source": "2020"
+    },
+    {
+      "id": 49,
+      "type": "mcq",
+      "stem": "ENT question 49 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 49.",
+      "source": "2021"
+    },
+    {
+      "id": 50,
+      "type": "mcq",
+      "stem": "ENT question 50 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 50.",
+      "source": "2022"
+    },
+    {
+      "id": 51,
+      "type": "mcq",
+      "stem": "ENT question 51 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 51.",
+      "source": "2020"
+    },
+    {
+      "id": 52,
+      "type": "mcq",
+      "stem": "ENT question 52 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 52.",
+      "source": "2021"
+    },
+    {
+      "id": 53,
+      "type": "mcq",
+      "stem": "ENT question 53 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 53.",
+      "source": "2022"
+    },
+    {
+      "id": 54,
+      "type": "mcq",
+      "stem": "ENT question 54 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 54.",
+      "source": "2020"
+    },
+    {
+      "id": 55,
+      "type": "mcq",
+      "stem": "ENT question 55 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 55.",
+      "source": "2021"
+    },
+    {
+      "id": 56,
+      "type": "mcq",
+      "stem": "ENT question 56 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 56.",
+      "source": "2022"
+    },
+    {
+      "id": 57,
+      "type": "mcq",
+      "stem": "ENT question 57 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 57.",
+      "source": "2020"
+    },
+    {
+      "id": 58,
+      "type": "mcq",
+      "stem": "ENT question 58 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 58.",
+      "source": "2021"
+    },
+    {
+      "id": 59,
+      "type": "mcq",
+      "stem": "ENT question 59 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 59.",
+      "source": "2022"
+    },
+    {
+      "id": 60,
+      "type": "mcq",
+      "stem": "ENT question 60 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 60.",
+      "source": "2020"
+    },
+    {
+      "id": 61,
+      "type": "mcq",
+      "stem": "ENT question 61 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 61.",
+      "source": "2021"
+    },
+    {
+      "id": 62,
+      "type": "mcq",
+      "stem": "ENT question 62 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 62.",
+      "source": "2022"
+    },
+    {
+      "id": 63,
+      "type": "mcq",
+      "stem": "ENT question 63 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 63.",
+      "source": "2020"
+    },
+    {
+      "id": 64,
+      "type": "mcq",
+      "stem": "ENT question 64 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 64.",
+      "source": "2021"
+    },
+    {
+      "id": 65,
+      "type": "mcq",
+      "stem": "ENT question 65 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 65.",
+      "source": "2022"
+    },
+    {
+      "id": 66,
+      "type": "mcq",
+      "stem": "ENT question 66 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 66.",
+      "source": "2020"
+    },
+    {
+      "id": 67,
+      "type": "mcq",
+      "stem": "ENT question 67 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 67.",
+      "source": "2021"
+    },
+    {
+      "id": 68,
+      "type": "mcq",
+      "stem": "ENT question 68 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 68.",
+      "source": "2022"
+    },
+    {
+      "id": 69,
+      "type": "mcq",
+      "stem": "ENT question 69 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 69.",
+      "source": "2020"
+    },
+    {
+      "id": 70,
+      "type": "mcq",
+      "stem": "ENT question 70 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 70.",
+      "source": "2021"
+    },
+    {
+      "id": 71,
+      "type": "mcq",
+      "stem": "ENT question 71 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 71.",
+      "source": "2022"
+    },
+    {
+      "id": 72,
+      "type": "mcq",
+      "stem": "ENT question 72 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 72.",
+      "source": "2020"
+    },
+    {
+      "id": 73,
+      "type": "mcq",
+      "stem": "ENT question 73 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 73.",
+      "source": "2021"
+    },
+    {
+      "id": 74,
+      "type": "mcq",
+      "stem": "ENT question 74 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 74.",
+      "source": "2022"
+    },
+    {
+      "id": 75,
+      "type": "mcq",
+      "stem": "ENT question 75 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 75.",
+      "source": "2020"
+    },
+    {
+      "id": 76,
+      "type": "mcq",
+      "stem": "ENT question 76 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 76.",
+      "source": "2021"
+    },
+    {
+      "id": 77,
+      "type": "mcq",
+      "stem": "ENT question 77 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 77.",
+      "source": "2022"
+    },
+    {
+      "id": 78,
+      "type": "mcq",
+      "stem": "ENT question 78 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 78.",
+      "source": "2020"
+    },
+    {
+      "id": 79,
+      "type": "mcq",
+      "stem": "ENT question 79 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 79.",
+      "source": "2021"
+    },
+    {
+      "id": 80,
+      "type": "mcq",
+      "stem": "ENT question 80 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 80.",
+      "source": "2022"
+    },
+    {
+      "id": 81,
+      "type": "mcq",
+      "stem": "ENT question 81 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 81.",
+      "source": "2020"
+    },
+    {
+      "id": 82,
+      "type": "mcq",
+      "stem": "ENT question 82 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 82.",
+      "source": "2021"
+    },
+    {
+      "id": 83,
+      "type": "mcq",
+      "stem": "ENT question 83 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 83.",
+      "source": "2022"
+    },
+    {
+      "id": 84,
+      "type": "mcq",
+      "stem": "ENT question 84 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 84.",
+      "source": "2020"
+    },
+    {
+      "id": 85,
+      "type": "mcq",
+      "stem": "ENT question 85 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 85.",
+      "source": "2021"
+    },
+    {
+      "id": 86,
+      "type": "mcq",
+      "stem": "ENT question 86 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 86.",
+      "source": "2022"
+    },
+    {
+      "id": 87,
+      "type": "mcq",
+      "stem": "ENT question 87 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 87.",
+      "source": "2020"
+    },
+    {
+      "id": 88,
+      "type": "mcq",
+      "stem": "ENT question 88 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 88.",
+      "source": "2021"
+    },
+    {
+      "id": 89,
+      "type": "mcq",
+      "stem": "ENT question 89 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 89.",
+      "source": "2022"
+    },
+    {
+      "id": 90,
+      "type": "mcq",
+      "stem": "ENT question 90 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 90.",
+      "source": "2020"
+    },
+    {
+      "id": 91,
+      "type": "mcq",
+      "stem": "ENT question 91 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 91.",
+      "source": "2021"
+    },
+    {
+      "id": 92,
+      "type": "mcq",
+      "stem": "ENT question 92 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 92.",
+      "source": "2022"
+    },
+    {
+      "id": 93,
+      "type": "mcq",
+      "stem": "ENT question 93 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 93.",
+      "source": "2020"
+    },
+    {
+      "id": 94,
+      "type": "mcq",
+      "stem": "ENT question 94 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 94.",
+      "source": "2021"
+    },
+    {
+      "id": 95,
+      "type": "mcq",
+      "stem": "ENT question 95 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 95.",
+      "source": "2022"
+    },
+    {
+      "id": 96,
+      "type": "mcq",
+      "stem": "ENT question 96 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 96.",
+      "source": "2020"
+    },
+    {
+      "id": 97,
+      "type": "mcq",
+      "stem": "ENT question 97 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 97.",
+      "source": "2021"
+    },
+    {
+      "id": 98,
+      "type": "mcq",
+      "stem": "ENT question 98 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 98.",
+      "source": "2022"
+    },
+    {
+      "id": 99,
+      "type": "mcq",
+      "stem": "ENT question 99 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 99.",
+      "source": "2020"
+    },
+    {
+      "id": 100,
+      "type": "mcq",
+      "stem": "ENT question 100 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 100.",
+      "source": "2021"
+    },
+    {
+      "id": 101,
+      "type": "mcq",
+      "stem": "ENT question 101 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 101.",
+      "source": "2022"
+    },
+    {
+      "id": 102,
+      "type": "mcq",
+      "stem": "ENT question 102 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 102.",
+      "source": "2020"
+    },
+    {
+      "id": 103,
+      "type": "mcq",
+      "stem": "ENT question 103 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 103.",
+      "source": "2021"
+    },
+    {
+      "id": 104,
+      "type": "mcq",
+      "stem": "ENT question 104 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 104.",
+      "source": "2022"
+    },
+    {
+      "id": 105,
+      "type": "mcq",
+      "stem": "ENT question 105 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 105.",
+      "source": "2020"
+    },
+    {
+      "id": 106,
+      "type": "mcq",
+      "stem": "ENT question 106 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 106.",
+      "source": "2021"
+    },
+    {
+      "id": 107,
+      "type": "mcq",
+      "stem": "ENT question 107 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 107.",
+      "source": "2022"
+    },
+    {
+      "id": 108,
+      "type": "mcq",
+      "stem": "ENT question 108 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 108.",
+      "source": "2020"
+    },
+    {
+      "id": 109,
+      "type": "mcq",
+      "stem": "ENT question 109 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 109.",
+      "source": "2021"
+    },
+    {
+      "id": 110,
+      "type": "mcq",
+      "stem": "ENT question 110 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 110.",
+      "source": "2022"
+    },
+    {
+      "id": 111,
+      "type": "mcq",
+      "stem": "ENT question 111 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 111.",
+      "source": "2020"
+    },
+    {
+      "id": 112,
+      "type": "mcq",
+      "stem": "ENT question 112 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 112.",
+      "source": "2021"
+    },
+    {
+      "id": 113,
+      "type": "mcq",
+      "stem": "ENT question 113 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 113.",
+      "source": "2022"
+    },
+    {
+      "id": 114,
+      "type": "mcq",
+      "stem": "ENT question 114 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 114.",
+      "source": "2020"
+    },
+    {
+      "id": 115,
+      "type": "mcq",
+      "stem": "ENT question 115 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 115.",
+      "source": "2021"
+    },
+    {
+      "id": 116,
+      "type": "mcq",
+      "stem": "ENT question 116 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 116.",
+      "source": "2022"
+    },
+    {
+      "id": 117,
+      "type": "mcq",
+      "stem": "ENT question 117 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 117.",
+      "source": "2020"
+    },
+    {
+      "id": 118,
+      "type": "mcq",
+      "stem": "ENT question 118 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 118.",
+      "source": "2021"
+    },
+    {
+      "id": 119,
+      "type": "mcq",
+      "stem": "ENT question 119 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 119.",
+      "source": "2022"
+    },
+    {
+      "id": 120,
+      "type": "mcq",
+      "stem": "ENT question 120 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 120.",
+      "source": "2020"
+    },
+    {
+      "id": 121,
+      "type": "mcq",
+      "stem": "ENT question 121 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 121.",
+      "source": "2021"
+    },
+    {
+      "id": 122,
+      "type": "mcq",
+      "stem": "ENT question 122 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 122.",
+      "source": "2022"
+    },
+    {
+      "id": 123,
+      "type": "mcq",
+      "stem": "ENT question 123 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 123.",
+      "source": "2020"
+    },
+    {
+      "id": 124,
+      "type": "mcq",
+      "stem": "ENT question 124 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 124.",
+      "source": "2021"
+    },
+    {
+      "id": 125,
+      "type": "mcq",
+      "stem": "ENT question 125 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 125.",
+      "source": "2022"
+    },
+    {
+      "id": 126,
+      "type": "mcq",
+      "stem": "ENT question 126 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 126.",
+      "source": "2020"
+    },
+    {
+      "id": 127,
+      "type": "mcq",
+      "stem": "ENT question 127 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 127.",
+      "source": "2021"
+    },
+    {
+      "id": 128,
+      "type": "mcq",
+      "stem": "ENT question 128 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 128.",
+      "source": "2022"
+    },
+    {
+      "id": 129,
+      "type": "mcq",
+      "stem": "ENT question 129 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 129.",
+      "source": "2020"
+    },
+    {
+      "id": 130,
+      "type": "mcq",
+      "stem": "ENT question 130 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 130.",
+      "source": "2021"
+    },
+    {
+      "id": 131,
+      "type": "mcq",
+      "stem": "ENT question 131 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 131.",
+      "source": "2022"
+    },
+    {
+      "id": 132,
+      "type": "mcq",
+      "stem": "ENT question 132 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 132.",
+      "source": "2020"
+    },
+    {
+      "id": 133,
+      "type": "mcq",
+      "stem": "ENT question 133 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 133.",
+      "source": "2021"
+    },
+    {
+      "id": 134,
+      "type": "mcq",
+      "stem": "ENT question 134 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 134.",
+      "source": "2022"
+    },
+    {
+      "id": 135,
+      "type": "mcq",
+      "stem": "ENT question 135 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 135.",
+      "source": "2020"
+    },
+    {
+      "id": 136,
+      "type": "mcq",
+      "stem": "ENT question 136 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 136.",
+      "source": "2021"
+    },
+    {
+      "id": 137,
+      "type": "mcq",
+      "stem": "ENT question 137 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 137.",
+      "source": "2022"
+    },
+    {
+      "id": 138,
+      "type": "mcq",
+      "stem": "ENT question 138 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 138.",
+      "source": "2020"
+    },
+    {
+      "id": 139,
+      "type": "mcq",
+      "stem": "ENT question 139 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 139.",
+      "source": "2021"
+    },
+    {
+      "id": 140,
+      "type": "mcq",
+      "stem": "ENT question 140 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 140.",
+      "source": "2022"
+    },
+    {
+      "id": 141,
+      "type": "mcq",
+      "stem": "ENT question 141 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 141.",
+      "source": "2020"
+    },
+    {
+      "id": 142,
+      "type": "mcq",
+      "stem": "ENT question 142 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 142.",
+      "source": "2021"
+    },
+    {
+      "id": 143,
+      "type": "mcq",
+      "stem": "ENT question 143 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 143.",
+      "source": "2022"
+    },
+    {
+      "id": 144,
+      "type": "mcq",
+      "stem": "ENT question 144 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 144.",
+      "source": "2020"
+    },
+    {
+      "id": 145,
+      "type": "mcq",
+      "stem": "ENT question 145 stem about ear, nose or throat.",
+      "options": {
+        "A": "Option A",
+        "B": "Option B",
+        "C": "Option C",
+        "D": "Option D"
+      },
+      "answer": "A",
+      "explanation": "Explanation for question 145.",
+      "source": "2021"
+    }
+  ]
+}

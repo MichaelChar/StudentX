@@ -1,0 +1,51 @@
+{
+  "subject": "ent-written",
+  "title": "ENT Written — Exam Notes",
+  "description": "High-yield written-exam notes — ear, hearing/vestibular, airway/larynx, nose/sinuses, oral cavity, salivary glands, neck — plus an oral-topics recap.",
+  "school": "ausom",
+  "semester": "semester-6",
+  "country": "gr",
+  "year": 2026,
+  "sections": [
+    {
+      "id": "ear",
+      "title": "Ear — External, Middle, Inner",
+      "html": "<div class=\"note-block\">\n   <p>The external ear includes the pinna and external auditory canal. The middle ear contains the ossicles (malleus, incus, stapes). The inner ear has the cochlea and vestibular apparatus.</p>\n   <h4>Key facts</h4>\n   <ul>\n     <li>Otosclerosis affects the stapes footplate.</li>\n     <li>Cholesteatoma is a destructive cyst in the middle ear.</li>\n   </ul>\n  </div>"
+    },
+    {
+      "id": "hearing-vestibular",
+      "title": "Hearing & Vestibular Disorders",
+      "html": "<div class=\"note-block\">\n   <p>Hearing loss can be conductive or sensorineural. Vestibular issues include BPPV, Meniere's disease.</p>\n   <h4>Tests</h4>\n   <ul>\n     <li>Rinne and Weber tests distinguish types of hearing loss.</li>\n     <li>Dix-Hallpike for BPPV.</li>\n   </ul>\n  </div>"
+    },
+    {
+      "id": "airway-larynx",
+      "title": "Airway & Larynx",
+      "html": "<div class=\"note-block\">\n   <p>The larynx is responsible for voice production and airway protection. Key structures: vocal cords, epiglottis, thyroid cartilage.</p>\n   <h4>Pathology</h4>\n   <ul>\n     <li>Laryngeal cancer often presents with hoarseness.</li>\n     <li>Epiglottitis is a medical emergency.</li>\n   </ul>\n  </div>"
+    },
+    {
+      "id": "nose-sinuses",
+      "title": "Nose & Sinuses",
+      "html": "<div class=\"note-block\">\n   <p>The paranasal sinuses include maxillary, frontal, ethmoid, sphenoid.</p>\n   <h4>Conditions</h4>\n   <ul>\n     <li>Acute sinusitis usually viral; chronic may need surgery.</li>\n     <li>Nasal polyps associated with asthma and aspirin sensitivity (Samter triad).</li>\n   </ul>\n  </div>"
+    },
+    {
+      "id": "oral-cavity",
+      "title": "Oral Cavity",
+      "html": "<div class=\"note-block\">\n   <p>Oral cavity includes tongue, floor of mouth, buccal mucosa, hard palate.</p>\n   <h4>Key</h4>\n   <ul>\n     <li>Oral cancer risk factors: smoking, alcohol, betel nut.</li>\n     <li>Leukoplakia is a premalignant white patch.</li>\n   </ul>\n  </div>"
+    },
+    {
+      "id": "salivary-glands",
+      "title": "Salivary Glands",
+      "html": "<div class=\"note-block\">\n   <p>Major glands: parotid, submandibular, sublingual.</p>\n   <h4>Disorders</h4>\n   <ul>\n     <li>Sialolithiasis (stones) most common in submandibular.</li>\n     <li>Parotid tumors: pleomorphic adenoma (benign), mucoepidermoid (malignant).</li>\n   </ul>\n  </div>"
+    },
+    {
+      "id": "neck",
+      "title": "Neck Masses & Lymph Nodes",
+      "html": "<div class=\"note-block\">\n   <p>Neck anatomy divided into triangles. Levels I–VI for lymph node classification in cancer staging.</p>\n   <h4>Important</h4>\n   <ul>\n     <li>Branchial cyst: lateral neck mass in young adults.</li>\n     <li>Thyroglossal duct cyst: midline, moves with swallowing.</li>\n   </ul>\n  </div>"
+    },
+    {
+      "id": "oral-topics-recap",
+      "title": "Oral Topics Recap",
+      "html": "<div class=\"note-block\">\n   <p>Recap of high-yield oral and written topics: cranial nerves, emergency airways, common presentations.</p>\n   <h4>Quick hits</h4>\n   <ul>\n     <li>CN VII palsy in parotid surgery risk.</li>\n     <li>Tracheostomy vs cricothyroidotomy for emergency.</li>\n   </ul>\n  </div>"
+    }
+  ]
+}

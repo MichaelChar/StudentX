@@ -1,0 +1,26 @@
+{
+  "subject": "ent-written",
+  "title": "ENT — Written Exam (MD1039)",
+  "school": "ausom",
+  "semester": "semester-6",
+  "country": "gr",
+  "tests": [
+    {
+      "id": "recalls",
+      "title": "ENT Written — Recalled MCQs",
+      "kind": "topic",
+      "questionCount": 17,
+      "description": "17 student-recalled written-exam MCQs (2025) with explanations.",
+      "year": 2026
+    },
+    {
+      "id": "past-papers",
+      "title": "ENT Written — Past Papers",
+      "kind": "mock",
+      "questionCount": 145,
+      "description": "145 written past-paper MCQs (2020–2022), each tagged with its exam year.",
+      "year": 2026,
+      "resourceType": "past-paper"
+    }
+  ]
+}

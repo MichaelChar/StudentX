@@ -15,6 +15,9 @@ import semester2GeneralPhysiologyIndex from '../../../content/practice/ausom/sem
 import semester2GeneralPhysiologyTestPredictedLabExam from '../../../content/practice/ausom/semester-2/general-physiology/predicted-lab-exam.json';
 import semester2GeneralPhysiologyTestPredictedMcqOneoffs from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-oneoffs.json';
 import semester2GeneralPhysiologyTestPredictedMcqRepeaters from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-repeaters.json';
+import semester6EntWrittenIndex from '../../../content/practice/ausom/semester-6/ent-written/index.json';
+import semester6EntWrittenTestPastPapers from '../../../content/practice/ausom/semester-6/ent-written/past-papers.json';
+import semester6EntWrittenTestRecalls from '../../../content/practice/ausom/semester-6/ent-written/recalls.json';
 import semester6HygieneEpidemiologyIndex from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/index.json';
 import semester6HygieneEpidemiologyTestPastPapers20202024 from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/past-papers-2020-2024.json';
 import semester6HygieneEpidemiologyTestPredictedPaper1 from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/predicted-paper-1.json';
@@ -60,6 +63,13 @@ export const MANIFEST = {
     },
   },
   "semester-6": {
+    "ent-written": {
+      index: semester6EntWrittenIndex,
+      tests: {
+        "past-papers": semester6EntWrittenTestPastPapers,
+        "recalls": semester6EntWrittenTestRecalls,
+      },
+    },
     "hygiene-epidemiology": {
       index: semester6HygieneEpidemiologyIndex,
       tests: {

@@ -1,0 +1,237 @@
+{
+  "meta": {
+    "title": "ENT Written — Recalled MCQs",
+    "course": "MD1039 Otorhinolaryngology",
+    "semester": "Semester 6",
+    "total_questions": 17,
+    "mcq_count": 17,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 1 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 1."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 2 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 2."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 3 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 3."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 4 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 4."
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 5 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 5."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 6 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 6."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 7 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 7."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 8 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 8."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 9 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 9."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 10 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 10."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 11 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 11."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 12 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 12."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 13 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 13."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 14 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 14."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 15 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 15."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 16 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 16."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Recalled ENT MCQ 17 stem.",
+      "options": {
+        "A": "Opt A",
+        "B": "Opt B",
+        "C": "Opt C",
+        "D": "Opt D"
+      },
+      "answer": "B",
+      "explanation": "Recalled explanation 17."
+    }
+  ]
+}

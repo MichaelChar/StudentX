@@ -90,6 +90,22 @@ export const RESOURCES = [
     "subjectLabel": "Anatomy I (MD1009)"
   },
   {
+    "id": "notes:ent-written",
+    "type": "study-notes",
+    "title": "ENT Written — Exam Notes",
+    "description": "High-yield written-exam notes — ear, hearing/vestibular, airway/larynx, nose/sinuses, oral cavity, salivary glands, neck — plus an oral-topics recap.",
+    "href": "/student/ausom/semester-6/ent-written/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-written",
+    "meta": {
+      "sectionCount": 8
+    },
+    "subjectLabel": "ENT — Written Exam (MD1039)"
+  },
+  {
     "id": "notes:hygiene-epidemiology",
     "type": "study-notes",
     "title": "MD1040 Hygiene & Epidemiology — High-Yield Notes",
@@ -168,6 +184,38 @@ export const RESOURCES = [
       "questionCount": 48
     },
     "subjectLabel": "Biochemistry I (MD1011)"
+  },
+  {
+    "id": "practice:ent-written:past-papers",
+    "type": "past-paper",
+    "title": "ENT Written — Past Papers",
+    "description": "145 written past-paper MCQs (2020–2022), each tagged with its exam year.",
+    "href": "/student/ausom/semester-6/ent-written/past-papers",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-written",
+    "meta": {
+      "questionCount": 145
+    },
+    "subjectLabel": "ENT — Written Exam (MD1039)"
+  },
+  {
+    "id": "practice:ent-written:recalls",
+    "type": "practice-test",
+    "title": "ENT Written — Recalled MCQs",
+    "description": "17 student-recalled written-exam MCQs (2025) with explanations.",
+    "href": "/student/ausom/semester-6/ent-written/recalls",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-written",
+    "meta": {
+      "questionCount": 17
+    },
+    "subjectLabel": "ENT — Written Exam (MD1039)"
   },
   {
     "id": "practice:general-histology:em-structure-id",
