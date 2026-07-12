@@ -5,6 +5,7 @@
 // content.js need no runtime fs (required for Cloudflare Workers / OpenNext).
 
 import semester2Anatomy1Notes from '../../../content/notes/ausom/semester-2/anatomy-1.json';
+import semester6EntOralNotes from '../../../content/notes/ausom/semester-6/ent-oral.json';
 import semester6HygieneEpidemiologyNotes from '../../../content/notes/ausom/semester-6/hygiene-epidemiology.json';
 import semester6PathophysiologyNotes from '../../../content/notes/ausom/semester-6/pathophysiology.json';
 import semester6SocialMedicineNotes from '../../../content/notes/ausom/semester-6/social-medicine.json';
@@ -15,6 +16,7 @@ export const MANIFEST = {
     "anatomy-1": semester2Anatomy1Notes,
   },
   "semester-6": {
+    "ent-oral": semester6EntOralNotes,
     "hygiene-epidemiology": semester6HygieneEpidemiologyNotes,
     "pathophysiology": semester6PathophysiologyNotes,
     "social-medicine": semester6SocialMedicineNotes,
