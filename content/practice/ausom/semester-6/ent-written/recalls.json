@@ -1,0 +1,237 @@
+{
+  "meta": {
+    "title": "ENT Written — Recalled MCQs",
+    "course": "MD1039 Otorhinolaryngology",
+    "semester": "Semester 6",
+    "total_questions": 17,
+    "mcq_count": 17,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Which is NOT a test for the peripheral vestibular system?",
+      "options": {
+        "A": "Fistula test",
+        "B": "Rotation test",
+        "C": "Fork (tuning-fork) test",
+        "D": "Caloric test"
+      },
+      "answer": "C",
+      "explanation": "The tuning-fork (fork) test assesses hearing, not the vestibular system. Fistula, rotation and caloric tests are all vestibular."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Which is NOT a complication of middle-ear disease?",
+      "options": {
+        "A": "Acute mastoiditis",
+        "B": "Labyrinthitis",
+        "C": "Meningitis",
+        "D": "Cavernous sinus thrombosis"
+      },
+      "answer": "D",
+      "explanation": "Cavernous sinus thrombosis complicates sinusitis/facial infection. Middle-ear disease causes sigmoid sinus thrombosis, mastoiditis, labyrinthitis and meningitis."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Which is a LOCAL cause of epistaxis?",
+      "options": {
+        "A": "Trauma",
+        "B": "Anticoagulants",
+        "C": "Bleeding disorders",
+        "D": "Hypertension"
+      },
+      "answer": "A",
+      "explanation": "Trauma is local. Anticoagulants, bleeding disorders and hypertension are systemic (general) causes."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Which is NOT a cause of a white tongue?",
+      "options": {
+        "A": "Leukoplakia",
+        "B": "Lichen planus",
+        "C": "Fissured tongue",
+        "D": "Candidiasis"
+      },
+      "answer": "C",
+      "explanation": "Fissured tongue = grooves, not a white plaque. Leukoplakia, oral lichen planus and candidiasis all produce white lesions."
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Which is NOT an infectious cause of a neck lump?",
+      "options": {
+        "A": "Tuberculosis",
+        "B": "Mumps",
+        "C": "HIV",
+        "D": "Vasomotor rhinitis"
+      },
+      "answer": "D",
+      "explanation": "Vasomotor rhinitis is non-infectious (and not a neck lump). TB, mumps and HIV are infective causes of cervical swelling."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Which does NOT lead to septal perforation?",
+      "options": {
+        "A": "Trauma",
+        "B": "Cocaine use",
+        "C": "Vasomotor rhinitis",
+        "D": "Wegener’s granulomatosis"
+      },
+      "answer": "C",
+      "explanation": "Vasomotor rhinitis doesn’t perforate the septum. Trauma/surgery, cocaine, and Wegener’s (GPA) classically do (also infection, steroid overuse)."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Which artery does NOT supply the internal nose?",
+      "options": {
+        "A": "Anterior ethmoidal",
+        "B": "Posterior ethmoidal",
+        "C": "Sphenopalatine",
+        "D": "Ascending pharyngeal"
+      },
+      "answer": "D",
+      "explanation": "The ascending pharyngeal artery supplies the pharynx/tonsil, not the internal nose. The nose is fed by the ethmoidals (from the ophthalmic/ICA) and the sphenopalatine (+ greater palatine, superior labial) from the maxillary/ECA."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Which sinus drains into the superior nasal meatus?",
+      "options": {
+        "A": "Frontal",
+        "B": "Maxillary",
+        "C": "Sphenoid",
+        "D": "Anterior ethmoidal"
+      },
+      "answer": "C",
+      "explanation": "By elimination: frontal, maxillary and anterior ethmoid all drain to the middle meatus, so the answer here is sphenoid (it drains highest, via the sphenoethmoidal recess). Note: strictly, the posterior ethmoid cells are the true “superior-meatus” sinus — but they’re not offered as an option."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Which hearing test OBJECTIVELY measures the hearing threshold?",
+      "options": {
+        "A": "Otoacoustic emissions",
+        "B": "Pure tone audiometry",
+        "C": "Stapedius reflex",
+        "D": "Auditory brainstem response (electric brain response)"
+      },
+      "answer": "D",
+      "explanation": "ABR/BERA objectively measures threshold. PTA is subjective; OAE tests outer-hair-cell function; stapedius reflex is objective but not a threshold test."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Squamous cell carcinoma of the mouth most likely arises on the:",
+      "options": {
+        "A": "Tongue",
+        "B": "Buccal area",
+        "C": "Upper alveolus",
+        "D": "Palate"
+      },
+      "answer": "A",
+      "explanation": "The tongue (lateral/ventral border) and floor of mouth are the highest-risk intra-oral SCC sites."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "Which does NOT cause a PAINFUL parotid swelling?",
+      "options": {
+        "A": "Sarcoidosis",
+        "B": "Mumps",
+        "C": "Sialolithiasis",
+        "D": "Neoplasia"
+      },
+      "answer": "D",
+      "explanation": "A neoplasm (esp. benign pleomorphic adenoma) is classically a painless lump — pain is a red flag for malignancy. Mumps and sialolithiasis are painful. Flagged: sarcoidosis (Heerfordt) is also usually painless, so this source item is somewhat ambiguous — \"neoplasia\" is the expected key."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Allergic rhinitis — choose the WRONG statement:",
+      "options": {
+        "A": "Presents with a positive allergy test",
+        "B": "Affects 40% of the population",
+        "C": "Symptoms are congestion, sneezing, rhinorrhoea",
+        "D": "Treated with decongestants, corticosteroids, oral antihistamines"
+      },
+      "answer": "B",
+      "explanation": "\"Affects 40%\" is overstated — allergic rhinitis prevalence is usually quoted ~10–25%. The other three statements are correct. (Mild ambiguity, as some regions report higher figures.)"
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Which structure is NOT adjacent to the sphenoid sinus?",
+      "options": {
+        "A": "Internal carotid artery",
+        "B": "Oculomotor nerve (III)",
+        "C": "Maxillary nerve (V2)",
+        "D": "Mandibular nerve (V3)"
+      },
+      "answer": "D",
+      "explanation": "The mandibular nerve (V3) exits via foramen ovale into the infratemporal fossa — not related to the sphenoid sinus. The ICA, CN III (cavernous sinus wall) and V2 are all adjacent (plus optic nerve, cavernous sinus, Vidian nerve)."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Which is NOT true of trigeminal neuralgia?",
+      "options": {
+        "A": "Ipsilateral lacrimation and rhinorrhoea are common",
+        "B": "Relapses are not frequent",
+        "C": "The ophthalmic division is most often affected",
+        "D": "It is treated with carbamazepine"
+      },
+      "answer": "C",
+      "explanation": "The ophthalmic (V1) division is the LEAST affected — the maxillary (V2) and mandibular (V3) divisions are most common, so that statement is false. Carbamazepine is the first-line drug. Flagged: the lacrimation/rhinorrhoea option is also atypical of classic TN, so more than one answer is arguable."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Which EARLY symptom presents with a hypopharyngeal tumour?",
+      "options": {
+        "A": "Weight loss",
+        "B": "Referred otalgia",
+        "C": "Sore throat",
+        "D": "Dysphonia"
+      },
+      "answer": "C",
+      "explanation": "Sore throat / throat discomfort is the typical early symptom (with dysphagia). Referred otalgia is also early/characteristic; dysphonia (laryngeal spread) and weight loss are late. Mild ambiguity between sore throat and referred otalgia."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Which is NOT a cause of chronic laryngitis?",
+      "options": {
+        "A": "Hypothyroidism",
+        "B": "Laryngopharyngeal reflux",
+        "C": "Smoking",
+        "D": "Vocal abuse"
+      },
+      "answer": "A",
+      "explanation": "Hypothyroidism causes hoarseness via myxoedema/Reinke-type changes but is not classed as chronic laryngitis. LPR, smoking and vocal abuse are the classic causes."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Which is NOT a symptom of Ménière’s disease?",
+      "options": {
+        "A": "Aural fullness",
+        "B": "Headache",
+        "C": "Vertigo",
+        "D": "Tinnitus"
+      },
+      "answer": "B",
+      "explanation": "Ménière’s tetrad = vertigo + fluctuating SNHL + tinnitus + aural fullness. Headache is not part of it."
+    }
+  ]
+}
