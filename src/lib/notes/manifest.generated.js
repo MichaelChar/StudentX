@@ -6,6 +6,7 @@
 
 import semester2Anatomy1Notes from '../../../content/notes/ausom/semester-2/anatomy-1.json';
 import semester6EntOralNotes from '../../../content/notes/ausom/semester-6/ent-oral.json';
+import semester6EntWrittenNotes from '../../../content/notes/ausom/semester-6/ent-written.json';
 import semester6HygieneEpidemiologyNotes from '../../../content/notes/ausom/semester-6/hygiene-epidemiology.json';
 import semester6PathophysiologyNotes from '../../../content/notes/ausom/semester-6/pathophysiology.json';
 import semester6SocialMedicineNotes from '../../../content/notes/ausom/semester-6/social-medicine.json';
@@ -17,6 +18,7 @@ export const MANIFEST = {
   },
   "semester-6": {
     "ent-oral": semester6EntOralNotes,
+    "ent-written": semester6EntWrittenNotes,
     "hygiene-epidemiology": semester6HygieneEpidemiologyNotes,
     "pathophysiology": semester6PathophysiologyNotes,
     "social-medicine": semester6SocialMedicineNotes,
