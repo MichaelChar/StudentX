@@ -1,0 +1,380 @@
+{
+  "meta": {
+    "title": "ENT Oral — Recalled Quiz",
+    "course": "MD1039 Otorhinolaryngology",
+    "semester": "Semester 6",
+    "total_questions": 28,
+    "mcq_count": 28,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Which of the following is NOT an indication for tonsillectomy?",
+      "options": {
+        "A": "Recurrent acute tonsillitis (≥7 episodes/year)",
+        "B": "Obstructive sleep apnoea",
+        "C": "A single uncomplicated episode of tonsillitis",
+        "D": "Recurrent peritonsillar abscess"
+      },
+      "answer": "C",
+      "explanation": "A <b>single uncomplicated episode</b> is not an indication. Recurrent infection, OSA, recurrent quinsy and suspected malignancy all are."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Which drug is NOT ototoxic?",
+      "options": {
+        "A": "Gentamicin",
+        "B": "Cisplatin",
+        "C": "Furosemide",
+        "D": "Amoxicillin"
+      },
+      "answer": "D",
+      "explanation": "<b>Amoxicillin/penicillin are not ototoxic.</b> Aminoglycosides, cisplatin and loop diuretics (furosemide) are — \"A CLaSs of Quiet\"."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Which neck lump is NOT contagious?",
+      "options": {
+        "A": "Tuberculous lymphadenitis",
+        "B": "Branchial cyst",
+        "C": "Infectious mononucleosis node",
+        "D": "Cat-scratch lymphadenitis"
+      },
+      "answer": "B",
+      "explanation": "A <b>branchial cyst</b> is congenital — no transmissible organism. The others are infective."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Which salivary gland tumour is usually bilateral?",
+      "options": {
+        "A": "Pleomorphic adenoma",
+        "B": "Warthin's tumour",
+        "C": "Mucoepidermoid carcinoma",
+        "D": "Adenoid cystic carcinoma"
+      },
+      "answer": "B",
+      "explanation": "<b>Warthin's tumour</b> (older male smokers) is the one that can be bilateral/multifocal."
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Which sinus drains into the superior meatus?",
+      "options": {
+        "A": "Maxillary sinus",
+        "B": "Frontal sinus",
+        "C": "Posterior ethmoid cells",
+        "D": "Sphenoid sinus"
+      },
+      "answer": "C",
+      "explanation": "<b>Posterior ethmoid cells</b> drain to the superior meatus. Frontal/maxillary/anterior ethmoid → middle; sphenoid → sphenoethmoidal recess."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Which nerve carries taste from the anterior 2/3 of the tongue?",
+      "options": {
+        "A": "Lingual nerve (V3)",
+        "B": "Chorda tympani (VII)",
+        "C": "Glossopharyngeal (IX)",
+        "D": "Hypoglossal (XII)"
+      },
+      "answer": "B",
+      "explanation": "<b>Chorda tympani (VII)</b> = taste anterior 2/3. The lingual nerve carries general sensation there; IX does both for the posterior 1/3."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Which is NOT a symptom of peritonsillar abscess?",
+      "options": {
+        "A": "Trismus",
+        "B": "Uvula deviated to the opposite side",
+        "C": "Symmetrical bilateral tonsillar swelling",
+        "D": "\"Hot potato\" muffled voice"
+      },
+      "answer": "C",
+      "explanation": "Quinsy is <b>unilateral</b> — bulging on one side with the uvula pushed away. Symmetrical bilateral swelling is not typical."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Which organism most commonly causes otitis externa?",
+      "options": {
+        "A": "Streptococcus pneumoniae",
+        "B": "Pseudomonas aeruginosa",
+        "C": "Haemophilus influenzae",
+        "D": "Epstein-Barr virus"
+      },
+      "answer": "B",
+      "explanation": "<b>Pseudomonas aeruginosa</b> (+ Staph aureus). Also the organism of malignant otitis externa in diabetics."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Barotrauma of the ear is caused by:",
+      "options": {
+        "A": "Loud noise damaging hair cells",
+        "B": "Failure of the Eustachian tube to equalise middle-ear pressure",
+        "C": "Autoimmune destruction of the cochlea",
+        "D": "Bacterial infection of the mastoid"
+      },
+      "answer": "B",
+      "explanation": "Pressure change the <b>ET cannot equalise</b> → TM retraction, effusion, possible perforation. Worse with a blocked tube (URTI)."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Which is NOT a feature of Ramsay Hunt syndrome?",
+      "options": {
+        "A": "Vesicles in the external auditory canal",
+        "B": "Lower-motor-neuron facial palsy",
+        "C": "Forehead sparing",
+        "D": "Vertigo and SNHL"
+      },
+      "answer": "C",
+      "explanation": "Ramsay Hunt is a <b>LMN</b> palsy → the <b>whole half of the face</b> is affected, so <b>no forehead sparing</b> (that's a central/UMN sign)."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "Which disease does NOT cause salivary gland inflammation/swelling?",
+      "options": {
+        "A": "Mumps",
+        "B": "Sjögren's syndrome",
+        "C": "Sialolithiasis",
+        "D": "Otosclerosis"
+      },
+      "answer": "D",
+      "explanation": "<b>Otosclerosis</b> is stapes fixation in the ear — nothing to do with salivary glands."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Which structure separates the (true) vocal cords?",
+      "options": {
+        "A": "Rima glottidis",
+        "B": "Laryngeal ventricle",
+        "C": "Cricothyroid membrane",
+        "D": "Aryepiglottic fold"
+      },
+      "answer": "A",
+      "explanation": "The <b>rima glottidis</b> (glottis) is the aperture between the true cords. The ventricle separates true from false cords."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "The parotid gland drains into the mouth via a duct opening:",
+      "options": {
+        "A": "At the sublingual papilla",
+        "B": "Opposite the 2nd upper molar",
+        "C": "Under the tongue beside the frenulum",
+        "D": "At the foramen cecum"
+      },
+      "answer": "B",
+      "explanation": "<b>Stensen's duct</b> opens opposite the <b>2nd upper molar</b>. (Wharton's/submandibular opens at the sublingual papilla.)"
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Squamous cell carcinoma of the oral cavity is most frequent at:",
+      "options": {
+        "A": "Hard palate",
+        "B": "Floor of mouth / lateral tongue",
+        "C": "Buccal mucosa",
+        "D": "Gingiva"
+      },
+      "answer": "B",
+      "explanation": "<b>Floor of mouth and lateral/ventral tongue</b> are the highest-risk sites for oral SCC."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Nasopharyngeal carcinoma usually arises from:",
+      "options": {
+        "A": "The torus tubarius",
+        "B": "The fossa of Rosenmüller",
+        "C": "Waldeyer's ring",
+        "D": "The choana"
+      },
+      "answer": "B",
+      "explanation": "The <b>fossa of Rosenmüller</b> (lateral pharyngeal recess) — EBV-associated."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Overgrowth of the filiform papillae on the dorsum of the tongue is called:",
+      "options": {
+        "A": "Geographic tongue",
+        "B": "Hairy tongue (lingua villosa)",
+        "C": "Glossitis",
+        "D": "Leukoplakia"
+      },
+      "answer": "B",
+      "explanation": "<b>Hairy tongue (lingua villosa)</b> — elongated keratinised filiform papillae; benign."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Which is NOT a typical primary site presenting with cervical nodal metastases?",
+      "options": {
+        "A": "Nasopharynx",
+        "B": "Larynx / hypopharynx",
+        "C": "Oral cavity",
+        "D": "Femur"
+      },
+      "answer": "D",
+      "explanation": "Head & neck SCC sites (nasopharynx, larynx, oral cavity) drain to neck nodes. A <b>femoral (bone) primary</b> does not present as a cervical node."
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Which parotid swelling is typically NOT painful?",
+      "options": {
+        "A": "Pleomorphic adenoma",
+        "B": "Adenoid cystic carcinoma",
+        "C": "Acute bacterial parotitis",
+        "D": "Mucoepidermoid carcinoma"
+      },
+      "answer": "A",
+      "explanation": "<b>Pleomorphic adenoma</b> is a benign, slow, painless lump. Pain suggests malignancy or infection."
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Which is NOT a complication of middle-ear infection?",
+      "options": {
+        "A": "Labyrinthitis",
+        "B": "Meningitis",
+        "C": "Cavernous sinus thrombosis",
+        "D": "Mastoiditis"
+      },
+      "answer": "C",
+      "explanation": "<b>Cavernous sinus thrombosis</b> complicates <b>sinusitis</b>/facial infection. Middle-ear infection causes <i>sigmoid</i> sinus thrombosis, not cavernous."
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "In an adult with unilateral otitis media with effusion, you must exclude:",
+      "options": {
+        "A": "Otosclerosis",
+        "B": "Nasopharyngeal carcinoma",
+        "C": "Presbycusis",
+        "D": "Cholesteatoma"
+      },
+      "answer": "B",
+      "explanation": "Unilateral adult glue ear → exclude <b>nasopharyngeal carcinoma</b> obstructing the ET. Scope the nasopharynx."
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "Which is NOT a cause of stridor in neonates?",
+      "options": {
+        "A": "Laryngomalacia",
+        "B": "Vocal cord palsy",
+        "C": "Croup (laryngotracheobronchitis)",
+        "D": "Subglottic stenosis"
+      },
+      "answer": "C",
+      "explanation": "<b>Croup</b> affects older infants/children (6 mo–3 y), not neonates. Laryngomalacia is the commonest neonatal cause."
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Main treatment for otitis externa is:",
+      "options": {
+        "A": "Oral broad-spectrum antibiotics",
+        "B": "Aural toilet + topical antibiotic/steroid drops",
+        "C": "Myringotomy and grommet",
+        "D": "Mastoidectomy"
+      },
+      "answer": "B",
+      "explanation": "<b>Aural toilet + topical antibiotic/steroid ear drops</b>, keep the ear dry. Systemic antibiotics only if spreading."
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Which test objectively measures the hearing threshold?",
+      "options": {
+        "A": "Pure tone audiometry",
+        "B": "Weber test",
+        "C": "Auditory brainstem response (ABR/BERA)",
+        "D": "Rinne test"
+      },
+      "answer": "C",
+      "explanation": "<b>ABR/BERA</b> is objective. PTA, Weber and Rinne all need a patient response (subjective)."
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "BPPV vertigo typically lasts:",
+      "options": {
+        "A": "Seconds (with position change)",
+        "B": "20 minutes to hours",
+        "C": "Days, constant",
+        "D": "Permanent"
+      },
+      "answer": "A",
+      "explanation": "<b>Seconds</b> on head-position change. Ménière's lasts 20 min–hours; vestibular neuritis days."
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "The cardinal feature combination of Ménière's disease is:",
+      "options": {
+        "A": "Vertigo + conductive loss + otorrhea",
+        "B": "Vertigo + fluctuating SNHL + tinnitus + aural fullness",
+        "C": "Facial palsy + vesicles + otalgia",
+        "D": "Vertigo only, no hearing change"
+      },
+      "answer": "B",
+      "explanation": "<b>Episodic vertigo + fluctuating SNHL + tinnitus + aural fullness</b> (endolymphatic hydrops)."
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "The cardinal symptom of nasal polyps is:",
+      "options": {
+        "A": "Epistaxis",
+        "B": "Nasal obstruction",
+        "C": "Facial pain",
+        "D": "Anosmia alone"
+      },
+      "answer": "B",
+      "explanation": "<b>Nasal obstruction</b> is the cardinal symptom (with hyposmia/rhinorrhea). Pale, insensitive, in the middle meatus."
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Which is NOT used to evaluate peripheral vestibular function?",
+      "options": {
+        "A": "Dix-Hallpike manoeuvre",
+        "B": "Caloric test",
+        "C": "MRI brain",
+        "D": "Head-impulse test"
+      },
+      "answer": "C",
+      "explanation": "<b>MRI</b> is for suspected <i>central</i> pathology. Dix-Hallpike, caloric and head-impulse test the peripheral vestibular system."
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "What is NOT possible/likely as the diagnosis of a neck lump in a patient under 18?",
+      "options": {
+        "A": "Reactive lymphadenitis",
+        "B": "Branchial cyst",
+        "C": "Metastatic squamous cell carcinoma",
+        "D": "Lymphoma"
+      },
+      "answer": "C",
+      "explanation": "<b>Metastatic SCC</b> is very unlikely under 18. Congenital cysts, reactive nodes and lymphoma dominate this age group."
+    }
+  ]
+}

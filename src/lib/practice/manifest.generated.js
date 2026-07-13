@@ -15,6 +15,9 @@ import semester2GeneralPhysiologyIndex from '../../../content/practice/ausom/sem
 import semester2GeneralPhysiologyTestPredictedLabExam from '../../../content/practice/ausom/semester-2/general-physiology/predicted-lab-exam.json';
 import semester2GeneralPhysiologyTestPredictedMcqOneoffs from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-oneoffs.json';
 import semester2GeneralPhysiologyTestPredictedMcqRepeaters from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-repeaters.json';
+import semester6EntOralIndex from '../../../content/practice/ausom/semester-6/ent-oral/index.json';
+import semester6EntOralTestFlashcards from '../../../content/practice/ausom/semester-6/ent-oral/flashcards.json';
+import semester6EntOralTestQuiz from '../../../content/practice/ausom/semester-6/ent-oral/quiz.json';
 import semester6EntWrittenIndex from '../../../content/practice/ausom/semester-6/ent-written/index.json';
 import semester6EntWrittenTestPastPapers from '../../../content/practice/ausom/semester-6/ent-written/past-papers.json';
 import semester6EntWrittenTestRecalls from '../../../content/practice/ausom/semester-6/ent-written/recalls.json';
@@ -63,6 +66,13 @@ export const MANIFEST = {
     },
   },
   "semester-6": {
+    "ent-oral": {
+      index: semester6EntOralIndex,
+      tests: {
+        "flashcards": semester6EntOralTestFlashcards,
+        "quiz": semester6EntOralTestQuiz,
+      },
+    },
     "ent-written": {
       index: semester6EntWrittenIndex,
       tests: {

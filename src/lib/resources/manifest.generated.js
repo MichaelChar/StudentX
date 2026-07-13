@@ -90,6 +90,22 @@ export const RESOURCES = [
     "subjectLabel": "Anatomy I (MD1009)"
   },
   {
+    "id": "notes:ent-oral",
+    "type": "study-notes",
+    "title": "ENT Oral — Exam Notes",
+    "description": "Priority map, 12 cheat tables & mnemonics, and 7 practical OSCE scripts for the oral exam.",
+    "href": "/student/ausom/semester-6/ent-oral/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-oral",
+    "meta": {
+      "sectionCount": 22
+    },
+    "subjectLabel": "ENT — Oral Exam (MD1039)"
+  },
+  {
     "id": "notes:ent-written",
     "type": "study-notes",
     "title": "ENT Written — Exam Notes",
@@ -184,6 +200,38 @@ export const RESOURCES = [
       "questionCount": 48
     },
     "subjectLabel": "Biochemistry I (MD1011)"
+  },
+  {
+    "id": "practice:ent-oral:flashcards",
+    "type": "practice-test",
+    "title": "ENT Oral — Flashcards",
+    "description": "74 tiered flip-cards across 9 ENT regions — tap to reveal.",
+    "href": "/student/ausom/semester-6/ent-oral/flashcards",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-oral",
+    "meta": {
+      "questionCount": 74
+    },
+    "subjectLabel": "ENT — Oral Exam (MD1039)"
+  },
+  {
+    "id": "practice:ent-oral:quiz",
+    "type": "practice-test",
+    "title": "ENT Oral — Recalled Quiz",
+    "description": "28 MCQs built from real recalled oral-exam questions.",
+    "href": "/student/ausom/semester-6/ent-oral/quiz",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-oral",
+    "meta": {
+      "questionCount": 28
+    },
+    "subjectLabel": "ENT — Oral Exam (MD1039)"
   },
   {
     "id": "practice:ent-written:past-papers",
