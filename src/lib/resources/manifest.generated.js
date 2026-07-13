@@ -10,6 +10,21 @@
 /** @type {import('./schema.js').ResourceEntry[]} */
 export const RESOURCES = [
   {
+    "id": "flashcard:general-histology:general-histology",
+    "type": "flashcard-deck",
+    "title": "General Histology",
+    "description": "Comprehensive and high yield anki deck covering all the content.",
+    "href": "/flashcards/histology/general-histology.apkg",
+    "school": "ausom",
+    "subject": "general-histology",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "meta": {
+      "cardCount": 115
+    }
+  },
+  {
     "id": "flashcard:general-physiology:general-physiology",
     "type": "flashcard-deck",
     "title": "General Physiology",
@@ -22,21 +37,6 @@ export const RESOURCES = [
     "year": 2026,
     "meta": {
       "cardCount": 120
-    }
-  },
-  {
-    "id": "flashcard:histology:general-histology",
-    "type": "flashcard-deck",
-    "title": "General Histology",
-    "description": "Comprehensive and high yield anki deck covering all the content.",
-    "href": "/flashcards/histology/general-histology.apkg",
-    "school": "ausom",
-    "subject": "histology",
-    "semester": "semester-2",
-    "country": "gr",
-    "year": 2026,
-    "meta": {
-      "cardCount": 115
     }
   },
   {
@@ -143,5 +143,17 @@ export const RESOURCES = [
     "meta": {
       "questionCount": 33
     }
+  },
+  {
+    "id": "practice:medical-informatics:predicted-practice-exam",
+    "type": "practice-test",
+    "title": "Medical Informatics — Predicted Practice Exam",
+    "description": "Standalone practice exam predicting the contents of the Medical Informatics June 2026 exam.",
+    "href": "/practice/ausom/semester-2/medical-informatics/predicted-practice-exam.html",
+    "school": "ausom",
+    "subject": "medical-informatics",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026
   }
 ];

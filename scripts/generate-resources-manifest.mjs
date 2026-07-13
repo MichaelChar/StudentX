@@ -24,7 +24,6 @@ import path from 'node:path';
 import { SubjectIndexSchema as PracticeSubjectIndexSchema } from '../src/lib/practice/schema.js';
 import { SubjectIndexSchema as FlashcardsSubjectIndexSchema } from '../src/lib/flashcards/schema.js';
 import { ResourceEntrySchema } from '../src/lib/resources/schema.js';
-import { getSubjectLabel } from '../src/lib/resources/taxonomy.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Walk every semester under the AUSoM tree: content/practice/ausom/<semester-N>/<subject>/.
@@ -84,10 +83,9 @@ function collectPracticeEntries() {
         continue;
       }
       for (const test of index.tests) {
-        // Derive subject slug (value for facet/filter + ?subject=) and human label
-        // from the content path (index + folder), per task. Slugs are exact (no merging).
+        // Subject slug (facet/filter value + ?subject=) comes from index.json,
+        // falling back to the folder name. Slugs are exact (no family merging).
         const subjectSlug = index.subject || subject;
-        const subjectLabel = index.title || getSubjectLabel(subjectSlug);
         entries.push({
           // The card type defaults to 'practice-test'; a test can opt into
           // 'past-paper' via `resourceType` in its index.json entry.
@@ -126,10 +124,9 @@ function collectFlashcardEntries() {
     }
     const index = parsed.data;
     for (const deck of index.decks) {
-      // Derive subject slug (value for facet/filter + ?subject=) and human label
-      // from the content path (index + folder), per task. Slugs are exact (no merging).
+      // Subject slug (facet/filter value + ?subject=) comes from index.json,
+      // falling back to the folder name. Slugs are exact (no family merging).
       const subjectSlug = index.subject || subject;
-      const subjectLabel = index.title || getSubjectLabel(subjectSlug);
       entries.push({
         id: `flashcard:${subject}:${deck.id}`,
         type: 'flashcard-deck',
@@ -150,8 +147,29 @@ function collectFlashcardEntries() {
   return entries;
 }
 
+// Hand-authored entries for resources that live outside the content/ trees.
+// The Medical Informatics exam is a standalone static HTML page under public/
+// (no per-question JSON), so it can't go through the practice pipeline — it
+// would break scripts/generate-practice-manifest.mjs, which imports a JSON
+// file per test. Validated against ResourceEntrySchema like everything else.
+const EXTRA_RESOURCES = [
+  {
+    id: 'practice:medical-informatics:predicted-practice-exam',
+    type: 'practice-test',
+    title: 'Medical Informatics — Predicted Practice Exam',
+    description:
+      'Standalone practice exam predicting the contents of the Medical Informatics June 2026 exam.',
+    href: '/practice/ausom/semester-2/medical-informatics/predicted-practice-exam.html',
+    school: 'ausom',
+    subject: 'medical-informatics',
+    semester: 'semester-2',
+    country: 'gr',
+    year: 2026,
+  },
+];
+
 function main() {
-  const entries = [...collectPracticeEntries(), ...collectFlashcardEntries()];
+  const entries = [...collectPracticeEntries(), ...collectFlashcardEntries(), ...EXTRA_RESOURCES];
 
   for (const entry of entries) {
     const parsed = ResourceEntrySchema.safeParse(entry);

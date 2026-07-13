@@ -86,9 +86,11 @@ export default function ResourcesExplorer() {
       } else {
         next.delete('q');
       }
-      // Search does not affect lastChanged (relax prioritizes last facet)
+      // Search does not affect lastChanged (relax prioritizes last facet).
+      // replace, not push: one history entry per keystroke would make Back
+      // walk through the query character by character.
       const qs = next.toString();
-      router.push(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
     },
     [searchParams, router, pathname],
   );
@@ -308,8 +310,6 @@ export default function ResourcesExplorer() {
             : ' for the selected filters'}
           {droppedKey && droppedKey !== 'all'
             ? ` — showing results with "${FACET_TITLES[droppedKey] ?? droppedKey}" cleared.`
-            : hasActiveSearch && !hasActiveFacetFilters
-            ? ' — showing all resources.'
             : ' — showing all resources.'}
         </p>
       )}
@@ -323,7 +323,7 @@ export default function ResourcesExplorer() {
       >
         {groupBySubject && grouped
           ? grouped.map((g) => (
-              <div key={g.subject}>
+              <div key={g.subject} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
                 <div
                   style={{
                     fontSize: 11,
@@ -398,6 +398,16 @@ function ResourceCard({ resource }) {
   if (resource.type === 'flashcard-deck') {
     return (
       <a href={resource.href} download className={CARD_CLASS} style={CARD_STYLE}>
+        <ResourceCardBody resource={resource} meta={meta} />
+      </a>
+    );
+  }
+
+  // Static-asset resources (e.g. the standalone Medical Informatics .html
+  // exam) aren't Next routes — a plain anchor avoids the client router.
+  if (resource.href.endsWith('.html')) {
+    return (
+      <a href={resource.href} className={CARD_CLASS} style={CARD_STYLE}>
         <ResourceCardBody resource={resource} meta={meta} />
       </a>
     );
