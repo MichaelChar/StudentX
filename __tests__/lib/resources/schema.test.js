@@ -8,6 +8,7 @@ const validEntry = {
   description: 'Mega test predicting the contents for the exam',
   href: '/student/ausom/semester-2/biochemistry/mega-test',
   school: 'ausom',
+  subject: 'biochemistry',
   semester: 'semester-2',
   country: 'gr',
   year: 2026,
@@ -25,7 +26,7 @@ describe('ResourceEntrySchema', () => {
   });
 
   it('rejects an unknown semester', () => {
-    const result = ResourceEntrySchema.safeParse({ ...validEntry, semester: 'semester-9' });
+    const result = ResourceEntrySchema.safeParse({ ...validEntry, semester: 'semester-13' });
     expect(result.success).toBe(false);
   });
 

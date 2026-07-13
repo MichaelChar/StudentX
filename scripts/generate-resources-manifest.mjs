@@ -24,6 +24,7 @@ import path from 'node:path';
 import { SubjectIndexSchema as PracticeSubjectIndexSchema } from '../src/lib/practice/schema.js';
 import { SubjectIndexSchema as FlashcardsSubjectIndexSchema } from '../src/lib/flashcards/schema.js';
 import { ResourceEntrySchema } from '../src/lib/resources/schema.js';
+import { getSubjectLabel } from '../src/lib/resources/taxonomy.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Walk every semester under the AUSoM tree: content/practice/ausom/<semester-N>/<subject>/.
@@ -83,6 +84,10 @@ function collectPracticeEntries() {
         continue;
       }
       for (const test of index.tests) {
+        // Derive subject slug (value for facet/filter + ?subject=) and human label
+        // from the content path (index + folder), per task. Slugs are exact (no merging).
+        const subjectSlug = index.subject || subject;
+        const subjectLabel = index.title || getSubjectLabel(subjectSlug);
         entries.push({
           // The card type defaults to 'practice-test'; a test can opt into
           // 'past-paper' via `resourceType` in its index.json entry.
@@ -92,6 +97,7 @@ function collectPracticeEntries() {
           description: test.description,
           href: `/student/ausom/${semester}/${subject}/${test.id}`,
           school: index.school,
+          subject: subjectSlug,
           semester: index.semester,
           country: index.country,
           year: test.year,
@@ -120,6 +126,10 @@ function collectFlashcardEntries() {
     }
     const index = parsed.data;
     for (const deck of index.decks) {
+      // Derive subject slug (value for facet/filter + ?subject=) and human label
+      // from the content path (index + folder), per task. Slugs are exact (no merging).
+      const subjectSlug = index.subject || subject;
+      const subjectLabel = index.title || getSubjectLabel(subjectSlug);
       entries.push({
         id: `flashcard:${subject}:${deck.id}`,
         type: 'flashcard-deck',
@@ -129,6 +139,7 @@ function collectFlashcardEntries() {
         // which navigate to a page — see ResourceCard in ResourcesExplorer.js.
         href: deck.file,
         school: index.school,
+        subject: subjectSlug,
         semester: index.semester,
         country: index.country,
         year: deck.year,

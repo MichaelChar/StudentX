@@ -5,7 +5,9 @@ import {
   getFacetOptions,
   relaxFilters,
   resourcesMatchingOtherFilters,
+  searchResources,
 } from '@/lib/resources/facets';
+import { getSubjectLabel } from '@/lib/resources/taxonomy';
 
 const resources = [
   { id: '1', type: 'practice-test', semester: 'semester-2', country: 'gr', year: 2026 },
@@ -127,5 +129,81 @@ describe('resourcesMatchingOtherFilters + getFacetOptions (refined faceting)', (
     const keys = deriveFacets(mixed).map((f) => f.key);
     expect(keys).toContain('type');
     expect(keys).toContain('semester');
+  });
+});
+
+describe('subject facet (new)', () => {
+  const withSubjects = [
+    { id: 'p1', type: 'practice-test', semester: 'semester-2', subject: 'anatomy-1', country: 'gr', year: 2026 },
+    { id: 'p2', type: 'practice-test', semester: 'semester-2', subject: 'biochemistry', country: 'gr', year: 2026 },
+    { id: 'f1', type: 'flashcard-deck', semester: 'semester-2', subject: 'general-physiology', country: 'gr', year: 2026 },
+  ];
+
+  it('includes subject in FACET_KEYS and surfaces when >=2 distinct', () => {
+    const keys = deriveFacets(withSubjects).map((f) => f.key);
+    expect(keys).toContain('subject');
+  });
+
+  it('getFacetOptions derives human labels for subject values', () => {
+    const opts = getFacetOptions(withSubjects, 'subject');
+    const labels = Object.fromEntries(opts.map((o) => [o.value, o.label]));
+    expect(labels['anatomy-1']).toBe('Anatomy I');
+    expect(labels['biochemistry']).toBe('Biochemistry I');
+    expect(labels['general-physiology']).toBe('General Physiology');
+  });
+});
+
+describe('searchResources (new)', () => {
+  const data = [
+    { id: 'a', title: 'Anatomy I — Mega', description: 'Bones and muscles', subject: 'anatomy-1' },
+    { id: 'b', title: 'Biochem Predicted', description: 'Metabolism exam', subject: 'biochemistry' },
+    { id: 'c', title: 'General Physiology Deck', description: 'High yield', subject: 'general-physiology' },
+  ];
+
+  it('case-insensitive substring over title + description + subject label', () => {
+    expect(searchResources(data, 'anatomy').map((r) => r.id)).toEqual(['a']);
+    expect(searchResources(data, 'BONES').map((r) => r.id)).toEqual(['a']);
+    expect(searchResources(data, 'biochemistry').map((r) => r.id)).toEqual(['b']); // label match
+    expect(searchResources(data, 'exam').map((r) => r.id)).toEqual(['b']);
+  });
+
+  it('empty or blank q returns everything', () => {
+    expect(searchResources(data, '').length).toBe(3);
+    expect(searchResources(data, '   ').length).toBe(3);
+  });
+});
+
+describe('search composes with facets + relaxation with q (new)', () => {
+  const data = [
+    { id: 'a1', type: 'practice-test', semester: 'semester-2', subject: 'anatomy-1', country: 'gr', year: 2026 },
+    { id: 'a2', type: 'practice-test', semester: 'semester-2', subject: 'anatomy-1', country: 'gr', year: 2026 },
+    { id: 'b1', type: 'practice-test', semester: 'semester-2', subject: 'biochemistry', country: 'gr', year: 2026 },
+  ];
+
+  it('search + facet filter is AND', () => {
+    const filtered = filterResources(data, { semester: 'semester-2' });
+    const withSearch = searchResources(filtered, 'anatomy');
+    expect(withSearch.map((r) => r.id)).toEqual(['a1', 'a2']);
+  });
+
+  it('facet+search zero triggers facet relaxation (q kept applied)', () => {
+    // Filter to a subject + search that only that subject has, but force empty by bad combo
+    const res = searchResources(filterResources(data, { semester: 'semester-2', subject: 'biochemistry' }), 'anatomy');
+    expect(res.length).toBe(0);
+
+    // Using explorer-style: relax facets then search on result
+    const relaxed = relaxFilters(data, { semester: 'semester-2', subject: 'biochemistry' }, 'subject');
+    const afterSearch = searchResources(relaxed.results, 'anatomy');
+    // After dropping subject we still have semester-2; 'anatomy' search should match
+    expect(afterSearch.length).toBeGreaterThan(0);
+    expect(afterSearch.every((r) => r.subject === 'anatomy-1')).toBe(true);
+  });
+
+  it('search alone zero shows facet results (never empty)', () => {
+    const facetRes = filterResources(data, {});
+    const searched = searchResources(facetRes, 'no-such-term-xyz');
+    expect(searched.length).toBe(0);
+    // In explorer this path returns the facetRes (un-searched) + message
+    expect(facetRes.length).toBe(3);
   });
 });
