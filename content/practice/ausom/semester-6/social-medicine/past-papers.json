@@ -1,0 +1,1486 @@
+{
+  "meta": {
+    "title": "Social Medicine & Public Health — Past Papers",
+    "course": "MD1041 Social Medicine & Public Health",
+    "semester": "Semester 6",
+    "total_questions": 105,
+    "mcq_count": 105,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Disadvantages of spermicides / chemical contraceptives:",
+      "options": {
+        "A": "The high cost of procurement",
+        "B": "They require medical intervention",
+        "C": "They do not protect against venereal diseases",
+        "D": "They present an unpleasant odour"
+      },
+      "answer": "C",
+      "explanation": "The key limitation of spermicides is that they give no protection against STIs/venereal diseases (unlike condoms).",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Psychology of change (in improving healthcare quality) — which is true?",
+      "options": {
+        "A": "Adopting a clearly improved idea rarely meets obstacles",
+        "B": "Improvement is achieved when the entire population implements the change",
+        "C": "All are wrong",
+        "D": "In a few groups ~50% delay adopting a clearly improved idea"
+      },
+      "answer": "C",
+      "explanation": "Per Rogers' diffusion curve, innovation does meet resistance, full adoption is not required, and resisters (laggards) are ~16%, not 50% — so all three specific statements are wrong.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Regarding the Bradford-Hill criteria, which is correct?",
+      "options": {
+        "A": "There are 9, including \"strength of association\" and \"plausibility\"",
+        "B": "There are 9, including \"reusability\", \"investigation\" and \"plausibility\"",
+        "C": "There are 9, including \"temporality\", \"specificity\" and \"prevalence\"",
+        "D": "There are 7, including \"ratio\", \"plausibility\" and \"prevalence\""
+      },
+      "answer": "A",
+      "explanation": "Bradford-Hill = 9 criteria (strength, consistency, specificity, temporality, biological gradient, plausibility, coherence, experiment, analogy). \"Prevalence\" and \"reusability\" are not criteria.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Modifiable risk factors for Coronary Artery Disease are:",
+      "options": {
+        "A": "Dyslipidemia",
+        "B": "Gender",
+        "C": "Family history",
+        "D": "Low body mass index (BMI)"
+      },
+      "answer": "A",
+      "explanation": "Dyslipidemia is modifiable. Gender & family history are non-modifiable; low BMI is not a CHD risk factor.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "The onset of an infectious disease requires:",
+      "options": {
+        "A": "The absence of a susceptible host",
+        "B": "The absence of protozoa",
+        "C": "The absence of a receptor",
+        "D": "The presence of a causal factor"
+      },
+      "answer": "D",
+      "explanation": "Disease needs a causative agent (plus a susceptible host and a route of transmission) — the chain of infection.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Meta-analysis is:",
+      "options": {
+        "A": "Simple statistical data analysis",
+        "B": "The analysis of only interventional studies",
+        "C": "The quantitative synthesis of results from individual studies",
+        "D": "The qualitative synthesis of results from individual studies"
+      },
+      "answer": "C",
+      "explanation": "Meta-analysis = quantitative synthesis of results across individual studies (a weighted pooled estimate).",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Which measure of association is estimated in a case-control study?",
+      "options": {
+        "A": "Relative risk",
+        "B": "Relative frequency",
+        "C": "Odds ratio",
+        "D": "The inverse of relative frequency"
+      },
+      "answer": "C",
+      "explanation": "Case-control studies yield the odds ratio (they cannot directly measure incidence/relative risk).",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "In secondary prevention of breast cancer, all are true EXCEPT:",
+      "options": {
+        "A": "MRI in women with a family history of breast cancer",
+        "B": "Self-examination from a young age",
+        "C": "Preventive mastectomy",
+        "D": "Mammography every year in women >55"
+      },
+      "answer": "C",
+      "explanation": "Prophylactic mastectomy = primary prevention (removing the organ before disease), so it is NOT part of secondary prevention/screening.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Regarding improvement of quality in healthcare, which is NOT true?",
+      "options": {
+        "A": "Related processes run parallel to and connected with daily clinical practice",
+        "B": "All are wrong",
+        "C": "Continuous, combined efforts of all involved professionals are necessary",
+        "D": "Adoption of necessary changes to improve therapeutic outcomes"
+      },
+      "answer": "B",
+      "explanation": "The other three statements are all valid QI principles, so \"All are wrong\" is itself the untrue option.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Measurement of disease frequency can be done with:",
+      "options": {
+        "A": "Odds ratio",
+        "B": "Prevalence",
+        "C": "Standard deviation",
+        "D": "Relative risk"
+      },
+      "answer": "B",
+      "explanation": "Prevalence (and incidence) measure disease frequency. Odds ratio & relative risk are measures of association.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "\"Countries with wet habits\" regarding alcohol means:",
+      "options": {
+        "A": "Countries producing wine with few dependency cases",
+        "B": "Countries producing alcohol that border the sea",
+        "C": "Countries with high alcohol abuse and intoxication",
+        "D": "Countries with large surface water that produce alcohol"
+      },
+      "answer": "C",
+      "explanation": "\"Wet\" drinking cultures = high alcohol abuse and intoxication patterns.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Regarding the goals of Health Education:",
+      "options": {
+        "A": "Grouped into 7 basic categories",
+        "B": "All are correct",
+        "C": "They presuppose the process of decision-making and behaviour change",
+        "D": "Not always specific, as long as they include awareness, knowledge, value prioritization"
+      },
+      "answer": "C",
+      "explanation": "Health-education objectives presuppose decision-making and behaviour change (targeting knowledge → attitudes → behaviour).",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Rubella is transmitted:",
+      "options": {
+        "A": "After injury with a contaminated object",
+        "B": "Through contact with contaminated blood/derivatives",
+        "C": "By consuming contaminated water",
+        "D": "By direct contact with sufferers through droplets"
+      },
+      "answer": "D",
+      "explanation": "Rubella spreads by direct droplet contact (respiratory route).",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Accidents in developed countries, by frequency/cause of death, rank:",
+      "options": {
+        "A": "3rd, after circulatory diseases and malignant neoplasms",
+        "B": "2nd, after malignant neoplasms",
+        "C": "4th, after malignant disease, substance abuse and alcohol",
+        "D": "1st, with malignant disease 2nd"
+      },
+      "answer": "A",
+      "explanation": "In developed countries injuries/accidents are typically the 3rd leading cause of death, after cardiovascular disease and cancer.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "WHO's goal: reduce the life-expectancy gap between socioeconomic groups by at least:",
+      "options": {
+        "A": "35%",
+        "B": "25%",
+        "C": "15%",
+        "D": "45%"
+      },
+      "answer": "B",
+      "explanation": "The WHO target is a reduction of at least 25%.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Maximum blood nicotine concentration is achieved within:",
+      "options": {
+        "A": "15 minutes",
+        "B": "6–8 minutes",
+        "C": "10 minutes",
+        "D": "5 minutes"
+      },
+      "answer": "C",
+      "explanation": "Peak blood nicotine is reached within about 10 minutes.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "WHO goals for the 21st century include all EXCEPT:",
+      "options": {
+        "A": "Reduction of communicable diseases",
+        "B": "Increase in population fertility",
+        "C": "Reduction of non-communicable diseases",
+        "D": "Healthy ageing"
+      },
+      "answer": "B",
+      "explanation": "Increasing fertility is not a WHO goal; the goals target reducing communicable & non-communicable disease and healthy ageing.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "In direct transmission of infectious diseases:",
+      "options": {
+        "A": "Host and susceptible host are more than 1.5 m apart",
+        "B": "Host and susceptible host are less than 1.5 m apart",
+        "C": "Transmission occurs only through contact between two people",
+        "D": "Transmission occurs only through droplets"
+      },
+      "answer": "B",
+      "explanation": "Direct (droplet) transmission occurs at close range — typically < 1.5 m.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Which is true regarding early historical observations?",
+      "options": {
+        "A": "Treatment of scurvy symptoms by consuming fruits and vegetables",
+        "B": "Thicker skulls of Egyptians (vs Persians) from enriched clothing",
+        "C": "Treatment of night blindness by consuming meat with honey",
+        "D": "Lower prevalence of osteomalacia in areas with greater sunlight"
+      },
+      "answer": "A",
+      "explanation": "The classic early observation is that fruit/vegetables cure scurvy (Lind, vitamin C). Note: lower osteomalacia in sunny areas (vitamin D) is also a valid historical observation, but the Egyptian-skull and night-blindness options are stated incorrectly.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "The second phase of demographic maturity is characterized by:",
+      "options": {
+        "A": "Low birth rate and mortality",
+        "B": "High birth rate and mortality",
+        "C": "High birth rate and decreasing mortality",
+        "D": "Slow decrease in birth rate with a significant decrease in mortality"
+      },
+      "answer": "C",
+      "explanation": "Phase 2 (early expanding) = high fertility with falling mortality → rapid population growth.",
+      "source": "SOCIAL 2020"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "The types of receptors / reservoirs are:",
+      "options": {
+        "A": "Three: humans, animals and environment",
+        "B": "One: only humans",
+        "C": "Two: humans and animals",
+        "D": "Four: humans, animals, environment and microbes"
+      },
+      "answer": "A",
+      "explanation": "Reservoirs are classified as Human, Animal and Environmental — three types.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "\"Countries with wet habits\" regarding alcohol means:",
+      "options": {
+        "A": "Countries producing alcohol that are wet from the sea",
+        "B": "Countries with high alcohol abuse and intoxication",
+        "C": "Countries with large surface waters that produce alcohol",
+        "D": "Countries producing wine with few dependency cases"
+      },
+      "answer": "B",
+      "explanation": "\"Wet\" cultures = high alcohol abuse and intoxication.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Which of the following is true?",
+      "options": {
+        "A": "Secondary prevention aims to inform and sensitise increased-risk groups",
+        "B": "All are correct",
+        "C": "Primary prevention concerns the entire population, healthy and sick",
+        "D": "Tertiary prevention aims at rehabilitation, adaptation and prevention of relapse"
+      },
+      "answer": "B",
+      "explanation": "Each statement is defensible in the course's framing (secondary→high-risk outreach/screening, primary→whole population, tertiary→rehabilitation) → All are correct.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Life expectancy is:",
+      "options": {
+        "A": "Higher in infants regardless of gender",
+        "B": "Higher in women",
+        "C": "No difference between genders",
+        "D": "Higher in men"
+      },
+      "answer": "B",
+      "explanation": "Life expectancy is generally higher in women.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Based on the relationship between economy and health:",
+      "options": {
+        "A": "Poverty doesn't contribute to disease (no meat/sugar consumed)",
+        "B": "The poverty–wealth–health relationship is undocumented",
+        "C": "Poverty contributes to the manifestation of disease",
+        "D": "Prosperity undermines health via alcohol/substances"
+      },
+      "answer": "C",
+      "explanation": "Poverty contributes to disease — a core social determinant of health.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "Maximum blood nicotine concentration is achieved within:",
+      "options": {
+        "A": "10 minutes",
+        "B": "15 minutes",
+        "C": "6–8 minutes",
+        "D": "5 minutes"
+      },
+      "answer": "A",
+      "explanation": "About 10 minutes.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Healthy life expectancy is an indicator that answers questions such as:",
+      "options": {
+        "A": "Which risk factor is most dangerous for health?",
+        "B": "Does improving health also come with longevity?",
+        "C": "At which prevention level can we intervene?",
+        "D": "Which disease is responsible for most deaths?"
+      },
+      "answer": "B",
+      "explanation": "HALE addresses whether improvements in health are accompanied by longevity (living longer in good health).",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "A risk factor for cancer in the adult Greek population is:",
+      "options": {
+        "A": "Daily large intake of vegetables/fruit",
+        "B": "Large muscle mass",
+        "C": "Obesity",
+        "D": "Intense aerobic exercise"
+      },
+      "answer": "C",
+      "explanation": "Obesity is a modifiable cancer risk factor; the others are protective.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "Which is NOT true about hepatitis B vaccination?",
+      "options": {
+        "A": "It is completed in one dose",
+        "B": "It is the main prevention against HBV",
+        "C": "Recommended for all HCWs not vaccinated in childhood",
+        "D": "One of the mandatory childhood vaccinations"
+      },
+      "answer": "A",
+      "explanation": "The HBV vaccine is a multi-dose (3-dose) schedule, not one dose.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "An advantage of the prospective cohort study is that:",
+      "options": {
+        "A": "It can calculate all confounding factors",
+        "B": "It can only calculate relative risks",
+        "C": "It can only calculate odds ratios",
+        "D": "It can calculate incidence"
+      },
+      "answer": "D",
+      "explanation": "Cohort studies follow disease-free people forward, so they can measure incidence (and relative risk).",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "The second phase of demographic transition is characterized by:",
+      "options": {
+        "A": "High fertility and decreasing mortality",
+        "B": "High fertility and mortality",
+        "C": "Low fertility and mortality",
+        "D": "Slow reduction in fertility with significant reduction in mortality"
+      },
+      "answer": "A",
+      "explanation": "Phase 2 = high fertility, falling mortality → rapid growth.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "The statistical model for estimating risk from CVD (SCORE) includes:",
+      "options": {
+        "A": "Obesity",
+        "B": "Diabetes mellitus",
+        "C": "Thyroid disorders",
+        "D": "Hypertension"
+      },
+      "answer": "D",
+      "explanation": "SCORE uses age, sex, smoking, cholesterol and systolic BP (hypertension).",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "Epidemiological surveillance of smallpox includes:",
+      "options": {
+        "A": "Chemoprophylaxis of health personnel during an outbreak",
+        "B": "Disinfection of patients' faeces and urine",
+        "C": "Isolation of patients for 9 days",
+        "D": "Strict isolation when the patient is hospitalized"
+      },
+      "answer": "D",
+      "explanation": "Smallpox requires strict isolation of hospitalized patients (a highly contagious airborne/contact pathogen).",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "HPV vaccination to prevent cervical cancer is an example of:",
+      "options": {
+        "A": "Secondary prevention",
+        "B": "Primary prevention",
+        "C": "Combination of primary & secondary",
+        "D": "Tertiary prevention"
+      },
+      "answer": "B",
+      "explanation": "It's a vaccine → primary prevention, even though the ultimate target is a cancer.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "The population pyramid of a mature population is characterized by:",
+      "options": {
+        "A": "Expansion of the base of the pyramid",
+        "B": "Decrease in average age of marriage",
+        "C": "Increase in average age of marriage",
+        "D": "Decreasing mortality followed gradually by a sharp fall in fertility"
+      },
+      "answer": "D",
+      "explanation": "A mature population shows falling mortality then a marked fall in fertility → narrowing base, ageing structure.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "Nitrosamine, produced from tobacco combustion, is considered a substance that:",
+      "options": {
+        "A": "Is implicated in carcinogenic action",
+        "B": "Causes nausea and vomiting",
+        "C": "Is the main cause of myocardial infarction",
+        "D": "Leads to chronic respiratory failure"
+      },
+      "answer": "A",
+      "explanation": "Nitrosamines are carcinogenic.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "Smoking damage to the cardiovascular system contributes to:",
+      "options": {
+        "A": "Coronary heart disease – angina",
+        "B": "Aortic root aneurysm",
+        "C": "Myocarditis",
+        "D": "Pericarditis"
+      },
+      "answer": "A",
+      "explanation": "Smoking → coronary heart disease / angina (via thrombosis & vasoconstriction).",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 38,
+      "type": "mcq",
+      "stem": "Causes / risk factors for alcohol use include all EXCEPT:",
+      "options": {
+        "A": "Genetic causes",
+        "B": "Comorbidities (coexistence of other diseases)",
+        "C": "Emotional state",
+        "D": "Psychological causes"
+      },
+      "answer": "B",
+      "explanation": "The recognised causes are genetic, psychological and emotional. Comorbidities are coexisting conditions, treated here as the exception.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 39,
+      "type": "mcq",
+      "stem": "Screening programs, regarding prevention, are used for:",
+      "options": {
+        "A": "Early diagnosis of disease at a preclinical stage",
+        "B": "Encouraging individuals to adopt healthy habits",
+        "C": "Limiting disability from disease",
+        "D": "Appropriate treatment of disease"
+      },
+      "answer": "A",
+      "explanation": "Screening = secondary prevention = early detection in the preclinical (asymptomatic) stage.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 40,
+      "type": "mcq",
+      "stem": "Which is NOT used for understanding the system when improving quality of health services?",
+      "options": {
+        "A": "Run chart",
+        "B": "Observation",
+        "C": "Surveys",
+        "D": "Fishbone diagram"
+      },
+      "answer": "A",
+      "explanation": "Fishbone, observation and surveys help map/understand the system; a run chart is used to track change/variation over time (the measurement phase) rather than to understand the system itself.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 41,
+      "type": "mcq",
+      "stem": "What is true about active immunity?",
+      "options": {
+        "A": "The host develops antibodies after vaccination or illness",
+        "B": "None of the above",
+        "C": "Only when the host develops antibodies due to illness",
+        "D": "When ready-made antibodies are administered for immediate protection"
+      },
+      "answer": "A",
+      "explanation": "Active immunity = the host produces its own antibodies after infection or vaccination. Ready-made antibodies = passive immunity.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 42,
+      "type": "mcq",
+      "stem": "WHO's goal: reduce the life-expectancy gap between socioeconomic groups by at least:",
+      "options": {
+        "A": "35%",
+        "B": "45%",
+        "C": "25%",
+        "D": "15%"
+      },
+      "answer": "C",
+      "explanation": "At least 25%.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 43,
+      "type": "mcq",
+      "stem": "In the USA, one fifth of fatal road accidents involve:",
+      "options": {
+        "A": "Users of addictive substances",
+        "B": "Pedestrians",
+        "C": "Teenagers",
+        "D": "The elderly"
+      },
+      "answer": "C",
+      "explanation": "About one fifth of fatal crashes involve teenagers/adolescents.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 44,
+      "type": "mcq",
+      "stem": "Regarding studies on diet–cancer correlation, which is true?",
+      "options": {
+        "A": "None of the above",
+        "B": "Antioxidants are associated with a partial reduction of ALL cancer types",
+        "C": "Reduced appearance of certain cancers from increased fruit consumption",
+        "D": "Reduced appearance of all cancers from increased vegetable consumption"
+      },
+      "answer": "C",
+      "explanation": "Increased fruit intake is linked to reduced incidence of certain cancer types — not \"all\" cancers.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 45,
+      "type": "mcq",
+      "stem": "Modifiable risk factors for Coronary Heart Disease are:",
+      "options": {
+        "A": "Gender",
+        "B": "Genetic history",
+        "C": "Dyslipidemia",
+        "D": "Low body mass index (BMI)"
+      },
+      "answer": "C",
+      "explanation": "Dyslipidemia is modifiable; gender & genetics are not; low BMI isn't a CHD risk factor.",
+      "source": "SOCIAL 2022 (Feb)"
+    },
+    {
+      "id": 46,
+      "type": "mcq",
+      "stem": "WHO's goal: reduce the life-expectancy gap among socioeconomic groups by at least:",
+      "options": {
+        "A": "35%",
+        "B": "25%",
+        "C": "45%",
+        "D": "15%"
+      },
+      "answer": "B",
+      "explanation": "At least 25%.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 47,
+      "type": "mcq",
+      "stem": "Per WHO, the most common conditions contributing to DALYs include all EXCEPT:",
+      "options": {
+        "A": "Colon cancer",
+        "B": "Road traffic accidents",
+        "C": "Chronic lung disease",
+        "D": "Ischaemic heart disease"
+      },
+      "answer": "A",
+      "explanation": "Top DALY contributors include IHD, stroke, road injury and COPD; colon cancer is not among the very top DALY causes.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 48,
+      "type": "mcq",
+      "stem": "In Greece, family planning was first institutionalized:",
+      "options": {
+        "A": "1991 with Law 732",
+        "B": "1974 with Law 1281",
+        "C": "2001 with Law 1451",
+        "D": "1980 with Law 1036"
+      },
+      "answer": "D",
+      "explanation": "1980, Law 1036.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 49,
+      "type": "mcq",
+      "stem": "An advantage of a prospective cohort study is that:",
+      "options": {
+        "A": "Incidence can be calculated",
+        "B": "All confounding factors can be calculated",
+        "C": "Only proportion ratios can be calculated",
+        "D": "Only relative risks can be calculated"
+      },
+      "answer": "A",
+      "explanation": "Cohort studies measure incidence.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 50,
+      "type": "mcq",
+      "stem": "Cigarette smoke is classified into:",
+      "options": {
+        "A": "Main, middle and lower stream",
+        "B": "Main and sidestream",
+        "C": "Main, clockwise and counter-clockwise stream",
+        "D": "Upward and downward stream"
+      },
+      "answer": "B",
+      "explanation": "Tobacco smoke = mainstream + sidestream.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 51,
+      "type": "mcq",
+      "stem": "Road traffic accidents show:",
+      "options": {
+        "A": "Increase in middle-aged individuals",
+        "B": "Local clustering and temporal periodicity",
+        "C": "Higher frequency on provincial roads",
+        "D": "Increase during the summer months"
+      },
+      "answer": "B",
+      "explanation": "The canonical answer is local clustering and temporal periodicity (though summer increase & provincial-road frequency are also true features).",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 52,
+      "type": "mcq",
+      "stem": "Modifiable risk factors for CHD include:",
+      "options": {
+        "A": "Family history",
+        "B": "Low body mass index (BMI)",
+        "C": "Gender",
+        "D": "Dyslipidemia"
+      },
+      "answer": "D",
+      "explanation": "Dyslipidemia is the modifiable factor.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 53,
+      "type": "mcq",
+      "stem": "Psychology of change (improving healthcare quality) — which is true?",
+      "options": {
+        "A": "In a few groups ~50% delay adopting an improved idea",
+        "B": "All are incorrect",
+        "C": "Improvement is achieved only when the entire population adopts",
+        "D": "Adoption of an improved idea rarely meets resistance"
+      },
+      "answer": "B",
+      "explanation": "All three specific statements misrepresent Rogers' curve → all are incorrect (resisters ≈16%, full adoption not required, innovation does meet resistance).",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 54,
+      "type": "mcq",
+      "stem": "Which is true about Health Education?",
+      "options": {
+        "A": "It primarily targets community health improvement",
+        "B": "It includes all opportunities contributing to individual and community health",
+        "C": "Constructed learning is not pursued",
+        "D": "It is an integral and dynamic tool of Health Promotion"
+      },
+      "answer": "D",
+      "explanation": "Health education is an indispensable / integral tool of Health Promotion (learning is very much consciously constructed, so option C is false).",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 55,
+      "type": "mcq",
+      "stem": "The types of hosts / reservoirs are:",
+      "options": {
+        "A": "Three: human, animals and environment",
+        "B": "Four: human, animals, environment and microbes",
+        "C": "One: only humans",
+        "D": "Two: human and animals"
+      },
+      "answer": "A",
+      "explanation": "Human, animal, environmental — three.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 56,
+      "type": "mcq",
+      "stem": "What is herd immunity?",
+      "options": {
+        "A": "Disease transmission at the population level",
+        "B": "Administration of antibiotics to the entire population",
+        "C": "Susceptibility or resistance of a population to a specific disease",
+        "D": "Non-vaccination of the population"
+      },
+      "answer": "C",
+      "explanation": "Herd immunity = a population's resistance (or susceptibility) to a specific disease when enough members are immune to break transmission.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 57,
+      "type": "mcq",
+      "stem": "Smoking cessation, weight control, balanced diet and exercise in a woman of reproductive age with a history of gestational diabetes are examples of:",
+      "options": {
+        "A": "None of the above",
+        "B": "Secondary prevention",
+        "C": "Tertiary prevention",
+        "D": "Primary prevention"
+      },
+      "answer": "D",
+      "explanation": "Reducing risk factors before disease onset = primary prevention.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 58,
+      "type": "mcq",
+      "stem": "Non-modifiable risk factors for CHD include:",
+      "options": {
+        "A": "Gender",
+        "B": "Smoking",
+        "C": "Dyslipidemia",
+        "D": "Low BMI"
+      },
+      "answer": "A",
+      "explanation": "Gender is non-modifiable; smoking & dyslipidemia are modifiable; low BMI isn't a CHD risk factor.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 59,
+      "type": "mcq",
+      "stem": "Diphtheria incidence is highest in:",
+      "options": {
+        "A": "The autumn months",
+        "B": "The winter months",
+        "C": "The summer months",
+        "D": "The spring months"
+      },
+      "answer": "B",
+      "explanation": "Diphtheria (respiratory droplet spread) peaks in the colder winter months.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 60,
+      "type": "mcq",
+      "stem": "Those more prone to accidents are:",
+      "options": {
+        "A": "Children",
+        "B": "Adolescents",
+        "C": "Women",
+        "D": "Men"
+      },
+      "answer": "D",
+      "explanation": "Men — roughly twice as many males as females die from injuries.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 61,
+      "type": "mcq",
+      "stem": "Causes contributing to alcohol addiction include all EXCEPT:",
+      "options": {
+        "A": "Psychological causes",
+        "B": "Emotional state",
+        "C": "Genetic causes",
+        "D": "Financial poverty"
+      },
+      "answer": "D",
+      "explanation": "Recognised causes are genetic, psychological and emotional; financial poverty is the exception here.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 62,
+      "type": "mcq",
+      "stem": "The statistical model for estimating CHD risk (SCORE) includes:",
+      "options": {
+        "A": "Thyroid disease",
+        "B": "Obesity",
+        "C": "Arterial hypertension",
+        "D": "Diabetes mellitus"
+      },
+      "answer": "C",
+      "explanation": "SCORE includes arterial hypertension (systolic BP), with age, sex, smoking, cholesterol.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 63,
+      "type": "mcq",
+      "stem": "In direct transmission of infectious diseases:",
+      "options": {
+        "A": "Host and susceptible host are more than 1.5 m apart",
+        "B": "Host and susceptible host are less than 1.5 m apart",
+        "C": "Transmission occurs only through person-to-person contact",
+        "D": "Transmission occurs only through droplets"
+      },
+      "answer": "B",
+      "explanation": "Direct droplet transmission occurs at < 1.5 m.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 64,
+      "type": "mcq",
+      "stem": "Per Rogers' curve on the psychology of change during new quality interventions, which is true?",
+      "options": {
+        "A": "All of the above",
+        "B": "The majority (66%) are early adopters",
+        "C": "Everyone reacts the same way to change",
+        "D": "A small percentage (16%) stubbornly resist and may never adopt (laggards)"
+      },
+      "answer": "D",
+      "explanation": "Laggards ≈ 16% resist and may never adopt. Early adopters are ~13.5%, and people clearly differ in their response.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 65,
+      "type": "mcq",
+      "stem": "The second phase of demographic transition is characterized by:",
+      "options": {
+        "A": "Low birth and death rates",
+        "B": "High birth and death rates",
+        "C": "High birth rate and declining death rate",
+        "D": "Slow decline in birth rate with significant decline in death rate"
+      },
+      "answer": "C",
+      "explanation": "Phase 2 = high birth rate, declining death rate.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 66,
+      "type": "mcq",
+      "stem": "Carcinogens are identified by all of the following EXCEPT:",
+      "options": {
+        "A": "Direct application of known carcinogens to volunteers and observation",
+        "B": "Use of lab animals",
+        "C": "Occupational cohort studies",
+        "D": "Observing individuals exposed to carcinogens during treatments (e.g. radiation)"
+      },
+      "answer": "A",
+      "explanation": "You cannot ethically apply carcinogens to volunteers. Identification uses animal studies, occupational cohorts and observation of exposed patients.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 67,
+      "type": "mcq",
+      "stem": "All of the following are true EXCEPT:",
+      "options": {
+        "A": "Early colon cancer diagnosis gives good 5-year survival (90%)",
+        "B": "Ovarian cancer causes the fewest reproductive-system cancers in women",
+        "C": "Prostate cancer has good 5-year survival",
+        "D": "Pancreatic cancer has poor 5-year survival (5%)"
+      },
+      "answer": "B",
+      "explanation": "The ovarian cancer statement is the false one (it is neither the \"fewest\" nor benign — ovarian cancer has notably poor survival).",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 68,
+      "type": "mcq",
+      "stem": "Regarding the \"Dutch Hunger Winter\" study, which is correct?",
+      "options": {
+        "A": "Only the early stages of pregnancy affect fetal growth trajectory",
+        "B": "Fetal growth trajectory is determined in the first half of pregnancy",
+        "C": "None of the above",
+        "D": "Early-pregnancy nutritional deficiency gave long-term advantages (greater resilience)"
+      },
+      "answer": "C",
+      "explanation": "The Dutch Hunger Winter showed early-gestation famine → long-term harm (obesity, metabolic/CVD disease, schizophrenia risk), and growth is not fixed only in the first half → so none of the above.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 69,
+      "type": "mcq",
+      "stem": "Nitrogen oxides in cigarette-smoke gases cause damage to:",
+      "options": {
+        "A": "The respiratory system",
+        "B": "The lymphatic system",
+        "C": "The haematopoietic system",
+        "D": "The cardiovascular system"
+      },
+      "answer": "A",
+      "explanation": "Nitrogen oxides damage the respiratory system.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 70,
+      "type": "mcq",
+      "stem": "The occurrence of an infectious disease requires:",
+      "options": {
+        "A": "The absence of protozoa",
+        "B": "The absence of a susceptible host",
+        "C": "The presence of a causative agent",
+        "D": "The absence of a host"
+      },
+      "answer": "C",
+      "explanation": "A causative agent must be present (with a susceptible host and transmission).",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 71,
+      "type": "mcq",
+      "stem": "A prerequisite for a confounding factor is that:",
+      "options": {
+        "A": "It must be related to the studied exposure",
+        "B": "It must not be related to the exposure",
+        "C": "It must not be a risk factor for the outcome",
+        "D": "It must be an intermediate factor between exposure and outcome"
+      },
+      "answer": "A",
+      "explanation": "A confounder must be associated with the exposure, be an independent risk factor for the outcome, and not lie on the causal pathway.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 72,
+      "type": "mcq",
+      "stem": "Regarding prolonged starvation, which is true?",
+      "options": {
+        "A": "Reduced mental function, but for a shorter duration",
+        "B": "Symptoms of poor mental health",
+        "C": "Reduced libido",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "Prolonged starvation → reduced mental function, poor mental-health symptoms and reduced libido → all of the above.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 73,
+      "type": "mcq",
+      "stem": "In overviews of systematic reviews (umbrella reviews):",
+      "options": {
+        "A": "Their synthesis unit is only individual studies",
+        "B": "There is no synthesis unit",
+        "C": "Their synthesis unit is drug side effects",
+        "D": "Their synthesis unit is systematic reviews"
+      },
+      "answer": "D",
+      "explanation": "Umbrella reviews synthesise systematic reviews (reviews of reviews).",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 74,
+      "type": "mcq",
+      "stem": "A country's birth rate is influenced by:",
+      "options": {
+        "A": "The population composition",
+        "B": "The proportion of females in the general population",
+        "C": "The region's climate",
+        "D": "The proportion of males in the general population"
+      },
+      "answer": "A",
+      "explanation": "Birth rate depends on population composition — its age/sex structure, especially the share of women of reproductive age.",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 75,
+      "type": "mcq",
+      "stem": "Hepatitis D is NOT endemic in:",
+      "options": {
+        "A": "Countries with water-scarcity issues",
+        "B": "Drug users and frequently transfused patients",
+        "C": "Areas with tropical climate",
+        "D": "Migrant populations from Asian countries"
+      },
+      "answer": "A",
+      "explanation": "HDV is bloodborne (requires HBV co-infection) — not waterborne, so it is not linked to water scarcity (that fits hepatitis A/E).",
+      "source": "SOCIAL 2022 (June)"
+    },
+    {
+      "id": 76,
+      "type": "mcq",
+      "stem": "The main causes of injury and death in aviation accidents are:",
+      "options": {
+        "A": "Fire and deceleration of the aircraft",
+        "B": "Tyre burst",
+        "C": "Leakage of fuel and toxic gases",
+        "D": "Engine failure"
+      },
+      "answer": "C",
+      "explanation": "The main cause is leakage of fuel and toxic/poisonous gases.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 77,
+      "type": "mcq",
+      "stem": "Road traffic accidents show:",
+      "options": {
+        "A": "An increase in middle-aged people",
+        "B": "Local clustering and temporal periodicity",
+        "C": "Higher frequency on provincial roads",
+        "D": "An increase during the summer months"
+      },
+      "answer": "B",
+      "explanation": "The canonical feature is local clustering and temporal periodicity (they also rise in summer and on provincial roads).",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 78,
+      "type": "mcq",
+      "stem": "Epidemiological surveillance of chickenpox (varicella) includes:",
+      "options": {
+        "A": "Strict isolation when the patient is hospitalized",
+        "B": "Disinfection of patients' faeces and urine",
+        "C": "Chemoprophylaxis of personnel during an outbreak",
+        "D": "Isolation of patients for 9 days"
+      },
+      "answer": "A",
+      "explanation": "Varicella (airborne/contact) requires strict isolation during hospitalization until all lesions have crusted.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 79,
+      "type": "mcq",
+      "stem": "Rubella is transmitted:",
+      "options": {
+        "A": "Through contact with contaminated blood",
+        "B": "By consuming contaminated water",
+        "C": "By direct contact with sufferers through droplets",
+        "D": "After injury with a contaminated object"
+      },
+      "answer": "C",
+      "explanation": "Rubella spreads by direct droplet contact (respiratory route).",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 80,
+      "type": "mcq",
+      "stem": "In secondary prevention of breast cancer, all are true EXCEPT:",
+      "options": {
+        "A": "Preventive mastectomy",
+        "B": "MRI in women with a family history",
+        "C": "Mammography every year in women >55",
+        "D": "Self-examination from a young age"
+      },
+      "answer": "A",
+      "explanation": "Prophylactic mastectomy = primary prevention, not secondary.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 81,
+      "type": "mcq",
+      "stem": "Among environmental factors for cancer, all are included EXCEPT:",
+      "options": {
+        "A": "Solar radiation",
+        "B": "A diet poor in antioxidants",
+        "C": "Smoking",
+        "D": "Exercise"
+      },
+      "answer": "D",
+      "explanation": "Exercise is protective, not a risk factor.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 82,
+      "type": "mcq",
+      "stem": "Regarding quality improvement in healthcare, which is NOT true?",
+      "options": {
+        "A": "Adoption of necessary changes to improve therapeutic outcomes",
+        "B": "Continuous and combined efforts of all involved are necessary",
+        "C": "All",
+        "D": "The processes run parallel to and connected with daily practice"
+      },
+      "answer": "C",
+      "explanation": "Options A, B and D are all valid QI principles, so \"All\" is the key here (every statement holds).",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 83,
+      "type": "mcq",
+      "stem": "Regarding understanding the system (in quality improvement), what is true?",
+      "options": {
+        "A": "Understanding is the final step of the improvement effort",
+        "B": "The ideal way comes from combining methods of inquiry",
+        "C": "All are correct",
+        "D": "Brainstorming improves the team's dynamic"
+      },
+      "answer": "C",
+      "explanation": "Combining methods and brainstorming both hold, and understanding is not the \"final\" step → all are correct among the valid statements.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 84,
+      "type": "mcq",
+      "stem": "Regarding Health Promotion:",
+      "options": {
+        "A": "All are correct",
+        "B": "It covers a wide range of social & environmental interventions",
+        "C": "It aims at adopting healthy attitudes and behaviours",
+        "D": "It refers to enhancing people's ability to control their own health"
+      },
+      "answer": "A",
+      "explanation": "All three statements correctly describe health promotion → all are correct.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 85,
+      "type": "mcq",
+      "stem": "Regarding the goals of Health Education:",
+      "options": {
+        "A": "They are grouped into 7 basic categories",
+        "B": "All are correct",
+        "C": "They presuppose \"decision-making\" and \"behaviour change\"",
+        "D": "They are not always specific, as long as they include awareness, knowledge and value prioritization"
+      },
+      "answer": "C",
+      "explanation": "Health-education goals presuppose decision-making and behaviour change.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 86,
+      "type": "mcq",
+      "stem": "Regarding the results of the \"Seven Countries\" study, which holds?",
+      "options": {
+        "A": "The Mediterranean Diet is UNESCO-protected heritage",
+        "B": "Longevity is due to genotype and is minimally affected by diet",
+        "C": "All options are correct",
+        "D": "The observations confirmed the definition of the Mediterranean Diet model"
+      },
+      "answer": "D",
+      "explanation": "The Seven Countries Study (Ancel Keys) confirmed/defined the Mediterranean Diet model as protective against CVD.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 87,
+      "type": "mcq",
+      "stem": "Which is true about prolonged starvation?",
+      "options": {
+        "A": "It reduces mental function but for a shorter period",
+        "B": "It leads to symptoms of poor mental health",
+        "C": "All of the listed options",
+        "D": "It leads to reduced libido"
+      },
+      "answer": "C",
+      "explanation": "Prolonged starvation → poor mental health + reduced libido + impaired mental function → all of them.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 88,
+      "type": "mcq",
+      "stem": "Regarding diet–cancer correlation studies, which is true?",
+      "options": {
+        "A": "None",
+        "B": "Antioxidants partially reduce the prevalence of ALL cancers",
+        "C": "Reduced appearance of certain cancers from increased fruit consumption",
+        "D": "Reduced appearance of all cancers from increased vegetable consumption"
+      },
+      "answer": "C",
+      "explanation": "Increased fruit intake → reduced appearance of certain cancer types (not \"all\").",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 89,
+      "type": "mcq",
+      "stem": "The summary result obtained after a meta-analysis is:",
+      "options": {
+        "A": "A weighted mean where smaller studies get more weight",
+        "B": "A median of the results",
+        "C": "A weighted mean where larger studies get more weight",
+        "D": "A simple mean of the results"
+      },
+      "answer": "C",
+      "explanation": "In meta-analysis, larger studies are weighted more heavily.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 90,
+      "type": "mcq",
+      "stem": "Which is an advantage of a prospective cohort study?",
+      "options": {
+        "A": "Incidence can be calculated",
+        "B": "It can calculate all confounding factors",
+        "C": "It can calculate only proportion ratios",
+        "D": "It can calculate only relative risks"
+      },
+      "answer": "A",
+      "explanation": "A cohort measures incidence.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 91,
+      "type": "mcq",
+      "stem": "How are nested case-control studies designed?",
+      "options": {
+        "A": "Within a cohort study",
+        "B": "Within a randomized study",
+        "C": "Within a cross-sectional study",
+        "D": "Within a case-control study"
+      },
+      "answer": "A",
+      "explanation": "Nested case-control studies are designed within a cohort.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 92,
+      "type": "mcq",
+      "stem": "WHO's goal: the life-expectancy gap between socioeconomic groups should be reduced by at least:",
+      "options": {
+        "A": "35%",
+        "B": "45%",
+        "C": "15%",
+        "D": "25%"
+      },
+      "answer": "D",
+      "explanation": "At least 25%.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 93,
+      "type": "mcq",
+      "stem": "In Greece, family planning was first institutionalized:",
+      "options": {
+        "A": "In 1991 with Law 732",
+        "B": "In 1974 with Law 1281",
+        "C": "In 2001 with Law 1451",
+        "D": "In 1980 with Law 1036"
+      },
+      "answer": "D",
+      "explanation": "1980, Law 1036.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 94,
+      "type": "mcq",
+      "stem": "In medical demography, the term \"births\" corresponds only to:",
+      "options": {
+        "A": "Live male births",
+        "B": "Live female births",
+        "C": "All deliveries",
+        "D": "Live births"
+      },
+      "answer": "D",
+      "explanation": "\"Births\" = live births.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 95,
+      "type": "mcq",
+      "stem": "The population pyramid of a mature population is characterized by:",
+      "options": {
+        "A": "A decrease in average age of marriage",
+        "B": "Expansion of the base of the pyramid",
+        "C": "Decreasing mortality, followed gradually by a sharp fall in fertility",
+        "D": "An increase in average age of marriage"
+      },
+      "answer": "C",
+      "explanation": "Mature population: falling mortality → then a sharp fall in fertility.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 96,
+      "type": "mcq",
+      "stem": "Diseases associated with alcohol include:",
+      "options": {
+        "A": "Liver disease",
+        "B": "Progressive neurological diseases (e.g. multiple sclerosis)",
+        "C": "Thyroid disease",
+        "D": "Orthopaedic problems"
+      },
+      "answer": "A",
+      "explanation": "Alcohol is causally linked to liver disease (and 200+ other conditions).",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 97,
+      "type": "mcq",
+      "stem": "Causes / risk factors for alcohol use include all EXCEPT:",
+      "options": {
+        "A": "Genetic causes",
+        "B": "Comorbidities (coexistence of other diseases)",
+        "C": "Emotional state",
+        "D": "Psychological causes"
+      },
+      "answer": "B",
+      "explanation": "Recognised causes are genetic, psychological and emotional; comorbidities are treated here as the exception.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 98,
+      "type": "mcq",
+      "stem": "Nitrosamine, produced from tobacco combustion, is considered a substance that:",
+      "options": {
+        "A": "Is implicated in carcinogenic action",
+        "B": "Causes nausea and vomiting",
+        "C": "Is the main cause of myocardial infarction",
+        "D": "Leads to chronic respiratory failure"
+      },
+      "answer": "A",
+      "explanation": "Nitrosamines are carcinogenic.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 99,
+      "type": "mcq",
+      "stem": "The nitrogen oxides in cigarette-smoke gases cause damage to:",
+      "options": {
+        "A": "The respiratory system",
+        "B": "The lymphatic system",
+        "C": "The haematopoietic system",
+        "D": "The cardiovascular system"
+      },
+      "answer": "A",
+      "explanation": "Damage to the respiratory system.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 100,
+      "type": "mcq",
+      "stem": "The statistical model for estimating CVD risk (SCORE) includes:",
+      "options": {
+        "A": "Thyroid disease",
+        "B": "Obesity",
+        "C": "Arterial hypertension",
+        "D": "Diabetes mellitus"
+      },
+      "answer": "C",
+      "explanation": "SCORE includes arterial hypertension (with age, sex, smoking, cholesterol).",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 101,
+      "type": "mcq",
+      "stem": "Modifiable risk factors for coronary heart disease are:",
+      "options": {
+        "A": "Hereditary history",
+        "B": "Low body mass index (BMI)",
+        "C": "Gender",
+        "D": "Dyslipidemia"
+      },
+      "answer": "D",
+      "explanation": "Dyslipidemia is modifiable; heredity & gender are not; low BMI isn't a CHD risk factor.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 102,
+      "type": "mcq",
+      "stem": "What is herd immunity?",
+      "options": {
+        "A": "Transmission of disease at the population level",
+        "B": "The taking of antibiotics by the whole population",
+        "C": "The susceptibility or resistance of a population to a specific disease",
+        "D": "Non-vaccination of the population"
+      },
+      "answer": "C",
+      "explanation": "Herd immunity = a population's resistance/susceptibility to a disease; enough immune members break transmission (R<1).",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 103,
+      "type": "mcq",
+      "stem": "The types of reservoirs are:",
+      "options": {
+        "A": "Three: human, animals and environment",
+        "B": "Four: human, animals, environment and microbes",
+        "C": "One: only humans",
+        "D": "Two: human and animals"
+      },
+      "answer": "A",
+      "explanation": "Human, animal, environmental — three.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 104,
+      "type": "mcq",
+      "stem": "WHO goals for the 21st century are all of the following EXCEPT:",
+      "options": {
+        "A": "Reduction of communicable / transmissible diseases",
+        "B": "Reduction of non-communicable diseases",
+        "C": "Healthy ageing",
+        "D": "Increasing population fertility"
+      },
+      "answer": "D",
+      "explanation": "Increasing fertility is not a WHO goal.",
+      "source": "SOCIAL 2021 (national, translated)"
+    },
+    {
+      "id": 105,
+      "type": "mcq",
+      "stem": "Healthy life expectancy is an indicator that answers questions such as:",
+      "options": {
+        "A": "Which risk factor is the most dangerous?",
+        "B": "Does improving health come with longevity?",
+        "C": "At which prevention level can we intervene?",
+        "D": "Which disease is responsible for deaths at a given moment?"
+      },
+      "answer": "B",
+      "explanation": "HALE addresses whether improving health is accompanied by longevity (years lived in good health).",
+      "source": "SOCIAL 2021 (national, translated)"
+    }
+  ]
+}

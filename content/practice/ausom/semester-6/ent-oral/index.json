@@ -1,0 +1,25 @@
+{
+  "subject": "ent-oral",
+  "title": "ENT — Oral Exam (MD1039)",
+  "school": "ausom",
+  "semester": "semester-6",
+  "country": "gr",
+  "tests": [
+    {
+      "id": "flashcards",
+      "title": "ENT Oral — Flashcards",
+      "kind": "topic",
+      "questionCount": 74,
+      "description": "74 tiered flip-cards across 9 ENT regions — tap to reveal.",
+      "year": 2026
+    },
+    {
+      "id": "quiz",
+      "title": "ENT Oral — Recalled Quiz",
+      "kind": "topic",
+      "questionCount": 28,
+      "description": "28 MCQs built from real recalled oral-exam questions.",
+      "year": 2026
+    }
+  ]
+}

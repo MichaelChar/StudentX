@@ -25,7 +25,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const CONTENT_ROOT = path.join(ROOT, 'content/flashcards');
 const OUT_FILE = path.join(ROOT, 'src/lib/flashcards/manifest.generated.js');
 
-/** kebab/anything -> a safe JS identifier fragment, e.g. "histology" -> "histology". */
+/** kebab/anything -> a safe JS identifier fragment, e.g. "general-histology" -> "generalHistology". */
 function ident(...parts) {
   const raw = parts.join('_').replace(/[^a-zA-Z0-9]+/g, '_');
   return raw.replace(/^_+/, '').replace(/_([a-z0-9])/g, (_, c) => c.toUpperCase());

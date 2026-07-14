@@ -3,6 +3,7 @@ import {
   evaluateBody,
   evaluateAnonCacheHeader,
   evaluateAuthedCacheHeader,
+  skipIfInconclusiveError,
 } from '@/app/api/cron/synthetic-en-listing/route';
 
 // Cache-header regression guards. Pre-PR #105 the canary asserted
@@ -66,6 +67,36 @@ describe('evaluateBody', () => {
       expect(result.ok).toBe(false);
       expect(result.reason).toMatch(/non-200 status: 500/);
     });
+  });
+});
+
+// The API/asset checks (listing-api-distances, og-default, landlord-listings-api,
+// missing-message) share this helper so a Worker self-fetch timeout — the abort
+// twin of an INCONCLUSIVE_CF_5XX status — is skipped, not paged. This is the
+// 2026-07-07 false positive: `listing-api-distances: fetch threw: The operation
+// was aborted due to timeout`, with prod healthy 30s either side.
+describe('skipIfInconclusiveError', () => {
+  for (const errName of ['TimeoutError', 'AbortError']) {
+    it(`skips on ${errName}`, () => {
+      const result = skipIfInconclusiveError('listing-api-distances', {
+        name: errName,
+        message: 'The operation was aborted due to timeout',
+      });
+      expect(result).toEqual({
+        name: 'listing-api-distances',
+        ok: true,
+        skipped: true,
+        reason: `skipped: ${errName}`,
+      });
+    });
+  }
+
+  it('returns null for a real error (caller hard-fails)', () => {
+    expect(skipIfInconclusiveError('og-default', new TypeError('bad json'))).toBeNull();
+  });
+
+  it('returns null when err is undefined', () => {
+    expect(skipIfInconclusiveError('og-default', undefined)).toBeNull();
   });
 });
 

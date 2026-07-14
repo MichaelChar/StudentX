@@ -937,6 +937,9 @@
         "done": "Done"
       }
     },
+    "notes": {
+      "back": "Back"
+    },
     "flashcards": {
       "backToHub": "Student Services",
       "backToSubjects": "Anki Flashcards",

@@ -10,19 +10,52 @@
 /** @type {import('./schema.js').ResourceEntry[]} */
 export const RESOURCES = [
   {
+    "id": "flashcard:anatomy-1:anatomy-high-yield",
+    "type": "flashcard-deck",
+    "title": "Anatomy I — Highest yield anatomy topics",
+    "description": "Consists only of topics repeatedly examined in the past. This deck is a companion to the \"Anatomy I — Exam Study Guide. Pattern-driven revision across 13 chapters\" set of notes",
+    "href": "/flashcards/anatomy-1/anatomy-high-yield.apkg",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "subject": "anatomy-1",
+    "meta": {
+      "cardCount": 177
+    },
+    "subjectLabel": "Anatomy I (MD1009)"
+  },
+  {
+    "id": "flashcard:biochemistry:biochemistry-high-yield",
+    "type": "flashcard-deck",
+    "title": "Biochemistry I — Highest yield biochemistry topics",
+    "description": "Topics either repeatedly tested in the past or specifically emphasised in lectures. This deck is built to be the only anki deck necessary for the course. Therefore, it is great cramming material",
+    "href": "/flashcards/biochemistry/biochemistry-high-yield.apkg",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "subject": "biochemistry",
+    "meta": {
+      "cardCount": 408
+    },
+    "subjectLabel": "Biochemistry I (MD1011)"
+  },
+  {
     "id": "flashcard:general-histology:general-histology",
     "type": "flashcard-deck",
     "title": "General Histology",
     "description": "Comprehensive and high yield anki deck covering all the content.",
-    "href": "/flashcards/histology/general-histology.apkg",
+    "href": "/flashcards/general-histology/general-histology.apkg",
     "school": "ausom",
-    "subject": "general-histology",
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-histology",
     "meta": {
       "cardCount": 115
-    }
+    },
+    "subjectLabel": "General Histology (MD1010)"
   },
   {
     "id": "flashcard:general-physiology:general-physiology",
@@ -31,13 +64,110 @@ export const RESOURCES = [
     "description": "Reviewing this Anki deck to perfection provides 100% of the knowledge necessary to get full marks for the first four past papers",
     "href": "/flashcards/general-physiology/general-physiology.apkg",
     "school": "ausom",
-    "subject": "general-physiology",
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-physiology",
     "meta": {
       "cardCount": 120
-    }
+    },
+    "subjectLabel": "General Physiology (MD1012)"
+  },
+  {
+    "id": "notes:anatomy-1",
+    "type": "study-notes",
+    "title": "Anatomy I — Exam Study Guide",
+    "description": "Pattern-driven revision across 13 chapters.",
+    "href": "/student/ausom/semester-2/anatomy-1/notes",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "subject": "anatomy-1",
+    "meta": {
+      "sectionCount": 13
+    },
+    "subjectLabel": "Anatomy I (MD1009)"
+  },
+  {
+    "id": "notes:ent-oral",
+    "type": "study-notes",
+    "title": "ENT Oral — Exam Notes",
+    "description": "Priority map, 12 cheat tables & mnemonics, and 7 practical OSCE scripts for the oral exam.",
+    "href": "/student/ausom/semester-6/ent-oral/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-oral",
+    "meta": {
+      "sectionCount": 22
+    },
+    "subjectLabel": "ENT — Oral Exam (MD1039)"
+  },
+  {
+    "id": "notes:ent-written",
+    "type": "study-notes",
+    "title": "ENT Written — Exam Notes",
+    "description": "High-yield written-exam notes — ear, hearing/vestibular, airway/larynx, nose/sinuses, oral cavity, salivary glands, neck — plus an oral-topics recap.",
+    "href": "/student/ausom/semester-6/ent-written/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-written",
+    "meta": {
+      "sectionCount": 8
+    },
+    "subjectLabel": "ENT — Written Exam (MD1039)"
+  },
+  {
+    "id": "notes:hygiene-epidemiology",
+    "type": "study-notes",
+    "title": "MD1040 Hygiene & Epidemiology — High-Yield Notes",
+    "description": "Condensed revision notes across 12 topics: hygiene of water, air, food and the workplace, and outbreak investigation.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "hygiene-epidemiology",
+    "meta": {
+      "sectionCount": 12
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
+  },
+  {
+    "id": "notes:pathophysiology",
+    "type": "study-notes",
+    "title": "Pathophysiology — High-Yield Notes",
+    "description": "Condensed revision notes across 10 systems — renal, electrolyte, acid–base, respiratory, cardiovascular, GI/liver, endocrine, haematology, immunity, and thermoregulation.",
+    "href": "/student/ausom/semester-6/pathophysiology/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "pathophysiology",
+    "meta": {
+      "sectionCount": 10
+    },
+    "subjectLabel": "Pathophysiology"
+  },
+  {
+    "id": "notes:social-medicine",
+    "type": "study-notes",
+    "title": "Social Medicine & Public Health — High-Yield Notes",
+    "description": "Condensed revision notes across 21 topics — health & prevention, epidemiology & screening, communicable/non-communicable disease, global health, surveillance, and study methods.",
+    "href": "/student/ausom/semester-6/social-medicine/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "social-medicine",
+    "meta": {
+      "sectionCount": 21
+    },
+    "subjectLabel": "Social Medicine & Public Health (MD1041)"
   },
   {
     "id": "practice:anatomy-1:mega-test",
@@ -46,13 +176,14 @@ export const RESOURCES = [
     "description": "Cumulative review of every presentation, including vertebral column, pectoral/pelvic girdles, limb bones, skull, joints, and head/neck/thorax/back/limb muscles.",
     "href": "/student/ausom/semester-2/anatomy-1/mega-test",
     "school": "ausom",
-    "subject": "anatomy-1",
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "anatomy-1",
     "meta": {
       "questionCount": 80
-    }
+    },
+    "subjectLabel": "Anatomy I (MD1009)"
   },
   {
     "id": "practice:biochemistry:mega-test",
@@ -61,13 +192,78 @@ export const RESOURCES = [
     "description": "Mega test predicting the contents for the Biochemistry I June 2026 exam",
     "href": "/student/ausom/semester-2/biochemistry/mega-test",
     "school": "ausom",
-    "subject": "biochemistry",
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "biochemistry",
     "meta": {
       "questionCount": 48
-    }
+    },
+    "subjectLabel": "Biochemistry I (MD1011)"
+  },
+  {
+    "id": "practice:ent-oral:flashcards",
+    "type": "practice-test",
+    "title": "ENT Oral — Flashcards",
+    "description": "74 tiered flip-cards across 9 ENT regions — tap to reveal.",
+    "href": "/student/ausom/semester-6/ent-oral/flashcards",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-oral",
+    "meta": {
+      "questionCount": 74
+    },
+    "subjectLabel": "ENT — Oral Exam (MD1039)"
+  },
+  {
+    "id": "practice:ent-oral:quiz",
+    "type": "practice-test",
+    "title": "ENT Oral — Recalled Quiz",
+    "description": "28 MCQs built from real recalled oral-exam questions.",
+    "href": "/student/ausom/semester-6/ent-oral/quiz",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-oral",
+    "meta": {
+      "questionCount": 28
+    },
+    "subjectLabel": "ENT — Oral Exam (MD1039)"
+  },
+  {
+    "id": "practice:ent-written:past-papers",
+    "type": "past-paper",
+    "title": "ENT Written — Past Papers",
+    "description": "145 written past-paper MCQs (2020–2022), each tagged with its exam year.",
+    "href": "/student/ausom/semester-6/ent-written/past-papers",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-written",
+    "meta": {
+      "questionCount": 145
+    },
+    "subjectLabel": "ENT — Written Exam (MD1039)"
+  },
+  {
+    "id": "practice:ent-written:recalls",
+    "type": "practice-test",
+    "title": "ENT Written — Recalled MCQs",
+    "description": "17 student-recalled written-exam MCQs (2025) with explanations.",
+    "href": "/student/ausom/semester-6/ent-written/recalls",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ent-written",
+    "meta": {
+      "questionCount": 17
+    },
+    "subjectLabel": "ENT — Written Exam (MD1039)"
   },
   {
     "id": "practice:general-histology:em-structure-id",
@@ -76,13 +272,14 @@ export const RESOURCES = [
     "description": "Test revising the electron microscope slides for the General Histology June 2026 lab exam",
     "href": "/student/ausom/semester-2/general-histology/em-structure-id",
     "school": "ausom",
-    "subject": "general-histology",
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-histology",
     "meta": {
       "questionCount": 9
-    }
+    },
+    "subjectLabel": "General Histology (MD1010)"
   },
   {
     "id": "practice:general-histology:lm-specimen-id",
@@ -91,13 +288,14 @@ export const RESOURCES = [
     "description": "Test revising the light microscope slides for the General Histology June 2026 lab exam",
     "href": "/student/ausom/semester-2/general-histology/lm-specimen-id",
     "school": "ausom",
-    "subject": "general-histology",
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-histology",
     "meta": {
       "questionCount": 14
-    }
+    },
+    "subjectLabel": "General Histology (MD1010)"
   },
   {
     "id": "practice:general-physiology:predicted-lab-exam",
@@ -106,13 +304,14 @@ export const RESOURCES = [
     "description": "Test predicting the long answer questions for the General Physiology June 2026 lab exam",
     "href": "/student/ausom/semester-2/general-physiology/predicted-lab-exam",
     "school": "ausom",
-    "subject": "general-physiology",
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-physiology",
     "meta": {
       "questionCount": 8
-    }
+    },
+    "subjectLabel": "General Physiology (MD1012)"
   },
   {
     "id": "practice:general-physiology:predicted-mcq-oneoffs",
@@ -121,13 +320,14 @@ export const RESOURCES = [
     "description": "27 high yield MCQs on previous papers. High probability of being reused.",
     "href": "/student/ausom/semester-2/general-physiology/predicted-mcq-oneoffs",
     "school": "ausom",
-    "subject": "general-physiology",
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-physiology",
     "meta": {
       "questionCount": 27
-    }
+    },
+    "subjectLabel": "General Physiology (MD1012)"
   },
   {
     "id": "practice:general-physiology:predicted-mcq-repeaters",
@@ -136,13 +336,94 @@ export const RESOURCES = [
     "description": "33 MCQ repeated across 2+ past papers. Obviously important content",
     "href": "/student/ausom/semester-2/general-physiology/predicted-mcq-repeaters",
     "school": "ausom",
-    "subject": "general-physiology",
     "semester": "semester-2",
     "country": "gr",
     "year": 2026,
+    "subject": "general-physiology",
     "meta": {
       "questionCount": 33
-    }
+    },
+    "subjectLabel": "General Physiology (MD1012)"
+  },
+  {
+    "id": "practice:hygiene-epidemiology:past-papers-2020-2024",
+    "type": "past-paper",
+    "title": "MD1040 Hygiene & Epidemiology — Past Papers (2020–2024)",
+    "description": "147 real MCQs from five sittings.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/past-papers-2020-2024",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "hygiene-epidemiology",
+    "meta": {
+      "questionCount": 147
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
+  },
+  {
+    "id": "practice:hygiene-epidemiology:predicted-paper-1",
+    "type": "practice-test",
+    "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 1",
+    "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/predicted-paper-1",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "hygiene-epidemiology",
+    "meta": {
+      "questionCount": 30
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
+  },
+  {
+    "id": "practice:hygiene-epidemiology:predicted-paper-2",
+    "type": "practice-test",
+    "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 2",
+    "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/predicted-paper-2",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "hygiene-epidemiology",
+    "meta": {
+      "questionCount": 30
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
+  },
+  {
+    "id": "practice:hygiene-epidemiology:predicted-paper-3",
+    "type": "practice-test",
+    "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 3",
+    "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/predicted-paper-3",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "hygiene-epidemiology",
+    "meta": {
+      "questionCount": 30
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
+  },
+  {
+    "id": "practice:hygiene-epidemiology:recalls",
+    "type": "practice-test",
+    "title": "MD1040 Hygiene & Epidemiology — Recalled MCQs",
+    "description": "38 student-recalled MCQs.",
+    "href": "/student/ausom/semester-6/hygiene-epidemiology/recalls",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "hygiene-epidemiology",
+    "meta": {
+      "questionCount": 38
+    },
+    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
     "id": "practice:medical-informatics:predicted-practice-exam",
@@ -151,9 +432,74 @@ export const RESOURCES = [
     "description": "Standalone practice exam predicting the contents of the Medical Informatics June 2026 exam.",
     "href": "/practice/ausom/semester-2/medical-informatics/predicted-practice-exam.html",
     "school": "ausom",
-    "subject": "medical-informatics",
     "semester": "semester-2",
     "country": "gr",
-    "year": 2026
+    "year": 2026,
+    "subject": "medical-informatics",
+    "subjectLabel": "Medical Informatics (MD1008)"
+  },
+  {
+    "id": "practice:pathophysiology:past-papers",
+    "type": "past-paper",
+    "title": "Pathophysiology — Past Papers",
+    "description": "150 real past-paper MCQs from three sittings (Feb 2021–July 2023), each tagged with its exam.",
+    "href": "/student/ausom/semester-6/pathophysiology/past-papers",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "pathophysiology",
+    "meta": {
+      "questionCount": 150
+    },
+    "subjectLabel": "Pathophysiology"
+  },
+  {
+    "id": "practice:pathophysiology:recall-drills",
+    "type": "practice-test",
+    "title": "Pathophysiology — Recall Drills",
+    "description": "83 flip-card recall drills across 7 systems — rapid Q&A on core mechanisms.",
+    "href": "/student/ausom/semester-6/pathophysiology/recall-drills",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "pathophysiology",
+    "meta": {
+      "questionCount": 83
+    },
+    "subjectLabel": "Pathophysiology"
+  },
+  {
+    "id": "practice:social-medicine:past-papers",
+    "type": "past-paper",
+    "title": "Social Medicine & Public Health — Past Papers",
+    "description": "105 real past-paper MCQs from four sittings (2020–2022), each tagged with its exam.",
+    "href": "/student/ausom/semester-6/social-medicine/past-papers",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "social-medicine",
+    "meta": {
+      "questionCount": 105
+    },
+    "subjectLabel": "Social Medicine & Public Health (MD1041)"
+  },
+  {
+    "id": "practice:social-medicine:recalls",
+    "type": "practice-test",
+    "title": "Social Medicine & Public Health — Recalled MCQs",
+    "description": "30 student-recalled MCQs with rationales.",
+    "href": "/student/ausom/semester-6/social-medicine/recalls",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "social-medicine",
+    "meta": {
+      "questionCount": 30
+    },
+    "subjectLabel": "Social Medicine & Public Health (MD1041)"
   }
 ];

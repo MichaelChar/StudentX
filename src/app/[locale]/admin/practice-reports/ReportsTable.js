@@ -135,7 +135,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
   const [isPending, startTransition] = useTransition();
 
   const preview = report.message.length > 80 ? `${report.message.slice(0, 80)}…` : report.message;
-  const deepLink = `/student/ausom/semester-2/${report.subject}/${report.test_id}?review=${report.question_id}`;
+  const deepLink = `/student/ausom/${report.semester ?? 'semester-2'}/${report.subject}/${report.test_id}?review=${report.question_id}`;
 
   function act(status) {
     setError('');

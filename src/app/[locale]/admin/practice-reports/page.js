@@ -52,6 +52,14 @@ export default async function PracticeReportsPage({ params, searchParams }) {
 
   const { data: reports } = await query;
 
+  // Each report links to a question inside a specific test; derive its semester
+  // from the subject (via the manifest) so the deep-link targets the right
+  // [semester] route. Falls back to semester-2 for any unmapped subject.
+  const reportsWithSemester = (reports ?? []).map((r) => ({
+    ...r,
+    semester: findSubjectIndexBySubject(r.subject)?.semester ?? 'semester-2',
+  }));
+
   const t = await getTranslations({ locale, namespace: 'admin.practiceReports' });
 
   return (
@@ -62,7 +70,7 @@ export default async function PracticeReportsPage({ params, searchParams }) {
       </div>
 
       <ReportsTable
-        reports={reports ?? []}
+        reports={reportsWithSemester}
         subjects={subjects}
         activeStatus={status}
         activeSubject={subject}

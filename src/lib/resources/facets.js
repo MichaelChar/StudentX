@@ -3,7 +3,7 @@
  * to run both at build time (tests) and in the browser (ResourcesExplorer).
  */
 
-import { RESOURCE_TYPE_LABELS, SEMESTER_LABELS, COUNTRY_LABELS, getSubjectLabel } from './taxonomy.js';
+import { RESOURCE_TYPE_LABELS, SEMESTER_LABELS, COUNTRY_LABELS } from './taxonomy.js';
 
 /** Facet keys, in the priority order used when relaxing an empty result set. */
 export const FACET_KEYS = ['type', 'subject', 'semester', 'year', 'country'];
@@ -19,18 +19,14 @@ const FACET_LABELS = {
 };
 
 /**
- * Case-insensitive substring match over title + description + derived subject label.
+ * Case-insensitive substring match over title + description + subjectLabel.
  * Used for ?q= search in /resources. Empty/blank q returns the input list.
  */
 export function searchResources(resources, q) {
   const needle = String(q || '').trim().toLowerCase();
   if (!needle) return resources;
   return resources.filter((r) => {
-    const hay = [
-      r.title,
-      r.description,
-      getSubjectLabel(String(r.subject || '')),
-    ]
+    const hay = [r.title, r.description, r.subjectLabel]
       .filter(Boolean)
       .join(' ')
       .toLowerCase();
@@ -44,21 +40,18 @@ export function searchResources(resources, q) {
  */
 export function getFacetOptions(resources, key) {
   const counts = new Map();
+  const labels = new Map();
   for (const r of resources) {
-    const value = String(r[key] ?? '');
-    if (!value || value === 'undefined') continue;
+    const value = String(r[key]);
     counts.set(value, (counts.get(value) ?? 0) + 1);
+    if (!labels.has(value) && r[key + 'Label']) labels.set(value, r[key + 'Label']);
   }
   const options = [...counts.entries()]
-    .map(([value, count]) => {
-      let label;
-      if (key === 'subject') {
-        label = getSubjectLabel(value);
-      } else {
-        label = FACET_LABELS[key]?.[value] ?? value;
-      }
-      return { value, label, count };
-    })
+    .map(([value, count]) => ({
+      value,
+      label: labels.get(value) ?? FACET_LABELS[key]?.[value] ?? value,
+      count,
+    }))
     .sort((a, b) => a.label.localeCompare(b.label, undefined, { numeric: true }));
   return options;
 }
@@ -66,13 +59,12 @@ export function getFacetOptions(resources, key) {
 /**
  * Returns the resources that match all active filters *except* the given key.
  * This is the base used to compute available options and counts for that facet
- * (standard faceted search refinement). Optional `q` is applied for search-aware
- * facet refinement (search composes as AND).
+ * (standard faceted search refinement). Optional `q` applies the search too,
+ * so facet counts narrow with the active query (search composes as AND).
  */
 export function resourcesMatchingOtherFilters(resources, filters, excludeKey, q = '') {
   const otherFilters = { ...filters, [excludeKey]: null };
-  let res = filterResources(resources, otherFilters);
-  return searchResources(res, q);
+  return searchResources(filterResources(resources, otherFilters), q);
 }
 
 /**

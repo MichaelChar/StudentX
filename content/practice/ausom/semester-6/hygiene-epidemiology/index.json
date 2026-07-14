@@ -1,0 +1,50 @@
+{
+  "subject": "hygiene-epidemiology",
+  "title": "Hygiene & Epidemiology (MD1040)",
+  "school": "ausom",
+  "semester": "semester-6",
+  "country": "gr",
+  "tests": [
+    {
+      "id": "recalls",
+      "title": "MD1040 Hygiene & Epidemiology — Recalled MCQs",
+      "kind": "topic",
+      "questionCount": 38,
+      "description": "38 student-recalled MCQs.",
+      "year": 2026
+    },
+    {
+      "id": "predicted-paper-1",
+      "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 1",
+      "kind": "mock",
+      "questionCount": 30,
+      "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
+      "year": 2026
+    },
+    {
+      "id": "predicted-paper-2",
+      "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 2",
+      "kind": "mock",
+      "questionCount": 30,
+      "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
+      "year": 2026
+    },
+    {
+      "id": "predicted-paper-3",
+      "title": "MD1040 Hygiene & Epidemiology — Predicted Paper 3",
+      "kind": "mock",
+      "questionCount": 30,
+      "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
+      "year": 2026
+    },
+    {
+      "id": "past-papers-2020-2024",
+      "title": "MD1040 Hygiene & Epidemiology — Past Papers (2020–2024)",
+      "kind": "mock",
+      "questionCount": 147,
+      "description": "147 real MCQs from five sittings.",
+      "year": 2026,
+      "resourceType": "past-paper"
+    }
+  ]
+}

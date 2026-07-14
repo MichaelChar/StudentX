@@ -1,0 +1,842 @@
+{
+  "id": "recall-drills",
+  "subject": "pathophysiology",
+  "title": "Pathophysiology — Recall Drills",
+  "kind": "topic",
+  "description": "83 flip-card recall drills across 7 systems — rapid Q&A on core mechanisms.",
+  "version": 1,
+  "updatedAt": "2026-07-11",
+  "questions": [
+    {
+      "id": "q001",
+      "type": "reveal",
+      "stem": "Pathophysiology of myocardial infarction",
+      "explanation": {
+        "text": "Plaque rupture + thrombus"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q002",
+      "type": "reveal",
+      "stem": "Most common cause of death in Marfan syndrome",
+      "explanation": {
+        "text": "Aortic dissection/rupture"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q003",
+      "type": "reveal",
+      "stem": "Atrial fibrillation characteristics",
+      "explanation": {
+        "text": "Irregularly irregular, no P wave"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q004",
+      "type": "reveal",
+      "stem": "What is the most common PSVT",
+      "explanation": {
+        "text": "AVNRT"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q005",
+      "type": "reveal",
+      "stem": "What starts the heart's electrical circuit",
+      "explanation": {
+        "text": "SA node"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q006",
+      "type": "reveal",
+      "stem": "P wave represents",
+      "explanation": {
+        "text": "Atrial depolarisation"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q007",
+      "type": "reveal",
+      "stem": "Which is NOT a mechanism of heart failure",
+      "explanation": {
+        "text": "Peripheral vasodilation"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q008",
+      "type": "reveal",
+      "stem": "Arterial stiffness effects",
+      "explanation": {
+        "text": "↑systolic, ↓diastolic, wide pulse pressure"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q009",
+      "type": "reveal",
+      "stem": "Stroke and carotid atherosclerosis",
+      "explanation": {
+        "text": "Embolic/atherothrombotic source"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q010",
+      "type": "reveal",
+      "stem": "Nitric oxide action",
+      "explanation": {
+        "text": "Enhances vascular relaxation"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q011",
+      "type": "reveal",
+      "stem": "Complication of endocarditis",
+      "explanation": {
+        "text": "Prosthetic valve & S. epidermidis"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q012",
+      "type": "reveal",
+      "stem": "Highest acceptable range of BP",
+      "explanation": {
+        "text": "Threshold cut-off question"
+      },
+      "topic": "cardiovascular",
+      "yield": "high"
+    },
+    {
+      "id": "q013",
+      "type": "reveal",
+      "stem": "Main risk factor for COPD",
+      "explanation": {
+        "text": "Smoking"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q014",
+      "type": "reveal",
+      "stem": "Symptom of obstructive pulmonary disease",
+      "explanation": {
+        "text": "Dyspnoea"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q015",
+      "type": "reveal",
+      "stem": "Characteristic of obstructive lung disease",
+      "explanation": {
+        "text": "↓FEV1/FVC, airflow limitation"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q016",
+      "type": "reveal",
+      "stem": "Asthma is associated with which gene",
+      "explanation": {
+        "text": "ADAM33"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q017",
+      "type": "reveal",
+      "stem": "Asthma pathophysiology",
+      "explanation": {
+        "text": "Bronchoconstriction + inflammation"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q018",
+      "type": "reveal",
+      "stem": "Asthma cells",
+      "explanation": {
+        "text": "Mast cells"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q019",
+      "type": "reveal",
+      "stem": "Chronic bronchitis",
+      "explanation": {
+        "text": "Mucus hypersecretion"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q020",
+      "type": "reveal",
+      "stem": "Bronchial hyper-responsiveness",
+      "explanation": {
+        "text": "Exaggerated response to stimuli"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q021",
+      "type": "reveal",
+      "stem": "Non-cardiogenic ARDS / pulmonary oedema cause",
+      "explanation": {
+        "text": "Capillary injury / ↑permeability"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q022",
+      "type": "reveal",
+      "stem": "Non-cardiogenic ARDS",
+      "explanation": {
+        "text": "Diffuse alveolar damage — true"
+      },
+      "topic": "respiratory",
+      "yield": "high"
+    },
+    {
+      "id": "q023",
+      "type": "reveal",
+      "stem": "What is true about acute kidney injury",
+      "explanation": {
+        "text": "Prerenal/intrinsic/postrenal framework"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q024",
+      "type": "reveal",
+      "stem": "Which is NOT a prerenal cause of AKI",
+      "explanation": {
+        "text": "Intrinsic/obstructive distractor"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q025",
+      "type": "reveal",
+      "stem": "Function of the kidneys / what is NOT renal regulation",
+      "explanation": {
+        "text": "WBC & glucose regulation are not renal"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q026",
+      "type": "reveal",
+      "stem": "The juxtaglomerular apparatus does NOT contribute to",
+      "explanation": {
+        "text": "Distractor (it controls renin/GFR)"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q027",
+      "type": "reveal",
+      "stem": "Nephrotic syndrome",
+      "explanation": {
+        "text": "Proteinuria, hypoalbuminaemia, hyperlipidaemia"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q028",
+      "type": "reveal",
+      "stem": "Nephritic syndrome",
+      "explanation": {
+        "text": "Haematuria, RBC casts, HTN"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q029",
+      "type": "reveal",
+      "stem": "Glomerulonephritis with anti-GBM antibodies",
+      "explanation": {
+        "text": "Goodpasture (Type II)"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q030",
+      "type": "reveal",
+      "stem": "Acute proliferative GN",
+      "explanation": {
+        "text": "Post-infectious / immune complex — true"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q031",
+      "type": "reveal",
+      "stem": "Aldosterone action",
+      "explanation": {
+        "text": "↑Na reabsorption (triggered by Ang II)"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q032",
+      "type": "reveal",
+      "stem": "Normal anion gap acidosis cause",
+      "explanation": {
+        "text": "RTA / diarrhoea"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q033",
+      "type": "reveal",
+      "stem": "HAGMA example",
+      "explanation": {
+        "text": "Lactic acidosis"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q034",
+      "type": "reveal",
+      "stem": "Which cannot coexist",
+      "explanation": {
+        "text": "Respiratory acidosis + respiratory alkalosis"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q035",
+      "type": "reveal",
+      "stem": "Causes of metabolic alkalosis",
+      "explanation": {
+        "text": "Vomiting / loss of gastric fluid"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q036",
+      "type": "reveal",
+      "stem": "Hyponatraemia with hypervolaemia",
+      "explanation": {
+        "text": "Liver cirrhosis"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q037",
+      "type": "reveal",
+      "stem": "Chloride ions are",
+      "explanation": {
+        "text": "Lost with vomiting"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q038",
+      "type": "reveal",
+      "stem": "A question on SIADH",
+      "explanation": {
+        "text": "Euvolaemic hyponatraemia, concentrated urine — true"
+      },
+      "topic": "renal-electrolytes-and-acid-base",
+      "yield": "high"
+    },
+    {
+      "id": "q039",
+      "type": "reveal",
+      "stem": "Which cells produce insulin",
+      "explanation": {
+        "text": "Pancreatic β-cells"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q040",
+      "type": "reveal",
+      "stem": "Type 1 diabetes is characterized by",
+      "explanation": {
+        "text": "Autoimmune β-cell destruction"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q041",
+      "type": "reveal",
+      "stem": "What problem does type 1 diabetes give",
+      "explanation": {
+        "text": "β-cell destruction + insulin deficiency"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q042",
+      "type": "reveal",
+      "stem": "An action of insulin",
+      "explanation": {
+        "text": "Increases lipogenesis"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q043",
+      "type": "reveal",
+      "stem": "GLUT4 transporter",
+      "explanation": {
+        "text": "Insulin-dependent glucose uptake"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q044",
+      "type": "reveal",
+      "stem": "Fasting glucose for diagnosis of diabetes",
+      "explanation": {
+        "text": "≥126 mg/dL"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q045",
+      "type": "reveal",
+      "stem": "NAFLD/MASLD",
+      "explanation": {
+        "text": "Insulin resistant"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q046",
+      "type": "reveal",
+      "stem": "Mechanisms of microvascular damage in hyperglycaemia",
+      "explanation": {
+        "text": "Polyol, AGEs, PKC, hexosamine — true"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q047",
+      "type": "reveal",
+      "stem": "Cushing's triad / normal signs",
+      "explanation": {
+        "text": "(Distinguish ICP triad vs Cushing syndrome)"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q048",
+      "type": "reveal",
+      "stem": "Clinical feature / characteristic of Cushing's syndrome",
+      "explanation": {
+        "text": "Moon face, central obesity, striae"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q049",
+      "type": "reveal",
+      "stem": "1st-line treatment of hyperprolactinaemia",
+      "explanation": {
+        "text": "Dopamine agonist (cabergoline)"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q050",
+      "type": "reveal",
+      "stem": "A question on SIADH vs DI",
+      "explanation": {
+        "text": "ADH excess vs deficiency — true"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q051",
+      "type": "reveal",
+      "stem": "Hyperthyroidism does NOT cause",
+      "explanation": {
+        "text": "Cold, dry skin"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q052",
+      "type": "reveal",
+      "stem": "Cushing's disease cortisol/ACTH",
+      "explanation": {
+        "text": "Pituitary ACTH excess (various combinations)"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q053",
+      "type": "reveal",
+      "stem": "Which hormone does NOT bind an intracellular receptor",
+      "explanation": {
+        "text": "Insulin"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q054",
+      "type": "reveal",
+      "stem": "Which hormone regulates the menstrual cycle",
+      "explanation": {
+        "text": "FSH/LH (with oestrogen/progesterone)"
+      },
+      "topic": "endocrine-and-diabetes",
+      "yield": "high"
+    },
+    {
+      "id": "q055",
+      "type": "reveal",
+      "stem": "Most common type of leukaemia in adults",
+      "explanation": {
+        "text": "CLL"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q056",
+      "type": "reveal",
+      "stem": "AML feature",
+      "explanation": {
+        "text": "Auer rods"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q057",
+      "type": "reveal",
+      "stem": "Where are Reed-Sternberg cells seen",
+      "explanation": {
+        "text": "Hodgkin lymphoma"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q058",
+      "type": "reveal",
+      "stem": "Polycythaemia vera",
+      "explanation": {
+        "text": "Myeloproliferative disorder"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q059",
+      "type": "reveal",
+      "stem": "How to differentiate B12 from folate anaemia",
+      "explanation": {
+        "text": "B12 → neurological signs / ↑MMA"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q060",
+      "type": "reveal",
+      "stem": "Iron-deficiency anaemia is seen as",
+      "explanation": {
+        "text": "Microcytic, hypochromic, ↓ferritin"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q061",
+      "type": "reveal",
+      "stem": "Which is NOT a clinical feature of iron deficiency",
+      "explanation": {
+        "text": "Distractor (e.g. macrocytosis)"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q062",
+      "type": "reveal",
+      "stem": "Thalassaemia lab levels",
+      "explanation": {
+        "text": "Low MCH/MCV, normal ferritin"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q063",
+      "type": "reveal",
+      "stem": "Hemolytic anaemia findings",
+      "explanation": {
+        "text": "↑LDH, ↑indirect bili, ↓haptoglobin"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q064",
+      "type": "reveal",
+      "stem": "Hemolysis quantities",
+      "explanation": {
+        "text": "Reticulocytosis, ↑bilirubin — true"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q065",
+      "type": "reveal",
+      "stem": "Hemophilia A causes",
+      "explanation": {
+        "text": "Haemarthrosis"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q066",
+      "type": "reveal",
+      "stem": "Acute severe blood loss — Hb, MCV, MCH",
+      "explanation": {
+        "text": "Initially normal indices"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q067",
+      "type": "reveal",
+      "stem": "Virchow's triad",
+      "explanation": {
+        "text": "Stasis, endothelial injury, hypercoagulability"
+      },
+      "topic": "haematology",
+      "yield": "high"
+    },
+    {
+      "id": "q068",
+      "type": "reveal",
+      "stem": "Pathophysiology of portal hypertension",
+      "explanation": {
+        "text": "↑hepatic resistance + ↑blood flow"
+      },
+      "topic": "gi-and-liver",
+      "yield": "high"
+    },
+    {
+      "id": "q069",
+      "type": "reveal",
+      "stem": "What causes vasodilation in cirrhosis",
+      "explanation": {
+        "text": "Nitric oxide"
+      },
+      "topic": "gi-and-liver",
+      "yield": "high"
+    },
+    {
+      "id": "q070",
+      "type": "reveal",
+      "stem": "Acute pancreatitis most common cause",
+      "explanation": {
+        "text": "Gallstones"
+      },
+      "topic": "gi-and-liver",
+      "yield": "high"
+    },
+    {
+      "id": "q071",
+      "type": "reveal",
+      "stem": "NOT true about choledocholithiasis",
+      "explanation": {
+        "text": "Stones form only in the gallbladder (false)"
+      },
+      "topic": "gi-and-liver",
+      "yield": "high"
+    },
+    {
+      "id": "q072",
+      "type": "reveal",
+      "stem": "Bird-beak appearance",
+      "explanation": {
+        "text": "Achalasia"
+      },
+      "topic": "gi-and-liver",
+      "yield": "high"
+    },
+    {
+      "id": "q073",
+      "type": "reveal",
+      "stem": "Ulcerative colitis",
+      "explanation": {
+        "text": "Diffuse, continuous, involves rectum"
+      },
+      "topic": "gi-and-liver",
+      "yield": "high"
+    },
+    {
+      "id": "q074",
+      "type": "reveal",
+      "stem": "Which is relieved with eating food",
+      "explanation": {
+        "text": "Duodenal ulcer"
+      },
+      "topic": "gi-and-liver",
+      "yield": "high"
+    },
+    {
+      "id": "q075",
+      "type": "reveal",
+      "stem": "Hepatorenal syndrome",
+      "explanation": {
+        "text": "Renal failure from splanchnic vasodilation — true"
+      },
+      "topic": "gi-and-liver",
+      "yield": "high"
+    },
+    {
+      "id": "q076",
+      "type": "reveal",
+      "stem": "H. pylori infection",
+      "explanation": {
+        "text": "Ulcer / chronic gastritis — true"
+      },
+      "topic": "gi-and-liver",
+      "yield": "high"
+    },
+    {
+      "id": "q077",
+      "type": "reveal",
+      "stem": "Which is NOT part of innate immunity",
+      "explanation": {
+        "text": "Antibodies"
+      },
+      "topic": "immunity-inflammation-and-ctd",
+      "yield": "high"
+    },
+    {
+      "id": "q078",
+      "type": "reveal",
+      "stem": "NOT true about acute inflammatory response",
+      "explanation": {
+        "text": "'Main feature is vasoconstriction' (false)"
+      },
+      "topic": "immunity-inflammation-and-ctd",
+      "yield": "high"
+    },
+    {
+      "id": "q079",
+      "type": "reveal",
+      "stem": "NOT true about SLE",
+      "explanation": {
+        "text": "Causes thrombocytosis (false → thrombocytopenia)"
+      },
+      "topic": "immunity-inflammation-and-ctd",
+      "yield": "high"
+    },
+    {
+      "id": "q080",
+      "type": "reveal",
+      "stem": "Atopic dermatitis",
+      "explanation": {
+        "text": "Barrier defect, Type I-associated"
+      },
+      "topic": "immunity-inflammation-and-ctd",
+      "yield": "high"
+    },
+    {
+      "id": "q081",
+      "type": "reveal",
+      "stem": "Which joints does rheumatoid arthritis affect / spare",
+      "explanation": {
+        "text": "Spares DIP joints"
+      },
+      "topic": "immunity-inflammation-and-ctd",
+      "yield": "high"
+    },
+    {
+      "id": "q082",
+      "type": "reveal",
+      "stem": "Primary TB can cavitate and spread",
+      "explanation": {
+        "text": "To lungs and other organs (true)"
+      },
+      "topic": "immunity-inflammation-and-ctd",
+      "yield": "high"
+    },
+    {
+      "id": "q083",
+      "type": "reveal",
+      "stem": "Something NOT caused by intense exercise",
+      "explanation": {
+        "text": "Distractor"
+      },
+      "topic": "immunity-inflammation-and-ctd",
+      "yield": "high"
+    }
+  ],
+  "year": 2026
+}

@@ -15,6 +15,24 @@ import semester2GeneralPhysiologyIndex from '../../../content/practice/ausom/sem
 import semester2GeneralPhysiologyTestPredictedLabExam from '../../../content/practice/ausom/semester-2/general-physiology/predicted-lab-exam.json';
 import semester2GeneralPhysiologyTestPredictedMcqOneoffs from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-oneoffs.json';
 import semester2GeneralPhysiologyTestPredictedMcqRepeaters from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-repeaters.json';
+import semester6EntOralIndex from '../../../content/practice/ausom/semester-6/ent-oral/index.json';
+import semester6EntOralTestFlashcards from '../../../content/practice/ausom/semester-6/ent-oral/flashcards.json';
+import semester6EntOralTestQuiz from '../../../content/practice/ausom/semester-6/ent-oral/quiz.json';
+import semester6EntWrittenIndex from '../../../content/practice/ausom/semester-6/ent-written/index.json';
+import semester6EntWrittenTestPastPapers from '../../../content/practice/ausom/semester-6/ent-written/past-papers.json';
+import semester6EntWrittenTestRecalls from '../../../content/practice/ausom/semester-6/ent-written/recalls.json';
+import semester6HygieneEpidemiologyIndex from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/index.json';
+import semester6HygieneEpidemiologyTestPastPapers20202024 from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/past-papers-2020-2024.json';
+import semester6HygieneEpidemiologyTestPredictedPaper1 from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/predicted-paper-1.json';
+import semester6HygieneEpidemiologyTestPredictedPaper2 from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/predicted-paper-2.json';
+import semester6HygieneEpidemiologyTestPredictedPaper3 from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/predicted-paper-3.json';
+import semester6HygieneEpidemiologyTestRecalls from '../../../content/practice/ausom/semester-6/hygiene-epidemiology/recalls.json';
+import semester6PathophysiologyIndex from '../../../content/practice/ausom/semester-6/pathophysiology/index.json';
+import semester6PathophysiologyTestPastPapers from '../../../content/practice/ausom/semester-6/pathophysiology/past-papers.json';
+import semester6PathophysiologyTestRecallDrills from '../../../content/practice/ausom/semester-6/pathophysiology/recall-drills.json';
+import semester6SocialMedicineIndex from '../../../content/practice/ausom/semester-6/social-medicine/index.json';
+import semester6SocialMedicineTestPastPapers from '../../../content/practice/ausom/semester-6/social-medicine/past-papers.json';
+import semester6SocialMedicineTestRecalls from '../../../content/practice/ausom/semester-6/social-medicine/recalls.json';
 
 /** @type {Record<string, Record<string, { index: import('./schema.js').SubjectIndex, tests: Record<string, import('./schema.js').PracticeTest> }>>} */
 export const MANIFEST = {
@@ -44,6 +62,46 @@ export const MANIFEST = {
         "predicted-lab-exam": semester2GeneralPhysiologyTestPredictedLabExam,
         "predicted-mcq-oneoffs": semester2GeneralPhysiologyTestPredictedMcqOneoffs,
         "predicted-mcq-repeaters": semester2GeneralPhysiologyTestPredictedMcqRepeaters,
+      },
+    },
+  },
+  "semester-6": {
+    "ent-oral": {
+      index: semester6EntOralIndex,
+      tests: {
+        "flashcards": semester6EntOralTestFlashcards,
+        "quiz": semester6EntOralTestQuiz,
+      },
+    },
+    "ent-written": {
+      index: semester6EntWrittenIndex,
+      tests: {
+        "past-papers": semester6EntWrittenTestPastPapers,
+        "recalls": semester6EntWrittenTestRecalls,
+      },
+    },
+    "hygiene-epidemiology": {
+      index: semester6HygieneEpidemiologyIndex,
+      tests: {
+        "past-papers-2020-2024": semester6HygieneEpidemiologyTestPastPapers20202024,
+        "predicted-paper-1": semester6HygieneEpidemiologyTestPredictedPaper1,
+        "predicted-paper-2": semester6HygieneEpidemiologyTestPredictedPaper2,
+        "predicted-paper-3": semester6HygieneEpidemiologyTestPredictedPaper3,
+        "recalls": semester6HygieneEpidemiologyTestRecalls,
+      },
+    },
+    "pathophysiology": {
+      index: semester6PathophysiologyIndex,
+      tests: {
+        "past-papers": semester6PathophysiologyTestPastPapers,
+        "recall-drills": semester6PathophysiologyTestRecallDrills,
+      },
+    },
+    "social-medicine": {
+      index: semester6SocialMedicineIndex,
+      tests: {
+        "past-papers": semester6SocialMedicineTestPastPapers,
+        "recalls": semester6SocialMedicineTestRecalls,
       },
     },
   },

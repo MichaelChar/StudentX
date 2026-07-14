@@ -23,8 +23,10 @@ Around that core sit the monetizing / retention surfaces:
 - **`/resources`** — filterable resources hub (spec in
   `docs/resources-hub-spec.md`).
 - **`/student/ausom`** — AUSoM practice tests + flashcards (authoring
-  docs in `docs/practice-tests/`, test JSON in `public/practice/`,
-  players in `src/components/practice/`).
+  docs in `docs/practice-tests/`, test JSON in `content/practice/`
+  (bundled at build time via `src/lib/practice/manifest.generated.js`),
+  question media in `public/practice/`, players in
+  `src/components/practice/`).
 - **`/admin`** — dashboard, landlord verifications, metrics,
   practice-reports.
 - **`/claim/[token]`** — token-based listing-claim flow for landlords.
@@ -77,7 +79,11 @@ Around that core sit the monetizing / retention surfaces:
 ├── supabase/
 │   ├── migrations/              ← numbered SQL migrations (see Database section for numbering rules)
 │   ├── config.toml, seed.sql
-├── public/practice/             ← practice-test JSON (per-subject)
+├── content/
+│   └── practice/ausom/          ← practice-test JSON source (per-subject index.json + test files;
+│                                  bundled via src/lib/practice/manifest.generated.js —
+│                                  regenerate with `npm run practice:manifest`)
+├── public/practice/             ← static question media only (jpg/mp4/html screenshots)
 ├── docs/
 │   ├── runbooks/                ← operational runbooks
 │   ├── practice-tests/          ← practice-test authoring conventions

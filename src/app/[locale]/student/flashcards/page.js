@@ -37,8 +37,8 @@ const SUBJECTS = [
     ),
   },
   {
-    id: 'histology',
-    label: 'Histology',
+    id: 'general-histology',
+    label: 'General Histology',
     illustration: (
       <svg width="430" height="168" viewBox="0 0 200 78" fill="none" stroke="#1E8A6C" strokeLinecap="round" strokeLinejoin="round">
         <circle cx="68" cy="40" r="30" strokeWidth="1.7"/>

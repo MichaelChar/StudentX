@@ -13,7 +13,6 @@ import {
   resourcesMatchingOtherFilters,
   searchResources,
 } from '@/lib/resources/facets';
-import { getSubjectLabel } from '@/lib/resources/taxonomy';
 
 const FACET_TITLES = {
   type: 'Resource type',
@@ -134,16 +133,12 @@ export default function ResourcesExplorer() {
     const map = new Map();
     for (const r of results) {
       const s = r.subject || 'unknown';
-      if (!map.has(s)) map.set(s, []);
-      map.get(s).push(r);
+      if (!map.has(s)) map.set(s, { label: r.subjectLabel || s, cards: [] });
+      map.get(s).cards.push(r);
     }
-    const arr = [...map.entries()];
-    arr.sort((a, b) => {
-      const la = getSubjectLabel(a[0]);
-      const lb = getSubjectLabel(b[0]);
-      return la.localeCompare(lb);
-    });
-    return arr.map(([subj, cards]) => ({ subject: subj, label: getSubjectLabel(subj), cards }));
+    return [...map.entries()]
+      .sort((a, b) => a[1].label.localeCompare(b[1].label))
+      .map(([subj, g]) => ({ subject: subj, label: g.label, cards: g.cards }));
   }, [results, groupBySubject]);
 
   return (

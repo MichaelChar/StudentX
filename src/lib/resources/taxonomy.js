@@ -66,31 +66,3 @@ export const isValidResourceType = (value) => RESOURCE_TYPE_VALUES.has(value);
 export const isValidSemester = (value) => SEMESTER_VALUES.has(value);
 export const isValidCountry = (value) => COUNTRY_VALUES.has(value);
 export const isValidYear = (value) => Number.isInteger(value) && value >= MIN_YEAR && value <= MAX_YEAR;
-
-/**
- * Derive a human label for a subject slug coming from a content path.
- * Examples: "anatomy-1" → "Anatomy I", "general-histology" → "General Histology",
- * "biochemistry" → "Biochemistry I" (override for source fidelity).
- * Used for subject facet pills, grouping headers, and search.
- */
-export function getSubjectLabel(slug) {
-  if (typeof slug !== 'string' || !slug) return '';
-  const overrides = {
-    'anatomy-1': 'Anatomy I',
-    'biochemistry': 'Biochemistry I',
-  };
-  if (overrides[slug]) return overrides[slug];
-  return slug
-    .split('-')
-    .map((part) => {
-      const m = part.match(/^(\d+)$/);
-      if (m) {
-        const n = parseInt(m[1], 10);
-        const romans = [null, 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'];
-        if (n > 0 && n < romans.length) return romans[n];
-        return part;
-      }
-      return part.charAt(0).toUpperCase() + part.slice(1);
-    })
-    .join(' ');
-}

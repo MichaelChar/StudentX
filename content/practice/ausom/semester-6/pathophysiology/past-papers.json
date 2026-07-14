@@ -1,0 +1,2142 @@
+{
+  "meta": {
+    "title": "Pathophysiology — Past Papers",
+    "course": "Pathophysiology",
+    "semester": "Semester 6",
+    "total_questions": 150,
+    "mcq_count": 150,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Main collagen in articular cartilage",
+      "options": {
+        "A": "Type X",
+        "B": "Type I",
+        "C": "Type II",
+        "D": "Type III"
+      },
+      "answer": "C",
+      "explanation": "Hyaline/articular cartilage is predominantly type II collagen; type I is bone/tendon, type X is hypertrophic growth-plate cartilage.",
+      "source": "July 2023"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Seronegative spondyloarthropathies are characterized by",
+      "options": {
+        "A": "Severe renal involvement",
+        "B": "Positive rheumatoid factor",
+        "C": "Appearing with degenerative disease in old age",
+        "D": "Involvement of the axial skeleton"
+      },
+      "answer": "D",
+      "explanation": "Seronegative (RF-negative) spondyloarthropathies (ankylosing spondylitis, psoriatic, reactive) are HLA-B27–linked and preferentially involve the axial skeleton and sacroiliac joints.",
+      "source": "July 2023"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Cartilage's compressive resistance/elasticity is due to",
+      "options": {
+        "A": "Hydrophilic GAG chains of proteoglycans",
+        "B": "Chondrocytes",
+        "C": "Local proteolytic enzymes",
+        "D": "The tissue's vascular network"
+      },
+      "answer": "A",
+      "explanation": "Negatively-charged GAGs (aggrecan) osmotically draw in water, giving cartilage its swelling pressure and compressive resilience; cartilage is avascular.",
+      "source": "July 2023"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "A cause of prerenal AKI may be",
+      "options": {
+        "A": "Severe nephrotic syndrome with marked hypoalbuminaemia",
+        "B": "Omeprazole use",
+        "C": "Cisplatin use",
+        "D": "Iodinated contrast"
+      },
+      "answer": "A",
+      "explanation": "Hypoalbuminaemia lowers oncotic pressure → ↓effective circulating volume (prerenal). The others cause intrinsic injury (AIN/ATN).",
+      "source": "July 2023"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Regarding albuminuria",
+      "options": {
+        "A": "Multiple myeloma is a characteristic case of overflow proteinuria",
+        "B": "Normally we excrete no albumin",
+        "C": "1–3 g/24h characterizes nephrotic syndrome",
+        "D": "500 mg/24h always means idiopathic GN"
+      },
+      "answer": "A",
+      "explanation": "Nephrotic-range is >3.5 g/24h; a small amount of albumin is normally excreted.",
+      "source": "July 2023"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Regarding postrenal (obstructive) AKI",
+      "options": {
+        "A": "Relief → increased ADH sensitivity",
+        "B": "Relief → polyuria",
+        "C": "Relief → hyperkalaemia after 48h",
+        "D": "Obstruction always distal to pelviureteric junction"
+      },
+      "answer": "B",
+      "explanation": "Relieving obstruction causes post-obstructive polyuria (osmotic diuresis + tubular ADH resistance); the risk is hypovolaemia, not hyperkalaemia.",
+      "source": "July 2023"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Regarding CKD stage 3a",
+      "options": {
+        "A": "Usually with pruritus and nausea",
+        "B": "Severe flank pain along ureters",
+        "C": "Often thrombocytopathy/coagulation disorders",
+        "D": "None of the above"
+      },
+      "answer": "D",
+      "explanation": "Stage 3a (GFR 45–59) is usually asymptomatic; uraemic features appear in stages 4–5.",
+      "source": "July 2023"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Regarding acute kidney injury",
+      "options": {
+        "A": "Creatinine replaced by cystatin C in practice",
+        "B": "Needs dialysis even early",
+        "C": "Oliguric in >95% of cases",
+        "D": "Prolonged prerenal AKI may progress to ATN"
+      },
+      "answer": "D",
+      "explanation": "Sustained hypoperfusion converts reversible prerenal azotaemia into ischaemic ATN; creatinine is not replaced by cystatin C, and non-oliguric AKI is common.",
+      "source": "July 2023"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Regarding GFR",
+      "options": {
+        "A": "Best equation is Cockcroft-Gault",
+        "B": "Inversely proportional to serum creatinine",
+        "C": "Reliably measured by urea clearance",
+        "D": "Normal for women is 60 ml/min"
+      },
+      "answer": "B",
+      "explanation": "As GFR falls serum creatinine rises (inverse relationship); creatinine-based CKD-EPI/MDRD are preferred and urea clearance is unreliable.",
+      "source": "July 2023"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "The endocrine role of the kidneys includes",
+      "options": {
+        "A": "PTH secretion",
+        "B": "Erythropoietin secretion",
+        "C": "25-hydroxylation of vitamin D",
+        "D": "All correct"
+      },
+      "answer": "B",
+      "explanation": "Kidney does 1α-hydroxylation; 25-hydroxylation is hepatic. PTH is parathyroid.",
+      "source": "July 2023"
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "Which is FALSE regarding ADH",
+      "options": {
+        "A": "Non-osmotic stimuli stronger than osmotic",
+        "B": "Has vasoconstrictive action",
+        "C": "↑water reabsorption in collecting duct",
+        "D": "Half-life of 4–5 hours"
+      },
+      "answer": "D",
+      "explanation": "ADH half-life is ~15–20 min.",
+      "source": "July 2023"
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Regarding body water distribution",
+      "options": {
+        "A": "60% of body water is extracellular",
+        "B": "Body water % greater in men",
+        "C": "ECF corresponds to interstitial space",
+        "D": "20% of body water is intravascular"
+      },
+      "answer": "B",
+      "explanation": "Men have a higher body-water percentage (more muscle, less fat); total body water ≈60% and about two-thirds is intracellular.",
+      "source": "July 2023"
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Hyperkalaemia",
+      "options": {
+        "A": "Caused by loop diuretics",
+        "B": "Occurs in hyperaldosteronism",
+        "C": "Common in acute/chronic renal failure",
+        "D": "Caused by beta-agonists"
+      },
+      "answer": "C",
+      "explanation": "Failing kidneys cannot excrete K⁺; loop diuretics and β-agonists lower K⁺, and hyperaldosteronism causes hypokalaemia.",
+      "source": "July 2023"
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Hypokalaemia",
+      "options": {
+        "A": "In diarrhoea renal K excretion >50 mEq/day",
+        "B": "Caused by all diuretics",
+        "C": "Caused by beta-blockers",
+        "D": "Frequent in hyperaldosteronism"
+      },
+      "answer": "D",
+      "explanation": "Aldosterone drives renal K⁺ wasting → hypokalaemia; K-sparing diuretics raise K⁺ and β-blockers tend to raise it too.",
+      "source": "July 2023"
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Causes of type 2 respiratory failure do NOT include",
+      "options": {
+        "A": "Thoracic cage disorders e.g. kyphosis",
+        "B": "Decreased airway flow e.g. bronchitis",
+        "C": "Stimulation of respiratory centre e.g. progesterone",
+        "D": "Reduced lung parenchyma e.g. pneumonia"
+      },
+      "answer": "C",
+      "explanation": "Keyed: stimulation of the respiratory centre causes hyper-, not hypo-ventilation. Note: pneumonia (parenchymal) causes type 1 failure, so it's also defensibly 'not type 2' — examiner-dependent.",
+      "source": "July 2023"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "A cause of hypercapnia is",
+      "options": {
+        "A": "Venous-to-arterial shunt",
+        "B": "Central hypoventilation",
+        "C": "Decreased V/Q ratio",
+        "D": "Decreased FiO₂"
+      },
+      "answer": "B",
+      "explanation": "Hypercapnia (type 2 failure) reflects alveolar hypoventilation; shunt, low V/Q and low FiO₂ cause hypoxaemia without early CO₂ retention.",
+      "source": "July 2023"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Weakness of upper-airway muscles does NOT cause",
+      "options": {
+        "A": "Inability to swallow food/liquids",
+        "B": "Adequate speech",
+        "C": "Recurrent respiratory infections",
+        "D": "Aspiration"
+      },
+      "answer": "B",
+      "explanation": "Weak upper-airway muscles impair swallowing/speech and predispose to aspiration and infection — 'adequate speech' is the outcome that would NOT occur.",
+      "source": "July 2023"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "COPD is more common in",
+      "options": {
+        "A": "Young adults, smoking + atopy",
+        "B": "High FEV1/FVC ratio",
+        "C": "Strongly positive bronchodilator test",
+        "D": "Age >40–50, heavy smoking (>20–30 pack-years)"
+      },
+      "answer": "D",
+      "explanation": "COPD is a disease of older heavy smokers (>20–30 pack-years) with a low FEV1/FVC and minimal bronchodilator reversibility (unlike asthma).",
+      "source": "July 2023"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Regarding pulmonary fibrosis",
+      "options": {
+        "A": "Normal TLC",
+        "B": "Normal or increased FEV1/FVC ratio",
+        "C": "Increased FRC",
+        "D": "All of the above"
+      },
+      "answer": "B",
+      "explanation": "Restrictive fibrosis reduces all volumes proportionally (low TLC, low FRC), so the FEV1/FVC ratio is preserved or increased.",
+      "source": "July 2023"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "Hyperventilation is caused by",
+      "options": {
+        "A": "CNS tumour impairing respiratory control",
+        "B": "Muscle relaxants",
+        "C": "Reduction of dead space",
+        "D": "Respiratory muscle fatigue"
+      },
+      "answer": "C",
+      "explanation": "The others all cause hypoventilation.",
+      "source": "July 2023"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "Which is correct (V/Q)",
+      "options": {
+        "A": "Upper regions hyperventilated relative to perfusion",
+        "B": "Upper regions hypoventilated relative to perfusion",
+        "C": "Perfusion at bases double that at apices",
+        "D": "Perfusion at bases half that at apices"
+      },
+      "answer": "A",
+      "explanation": "At the apex ventilation exceeds perfusion (high V/Q); perfusion is greatest at the bases, roughly the reverse of the false options.",
+      "source": "July 2023"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Severe heart failure with pleural effusion → expect",
+      "options": {
+        "A": "Empyema",
+        "B": "Bilateral exudate",
+        "C": "Unilateral exudate",
+        "D": "Bilateral transudate"
+      },
+      "answer": "D",
+      "explanation": "Cardiogenic effusions are transudates (high hydrostatic pressure, low protein) and are typically bilateral.",
+      "source": "July 2023"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Hypoventilation is observed in all EXCEPT",
+      "options": {
+        "A": "Respiratory muscle fatigue",
+        "B": "Muscle relaxants",
+        "C": "Reduction of dead space",
+        "D": "CNS tumour impairing control"
+      },
+      "answer": "C",
+      "explanation": "Reducing dead space improves ventilation; muscle fatigue, relaxants and CNS lesions all cause hypoventilation.",
+      "source": "July 2023"
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "A cause of malabsorption in the mucosal phase is NOT",
+      "options": {
+        "A": "Intestinal ischaemia",
+        "B": "Coeliac disease",
+        "C": "Parasitic disease",
+        "D": "Crohn's disease"
+      },
+      "answer": "A",
+      "explanation": "Ischaemia impairs the transport/delivery phase; coeliac, parasites and Crohn's damage the mucosa itself.",
+      "source": "July 2023"
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "A cause of malabsorption in the mucosal phase",
+      "options": {
+        "A": "Zollinger-Ellison syndrome",
+        "B": "Coeliac disease",
+        "C": "Intestinal ischaemia",
+        "D": "Bacterial overgrowth"
+      },
+      "answer": "B",
+      "explanation": "Coeliac disease destroys villous mucosa (mucosal phase); Zollinger-Ellison and bacterial overgrowth are intraluminal, ischaemia is transport-phase.",
+      "source": "July 2023"
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "Regarding gastric ulcer",
+      "options": {
+        "A": "Acid secretion usually normal or decreased",
+        "B": "Due to increased acid secretion",
+        "C": "Never malignant",
+        "D": "H. pylori is not a cause"
+      },
+      "answer": "A",
+      "explanation": "Gastric ulcers arise from impaired mucosal defence (acid often normal/low), can be malignant, and H. pylori is a major cause.",
+      "source": "July 2023"
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "In oesophageal achalasia",
+      "options": {
+        "A": "Spontaneous (simultaneous) contractions occur",
+        "B": "Decreased LES tone",
+        "C": "Disorder of the muscular wall",
+        "D": "Due to chronic inflammation"
+      },
+      "answer": "A",
+      "explanation": "Achalasia is a neuronal disorder (loss of myenteric inhibitory neurons) with failure of LES relaxation. By elimination the manometric 'simultaneous/spontaneous contractions' is the keyed answer.",
+      "source": "July 2023"
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "In secretory diarrhoea",
+      "options": {
+        "A": "Remits during fasting",
+        "B": "Water/electrolyte absorption is normal",
+        "C": "Stool volume is large",
+        "D": "Large osmotic gap in stool"
+      },
+      "answer": "C",
+      "explanation": "Secretory diarrhoea is large-volume, persists during fasting, and has a low stool osmotic gap (active ion secretion).",
+      "source": "July 2023"
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "In the pathogenesis of ascites in cirrhosis",
+      "options": {
+        "A": "No portal HTN → no ascites/oedema",
+        "B": "CO is the main vasodilation mediator",
+        "C": "Free-water clearance normal then increases",
+        "D": "Na-retaining mechanisms are deactivated"
+      },
+      "answer": "A",
+      "explanation": "Portal HTN is required; NO is the main vasodilator; Na-retaining systems are activated.",
+      "source": "July 2023"
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "In osmotic diarrhoea",
+      "options": {
+        "A": "Not affected by fasting",
+        "B": "Cholera is a cause",
+        "C": "Stool volume is large",
+        "D": "Due to disaccharidase deficiency"
+      },
+      "answer": "D",
+      "explanation": "Unabsorbed solutes (e.g. disaccharidase/lactase deficiency) draw water in; osmotic diarrhoea stops with fasting and has a high stool osmotic gap.",
+      "source": "July 2023"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "In obstructive ileus",
+      "options": {
+        "A": "Proximal obstruction → metabolic acidosis",
+        "B": "May lead to hypovolaemia and shock",
+        "C": "Lower obstruction → metabolic alkalosis",
+        "D": "Acute pancreatitis is among its causes"
+      },
+      "answer": "B",
+      "explanation": "Proximal/vomiting → alkalosis; distal → acidosis (the a/c options are swapped).",
+      "source": "July 2023"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "Bile acids",
+      "options": {
+        "A": "Not related to cholesterol homeostasis",
+        "B": "Do not undergo enterohepatic circulation",
+        "C": "Not needed for fat/vitamin absorption",
+        "D": "Promote bile flow + secretion of phospholipids/cholesterol/bilirubin"
+      },
+      "answer": "D",
+      "explanation": "Bile acids are synthesised from cholesterol, undergo enterohepatic recirculation, are essential for fat and fat-soluble vitamin absorption, and are choleretic.",
+      "source": "July 2023"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "Healthy endothelium",
+      "options": {
+        "A": "Strong prothrombotic actions",
+        "B": "Produces PGI2, the body's most potent vasodilator",
+        "C": "Vasodilates to acetylcholine",
+        "D": "Does not vary along the arterial tree"
+      },
+      "answer": "C",
+      "explanation": "Intact endothelium releases NO in response to acetylcholine (vasodilation); it is antithrombotic and its properties vary along the arterial tree.",
+      "source": "July 2023"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "Endothelial dysfunction is more problematic in",
+      "options": {
+        "A": "Hyperlipidaemia",
+        "B": "Unstable angina",
+        "C": "Stable angina",
+        "D": "Myocardial infarction"
+      },
+      "answer": "B",
+      "explanation": "Examiner-dependent. Keyed to unstable angina (dysfunction → vasospasm/plaque instability); some sources emphasise it as the earliest lesion in hyperlipidaemia.",
+      "source": "July 2023"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "Coronary flow reserve is significantly affected when stenosis exceeds",
+      "options": {
+        "A": "70%",
+        "B": "80%",
+        "C": "40%",
+        "D": "50%"
+      },
+      "answer": "A",
+      "explanation": "Commonly taught threshold ~70%. (Resting flow is affected only at ~90%; some texts cite 50% for early reserve loss.)",
+      "source": "July 2023"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "Most common haemorrhagic manifestation of haemophilia A",
+      "options": {
+        "A": "Ecchymoses",
+        "B": "Epistaxis",
+        "C": "Haemarthroses",
+        "D": "Menorrhagia"
+      },
+      "answer": "C",
+      "explanation": "Factor VIII deficiency causes deep bleeding into joints (haemarthrosis) and muscles rather than mucosal bleeding.",
+      "source": "July 2023"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "Hypovolaemic hyponatraemia",
+      "options": {
+        "A": "Urine Na always >50",
+        "B": "Urine Na may be > or < 20 depending on cause",
+        "C": "Due to ADH suppression",
+        "D": "Classic cause is hypothyroidism"
+      },
+      "answer": "B",
+      "explanation": "Renal salt loss gives urine Na >20; extrarenal loss (GI, sweat) gives avid retention with urine Na <20.",
+      "source": "July 2023"
+    },
+    {
+      "id": 38,
+      "type": "mcq",
+      "stem": "Main mechanism of dyspnoea in heart failure",
+      "options": {
+        "A": "Low arterial BP",
+        "B": "Reduced stroke volume",
+        "C": "Reduced ejection fraction",
+        "D": "Increased pulmonary capillary pressure"
+      },
+      "answer": "D",
+      "explanation": "Raised LVEDP transmits back to the pulmonary capillaries → interstitial/alveolar congestion and dyspnoea.",
+      "source": "July 2023"
+    },
+    {
+      "id": 39,
+      "type": "mcq",
+      "stem": "An atherosclerotic plaque is unstable when there is",
+      "options": {
+        "A": "Small lipid core",
+        "B": "Thick fibrous cap",
+        "C": "Lymphocytic infiltration",
+        "D": "Thin fibrous cap"
+      },
+      "answer": "D",
+      "explanation": "Vulnerable plaques have a large lipid core and a thin fibrous cap prone to rupture; a thick cap with small core is stable.",
+      "source": "July 2023"
+    },
+    {
+      "id": 40,
+      "type": "mcq",
+      "stem": "Diabetes insipidus is characterized by",
+      "options": {
+        "A": "Marked dehydration in adults",
+        "B": "Increased vasopressin in blood",
+        "C": "Increased thirst, polydipsia",
+        "D": "Small amounts of concentrated urine"
+      },
+      "answer": "C",
+      "explanation": "ADH deficiency or resistance produces large volumes of dilute urine with compensatory polydipsia; vasopressin is low in central DI.",
+      "source": "July 2023"
+    },
+    {
+      "id": 41,
+      "type": "mcq",
+      "stem": "Lifespan of platelets",
+      "options": {
+        "A": "7 days",
+        "B": "7 months",
+        "C": "30 days",
+        "D": "24 hours"
+      },
+      "answer": "A",
+      "explanation": "Circulating platelets survive about 7–10 days.",
+      "source": "July 2023"
+    },
+    {
+      "id": 42,
+      "type": "mcq",
+      "stem": "Lipoprotein metabolic pathway",
+      "options": {
+        "A": "Exogenous pathway",
+        "B": "Hexosamine pathway",
+        "C": "Krebs cycle",
+        "D": "Diacylglycerol pathway"
+      },
+      "answer": "A",
+      "explanation": "The exogenous (dietary) pathway carries chylomicron lipids from gut to tissues; the other options are glucose/metabolic pathways.",
+      "source": "July 2023"
+    },
+    {
+      "id": 43,
+      "type": "mcq",
+      "stem": "Main clinical manifestations of heart failure",
+      "options": {
+        "A": "Syncope",
+        "B": "Easy fatigability and exertional dyspnoea",
+        "C": "Stroke",
+        "D": "Angina"
+      },
+      "answer": "B",
+      "explanation": "Low output and pulmonary congestion produce fatigue and exertional breathlessness as the cardinal symptoms.",
+      "source": "July 2023"
+    },
+    {
+      "id": 44,
+      "type": "mcq",
+      "stem": "Which is an acquired bleeding disorder",
+      "options": {
+        "A": "Haemophilia B",
+        "B": "Disseminated intravascular coagulation",
+        "C": "von Willebrand disease",
+        "D": "Haemophilia A"
+      },
+      "answer": "B",
+      "explanation": "DIC is acquired; haemophilia A/B and von Willebrand disease are inherited.",
+      "source": "July 2023"
+    },
+    {
+      "id": 45,
+      "type": "mcq",
+      "stem": "Which is NOT a clinical sign of heart failure",
+      "options": {
+        "A": "Low systolic arterial pressure",
+        "B": "Jugular venous distension",
+        "C": "Peripheral oedema",
+        "D": "Basal moist crackles"
+      },
+      "answer": "A",
+      "explanation": "JVD, oedema and basal crackles are congestive signs; hypotension is a late/shock feature, not a defining sign of heart failure.",
+      "source": "July 2023"
+    },
+    {
+      "id": 46,
+      "type": "mcq",
+      "stem": "Which acts as an inhibitor of haematopoiesis",
+      "options": {
+        "A": "Thrombopoietin",
+        "B": "Erythropoietin",
+        "C": "TNF",
+        "D": "G-CSF"
+      },
+      "answer": "C",
+      "explanation": "TNF (and interferons) suppress haematopoiesis; EPO, TPO and G-CSF are stimulatory growth factors.",
+      "source": "July 2023"
+    },
+    {
+      "id": 47,
+      "type": "mcq",
+      "stem": "Endothelial dysfunction is defined as",
+      "options": {
+        "A": "↓adhesion molecule expression",
+        "B": "↓thromboxane A2 production",
+        "C": "↑anti-inflammatory cytokines",
+        "D": "Reduced bioavailability of nitric oxide"
+      },
+      "answer": "D",
+      "explanation": "The hallmark is loss of nitric-oxide bioavailability, with increased adhesion molecules and a pro-thrombotic, pro-inflammatory shift.",
+      "source": "July 2023"
+    },
+    {
+      "id": 48,
+      "type": "mcq",
+      "stem": "Hepcidin is important in the pathogenesis of",
+      "options": {
+        "A": "Aplastic anaemia",
+        "B": "Thalassaemia",
+        "C": "Megaloblastic anaemia",
+        "D": "Anaemia of chronic disease"
+      },
+      "answer": "D",
+      "explanation": "Inflammation raises hepcidin, trapping iron in stores and macrophages → the iron-restricted anaemia of chronic disease.",
+      "source": "July 2023"
+    },
+    {
+      "id": 49,
+      "type": "mcq",
+      "stem": "Which are NOT mature blood cells",
+      "options": {
+        "A": "Myelocytes",
+        "B": "Red blood cells",
+        "C": "Neutrophilic polymorphonuclears"
+      },
+      "answer": "A",
+      "explanation": "Myelocytes are immature granulocyte precursors; RBCs and neutrophils are mature circulating cells.",
+      "source": "July 2023"
+    },
+    {
+      "id": 50,
+      "type": "mcq",
+      "stem": "The Mantoux test is an example of",
+      "options": {
+        "A": "Type II hypersensitivity",
+        "B": "Type III hypersensitivity",
+        "C": "Type IV hypersensitivity",
+        "D": "Type I hypersensitivity"
+      },
+      "answer": "C",
+      "explanation": "The tuberculin skin test is a delayed, T-cell-mediated type IV reaction peaking at 48–72h.",
+      "source": "July 2023"
+    },
+    {
+      "id": 51,
+      "type": "mcq",
+      "stem": "A cause of decreased ventilation is NOT",
+      "options": {
+        "A": "Stimulation of respiratory centre e.g. progesterone",
+        "B": "Thoracic cage disorders e.g. kyphosis",
+        "C": "Decreased airway flow e.g. bronchitis",
+        "D": "Reduced lung parenchyma e.g. pneumonia"
+      },
+      "answer": "A",
+      "explanation": "Keyed: stimulation increases ventilation. Note: pneumonia causes type 1 (hypoxaemic) failure rather than hypoventilation — also defensible.",
+      "source": "July 2021"
+    },
+    {
+      "id": 52,
+      "type": "mcq",
+      "stem": "Angiotensin II causes",
+      "options": {
+        "A": "Natriuresis",
+        "B": "Inhibition of sympathetic activity",
+        "C": "Thirst",
+        "D": "Vasodilation"
+      },
+      "answer": "C",
+      "explanation": "Angiotensin II stimulates thirst (and ADH), causes vasoconstriction, sympathetic activation and sodium retention — not natriuresis or vasodilation.",
+      "source": "July 2021"
+    },
+    {
+      "id": 53,
+      "type": "mcq",
+      "stem": "The direct Coombs test is positive in",
+      "options": {
+        "A": "Sickle cell disease",
+        "B": "B12-deficiency anaemia",
+        "C": "Autoimmune haemolytic anaemia",
+        "D": "G6PD deficiency"
+      },
+      "answer": "C",
+      "explanation": "The direct antiglobulin (Coombs) test detects antibody/complement coating RBCs, positive in autoimmune haemolytic anaemia.",
+      "source": "July 2021"
+    },
+    {
+      "id": 54,
+      "type": "mcq",
+      "stem": "Which is NOT a cause of heart failure",
+      "options": {
+        "A": "Coronary artery disease",
+        "B": "Dilated cardiomyopathy",
+        "C": "Valvular disease",
+        "D": "Arterial hypertension",
+        "E": "Intense athletic activity"
+      },
+      "answer": "E",
+      "explanation": "Athlete's heart is a physiological adaptation; CAD, dilated cardiomyopathy, valve disease and hypertension all cause heart failure.",
+      "source": "July 2021"
+    },
+    {
+      "id": 55,
+      "type": "mcq",
+      "stem": "Autoantibodies in type 1 diabetes",
+      "options": {
+        "A": "Anti-islet, anti-insulin, anti-GAD",
+        "B": "APCA and ANCA",
+        "C": "Anti-islet, antinuclear, anti-GAD",
+        "D": "Anti-tyrosine phosphatase, anti-ZnT8, anti-FAD",
+        "E": "Anti-islet, anti-insulin, anti-FAD"
+      },
+      "answer": "A",
+      "explanation": "Classic type 1 diabetes autoantibodies are anti-islet (ICA), anti-insulin (IAA) and anti-GAD65 (also IA-2/ZnT8).",
+      "source": "July 2021"
+    },
+    {
+      "id": 56,
+      "type": "mcq",
+      "stem": "An initial finding in acute PE is NOT",
+      "options": {
+        "A": "Respiratory alkalosis",
+        "B": "Hypocapnia",
+        "C": "Respiratory acidosis",
+        "D": "Hypoxaemia"
+      },
+      "answer": "C",
+      "explanation": "Acute PE causes tachypnoea → hypocapnia and respiratory alkalosis with hypoxaemia; acidosis is not the early picture.",
+      "source": "July 2021"
+    },
+    {
+      "id": 57,
+      "type": "mcq",
+      "stem": "Immunological memory characterizes",
+      "options": {
+        "A": "Adaptive immunity",
+        "B": "Hypersensitivity reactions",
+        "C": "Osteophyte formation",
+        "D": "Innate immunity"
+      },
+      "answer": "A",
+      "explanation": "Memory (faster, stronger secondary responses) is a defining feature of adaptive, not innate, immunity.",
+      "source": "July 2021"
+    },
+    {
+      "id": 58,
+      "type": "mcq",
+      "stem": "Kussmaul respiration occurs in",
+      "options": {
+        "A": "Chronic respiratory acidosis",
+        "B": "Metabolic acidosis during respiratory compensation",
+        "C": "Mixed disorders",
+        "D": "Acute respiratory acidosis",
+        "E": "Metabolic alkalosis during compensation"
+      },
+      "answer": "B",
+      "explanation": "Deep, rapid Kussmaul breathing is the respiratory compensation blowing off CO₂ in metabolic acidosis (e.g. DKA).",
+      "source": "July 2021"
+    },
+    {
+      "id": 59,
+      "type": "mcq",
+      "stem": "In diffuse oesophageal spasm, NOT observed",
+      "options": {
+        "A": "Reduced myenteric plexus ganglia",
+        "B": "Anterior chest pain",
+        "C": "Dysphagia",
+        "D": "Diffuse muscular wall thickening"
+      },
+      "answer": "A",
+      "explanation": "Reduced ganglia is achalasia; DES has normal ganglia.",
+      "source": "July 2021"
+    },
+    {
+      "id": 60,
+      "type": "mcq",
+      "stem": "A cause of neonatal jaundice is NOT",
+      "options": {
+        "A": "Impaired bilirubin conjugation",
+        "B": "Bilirubin overproduction",
+        "C": "Impaired bilirubin excretion",
+        "D": "Impaired hepatocyte uptake"
+      },
+      "answer": "C",
+      "explanation": "Physiologic neonatal jaundice is unconjugated (↑production, ↓uptake, ↓conjugation). Impaired excretion → conjugated/cholestatic, not the physiologic pattern.",
+      "source": "July 2021"
+    },
+    {
+      "id": 61,
+      "type": "mcq",
+      "stem": "Mechanisms NOT involved in diabetic nephropathy",
+      "options": {
+        "A": "Increased VEGF production",
+        "B": "Hypertension",
+        "C": "Renin-angiotensin system",
+        "D": "Microcirculation haemodynamic change",
+        "E": "Genetic predisposition"
+      },
+      "answer": "A",
+      "explanation": "By elimination — the hemodynamic/RAAS/genetic options are core mechanisms. VEGF is more characteristically tied to retinopathy, though it is also implicated in nephropathy; examiner-dependent.",
+      "source": "July 2021"
+    },
+    {
+      "id": 62,
+      "type": "mcq",
+      "stem": "Factors NOT involved in diabetic complications",
+      "options": {
+        "A": "Duration of diabetes",
+        "B": "Metabolic memory",
+        "C": "Glycaemic control",
+        "D": "Hereditary factors",
+        "E": "Sex"
+      },
+      "answer": "E",
+      "explanation": "Duration, glycaemic control, metabolic memory and heredity drive complications; biological sex is not an established independent factor.",
+      "source": "July 2021"
+    },
+    {
+      "id": 63,
+      "type": "mcq",
+      "stem": "Potassium",
+      "options": {
+        "A": "Main extracellular ion",
+        "B": "Reabsorbed only in collecting ducts",
+        "C": "Main intracellular ion",
+        "D": "Aldosterone causes K retention"
+      },
+      "answer": "C",
+      "explanation": "K⁺ is the principal intracellular cation; it is reabsorbed largely proximally/in the loop, and aldosterone promotes K⁺ excretion.",
+      "source": "July 2021"
+    },
+    {
+      "id": 64,
+      "type": "mcq",
+      "stem": "Which is NOT a clinical sign of heart failure",
+      "options": {
+        "A": "Apex displaced down and left",
+        "B": "Ankle oedema",
+        "C": "Jugular venous distension",
+        "D": "Increased arterial pressure",
+        "E": "Third heart sound"
+      },
+      "answer": "D",
+      "explanation": "Displaced apex, ankle oedema, JVD and S3 are heart-failure signs; blood pressure is typically normal or low, not raised.",
+      "source": "July 2021"
+    },
+    {
+      "id": 65,
+      "type": "mcq",
+      "stem": "Triglycerides",
+      "options": {
+        "A": "Involved in reverse cholesterol transport",
+        "B": "Energy source for the brain",
+        "C": "Energy source for muscle tissue",
+        "D": "Used for hormone synthesis",
+        "E": "Involved in reverse cholesterol transport"
+      },
+      "answer": "C",
+      "explanation": "Triglycerides supply fatty acids to muscle; the brain uses glucose/ketones and reverse cholesterol transport is an HDL function.",
+      "source": "July 2021"
+    },
+    {
+      "id": 66,
+      "type": "mcq",
+      "stem": "Post-obstructive polyuria is due to",
+      "options": {
+        "A": "Osmotic diuresis",
+        "B": "ADH resistance",
+        "C": "Osmotic diuresis + ADH resistance",
+        "D": "Hypokalaemia"
+      },
+      "answer": "C",
+      "explanation": "Both retained solute (osmotic diuresis) and tubular resistance to ADH drive the polyuria after relief of obstruction.",
+      "source": "July 2021"
+    },
+    {
+      "id": 67,
+      "type": "mcq",
+      "stem": "Hyperventilation causes",
+      "options": {
+        "A": "Paraesthesias, confusion",
+        "B": "Hypercapnia",
+        "C": "Respiratory acidosis",
+        "D": "Cerebral vasodilation"
+      },
+      "answer": "A",
+      "explanation": "Hypocapnic alkalosis causes paraesthesiae and lightheadedness with cerebral vasoconstriction — not hypercapnia or acidosis.",
+      "source": "July 2021"
+    },
+    {
+      "id": 68,
+      "type": "mcq",
+      "stem": "Hypothermia is NOT observed in",
+      "options": {
+        "A": "Hypothyroidism",
+        "B": "Hyperthyroidism",
+        "C": "Malnutrition",
+        "D": "Excess alcohol"
+      },
+      "answer": "B",
+      "explanation": "Hyperthyroidism raises metabolic heat production; hypothyroidism, malnutrition and alcohol predispose to hypothermia.",
+      "source": "July 2021"
+    },
+    {
+      "id": 69,
+      "type": "mcq",
+      "stem": "Thrombocytopenia from ineffective thrombopoiesis is NOT caused by",
+      "options": {
+        "A": "Marrow infiltration",
+        "B": "B12 deficiency",
+        "C": "Aplastic anaemia",
+        "D": "Hypersplenism"
+      },
+      "answer": "D",
+      "explanation": "Hypersplenism = sequestration/destruction, not a production defect.",
+      "source": "July 2021"
+    },
+    {
+      "id": 70,
+      "type": "mcq",
+      "stem": "Greatest bicarbonate reabsorption occurs in",
+      "options": {
+        "A": "Glomerulus",
+        "B": "Proximal convoluted tubule",
+        "C": "Loop of Henle",
+        "D": "Collecting duct",
+        "E": "Distal convoluted tubule"
+      },
+      "answer": "B",
+      "explanation": "About 80–90% of filtered bicarbonate is reclaimed in the proximal convoluted tubule.",
+      "source": "July 2021"
+    },
+    {
+      "id": 71,
+      "type": "mcq",
+      "stem": "Diabetes insipidus is characterized by",
+      "options": {
+        "A": "Marked dehydration in adults",
+        "B": "Increased vasopressin in blood",
+        "C": "Increased thirst, polydipsia",
+        "D": "Small amounts of concentrated urine"
+      },
+      "answer": "C",
+      "explanation": "Water is lost as dilute urine, driving compensatory polydipsia; serum vasopressin is low in central DI.",
+      "source": "July 2021"
+    },
+    {
+      "id": 72,
+      "type": "mcq",
+      "stem": "A cause of malabsorption in the mucosal phase is NOT",
+      "options": {
+        "A": "Intestinal ischaemia",
+        "B": "Parasitic disease",
+        "C": "Crohn's disease",
+        "D": "Drugs",
+        "E": "Coeliac disease"
+      },
+      "answer": "A",
+      "explanation": "Ischaemia is a transport/delivery problem; coeliac, parasites, Crohn's and drugs damage the mucosa.",
+      "source": "July 2021"
+    },
+    {
+      "id": 73,
+      "type": "mcq",
+      "stem": "NOT a pathophysiological mechanism in heart failure",
+      "options": {
+        "A": "Reduced peripheral resistance",
+        "B": "LV dilatation + reduced contractility",
+        "C": "Reduced LV compliance",
+        "D": "Increased LVEDP",
+        "E": "Remodelling (ellipsoid→spherical)"
+      },
+      "answer": "A",
+      "explanation": "Heart failure activates RAAS/sympathetic tone → increased peripheral resistance; dilatation, stiff ventricle, high LVEDP and remodelling are the mechanisms.",
+      "source": "July 2021"
+    },
+    {
+      "id": 74,
+      "type": "mcq",
+      "stem": "Which statement is incorrect",
+      "options": {
+        "A": "Platelet lifespan ≈10 days",
+        "B": "WBC lifespan hours to months",
+        "C": "RBC lifespan is 120 hours"
+      },
+      "answer": "C",
+      "explanation": "RBC lifespan is 120 DAYS, not hours.",
+      "source": "July 2021"
+    },
+    {
+      "id": 75,
+      "type": "mcq",
+      "stem": "Which is NOT an inhibitor of haematopoiesis",
+      "options": {
+        "A": "Tumour necrosis factor",
+        "B": "Erythropoietin",
+        "C": "Interferons"
+      },
+      "answer": "B",
+      "explanation": "Erythropoietin stimulates erythropoiesis; TNF and interferons are inhibitory to haematopoiesis.",
+      "source": "July 2021"
+    },
+    {
+      "id": 76,
+      "type": "mcq",
+      "stem": "Heat loss is NOT caused by",
+      "options": {
+        "A": "Vasodilation",
+        "B": "Vasoconstriction",
+        "C": "Insensible respiration",
+        "D": "Sweating"
+      },
+      "answer": "B",
+      "explanation": "Vasoconstriction conserves heat; vasodilation, sweating and insensible respiratory losses dissipate it.",
+      "source": "July 2021"
+    },
+    {
+      "id": 77,
+      "type": "mcq",
+      "stem": "NOT a characteristic finding of nephrotic syndrome",
+      "options": {
+        "A": "Hypoalbuminaemia",
+        "B": "Dysmorphic RBCs in urine",
+        "C": "Albuminuria >3.5 g/24h",
+        "D": "Lower-limb oedema"
+      },
+      "answer": "B",
+      "explanation": "Dysmorphic RBCs/casts indicate a nephritic (glomerular haematuria) picture; nephrotic = heavy proteinuria, hypoalbuminaemia and oedema.",
+      "source": "July 2021"
+    },
+    {
+      "id": 78,
+      "type": "mcq",
+      "stem": "What is correct (Na & hypertension)",
+      "options": {
+        "A": "↑Na never causes HTN",
+        "B": "↑Na causes HTN in salt-sensitive people",
+        "C": "↑Na causes HTN in salt-resistant people",
+        "D": "↑Na causes HTN in everyone"
+      },
+      "answer": "B",
+      "explanation": "A high sodium load reliably raises blood pressure mainly in salt-sensitive individuals.",
+      "source": "July 2021"
+    },
+    {
+      "id": 79,
+      "type": "mcq",
+      "stem": "NOT an intraluminal-phase malabsorption mechanism",
+      "options": {
+        "A": "Disaccharidase deficiency",
+        "B": "Bacterial overgrowth",
+        "C": "Short bowel syndrome",
+        "D": "Decreased bile salts",
+        "E": "Pancreatic enzyme deficiency"
+      },
+      "answer": "A",
+      "explanation": "Disaccharidase deficiency is a brush-border/mucosal defect.",
+      "source": "July 2021"
+    },
+    {
+      "id": 80,
+      "type": "mcq",
+      "stem": "Easy fatigability in heart failure is due to",
+      "options": {
+        "A": "Increased LVEDP/pulmonary pressure",
+        "B": "Increased venous pressure",
+        "C": "Reduced cardiac output",
+        "D": "Arrhythmias",
+        "E": "Low arterial BP"
+      },
+      "answer": "C",
+      "explanation": "Fatigue reflects low cardiac output and poor tissue perfusion, distinct from the congestive (dyspnoea) symptoms.",
+      "source": "July 2021"
+    },
+    {
+      "id": 81,
+      "type": "mcq",
+      "stem": "Incorrect regarding normal sleep",
+      "options": {
+        "A": "REM: wake-like EEG + muscle inhibition",
+        "B": "Sleep normally begins with REM",
+        "C": "NREM has 3 stages, 90–120 min",
+        "D": "REM includes dreaming"
+      },
+      "answer": "B",
+      "explanation": "Normal sleep begins with NREM; the first REM period follows after roughly 90 minutes.",
+      "source": "July 2021"
+    },
+    {
+      "id": 82,
+      "type": "mcq",
+      "stem": "Features of acute inflammation include all EXCEPT",
+      "options": {
+        "A": "Oedema",
+        "B": "Pallor",
+        "C": "Heat",
+        "D": "Pain"
+      },
+      "answer": "B",
+      "explanation": "Cardinal signs are redness, heat, swelling, pain and loss of function — the tissue is hyperaemic (red), not pale.",
+      "source": "July 2021"
+    },
+    {
+      "id": 83,
+      "type": "mcq",
+      "stem": "Hypersecretion of growth hormone",
+      "options": {
+        "A": "Causes cardiomegaly in all patients",
+        "B": "Usually causes hypoglycaemia",
+        "C": "Causes gigantism in adults",
+        "D": "No joint/cartilage changes"
+      },
+      "answer": "A",
+      "explanation": "Best option: acromegalic cardiomyopathy is real ('in all patients' is an overstatement). Note: gigantism is paediatric; GH is diabetogenic (hyperglycaemia); it does affect joints/cartilage — so all options are imperfect.",
+      "source": "July 2021"
+    },
+    {
+      "id": 84,
+      "type": "mcq",
+      "stem": "NOT a vasoactive peptide of inflammation",
+      "options": {
+        "A": "Serotonin",
+        "B": "Ferritin",
+        "C": "Adenosine",
+        "D": "Histamine"
+      },
+      "answer": "B",
+      "explanation": "Histamine, serotonin and adenosine are vasoactive mediators; ferritin is an iron-storage/acute-phase protein, not vasoactive.",
+      "source": "July 2021"
+    },
+    {
+      "id": 85,
+      "type": "mcq",
+      "stem": "A cause of constipation is NOT",
+      "options": {
+        "A": "Calcium supplement",
+        "B": "Rectal prolapse",
+        "C": "Hyperthyroidism",
+        "D": "Congenital megacolon",
+        "E": "Multiple sclerosis"
+      },
+      "answer": "C",
+      "explanation": "Hypothyroidism causes constipation; hyperthyroidism tends to diarrhoea.",
+      "source": "July 2021"
+    },
+    {
+      "id": 86,
+      "type": "mcq",
+      "stem": "Hypovolaemic hyponatraemia",
+      "options": {
+        "A": "Urine Na always >50",
+        "B": "Urine Na may be > or < 20 by cause",
+        "C": "Due to ADH suppression",
+        "D": "Classic cause is adrenal insufficiency"
+      },
+      "answer": "B",
+      "explanation": "Renal loss gives urine Na >20 and extrarenal loss <20; adrenal insufficiency is a classic cause of hypovolaemic hyponatraemia.",
+      "source": "July 2021"
+    },
+    {
+      "id": 87,
+      "type": "mcq",
+      "stem": "Which anaemia is microcytic",
+      "options": {
+        "A": "Aplastic",
+        "B": "Megaloblastic",
+        "C": "Iron deficiency",
+        "D": "Sickle cell"
+      },
+      "answer": "C",
+      "explanation": "Iron deficiency is microcytic; aplastic and sickle cell are normocytic and megaloblastic is macrocytic.",
+      "source": "July 2021"
+    },
+    {
+      "id": 88,
+      "type": "mcq",
+      "stem": "NOT a risk factor for coronary artery disease",
+      "options": {
+        "A": "Family history",
+        "B": "Smoking",
+        "C": "Hyperthyroidism",
+        "D": "Diabetes mellitus",
+        "E": "Hyperlipidaemia"
+      },
+      "answer": "C",
+      "explanation": "Established coronary risks are smoking, diabetes, hyperlipidaemia and family history; thyroid excess is not a classic risk factor.",
+      "source": "July 2021"
+    },
+    {
+      "id": 89,
+      "type": "mcq",
+      "stem": "NOT a risk factor for coronary artery disease",
+      "options": {
+        "A": "Family history",
+        "B": "Smoking",
+        "C": "Hyperthyroidism",
+        "D": "Diabetes mellitus",
+        "E": "Hyperlipidaemia"
+      },
+      "answer": "C",
+      "explanation": "As above — hyperthyroidism is not a conventional coronary risk factor.",
+      "source": "July 2021"
+    },
+    {
+      "id": 90,
+      "type": "mcq",
+      "stem": "Chylomicronaemia",
+      "options": {
+        "A": "No pancreatitis risk",
+        "B": "Due to complete LPL deficiency",
+        "C": "Causes arthritis",
+        "D": "Functions as the body's scavenger",
+        "E": "Causes hepatitis"
+      },
+      "answer": "B",
+      "explanation": "Familial chylomicronaemia (type I) results from lipoprotein-lipase (or apoC-II) deficiency and carries a high pancreatitis risk.",
+      "source": "July 2021"
+    },
+    {
+      "id": 91,
+      "type": "mcq",
+      "stem": "Obesity hypoventilation syndrome includes",
+      "options": {
+        "A": "Increased lung volumes",
+        "B": "Reduced work of breathing",
+        "C": "Increased chest-wall compliance",
+        "D": "Impaired response to hypercapnia/hypoxia"
+      },
+      "answer": "D",
+      "explanation": "Obesity hypoventilation features blunted central chemoresponsiveness plus reduced lung volumes, low chest-wall compliance and increased work of breathing.",
+      "source": "July 2021"
+    },
+    {
+      "id": 92,
+      "type": "mcq",
+      "stem": "Hyponatraemia with hypovolaemia is NOT caused by",
+      "options": {
+        "A": "Diuretics",
+        "B": "Chronic renal failure",
+        "C": "Salt-losing nephropathy",
+        "D": "Adrenal insufficiency"
+      },
+      "answer": "B",
+      "explanation": "CKD gives hypervolaemic/euvolaemic hyponatraemia.",
+      "source": "July 2021"
+    },
+    {
+      "id": 93,
+      "type": "mcq",
+      "stem": "Marfan syndrome affects",
+      "options": {
+        "A": "The eye",
+        "B": "The skin",
+        "C": "The joints",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "Fibrillin-1 mutation affects the eyes (lens dislocation), skeleton/joints, skin and — most dangerously — the aorta.",
+      "source": "July 2021"
+    },
+    {
+      "id": 94,
+      "type": "mcq",
+      "stem": "Mechanisms of pleural effusion include",
+      "options": {
+        "A": "Decreased pleural permeability",
+        "B": "Iatrogenic causes",
+        "C": "Increased intravascular oncotic pressure",
+        "D": "Decreased vascular hydrostatic pressure"
+      },
+      "answer": "B",
+      "explanation": "Effusions form from raised hydrostatic or permeability, low oncotic pressure, impaired drainage, or iatrogenic causes; the other listed options would reduce fluid.",
+      "source": "July 2021"
+    },
+    {
+      "id": 95,
+      "type": "mcq",
+      "stem": "The Mantoux test is an example of",
+      "options": {
+        "A": "Type II",
+        "B": "Type III",
+        "C": "Type IV",
+        "D": "Type I"
+      },
+      "answer": "C",
+      "explanation": "Delayed-type (T-cell-mediated) type IV hypersensitivity, like the Mantoux/tuberculin test.",
+      "source": "July 2021"
+    },
+    {
+      "id": 96,
+      "type": "mcq",
+      "stem": "In Cushing disease",
+      "options": {
+        "A": "Cortisol-secreting adrenal adenoma",
+        "B": "Circadian cortisol rhythm preserved",
+        "C": "ACTH-secreting pituitary adenoma",
+        "D": "↑cortisol but not androgens"
+      },
+      "answer": "C",
+      "explanation": "'Cushing disease' specifically means a pituitary ACTH-secreting adenoma; the circadian rhythm is lost and adrenal androgens rise.",
+      "source": "July 2021"
+    },
+    {
+      "id": 97,
+      "type": "mcq",
+      "stem": "Lipoproteins are composed of",
+      "options": {
+        "A": "Glycogen",
+        "B": "Enzymes",
+        "C": "Glucose",
+        "D": "Apoproteins",
+        "E": "Myo-inositol"
+      },
+      "answer": "D",
+      "explanation": "Lipoproteins are lipids packaged with apolipoproteins (plus a phospholipid/cholesterol shell).",
+      "source": "July 2021"
+    },
+    {
+      "id": 98,
+      "type": "mcq",
+      "stem": "Articular cartilage",
+      "options": {
+        "A": "Histology similar to bone",
+        "B": "Supplied by nutrient vessels from bone",
+        "C": "Basic unit is the 'chondron'",
+        "D": "Substrate for osteoclast maturation"
+      },
+      "answer": "C",
+      "explanation": "The chondron (chondrocyte plus its pericellular matrix) is the functional unit; cartilage is avascular and histologically unlike bone.",
+      "source": "July 2021"
+    },
+    {
+      "id": 99,
+      "type": "mcq",
+      "stem": "Characteristic histology of rapidly progressive GN",
+      "options": {
+        "A": "Basement-membrane thickening",
+        "B": "Crescent formation",
+        "C": "Mesangial hyperplasia",
+        "D": "Kimmelstiel-Wilson nodules"
+      },
+      "answer": "B",
+      "explanation": "Rapidly progressive (crescentic) GN shows glomerular crescents; Kimmelstiel-Wilson nodules are diabetic and basement-membrane thickening is membranous.",
+      "source": "July 2021"
+    },
+    {
+      "id": 100,
+      "type": "mcq",
+      "stem": "True regarding type 2 diabetes",
+      "options": {
+        "A": "Diabetogenic genes cause resistance but not secretory defect",
+        "B": "Risk not affected by family history",
+        "C": "Genes cause resistance AND impaired secretion",
+        "D": "More frequent in residents of Corsica",
+        "E": "Genetic effect smaller than in T1DM"
+      },
+      "answer": "C",
+      "explanation": "Type 2 diabetes genetics contribute to both insulin resistance and β-cell secretory failure, with a strong family-history effect.",
+      "source": "July 2021"
+    },
+    {
+      "id": 101,
+      "type": "mcq",
+      "stem": "NOT a characteristic finding of nephrotic syndrome",
+      "options": {
+        "A": "Hypoalbuminaemia",
+        "B": "Albuminuria >3.5 g/24h",
+        "C": "Dysmorphic RBCs in urine",
+        "D": "Lower-limb oedema"
+      },
+      "answer": "C",
+      "explanation": "Dysmorphic RBCs are a nephritic (haematuria) feature; nephrotic syndrome = proteinuria >3.5 g/24h, hypoalbuminaemia and oedema.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 102,
+      "type": "mcq",
+      "stem": "NOT an acquired thrombophilic factor",
+      "options": {
+        "A": "Nephrotic syndrome",
+        "B": "Antiphospholipid syndrome",
+        "C": "Myeloproliferative syndromes",
+        "D": "Factor V Leiden"
+      },
+      "answer": "D",
+      "explanation": "Factor V Leiden is inherited; nephrotic syndrome, antiphospholipid syndrome and myeloproliferative disorders are acquired prothrombotic states.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 103,
+      "type": "mcq",
+      "stem": "Hypersecretion of growth hormone",
+      "options": {
+        "A": "Causes cardiomegaly in all patients",
+        "B": "Usually causes hypoglycaemia",
+        "C": "Causes gigantism in adults",
+        "D": "No joint/cartilage changes"
+      },
+      "answer": "A",
+      "explanation": "Best option (acromegalic cardiomyopathy). Other options are false — gigantism is paediatric, GH is diabetogenic, joints/cartilage are affected.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 104,
+      "type": "mcq",
+      "stem": "NOT an action of cytokines",
+      "options": {
+        "A": "Tachycardia / somnolence",
+        "B": "Anorexia / catabolism",
+        "C": "Fever",
+        "D": "Suppression of inflammation"
+      },
+      "answer": "D",
+      "explanation": "Pro-inflammatory cytokines cause fever, anorexia, catabolism and tachycardia/somnolence — they drive, not suppress, inflammation.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 105,
+      "type": "mcq",
+      "stem": "Type 1A diabetics more frequently develop",
+      "options": {
+        "A": "Cushing disease",
+        "B": "Iron-deficiency anaemia",
+        "C": "Cushing syndrome",
+        "D": "Crohn's disease",
+        "E": "Hashimoto thyroiditis"
+      },
+      "answer": "E",
+      "explanation": "Autoimmune (type 1A) diabetes clusters with other organ-specific autoimmunity, classically Hashimoto (autoimmune) thyroiditis.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 106,
+      "type": "mcq",
+      "stem": "In obstructive ileus",
+      "options": {
+        "A": "Proximal obstruction → metabolic acidosis",
+        "B": "May cause hypovolaemia and shock",
+        "C": "Lower obstruction → metabolic alkalosis",
+        "D": "Acute pancreatitis is among its causes"
+      },
+      "answer": "B",
+      "explanation": "Third-spacing and vomiting cause fluid loss and shock; proximal obstruction → alkalosis and distal → acidosis (options a/c are reversed).",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 107,
+      "type": "mcq",
+      "stem": "A cause of neonatal jaundice is NOT",
+      "options": {
+        "A": "Impaired conjugation",
+        "B": "Overproduction",
+        "C": "Impaired excretion",
+        "D": "Impaired hepatocyte uptake"
+      },
+      "answer": "C",
+      "explanation": "Impaired excretion → conjugated/cholestatic jaundice, not the unconjugated physiologic pattern.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 108,
+      "type": "mcq",
+      "stem": "Hyponatraemia with hypovolaemia is NOT caused by",
+      "options": {
+        "A": "Diuretics",
+        "B": "Chronic renal failure",
+        "C": "Salt-losing nephropathy",
+        "D": "Adrenal insufficiency"
+      },
+      "answer": "B",
+      "explanation": "CKD produces euvolaemic/hypervolaemic hyponatraemia, not the hypovolaemic pattern.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 109,
+      "type": "mcq",
+      "stem": "Mechanisms NOT involved in diabetic nephropathy",
+      "options": {
+        "A": "Increased VEGF production",
+        "B": "Hypertension",
+        "C": "Renin-angiotensin system",
+        "D": "Microcirculation haemodynamic change",
+        "E": "Genetic predisposition"
+      },
+      "answer": "A",
+      "explanation": "By elimination; examiner-dependent (VEGF is also implicated in nephropathy).",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 110,
+      "type": "mcq",
+      "stem": "In subtotal gastrectomy, absorption is NOT impaired for",
+      "options": {
+        "A": "Iron",
+        "B": "Fats",
+        "C": "Fat-soluble vitamins",
+        "D": "Vitamin B12"
+      },
+      "answer": "B",
+      "explanation": "Gastrectomy classically impairs iron (acid) and B12 (intrinsic factor). Fat digestion depends on pancreas/bile, so plain fats are keyed as 'not impaired' — but fat malabsorption can occur, so examiner-dependent.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 111,
+      "type": "mcq",
+      "stem": "Among secondary dyslipidaemias",
+      "options": {
+        "A": "Well-controlled type 1 diabetes",
+        "B": "Type 2 diabetes mellitus",
+        "C": "Rheumatoid arthritis",
+        "D": "Chronic respiratory failure",
+        "E": "Systemic lupus erythematosus"
+      },
+      "answer": "B",
+      "explanation": "Type 2 diabetes is a classic secondary cause of dyslipidaemia (high triglycerides, low HDL).",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 112,
+      "type": "mcq",
+      "stem": "Autoantibodies in type 1 diabetes",
+      "options": {
+        "A": "Anti-islet, anti-insulin, anti-GAD",
+        "B": "APCA and ANCA",
+        "C": "Anti-islet, antinuclear, anti-GAD",
+        "D": "Anti-tyrosine phosphatase, anti-ZnT8, anti-FAD",
+        "E": "Anti-islet, anti-insulin, anti-FAD"
+      },
+      "answer": "A",
+      "explanation": "The standard type 1 diabetes autoantibodies are anti-islet (ICA), anti-insulin (IAA) and anti-GAD65.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 113,
+      "type": "mcq",
+      "stem": "Features of acute inflammation include all EXCEPT",
+      "options": {
+        "A": "Oedema",
+        "B": "Pallor",
+        "C": "Heat",
+        "D": "Pain"
+      },
+      "answer": "B",
+      "explanation": "Inflamed tissue is red and hyperaemic; pallor is not a cardinal sign of acute inflammation.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 114,
+      "type": "mcq",
+      "stem": "Which is incorrect — cells/tissues are damaged by",
+      "options": {
+        "A": "Increased oxygen and nutrient supply",
+        "B": "Mechanical/thermal injury",
+        "C": "Chemical causes",
+        "D": "Living infectious microorganisms"
+      },
+      "answer": "A",
+      "explanation": "Injury results from deprivation, not surfeit, of oxygen/nutrients; mechanical, chemical and infectious causes are all valid.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 115,
+      "type": "mcq",
+      "stem": "Hyponatraemia",
+      "options": {
+        "A": "Does not affect plasma osmolality",
+        "B": "Always reflects increased intravascular volume",
+        "C": "In hyperglycaemia (>200) it is pseudo-hyponatraemia",
+        "D": "Always caused by sodium deficit"
+      },
+      "answer": "C",
+      "explanation": "Hyperglycaemia osmotically shifts water into plasma, diluting sodium (translocational/pseudo-hyponatraemia); correct ~1.6 mmol/L Na per 5.5 mmol/L glucose.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 116,
+      "type": "mcq",
+      "stem": "Hyperprolactinaemia",
+      "options": {
+        "A": "May occur in stress and hypothyroidism",
+        "B": "Always due to a prolactinoma",
+        "C": "Does not affect other pituitary hormones",
+        "D": "Rarely causes galactorrhoea"
+      },
+      "answer": "A",
+      "explanation": "Stress, hypothyroidism (TRH excess), pregnancy and dopamine antagonists all raise prolactin — not always a prolactinoma; it suppresses gonadotropins and causes galactorrhoea.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 117,
+      "type": "mcq",
+      "stem": "In oesophageal achalasia",
+      "options": {
+        "A": "Decreased LES tone",
+        "B": "Due to chronic inflammation",
+        "C": "Spontaneous (simultaneous) contractions occur",
+        "D": "Increased oesophageal motility",
+        "E": "Disorder of the muscular wall"
+      },
+      "answer": "C",
+      "explanation": "By elimination — achalasia has aperistalsis with simultaneous contractions on manometry; LES tone is increased (relaxation fails); it is neuronal, not muscular.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 118,
+      "type": "mcq",
+      "stem": "Cytokines that promote inflammation",
+      "options": {
+        "A": "TNF-α",
+        "B": "Interleukin-6",
+        "C": "Interleukin-1",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "TNF-α, IL-1 and IL-6 are the principal pro-inflammatory cytokines.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 119,
+      "type": "mcq",
+      "stem": "An initial finding in acute PE is NOT",
+      "options": {
+        "A": "Respiratory alkalosis",
+        "B": "Hypocapnia",
+        "C": "Respiratory acidosis",
+        "D": "Hypoxaemia"
+      },
+      "answer": "C",
+      "explanation": "Early PE causes hyperventilation → respiratory alkalosis and hypocapnia with hypoxaemia, not acidosis.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 120,
+      "type": "mcq",
+      "stem": "Among secondary dyslipidaemias",
+      "options": {
+        "A": "Iron-deficiency anaemia",
+        "B": "Hyperthyroidism",
+        "C": "Salicylate use",
+        "D": "Megaloblastic anaemia",
+        "E": "Hypothyroidism"
+      },
+      "answer": "E",
+      "explanation": "Hypothyroidism raises LDL/total cholesterol and is a classic secondary dyslipidaemia.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 121,
+      "type": "mcq",
+      "stem": "Which is correct (V/Q)",
+      "options": {
+        "A": "Upper regions hypoventilated relative to perfusion",
+        "B": "Perfusion at bases half that at apices",
+        "C": "Upper regions hyperventilated relative to perfusion",
+        "D": "Perfusion at bases double that at apices"
+      },
+      "answer": "C",
+      "explanation": "At the apex ventilation exceeds perfusion (high V/Q); perfusion is greatest at the bases.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 122,
+      "type": "mcq",
+      "stem": "Thrombocytopenia from ineffective thrombopoiesis is NOT caused by",
+      "options": {
+        "A": "Marrow infiltration",
+        "B": "B12 deficiency",
+        "C": "Aplastic anaemia",
+        "D": "Hypersplenism"
+      },
+      "answer": "D",
+      "explanation": "Hypersplenism destroys/sequesters platelets rather than impairing their production.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 123,
+      "type": "mcq",
+      "stem": "A cause of hyperkalaemia is NOT",
+      "options": {
+        "A": "Secondary aldosteronism",
+        "B": "Potassium-sparing diuretics",
+        "C": "Renal failure",
+        "D": "Tumour lysis syndrome"
+      },
+      "answer": "A",
+      "explanation": "Aldosteronism (primary or secondary) causes hypokalaemia.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 124,
+      "type": "mcq",
+      "stem": "Autoimmune haemolytic anaemia is",
+      "options": {
+        "A": "Type I hypersensitivity",
+        "B": "Type II hypersensitivity",
+        "C": "Type III hypersensitivity"
+      },
+      "answer": "B",
+      "explanation": "Antibody-mediated red-cell destruction is a type II (cytotoxic) hypersensitivity reaction.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 125,
+      "type": "mcq",
+      "stem": "Hyperventilation causes",
+      "options": {
+        "A": "Paraesthesias, confusion",
+        "B": "Hypercapnia",
+        "C": "Respiratory acidosis",
+        "D": "Cerebral vasodilation"
+      },
+      "answer": "A",
+      "explanation": "Respiratory alkalosis lowers ionised calcium and constricts cerebral vessels → paraesthesiae and confusion.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 126,
+      "type": "mcq",
+      "stem": "Incorrect regarding normal sleep",
+      "options": {
+        "A": "REM: wake-like EEG + muscle inhibition",
+        "B": "Sleep normally begins with REM",
+        "C": "NREM has 3 stages, 90–120 min",
+        "D": "REM includes dreaming"
+      },
+      "answer": "B",
+      "explanation": "Sleep onset is NREM; the first REM period follows after roughly 90 minutes.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 127,
+      "type": "mcq",
+      "stem": "Main pathophysiological mechanisms in heart failure",
+      "options": {
+        "A": "All of the above",
+        "B": "Remodelling (ellipsoid→spherical)",
+        "C": "LV dilatation + reduced contractility",
+        "D": "Increased LVEDP",
+        "E": "Reduced LV compliance"
+      },
+      "answer": "A",
+      "explanation": "Heart failure involves dilatation with reduced contractility, reduced compliance, raised LVEDP and remodelling — all of the listed mechanisms.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 128,
+      "type": "mcq",
+      "stem": "Angiotensin II causes",
+      "options": {
+        "A": "Natriuresis",
+        "B": "Inhibition of sympathetic activity",
+        "C": "Thirst",
+        "D": "Vasodilation"
+      },
+      "answer": "C",
+      "explanation": "Angiotensin II is a vasoconstrictor that stimulates thirst, ADH, sympathetic tone and sodium retention.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 129,
+      "type": "mcq",
+      "stem": "Which are NOT mature blood cells",
+      "options": {
+        "A": "Neutrophilic polymorphonuclears",
+        "B": "Red blood cells",
+        "C": "Myelocytes"
+      },
+      "answer": "C",
+      "explanation": "Myelocytes are immature precursors; neutrophils and RBCs are mature circulating cells.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 130,
+      "type": "mcq",
+      "stem": "Acid-base disorder accompanying hyperaldosteronism",
+      "options": {
+        "A": "Mixed metabolic + respiratory acidosis",
+        "B": "Metabolic acidosis",
+        "C": "Respiratory acidosis",
+        "D": "Metabolic alkalosis",
+        "E": "Metabolic acidosis with hyperkalaemia"
+      },
+      "answer": "D",
+      "explanation": "Aldosterone excess drives renal H⁺ and K⁺ loss → hypokalaemic metabolic alkalosis.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 131,
+      "type": "mcq",
+      "stem": "A cause of metabolic alkalosis",
+      "options": {
+        "A": "Acute renal failure",
+        "B": "Salicylate poisoning",
+        "C": "Uncontrolled diabetes",
+        "D": "Loss of gastric fluid",
+        "E": "Ethanol/methanol poisoning"
+      },
+      "answer": "D",
+      "explanation": "Vomiting/NG loss of gastric HCl generates metabolic alkalosis; the other options cause metabolic acidosis.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 132,
+      "type": "mcq",
+      "stem": "In hypercalcaemia",
+      "options": {
+        "A": "PTH always elevated",
+        "B": "Hypotension observed",
+        "C": "Polyuria + nephrogenic DI",
+        "D": "QT prolongation"
+      },
+      "answer": "C",
+      "explanation": "Hypercalcaemia shortens QT; PTH may be low (malignancy).",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 133,
+      "type": "mcq",
+      "stem": "Main mechanism of NSAID nephrotoxicity",
+      "options": {
+        "A": "Atheroembolic disease",
+        "B": "Obstruction by acid crystals",
+        "C": "Induction of hypotension",
+        "D": "Inhibition of intrarenal vasodilatory prostaglandins"
+      },
+      "answer": "D",
+      "explanation": "NSAIDs block afferent-arteriolar vasodilatory prostaglandins → reduced renal perfusion and GFR.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 134,
+      "type": "mcq",
+      "stem": "A cause of malabsorption in the mucosal phase is NOT",
+      "options": {
+        "A": "Zollinger-Ellison syndrome",
+        "B": "Bacterial overgrowth",
+        "C": "Coeliac disease",
+        "D": "Intestinal ischaemia"
+      },
+      "answer": "A",
+      "explanation": "Coeliac is the only mucosal-phase option. Zollinger-Ellison and bacterial overgrowth are intraluminal and ischaemia is transport-phase — so the stem has multiple non-mucosal options; ZE keyed as the classic intraluminal example.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 135,
+      "type": "mcq",
+      "stem": "Causes of decreased ventilation do NOT include",
+      "options": {
+        "A": "Stimulation of respiratory centre e.g. progesterone",
+        "B": "Thoracic cage disorders e.g. kyphosis",
+        "C": "Decreased airway flow e.g. bronchitis",
+        "D": "Reduced lung parenchyma e.g. pneumonia"
+      },
+      "answer": "A",
+      "explanation": "Keyed: stimulation increases ventilation. Pneumonia (parenchymal, type 1) is also defensible.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 136,
+      "type": "mcq",
+      "stem": "Lipoproteins are composed of",
+      "options": {
+        "A": "Glycogen",
+        "B": "Enzymes",
+        "C": "Glucose",
+        "D": "Apoproteins",
+        "E": "Myo-inositol"
+      },
+      "answer": "D",
+      "explanation": "Lipoproteins carry lipids bound to apolipoproteins.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 137,
+      "type": "mcq",
+      "stem": "What is correct (Na & hypertension)",
+      "options": {
+        "A": "↑Na never causes HTN",
+        "B": "↑Na causes HTN in salt-sensitive people",
+        "C": "↑Na causes HTN in salt-resistant people",
+        "D": "↑Na causes HTN in everyone"
+      },
+      "answer": "B",
+      "explanation": "A high sodium load raises blood pressure mainly in salt-sensitive individuals.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 138,
+      "type": "mcq",
+      "stem": "Components of innate immunity",
+      "options": {
+        "A": "Skin and physical barriers (mucus, cilia, hair)",
+        "B": "B-lymphocytes",
+        "C": "Plasma cells",
+        "D": "All of the above"
+      },
+      "answer": "A",
+      "explanation": "Barriers such as skin, mucus, cilia and hair are innate; B-lymphocytes and plasma cells belong to adaptive immunity.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 139,
+      "type": "mcq",
+      "stem": "Which anaemia is microcytic",
+      "options": {
+        "A": "Aplastic",
+        "B": "Megaloblastic",
+        "C": "Iron deficiency",
+        "D": "Sickle cell"
+      },
+      "answer": "C",
+      "explanation": "Iron deficiency is the classic microcytic, hypochromic anaemia.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 140,
+      "type": "mcq",
+      "stem": "Sickle cell disease is due to",
+      "options": {
+        "A": "Reduced β-chain synthesis",
+        "B": "Presence of HbS",
+        "C": "Hereditary α-chain membrane disorder",
+        "D": "Reduced α-chain synthesis"
+      },
+      "answer": "B",
+      "explanation": "A single β-globin point mutation produces HbS, which polymerises when deoxygenated; it is not a quantitative chain-synthesis (thalassaemia) defect.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 141,
+      "type": "mcq",
+      "stem": "Exogenous pyrogens include",
+      "options": {
+        "A": "Gram-negative endotoxins",
+        "B": "Interleukins-1α/1β",
+        "C": "Tumour necrosis factors",
+        "D": "Interferon-α/-γ"
+      },
+      "answer": "A",
+      "explanation": "LPS/endotoxin is an exogenous pyrogen; IL-1, TNF and interferons are endogenous pyrogens.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 142,
+      "type": "mcq",
+      "stem": "Dyspnoea in heart failure is due to",
+      "options": {
+        "A": "Increased venous pressure",
+        "B": "Arrhythmias",
+        "C": "Increased LVEDP (pulmonary pressures)",
+        "D": "Low arterial BP",
+        "E": "Reduced cardiac output"
+      },
+      "answer": "C",
+      "explanation": "Raised filling pressure transmits to the pulmonary capillaries, causing congestion and breathlessness.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 143,
+      "type": "mcq",
+      "stem": "NOT a risk factor for coronary artery disease",
+      "options": {
+        "A": "Family history",
+        "B": "Smoking",
+        "C": "Hyperthyroidism",
+        "D": "Diabetes mellitus",
+        "E": "Hyperlipidaemia"
+      },
+      "answer": "C",
+      "explanation": "Hyperthyroidism is not a conventional coronary risk factor, unlike smoking, diabetes, hyperlipidaemia and family history.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 144,
+      "type": "mcq",
+      "stem": "Mechanisms of pleural effusion include",
+      "options": {
+        "A": "Decreased pleural permeability",
+        "B": "Iatrogenic causes",
+        "C": "Increased intravascular oncotic pressure",
+        "D": "Decreased vascular hydrostatic pressure"
+      },
+      "answer": "B",
+      "explanation": "Iatrogenic causes are valid; decreased permeability, decreased hydrostatic and increased oncotic pressure would each reduce, not create, an effusion.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 145,
+      "type": "mcq",
+      "stem": "Characteristics of innate immunity",
+      "options": {
+        "A": "Present only in mammals",
+        "B": "Speed of action",
+        "C": "Specificity"
+      },
+      "answer": "B",
+      "explanation": "Innate immunity is fast and non-specific with no memory; it is present across many organisms (not only mammals) and lacks fine antigen specificity.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 146,
+      "type": "mcq",
+      "stem": "Acute ischaemic coronary syndromes are",
+      "options": {
+        "A": "Unstable angina",
+        "B": "Non-ST-elevation MI",
+        "C": "ST-elevation MI",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "Acute coronary syndromes span unstable angina, NSTEMI and STEMI.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 147,
+      "type": "mcq",
+      "stem": "NOT a cause of heart failure",
+      "options": {
+        "A": "Coronary artery disease",
+        "B": "Dilated cardiomyopathy",
+        "C": "Valvular disease",
+        "D": "Arterial hypertension",
+        "E": "Intense athletic activity"
+      },
+      "answer": "E",
+      "explanation": "Athletic remodelling is physiological; the other options are pathological causes of heart failure.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 148,
+      "type": "mcq",
+      "stem": "Regarding duodenal ulcer, NOT correct",
+      "options": {
+        "A": "Acid secretion usually normal or decreased",
+        "B": "H. pylori is a cause",
+        "C": "Never malignant",
+        "D": "Due to increased acid secretion"
+      },
+      "answer": "A",
+      "explanation": "Duodenal ulcer = increased acid, so 'normal/decreased' is the false statement.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 149,
+      "type": "mcq",
+      "stem": "Causes of nephrotic syndrome include",
+      "options": {
+        "A": "Membranous GN",
+        "B": "Minimal change disease",
+        "C": "Diabetic nephropathy",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "Membranous GN, minimal change disease and diabetic nephropathy all cause nephrotic-range proteinuria.",
+      "source": "Feb 2021"
+    },
+    {
+      "id": 150,
+      "type": "mcq",
+      "stem": "Acquired factors reducing β-cell function",
+      "options": {
+        "A": "Cow's milk before 3 months",
+        "B": "Reduced breastfeeding",
+        "C": "Nitrosamines",
+        "D": "Hypoglycaemia",
+        "E": "Hyperlipidaemia"
+      },
+      "answer": "C",
+      "explanation": "Nitrosamines are classic dietary β-cell toxins. Early cow's-milk exposure and short breastfeeding are also cited environmental triggers — examiner-dependent.",
+      "source": "Feb 2021"
+    }
+  ]
+}

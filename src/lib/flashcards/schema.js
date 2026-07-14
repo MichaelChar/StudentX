@@ -19,7 +19,7 @@ import { MIN_YEAR, MAX_YEAR } from '../resources/taxonomy.js';
  * @property {string} description    Shown verbatim on the /resources card.
  * @property {number} cardCount
  * @property {number} fileSizeBytes
- * @property {string} file           Public root path, e.g. "/flashcards/histology/general-histology.apkg".
+ * @property {string} file           Public root path, e.g. "/flashcards/general-histology/general-histology.apkg".
  * @property {string} updated        ISO date.
  * @property {number} year           Exam/curriculum year the deck targets (see
  *                                   src/lib/resources/taxonomy.js), e.g. 2026.
@@ -37,7 +37,7 @@ export const DeckSchema = z.object({
 
 /**
  * @typedef {Object} SubjectIndex
- * @property {string} subject   Subject slug, e.g. "histology".
+ * @property {string} subject   Subject slug, e.g. "general-histology".
  * @property {string} title     Display name, e.g. "Histology".
  * @property {string} school    e.g. "ausom".
  * @property {string} semester  e.g. "semester-2".

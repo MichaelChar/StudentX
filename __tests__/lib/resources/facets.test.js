@@ -7,7 +7,6 @@ import {
   resourcesMatchingOtherFilters,
   searchResources,
 } from '@/lib/resources/facets';
-import { getSubjectLabel } from '@/lib/resources/taxonomy';
 
 const resources = [
   { id: '1', type: 'practice-test', semester: 'semester-2', country: 'gr', year: 2026 },
@@ -132,78 +131,75 @@ describe('resourcesMatchingOtherFilters + getFacetOptions (refined faceting)', (
   });
 });
 
-describe('subject facet (new)', () => {
+describe('subject facet (dynamic labels via subjectLabel)', () => {
   const withSubjects = [
-    { id: 'p1', type: 'practice-test', semester: 'semester-2', subject: 'anatomy-1', country: 'gr', year: 2026 },
-    { id: 'p2', type: 'practice-test', semester: 'semester-2', subject: 'biochemistry', country: 'gr', year: 2026 },
-    { id: 'f1', type: 'flashcard-deck', semester: 'semester-2', subject: 'general-physiology', country: 'gr', year: 2026 },
+    { id: 'p1', type: 'practice-test', subject: 'biochemistry', subjectLabel: 'Biochemistry I', semester: 'semester-2', country: 'gr', year: 2026 },
+    { id: 'p2', type: 'practice-test', subject: 'biochemistry', subjectLabel: 'Biochemistry I', semester: 'semester-2', country: 'gr', year: 2026 },
+    { id: 'f1', type: 'flashcard-deck', subject: 'general-physiology', subjectLabel: 'General Physiology', semester: 'semester-2', country: 'gr', year: 2026 },
+    { id: 'n1', type: 'study-notes', subject: 'hygiene-epidemiology', subjectLabel: 'Hygiene & Epidemiology (MD1040)', semester: 'semester-6', country: 'gr', year: 2026 },
   ];
 
-  it('includes subject in FACET_KEYS and surfaces when >=2 distinct', () => {
+  it('getFacetOptions uses subjectLabel and counts correctly', () => {
+    const options = getFacetOptions(withSubjects, 'subject');
+    const byValue = Object.fromEntries(options.map((o) => [o.value, o]));
+    expect(byValue['biochemistry']).toMatchObject({ label: 'Biochemistry I', count: 2 });
+    expect(byValue['general-physiology']).toMatchObject({ label: 'General Physiology', count: 1 });
+    expect(byValue['hygiene-epidemiology']).toMatchObject({ label: 'Hygiene & Epidemiology (MD1040)', count: 1 });
+  });
+
+  it('deriveFacets includes subject when >=2 subjects exist', () => {
     const keys = deriveFacets(withSubjects).map((f) => f.key);
+    expect(keys).toContain('subject');
+    // only 1 type so type may hide? no, here 2 types + 2 subjects? wait  practice + flash + notes =3? but check presence
     expect(keys).toContain('subject');
   });
 
-  it('getFacetOptions derives human labels for subject values', () => {
-    const opts = getFacetOptions(withSubjects, 'subject');
-    const labels = Object.fromEntries(opts.map((o) => [o.value, o.label]));
-    expect(labels['anatomy-1']).toBe('Anatomy I');
-    expect(labels['biochemistry']).toBe('Biochemistry I');
-    expect(labels['general-physiology']).toBe('General Physiology');
+  it('filterResources by subject works (AND with other facets)', () => {
+    const filtered = filterResources(withSubjects, { subject: 'biochemistry' });
+    expect(filtered.map((r) => r.id)).toEqual(['p1', 'p2']);
+
+    const filtered2 = filterResources(withSubjects, { subject: 'hygiene-epidemiology', type: 'study-notes' });
+    expect(filtered2).toHaveLength(1);
+    expect(filtered2[0].id).toBe('n1');
   });
 });
 
-describe('searchResources (new)', () => {
+describe('searchResources', () => {
   const data = [
-    { id: 'a', title: 'Anatomy I — Mega', description: 'Bones and muscles', subject: 'anatomy-1' },
-    { id: 'b', title: 'Biochem Predicted', description: 'Metabolism exam', subject: 'biochemistry' },
-    { id: 'c', title: 'General Physiology Deck', description: 'High yield', subject: 'general-physiology' },
+    { id: 'a', title: 'Anatomy I — Mega', description: 'Bones and muscles', subject: 'anatomy-1', subjectLabel: 'Anatomy I (MD1009)' },
+    { id: 'b', title: 'Biochem Predicted', description: 'Metabolism exam', subject: 'biochemistry', subjectLabel: 'Biochemistry I' },
+    { id: 'c', title: 'General Physiology Deck', description: 'High yield', subject: 'general-physiology', subjectLabel: 'General Physiology' },
   ];
 
-  it('case-insensitive substring over title + description + subject label', () => {
+  it('case-insensitive substring over title + description + subjectLabel', () => {
     expect(searchResources(data, 'anatomy').map((r) => r.id)).toEqual(['a']);
     expect(searchResources(data, 'BONES').map((r) => r.id)).toEqual(['a']);
     expect(searchResources(data, 'biochemistry').map((r) => r.id)).toEqual(['b']); // label match
     expect(searchResources(data, 'exam').map((r) => r.id)).toEqual(['b']);
+    expect(searchResources(data, 'md1009').map((r) => r.id)).toEqual(['a']); // course code in label
   });
 
   it('empty or blank q returns everything', () => {
     expect(searchResources(data, '').length).toBe(3);
     expect(searchResources(data, '   ').length).toBe(3);
   });
-});
 
-describe('search composes with facets + relaxation with q (new)', () => {
-  const data = [
-    { id: 'a1', type: 'practice-test', semester: 'semester-2', subject: 'anatomy-1', country: 'gr', year: 2026 },
-    { id: 'a2', type: 'practice-test', semester: 'semester-2', subject: 'anatomy-1', country: 'gr', year: 2026 },
-    { id: 'b1', type: 'practice-test', semester: 'semester-2', subject: 'biochemistry', country: 'gr', year: 2026 },
-  ];
+  it('composes as AND with facet filtering, and q narrows facet-option counts', () => {
+    const filtered = filterResources(data, {});
+    expect(searchResources(filtered, 'anatomy').map((r) => r.id)).toEqual(['a']);
 
-  it('search + facet filter is AND', () => {
-    const filtered = filterResources(data, { semester: 'semester-2' });
-    const withSearch = searchResources(filtered, 'anatomy');
-    expect(withSearch.map((r) => r.id)).toEqual(['a1', 'a2']);
+    const base = resourcesMatchingOtherFilters(data, { subject: 'anatomy-1' }, 'subject', 'exam');
+    expect(base.map((r) => r.id)).toEqual(['b']);
   });
 
-  it('facet+search zero triggers facet relaxation (q kept applied)', () => {
-    // Filter to a subject + search that only that subject has, but force empty by bad combo
-    const res = searchResources(filterResources(data, { semester: 'semester-2', subject: 'biochemistry' }), 'anatomy');
-    expect(res.length).toBe(0);
-
-    // Using explorer-style: relax facets then search on result
-    const relaxed = relaxFilters(data, { semester: 'semester-2', subject: 'biochemistry' }, 'subject');
+  it('relaxation composes with q: relax facets first, then search the relaxed set', () => {
+    const pool = [
+      { id: 'a1', type: 'practice-test', semester: 'semester-2', subject: 'anatomy-1', subjectLabel: 'Anatomy I', country: 'gr', year: 2026, title: 'Anatomy test', description: 'x' },
+      { id: 'b1', type: 'practice-test', semester: 'semester-2', subject: 'biochemistry', subjectLabel: 'Biochemistry I', country: 'gr', year: 2026, title: 'Biochem test', description: 'x' },
+    ];
+    const relaxed = relaxFilters(pool, { semester: 'semester-2', subject: 'biochemistry' }, 'subject');
     const afterSearch = searchResources(relaxed.results, 'anatomy');
-    // After dropping subject we still have semester-2; 'anatomy' search should match
-    expect(afterSearch.length).toBeGreaterThan(0);
-    expect(afterSearch.every((r) => r.subject === 'anatomy-1')).toBe(true);
-  });
-
-  it('search alone zero shows facet results (never empty)', () => {
-    const facetRes = filterResources(data, {});
-    const searched = searchResources(facetRes, 'no-such-term-xyz');
-    expect(searched.length).toBe(0);
-    // In explorer this path returns the facetRes (un-searched) + message
-    expect(facetRes.length).toBe(3);
+    expect(afterSearch.map((r) => r.id)).toEqual(['a1']);
+    expect(relaxed.droppedKey).toBe('subject');
   });
 });

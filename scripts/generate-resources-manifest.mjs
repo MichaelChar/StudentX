@@ -23,13 +23,19 @@ import path from 'node:path';
 
 import { SubjectIndexSchema as PracticeSubjectIndexSchema } from '../src/lib/practice/schema.js';
 import { SubjectIndexSchema as FlashcardsSubjectIndexSchema } from '../src/lib/flashcards/schema.js';
+import { NotesDocSchema } from '../src/lib/notes/schema.js';
 import { ResourceEntrySchema } from '../src/lib/resources/schema.js';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 // Walk every semester under the AUSoM tree: content/practice/ausom/<semester-N>/<subject>/.
 const PRACTICE_ROOT = path.join(ROOT, 'content/practice/ausom');
 const FLASHCARDS_ROOT = path.join(ROOT, 'content/flashcards');
+// Notes are one file per subject: content/notes/ausom/<semester-N>/<subject>.json.
+const NOTES_ROOT = path.join(ROOT, 'content/notes/ausom');
 const OUT_FILE = path.join(ROOT, 'src/lib/resources/manifest.generated.js');
+
+/** slug (dir or json basename) → canonical display label. Populated preferring practice index.title. */
+const subjectLabels = new Map();
 
 /** @type {string[]} */
 const errors = [];
@@ -82,10 +88,8 @@ function collectPracticeEntries() {
         err(rel, `semester "${index.semester}" does not match folder "${semester}"`);
         continue;
       }
+      if (index.title) subjectLabels.set(subject, index.title);
       for (const test of index.tests) {
-        // Subject slug (facet/filter value + ?subject=) comes from index.json,
-        // falling back to the folder name. Slugs are exact (no family merging).
-        const subjectSlug = index.subject || subject;
         entries.push({
           // The card type defaults to 'practice-test'; a test can opt into
           // 'past-paper' via `resourceType` in its index.json entry.
@@ -95,10 +99,10 @@ function collectPracticeEntries() {
           description: test.description,
           href: `/student/ausom/${semester}/${subject}/${test.id}`,
           school: index.school,
-          subject: subjectSlug,
           semester: index.semester,
           country: index.country,
           year: test.year,
+          subject,
           meta: { questionCount: test.questionCount },
         });
       }
@@ -123,10 +127,8 @@ function collectFlashcardEntries() {
       continue;
     }
     const index = parsed.data;
+    if (index.title) subjectLabels.set(subject, index.title);
     for (const deck of index.decks) {
-      // Subject slug (facet/filter value + ?subject=) comes from index.json,
-      // falling back to the folder name. Slugs are exact (no family merging).
-      const subjectSlug = index.subject || subject;
       entries.push({
         id: `flashcard:${subject}:${deck.id}`,
         type: 'flashcard-deck',
@@ -136,11 +138,49 @@ function collectFlashcardEntries() {
         // which navigate to a page — see ResourceCard in ResourcesExplorer.js.
         href: deck.file,
         school: index.school,
-        subject: subjectSlug,
         semester: index.semester,
         country: index.country,
         year: deck.year,
+        subject,
         meta: { cardCount: deck.cardCount },
+      });
+    }
+  }
+  return entries;
+}
+
+function collectNotesEntries() {
+  const entries = [];
+  for (const semester of semesterDirs(NOTES_ROOT)) {
+    const semesterDir = path.join(NOTES_ROOT, semester);
+    const files = readdirSync(semesterDir)
+      .filter((f) => f.endsWith('.json'))
+      .sort();
+    for (const file of files) {
+      const subject = file.replace(/\.json$/, '');
+      const rel = `content/notes/ausom/${semester}/${file}`;
+      const parsed = NotesDocSchema.safeParse(JSON.parse(readFileSync(path.join(semesterDir, file), 'utf8')));
+      if (!parsed.success) {
+        for (const issue of parsed.error.issues) err(rel, `${issue.message} (at ${issue.path.join('.')})`);
+        continue;
+      }
+      const doc = parsed.data;
+      if (doc.semester !== semester) {
+        err(rel, `semester "${doc.semester}" does not match folder "${semester}"`);
+        continue;
+      }
+      entries.push({
+        id: `notes:${subject}`,
+        type: 'study-notes',
+        title: doc.title,
+        description: doc.description,
+        href: `/student/ausom/${semester}/${subject}/notes`,
+        school: doc.school,
+        semester: doc.semester,
+        country: doc.country,
+        year: doc.year,
+        subject,
+        meta: { sectionCount: doc.sections.length },
       });
     }
   }
@@ -151,7 +191,9 @@ function collectFlashcardEntries() {
 // The Medical Informatics exam is a standalone static HTML page under public/
 // (no per-question JSON), so it can't go through the practice pipeline — it
 // would break scripts/generate-practice-manifest.mjs, which imports a JSON
-// file per test. Validated against ResourceEntrySchema like everything else.
+// file per test. These carry subject + subjectLabel explicitly (no index.json
+// to derive them from) and are validated against ResourceEntrySchema like
+// everything else.
 const EXTRA_RESOURCES = [
   {
     id: 'practice:medical-informatics:predicted-practice-exam',
@@ -161,15 +203,40 @@ const EXTRA_RESOURCES = [
       'Standalone practice exam predicting the contents of the Medical Informatics June 2026 exam.',
     href: '/practice/ausom/semester-2/medical-informatics/predicted-practice-exam.html',
     school: 'ausom',
-    subject: 'medical-informatics',
     semester: 'semester-2',
     country: 'gr',
     year: 2026,
+    subject: 'medical-informatics',
+    subjectLabel: 'Medical Informatics (MD1008)',
   },
 ];
 
 function main() {
-  const entries = [...collectPracticeEntries(), ...collectFlashcardEntries(), ...EXTRA_RESOURCES];
+  const entries = [...collectPracticeEntries(), ...collectFlashcardEntries(), ...collectNotesEntries()];
+
+  // Assign subject + subjectLabel after collectors. Build one canonical label per slug
+  // (prefer practice index.title so tests/notes/decks for same subject share a pill label).
+  for (const entry of entries) {
+    const slug = entry.subject;
+    if (!slug) {
+      err(entry.id || 'unknown', 'missing subject slug');
+      continue;
+    }
+    let label = subjectLabels.get(slug);
+    if (!label) {
+      // For NOTES, explicitly do NOT fall back to the doc.title (it's the notes resource title).
+      if (entry.id && entry.id.startsWith('notes:')) {
+        label = slug;
+      } else {
+        label = entry.title ?? slug;
+      }
+    }
+    entry.subject = slug;
+    entry.subjectLabel = label;
+  }
+
+  // Added after the label pass — EXTRA_RESOURCES carry their own subjectLabel.
+  entries.push(...EXTRA_RESOURCES);
 
   for (const entry of entries) {
     const parsed = ResourceEntrySchema.safeParse(entry);

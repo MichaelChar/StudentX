@@ -1,0 +1,406 @@
+{
+  "meta": {
+    "title": "Social Medicine & Public Health — Recalled MCQs",
+    "course": "MD1041 Social Medicine & Public Health",
+    "semester": "Semester 6",
+    "total_questions": 30,
+    "mcq_count": 30,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Vaccination is which type of prevention?",
+      "options": {
+        "A": "Primary prevention",
+        "B": "Secondary prevention",
+        "C": "Tertiary prevention",
+        "D": "Quaternary prevention"
+      },
+      "answer": "A",
+      "explanation": "Vaccination prevents disease onset in healthy people → primary prevention. (Screening = secondary.)"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "What does \"70% sensitivity\" of a diagnostic/screening test mean?",
+      "options": {
+        "A": "70% of people who test positive truly have the disease",
+        "B": "The test correctly identifies 70% of people who truly have the disease",
+        "C": "70% of healthy people test negative",
+        "D": "70% of the population is at risk"
+      },
+      "answer": "B",
+      "explanation": "Sensitivity = a/(a+c): of everyone who truly has the disease, 70% are caught (30% are false negatives). Option A describes PPV; option C describes specificity."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Negative predictive value (NPV) is:",
+      "options": {
+        "A": "The probability disease is present given a positive test",
+        "B": "The probability disease is absent given a negative test",
+        "C": "The proportion of diseased who test negative",
+        "D": "The proportion of healthy who test positive"
+      },
+      "answer": "B",
+      "explanation": "NPV = d/(c+d) = given a negative result, the probability the person is truly disease-free. It rises when prevalence is low."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "PSA testing with low specificity leads chiefly to:",
+      "options": {
+        "A": "Underdiagnosis",
+        "B": "Overdiagnosis",
+        "C": "Perfect early detection",
+        "D": "No effect on outcomes"
+      },
+      "answer": "B",
+      "explanation": "PSA is highly sensitive but poorly specific (~20%); combined with indolent tumours this causes overdiagnosis and overtreatment."
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "According to Rogers' innovation curve, the group that stubbornly resists change is:",
+      "options": {
+        "A": "Innovators (~2.5%)",
+        "B": "Early adopters (~13.5%)",
+        "C": "Laggards (~16%)",
+        "D": "Early majority (~34%)"
+      },
+      "answer": "C",
+      "explanation": "Laggards ≈ 16% resist and may never adopt. Full population adoption is not required for improvement."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "What goes on the head of a fishbone (Ishikawa) diagram?",
+      "options": {
+        "A": "The proposed solution",
+        "B": "The problem / effect being analysed",
+        "C": "The project budget",
+        "D": "The team members"
+      },
+      "answer": "B",
+      "explanation": "The head states the problem/effect; the \"bones\" are categories of contributing causes. It is a tool for understanding the system."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "\"STEEEPI\" (the 7 dimensions of quality of care) stands for:",
+      "options": {
+        "A": "Safe, Timely, Efficient, Effective, Equitable, People-centred, Integrated",
+        "B": "Screening, Treatment, Education, Ethics, Prevention, Policy, Integration",
+        "C": "Sensitivity, Timeliness, Equity, Efficacy, Economy, Prevention, Information",
+        "D": "Structure, Timing, Evaluation, Evidence, Practice, Process, Impact"
+      },
+      "answer": "A",
+      "explanation": "IOM dimensions: Safe, Timely, Efficient, Effective, Equitable, People-centred, Integrated."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "The correct order of the public-health surveillance cycle is:",
+      "options": {
+        "A": "Dissemination → Collection → Analysis → Interpretation",
+        "B": "Collection → Analysis → Interpretation → Dissemination",
+        "C": "Analysis → Collection → Dissemination → Interpretation",
+        "D": "Interpretation → Dissemination → Collection → Analysis"
+      },
+      "answer": "B",
+      "explanation": "Surveillance = ongoing Collection → Analysis → Interpretation → Dissemination (→ link to action)."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "The first step in an outbreak investigation is to:",
+      "options": {
+        "A": "Implement control measures immediately",
+        "B": "Confirm the outbreak exists and verify the diagnosis",
+        "C": "Publish results to the media",
+        "D": "Vaccinate the whole population"
+      },
+      "answer": "B",
+      "explanation": "You first confirm the outbreak & verify the diagnosis; a case definition and case counting follow before hypothesis testing and control."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "In an outbreak investigation, a \"case definition\" is:",
+      "options": {
+        "A": "The total number of deaths",
+        "B": "A standard set of criteria (clinical + time/place/person) to decide who counts as a case",
+        "C": "The name of the pathogen",
+        "D": "A treatment protocol"
+      },
+      "answer": "B",
+      "explanation": "A case definition is standard criteria that make case counting consistent across investigators."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "CERC (Crisis & Emergency Risk Communication) principles include:",
+      "options": {
+        "A": "Be First, Be Right, Be Credible, Empathy, Promote Action, Respect",
+        "B": "Isolate, Quarantine, Treat, Report",
+        "C": "Test, Trace, Treat, Vaccinate",
+        "D": "Prevention, Preparedness, Response, Recovery"
+      },
+      "answer": "A",
+      "explanation": "CDC's CERC: Be First, Be Right, Be Credible, Express Empathy, Promote Action, Show Respect."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "One Health is best described as:",
+      "options": {
+        "A": "Free universal healthcare for all humans",
+        "B": "An integrated approach linking human, animal, plant and ecosystem health",
+        "C": "A single global health insurance scheme",
+        "D": "Treating one disease at a time"
+      },
+      "answer": "B",
+      "explanation": "One Health = integrated, multisectoral approach recognising interdependence of human–animal–plant–environment health (zoonoses, AMR, food safety). Quadripartite: WHO+FAO+WOAH+UNEP."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Antimicrobial resistance (AMR) results mainly from:",
+      "options": {
+        "A": "Vaccination programs",
+        "B": "Misuse and overuse of antimicrobials",
+        "C": "Herd immunity",
+        "D": "Improved sanitation"
+      },
+      "answer": "B",
+      "explanation": "AMR arises from the misuse & overuse of antimicrobials — a flagship One Health problem."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "How many Sustainable Development Goals (SDGs) are in the 2030 Agenda, and which one is health?",
+      "options": {
+        "A": "8 goals; SDG 6 is health",
+        "B": "17 goals; SDG 3 (Good Health & Well-being)",
+        "C": "10 goals; SDG 1 is health",
+        "D": "20 goals; SDG 10 is health"
+      },
+      "answer": "B",
+      "explanation": "17 SDGs (169 targets), adopted 2015 by 193 states; SDG 3 = Good Health & Well-being. Five P's: People, Planet, Prosperity, Peace, Partnership."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Neonatal mortality refers to deaths within:",
+      "options": {
+        "A": "The first 7 days of life only",
+        "B": "The first 28 days of life",
+        "C": "The first year of life",
+        "D": "The first 5 years of life"
+      },
+      "answer": "B",
+      "explanation": "Neonatal = first 28 days (early <7 days, late 7–<28). Infant mortality = first year; under-5 mortality = first 5 years."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Maternal health, as defined by WHO, covers women's health during:",
+      "options": {
+        "A": "Pregnancy only",
+        "B": "Pregnancy, childbirth and the postnatal (postpartum) period",
+        "C": "Only the reproductive years",
+        "D": "Only labour and delivery"
+      },
+      "answer": "B",
+      "explanation": "Maternal health = health during pregnancy, childbirth and the postnatal period."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "The most common reported foodborne disease / zoonosis in the EU is caused by:",
+      "options": {
+        "A": "Salmonella",
+        "B": "Campylobacter",
+        "C": "Listeria",
+        "D": "Norovirus"
+      },
+      "answer": "B",
+      "explanation": "Campylobacter (campylobacteriosis) is the most commonly reported zoonosis in the EU (EFSA/ECDC One Health Zoonoses Report)."
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Most cancer-related deaths worldwide are due to which cancer?",
+      "options": {
+        "A": "Breast cancer",
+        "B": "Colorectal cancer",
+        "C": "Lung (trachea/bronchus/lung) cancer",
+        "D": "Prostate cancer"
+      },
+      "answer": "C",
+      "explanation": "Lung cancer is the leading cause of cancer death globally (~1.9M deaths in 2021)."
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "The leading cause of death from injury for people aged 5–29 is:",
+      "options": {
+        "A": "Falls",
+        "B": "Road traffic injuries",
+        "C": "Drowning",
+        "D": "Poisoning"
+      },
+      "answer": "B",
+      "explanation": "Road traffic injuries lead for ages 5–29; three of the top five causes of death in this group are injury-related (road traffic, homicide, suicide)."
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "The most common cause of death in highly developed countries is:",
+      "options": {
+        "A": "Communicable (infectious) diseases",
+        "B": "Non-communicable diseases (esp. cardiovascular disease)",
+        "C": "Malnutrition",
+        "D": "Injuries"
+      },
+      "answer": "B",
+      "explanation": "In developed countries, NCDs — led by cardiovascular disease — dominate mortality (injuries typically rank ~3rd after CVD and cancer)."
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "The key difference between an \"accident\" and an \"injury\" in modern public health is that:",
+      "options": {
+        "A": "They mean exactly the same thing",
+        "B": "Injuries are predictable and preventable, whereas \"accident\" implies random/unavoidable fate",
+        "C": "Accidents are always intentional",
+        "D": "Injuries only occur at work"
+      },
+      "answer": "B",
+      "explanation": "Modern public health rejects \"accident\": injuries follow predictable epidemiological patterns and are preventable (energy transfers that can be blocked)."
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Communicable vs non-communicable diseases — the defining difference is:",
+      "options": {
+        "A": "Communicable can be transmitted from an infected source to a host; non-communicable cannot",
+        "B": "Communicable are always fatal",
+        "C": "Non-communicable are always acute",
+        "D": "Communicable never have a chronic form"
+      },
+      "answer": "A",
+      "explanation": "Communicable = caused by a pathogen and transmissible host-to-host; non-communicable = not transmitted between people. Either can be acute or chronic."
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Herd (community) immunity is achieved when:",
+      "options": {
+        "A": "100% of the population is vaccinated",
+        "B": "Enough of the population is immune to break transmission (R<1)",
+        "C": "Everyone takes antibiotics",
+        "D": "No one is vaccinated"
+      },
+      "answer": "B",
+      "explanation": "Enough immune individuals → the chain of transmission breaks (R<1); 100% coverage is not required and the threshold depends on the agent."
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Which quality dimension means providing the same care regardless of age, sex, ethnicity or income?",
+      "options": {
+        "A": "Efficiency",
+        "B": "Timeliness",
+        "C": "Equity",
+        "D": "Integration"
+      },
+      "answer": "C",
+      "explanation": "Equitable care = same quality regardless of personal characteristics — one of the 7 WHO/IOM quality dimensions."
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Healthy ageing (WHO) is defined as:",
+      "options": {
+        "A": "The absence of any disease in old age",
+        "B": "Developing and maintaining functional ability that enables wellbeing in older age",
+        "C": "Living past 100 years",
+        "D": "Retiring early"
+      },
+      "answer": "B",
+      "explanation": "Healthy ageing = maintaining functional ability (intrinsic capacity × environment) for wellbeing — not merely the absence of disease."
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "A doctor responds to a vaccine-hesitant parent: \"It sounds like you're worried about side effects because of something you read.\" This communication technique is:",
+      "options": {
+        "A": "Reflective listening",
+        "B": "Giving a direct order",
+        "C": "Providing statistics only",
+        "D": "Dismissing the concern"
+      },
+      "answer": "A",
+      "explanation": "Paraphrasing the patient's stated feeling back to them = reflective listening (a motivational-interviewing skill). Open-ended questions and affirmations (positive feedback) are the related techniques."
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "\"How to stop smoking in a community\" is best addressed by:",
+      "options": {
+        "A": "Only prescribing nicotine patches to individuals",
+        "B": "Population measures: smoke-free laws, taxation, mass-media campaigns, graphic warnings + cessation support",
+        "C": "Ignoring it until people get sick",
+        "D": "Banning all doctors from discussing it"
+      },
+      "answer": "B",
+      "explanation": "Community-level tobacco control combines primordial/primary prevention (smoke-free laws, taxation, marketing bans) with health-education campaigns and cessation support — the Behaviour Change Wheel."
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "A \"community\" (definition) can refer to:",
+      "options": {
+        "A": "Only a geographical area",
+        "B": "A geographical area OR a group sharing a characteristic (interest or a disease)",
+        "C": "Only people with the same disease",
+        "D": "Only a family unit"
+      },
+      "answer": "B",
+      "explanation": "Community = a geographical area OR a group with a shared characteristic (religion, sport, interest, or a particular disease)."
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "Which best describes health promotion?",
+      "options": {
+        "A": "Only treating established disease",
+        "B": "Enabling people to increase control over and improve their health via social & environmental interventions",
+        "C": "Only vaccinating children",
+        "D": "Only building hospitals"
+      },
+      "answer": "B",
+      "explanation": "Health promotion (Ottawa 1986) enables people to increase control over their health, addressing the root causes of ill health — not just treatment."
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "The WHO's overall goal for reducing the life-expectancy gap between socioeconomic groups is at least:",
+      "options": {
+        "A": "15%",
+        "B": "25%",
+        "C": "35%",
+        "D": "45%"
+      },
+      "answer": "B",
+      "explanation": "A reduction of at least 25%."
+    }
+  ]
+}
