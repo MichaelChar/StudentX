@@ -51,3 +51,6 @@ next-env.d.ts
 
 # Claude Code (sub-agent worktrees)
 .claude/worktrees/
+
+# Supabase CLI local scratch (machine-specific)
+supabase/.temp/
