@@ -138,6 +138,22 @@ export const RESOURCES = [
     "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
+    "id": "notes:ophthalmology",
+    "type": "study-notes",
+    "title": "Ophthalmology — Exam Notes",
+    "description": "High-yield ophthalmology revision notes across 12 topics — cranial-nerve palsies, glaucoma, strabismus, retina, optic pathways, cornea, conjunctiva, lids & lacrimal, refraction, cataract, orbit/uvea and anatomy — plus reported exam topics.",
+    "href": "/student/ausom/semester-6/ophthalmology/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ophthalmology",
+    "meta": {
+      "sectionCount": 13
+    },
+    "subjectLabel": "Ophthalmology (MD1038)"
+  },
+  {
     "id": "notes:pathophysiology",
     "type": "study-notes",
     "title": "Pathophysiology — High-Yield Notes",
@@ -424,6 +440,70 @@ export const RESOURCES = [
       "questionCount": 38
     },
     "subjectLabel": "Hygiene & Epidemiology (MD1040)"
+  },
+  {
+    "id": "practice:ophthalmology:clinical-practice-paper",
+    "type": "practice-test",
+    "title": "Ophthalmology — Clinical Practice Paper",
+    "description": "45 clinical-case MCQs mirroring the real exam, with negative marking (+0.2 / −0.05).",
+    "href": "/student/ausom/semester-6/ophthalmology/clinical-practice-paper",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ophthalmology",
+    "meta": {
+      "questionCount": 45
+    },
+    "subjectLabel": "Ophthalmology (MD1038)"
+  },
+  {
+    "id": "practice:ophthalmology:past-paper-2021",
+    "type": "past-paper",
+    "title": "Ophthalmology — 2021 Past Paper",
+    "description": "60 real MCQs from the 2021 sitting, with explanations.",
+    "href": "/student/ausom/semester-6/ophthalmology/past-paper-2021",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ophthalmology",
+    "meta": {
+      "questionCount": 60
+    },
+    "subjectLabel": "Ophthalmology (MD1038)"
+  },
+  {
+    "id": "practice:ophthalmology:past-paper-2022",
+    "type": "past-paper",
+    "title": "Ophthalmology — 2022 Past Paper",
+    "description": "60 real MCQs from the 2022 sitting, with explanations.",
+    "href": "/student/ausom/semester-6/ophthalmology/past-paper-2022",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ophthalmology",
+    "meta": {
+      "questionCount": 60
+    },
+    "subjectLabel": "Ophthalmology (MD1038)"
+  },
+  {
+    "id": "practice:ophthalmology:past-paper-2023",
+    "type": "past-paper",
+    "title": "Ophthalmology — 2023 Past Paper",
+    "description": "50 real MCQs from the 2023 sitting, with explanations.",
+    "href": "/student/ausom/semester-6/ophthalmology/past-paper-2023",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "ophthalmology",
+    "meta": {
+      "questionCount": 50
+    },
+    "subjectLabel": "Ophthalmology (MD1038)"
   },
   {
     "id": "practice:pathophysiology:past-papers",

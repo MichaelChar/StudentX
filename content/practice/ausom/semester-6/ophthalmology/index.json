@@ -1,0 +1,44 @@
+{
+  "subject": "ophthalmology",
+  "title": "Ophthalmology (MD1038)",
+  "school": "ausom",
+  "semester": "semester-6",
+  "country": "gr",
+  "tests": [
+    {
+      "id": "clinical-practice-paper",
+      "title": "Ophthalmology — Clinical Practice Paper",
+      "kind": "topic",
+      "questionCount": 45,
+      "description": "45 clinical-case MCQs mirroring the real exam, with negative marking (+0.2 / −0.05).",
+      "year": 2026
+    },
+    {
+      "id": "past-paper-2021",
+      "title": "Ophthalmology — 2021 Past Paper",
+      "kind": "mock",
+      "resourceType": "past-paper",
+      "questionCount": 60,
+      "description": "60 real MCQs from the 2021 sitting, with explanations.",
+      "year": 2026
+    },
+    {
+      "id": "past-paper-2022",
+      "title": "Ophthalmology — 2022 Past Paper",
+      "kind": "mock",
+      "resourceType": "past-paper",
+      "questionCount": 60,
+      "description": "60 real MCQs from the 2022 sitting, with explanations.",
+      "year": 2026
+    },
+    {
+      "id": "past-paper-2023",
+      "title": "Ophthalmology — 2023 Past Paper",
+      "kind": "mock",
+      "resourceType": "past-paper",
+      "questionCount": 50,
+      "description": "50 real MCQs from the 2023 sitting, with explanations.",
+      "year": 2026
+    }
+  ]
+}

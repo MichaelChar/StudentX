@@ -1,0 +1,811 @@
+{
+  "id": "clinical-practice-paper",
+  "subject": "ophthalmology",
+  "title": "Ophthalmology — Clinical Practice Paper",
+  "kind": "topic",
+  "description": "45-question clinical practice paper mirroring the real exam format, with negative marking (+0.2 correct, −0.05 wrong).",
+  "version": 1,
+  "updatedAt": "2026-07-13",
+  "year": 2026,
+  "scoring": {
+    "correct": 0.2,
+    "wrong": -0.05
+  },
+  "questions": [
+    {
+      "id": "q01",
+      "type": "mcq",
+      "stem": "A 70-year-old presents with sudden, painless, profound loss of vision in the right eye. The fundus is shown. Most likely diagnosis?",
+      "options": [
+        "Central retinal artery occlusion",
+        "Central retinal vein occlusion",
+        "Anterior ischaemic optic neuropathy",
+        "Vitreous haemorrhage"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A pale, oedematous retina with a cherry-red spot at the fovea = central retinal artery occlusion — sudden, painless monocular loss; an ocular emergency."
+      },
+      "topic": "retina-vitreous",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/crao.jpg",
+      "imageAlt": "Colour fundus photograph showing a pale, whitened retina with a small cherry-red spot at the centre of the macula.",
+      "imageCaption": "Colour fundus photograph"
+    },
+    {
+      "id": "q02",
+      "type": "mcq",
+      "stem": "A 66-year-old hypertensive notes sudden blurring of one eye. The fundus shows haemorrhages in all four quadrants with dilated tortuous veins. Diagnosis?",
+      "options": [
+        "Central retinal vein occlusion",
+        "Central retinal artery occlusion",
+        "Grade 1 hypertensive retinopathy",
+        "Choroidal melanoma"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Widespread 'blood-and-thunder' haemorrhages with engorged tortuous veins = central retinal vein occlusion."
+      },
+      "topic": "retina-vitreous",
+      "yield": "high"
+    },
+    {
+      "id": "q03",
+      "type": "mcq",
+      "stem": "A 58-year-old high myope describes a curtain descending over the vision after a week of floaters and flashes. The fundus is shown. Diagnosis?",
+      "options": [
+        "Rhegmatogenous retinal detachment",
+        "Posterior vitreous detachment only",
+        "Wet age-related macular degeneration",
+        "Central serous retinopathy"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "An elevated, billowing retina with a tear = rhegmatogenous retinal detachment — urgent surgical referral."
+      },
+      "topic": "retina-vitreous",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/rd.jpg",
+      "imageAlt": "Fundus photograph showing an elevated, billowing grey fold of retina.",
+      "imageCaption": "Colour fundus photograph"
+    },
+    {
+      "id": "q04",
+      "type": "mcq",
+      "stem": "A 60-year-old with 15 years of type-2 diabetes. The fundus shows microaneurysms, dot-and-blot haemorrhages and hard exudates. Diagnosis?",
+      "options": [
+        "Diabetic retinopathy",
+        "Central retinal vein occlusion",
+        "Hypertensive retinopathy",
+        "Retinitis pigmentosa"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Microaneurysms (the earliest sign), dot-blot haemorrhages and hard exudates = diabetic retinopathy."
+      },
+      "topic": "retina-vitreous",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/dr.jpg",
+      "imageAlt": "Colour fundus photograph showing scattered dot-and-blot haemorrhages, microaneurysms and yellow hard exudates.",
+      "imageCaption": "Colour fundus photograph"
+    },
+    {
+      "id": "q05",
+      "type": "mcq",
+      "stem": "A patient with a painful, photophobic red eye. The slit-lamp shows a white layer of cells settled in the lower anterior chamber. This finding is:",
+      "options": [
+        "Hypopyon",
+        "Hyphaema",
+        "Cataract",
+        "Corneal arcus"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A layered collection of white inflammatory cells in the anterior chamber = hypopyon (severe anterior uveitis or microbial keratitis). A blood level would be a hyphaema."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/hypopyon.jpg",
+      "imageAlt": "Anterior-segment photograph showing a horizontal layer of white material settled at the bottom of the anterior chamber.",
+      "imageCaption": "Anterior-segment photograph"
+    },
+    {
+      "id": "q06",
+      "type": "mcq",
+      "stem": "A soft-contact-lens wearer has a painful red eye with a white corneal infiltrate and a small hypopyon. Most likely diagnosis?",
+      "options": [
+        "Microbial (bacterial) keratitis",
+        "Allergic conjunctivitis",
+        "Subconjunctival haemorrhage",
+        "Episcleritis"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A contact-lens wearer with a corneal infiltrate and hypopyon = microbial keratitis (often Pseudomonas) — scrape and treat intensively; never pad."
+      },
+      "topic": "lens-cataract",
+      "yield": "high"
+    },
+    {
+      "id": "q07",
+      "type": "mcq",
+      "stem": "A 72-year-old has a painful vesicular rash over the forehead and upper eyelid, stopping at the midline, with a red eye. Diagnosis?",
+      "options": [
+        "Herpes zoster ophthalmicus",
+        "Bacterial preseptal cellulitis",
+        "Allergic contact dermatitis",
+        "Impetigo"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Dermatomal (V1) vesicles respecting the midline = herpes zoster ophthalmicus → systemic antivirals and assessment for ocular involvement."
+      },
+      "topic": "orbit-lids-lacrimal",
+      "yield": "high"
+    },
+    {
+      "id": "q08",
+      "type": "mcq",
+      "stem": "A 50-year-old outdoor worker has a fleshy, triangular growth extending from the nasal conjunctiva onto the cornea. Diagnosis?",
+      "options": [
+        "Pterygium",
+        "Pinguecula",
+        "Conjunctival naevus",
+        "Chalazion"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A wing-shaped fibrovascular growth crossing the limbus onto the cornea = pterygium; excise if it threatens the axis or induces astigmatism."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high"
+    },
+    {
+      "id": "q09",
+      "type": "mcq",
+      "stem": "A 38-year-old man is found to have a white-grey ring at the corneal periphery (shown). In a patient this young this should prompt evaluation for:",
+      "options": [
+        "Hyperlipidaemia",
+        "Wilson's disease",
+        "Glaucoma",
+        "Diabetes"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Arcus in someone under ~50 suggests dyslipidaemia; in the elderly it is a normal ageing finding (arcus senilis)."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/arcus.jpg",
+      "imageAlt": "Close-up of the cornea showing a white-grey ring around the corneal periphery.",
+      "imageCaption": "Slit-lamp / close-up photograph"
+    },
+    {
+      "id": "q10",
+      "type": "mcq",
+      "stem": "A 70-year-old on warfarin notices a painless, flat, bright-red patch on the white of one eye; vision is normal. Best management?",
+      "options": [
+        "Reassurance — it resolves spontaneously",
+        "Urgent IV antibiotics",
+        "Topical steroids for a month",
+        "Emergency surgery"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A subconjunctival haemorrhage is benign and self-resolving; reassure and check BP/clotting if recurrent."
+      },
+      "topic": "retina-vitreous",
+      "yield": "high"
+    },
+    {
+      "id": "q11",
+      "type": "mcq",
+      "stem": "A builder presents minutes after wet cement (lime) splashed into his eye, which now looks white and blanched. The single most important immediate step is:",
+      "options": [
+        "Immediate copious irrigation",
+        "Pad and review tomorrow",
+        "Topical anaesthetic and discharge",
+        "Start oral steroids"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Alkali burns are emergencies — irrigate immediately and copiously and evert the lids to remove particles before anything else. A blanched white eye signals limbal ischaemia (poor prognosis)."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/chem.jpg",
+      "imageAlt": "Anterior-segment photograph of an eye after a chemical injury, with conjunctival injection and limbal blanching.",
+      "imageCaption": "Anterior-segment photograph"
+    },
+    {
+      "id": "q12",
+      "type": "mcq",
+      "stem": "An 80-year-old has years of gradual painless visual decline; the pupil shows a white opacity (shown). Diagnosis?",
+      "options": [
+        "Mature cataract",
+        "Acute angle-closure glaucoma",
+        "Corneal scar",
+        "Retinoblastoma"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A white lens opacity with gradual painless loss = mature (white) cataract."
+      },
+      "topic": "lens-cataract",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/cataract.jpg",
+      "imageAlt": "Close-up of an eye showing a dense white opacity behind the pupil.",
+      "imageCaption": "Close-up photograph"
+    },
+    {
+      "id": "q13",
+      "type": "mcq",
+      "stem": "An elderly patient has a slowly growing pearly nodule on the lower lid margin with central ulceration and loss of lashes. Most likely diagnosis?",
+      "options": [
+        "Basal cell carcinoma",
+        "Chalazion",
+        "Hordeolum (stye)",
+        "Xanthelasma"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A pearly, ulcerated lid-margin nodule with madarosis (lash loss) is classic for basal cell carcinoma — the commonest eyelid malignancy, favouring the lower lid."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high"
+    },
+    {
+      "id": "q14",
+      "type": "mcq",
+      "stem": "An 82-year-old complains of chronic irritation and a foreign-body sensation; the lower lid margin and lashes are turned inward against the globe. Diagnosis?",
+      "options": [
+        "Entropion",
+        "Ectropion",
+        "Ptosis",
+        "Pinguecula"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Inturning of the lid margin (often involutional) = entropion → lashes abrade the cornea. Ectropion turns the lid outward."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high"
+    },
+    {
+      "id": "q15",
+      "type": "mcq",
+      "stem": "A patient presents with forward protrusion of one eye (shown). The correct term for this sign is:",
+      "options": [
+        "Proptosis (exophthalmos)",
+        "Enophthalmos",
+        "Ptosis",
+        "Lagophthalmos"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Forward displacement of the globe = proptosis/exophthalmos; causes include thyroid eye disease (commonest) and orbital masses or inflammation."
+      },
+      "topic": "orbit-lids-lacrimal",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/proptosis.jpg",
+      "imageAlt": "Facial photograph showing forward protrusion of one eyeball.",
+      "imageCaption": "Clinical photograph"
+    },
+    {
+      "id": "q16",
+      "type": "mcq",
+      "stem": "A patient has a tender red swelling at the inner corner of the eye, below the medial canthal tendon, with watering. Diagnosis?",
+      "options": [
+        "Acute dacryocystitis",
+        "Chalazion",
+        "Preseptal cellulitis of the lid",
+        "Conjunctivitis"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A tender swelling over the lacrimal sac (below the medial canthal tendon) with epiphora = acute dacryocystitis → systemic antibiotics."
+      },
+      "topic": "orbit-lids-lacrimal",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/dacryo.jpg",
+      "imageAlt": "Clinical photograph showing a red, tender swelling just below the inner corner of the eye.",
+      "imageCaption": "Clinical photograph"
+    },
+    {
+      "id": "q17",
+      "type": "mcq",
+      "stem": "A patient has bilateral red eyes with watery discharge and intense itching, worse every spring. Most likely type of conjunctivitis?",
+      "options": [
+        "Allergic",
+        "Bacterial",
+        "Herpetic",
+        "Chlamydial"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Itching + watery discharge + bilateral seasonal pattern = allergic conjunctivitis (a purulent discharge would point to bacterial)."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high"
+    },
+    {
+      "id": "q18",
+      "type": "mcq",
+      "stem": "A 62-year-old hyperope presents with a severely painful red eye, haloes around lights, nausea and vomiting. The cornea is hazy and the pupil is fixed and mid-dilated. Diagnosis?",
+      "options": [
+        "Acute angle-closure glaucoma",
+        "Acute anterior uveitis",
+        "Bacterial conjunctivitis",
+        "Episcleritis"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Painful red eye + haloes + nausea + hazy cornea + mid-dilated fixed pupil = acute angle-closure glaucoma, an emergency."
+      },
+      "topic": "glaucoma",
+      "yield": "high"
+    },
+    {
+      "id": "q19",
+      "type": "mcq",
+      "stem": "In a patient with acute angle-closure glaucoma, which treatment is CONTRAINDICATED?",
+      "options": [
+        "Dilating (mydriatic) drops",
+        "Topical pilocarpine",
+        "IV acetazolamide",
+        "Topical beta-blocker"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Mydriatics worsen pupillary block and angle closure. Treatment lowers IOP (acetazolamide, beta-blocker, pilocarpine) then laser iridotomy."
+      },
+      "topic": "glaucoma",
+      "yield": "high"
+    },
+    {
+      "id": "q20",
+      "type": "mcq",
+      "stem": "A 30-year-old woman has subacute loss of vision in one eye over days, with pain on eye movement, reduced colour vision and a relative afferent pupillary defect. Most likely diagnosis?",
+      "options": [
+        "Optic (retrobulbar) neuritis",
+        "Central retinal artery occlusion",
+        "Cataract",
+        "Open-angle glaucoma"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Young woman + painful eye movements + dyschromatopsia + RAPD = optic neuritis, often associated with multiple sclerosis."
+      },
+      "topic": "neuro-ophthalmology",
+      "yield": "high"
+    },
+    {
+      "id": "q21",
+      "type": "mcq",
+      "stem": "A 76-year-old has sudden painless vision loss in one eye, scalp tenderness, jaw pain on chewing and an ESR of 90. The immediate priority is:",
+      "options": [
+        "High-dose corticosteroids",
+        "Outpatient MRI in two weeks",
+        "Topical antibiotics",
+        "Reassurance and review"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Giant cell arteritis threatens the fellow eye — start high-dose steroids immediately, then confirm with biopsy/ESR/CRP."
+      },
+      "topic": "clinical-cases",
+      "yield": "high"
+    },
+    {
+      "id": "q22",
+      "type": "mcq",
+      "stem": "A 7-year-old with fever has a red swollen eye, proptosis, painful restricted eye movements and reduced vision after a sinus infection. Diagnosis and management?",
+      "options": [
+        "Orbital cellulitis — admit for IV antibiotics",
+        "Preseptal cellulitis — oral antibiotics at home",
+        "Allergic oedema — antihistamines",
+        "Conjunctivitis — topical antibiotics"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Proptosis + painful restricted motility + reduced vision = post-septal (orbital) cellulitis → admit, image, IV antibiotics."
+      },
+      "topic": "orbit-lids-lacrimal",
+      "yield": "high"
+    },
+    {
+      "id": "q23",
+      "type": "mcq",
+      "stem": "After blunt orbital trauma a patient has a tense, proptosed eye, severe pain and rapidly falling vision with a relative afferent pupillary defect. The sight-saving step is:",
+      "options": [
+        "Lateral canthotomy and cantholysis",
+        "Pad the eye and observe",
+        "Start oral steroids",
+        "Analgesia and review next day"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Orbital compartment syndrome from a retrobulbar haemorrhage → emergency lateral canthotomy and cantholysis to decompress the orbit."
+      },
+      "topic": "neuro-ophthalmology",
+      "yield": "high"
+    },
+    {
+      "id": "q24",
+      "type": "mcq",
+      "stem": "A teenager is struck in the eye by a ball and has blood layered in the anterior chamber. Appropriate early management includes:",
+      "options": [
+        "Upright rest, eye shield, avoid NSAIDs/aspirin and monitor IOP",
+        "Vigorous exercise to clear the blood",
+        "Immediate vitrectomy",
+        "Patch both eyes for a week with no review"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Traumatic hyphaema: upright rest, shield, avoid antiplatelet drugs, monitor IOP and watch for a rebleed."
+      },
+      "topic": "glaucoma",
+      "yield": "high"
+    },
+    {
+      "id": "q25",
+      "type": "mcq",
+      "stem": "A 64-year-old reports new floaters and brief flashes in one eye but has normal acuity and no field loss. Most likely diagnosis?",
+      "options": [
+        "Posterior vitreous detachment",
+        "Macula-off retinal detachment",
+        "Optic neuritis",
+        "Vitreous haemorrhage"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Floaters + photopsias with preserved vision = posterior vitreous detachment; examine the peripheral retina to exclude a tear."
+      },
+      "topic": "retina-vitreous",
+      "yield": "high"
+    },
+    {
+      "id": "q26",
+      "type": "mcq",
+      "stem": "A 70-year-old describes a transient 'curtain' coming down over one eye, lasting minutes then fully resolving. This most likely reflects:",
+      "options": [
+        "Amaurosis fugax (retinal embolic TIA)",
+        "Migraine with bilateral aura",
+        "Acute glaucoma",
+        "Cataract"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Transient monocular visual loss = amaurosis fugax — investigate the carotids and cardiovascular risk (a TIA equivalent)."
+      },
+      "topic": "clinical-cases",
+      "yield": "high"
+    },
+    {
+      "id": "q27",
+      "type": "mcq",
+      "stem": "A middle-aged woman has bilateral lid retraction, a staring appearance, proptosis and grittiness. The most likely underlying cause is:",
+      "options": [
+        "Thyroid eye disease (Graves')",
+        "Myasthenia gravis",
+        "Horner's syndrome",
+        "Cavernous sinus thrombosis"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Lid retraction + proptosis + restrictive signs = thyroid eye disease, the commonest cause of proptosis in adults."
+      },
+      "topic": "orbit-lids-lacrimal",
+      "yield": "high"
+    },
+    {
+      "id": "q28",
+      "type": "mcq",
+      "stem": "A neonate develops profuse purulent conjunctival discharge and marked lid swelling on day 3 of life. The most urgent organism to exclude is:",
+      "options": [
+        "Neisseria gonorrhoeae",
+        "Adenovirus",
+        "Staphylococcus epidermidis",
+        "Herpes simplex"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Hyperacute purulent ophthalmia neonatorum at days 2–5 = gonococcal until proven otherwise — it can perforate the cornea; treat urgently."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high"
+    },
+    {
+      "id": "q29",
+      "type": "mcq",
+      "stem": "A healthy 4-month-old has chronic watering and mild discharge of one eye since birth, with a normal-sized cornea. Best initial advice?",
+      "options": [
+        "Lacrimal sac massage — most resolve by ~12 months",
+        "Immediate dacryocystorhinostomy",
+        "Long-term topical steroids",
+        "Probe the duct on the day of presentation"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Congenital nasolacrimal duct obstruction: massage and observe — most open spontaneously by 12 months; probe if persistent."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high"
+    },
+    {
+      "id": "q30",
+      "type": "mcq",
+      "stem": "A neonate has leukocoria and an absent red reflex in one eye with a normal IOP. Management of a visually significant unilateral congenital cataract is:",
+      "options": [
+        "Early surgery to prevent deprivation amblyopia",
+        "Observe until school age",
+        "Glasses only",
+        "No treatment needed"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A unilateral congenital cataract carries a high amblyopia risk → early surgery and visual rehabilitation. Also exclude retinoblastoma as a cause of leukocoria."
+      },
+      "topic": "strabismus-amblyopia",
+      "yield": "high"
+    },
+    {
+      "id": "q31",
+      "type": "mcq",
+      "stem": "A 3-year-old with significant hyperopia develops an inward turning of the eyes that is worse on near focus. First-line treatment?",
+      "options": [
+        "Full hyperopic spectacle correction",
+        "Immediate strabismus surgery",
+        "Patch the deviating eye only",
+        "Botulinum toxin as first line"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Accommodative esotropia is driven by hyperopic accommodation — correcting the hyperopia with glasses straightens the eyes."
+      },
+      "topic": "strabismus-amblyopia",
+      "yield": "high"
+    },
+    {
+      "id": "q32",
+      "type": "mcq",
+      "stem": "A 5-year-old has reduced vision in one structurally normal eye that does not improve with glasses. The mainstay of treatment is:",
+      "options": [
+        "Occlusion (patching) of the better-seeing eye",
+        "Surgery on the amblyopic eye",
+        "Topical antibiotics",
+        "No treatment — it resolves at puberty"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Amblyopia is treated by penalising the better eye (patching or atropine) to force use of the amblyopic eye, within the critical period."
+      },
+      "topic": "strabismus-amblyopia",
+      "yield": "high"
+    },
+    {
+      "id": "q33",
+      "type": "mcq",
+      "stem": "A patient with a red painful eye has a branching corneal ulcer that stains brightly with fluorescein. Which treatment must be AVOIDED?",
+      "options": [
+        "Topical corticosteroids alone",
+        "Topical/oral aciclovir",
+        "Lubricants",
+        "Epithelial debridement"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A dendritic ulcer = HSV epithelial keratitis → antivirals. Unopposed topical steroids worsen it into a geographic/amoeboid ulcer."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high"
+    },
+    {
+      "id": "q34",
+      "type": "mcq",
+      "stem": "Four days after uncomplicated cataract surgery a patient returns with a painful red eye, falling vision and a hypopyon. Diagnosis and action?",
+      "options": [
+        "Endophthalmitis — emergency referral for intravitreal antibiotics",
+        "Normal post-op course — reassure",
+        "Dry eye — lubricants",
+        "Allergy — antihistamines"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Pain + falling vision + hypopyon days after surgery = endophthalmitis → urgent vitreous tap and intravitreal antibiotics."
+      },
+      "topic": "lens-cataract",
+      "yield": "high"
+    },
+    {
+      "id": "q35",
+      "type": "mcq",
+      "stem": "A 50-year-old with rheumatoid arthritis has deep, boring eye pain that wakes her at night; the redness does not blanch with topical phenylephrine. Diagnosis?",
+      "options": [
+        "Scleritis",
+        "Episcleritis",
+        "Conjunctivitis",
+        "Subconjunctival haemorrhage"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Severe boring pain + non-blanching deep redness + systemic autoimmune disease = scleritis (episcleritis is mild and blanches)."
+      },
+      "topic": "clinical-cases",
+      "yield": "high"
+    },
+    {
+      "id": "q36",
+      "type": "mcq",
+      "stem": "An 80-year-old reports that straight lines look wavy and a central grey patch in one eye over days. The screening test and likely diagnosis are:",
+      "options": [
+        "Amsler grid; wet age-related macular degeneration",
+        "Tonometry; glaucoma",
+        "Schirmer test; dry eye",
+        "Gonioscopy; angle closure"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Metamorphopsia + central scotoma = macular disease; the Amsler grid screens it. Rapid (wet) AMD needs prompt anti-VEGF."
+      },
+      "topic": "retina-vitreous",
+      "yield": "high"
+    },
+    {
+      "id": "q37",
+      "type": "mcq",
+      "stem": "A worried mother brings her healthy 18-month-old because the eyes look ‘crossed’, especially on side gaze. The child has a broad, flat nasal bridge with prominent epicanthal folds; the corneal light reflex is symmetric and central in both eyes, and the cover test shows no movement. Most appropriate management?",
+      "options": [
+        "Reassurance — this is pseudostrabismus from epicanthal folds and needs no treatment",
+        "Immediate strabismus surgery",
+        "Full-time occlusion (patching) of one eye",
+        "Urgent referral for botulinum toxin"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Epicanthal folds and a wide nasal bridge make the eyes look esotropic, but a symmetric, central corneal light reflex (Hirschberg) and a negative cover test confirm there is no true deviation = pseudostrabismus. It needs only reassurance and resolves as the facial bones grow."
+      },
+      "topic": "strabismus-amblyopia",
+      "yield": "high",
+      "image": "/practice/ausom/semester-6/ophthalmology/clinical-practice-paper/pseudo.jpg",
+      "imageAlt": "Photograph of a young child's eyes showing wide skin folds at the inner corners.",
+      "imageCaption": "Clinical photograph"
+    },
+    {
+      "id": "q38",
+      "type": "mcq",
+      "stem": "A patient feels a sharp pain that worsens with every blink after grinding metal. Vision is normal. The key examination step is:",
+      "options": [
+        "Evert the upper lid to look for a sub-tarsal foreign body",
+        "Immediately start oral steroids",
+        "Dilate the pupil and observe",
+        "Pad the eye without examination"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Pain on blinking after metalwork → look for a corneal/sub-tarsal foreign body (evert the upper lid); consider an intraocular FB if high-velocity."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high"
+    },
+    {
+      "id": "q39",
+      "type": "mcq",
+      "stem": "A patient has unilateral mild ptosis, a small pupil and reduced sweating on the same side of the face. This triad indicates:",
+      "options": [
+        "Horner's syndrome",
+        "Third nerve palsy",
+        "Myasthenia gravis",
+        "Adie's tonic pupil"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Miosis + partial ptosis + anhidrosis = Horner's syndrome (an oculosympathetic lesion); investigate the sympathetic pathway."
+      },
+      "topic": "neuro-ophthalmology",
+      "yield": "high"
+    },
+    {
+      "id": "q40",
+      "type": "mcq",
+      "stem": "A patient presents with sudden ptosis, a 'down-and-out' eye and a fixed dilated pupil, with headache. The most important diagnosis to exclude urgently is:",
+      "options": [
+        "Posterior communicating artery aneurysm",
+        "Diabetic microvascular palsy",
+        "Migraine",
+        "Thyroid eye disease"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A pupil-involving third nerve palsy suggests a compressive lesion (PCom aneurysm) → urgent imaging. Pupil-sparing favours a microvascular cause."
+      },
+      "topic": "neuro-ophthalmology",
+      "yield": "high"
+    },
+    {
+      "id": "q41",
+      "type": "mcq",
+      "stem": "A 48-year-old with previously good sight now needs to hold reading material at arm's length. The cause is:",
+      "options": [
+        "Presbyopia (loss of accommodation from lens stiffening)",
+        "New myopia",
+        "Cataract",
+        "Optic neuritis"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Age-related loss of accommodation = presbyopia; corrected with a reading (convex) addition."
+      },
+      "topic": "lens-cataract",
+      "yield": "high"
+    },
+    {
+      "id": "q42",
+      "type": "mcq",
+      "stem": "A young adult has severe pain, watering and photophobia after a fingernail injury; fluorescein shows an epithelial defect with no infiltrate. Management?",
+      "options": [
+        "Topical antibiotic ointment and analgesia; usually heals in 24–48 h",
+        "Long-term topical anaesthetic drops",
+        "Topical steroid monotherapy",
+        "Emergency corneal graft"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Simple corneal abrasion: antibiotic cover and analgesia. Never discharge a patient on topical anaesthetics — they are toxic and mask damage."
+      },
+      "topic": "cornea-ocular-surface",
+      "yield": "high"
+    },
+    {
+      "id": "q43",
+      "type": "mcq",
+      "stem": "In a patient with central retinal artery occlusion presenting within the first hour, immediate measures aim to:",
+      "options": [
+        "Lower IOP / dislodge the embolus (ocular massage, IOP-lowering) and find the source",
+        "Start topical antibiotics",
+        "Patch the eye and review in a week",
+        "Laser the macula"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "CRAO is a stroke equivalent — acute measures (ocular massage, IOP lowering) plus an urgent vascular/GCA work-up; prognosis is generally poor."
+      },
+      "topic": "glaucoma",
+      "yield": "high"
+    },
+    {
+      "id": "q44",
+      "type": "mcq",
+      "stem": "After blunt trauma a patient has restricted up-gaze, vertical diplopia, cheek numbness and enophthalmos. Most likely injury?",
+      "options": [
+        "Orbital floor (blow-out) fracture",
+        "Simple lid laceration",
+        "Conjunctival foreign body",
+        "Anterior uveitis"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "Restricted up-gaze (inferior rectus tethering), infra-orbital numbness and enophthalmos = orbital floor blow-out fracture."
+      },
+      "topic": "neuro-ophthalmology",
+      "yield": "high"
+    },
+    {
+      "id": "q45",
+      "type": "mcq",
+      "stem": "A patient has a deep laceration with a peaked (teardrop) pupil and a soft eye after a high-velocity injury. Correct immediate management?",
+      "options": [
+        "Rigid shield, nil by mouth, antibiotics and urgent surgical referral — do NOT press on the globe",
+        "Irrigate forcefully and pad firmly",
+        "Instil dilating drops and discharge",
+        "Measure IOP by applanation immediately"
+      ],
+      "correct": 0,
+      "explanation": {
+        "text": "A peaked pupil + soft eye = open globe (ruptured/penetrated) → rigid shield (no pressure), antiemetics, antibiotics, tetanus cover and urgent theatre."
+      },
+      "topic": "neuro-ophthalmology",
+      "yield": "high"
+    }
+  ]
+}

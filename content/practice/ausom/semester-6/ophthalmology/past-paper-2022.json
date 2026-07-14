@@ -1,0 +1,856 @@
+{
+  "meta": {
+    "title": "Ophthalmology — 2022 Past Paper",
+    "course": "MD1038 Ophthalmology",
+    "semester": "Semester 6",
+    "total_questions": 60,
+    "mcq_count": 60,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "In right abducens nerve palsy, diplopia is greatest:",
+      "options": {
+        "A": "In extreme right gaze",
+        "B": "In upper right gaze",
+        "C": "In lower right gaze",
+        "D": "While reading"
+      },
+      "answer": "A",
+      "explanation": "Paralysed right lateral rectus → diplopia worst looking far right, where that muscle is most needed.",
+      "source": "2022"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Amblyopia:",
+      "options": {
+        "A": "May be the result of latent strabismus",
+        "B": "Affects adults",
+        "C": "Is corrected during adolescence",
+        "D": "All of the above"
+      },
+      "answer": "A",
+      "explanation": "Latent strabismus can cause suppression amblyopia. It is a childhood condition, not correctable in adolescence.",
+      "source": "2022"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Which is NOT a complication of thyroid ophthalmopathy?",
+      "options": {
+        "A": "Strabismus",
+        "B": "Lower eyelid entropion",
+        "C": "Ocular hypertension",
+        "D": "None of the above"
+      },
+      "answer": "B",
+      "explanation": "Thyroid disease causes lid retraction, not entropion. Strabismus and raised IOP do occur.",
+      "source": "2022"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Sudden, painful recent decrease in visual acuity is due to:",
+      "options": {
+        "A": "Opacification of ocular media",
+        "B": "Simple chronic glaucoma",
+        "C": "Central retinal artery occlusion",
+        "D": "Iritis"
+      },
+      "answer": "D",
+      "explanation": "Sudden + painful + ↓VA = iritis (anterior uveitis). CRAO is painless; media opacification is gradual.",
+      "source": "2022"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Metamorphopsia suggests:",
+      "options": {
+        "A": "Astigmatism",
+        "B": "Early optic neuritis",
+        "C": "Macular edema",
+        "D": "Ischemic optic neuropathy"
+      },
+      "answer": "C",
+      "explanation": "Distorted straight lines = macular pathology distorting photoreceptor alignment.",
+      "source": "2022"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Unilateral mucous discharge and tearing in a neonate suggest:",
+      "options": {
+        "A": "Gonococcal ophthalmia",
+        "B": "Chlamydial conjunctivitis",
+        "C": "Nasolacrimal duct obstruction",
+        "D": "All of the above"
+      },
+      "answer": "C",
+      "explanation": "Unilateral, mucous (not purulent) → NLD obstruction. Gonococcal is purulent; chlamydial usually bilateral.",
+      "source": "2022"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Chronic dacryocystitis may be complicated by:",
+      "options": {
+        "A": "Dacryocystic abscess",
+        "B": "Corneal ulcer",
+        "C": "Cellulitis of the medial canthal area",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "All three are recognised complications of chronic sac infection.",
+      "source": "2022"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Chronic conjunctivitis without mucopurulent discharge in children suggests:",
+      "options": {
+        "A": "Allergic etiology",
+        "B": "Chlamydial infection",
+        "C": "Dry eye",
+        "D": "Chronic dacryocystitis"
+      },
+      "answer": "B",
+      "explanation": "In children, chronic non-purulent conjunctivitis points to chlamydial (inclusion) infection.",
+      "source": "2022"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Cavernous sinus thrombosis may cause:",
+      "options": {
+        "A": "Ipsilateral mydriasis",
+        "B": "Marcus-Gunn pupil",
+        "C": "Light anisocoria",
+        "D": "Dark anisocoria"
+      },
+      "answer": "A",
+      "explanation": "CN III involvement → parasympathetic palsy → ipsilateral mydriasis. Marcus-Gunn is an afferent (optic) defect.",
+      "source": "2022"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Ectropion causes corneal damage due to:",
+      "options": {
+        "A": "Dryness of the eye",
+        "B": "Tear overflow",
+        "C": "Mechanical abrasion of the epithelium",
+        "D": "All of the above"
+      },
+      "answer": "A",
+      "explanation": "Everted lid → exposure → dryness is the primary damage mechanism. Tear overflow is a symptom; abrasion is entropion.",
+      "source": "2022"
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "Slow and incomplete blinking suggests:",
+      "options": {
+        "A": "Lagophthalmos",
+        "B": "Refractive abnormality",
+        "C": "Dry eye",
+        "D": "Extrapyramidal syndrome"
+      },
+      "answer": "D",
+      "explanation": "Reduced, incomplete blink rate is typical of Parkinsonian/extrapyramidal disease. Lagophthalmos is failure to close, not slow blink.",
+      "source": "2022"
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Trauma to the free margin of the eyelid is treated with:",
+      "options": {
+        "A": "8-0 suture",
+        "B": "10-0 suture",
+        "C": "5-0 suture",
+        "D": "Referral to ophthalmologist"
+      },
+      "answer": "D",
+      "explanation": "Lid-margin trauma needs precise multilayer repair → refer to ophthalmology.",
+      "source": "2022"
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "The greatest perceived improvement in visual acuity is from:",
+      "options": {
+        "A": "1/20 to 1/10",
+        "B": "2/10 to 3/10",
+        "C": "4/10 to 5/10",
+        "D": "4/10 to 7/10"
+      },
+      "answer": "A",
+      "explanation": "VA is perceived logarithmically; doubling from a very low baseline (1/20→1/10) is the biggest functional gain.",
+      "source": "2022"
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Corneal arcus in young individuals suggests:",
+      "options": {
+        "A": "Diabetes mellitus",
+        "B": "Renal failure",
+        "C": "Hypercholesterolemia",
+        "D": "Poor contact lens hygiene"
+      },
+      "answer": "C",
+      "explanation": "Arcus before ~50 years → dyslipidaemia. In the elderly it is a normal aging finding.",
+      "source": "2022"
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Slow pain worsened by light and decreased visual acuity suggest:",
+      "options": {
+        "A": "Viral conjunctivitis",
+        "B": "Iritis",
+        "C": "Acute glaucoma",
+        "D": "Episcleritis"
+      },
+      "answer": "B",
+      "explanation": "Photophobia + dull pain + ↓VA = iritis. Acute glaucoma is severe acute pain with a hard eye.",
+      "source": "2022"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Sudden visual loss with preserved pupillary reflex suggests:",
+      "options": {
+        "A": "Vitreous hemorrhage",
+        "B": "Retinal vascular occlusion",
+        "C": "Acute glaucoma",
+        "D": "Traumatic cataract"
+      },
+      "answer": "A",
+      "explanation": "Light is blocked before reaching an intact retina → pupil reflex preserved. CRAO/CRVO give an RAPD.",
+      "source": "2022"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Post-septal orbital cellulitis includes:",
+      "options": {
+        "A": "Restricted globe motility",
+        "B": "Purulent conjunctival discharge",
+        "C": "Tearing",
+        "D": "None of the above"
+      },
+      "answer": "A",
+      "explanation": "Behind the septum → orbital fat/muscle involvement → restricted motility (plus proptosis, pain on movement).",
+      "source": "2022"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Bacterial conjunctivitis is characterized by:",
+      "options": {
+        "A": "Decreased visual acuity",
+        "B": "Photophobia",
+        "C": "Filamentous mucous discharge",
+        "D": "None of the above"
+      },
+      "answer": "D",
+      "explanation": "Bacterial conjunctivitis has normal VA, no significant photophobia, and mucopurulent (not filamentous) discharge.",
+      "source": "2022"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Treatment of a hordeolum includes:",
+      "options": {
+        "A": "Antibiotic eye drops",
+        "B": "Artificial tears",
+        "C": "Antibiotic drops and lid massage",
+        "D": "Incision and drainage"
+      },
+      "answer": "C",
+      "explanation": "Stye = acute infection → antibiotic drops + warm compress/lid massage. I&D is for chalazion.",
+      "source": "2022"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "Conjunctivitis with purulent discharge suggests:",
+      "options": {
+        "A": "Bacterial infection",
+        "B": "Viral infection",
+        "C": "Allergy",
+        "D": "Dry eye"
+      },
+      "answer": "A",
+      "explanation": "Purulent = bacterial.",
+      "source": "2022"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "Treatment of subconjunctival hemorrhage includes:",
+      "options": {
+        "A": "Antibiotic eye drops",
+        "B": "Corticosteroid eye drops",
+        "C": "Artificial tears",
+        "D": "None of the above"
+      },
+      "answer": "D",
+      "explanation": "Self-limiting — no treatment needed (artificial tears only if symptomatic dryness).",
+      "source": "2022"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Oculomotor nerve palsy causes:",
+      "options": {
+        "A": "Lagophthalmos",
+        "B": "Proptosis",
+        "C": "Ptosis",
+        "D": "Ptosis and convergent strabismus"
+      },
+      "answer": "C",
+      "explanation": "CN III → ptosis (+ mydriasis, down-and-out eye). The deviation is DIVERGENT, so 'convergent strabismus' is wrong.",
+      "source": "2022"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Slow intense pain radiating to the orbit with intact vision suggests:",
+      "options": {
+        "A": "Iritis",
+        "B": "Acute glaucoma",
+        "C": "Cluster headache",
+        "D": "Episcleritis"
+      },
+      "answer": "C",
+      "explanation": "Autonomic orbital pain with preserved vision = cluster headache. Iritis/glaucoma reduce VA.",
+      "source": "2022"
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Loss of red reflex with leukocoria suggests:",
+      "options": {
+        "A": "Total cataract",
+        "B": "Vitreous hemorrhage",
+        "C": "Choroidal melanoma",
+        "D": "Exudative chorioretinopathy"
+      },
+      "answer": "A",
+      "explanation": "Among these, total cataract is the classic benign cause (retinoblastoma also causes leukocoria but isn't listed).",
+      "source": "2022"
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Chronic conjunctivitis without mucopurulent discharge in the elderly suggests:",
+      "options": {
+        "A": "Allergic etiology",
+        "B": "Chlamydial infection",
+        "C": "Dry eye",
+        "D": "Chronic dacryocystitis"
+      },
+      "answer": "C",
+      "explanation": "In the elderly, chronic non-purulent conjunctivitis → dry eye (keratoconjunctivitis sicca).",
+      "source": "2022"
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "Herpes zoster of the first trigeminal branch begins with:",
+      "options": {
+        "A": "Loss of corneal luster",
+        "B": "Ocular hypertension",
+        "C": "Vesicular skin lesions",
+        "D": "Burning sensation and skin redness"
+      },
+      "answer": "D",
+      "explanation": "Prodrome = burning + skin redness before vesicles erupt along the dermatome.",
+      "source": "2022"
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Ptosis covering the pupil in preschool children is treated:",
+      "options": {
+        "A": "After age 6",
+        "B": "As soon as possible",
+        "C": "After at least 3 months",
+        "D": "It resolves spontaneously"
+      },
+      "answer": "B",
+      "explanation": "Visual-axis obstruction risks deprivation amblyopia → treat as soon as possible.",
+      "source": "2022"
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "Treatment of herpes zoster ophthalmicus includes:",
+      "options": {
+        "A": "Antiviral and antibiotic eye drops",
+        "B": "Non-steroidal anti-inflammatory drops",
+        "C": "Antiviral and corticosteroid eye drops",
+        "D": "Artificial tears"
+      },
+      "answer": "C",
+      "explanation": "Antivirals + topical steroids to control inflammation/keratitis.",
+      "source": "2022"
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "Dendritic herpetic keratitis:",
+      "options": {
+        "A": "Is always unilateral",
+        "B": "Is accompanied by corneal hypoesthesia",
+        "C": "May leave a corneal scar",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "Typically unilateral, with reduced corneal sensation (CN V), and can scar.",
+      "source": "2022"
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "Actinic keratitis:",
+      "options": {
+        "A": "Occurs after unprotected arc welding",
+        "B": "Does not affect visual acuity",
+        "C": "Is treated with anesthetic drops every 2 hours",
+        "D": "Needs no treatment"
+      },
+      "answer": "A",
+      "explanation": "UV exposure (welding/snow). Repeated topical anaesthetics are corneal-toxic and contraindicated.",
+      "source": "2022"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "In adenoviral epidemic keratoconjunctivitis, the affected eye transmits the disease:",
+      "options": {
+        "A": "During the incubation period",
+        "B": "The first two days of symptoms",
+        "C": "The first two weeks",
+        "D": "During the first trimester"
+      },
+      "answer": "C",
+      "explanation": "EKC is contagious for roughly the first two weeks of symptoms.",
+      "source": "2022"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "Eye redness and acute pain with heavy tearing suggests:",
+      "options": {
+        "A": "Corneal abrasion",
+        "B": "Iritis",
+        "C": "Scleritis",
+        "D": "Retrobulbar neuritis"
+      },
+      "answer": "A",
+      "explanation": "Intense surface pain + foreign-body sensation + reflex tearing = corneal abrasion.",
+      "source": "2022"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "Seasonal conjunctivitis beginning in spring in children suggests:",
+      "options": {
+        "A": "Allergy",
+        "B": "Dry eye",
+        "C": "Chlamydial infection",
+        "D": "Viral infection"
+      },
+      "answer": "A",
+      "explanation": "Spring/seasonal onset in a child = allergic (vernal) conjunctivitis.",
+      "source": "2022"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "A cataract is considered mature for surgery when:",
+      "options": {
+        "A": "Visual acuity is 5/10",
+        "B": "Visual acuity is 2/10",
+        "C": "Visual acuity is 1/10",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "Surgical timing is based on functional impairment, not a fixed VA — any of these can justify surgery.",
+      "source": "2022"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "Continuous occlusion of one eye in a 3-year-old child causes amblyopia after:",
+      "options": {
+        "A": "1 day",
+        "B": "3 days",
+        "C": "5 days",
+        "D": "7 days"
+      },
+      "answer": "B",
+      "explanation": "Deprivation amblyopia develops fast in young children — roughly 3 days here.",
+      "source": "2022"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "Corneal hypoesthesia is associated with:",
+      "options": {
+        "A": "Incomplete protection",
+        "B": "Thinning",
+        "C": "Perforation",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "Loss of protective reflexes → neurotrophic thinning → perforation.",
+      "source": "2022"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "The most severe postoperative complication of cataract surgery is:",
+      "options": {
+        "A": "Bullous keratopathy",
+        "B": "Ocular hypertension",
+        "C": "Endophthalmitis",
+        "D": "Retinal detachment"
+      },
+      "answer": "C",
+      "explanation": "Endophthalmitis is a sight-threatening intraocular infection — the most feared complication.",
+      "source": "2022"
+    },
+    {
+      "id": 38,
+      "type": "mcq",
+      "stem": "Urgent indication for removal of congenital cataract is when it is:",
+      "options": {
+        "A": "Overripe",
+        "B": "Unilateral",
+        "C": "Bilateral",
+        "D": "All of the above"
+      },
+      "answer": "B",
+      "explanation": "Unilateral congenital cataract carries the highest amblyopia risk → most urgent removal.",
+      "source": "2022"
+    },
+    {
+      "id": 39,
+      "type": "mcq",
+      "stem": "Neuroparalytic keratitis may be caused by:",
+      "options": {
+        "A": "Alkali burns",
+        "B": "Alcohol abuse",
+        "C": "Corticosteroid eye drop overuse",
+        "D": "Tetracaine abuse"
+      },
+      "answer": "D",
+      "explanation": "Topical anaesthetic (tetracaine) abuse destroys corneal nerve endings → loss of sensation.",
+      "source": "2022"
+    },
+    {
+      "id": 40,
+      "type": "mcq",
+      "stem": "Eye redness and deep pain increased by palpation suggest:",
+      "options": {
+        "A": "Corneal abrasion",
+        "B": "Iritis",
+        "C": "Scleritis",
+        "D": "Retrobulbar neuritis"
+      },
+      "answer": "C",
+      "explanation": "Deep, boring, tender-to-palpation pain = scleritis.",
+      "source": "2022"
+    },
+    {
+      "id": 41,
+      "type": "mcq",
+      "stem": "Facial nerve palsy causes:",
+      "options": {
+        "A": "Corneal hypoesthesia",
+        "B": "Ptosis",
+        "C": "Diplopia",
+        "D": "None of the above"
+      },
+      "answer": "D",
+      "explanation": "CN VII → lagophthalmos/exposure, not hypoaesthesia (CN V), ptosis (CN III), or diplopia — so none of these.",
+      "source": "2022"
+    },
+    {
+      "id": 42,
+      "type": "mcq",
+      "stem": "A 32-year-old man with stable -3D myopia exhibits:",
+      "options": {
+        "A": "The image focuses behind the retina",
+        "B": "Difficulty only with near vision",
+        "C": "Difficulty with distance vision",
+        "D": "Clear correction with biconvex converging lenses"
+      },
+      "answer": "C",
+      "explanation": "Myopia focuses light in front of the retina → blurred distance vision; corrected with biconcave lenses.",
+      "source": "2022"
+    },
+    {
+      "id": 43,
+      "type": "mcq",
+      "stem": "Gradual painless decrease in visual acuity is due to:",
+      "options": {
+        "A": "Opacification of ocular media",
+        "B": "Simple chronic glaucoma",
+        "C": "Central retinal artery occlusion",
+        "D": "Iritis"
+      },
+      "answer": "A",
+      "explanation": "Gradual + painless + ↓VA = media opacification (typically cataract).",
+      "source": "2022"
+    },
+    {
+      "id": 44,
+      "type": "mcq",
+      "stem": "Definitive treatment of chalazion is:",
+      "options": {
+        "A": "Antibiotic eye drops",
+        "B": "Artificial tears",
+        "C": "Antibiotic drops and lid massage",
+        "D": "Incision and drainage"
+      },
+      "answer": "D",
+      "explanation": "A persistent chalazion is definitively managed by incision & curettage.",
+      "source": "2022"
+    },
+    {
+      "id": 45,
+      "type": "mcq",
+      "stem": "Pterygium in a 57-year-old covering part of the cornea:",
+      "options": {
+        "A": "May turn into conjunctival carcinoma",
+        "B": "Develops on the temporal side of the conjunctiva",
+        "C": "Causes conjunctival redness and mucopurulent discharge",
+        "D": "Reduces visual acuity due to induced astigmatism"
+      },
+      "answer": "D",
+      "explanation": "A pterygium encroaching on the cornea induces astigmatism → ↓VA. It grows nasally, not temporally.",
+      "source": "2022"
+    },
+    {
+      "id": 46,
+      "type": "mcq",
+      "stem": "Seasonal allergic conjunctivitis is characterized by:",
+      "options": {
+        "A": "May lead to keratitis requiring topical steroids",
+        "B": "Purulent discharge and foreign body sensation when blinking",
+        "C": "Need for topical and systemic treatment",
+        "D": "Itching and watery discharge"
+      },
+      "answer": "D",
+      "explanation": "Hallmarks are itching and watery discharge. (Vernal disease is the severe variant that may need steroids.)",
+      "source": "2022"
+    },
+    {
+      "id": 47,
+      "type": "mcq",
+      "stem": "Myopia: which is correct?",
+      "options": {
+        "A": "A myope with -3D sees clearly at 33 cm without accommodation",
+        "B": "Glasses with biconvex lenses",
+        "C": "It is the opposite of presbyopia",
+        "D": "All of the above"
+      },
+      "answer": "A",
+      "explanation": "Far point of −3D = 33 cm. Myopia uses biconcave lenses and is the opposite of hyperopia (not presbyopia).",
+      "source": "2022"
+    },
+    {
+      "id": 48,
+      "type": "mcq",
+      "stem": "In ischemic central retinal vein occlusion:",
+      "options": {
+        "A": "Immediate surgical intervention is required",
+        "B": "Sudden vision loss with marked retinal vessel thinning",
+        "C": "Iris neovascularization improves retinal circulation",
+        "D": "Sudden unilateral visual loss ≤1/20 with venous congestion, widespread hemorrhages, and cotton-wool exudates"
+      },
+      "answer": "D",
+      "explanation": "Ischaemic CRVO: profound sudden loss with engorged veins, diffuse haemorrhages and cotton-wool spots. Rubeosis is a harmful complication.",
+      "source": "2022"
+    },
+    {
+      "id": 49,
+      "type": "mcq",
+      "stem": "A 65-year-old with -2D myopia sees clearly without correction:",
+      "options": {
+        "A": "At 10 meters",
+        "B": "At 1 meter",
+        "C": "At 50 cm",
+        "D": "At 10 cm"
+      },
+      "answer": "C",
+      "explanation": "Far point of −2D = 1/2 m = 50 cm.",
+      "source": "2022"
+    },
+    {
+      "id": 50,
+      "type": "mcq",
+      "stem": "Slow visceral eye pain with photophobia is relieved by:",
+      "options": {
+        "A": "Pressure patching of the eye",
+        "B": "Frequent artificial tears",
+        "C": "Corticosteroid eye drops",
+        "D": "Parasympatholytic eye drops"
+      },
+      "answer": "D",
+      "explanation": "Iritis pain is from ciliary spasm → relieved by cycloplegic/parasympatholytic drops (atropine).",
+      "source": "2022"
+    },
+    {
+      "id": 51,
+      "type": "mcq",
+      "stem": "In right trochlear nerve palsy, diplopia is greatest in:",
+      "options": {
+        "A": "Down-left gaze",
+        "B": "Down-right gaze",
+        "C": "Up-left gaze",
+        "D": "Up-right gaze"
+      },
+      "answer": "A",
+      "explanation": "Right superior oblique depresses the adducted eye → diplopia worst looking down and to the left.",
+      "source": "2022"
+    },
+    {
+      "id": 52,
+      "type": "mcq",
+      "stem": "Sudden diplopia in a 75-year-old is due to:",
+      "options": {
+        "A": "Abducens palsy",
+        "B": "Cataract",
+        "C": "Glaucoma",
+        "D": "None of the above"
+      },
+      "answer": "A",
+      "explanation": "Microvascular CN VI palsy is the commonest cause of isolated diplopia in the elderly.",
+      "source": "2022"
+    },
+    {
+      "id": 53,
+      "type": "mcq",
+      "stem": "Sudden painless recent visual acuity loss is due to:",
+      "options": {
+        "A": "Opacification of ocular media",
+        "B": "Simple chronic glaucoma",
+        "C": "Central retinal artery occlusion",
+        "D": "Iritis"
+      },
+      "answer": "C",
+      "explanation": "Sudden + painless + severe = CRAO.",
+      "source": "2022"
+    },
+    {
+      "id": 54,
+      "type": "mcq",
+      "stem": "A lesion of the entire thickness of the occipital lobe causes:",
+      "options": {
+        "A": "Homonymous hemianopia",
+        "B": "Unilateral amaurosis",
+        "C": "Binasal hemianopia",
+        "D": "Bitemporal hemianopia"
+      },
+      "answer": "A",
+      "explanation": "Destroying one visual cortex → contralateral homonymous hemianopia.",
+      "source": "2022"
+    },
+    {
+      "id": 55,
+      "type": "mcq",
+      "stem": "Which is correct about optic disc edema?",
+      "options": {
+        "A": "In papilledema, congested arteries are observed",
+        "B": "Ischemic edema causes significant and sudden vision loss",
+        "C": "It is not associated with intracranial hypertension",
+        "D": "Papilledema is characterized by decreased vision in early stages"
+      },
+      "answer": "B",
+      "explanation": "AION causes sudden marked vision loss. Papilloedema congests veins and spares VA early.",
+      "source": "2022"
+    },
+    {
+      "id": 56,
+      "type": "mcq",
+      "stem": "Age-related macular degeneration: which is correct?",
+      "options": {
+        "A": "It is unilateral",
+        "B": "It has elevated intraocular pressure",
+        "C": "Visual acuity gradually decreases",
+        "D": "All of the above"
+      },
+      "answer": "C",
+      "explanation": "AMD: usually bilateral, normal IOP, gradual central VA loss (dry form).",
+      "source": "2022"
+    },
+    {
+      "id": 57,
+      "type": "mcq",
+      "stem": "In temporal arteritis, we find:",
+      "options": {
+        "A": "Jaw pain",
+        "B": "Risk of blindness",
+        "C": "Visual acuity is unaffected",
+        "D": "Jaw pain and risk"
+      },
+      "answer": "D",
+      "explanation": "GCA: jaw claudication AND risk of blindness (AION) — both true.",
+      "source": "2022"
+    },
+    {
+      "id": 58,
+      "type": "mcq",
+      "stem": "A scotoma in the upper visual field is due to:",
+      "options": {
+        "A": "Superior bilateral ischemia",
+        "B": "Superior bilateral detachment",
+        "C": "Nasal pterygium",
+        "D": "Chronic glaucoma"
+      },
+      "answer": "D",
+      "explanation": "Inferior nerve fibres are damaged first in glaucoma → superior arcuate (upper field) scotoma.",
+      "source": "2022"
+    },
+    {
+      "id": 59,
+      "type": "mcq",
+      "stem": "A welding worker presents at night to the ER with:",
+      "options": {
+        "A": "Conjunctival redness and central corneal ulcer",
+        "B": "Intense itching and tearing",
+        "C": "Treated with prolonged topical anesthetic and antibiotic drops",
+        "D": "Intense pain and tearing with decreased vision"
+      },
+      "answer": "D",
+      "explanation": "UV photokeratitis: delayed intense pain, tearing, ↓VA. Prolonged anaesthetics are contraindicated.",
+      "source": "2022"
+    },
+    {
+      "id": 60,
+      "type": "mcq",
+      "stem": "In thyroid eye disease with compressive optic neuropathy, which is true:",
+      "options": {
+        "A": "The pupil is miotic and unresponsive to light",
+        "B": "The pupil is normal but visual acuity is reduced",
+        "C": "Reduced visual acuity, color perception, and pupillary reflexes",
+        "D": "The contralateral pupil does not respond to light"
+      },
+      "answer": "C",
+      "explanation": "Optic nerve compression → ↓VA, ↓colour vision, and abnormal pupil reflexes (RAPD).",
+      "source": "2022"
+    }
+  ]
+}

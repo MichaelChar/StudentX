@@ -893,7 +893,8 @@
           "allCorrect": "Perfect score — nothing to review.",
           "retry": "Retry test",
           "previousAttempts": "Previous attempts",
-          "previousAttemptScore": "{score} / {total} · {percent}%"
+          "previousAttemptScore": "{score} / {total} · {percent}%",
+          "negativeMarking": "Marked to the exam scheme — correct answers add, wrong answers subtract."
         },
         "review": {
           "label": "Review",
