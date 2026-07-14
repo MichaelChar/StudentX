@@ -19,6 +19,22 @@ const FACET_LABELS = {
 };
 
 /**
+ * Case-insensitive substring match over title + description + subjectLabel.
+ * Used for ?q= search in /resources. Empty/blank q returns the input list.
+ */
+export function searchResources(resources, q) {
+  const needle = String(q || '').trim().toLowerCase();
+  if (!needle) return resources;
+  return resources.filter((r) => {
+    const hay = [r.title, r.description, r.subjectLabel]
+      .filter(Boolean)
+      .join(' ')
+      .toLowerCase();
+    return hay.includes(needle);
+  });
+}
+
+/**
  * Returns the options for a single facet, computed from the provided resources.
  * Used internally for both global derivation and context-aware refinement.
  */
@@ -43,11 +59,12 @@ export function getFacetOptions(resources, key) {
 /**
  * Returns the resources that match all active filters *except* the given key.
  * This is the base used to compute available options and counts for that facet
- * (standard faceted search refinement).
+ * (standard faceted search refinement). Optional `q` applies the search too,
+ * so facet counts narrow with the active query (search composes as AND).
  */
-export function resourcesMatchingOtherFilters(resources, filters, excludeKey) {
+export function resourcesMatchingOtherFilters(resources, filters, excludeKey, q = '') {
   const otherFilters = { ...filters, [excludeKey]: null };
-  return filterResources(resources, otherFilters);
+  return searchResources(filterResources(resources, otherFilters), q);
 }
 
 /**

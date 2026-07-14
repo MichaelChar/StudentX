@@ -11,6 +11,7 @@ import {
   getFacetOptions,
   relaxFilters,
   resourcesMatchingOtherFilters,
+  searchResources,
 } from '@/lib/resources/facets';
 
 const FACET_TITLES = {
@@ -35,6 +36,7 @@ export default function ResourcesExplorer() {
   const [lastChanged, setLastChanged] = useState(null);
 
   const filters = readFilters(searchParams);
+  const q = (searchParams.get('q') || '').trim();
 
   // visibleFacets decides *which* facet rows to render (based on full dataset
   // having >= 2 distinct values, per the original spec).
@@ -46,11 +48,17 @@ export default function ResourcesExplorer() {
   // options for the current context disappear.
   const displayFacets = useMemo(() => {
     return visibleFacets.map((facet) => {
-      const baseResources = resourcesMatchingOtherFilters(RESOURCES, filters, facet.key);
+      const baseResources = resourcesMatchingOtherFilters(RESOURCES, filters, facet.key, q);
       const options = getFacetOptions(baseResources, facet.key);
       return { key: facet.key, options };
     });
-  }, [visibleFacets, filters]);
+  }, [visibleFacets, filters, q]);
+
+  // Semester row is always rendered (12 pills). Live semesters get context-aware
+  // counts (other facets + current search q). Non-present render as dashed "soon".
+  const semesterBase = resourcesMatchingOtherFilters(RESOURCES, filters, 'semester', q);
+  const semesterLiveOpts = getFacetOptions(semesterBase, 'semester');
+  const semesterCounts = Object.fromEntries(semesterLiveOpts.map((o) => [o.value, o.count]));
 
   const setFilter = useCallback(
     (key, value) => {
@@ -68,23 +76,179 @@ export default function ResourcesExplorer() {
     [searchParams, filters, router, pathname],
   );
 
-  const exactMatches = filterResources(RESOURCES, filters);
-  const hasActiveFilters = FACET_KEYS.some((key) => filters[key]);
-  const showingRelaxed = hasActiveFilters && exactMatches.length === 0;
+  const setSearchQuery = useCallback(
+    (value) => {
+      const next = new URLSearchParams(searchParams.toString());
+      const trimmed = String(value || '').trim();
+      if (trimmed) {
+        next.set('q', trimmed);
+      } else {
+        next.delete('q');
+      }
+      // Search does not affect lastChanged (relax prioritizes last facet).
+      // replace, not push: one history entry per keystroke would make Back
+      // walk through the query character by character.
+      const qs = next.toString();
+      router.replace(qs ? `${pathname}?${qs}` : pathname, { scroll: false });
+    },
+    [searchParams, router, pathname],
+  );
 
-  const { results, droppedKey } = showingRelaxed
-    ? relaxFilters(RESOURCES, filters, lastChanged)
-    : { results: exactMatches, droppedKey: null };
+  const facetFiltered = filterResources(RESOURCES, filters);
+  const exactMatches = searchResources(facetFiltered, q);
+  const hasActiveFacetFilters = FACET_KEYS.some((key) => filters[key]);
+  const hasActiveSearch = q.length > 0;
+  const showingRelaxed = (hasActiveFacetFilters || hasActiveSearch) && exactMatches.length === 0;
+
+  let results;
+  let droppedKey = null;
+  if (!showingRelaxed) {
+    results = exactMatches;
+  } else if (hasActiveFacetFilters) {
+    // Relax facets (existing semantics + last-applied), then apply search to the broader set.
+    // If search still yields zero on the relaxed set, fall back to the (un-searched) relaxed
+    // results so the page is never empty.
+    const relaxed = relaxFilters(RESOURCES, filters, lastChanged);
+    let cand = searchResources(relaxed.results, q);
+    if (cand.length === 0) cand = relaxed.results;
+    results = cand;
+    droppedKey = relaxed.droppedKey;
+  } else {
+    // Search alone yielded zero: show the "no exact matches" message with the
+    // (facet) filtered results rather than an empty page.
+    results = facetFiltered;
+    droppedKey = null;
+  }
+
+  // Effective filters for grouping decision: if relaxation dropped a facet, use the reduced set.
+  const effectiveFilters = showingRelaxed && hasActiveFacetFilters
+    ? relaxFilters(RESOURCES, filters, lastChanged).filters
+    : filters;
+
+  // Grouping: only when exactly one semester is active in the *effective* filters
+  // (respect relaxation). Groups sorted alphabetically by subject label.
+  const groupBySubject = !!effectiveFilters.semester;
+  const grouped = useMemo(() => {
+    if (!groupBySubject) return null;
+    const map = new Map();
+    for (const r of results) {
+      const s = r.subject || 'unknown';
+      if (!map.has(s)) map.set(s, { label: r.subjectLabel || s, cards: [] });
+      map.get(s).cards.push(r);
+    }
+    return [...map.entries()]
+      .sort((a, b) => a[1].label.localeCompare(b[1].label))
+      .map(([subj, g]) => ({ subject: subj, label: g.label, cards: g.cards }));
+  }, [results, groupBySubject]);
 
   return (
     <div>
-      {displayFacets.length > 0 && (
-        <div className="flex flex-col gap-3 mb-5">
-          {displayFacets.map((facet) => (
-            <div
-              key={facet.key}
-              className="flex flex-col gap-1 md:flex-row md:items-center md:gap-2"
-            >
+      {/* Search input (client-side, URL ?q=, composes AND with facets) */}
+      <div style={{ marginBottom: 12 }}>
+        <input
+          type="text"
+          value={q}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          placeholder="Search titles, descriptions or subjects..."
+          style={{
+            width: '100%',
+            padding: '9px 12px',
+            border: '1px solid rgba(10,37,64,0.15)',
+            borderRadius: 8,
+            fontSize: 14,
+            color: '#0a2540',
+            background: '#fff',
+          }}
+        />
+      </div>
+
+      {/* Facet rows. Semester is always shown (12 pills). Others follow derive >=2 rule. */}
+      <div className="flex flex-col gap-3 mb-5">
+        {FACET_KEYS.map((key) => {
+          if (key === 'semester') {
+            // Always render all 12; live ones (present in manifest) are normal clickable
+            // with context counts; others are non-clickable dashed "soon" pills.
+            return (
+              <div key={key} className="flex flex-col gap-1 md:flex-row md:items-center md:gap-2">
+                <span
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: 'rgba(10,37,64,0.4)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.4px',
+                  }}
+                >
+                  {FACET_TITLES[key] ?? key}
+                </span>
+                <div className="flex flex-wrap gap-1">
+                  {Array.from({ length: 12 }, (_, i) => {
+                    const n = i + 1;
+                    const val = `semester-${n}`;
+                    const count = semesterCounts[val];
+                    const isLive = typeof count === 'number';
+                    const active = filters.semester === val;
+                    if (isLive) {
+                      return (
+                        <button
+                          key={val}
+                          type="button"
+                          onClick={() => setFilter('semester', val)}
+                          className="transition-colors duration-150"
+                          style={{
+                            flexShrink: 0,
+                            display: 'inline-flex',
+                            alignItems: 'center',
+                            gap: 6,
+                            padding: '7px 14px',
+                            borderRadius: 999,
+                            fontSize: 13,
+                            fontWeight: 600,
+                            whiteSpace: 'nowrap',
+                            border: `1px solid ${active ? '#635BFF' : 'rgba(10,37,64,0.12)'}`,
+                            background: active ? '#635BFF' : '#ffffff',
+                            color: active ? '#ffffff' : '#0a2540',
+                            cursor: 'pointer',
+                          }}
+                        >
+                          {FACET_TITLES.semester ? `Semester ${n}` : val} · {count}
+                        </button>
+                      );
+                    }
+                    return (
+                      <span
+                        key={val}
+                        style={{
+                          flexShrink: 0,
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          padding: '7px 14px',
+                          borderRadius: 999,
+                          fontSize: 13,
+                          fontWeight: 600,
+                          whiteSpace: 'nowrap',
+                          border: '1px dashed rgba(10,37,64,0.25)',
+                          background: '#fff',
+                          color: 'rgba(10,37,64,0.4)',
+                          cursor: 'default',
+                        }}
+                      >
+                        Semester {n} · soon
+                      </span>
+                    );
+                  })}
+                </div>
+              </div>
+            );
+          }
+
+          // Non-semester facets: only if deriveFacets decided to show them (>=2 distinct overall)
+          const facet = displayFacets.find((f) => f.key === key);
+          if (!facet) return null;
+
+          return (
+            <div key={key} className="flex flex-col gap-1 md:flex-row md:items-center md:gap-2">
               <span
                 style={{
                   fontSize: 11,
@@ -94,16 +258,16 @@ export default function ResourcesExplorer() {
                   letterSpacing: '0.4px',
                 }}
               >
-                {FACET_TITLES[facet.key] ?? facet.key}
+                {FACET_TITLES[key] ?? key}
               </span>
               <div className="flex flex-wrap gap-1">
                 {facet.options.map((opt) => {
-                  const active = filters[facet.key] === opt.value;
+                  const active = filters[key] === opt.value;
                   return (
                     <button
                       key={opt.value}
                       type="button"
-                      onClick={() => setFilter(facet.key, opt.value)}
+                      onClick={() => setFilter(key, opt.value)}
                       className="transition-colors duration-150"
                       style={{
                         flexShrink: 0,
@@ -127,14 +291,21 @@ export default function ResourcesExplorer() {
                 })}
               </div>
             </div>
-          ))}
-        </div>
-      )}
+          );
+        })}
+      </div>
 
       {showingRelaxed && (
         <p style={{ fontSize: 13, color: 'rgba(10,37,64,0.55)', marginBottom: 16 }}>
-          No exact matches for the selected filters
-          {droppedKey && droppedKey !== 'all' ? ` — showing results with "${FACET_TITLES[droppedKey] ?? droppedKey}" cleared.` : ' — showing all resources.'}
+          No exact matches
+          {hasActiveSearch
+            ? hasActiveFacetFilters
+              ? ' for the selected filters and search'
+              : ` for search "${q}"`
+            : ' for the selected filters'}
+          {droppedKey && droppedKey !== 'all'
+            ? ` — showing results with "${FACET_TITLES[droppedKey] ?? droppedKey}" cleared.`
+            : ' — showing all resources.'}
         </p>
       )}
 
@@ -145,9 +316,29 @@ export default function ResourcesExplorer() {
           gap: 14,
         }}
       >
-        {results.map((resource) => (
-          <ResourceCard key={resource.id} resource={resource} />
-        ))}
+        {groupBySubject && grouped
+          ? grouped.map((g) => (
+              <div key={g.subject} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+                <div
+                  style={{
+                    fontSize: 11,
+                    fontWeight: 600,
+                    color: 'rgba(10,37,64,0.4)',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.4px',
+                    margin: '12px 0 6px',
+                  }}
+                >
+                  {g.label}
+                </div>
+                {g.cards.map((resource) => (
+                  <ResourceCard key={resource.id} resource={resource} />
+                ))}
+              </div>
+            ))
+          : results.map((resource) => (
+              <ResourceCard key={resource.id} resource={resource} />
+            ))}
       </div>
     </div>
   );
@@ -202,6 +393,16 @@ function ResourceCard({ resource }) {
   if (resource.type === 'flashcard-deck') {
     return (
       <a href={resource.href} download className={CARD_CLASS} style={CARD_STYLE}>
+        <ResourceCardBody resource={resource} meta={meta} />
+      </a>
+    );
+  }
+
+  // Static-asset resources (e.g. the standalone Medical Informatics .html
+  // exam) aren't Next routes — a plain anchor avoids the client router.
+  if (resource.href.endsWith('.html')) {
+    return (
+      <a href={resource.href} className={CARD_CLASS} style={CARD_STYLE}>
         <ResourceCardBody resource={resource} meta={meta} />
       </a>
     );

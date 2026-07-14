@@ -5,6 +5,7 @@ import {
   getFacetOptions,
   relaxFilters,
   resourcesMatchingOtherFilters,
+  searchResources,
 } from '@/lib/resources/facets';
 
 const resources = [
@@ -160,5 +161,45 @@ describe('subject facet (dynamic labels via subjectLabel)', () => {
     const filtered2 = filterResources(withSubjects, { subject: 'hygiene-epidemiology', type: 'study-notes' });
     expect(filtered2).toHaveLength(1);
     expect(filtered2[0].id).toBe('n1');
+  });
+});
+
+describe('searchResources', () => {
+  const data = [
+    { id: 'a', title: 'Anatomy I — Mega', description: 'Bones and muscles', subject: 'anatomy-1', subjectLabel: 'Anatomy I (MD1009)' },
+    { id: 'b', title: 'Biochem Predicted', description: 'Metabolism exam', subject: 'biochemistry', subjectLabel: 'Biochemistry I' },
+    { id: 'c', title: 'General Physiology Deck', description: 'High yield', subject: 'general-physiology', subjectLabel: 'General Physiology' },
+  ];
+
+  it('case-insensitive substring over title + description + subjectLabel', () => {
+    expect(searchResources(data, 'anatomy').map((r) => r.id)).toEqual(['a']);
+    expect(searchResources(data, 'BONES').map((r) => r.id)).toEqual(['a']);
+    expect(searchResources(data, 'biochemistry').map((r) => r.id)).toEqual(['b']); // label match
+    expect(searchResources(data, 'exam').map((r) => r.id)).toEqual(['b']);
+    expect(searchResources(data, 'md1009').map((r) => r.id)).toEqual(['a']); // course code in label
+  });
+
+  it('empty or blank q returns everything', () => {
+    expect(searchResources(data, '').length).toBe(3);
+    expect(searchResources(data, '   ').length).toBe(3);
+  });
+
+  it('composes as AND with facet filtering, and q narrows facet-option counts', () => {
+    const filtered = filterResources(data, {});
+    expect(searchResources(filtered, 'anatomy').map((r) => r.id)).toEqual(['a']);
+
+    const base = resourcesMatchingOtherFilters(data, { subject: 'anatomy-1' }, 'subject', 'exam');
+    expect(base.map((r) => r.id)).toEqual(['b']);
+  });
+
+  it('relaxation composes with q: relax facets first, then search the relaxed set', () => {
+    const pool = [
+      { id: 'a1', type: 'practice-test', semester: 'semester-2', subject: 'anatomy-1', subjectLabel: 'Anatomy I', country: 'gr', year: 2026, title: 'Anatomy test', description: 'x' },
+      { id: 'b1', type: 'practice-test', semester: 'semester-2', subject: 'biochemistry', subjectLabel: 'Biochemistry I', country: 'gr', year: 2026, title: 'Biochem test', description: 'x' },
+    ];
+    const relaxed = relaxFilters(pool, { semester: 'semester-2', subject: 'biochemistry' }, 'subject');
+    const afterSearch = searchResources(relaxed.results, 'anatomy');
+    expect(afterSearch.map((r) => r.id)).toEqual(['a1']);
+    expect(relaxed.droppedKey).toBe('subject');
   });
 });

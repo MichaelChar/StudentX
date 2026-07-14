@@ -26,6 +26,12 @@ export const SEMESTERS = [
   { value: 'semester-4', label: 'Semester 4' },
   { value: 'semester-5', label: 'Semester 5' },
   { value: 'semester-6', label: 'Semester 6' },
+  { value: 'semester-7', label: 'Semester 7' },
+  { value: 'semester-8', label: 'Semester 8' },
+  { value: 'semester-9', label: 'Semester 9' },
+  { value: 'semester-10', label: 'Semester 10' },
+  { value: 'semester-11', label: 'Semester 11' },
+  { value: 'semester-12', label: 'Semester 12' },
 ];
 
 /** @type {TaxonomyValue[]} */
