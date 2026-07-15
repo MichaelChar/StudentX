@@ -5,6 +5,7 @@ import { useSearchParams } from 'next/navigation';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { getProgressStore } from '@/lib/practice/progress';
+import { scorePercent } from '@/lib/practice/score';
 import QuestionCard from './QuestionCard';
 import FeedbackPanel from './FeedbackPanel';
 import ScoreSummary from './ScoreSummary';
@@ -128,6 +129,10 @@ function toAttempt(test, subject, attempt, answers, startedAt) {
     finishedAt: new Date().toISOString(),
     score,
     total: attempt.questions.length,
+    // Stored so past attempts stay consistent under negative marking (where the
+    // percentage isn't score ÷ total). Absent on pre-existing records → the
+    // previous-attempts row falls back to the raw ratio.
+    percent: scorePercent(attempt.questions, answers, test.scoring),
     answers: list,
   };
 }
@@ -522,6 +527,7 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
             onReview={setReviewIndex}
             onRetry={handleRetry}
             previousAttempts={previousAttempts}
+            scoring={test.scoring}
           />
         </Shell>
         {lightboxEl}

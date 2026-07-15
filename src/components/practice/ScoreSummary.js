@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { prettifyTopic } from '@/lib/practice/format';
+import { countCorrect, scorePercent } from '@/lib/practice/score';
 import { PrimaryButton } from './PlayerButton';
 
 // FINISHED state. Shows the overall score, a per-topic breakdown, and a list of
@@ -95,7 +96,7 @@ function PreviousAttempts({ attempts, t }) {
   const rows = [...attempts]
     .sort((a, b) => String(b.finishedAt).localeCompare(String(a.finishedAt)))
     .map((a) => {
-      const pct = a.total ? Math.round((a.score / a.total) * 100) : 0;
+      const pct = a.percent ?? (a.total ? Math.round((a.score / a.total) * 100) : 0);
       const when = a.finishedAt ? new Date(a.finishedAt) : null;
       const date =
         when && !Number.isNaN(when.getTime())
@@ -144,11 +145,19 @@ function PreviousAttempts({ attempts, t }) {
   );
 }
 
-export default function ScoreSummary({ attempt, answers, t, onReview, onRetry, previousAttempts = [] }) {
+export default function ScoreSummary({
+  attempt,
+  answers,
+  t,
+  onReview,
+  onRetry,
+  previousAttempts = [],
+  scoring = null,
+}) {
   const questions = attempt.questions;
   const total = questions.length;
-  const score = questions.reduce((acc, q, i) => acc + (answers[i] === q.correct ? 1 : 0), 0);
-  const percent = total === 0 ? 0 : Math.round((score / total) * 100);
+  const score = countCorrect(questions, answers);
+  const percent = scorePercent(questions, answers, scoring);
 
   const topics = topicBreakdown(questions, answers);
   const wrong = questions
@@ -171,7 +180,9 @@ export default function ScoreSummary({ attempt, answers, t, onReview, onRetry, p
         {t('results.title')}
       </h1>
 
-      {/* Score card */}
+      {/* Score card. Negative-marked tests (scoring set) report the weighted
+          percentage only; standard tests show the raw correct/total plus its
+          percent. */}
       <div
         style={{
           borderRadius: 22,
@@ -179,25 +190,47 @@ export default function ScoreSummary({ attempt, answers, t, onReview, onRetry, p
           background: '#f6f4ff',
           padding: '26px 24px',
           display: 'flex',
-          alignItems: 'baseline',
-          gap: 14,
+          flexDirection: scoring ? 'column' : 'row',
+          alignItems: scoring ? 'flex-start' : 'baseline',
+          gap: scoring ? 8 : 14,
           boxShadow: '0 10px 28px -16px rgba(10,37,64,0.16)',
         }}
       >
-        <span
-          style={{
-            fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
-            fontWeight: 700,
-            fontSize: 40,
-            letterSpacing: '-0.02em',
-            color: ACCENT,
-          }}
-        >
-          {t('results.scoreValue', { score, total })}
-        </span>
-        <span style={{ fontSize: 18, fontWeight: 600, color: 'rgba(10,37,64,0.55)' }}>
-          {t('results.percent', { percent })}
-        </span>
+        {scoring ? (
+          <>
+            <span
+              style={{
+                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontWeight: 700,
+                fontSize: 40,
+                letterSpacing: '-0.02em',
+                color: ACCENT,
+              }}
+            >
+              {t('results.percent', { percent })}
+            </span>
+            <span style={{ fontSize: 13.5, lineHeight: 1.45, color: 'rgba(10,37,64,0.55)' }}>
+              {t('results.negativeMarking')}
+            </span>
+          </>
+        ) : (
+          <>
+            <span
+              style={{
+                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontWeight: 700,
+                fontSize: 40,
+                letterSpacing: '-0.02em',
+                color: ACCENT,
+              }}
+            >
+              {t('results.scoreValue', { score, total })}
+            </span>
+            <span style={{ fontSize: 18, fontWeight: 600, color: 'rgba(10,37,64,0.55)' }}>
+              {t('results.percent', { percent })}
+            </span>
+          </>
+        )}
       </div>
 
       {/* Per-topic breakdown */}

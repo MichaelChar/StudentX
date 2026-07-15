@@ -132,6 +132,17 @@ export const PracticeTestSchema = z.object({
   description: z.string().optional(),
   version: z.number().int().positive(),
   updatedAt: z.string().min(1),
+  // Optional negative-marking scheme. When present, the score summary reports a
+  // weighted percentage: each correct answer adds `correct`, each answered-but-
+  // wrong subtracts |`wrong`|, unanswered scores 0; the percentage is raw ÷
+  // (questionCount × correct), floored at 0. Used by the Ophthalmology clinical
+  // paper (+0.2 / −0.05). Absent → plain 1-mark-per-correct scoring.
+  scoring: z
+    .object({
+      correct: z.number().positive(),
+      wrong: z.number(),
+    })
+    .optional(),
   questions: z.array(QuestionSchema).min(1),
   outro: z
     .object({
