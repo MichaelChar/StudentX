@@ -42,6 +42,22 @@ export const RESOURCES = [
     "subjectLabel": "Biochemistry I (MD1011)"
   },
   {
+    "id": "flashcard:english-terminology:english-terminology",
+    "type": "flashcard-deck",
+    "title": "English Terminology — Full medical vocabulary deck",
+    "description": "1,198 term-definition cards covering medical terminology word-building (prefixes, suffixes, plurals) plus system-by-system vocabulary: digestive, urinary, reproductive, cardiovascular, blood, respiratory, skeletal, and muscular systems. Text-only (rebuilt from a Quizlet-imported deck to strip audio and fit under the static-asset size limit).",
+    "href": "/flashcards/english-terminology/english-terminology.apkg",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "subject": "english-terminology",
+    "meta": {
+      "cardCount": 1198
+    },
+    "subjectLabel": "English Terminology (Medical Terminology)"
+  },
+  {
     "id": "flashcard:general-histology:general-histology",
     "type": "flashcard-deck",
     "title": "General Histology",
