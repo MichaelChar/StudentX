@@ -138,6 +138,22 @@ export const RESOURCES = [
     "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
+    "id": "notes:microbiology-ii",
+    "type": "study-notes",
+    "title": "Microbiology II (MD1043) — High-Yield Notes",
+    "description": "Condensed revision notes across 19 topics: virology, mycology, parasitology and laboratory diagnosis.",
+    "href": "/student/ausom/semester-6/microbiology-ii/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "microbiology-ii",
+    "meta": {
+      "sectionCount": 19
+    },
+    "subjectLabel": "Microbiology II (MD1043)"
+  },
+  {
     "id": "notes:ophthalmology",
     "type": "study-notes",
     "title": "Ophthalmology — Exam Notes",
@@ -453,6 +469,54 @@ export const RESOURCES = [
     "year": 2026,
     "subject": "medical-informatics",
     "subjectLabel": "Medical Informatics (MD1008)"
+  },
+  {
+    "id": "practice:microbiology-ii:past-papers",
+    "type": "past-paper",
+    "title": "Microbiology II — Past Papers",
+    "description": "70 real past-paper MCQs (2020–2022, Greek programme), each tagged with its exam year.",
+    "href": "/student/ausom/semester-6/microbiology-ii/past-papers",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "microbiology-ii",
+    "meta": {
+      "questionCount": 70
+    },
+    "subjectLabel": "Microbiology II (MD1043)"
+  },
+  {
+    "id": "practice:microbiology-ii:recalls",
+    "type": "practice-test",
+    "title": "Microbiology II — Recalled MCQs",
+    "description": "38 student-recalled MCQs across virology, HIV/hepatitis, mycology/parasitology and vaccines/antivirals.",
+    "href": "/student/ausom/semester-6/microbiology-ii/recalls",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "microbiology-ii",
+    "meta": {
+      "questionCount": 38
+    },
+    "subjectLabel": "Microbiology II (MD1043)"
+  },
+  {
+    "id": "practice:microbiology-ii:topic-practice",
+    "type": "practice-test",
+    "title": "Microbiology II — Topic Practice",
+    "description": "95 self-test MCQs across all 19 note topics (5 per topic), each tagged with its topic for review alongside the notes.",
+    "href": "/student/ausom/semester-6/microbiology-ii/topic-practice",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "microbiology-ii",
+    "meta": {
+      "questionCount": 95
+    },
+    "subjectLabel": "Microbiology II (MD1043)"
   },
   {
     "id": "practice:ophthalmology:clinical-practice-paper",

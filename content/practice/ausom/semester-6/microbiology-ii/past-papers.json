@@ -1,0 +1,996 @@
+{
+  "meta": {
+    "title": "Microbiology II — Past Papers",
+    "course": "MD1043 Microbiology II",
+    "semester": "Semester 6",
+    "total_questions": 70,
+    "mcq_count": 70,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Which of the following is NOT cultured (in the lab)?",
+      "options": {
+        "A": "Aspergillus",
+        "B": "Herpesviruses",
+        "C": "Influenza viruses",
+        "D": "Protozoa"
+      },
+      "answer": "D",
+      "explanation": "Aspergillus (Sabouraud), herpes (cell culture) and influenza (eggs/MDCK) are all cultured. <b>Protozoa</b> are diagnosed by microscopy/serology, not routine culture. (HPV is the classic 'cannot be cultured' but isn't listed.)",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Which statement is correct?",
+      "options": {
+        "A": "Atypical lymphocytes are an early finding of EBV infection",
+        "B": "Serological tests do not contribute to CMV diagnosis",
+        "C": "Adenoviruses are related to the common cold",
+        "D": "Plasmodia are parasites of white blood cells"
+      },
+      "answer": "A",
+      "explanation": "<b>Atypical lymphocytes</b> are an early finding in EBV mononucleosis. Serology DOES help CMV dx; adenovirus = pharyngoconjunctival (not simply common cold); plasmodia infect <b>red</b> cells, not white.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Which is correct?",
+      "options": {
+        "A": "Neutrophil count is unrelated to the course of aspergillus infection",
+        "B": "Allergic manifestations are uncommon in aspergilloses",
+        "C": "Pityriasis versicolor is due to the genus Candida",
+        "D": "Cryptococcosis usually manifests as a CNS infection"
+      },
+      "answer": "D",
+      "explanation": "<b>Cryptococcosis</b> classically presents as CNS disease (meningitis). Neutropenia is a key risk in invasive aspergillosis; allergic manifestations (ABPA) ARE common; pityriasis versicolor is due to <b>Malassezia</b>, not Candida.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Which viruses can affect the eye?",
+      "options": {
+        "A": "Coxsackie",
+        "B": "Herpes simplex",
+        "C": "All answers apply",
+        "D": "Adenoviruses"
+      },
+      "answer": "C",
+      "explanation": "HSV (keratitis), adenovirus (pink eye/keratoconjunctivitis) and Coxsackie (acute haemorrhagic conjunctivitis) can all infect the eye → <b>all apply</b>.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Which of the following is NOT an intestinal parasite?",
+      "options": {
+        "A": "Leishmania",
+        "B": "Ascaris",
+        "C": "Pinworm (oxyuris)",
+        "D": "Amoeba"
+      },
+      "answer": "A",
+      "explanation": "<b>Leishmania</b> is transmitted by sandfly and lives in macrophages (skin/viscera), not the gut. Ascaris, pinworm and amoeba are intestinal.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Which of the following causes diarrhoea?",
+      "options": {
+        "A": "All answers apply",
+        "B": "Rotavirus",
+        "C": "Entamoeba histolytica",
+        "D": "Norovirus"
+      },
+      "answer": "A",
+      "explanation": "Rotavirus, Norovirus and Entamoeba histolytica all cause diarrhoea → <b>all apply</b>.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Which of the following is intracellular?",
+      "options": {
+        "A": "Plasmodium",
+        "B": "Cryptococcus",
+        "C": "Lamblia (Giardia)",
+        "D": "Trichomonas"
+      },
+      "answer": "A",
+      "explanation": "<b>Plasmodium</b> is intracellular (hepatocytes, then RBCs). Giardia and Trichomonas are luminal; Cryptococcus is extracellular.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Hepatitis A virus is transmitted mainly:",
+      "options": {
+        "A": "Through breaks in the skin",
+        "B": "Via the digestive (GI) tract",
+        "C": "By sexual contact",
+        "D": "By transfusion of infected blood"
+      },
+      "answer": "B",
+      "explanation": "HAV is a naked, acid-stable picornavirus transmitted <b>faecal-orally through the GI tract</b>.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Which of the following causes congenital infections?",
+      "options": {
+        "A": "Toxoplasma",
+        "B": "All answers apply",
+        "C": "Parvo B19",
+        "D": "Cytomegalovirus"
+      },
+      "answer": "B",
+      "explanation": "Toxoplasma, Parvo B19 and CMV are all classic causes of congenital infection → <b>all apply</b> (TORCH).",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Which virus possesses reverse transcriptase (reverse transcriptase)?",
+      "options": {
+        "A": "Herpes simplex",
+        "B": "Hepatitis B",
+        "C": "HIV",
+        "D": "Human papillomavirus"
+      },
+      "answer": "C",
+      "explanation": "<b>HIV</b> (retrovirus) is the canonical answer. ⚠ Note: <b>HBV</b> also has reverse-transcriptase activity (replicates via an RNA intermediate) — if HBV is the only listed answer elsewhere, pick HBV.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "Epstein–Barr virus:",
+      "options": {
+        "A": "Belongs to the adenoviruses",
+        "B": "Causes a large decrease in lymphocytes",
+        "C": "Is implicated in neoplasias",
+        "D": "Causes severe pneumonias"
+      },
+      "answer": "C",
+      "explanation": "EBV is a <b>herpes</b>virus (not adeno), causes lymphocyto<b>sis</b> with atypical lymphocytes (not a decrease), and is <b>implicated in neoplasias</b> (Burkitt, nasopharyngeal ca, Hodgkin).",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Which of the following remains permanently in the organism?",
+      "options": {
+        "A": "Toxoplasma",
+        "B": "Cytomegalovirus",
+        "C": "Varicella virus",
+        "D": "All answers apply"
+      },
+      "answer": "D",
+      "explanation": "Toxoplasma (tissue cysts), CMV and VZV all establish lifelong latency → <b>all apply</b>.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Which virus is NOT transmitted sexually?",
+      "options": {
+        "A": "Herpes simplex",
+        "B": "Rubella",
+        "C": "HBV",
+        "D": "CMV"
+      },
+      "answer": "B",
+      "explanation": "<b>Rubella</b> spreads by respiratory droplet / vertically, not as an STD. HSV, HBV and CMV can all be sexually transmitted.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Which condition is NOT associated with Picorna viruses?",
+      "options": {
+        "A": "Pharyngitis",
+        "B": "Cystitis",
+        "C": "Myocarditis",
+        "D": "Meningitis"
+      },
+      "answer": "B",
+      "explanation": "Enteroviruses (picorna) cause pharyngitis (herpangina), myocarditis (Coxsackie B) and aseptic meningitis. <b>Haemorrhagic cystitis</b> is an <b>adenovirus</b> feature.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "What is true about yeasts?",
+      "options": {
+        "A": "They have a fluffy macroscopic appearance",
+        "B": "They are usually multicellular",
+        "C": "They are unrelated to human normal flora",
+        "D": "They are frequently related to daily diet and living"
+      },
+      "answer": "D",
+      "explanation": "Yeasts are unicellular with moist/pasty colonies (moulds are fluffy/multicellular), and Candida IS part of normal flora. They are <b>linked to daily diet/living</b> (bread, beer, fermentation).",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Which virus has RNA as its genetic material?",
+      "options": {
+        "A": "Adenoviruses",
+        "B": "Corona",
+        "C": "Varicella",
+        "D": "HPV"
+      },
+      "answer": "B",
+      "explanation": "<b>Corona</b> is an RNA virus. Adeno, varicella (herpes) and HPV are DNA viruses.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Which viruses are distinguished into dozens of serotypes?",
+      "options": {
+        "A": "Rhinoviruses",
+        "B": "Coxsackie",
+        "C": "Haemorrhagic fever",
+        "D": "Parainfluenza"
+      },
+      "answer": "A",
+      "explanation": "<b>Rhinoviruses</b> have ~100–160 serotypes → no lasting immunity, no vaccine.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Infection by the rabies virus:",
+      "options": {
+        "A": "Is prevented by vaccinating animals",
+        "B": "Is due to the bite of any animal",
+        "C": "Is easily treated",
+        "D": "Is related to birds"
+      },
+      "answer": "A",
+      "explanation": "Rabies is controlled by <b>vaccinating animals</b> (+ post-exposure prophylaxis). It follows bites of <b>mammals</b> (not birds/any animal) and is almost always fatal once symptomatic.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Which of the following injectable vaccines is from a live attenuated microorganism?",
+      "options": {
+        "A": "Influenza",
+        "B": "Measles",
+        "C": "HPV",
+        "D": "Hepatitis B"
+      },
+      "answer": "B",
+      "explanation": "<b>Measles (MMR)</b> is a live-attenuated injectable vaccine. Injectable flu = inactivated; HPV & HBV = recombinant subunit.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "What is true about amphotericin B?",
+      "options": {
+        "A": "Acts on the fungal cell wall",
+        "B": "Is a fungistatic drug",
+        "C": "Acts on the fungal cell membrane",
+        "D": "Belongs to the azoles"
+      },
+      "answer": "C",
+      "explanation": "Amphotericin B is a <b>polyene</b> that binds <b>ergosterol in the fungal cell membrane</b> and is <b>fungicidal</b> — not the wall, not fungistatic, not an azole.",
+      "source": "2020 (Greek prog.)"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "Which parasite's laboratory diagnosis is done on a vaginal smear sample?",
+      "options": {
+        "A": "Trichomonas",
+        "B": "Toxoplasma",
+        "C": "All answers are correct",
+        "D": "Leishmania"
+      },
+      "answer": "A",
+      "explanation": "<b>Trichomonas vaginalis</b> is diagnosed by wet-mount/vaginal smear (motile trophozoites).",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Influenza vaccination should be done:",
+      "options": {
+        "A": "In case of a pandemic",
+        "B": "Immediately after birth",
+        "C": "Every five years",
+        "D": "Annually"
+      },
+      "answer": "D",
+      "explanation": "The strains drift yearly, so the flu vaccine is given <b>annually</b>.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Which of the following is NOT intracellular?",
+      "options": {
+        "A": "Plasmodium",
+        "B": "Toxoplasma",
+        "C": "None (all are intracellular)",
+        "D": "Cryptococcus"
+      },
+      "answer": "D",
+      "explanation": "<b>Cryptococcus</b> is an extracellular encapsulated yeast. Plasmodium and Toxoplasma are intracellular.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "For the prevention of malaria today, the following is applied:",
+      "options": {
+        "A": "Vaccination",
+        "B": "Long-term immunostimulants",
+        "C": "Combating insects",
+        "D": "Strict isolation of the afflicted"
+      },
+      "answer": "C",
+      "explanation": "Malaria control relies on <b>vector (mosquito) control</b>.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Which virus can cause sterility in men?",
+      "options": {
+        "A": "Rubella",
+        "B": "Measles",
+        "C": "ECHO virus",
+        "D": "Mumps"
+      },
+      "answer": "D",
+      "explanation": "<b>Mumps</b> causes orchitis, which can lead to male sterility.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "Which of the following does NOT affect the liver?",
+      "options": {
+        "A": "Amoeba",
+        "B": "Echinococcus",
+        "C": "Epstein–Barr virus",
+        "D": "Rotavirus"
+      },
+      "answer": "D",
+      "explanation": "<b>Rotavirus</b> is confined to the gut. Amoeba (liver abscess), Echinococcus (hydatid cyst) and EBV (hepatitis) all involve the liver.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Which virus is NOT potentially oncogenic?",
+      "options": {
+        "A": "HCV",
+        "B": "CMV",
+        "C": "HPV",
+        "D": "HTLV"
+      },
+      "answer": "B",
+      "explanation": "HCV, HPV and HTLV are oncogenic. <b>CMV</b> is not classically oncogenic.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "Which part of a virus is mainly composed of protein?",
+      "options": {
+        "A": "Casing/envelope",
+        "B": "Capsid",
+        "C": "Genetic material",
+        "D": "Equal amounts everywhere"
+      },
+      "answer": "B",
+      "explanation": "The <b>capsid</b> is the protein shell — mainly protein.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "Which one belongs to the paramyxoviruses?",
+      "options": {
+        "A": "RSV",
+        "B": "Measles",
+        "C": "Mumps",
+        "D": "All answers correct"
+      },
+      "answer": "D",
+      "explanation": "RSV, measles and mumps are all Paramyxoviridae → <b>all correct</b>.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "Which of the following remains in the body after the initial infection?",
+      "options": {
+        "A": "Toxoplasma",
+        "B": "Herpes simplex virus",
+        "C": "Measles virus",
+        "D": "All answers are correct"
+      },
+      "answer": "D",
+      "explanation": "Toxoplasma (cysts) and HSV (latency) persist; measles can persist as defective virus (SSPE) → the intended answer is <b>all are correct</b>.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "Which laboratory term does NOT pertain to a virus?",
+      "options": {
+        "A": "Monospot",
+        "B": "p24 antigen",
+        "C": "VDRL",
+        "D": "Negri bodies"
+      },
+      "answer": "C",
+      "explanation": "<b>VDRL</b> is a syphilis (Treponema) test. Monospot (EBV), p24 (HIV) and Negri bodies (rabies) are viral.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "Nucleotide analogs are:",
+      "options": {
+        "A": "A category of antiviral drugs",
+        "B": "Enzymes that initiate viral reproduction",
+        "C": "Adhesive molecules of viruses",
+        "D": "Contents of antiviral vaccines"
+      },
+      "answer": "A",
+      "explanation": "Nucleos(t)ide analogues (e.g. acyclovir, tenofovir) are a <b>class of antiviral drug</b>.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "For which virus is there NO vaccine available?",
+      "options": {
+        "A": "Measles",
+        "B": "Rabies",
+        "C": "Rota",
+        "D": "CMV"
+      },
+      "answer": "D",
+      "explanation": "<b>CMV</b> has no vaccine. Measles, rabies and rotavirus vaccines exist.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "CD4 cell count is measured for the laboratory monitoring of:",
+      "options": {
+        "A": "Epstein–Barr lymphoma",
+        "B": "HIV infection",
+        "C": "Congenital Parvo B19",
+        "D": "Recurring herpes"
+      },
+      "answer": "B",
+      "explanation": "<b>CD4 count</b> is the key marker of HIV disease progression.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "Which of the following belongs to the dermatophytes?",
+      "options": {
+        "A": "Aspergillus",
+        "B": "Microsporum",
+        "C": "Candida",
+        "D": "Malassezia furfur"
+      },
+      "answer": "B",
+      "explanation": "<b>Microsporum</b> (with Trichophyton, Epidermophyton) is a dermatophyte. The others are not.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "The isolation of viruses is done in:",
+      "options": {
+        "A": "Media high in biological products",
+        "B": "Media high in cells",
+        "C": "Special enriched agar",
+        "D": "A variety of living substrates"
+      },
+      "answer": "D",
+      "explanation": "Viruses need <b>living substrates</b> — cell cultures, embryonated eggs, or animals.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "All hepatitis viruses:",
+      "options": {
+        "A": "Have DNA as genetic material",
+        "B": "None of the answers are correct",
+        "C": "Progress to chronicity",
+        "D": "Are preventable by vaccination"
+      },
+      "answer": "B",
+      "explanation": "Not all are DNA (most are RNA), not all become chronic (HAV/HEV don't), not all are vaccine-preventable (no HCV vaccine) → <b>none of the answers is correct</b>.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 38,
+      "type": "mcq",
+      "stem": "The varicella virus can cause:",
+      "options": {
+        "A": "Pneumonia",
+        "B": "Encephalitis",
+        "C": "Herpes zoster",
+        "D": "All answers are correct"
+      },
+      "answer": "D",
+      "explanation": "VZV → varicella pneumonia, encephalitis and (on reactivation) herpes zoster → <b>all correct</b>.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 39,
+      "type": "mcq",
+      "stem": "Opportunistic mycoses:",
+      "options": {
+        "A": "Are due to fungi widespread in nature or colonizers",
+        "B": "Cause transient, superficial damage",
+        "C": "Are geographically localized",
+        "D": "Are independent of the level of immunity"
+      },
+      "answer": "A",
+      "explanation": "Opportunistic mycoses arise from <b>ubiquitous fungi or colonisers</b> (Candida, Aspergillus) taking advantage of impaired immunity.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 40,
+      "type": "mcq",
+      "stem": "Mode of reproduction of viruses:",
+      "options": {
+        "A": "Binary fission",
+        "B": "All apply, depending on the virus",
+        "C": "Assembly of their individual parts",
+        "D": "Random duplication"
+      },
+      "answer": "C",
+      "explanation": "Viruses reproduce by <b>assembly of separately-made components</b> — never binary fission.",
+      "source": "2021 (Greek prog.)"
+    },
+    {
+      "id": 41,
+      "type": "mcq",
+      "stem": "Which virus is transmitted by animals?",
+      "options": {
+        "A": "West Nile",
+        "B": "Rabies",
+        "C": "Hantavirus",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "West Nile (birds/mosquito), rabies (mammals) and Hantavirus (rodents) are all zoonotic → <b>all of the above</b>.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 42,
+      "type": "mcq",
+      "stem": "What is NOT true about Trichomonas vaginalis?",
+      "options": {
+        "A": "Sexually transmitted",
+        "B": "Often causes haemorrhagic diarrhoea",
+        "C": "Diagnosed by trophozoites in a direct smear",
+        "D": "Treated with metronidazole"
+      },
+      "answer": "B",
+      "explanation": "Trichomonas causes vaginitis, not diarrhoea. The <b>haemorrhagic diarrhoea</b> statement is false.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 43,
+      "type": "mcq",
+      "stem": "Polyenes:",
+      "options": {
+        "A": "Include amphotericin B and nystatin",
+        "B": "Are also used as antibacterial agents",
+        "C": "Are administered only topically",
+        "D": "Are administered only systemically"
+      },
+      "answer": "A",
+      "explanation": "<b>Polyenes = amphotericin B and nystatin</b> (bind ergosterol in the fungal membrane).",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 44,
+      "type": "mcq",
+      "stem": "Myocarditis/pericarditis can be caused by which virus?",
+      "options": {
+        "A": "Coxsackie",
+        "B": "ECHO",
+        "C": "Parvo B19",
+        "D": "Herpesvirus 7"
+      },
+      "answer": "A",
+      "explanation": "<b>Coxsackie B</b> is the classic cause of viral myocarditis/pericarditis.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 45,
+      "type": "mcq",
+      "stem": "Which clinical sample is best for detecting poliovirus?",
+      "options": {
+        "A": "Blood",
+        "B": "Urine",
+        "C": "Stool",
+        "D": "CSF"
+      },
+      "answer": "C",
+      "explanation": "Poliovirus (enterovirus, faecal-oral) is best detected in <b>stool</b>.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 46,
+      "type": "mcq",
+      "stem": "An increase in eosinophils in peripheral blood is seen in infections from:",
+      "options": {
+        "A": "Plasmodia",
+        "B": "Dermatophytes",
+        "C": "Helminths",
+        "D": "None of the above"
+      },
+      "answer": "C",
+      "explanation": "<b>Helminth</b> infections classically cause peripheral eosinophilia.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 47,
+      "type": "mcq",
+      "stem": "Which of the following viruses is NOT potentially oncogenic?",
+      "options": {
+        "A": "HPV and Epstein–Barr",
+        "B": "HBV and HCV",
+        "C": "Herpesvirus 8 and HTLV",
+        "D": "None (all are oncogenic)"
+      },
+      "answer": "D",
+      "explanation": "HPV, EBV, HBV, HCV, HHV-8 and HTLV are all oncogenic → <b>none of the above</b> (all are oncogenic).",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 48,
+      "type": "mcq",
+      "stem": "Which virus preferentially infects human erythroid progenitor cells?",
+      "options": {
+        "A": "Ebola",
+        "B": "Parvo B19",
+        "C": "HTLV",
+        "D": "All of the above"
+      },
+      "answer": "B",
+      "explanation": "<b>Parvovirus B19</b> targets erythroid progenitors → aplastic crisis.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 49,
+      "type": "mcq",
+      "stem": "What is true about Aspergillus?",
+      "options": {
+        "A": "Causes allergic reactions",
+        "B": "Does not produce toxins",
+        "C": "Grows very poorly in cultures",
+        "D": "Causes only mild respiratory infections"
+      },
+      "answer": "A",
+      "explanation": "Aspergillus <b>causes allergic reactions</b> (ABPA, allergic antigens). It grows well and can cause severe invasive disease.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 50,
+      "type": "mcq",
+      "stem": "Which is the most common cause of congenital infection?",
+      "options": {
+        "A": "Cytomegalovirus",
+        "B": "Herpes simplex virus",
+        "C": "Parvo B19",
+        "D": "Toxoplasma"
+      },
+      "answer": "A",
+      "explanation": "<b>CMV</b> is the most common congenital infection ('owl's-eye' inclusions).",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 51,
+      "type": "mcq",
+      "stem": "Which virus most commonly causes severe gastroenteritis in infants?",
+      "options": {
+        "A": "All enteroviruses",
+        "B": "Adenoviruses",
+        "C": "Rotavirus",
+        "D": "None of the above"
+      },
+      "answer": "C",
+      "explanation": "<b>Rotavirus</b> is the leading cause of severe infant gastroenteritis (now reduced by vaccine).",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 52,
+      "type": "mcq",
+      "stem": "A vaccine exists for:",
+      "options": {
+        "A": "Hepatitis C",
+        "B": "Malaria",
+        "C": "Yellow fever",
+        "D": "None of the above"
+      },
+      "answer": "C",
+      "explanation": "<b>Yellow fever</b> has a live-attenuated vaccine. No HCV vaccine; malaria vaccine wasn't routine at exam time.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 53,
+      "type": "mcq",
+      "stem": "Which virus can cause haemorrhagic cystitis?",
+      "options": {
+        "A": "Adenovirus",
+        "B": "Enteroviruses",
+        "C": "HIV",
+        "D": "Epstein–Barr"
+      },
+      "answer": "A",
+      "explanation": "<b>Adenovirus</b> causes haemorrhagic cystitis (esp. in children/transplant).",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 54,
+      "type": "mcq",
+      "stem": "Which of the following has NOT been proven to transmit HIV?",
+      "options": {
+        "A": "Shaving tools",
+        "B": "Transplants",
+        "C": "Mosquitoes",
+        "D": "Breastfeeding"
+      },
+      "answer": "C",
+      "explanation": "HIV is not transmitted by <b>mosquitoes</b>. Blood-contaminated tools, transplants and breastfeeding can transmit it.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 55,
+      "type": "mcq",
+      "stem": "After close contact with someone with shingles, a non-immune person risks developing:",
+      "options": {
+        "A": "Herpes simplex type I",
+        "B": "Shingles",
+        "C": "Chickenpox",
+        "D": "Erythema multiforme"
+      },
+      "answer": "C",
+      "explanation": "Exposure to zoster in a non-immune person causes primary VZV = <b>chickenpox</b> (you can't 'catch' shingles).",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 56,
+      "type": "mcq",
+      "stem": "What is NOT true about the measles virus?",
+      "options": {
+        "A": "Confers lifelong immunity",
+        "B": "Has serious complications in immunocompromised",
+        "C": "Is preventable by vaccination",
+        "D": "Has many serotypes"
+      },
+      "answer": "D",
+      "explanation": "Measles has <b>ONE serotype</b> — 'many serotypes' is false.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 57,
+      "type": "mcq",
+      "stem": "Which of the following is an intestinal cestode (tapeworm)?",
+      "options": {
+        "A": "Pinworm",
+        "B": "Echinococcus",
+        "C": "Ascaris",
+        "D": "Giardia"
+      },
+      "answer": "B",
+      "explanation": "<b>Echinococcus</b> is a cestode (tapeworm). Pinworm & Ascaris are nematodes; Giardia is a protozoan.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 58,
+      "type": "mcq",
+      "stem": "The CD4/CD8 ratio is determined for monitoring:",
+      "options": {
+        "A": "Epstein–Barr lymphoma",
+        "B": "Herpes",
+        "C": "HIV infection",
+        "D": "None of the above"
+      },
+      "answer": "C",
+      "explanation": "CD4/CD8 ratio monitors <b>HIV infection</b>.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 59,
+      "type": "mcq",
+      "stem": "Which virus belongs to the paramyxoviruses?",
+      "options": {
+        "A": "RSV",
+        "B": "Measles",
+        "C": "Mumps",
+        "D": "All of the above"
+      },
+      "answer": "D",
+      "explanation": "RSV, measles and mumps are all paramyxoviruses → <b>all of the above</b>.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 60,
+      "type": "mcq",
+      "stem": "Which combination of positive markers indicates recovery and immunity after infection?",
+      "options": {
+        "A": "HBsAg + Anti-HBs",
+        "B": "HBsAg + Anti-HBc",
+        "C": "Anti-HBs + Anti-HBc",
+        "D": "HBeAg + Anti-HBs"
+      },
+      "answer": "C",
+      "explanation": "Resolved infection with immunity = <b>Anti-HBs (+) & Anti-HBc (+)</b> (HBsAg negative). Anti-HBs alone = vaccination only.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 61,
+      "type": "mcq",
+      "stem": "The flu vaccine includes:",
+      "options": {
+        "A": "A and B strains, usually different each year",
+        "B": "Strains from all three types of flu",
+        "C": "Only the strain from the most recent pandemic",
+        "D": "A GM strain with genes from all types"
+      },
+      "answer": "A",
+      "explanation": "The seasonal vaccine contains <b>A (H1N1, H3N2) and B strains, updated yearly</b>.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 62,
+      "type": "mcq",
+      "stem": "Congenital rubella:",
+      "options": {
+        "A": "Is more severe if contracted in the 3rd trimester",
+        "B": "Does not lead to miscarriage",
+        "C": "Severity is inversely proportional to gestational age",
+        "D": "Cannot be prevented (no vaccine)"
+      },
+      "answer": "C",
+      "explanation": "Damage is worst <b>early</b> in pregnancy — severity is <b>inversely proportional to gestational age</b> (worst in the 1st trimester).",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 63,
+      "type": "mcq",
+      "stem": "Fungal cultures:",
+      "options": {
+        "A": "Do not require special media",
+        "B": "Do not require a combination of media",
+        "C": "Are accelerated at 40°C",
+        "D": "Are a diagnostic method with satisfactory sensitivity"
+      },
+      "answer": "D",
+      "explanation": "By elimination: fungi DO need special/combined media and grow at 25–30°C (not accelerated at 40°C). The intended 'true' option is that culture is a <b>useful diagnostic method</b>.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 64,
+      "type": "mcq",
+      "stem": "Which virus provides short-lived, ineffective immunity after infection?",
+      "options": {
+        "A": "Measles",
+        "B": "Rhinovirus",
+        "C": "Poliovirus",
+        "D": "Hepatitis A"
+      },
+      "answer": "B",
+      "explanation": "<b>Rhinovirus</b> (100+ serotypes) gives short, type-specific immunity → repeat colds. The others give lasting immunity.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 65,
+      "type": "mcq",
+      "stem": "Which of the following is NOT transmitted by mosquitoes?",
+      "options": {
+        "A": "Leishmania",
+        "B": "West Nile virus",
+        "C": "Plasmodium",
+        "D": "None (all are mosquito-borne)"
+      },
+      "answer": "A",
+      "explanation": "<b>Leishmania</b> is transmitted by <b>sandflies</b>, not mosquitoes.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 66,
+      "type": "mcq",
+      "stem": "Which finding indicates congenital infection?",
+      "options": {
+        "A": "IgM in the mother",
+        "B": "IgG in the mother",
+        "C": "IgM in the neonate",
+        "D": "IgG in the neonate"
+      },
+      "answer": "C",
+      "explanation": "IgM does not cross the placenta, so <b>IgM in the neonate</b> proves the infant was itself infected (congenital).",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 67,
+      "type": "mcq",
+      "stem": "Which virus does NOT affect the respiratory system?",
+      "options": {
+        "A": "RSV",
+        "B": "Measles",
+        "C": "CMV",
+        "D": "Rotavirus"
+      },
+      "answer": "D",
+      "explanation": "<b>Rotavirus</b> affects the GI tract. RSV, measles and CMV all cause respiratory disease.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 68,
+      "type": "mcq",
+      "stem": "Azidothymidine (AZT) is used to treat infection by:",
+      "options": {
+        "A": "HIV",
+        "B": "Herpes simplex virus",
+        "C": "Hepatitis B (chronic)",
+        "D": "Hepatitis C"
+      },
+      "answer": "A",
+      "explanation": "<b>AZT/zidovudine</b> is an anti-<b>HIV</b> reverse-transcriptase inhibitor.",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 69,
+      "type": "mcq",
+      "stem": "A virus establishes itself in cells of:",
+      "options": {
+        "A": "Any tissue of a specific animal species",
+        "B": "A specific tissue in any species",
+        "C": "Specific tissues in specific animal species",
+        "D": "Any healthy tissue"
+      },
+      "answer": "C",
+      "explanation": "Tropism = <b>specific tissues of specific species</b> (receptor-determined).",
+      "source": "2022 (Greek prog.)"
+    },
+    {
+      "id": 70,
+      "type": "mcq",
+      "stem": "Which part of a virus is mainly made of protein?",
+      "options": {
+        "A": "Envelope",
+        "B": "Capsid",
+        "C": "Genetic material",
+        "D": "All equal"
+      },
+      "answer": "B",
+      "explanation": "The <b>capsid</b> is the protein shell.",
+      "source": "2022 (Greek prog.)"
+    }
+  ]
+}

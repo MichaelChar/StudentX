@@ -1,0 +1,548 @@
+{
+  "meta": {
+    "title": "Microbiology II — Recalled MCQs",
+    "course": "MD1043 Microbiology II",
+    "semester": "Semester 6",
+    "total_questions": 38,
+    "mcq_count": 38,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Which virus is NOT part of the Myxovirus / Paramyxovirus family?",
+      "options": {
+        "A": "Coronavirus",
+        "B": "Influenza virus",
+        "C": "Parainfluenza virus",
+        "D": "RSV"
+      },
+      "answer": "A",
+      "explanation": "<b>Corona</b> is not a myxovirus. Influenza = orthomyxo; paraflu & RSV = paramyxo. (Repeats in 2024 & 2025 recalls.)",
+      "source": "Virology recall"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Which virus is most likely to cause a pandemic?",
+      "options": {
+        "A": "Influenza",
+        "B": "RSV",
+        "C": "Rhinovirus",
+        "D": "HBV"
+      },
+      "answer": "A",
+      "explanation": "<b>Influenza A</b> — antigenic shift via reassortment of its segmented genome → pandemics.",
+      "source": "Virology recall"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Which is an RNA virus?",
+      "options": {
+        "A": "Mumps",
+        "B": "HBV",
+        "C": "Adenovirus",
+        "D": "HPV"
+      },
+      "answer": "A",
+      "explanation": "<b>Mumps</b> (paramyxovirus) is RNA. HBV/adeno/HPV are DNA. (Recall note: the question asked what IS an RNA virus.)",
+      "source": "Virology recall"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Which virus can cause cancer?",
+      "options": {
+        "A": "HBV",
+        "B": "Rhinovirus",
+        "C": "Rotavirus",
+        "D": "Parainfluenza"
+      },
+      "answer": "A",
+      "explanation": "<b>HBV</b> → hepatocellular carcinoma (also HPV, HCV, EBV, HTLV, HHV-8).",
+      "source": "Virology recall"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Which virus circulates and kills erythrocytes / infects the erythroid lineage?",
+      "options": {
+        "A": "Parvovirus B19",
+        "B": "CMV",
+        "C": "EBV",
+        "D": "Rotavirus"
+      },
+      "answer": "A",
+      "explanation": "<b>Parvo B19</b> targets erythroid progenitor cells → aplastic crisis (esp. sickle cell).",
+      "source": "Virology recall"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Which virus CANNOT cause congenital infection?",
+      "options": {
+        "A": "RSV",
+        "B": "CMV",
+        "C": "Rubella",
+        "D": "Parvo B19"
+      },
+      "answer": "A",
+      "explanation": "<b>RSV</b> is not a congenital pathogen. CMV, rubella and Parvo B19 are classic congenital infections.",
+      "source": "Virology recall"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "For which gastrointestinal virus is there a vaccine?",
+      "options": {
+        "A": "Rotavirus",
+        "B": "Norovirus",
+        "C": "Astrovirus",
+        "D": "Enteric adenovirus"
+      },
+      "answer": "A",
+      "explanation": "<b>Rotavirus</b> has a live-attenuated oral vaccine (Rotarix/RotaTeq).",
+      "source": "Virology recall"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Against which virus does the MMR/vaccine protect (mumps-type)?",
+      "options": {
+        "A": "Mumps",
+        "B": "Rhinovirus",
+        "C": "CMV",
+        "D": "RSV"
+      },
+      "answer": "A",
+      "explanation": "MMR protects against measles, <b>mumps</b> and rubella.",
+      "source": "Virology recall"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Which is NOT used routinely nowadays for the diagnosis of viruses?",
+      "options": {
+        "A": "Cell cultures",
+        "B": "RT-PCR",
+        "C": "Antigen detection",
+        "D": "Serology"
+      },
+      "answer": "A",
+      "explanation": "Traditional <b>cell culture</b> is largely replaced by molecular methods (PCR) for routine viral diagnosis.",
+      "source": "Virology recall"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Which part of a virus is mainly made of protein?",
+      "options": {
+        "A": "Capsid",
+        "B": "Genetic material",
+        "C": "Envelope lipid",
+        "D": "Water"
+      },
+      "answer": "A",
+      "explanation": "The <b>capsid</b> = protein shell.",
+      "source": "Virology recall"
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "What is NOT part of a virus?",
+      "options": {
+        "A": "Ribosomes",
+        "B": "Capsid",
+        "C": "Nucleic acid",
+        "D": "Envelope (some)"
+      },
+      "answer": "A",
+      "explanation": "Viruses have <b>no ribosomes</b> (nor mitochondria/nucleus) — they hijack host machinery.",
+      "source": "Virology recall"
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Enveloped vs non-enveloped viruses — which statement is INCORRECT?",
+      "options": {
+        "A": "Enveloped viruses are more resistant to lipid solvents",
+        "B": "Enveloped viruses are labile to detergents",
+        "C": "Non-enveloped viruses are more environmentally stable",
+        "D": "Envelope glycoproteins mediate attachment"
+      },
+      "answer": "A",
+      "explanation": "Enveloped viruses are <b>more sensitive</b> (not resistant) to lipid solvents/detergents — that statement is the incorrect one.",
+      "source": "Virology recall"
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "A 4th-generation HIV test detects:",
+      "options": {
+        "A": "HIV antibodies and p24 antigen",
+        "B": "p24 antigen only",
+        "C": "HIV antibodies only",
+        "D": "HIV RNA only"
+      },
+      "answer": "A",
+      "explanation": "4th-gen combines <b>antibody + p24 antigen</b> detection → shortens the window period. (Jun 2026 recall.)",
+      "source": "HIV / Hepatitis recall"
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Which is found in the blood for definitive early diagnosis of HIV?",
+      "options": {
+        "A": "p24 antigen",
+        "B": "HBcAg",
+        "C": "Negri bodies",
+        "D": "Owl's-eye cells"
+      },
+      "answer": "A",
+      "explanation": "<b>p24 (capsid) antigen</b> is detectable in blood early. Negri = rabies; owl's-eye = CMV; HBcAg = HBV core (in cells).",
+      "source": "HIV / Hepatitis recall"
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Which virus uses reverse transcriptase AND integrase and infects CD4 cells?",
+      "options": {
+        "A": "HIV",
+        "B": "HBV",
+        "C": "HTLV",
+        "D": "HSV"
+      },
+      "answer": "A",
+      "explanation": "<b>HIV</b>: gp120→CD4 entry; RT, integrase and protease enzymes.",
+      "source": "HIV / Hepatitis recall"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "What is the medication used for HIV?",
+      "options": {
+        "A": "Azidothymidine (AZT) / combination ART",
+        "B": "Acyclovir",
+        "C": "Oseltamivir",
+        "D": "Ganciclovir"
+      },
+      "answer": "A",
+      "explanation": "<b>AZT</b> and combination antiretroviral therapy.",
+      "source": "HIV / Hepatitis recall"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Serological markers in a patient with PAST (resolved) hepatitis B infection:",
+      "options": {
+        "A": "HBsAg (−), Anti-HBc (+), Anti-HBs (+)",
+        "B": "HBsAg (+), Anti-HBc IgM (+)",
+        "C": "Anti-HBs (+) only",
+        "D": "HBeAg (+), Anti-HBs (+)"
+      },
+      "answer": "A",
+      "explanation": "Resolved/immune = <b>HBsAg negative, Anti-HBc (+), Anti-HBs (+)</b>. Anti-HBs alone = vaccinated. (Jun 2026 recall — Georgia's correction.)",
+      "source": "HIV / Hepatitis recall"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Which serological pattern would be expected in CHRONIC hepatitis B?",
+      "options": {
+        "A": "HBsAg (+) and Anti-HBc IgM/IgG (+)",
+        "B": "Anti-HBs (+) alone",
+        "C": "HBsAg (−), Anti-HBc (−)",
+        "D": "Anti-HBs (+), Anti-HBc (−)"
+      },
+      "answer": "A",
+      "explanation": "Chronic HBV = persistent <b>HBsAg (+)</b> (>6 months) with Anti-HBc positive. (Jun 2026 recall.)",
+      "source": "HIV / Hepatitis recall"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Chronic HCV infection is associated with:",
+      "options": {
+        "A": "Hepatocellular carcinoma",
+        "B": "Aplastic crisis",
+        "C": "Congenital cataracts",
+        "D": "Croup"
+      },
+      "answer": "A",
+      "explanation": "Chronic HCV → cirrhosis and <b>hepatocellular carcinoma</b>.",
+      "source": "HIV / Hepatitis recall"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "Anti-HBc antibody in the blood indicates immunisation — true or the wrong statement?",
+      "options": {
+        "A": "Wrong — Anti-HBs indicates immunisation",
+        "B": "True",
+        "C": "Anti-HBc = vaccine response",
+        "D": "Anti-HBe = immunisation"
+      },
+      "answer": "A",
+      "explanation": "<b>Anti-HBs</b> (not Anti-HBc) indicates immunity/vaccination. Anti-HBc = past exposure. (Sept recall flagged this as the wrong statement.)",
+      "source": "HIV / Hepatitis recall"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "Which is associated with hyphae?",
+      "options": {
+        "A": "Molds",
+        "B": "Yeasts",
+        "C": "Bacteria",
+        "D": "Protozoa"
+      },
+      "answer": "A",
+      "explanation": "<b>Moulds</b> form hyphae. Yeasts are unicellular (pseudohyphae only). (Jun 2026 recall Q1.)",
+      "source": "Mycology / Parasitology recall"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Amphotericin B works by binding:",
+      "options": {
+        "A": "Ergosterol in the fungal cell membrane",
+        "B": "The fungal cell wall glucan",
+        "C": "Fungal DNA",
+        "D": "Fungal ribosomes"
+      },
+      "answer": "A",
+      "explanation": "Amphotericin B (polyene) binds <b>ergosterol</b> → membrane pores → fungicidal.",
+      "source": "Mycology / Parasitology recall"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Which is a systemic (endemic) dimorphic mycosis?",
+      "options": {
+        "A": "Histoplasmosis",
+        "B": "Tinea pedis",
+        "C": "Pityriasis versicolor",
+        "D": "Oral thrush"
+      },
+      "answer": "A",
+      "explanation": "<b>Histoplasma capsulatum</b> — dimorphic systemic mycosis (bird/bat droppings).",
+      "source": "Mycology / Parasitology recall"
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Which is mostly intracellular?",
+      "options": {
+        "A": "Plasmodium",
+        "B": "Trichomonas vaginalis",
+        "C": "Cryptococcus neoformans",
+        "D": "Giardia"
+      },
+      "answer": "A",
+      "explanation": "<b>Plasmodium</b> lives intracellularly (hepatocytes/RBCs). Trichomonas & Giardia are luminal; Cryptococcus extracellular. (Jul 2025 recall.)",
+      "source": "Mycology / Parasitology recall"
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Which fungus is LEAST likely to cause harm by colonisation (i.e. it's always pathogenic)?",
+      "options": {
+        "A": "Histoplasma",
+        "B": "Candida",
+        "C": "Aspergillus",
+        "D": "Mucor"
+      },
+      "answer": "A",
+      "explanation": "<b>Histoplasma</b> is a true dimorphic pathogen (not a coloniser). Candida/Aspergillus/Mucor colonise & act opportunistically. (Sept recall.)",
+      "source": "Mycology / Parasitology recall"
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "Toxoplasmosis is transmitted by:",
+      "options": {
+        "A": "Cats",
+        "B": "Mosquitoes",
+        "C": "Ticks",
+        "D": "Sandflies"
+      },
+      "answer": "A",
+      "explanation": "<b>Cats</b> are the definitive host of Toxoplasma gondii (oocysts in faeces; also undercooked meat).",
+      "source": "Mycology / Parasitology recall"
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Enterobius vermicularis (pinworm) characteristically affects the:",
+      "options": {
+        "A": "Perianal area of children",
+        "B": "Liver",
+        "C": "Lungs",
+        "D": "Brain"
+      },
+      "answer": "A",
+      "explanation": "<b>Perianal itching in children</b> (Scotch-tape test).",
+      "source": "Mycology / Parasitology recall"
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "Which can be caused by parasites?",
+      "options": {
+        "A": "Cysticercosis",
+        "B": "Influenza",
+        "C": "Shingles",
+        "D": "Roseola"
+      },
+      "answer": "A",
+      "explanation": "<b>Cysticercosis</b> is caused by Taenia (tapeworm) larvae. (Jul 2025 recall.)",
+      "source": "Mycology / Parasitology recall"
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "The wrong statement is: 'fungi and protozoa use flagella for movement' — because:",
+      "options": {
+        "A": "Not all fungi/protozoa are flagellated",
+        "B": "All fungi swim with flagella",
+        "C": "Protozoa never move",
+        "D": "Fungi are motile with cilia"
+      },
+      "answer": "A",
+      "explanation": "Most fungi are non-motile and only some protozoa are flagellated — so the blanket statement is <b>false</b>. (Sept recall — 'wrong statement'.)",
+      "source": "Mycology / Parasitology recall"
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "Which of these has a vaccine?",
+      "options": {
+        "A": "VZV",
+        "B": "HSV",
+        "C": "HCV",
+        "D": "EBV"
+      },
+      "answer": "A",
+      "explanation": "<b>VZV</b> (varicella & zoster vaccines). No licensed HSV, HCV or EBV vaccine. (Sept recall.)",
+      "source": "Vaccines / antivirals / misc recall"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "Which virus has NO specific antiviral and NO vaccine?",
+      "options": {
+        "A": "Rhinovirus",
+        "B": "Influenza",
+        "C": "HBV",
+        "D": "HSV"
+      },
+      "answer": "A",
+      "explanation": "<b>Rhinovirus</b> — too many serotypes → neither vaccine nor specific antiviral. (Jul 2025 recall.)",
+      "source": "Vaccines / antivirals / misc recall"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "Which is given as a live, attenuated vaccine?",
+      "options": {
+        "A": "VZV (varicella)",
+        "B": "Hepatitis B",
+        "C": "HPV",
+        "D": "Injectable influenza"
+      },
+      "answer": "A",
+      "explanation": "<b>Varicella/VZV</b> is live-attenuated (also MMR, OPV, rotavirus, yellow fever).",
+      "source": "Vaccines / antivirals / misc recall"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "By which mechanism are viruses LEAST likely to cause disease?",
+      "options": {
+        "A": "Producing exotoxins",
+        "B": "Cell lysis",
+        "C": "Immune-mediated damage",
+        "D": "Cell transformation"
+      },
+      "answer": "A",
+      "explanation": "Viruses don't secrete classic <b>exotoxins</b> (that's bacteria). They damage via lysis, immunopathology or transformation. (Sept recall.)",
+      "source": "Vaccines / antivirals / misc recall"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "Which arthropod is a vector for viral infections in humans?",
+      "options": {
+        "A": "Mosquitoes",
+        "B": "Lice",
+        "C": "Fleas",
+        "D": "Beetles"
+      },
+      "answer": "A",
+      "explanation": "<b>Mosquitoes</b> transmit arboviruses (WNV, Dengue, YF, Chikungunya). (Jun 2026 recall Q3.)",
+      "source": "Vaccines / antivirals / misc recall"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "Which step of PCR occurs at approximately 95 °C?",
+      "options": {
+        "A": "Denaturation",
+        "B": "Primer annealing",
+        "C": "Elongation",
+        "D": "Initial activation"
+      },
+      "answer": "A",
+      "explanation": "<b>Denaturation</b> (~95 °C) separates the DNA strands; annealing ~50–60 °C; extension ~72 °C. (Jun 2026 recall Q5.)",
+      "source": "Vaccines / antivirals / misc recall"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "Which has a rodent reservoir?",
+      "options": {
+        "A": "Hantaviruses",
+        "B": "West Nile virus",
+        "C": "Rabies",
+        "D": "Dengue"
+      },
+      "answer": "A",
+      "explanation": "<b>Hantaviruses</b> are robo (rodent-borne) viruses — inhaled rodent excreta. (Sept recall.)",
+      "source": "Vaccines / antivirals / misc recall"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "HIV infects which cells / uses which enzyme?",
+      "options": {
+        "A": "CD4 cells; reverse transcriptase",
+        "B": "CD8 cells; neuraminidase",
+        "C": "B cells; integrase only",
+        "D": "Erythrocytes; protease"
+      },
+      "answer": "A",
+      "explanation": "HIV infects <b>CD4</b> cells and carries <b>reverse transcriptase</b> (+ integrase, protease). (Sept recall.)",
+      "source": "Vaccines / antivirals / misc recall"
+    },
+    {
+      "id": 38,
+      "type": "mcq",
+      "stem": "EBV's main cellular target is:",
+      "options": {
+        "A": "B lymphocytes (via CD21)",
+        "B": "CD4 T cells",
+        "C": "Erythrocytes",
+        "D": "Hepatocytes"
+      },
+      "answer": "A",
+      "explanation": "EBV infects <b>B lymphocytes</b> through CD21. (Jul 2025 recall.)",
+      "source": "Vaccines / antivirals / misc recall"
+    }
+  ]
+}
