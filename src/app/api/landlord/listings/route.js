@@ -138,7 +138,7 @@ export async function POST(request) {
   }
 
   const authedSupabase = getSupabaseWithToken(token);
-  const supabase = getSupabase();
+  const supabase = getSupabaseAsService();
 
   // Insert rent row (use service-role client because the RLS ALL policy on
   // rent requires the rent_id to already appear in listings, which blocks the
