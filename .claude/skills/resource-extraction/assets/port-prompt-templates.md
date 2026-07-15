@@ -1,8 +1,9 @@
 # Port-prompt templates
 
-Hand these to a cheap coding agent (Grok/Haiku/Fable) to turn STAGED inputs into
-repo content. Fill the `<…>` placeholders. **Every prompt starts with the
-worktree setup + the INPUT-MISSING guardrail.** Comment-free (founder's shell).
+Hand these to a cheap coding agent (Haiku 4.5, or Sonnet 5 as a safe upgrade —
+NOT Fable 5) to turn STAGED inputs into repo content. Fill the `<…>`
+placeholders. **Every prompt starts with the worktree setup + the
+INPUT-MISSING guardrail.** Comment-free (founder's shell).
 
 ## Shared header (paste at the top of every port prompt)
 

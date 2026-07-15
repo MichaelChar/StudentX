@@ -2,6 +2,11 @@
 
 Append sparingly (see README). Newest at top.
 
+## 2026-07-15 — Microbiology II run (plain `mcp__Claude_Browser__*`, data-array artifact)
+
+- **For TEXT data, a plain `javascript_tool` return beats clipboard/download outright — try it first.** Refines the Ophthalmology note below (which is about binary/download sandboxing, not re-tested here): returning a plain JS object/array directly — letting the tool's own JSON serialization do the ONE encoding pass — transferred ~50KB+ of question/note JSON per call cleanly through the tool-output channel with zero redaction, on the plain in-app browser (no MCP-Chrome needed). The trap: calling `JSON.stringify()` yourself before returning double-encodes it, and if that pushes the result past the token cap the auto-saved fallback file comes out with mismatched backslash-escaping (`JSONDecodeError: Extra data`) — never stringify your own return value.
+- **Artifact literals can carry a trailing JS method call, not just pure data.** One question array ended `[...].slice(0,4)` (author trimming a placeholder 5th option) — the brace/string-aware parser must also recognize and apply a trailing `.slice(m,n)` after an array literal, or it throws mid-parse.
+
 ## 2026-07 — Ophthalmology run (Claude Code harness, no MCP-Chrome)
 
 - **Transport is harness-dependent; the reliable no-loss channel is a founder-run
