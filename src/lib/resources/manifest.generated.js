@@ -442,6 +442,19 @@ export const RESOURCES = [
     "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
+    "id": "practice:medical-informatics:predicted-practice-exam",
+    "type": "practice-test",
+    "title": "Medical Informatics — Predicted Practice Exam",
+    "description": "Standalone practice exam predicting the contents of the Medical Informatics June 2026 exam.",
+    "href": "/practice/ausom/semester-2/medical-informatics/predicted-practice-exam.html",
+    "school": "ausom",
+    "semester": "semester-2",
+    "country": "gr",
+    "year": 2026,
+    "subject": "medical-informatics",
+    "subjectLabel": "Medical Informatics (MD1008)"
+  },
+  {
     "id": "practice:ophthalmology:clinical-practice-paper",
     "type": "practice-test",
     "title": "Ophthalmology — Clinical Practice Paper",

@@ -187,6 +187,30 @@ function collectNotesEntries() {
   return entries;
 }
 
+// Hand-authored entries for resources that live outside the content/ trees.
+// The Medical Informatics exam is a standalone static HTML page under public/
+// (no per-question JSON), so it can't go through the practice pipeline — it
+// would break scripts/generate-practice-manifest.mjs, which imports a JSON
+// file per test. These carry subject + subjectLabel explicitly (no index.json
+// to derive them from) and are validated against ResourceEntrySchema like
+// everything else.
+const EXTRA_RESOURCES = [
+  {
+    id: 'practice:medical-informatics:predicted-practice-exam',
+    type: 'practice-test',
+    title: 'Medical Informatics — Predicted Practice Exam',
+    description:
+      'Standalone practice exam predicting the contents of the Medical Informatics June 2026 exam.',
+    href: '/practice/ausom/semester-2/medical-informatics/predicted-practice-exam.html',
+    school: 'ausom',
+    semester: 'semester-2',
+    country: 'gr',
+    year: 2026,
+    subject: 'medical-informatics',
+    subjectLabel: 'Medical Informatics (MD1008)',
+  },
+];
+
 function main() {
   const entries = [...collectPracticeEntries(), ...collectFlashcardEntries(), ...collectNotesEntries()];
 
@@ -210,6 +234,9 @@ function main() {
     entry.subject = slug;
     entry.subjectLabel = label;
   }
+
+  // Added after the label pass — EXTRA_RESOURCES carry their own subjectLabel.
+  entries.push(...EXTRA_RESOURCES);
 
   for (const entry of entries) {
     const parsed = ResourceEntrySchema.safeParse(entry);
