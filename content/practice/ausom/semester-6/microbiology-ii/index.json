@@ -1,0 +1,34 @@
+{
+  "subject": "microbiology-ii",
+  "title": "Microbiology II (MD1043)",
+  "school": "ausom",
+  "semester": "semester-6",
+  "country": "gr",
+  "tests": [
+    {
+      "id": "past-papers",
+      "title": "Microbiology II — Past Papers",
+      "kind": "mock",
+      "resourceType": "past-paper",
+      "questionCount": 70,
+      "description": "70 real past-paper MCQs (2020–2022, Greek programme), each tagged with its exam year.",
+      "year": 2026
+    },
+    {
+      "id": "recalls",
+      "title": "Microbiology II — Recalled MCQs",
+      "kind": "topic",
+      "questionCount": 38,
+      "description": "38 student-recalled MCQs across virology, HIV/hepatitis, mycology/parasitology and vaccines/antivirals.",
+      "year": 2026
+    },
+    {
+      "id": "topic-practice",
+      "title": "Microbiology II — Topic Practice",
+      "kind": "topic",
+      "questionCount": 95,
+      "description": "95 self-test MCQs across all 19 note topics (5 per topic), each tagged with its topic for review alongside the notes.",
+      "year": 2026
+    }
+  ]
+}

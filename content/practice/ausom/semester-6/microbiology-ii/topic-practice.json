@@ -1,0 +1,1346 @@
+{
+  "meta": {
+    "title": "Microbiology II — Topic Practice",
+    "course": "MD1043 Microbiology II",
+    "semester": "Semester 6",
+    "total_questions": 95,
+    "mcq_count": 95,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Which structural component of a virion is made mainly of protein and is antigenic?",
+      "options": {
+        "A": "Envelope lipid bilayer",
+        "B": "Capsid",
+        "C": "Genomic RNA",
+        "D": "Host-derived glycolipid"
+      },
+      "answer": "B",
+      "explanation": "The capsid is the protein shell (capsomers) — protects the genome, gives shape, binds receptors and is antigenic. Recurrent exam answer.",
+      "topic": "General Virology — structure, genome, replication"
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "A virus with a segmented (−)ssRNA genome capable of reassortment / antigenic shift is:",
+      "options": {
+        "A": "Rhinovirus",
+        "B": "Rotavirus (dsRNA)",
+        "C": "Influenza virus",
+        "D": "HBV"
+      },
+      "answer": "C",
+      "explanation": "Influenza (Orthomyxo) has a segmented (−)ssRNA genome → reassortment → antigenic shift → pandemics. Rotavirus is also segmented but dsRNA.",
+      "topic": "General Virology — structure, genome, replication"
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Which statement about (+)ssRNA viruses is correct?",
+      "options": {
+        "A": "They must carry their own polymerase to be infectious",
+        "B": "Their genome acts directly as mRNA and is infectious alone",
+        "C": "They always integrate into host DNA",
+        "D": "They cannot be enveloped"
+      },
+      "answer": "B",
+      "explanation": "(+)ssRNA acts directly as mRNA, so naked genome is infectious. (−)ssRNA must bring its own RNA-dependent RNA polymerase and is not infectious alone.",
+      "topic": "General Virology — structure, genome, replication"
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Reverse transcriptase activity is found in which pair?",
+      "options": {
+        "A": "HSV and HPV",
+        "B": "HIV and HBV",
+        "C": "Rotavirus and Norovirus",
+        "D": "Influenza and RSV"
+      },
+      "answer": "B",
+      "explanation": "Retroviruses (HIV, HTLV) and HBV (Hepadna, via an RNA intermediate) both use reverse transcriptase — a classic exam trap since HBV is a DNA virus.",
+      "topic": "General Virology — structure, genome, replication"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Which virus CANNOT be propagated in conventional in-vitro cell culture?",
+      "options": {
+        "A": "Adenovirus",
+        "B": "Poliovirus",
+        "C": "HPV",
+        "D": "Influenza virus"
+      },
+      "answer": "C",
+      "explanation": "HPV cannot be cultured in vitro; diagnosis is molecular. Viruses in general grow only on living substrates (cell cultures, eggs, animals), never cell-free agar.",
+      "topic": "General Virology — structure, genome, replication"
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Viral tropism is determined primarily by:",
+      "options": {
+        "A": "Genome size",
+        "B": "Match between viral attachment protein and host cell receptor",
+        "C": "Presence of an envelope",
+        "D": "Number of serotypes"
+      },
+      "answer": "B",
+      "explanation": "Tropism = viral attachment protein ↔ specific host receptor, restricting a virus to specific tissues of specific species.",
+      "topic": "Viral pathogenicity, tropism & persistence"
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "SARS-CoV-2 enters host cells using which receptor?",
+      "options": {
+        "A": "CD4",
+        "B": "Sialic acid",
+        "C": "ACE2",
+        "D": "CD21"
+      },
+      "answer": "C",
+      "explanation": "SARS-CoV-2 Spike binds ACE2. Influenza HA ↔ sialic acid; HIV gp120 ↔ CD4; EBV/CMV ↔ CD21.",
+      "topic": "Viral pathogenicity, tropism & persistence"
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "The 'eclipse phase' of viral replication refers to the period when:",
+      "options": {
+        "A": "Virus buds from the membrane",
+        "B": "No infectious virus is detectable inside the cell",
+        "C": "The host mounts antibody response",
+        "D": "The virus is latent for years"
+      },
+      "answer": "B",
+      "explanation": "After uncoating, no complete infectious virions can be recovered from the cell until assembly — the eclipse phase.",
+      "topic": "Viral pathogenicity, tropism & persistence"
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Naked (non-enveloped) viruses are typically released by:",
+      "options": {
+        "A": "Budding without killing the cell",
+        "B": "Cell lysis",
+        "C": "Exocytosis of intact vesicles",
+        "D": "Reverse transcription"
+      },
+      "answer": "B",
+      "explanation": "Naked viruses are released by lysis (cytolytic). Enveloped viruses bud and may shed without killing the cell → persistent infection.",
+      "topic": "Viral pathogenicity, tropism & persistence"
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Antigenic drift differs from antigenic shift in that drift is caused by:",
+      "options": {
+        "A": "Reassortment of genome segments",
+        "B": "Random point mutations",
+        "C": "Recombination of two DNA viruses",
+        "D": "Loss of the envelope"
+      },
+      "answer": "B",
+      "explanation": "Drift = small point mutations → seasonal epidemics. Shift = reassortment/major change → pandemics.",
+      "topic": "Viral pathogenicity, tropism & persistence"
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "Which herpesvirus establishes latency in sensory (dorsal root / trigeminal) ganglia?",
+      "options": {
+        "A": "EBV",
+        "B": "CMV",
+        "C": "HSV / VZV",
+        "D": "HHV-8"
+      },
+      "answer": "C",
+      "explanation": "HSV-1/2 and VZV become latent in sensory ganglia. EBV latency is in B cells; HHV-8 → Kaposi sarcoma.",
+      "topic": "Herpesviruses (HSV, VZV, EBV, CMV, HHV6/7/8)"
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Reactivation of latent VZV produces:",
+      "options": {
+        "A": "Infectious mononucleosis",
+        "B": "Herpes zoster (shingles)",
+        "C": "Roseola infantum",
+        "D": "Kaposi sarcoma"
+      },
+      "answer": "B",
+      "explanation": "Primary VZV = chickenpox; reactivation from dorsal root ganglia = zoster along a dermatome.",
+      "topic": "Herpesviruses (HSV, VZV, EBV, CMV, HHV6/7/8)"
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "EBV primarily infects which cells and is associated with which malignancy?",
+      "options": {
+        "A": "T cells; ATLL",
+        "B": "B cells; Burkitt lymphoma / nasopharyngeal carcinoma",
+        "C": "Hepatocytes; HCC",
+        "D": "Endothelium; Kaposi sarcoma"
+      },
+      "answer": "B",
+      "explanation": "EBV infects B lymphocytes (via CD21) and is linked to Burkitt lymphoma, nasopharyngeal carcinoma and post-transplant lymphoma.",
+      "topic": "Herpesviruses (HSV, VZV, EBV, CMV, HHV6/7/8)"
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "The most common viral cause of congenital infection and sensorineural hearing loss is:",
+      "options": {
+        "A": "HSV-2",
+        "B": "Rubella",
+        "C": "CMV",
+        "D": "Parvovirus B19"
+      },
+      "answer": "C",
+      "explanation": "Congenital CMV is the leading infectious cause of congenital hearing loss and neurodevelopmental deficit.",
+      "topic": "Herpesviruses (HSV, VZV, EBV, CMV, HHV6/7/8)"
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "HHV-8 is the causative agent of:",
+      "options": {
+        "A": "Roseola (exanthem subitum)",
+        "B": "Kaposi sarcoma",
+        "C": "Oral hairy leukoplakia",
+        "D": "Herpangina"
+      },
+      "answer": "B",
+      "explanation": "HHV-8 (KSHV) causes Kaposi sarcoma, especially in AIDS. HHV-6/7 cause roseola.",
+      "topic": "Herpesviruses (HSV, VZV, EBV, CMV, HHV6/7/8)"
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Which hepatitis viruses are transmitted mainly by the faecal–oral route?",
+      "options": {
+        "A": "B and C",
+        "B": "A and E",
+        "C": "C and D",
+        "D": "B and D"
+      },
+      "answer": "B",
+      "explanation": "HAV and HEV are enteric (faecal–oral). HBV, HCV, HDV are parenteral/blood-borne.",
+      "topic": "Hepatitis viruses (A, B, C, D, E) + HBV serology"
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "A patient is HBsAg negative, anti-HBs positive, anti-HBc negative. This indicates:",
+      "options": {
+        "A": "Acute infection",
+        "B": "Chronic infection",
+        "C": "Vaccination (immunity)",
+        "D": "Window period"
+      },
+      "answer": "C",
+      "explanation": "Isolated anti-HBs (with negative anti-HBc) = vaccine-induced immunity. Natural infection would also make anti-HBc positive.",
+      "topic": "Hepatitis viruses (A, B, C, D, E) + HBV serology"
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "The marker indicating high infectivity / active HBV replication is:",
+      "options": {
+        "A": "Anti-HBs",
+        "B": "HBeAg",
+        "C": "Anti-HBc IgG",
+        "D": "HBsAg alone"
+      },
+      "answer": "B",
+      "explanation": "HBeAg reflects active replication and high infectivity. Its persistence beyond ~3 months suggests progression to chronicity.",
+      "topic": "Hepatitis viruses (A, B, C, D, E) + HBV serology"
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Hepatitis D virus is a defective virus that requires which co-infection to replicate?",
+      "options": {
+        "A": "HAV",
+        "B": "HCV",
+        "C": "HBV",
+        "D": "HEV"
+      },
+      "answer": "C",
+      "explanation": "HDV is a defective (satellite) virus needing HBsAg from HBV. Only HBV carriers can be infected by HDV.",
+      "topic": "Hepatitis viruses (A, B, C, D, E) + HBV serology"
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "Which hepatitis virus most frequently progresses to chronic infection?",
+      "options": {
+        "A": "HAV",
+        "B": "HCV",
+        "C": "HEV",
+        "D": "None progress"
+      },
+      "answer": "B",
+      "explanation": "HCV becomes chronic in ~75–85% of cases, a leading cause of cirrhosis/HCC. HAV and HEV do not cause chronic infection.",
+      "topic": "Hepatitis viruses (A, B, C, D, E) + HBV serology"
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "The leading viral cause of bronchiolitis in infants is:",
+      "options": {
+        "A": "Influenza A",
+        "B": "RSV",
+        "C": "Rhinovirus",
+        "D": "Adenovirus"
+      },
+      "answer": "B",
+      "explanation": "RSV is the top cause of bronchiolitis and pneumonia in infants; palivizumab is used for prophylaxis in high-risk babies.",
+      "topic": "Respiratory viruses (Influenza, Paraflu, RSV, Corona, Rhino, Adeno)"
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Influenza neuraminidase functions to:",
+      "options": {
+        "A": "Bind sialic acid for entry",
+        "B": "Release progeny virions from the cell surface",
+        "C": "Reverse-transcribe the genome",
+        "D": "Form the capsid"
+      },
+      "answer": "B",
+      "explanation": "Haemagglutinin binds sialic acid (entry); neuraminidase cleaves sialic acid to release budding virions — the target of oseltamivir/zanamivir.",
+      "topic": "Respiratory viruses (Influenza, Paraflu, RSV, Corona, Rhino, Adeno)"
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "The largest number of serotypes, causing the common cold, belongs to:",
+      "options": {
+        "A": "Coronavirus",
+        "B": "Rhinovirus",
+        "C": "Parainfluenza",
+        "D": "RSV"
+      },
+      "answer": "B",
+      "explanation": "Rhinoviruses (~100–160 serotypes) are the commonest cause of the common cold, explaining repeated infections.",
+      "topic": "Respiratory viruses (Influenza, Paraflu, RSV, Corona, Rhino, Adeno)"
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Croup (laryngotracheobronchitis) with a barking cough is most classically caused by:",
+      "options": {
+        "A": "RSV",
+        "B": "Parainfluenza virus",
+        "C": "Adenovirus",
+        "D": "Rhinovirus"
+      },
+      "answer": "B",
+      "explanation": "Parainfluenza viruses are the classic cause of croup with subglottic narrowing and barking cough.",
+      "topic": "Respiratory viruses (Influenza, Paraflu, RSV, Corona, Rhino, Adeno)"
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Adenovirus is distinctive among the common respiratory viruses because it:",
+      "options": {
+        "A": "Has an RNA genome",
+        "B": "Is a naked dsDNA virus that also causes conjunctivitis and gastroenteritis",
+        "C": "Cannot be cultured",
+        "D": "Has an envelope with HA/NA"
+      },
+      "answer": "B",
+      "explanation": "Adenovirus is a naked dsDNA virus causing pharyngoconjunctival fever, keratoconjunctivitis and gastroenteritis, unlike the enveloped RNA respiratory viruses.",
+      "topic": "Respiratory viruses (Influenza, Paraflu, RSV, Corona, Rhino, Adeno)"
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "The most common cause of severe dehydrating gastroenteritis in young children worldwide is:",
+      "options": {
+        "A": "Norovirus",
+        "B": "Rotavirus",
+        "C": "Astrovirus",
+        "D": "Adenovirus 40/41"
+      },
+      "answer": "B",
+      "explanation": "Rotavirus (segmented dsRNA, naked) is the leading cause of severe childhood diarrhoea; live oral vaccines exist.",
+      "topic": "Viral gastroenteritis (Rota, Noro, Adeno, Astro, Sapo)"
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "The commonest cause of epidemic gastroenteritis outbreaks (cruise ships, institutions) in all ages is:",
+      "options": {
+        "A": "Rotavirus",
+        "B": "Norovirus",
+        "C": "Sapovirus",
+        "D": "Adenovirus"
+      },
+      "answer": "B",
+      "explanation": "Norovirus (Calicivirus, (+)ssRNA) causes explosive outbreaks; very low infectious dose and environmental stability.",
+      "topic": "Viral gastroenteritis (Rota, Noro, Adeno, Astro, Sapo)"
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "Rotavirus causes diarrhoea mainly by:",
+      "options": {
+        "A": "Invasion of the bloodstream",
+        "B": "Damaging villous enterocytes + NSP4 enterotoxin → malabsorption/secretion",
+        "C": "Producing a neurotoxin",
+        "D": "Forming pseudomembranes"
+      },
+      "answer": "B",
+      "explanation": "Rotavirus destroys mature villous tip cells and NSP4 acts as a viral enterotoxin, causing osmotic + secretory diarrhoea.",
+      "topic": "Viral gastroenteritis (Rota, Noro, Adeno, Astro, Sapo)"
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "Which gastroenteritis viruses are non-enveloped and therefore alcohol-resistant?",
+      "options": {
+        "A": "Only Rotavirus",
+        "B": "Rota, Noro, Astro and enteric Adeno",
+        "C": "None of them",
+        "D": "Only Norovirus"
+      },
+      "answer": "B",
+      "explanation": "The enteric viruses are all naked (non-enveloped), making them resistant to alcohol hand gels — soap/water and bleach are preferred.",
+      "topic": "Viral gastroenteritis (Rota, Noro, Adeno, Astro, Sapo)"
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "Enteric adenoviruses associated with childhood diarrhoea are serotypes:",
+      "options": {
+        "A": "3 and 7",
+        "B": "40 and 41",
+        "C": "1 and 2",
+        "D": "11 and 21"
+      },
+      "answer": "B",
+      "explanation": "Adenovirus 40/41 (subgroup F) are the enteric serotypes causing paediatric gastroenteritis.",
+      "topic": "Viral gastroenteritis (Rota, Noro, Adeno, Astro, Sapo)"
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "Koplik spots are pathognomonic of:",
+      "options": {
+        "A": "Rubella",
+        "B": "Measles",
+        "C": "Mumps",
+        "D": "Roseola"
+      },
+      "answer": "B",
+      "explanation": "Koplik spots (buccal mucosa) precede the measles rash and are pathognomonic.",
+      "topic": "Measles · Mumps · Rubella"
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "The most feared late complication of measles, appearing years later, is:",
+      "options": {
+        "A": "Orchitis",
+        "B": "Subacute sclerosing panencephalitis (SSPE)",
+        "C": "Congenital cataract",
+        "D": "Parotitis"
+      },
+      "answer": "B",
+      "explanation": "SSPE is a rare, fatal degenerative CNS disease years after measles due to persistent defective virus.",
+      "topic": "Measles · Mumps · Rubella"
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "Rubella infection in the first trimester classically causes:",
+      "options": {
+        "A": "Hydrops fetalis",
+        "B": "Congenital rubella syndrome (cataracts, PDA, deafness)",
+        "C": "Hand-foot-mouth disease",
+        "D": "Shingles"
+      },
+      "answer": "B",
+      "explanation": "Congenital rubella syndrome: sensorineural deafness, cataracts, cardiac defects (PDA), and 'blueberry muffin' rash.",
+      "topic": "Measles · Mumps · Rubella"
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "A common complication of mumps in post-pubertal males is:",
+      "options": {
+        "A": "Meningoencephalitis only",
+        "B": "Orchitis (may cause infertility)",
+        "C": "Pancreatic cancer",
+        "D": "Myocarditis"
+      },
+      "answer": "B",
+      "explanation": "Mumps orchitis is unilateral usually; bilateral cases can rarely cause sterility. Mumps also causes aseptic meningitis and parotitis.",
+      "topic": "Measles · Mumps · Rubella"
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "Measles, mumps and rubella vaccine is what type of vaccine?",
+      "options": {
+        "A": "Inactivated",
+        "B": "Live attenuated",
+        "C": "Subunit/recombinant",
+        "D": "Toxoid"
+      },
+      "answer": "B",
+      "explanation": "MMR is a live attenuated vaccine → contraindicated in pregnancy and severe immunosuppression.",
+      "topic": "Measles · Mumps · Rubella"
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "Which HPV types are most strongly associated with cervical carcinoma?",
+      "options": {
+        "A": "6 and 11",
+        "B": "16 and 18",
+        "C": "1 and 2",
+        "D": "40 and 41"
+      },
+      "answer": "B",
+      "explanation": "HPV 16 and 18 are the principal high-risk oncogenic types; 6 and 11 cause benign genital warts.",
+      "topic": "Oncogenic viruses & HPV"
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "The HPV oncoproteins driving malignant transformation act by:",
+      "options": {
+        "A": "E6 inactivating p53 and E7 inactivating Rb",
+        "B": "Integrating reverse transcriptase",
+        "C": "Producing a secreted toxin",
+        "D": "Blocking neuraminidase"
+      },
+      "answer": "A",
+      "explanation": "E6 degrades p53 and E7 inactivates Rb, releasing the cell cycle brake → transformation.",
+      "topic": "Oncogenic viruses & HPV"
+    },
+    {
+      "id": 38,
+      "type": "mcq",
+      "stem": "Which virus–cancer pairing is INCORRECT?",
+      "options": {
+        "A": "EBV — Burkitt lymphoma",
+        "B": "HBV/HCV — hepatocellular carcinoma",
+        "C": "HTLV-1 — adult T-cell leukaemia",
+        "D": "Rotavirus — colon cancer"
+      },
+      "answer": "D",
+      "explanation": "Rotavirus is not oncogenic. The others are established virus–cancer associations.",
+      "topic": "Oncogenic viruses & HPV"
+    },
+    {
+      "id": 39,
+      "type": "mcq",
+      "stem": "HTLV-1 is associated with:",
+      "options": {
+        "A": "Kaposi sarcoma",
+        "B": "Adult T-cell leukaemia/lymphoma & tropical spastic paraparesis",
+        "C": "Nasopharyngeal carcinoma",
+        "D": "Cervical cancer"
+      },
+      "answer": "B",
+      "explanation": "HTLV-1 (a retrovirus) causes ATLL and HAM/TSP, endemic in Japan and the Caribbean.",
+      "topic": "Oncogenic viruses & HPV"
+    },
+    {
+      "id": 40,
+      "type": "mcq",
+      "stem": "The HPV vaccine is based on:",
+      "options": {
+        "A": "Live attenuated HPV",
+        "B": "Virus-like particles (L1 capsid protein)",
+        "C": "Inactivated whole virus",
+        "D": "Killed E6/E7 proteins"
+      },
+      "answer": "B",
+      "explanation": "HPV vaccines use recombinant L1 virus-like particles (VLPs) — no viral DNA, cannot cause infection.",
+      "topic": "Oncogenic viruses & HPV"
+    },
+    {
+      "id": 41,
+      "type": "mcq",
+      "stem": "The commonest cause of viral (aseptic) meningitis is:",
+      "options": {
+        "A": "Rabies virus",
+        "B": "Enteroviruses (e.g., Coxsackie, echovirus)",
+        "C": "HSV-1",
+        "D": "Measles"
+      },
+      "answer": "B",
+      "explanation": "Enteroviruses are the leading cause of aseptic meningitis, typically self-limiting.",
+      "topic": "CNS viruses (Entero/Polio, Rabies, arboviral encephalitis)"
+    },
+    {
+      "id": 42,
+      "type": "mcq",
+      "stem": "HSV encephalitis characteristically affects which brain region?",
+      "options": {
+        "A": "Cerebellum",
+        "B": "Temporal lobes",
+        "C": "Spinal cord anterior horns",
+        "D": "Occipital cortex"
+      },
+      "answer": "B",
+      "explanation": "HSV-1 encephalitis has a predilection for the temporal lobes; it is a treatable emergency with IV aciclovir.",
+      "topic": "CNS viruses (Entero/Polio, Rabies, arboviral encephalitis)"
+    },
+    {
+      "id": 43,
+      "type": "mcq",
+      "stem": "Negri bodies in neurons are diagnostic of:",
+      "options": {
+        "A": "Poliomyelitis",
+        "B": "Rabies",
+        "C": "Japanese encephalitis",
+        "D": "SSPE"
+      },
+      "answer": "B",
+      "explanation": "Rabies (Rhabdovirus, bullet-shaped) produces cytoplasmic Negri bodies; post-exposure prophylaxis is vaccine + immunoglobulin.",
+      "topic": "CNS viruses (Entero/Polio, Rabies, arboviral encephalitis)"
+    },
+    {
+      "id": 44,
+      "type": "mcq",
+      "stem": "Poliovirus causes paralysis by destroying:",
+      "options": {
+        "A": "Dorsal root ganglia",
+        "B": "Anterior horn motor neurons",
+        "C": "Oligodendrocytes",
+        "D": "Purkinje cells"
+      },
+      "answer": "B",
+      "explanation": "Poliovirus targets anterior horn motor neurons → asymmetric flaccid paralysis.",
+      "topic": "CNS viruses (Entero/Polio, Rabies, arboviral encephalitis)"
+    },
+    {
+      "id": 45,
+      "type": "mcq",
+      "stem": "Rabies post-exposure prophylaxis in a previously unvaccinated person includes:",
+      "options": {
+        "A": "Antivirals only",
+        "B": "Wound care + rabies vaccine + rabies immunoglobulin",
+        "C": "Immunoglobulin only",
+        "D": "No treatment if asymptomatic"
+      },
+      "answer": "B",
+      "explanation": "Once symptomatic, rabies is almost always fatal, so prompt wound cleaning, vaccine and RIG are essential during the incubation period.",
+      "topic": "CNS viruses (Entero/Polio, Rabies, arboviral encephalitis)"
+    },
+    {
+      "id": 46,
+      "type": "mcq",
+      "stem": "Which mosquito transmits dengue, Zika, yellow fever and chikungunya?",
+      "options": {
+        "A": "Anopheles",
+        "B": "Aedes aegypti",
+        "C": "Culex",
+        "D": "Ixodes tick"
+      },
+      "answer": "B",
+      "explanation": "Aedes aegypti is the principal urban vector for these arboviruses (Anopheles → malaria; Culex → West Nile/JE).",
+      "topic": "Arboviruses & viral haemorrhagic fevers (Toga/Flavi/Arena/Bunya/Filo)"
+    },
+    {
+      "id": 47,
+      "type": "mcq",
+      "stem": "A severe complication of secondary dengue infection with a different serotype is:",
+      "options": {
+        "A": "Congenital defects",
+        "B": "Dengue haemorrhagic fever / shock (antibody-dependent enhancement)",
+        "C": "Chronic hepatitis",
+        "D": "Ascending paralysis"
+      },
+      "answer": "B",
+      "explanation": "Antibody-dependent enhancement on secondary infection with a heterologous serotype predisposes to DHF/DSS.",
+      "topic": "Arboviruses & viral haemorrhagic fevers (Toga/Flavi/Arena/Bunya/Filo)"
+    },
+    {
+      "id": 48,
+      "type": "mcq",
+      "stem": "Zika virus infection during pregnancy is associated with:",
+      "options": {
+        "A": "Neonatal hepatitis",
+        "B": "Microcephaly",
+        "C": "Congenital heart block",
+        "D": "Hydrops"
+      },
+      "answer": "B",
+      "explanation": "Congenital Zika causes microcephaly and other CNS malformations.",
+      "topic": "Arboviruses & viral haemorrhagic fevers (Toga/Flavi/Arena/Bunya/Filo)"
+    },
+    {
+      "id": 49,
+      "type": "mcq",
+      "stem": "Ebola and Marburg belong to which family?",
+      "options": {
+        "A": "Flaviviridae",
+        "B": "Filoviridae",
+        "C": "Arenaviridae",
+        "D": "Bunyaviridae"
+      },
+      "answer": "B",
+      "explanation": "Ebola/Marburg are filoviruses (filamentous (−)ssRNA) causing viral haemorrhagic fever with high mortality.",
+      "topic": "Arboviruses & viral haemorrhagic fevers (Toga/Flavi/Arena/Bunya/Filo)"
+    },
+    {
+      "id": 50,
+      "type": "mcq",
+      "stem": "Lassa fever, a rodent-borne haemorrhagic fever, is caused by a virus of which family?",
+      "options": {
+        "A": "Filoviridae",
+        "B": "Arenaviridae",
+        "C": "Togaviridae",
+        "D": "Reoviridae"
+      },
+      "answer": "B",
+      "explanation": "Lassa virus is an Arenavirus transmitted by Mastomys rodent excreta; ribavirin has some efficacy.",
+      "topic": "Arboviruses & viral haemorrhagic fevers (Toga/Flavi/Arena/Bunya/Filo)"
+    },
+    {
+      "id": 51,
+      "type": "mcq",
+      "stem": "Parvovirus B19 is unique among human DNA viruses because it is:",
+      "options": {
+        "A": "A large enveloped dsDNA virus",
+        "B": "A small naked ssDNA virus",
+        "C": "An RNA virus",
+        "D": "A retrovirus"
+      },
+      "answer": "B",
+      "explanation": "B19 is the only ssDNA virus infecting humans — very small and non-enveloped.",
+      "topic": "Parvovirus B19"
+    },
+    {
+      "id": 52,
+      "type": "mcq",
+      "stem": "Parvovirus B19 has tropism for which cells, explaining its main complication?",
+      "options": {
+        "A": "Hepatocytes",
+        "B": "Erythroid progenitor cells (via P antigen)",
+        "C": "T lymphocytes",
+        "D": "Neurons"
+      },
+      "answer": "B",
+      "explanation": "B19 infects erythroid precursors through the P antigen (globoside) → transient aplastic crisis, especially in haemolytic anaemias.",
+      "topic": "Parvovirus B19"
+    },
+    {
+      "id": 53,
+      "type": "mcq",
+      "stem": "The childhood rash caused by parvovirus B19 is:",
+      "options": {
+        "A": "Roseola",
+        "B": "Erythema infectiosum ('slapped cheek', fifth disease)",
+        "C": "Measles",
+        "D": "Rubella"
+      },
+      "answer": "B",
+      "explanation": "Fifth disease = erythema infectiosum with slapped-cheek facial rash and lacy body rash.",
+      "topic": "Parvovirus B19"
+    },
+    {
+      "id": 54,
+      "type": "mcq",
+      "stem": "B19 infection in pregnancy can cause:",
+      "options": {
+        "A": "Congenital cataracts",
+        "B": "Hydrops fetalis",
+        "C": "Microcephaly",
+        "D": "Neonatal hepatitis"
+      },
+      "answer": "B",
+      "explanation": "Fetal infection → severe anaemia and hydrops fetalis due to red-cell aplasia.",
+      "topic": "Parvovirus B19"
+    },
+    {
+      "id": 55,
+      "type": "mcq",
+      "stem": "In a patient with hereditary spherocytosis, parvovirus B19 characteristically precipitates:",
+      "options": {
+        "A": "Haemolytic crisis",
+        "B": "Transient aplastic crisis",
+        "C": "Megaloblastic anaemia",
+        "D": "Polycythaemia"
+      },
+      "answer": "B",
+      "explanation": "By halting erythropoiesis in patients already dependent on high red-cell turnover, B19 causes an aplastic crisis.",
+      "topic": "Parvovirus B19"
+    },
+    {
+      "id": 56,
+      "type": "mcq",
+      "stem": "HIV primarily infects cells bearing which receptor/co-receptor?",
+      "options": {
+        "A": "ACE2",
+        "B": "CD4 with CCR5/CXCR4",
+        "C": "CD21",
+        "D": "Sialic acid"
+      },
+      "answer": "B",
+      "explanation": "HIV gp120 binds CD4 plus a chemokine co-receptor (CCR5 or CXCR4). CCR5-Δ32 confers relative resistance.",
+      "topic": "HIV — biology, course & lab diagnosis"
+    },
+    {
+      "id": 57,
+      "type": "mcq",
+      "stem": "The recommended initial screening test for HIV is:",
+      "options": {
+        "A": "Western blot",
+        "B": "4th-generation antigen/antibody (p24 + Ab) immunoassay",
+        "C": "Viral culture",
+        "D": "CD4 count"
+      },
+      "answer": "B",
+      "explanation": "4th-gen combined p24 antigen/antibody assays shorten the window period; reactive results are confirmed by differentiation assay/Western blot or NAT.",
+      "topic": "HIV — biology, course & lab diagnosis"
+    },
+    {
+      "id": 58,
+      "type": "mcq",
+      "stem": "The 'window period' in HIV testing is:",
+      "options": {
+        "A": "Time from infection until antibodies/antigen are detectable",
+        "B": "Time on antiretroviral therapy",
+        "C": "Interval of clinical latency (years)",
+        "D": "Time to develop AIDS"
+      },
+      "answer": "A",
+      "explanation": "The window period is the early interval after infection before the test marker becomes detectable — a false-negative risk.",
+      "topic": "HIV — biology, course & lab diagnosis"
+    },
+    {
+      "id": 59,
+      "type": "mcq",
+      "stem": "Which laboratory value best defines progression to AIDS?",
+      "options": {
+        "A": "CD4 count < 200 cells/µL (or AIDS-defining illness)",
+        "B": "CD8 > 500",
+        "C": "Viral load < 50",
+        "D": "Positive p24 alone"
+      },
+      "answer": "A",
+      "explanation": "AIDS is defined by CD4 < 200/µL or an AIDS-defining opportunistic illness.",
+      "topic": "HIV — biology, course & lab diagnosis"
+    },
+    {
+      "id": 60,
+      "type": "mcq",
+      "stem": "To monitor the response to antiretroviral therapy, the key test is:",
+      "options": {
+        "A": "HIV antibody titre",
+        "B": "Plasma HIV RNA viral load",
+        "C": "p24 antigen only",
+        "D": "Western blot"
+      },
+      "answer": "B",
+      "explanation": "Plasma HIV-1 RNA (viral load) monitors treatment efficacy; CD4 count tracks immune recovery. Antibody tests are for diagnosis, not monitoring.",
+      "topic": "HIV — biology, course & lab diagnosis"
+    },
+    {
+      "id": 61,
+      "type": "mcq",
+      "stem": "Aciclovir is selectively activated in HSV-infected cells by:",
+      "options": {
+        "A": "Host thymidine kinase",
+        "B": "Viral thymidine kinase",
+        "C": "Reverse transcriptase",
+        "D": "Neuraminidase"
+      },
+      "answer": "B",
+      "explanation": "Aciclovir requires viral thymidine kinase for the first phosphorylation, giving selectivity; it is a guanosine analogue chain terminator.",
+      "topic": "Antiviral drugs"
+    },
+    {
+      "id": 62,
+      "type": "mcq",
+      "stem": "Oseltamivir treats influenza by inhibiting:",
+      "options": {
+        "A": "Haemagglutinin",
+        "B": "Neuraminidase",
+        "C": "M2 ion channel",
+        "D": "RNA polymerase (via reverse transcription)"
+      },
+      "answer": "B",
+      "explanation": "Oseltamivir/zanamivir are neuraminidase inhibitors, blocking release of progeny virions.",
+      "topic": "Antiviral drugs"
+    },
+    {
+      "id": 63,
+      "type": "mcq",
+      "stem": "Which drug class targets HIV by preventing integration of viral DNA into host DNA?",
+      "options": {
+        "A": "Protease inhibitors",
+        "B": "Integrase strand-transfer inhibitors (e.g., raltegravir)",
+        "C": "NRTIs",
+        "D": "Fusion inhibitors"
+      },
+      "answer": "B",
+      "explanation": "Integrase inhibitors (…-tegravir) block proviral integration. NRTIs/NNRTIs target reverse transcriptase; protease inhibitors block maturation.",
+      "topic": "Antiviral drugs"
+    },
+    {
+      "id": 64,
+      "type": "mcq",
+      "stem": "A first-line direct-acting antiviral cure strategy exists for which chronic hepatitis?",
+      "options": {
+        "A": "Hepatitis B",
+        "B": "Hepatitis C",
+        "C": "Hepatitis A",
+        "D": "Hepatitis E"
+      },
+      "answer": "B",
+      "explanation": "HCV is now curable with direct-acting antivirals (e.g., sofosbuvir-based). HBV is suppressed but rarely cured (nucleos(t)ide analogues).",
+      "topic": "Antiviral drugs"
+    },
+    {
+      "id": 65,
+      "type": "mcq",
+      "stem": "Why do antiviral drugs generally have a narrow therapeutic window?",
+      "options": {
+        "A": "Viruses replicate outside cells",
+        "B": "Viruses use host-cell machinery, so few unique viral targets exist",
+        "C": "Viruses lack enzymes",
+        "D": "All antivirals are antibiotics"
+      },
+      "answer": "B",
+      "explanation": "Because viruses replicate using host machinery, selective toxicity is hard — drugs target the few virus-specific enzymes.",
+      "topic": "Antiviral drugs"
+    },
+    {
+      "id": 66,
+      "type": "mcq",
+      "stem": "Which is an example of a live attenuated viral vaccine?",
+      "options": {
+        "A": "Hepatitis B vaccine",
+        "B": "Inactivated polio (Salk)",
+        "C": "MMR",
+        "D": "HPV vaccine"
+      },
+      "answer": "C",
+      "explanation": "MMR, oral polio (Sabin), varicella, yellow fever and rotavirus are live attenuated. HBV/HPV are recombinant subunit; Salk polio is inactivated.",
+      "topic": "Viral vaccines"
+    },
+    {
+      "id": 67,
+      "type": "mcq",
+      "stem": "The hepatitis B vaccine is produced as:",
+      "options": {
+        "A": "Live attenuated HBV",
+        "B": "Recombinant HBsAg (subunit)",
+        "C": "Inactivated whole virus",
+        "D": "Toxoid"
+      },
+      "answer": "B",
+      "explanation": "HBV vaccine is recombinant HBsAg expressed in yeast — induces protective anti-HBs.",
+      "topic": "Viral vaccines"
+    },
+    {
+      "id": 68,
+      "type": "mcq",
+      "stem": "A key contraindication to live attenuated vaccines is:",
+      "options": {
+        "A": "Age over 50",
+        "B": "Pregnancy / severe immunosuppression",
+        "C": "Prior vaccination",
+        "D": "Egg allergy in all cases"
+      },
+      "answer": "B",
+      "explanation": "Live vaccines can replicate and are generally contraindicated in pregnancy and significant immunodeficiency.",
+      "topic": "Viral vaccines"
+    },
+    {
+      "id": 69,
+      "type": "mcq",
+      "stem": "Compared with inactivated vaccines, live attenuated vaccines generally:",
+      "options": {
+        "A": "Require more doses and adjuvant",
+        "B": "Induce stronger, longer-lasting immunity including cellular immunity",
+        "C": "Never induce mucosal immunity",
+        "D": "Cannot revert"
+      },
+      "answer": "B",
+      "explanation": "Live vaccines elicit broad, durable humoral + cellular (and often mucosal) immunity, usually with fewer doses, but carry a small reversion risk.",
+      "topic": "Viral vaccines"
+    },
+    {
+      "id": 70,
+      "type": "mcq",
+      "stem": "Passive immunisation (e.g., hepatitis B immunoglobulin after exposure) provides:",
+      "options": {
+        "A": "Long-lasting active immunity",
+        "B": "Immediate but temporary protection",
+        "C": "Memory B-cell formation",
+        "D": "Lifelong protection"
+      },
+      "answer": "B",
+      "explanation": "Passive immunity gives immediate, short-lived protection via pre-formed antibodies, with no immunological memory.",
+      "topic": "Viral vaccines"
+    },
+    {
+      "id": 71,
+      "type": "mcq",
+      "stem": "The first line of antiviral defence, produced early by infected cells, is:",
+      "options": {
+        "A": "IgG antibody",
+        "B": "Type I interferons (IFN-α/β)",
+        "C": "Complement C3",
+        "D": "IgA"
+      },
+      "answer": "B",
+      "explanation": "Type I interferons induce an antiviral state in neighbouring cells and activate NK cells early in infection.",
+      "topic": "Immunology of viral infection"
+    },
+    {
+      "id": 72,
+      "type": "mcq",
+      "stem": "Which cells kill virus-infected cells that have DOWN-regulated MHC class I?",
+      "options": {
+        "A": "Neutrophils",
+        "B": "Natural killer (NK) cells",
+        "C": "Plasma cells",
+        "D": "Eosinophils"
+      },
+      "answer": "B",
+      "explanation": "NK cells detect 'missing self' (loss of MHC I) — a strategy viruses use to evade CD8 T cells.",
+      "topic": "Immunology of viral infection"
+    },
+    {
+      "id": 73,
+      "type": "mcq",
+      "stem": "Cytotoxic (CD8) T lymphocytes recognise viral peptides presented on:",
+      "options": {
+        "A": "MHC class II",
+        "B": "MHC class I",
+        "C": "CD4",
+        "D": "Complement receptors"
+      },
+      "answer": "B",
+      "explanation": "Endogenous viral peptides are presented on MHC class I to CD8 cytotoxic T cells, which kill infected cells.",
+      "topic": "Immunology of viral infection"
+    },
+    {
+      "id": 74,
+      "type": "mcq",
+      "stem": "Which antibody class is most important at mucosal surfaces (gut, respiratory tract)?",
+      "options": {
+        "A": "IgG",
+        "B": "IgA (secretory)",
+        "C": "IgM",
+        "D": "IgE"
+      },
+      "answer": "B",
+      "explanation": "Secretory IgA neutralises viruses at mucosal portals of entry — relevant to oral/intranasal vaccines.",
+      "topic": "Immunology of viral infection"
+    },
+    {
+      "id": 75,
+      "type": "mcq",
+      "stem": "Neutralising antibodies protect chiefly by:",
+      "options": {
+        "A": "Lysing infected cells directly",
+        "B": "Blocking viral attachment/entry",
+        "C": "Presenting antigen on MHC II",
+        "D": "Producing interferon"
+      },
+      "answer": "B",
+      "explanation": "Neutralising antibodies bind surface proteins and prevent attachment/entry; they are the correlate of protection for many vaccines.",
+      "topic": "Immunology of viral infection"
+    },
+    {
+      "id": 76,
+      "type": "mcq",
+      "stem": "In a severely immunocompromised (e.g., transplant) patient, which latent virus commonly reactivates to cause pneumonitis/colitis?",
+      "options": {
+        "A": "Rhinovirus",
+        "B": "Cytomegalovirus (CMV)",
+        "C": "Rotavirus",
+        "D": "HAV"
+      },
+      "answer": "B",
+      "explanation": "CMV reactivation is a major cause of pneumonitis, colitis and retinitis in transplant and AIDS patients.",
+      "topic": "Infections in the immunocompromised"
+    },
+    {
+      "id": 77,
+      "type": "mcq",
+      "stem": "CMV retinitis is most characteristic of AIDS patients when the CD4 count falls below:",
+      "options": {
+        "A": "500/µL",
+        "B": "350/µL",
+        "C": "50/µL",
+        "D": "1000/µL"
+      },
+      "answer": "C",
+      "explanation": "CMV retinitis typically occurs at CD4 < 50/µL, a hallmark of advanced AIDS.",
+      "topic": "Infections in the immunocompromised"
+    },
+    {
+      "id": 78,
+      "type": "mcq",
+      "stem": "Progressive multifocal leukoencephalopathy (PML) in immunosuppressed patients is caused by:",
+      "options": {
+        "A": "JC polyomavirus",
+        "B": "HSV-1",
+        "C": "Measles",
+        "D": "CMV"
+      },
+      "answer": "A",
+      "explanation": "Reactivated JC virus infects oligodendrocytes → demyelinating PML, seen in AIDS and with certain immunotherapies.",
+      "topic": "Infections in the immunocompromised"
+    },
+    {
+      "id": 79,
+      "type": "mcq",
+      "stem": "Which fungal infection is an AIDS-defining opportunistic pneumonia?",
+      "options": {
+        "A": "Candida vaginitis",
+        "B": "Pneumocystis jirovecii pneumonia",
+        "C": "Tinea pedis",
+        "D": "Otomycosis"
+      },
+      "answer": "B",
+      "explanation": "Pneumocystis jirovecii pneumonia (PCP) is a classic AIDS-defining illness at low CD4 counts.",
+      "topic": "Infections in the immunocompromised"
+    },
+    {
+      "id": 80,
+      "type": "mcq",
+      "stem": "EBV in profoundly immunosuppressed transplant patients can drive:",
+      "options": {
+        "A": "Kaposi sarcoma",
+        "B": "Post-transplant lymphoproliferative disorder (PTLD)",
+        "C": "Shingles",
+        "D": "SSPE"
+      },
+      "answer": "B",
+      "explanation": "Uncontrolled EBV-driven B-cell proliferation causes PTLD after transplantation.",
+      "topic": "Infections in the immunocompromised"
+    },
+    {
+      "id": 81,
+      "type": "mcq",
+      "stem": "Which organism is a dimorphic fungus (mould in environment, yeast at body temperature)?",
+      "options": {
+        "A": "Candida albicans",
+        "B": "Aspergillus fumigatus",
+        "C": "Histoplasma capsulatum",
+        "D": "Trichophyton"
+      },
+      "answer": "C",
+      "explanation": "Dimorphic fungi (Histoplasma, Blastomyces, Coccidioides, Sporothrix) grow as moulds at 25°C and yeasts at 37°C.",
+      "topic": "Mycology — yeasts, moulds, dimorphic, dermatophytes + antifungals"
+    },
+    {
+      "id": 82,
+      "type": "mcq",
+      "stem": "Aspergillus most characteristically causes disease by:",
+      "options": {
+        "A": "Yeast budding in blood",
+        "B": "Septate hyphae with acute-angle branching invading lung tissue",
+        "C": "Pseudohyphae in mucosa",
+        "D": "Spores forming Negri bodies"
+      },
+      "answer": "B",
+      "explanation": "Aspergillus shows septate hyphae branching at ~45°, causing aspergilloma and invasive aspergillosis, especially in neutropenia.",
+      "topic": "Mycology — yeasts, moulds, dimorphic, dermatophytes + antifungals"
+    },
+    {
+      "id": 83,
+      "type": "mcq",
+      "stem": "Cryptococcus neoformans is best identified in CSF by:",
+      "options": {
+        "A": "Gram stain",
+        "B": "India ink / capsular antigen (halo of the polysaccharide capsule)",
+        "C": "Ziehl-Neelsen",
+        "D": "Germ tube test"
+      },
+      "answer": "B",
+      "explanation": "Cryptococcus has a thick polysaccharide capsule seen with India ink; cryptococcal antigen (CrAg) testing is more sensitive. It causes meningitis in AIDS.",
+      "topic": "Mycology — yeasts, moulds, dimorphic, dermatophytes + antifungals"
+    },
+    {
+      "id": 84,
+      "type": "mcq",
+      "stem": "Dermatophytes (Trichophyton, Microsporum, Epidermophyton) infect:",
+      "options": {
+        "A": "Blood",
+        "B": "Keratinised tissue (skin, hair, nails)",
+        "C": "The meninges",
+        "D": "The lungs"
+      },
+      "answer": "B",
+      "explanation": "Dermatophytes digest keratin, causing tinea (ringworm) of skin, hair and nails — a superficial mycosis.",
+      "topic": "Mycology — yeasts, moulds, dimorphic, dermatophytes + antifungals"
+    },
+    {
+      "id": 85,
+      "type": "mcq",
+      "stem": "The 'germ tube' test at 37°C is used to presumptively identify:",
+      "options": {
+        "A": "Aspergillus",
+        "B": "Candida albicans",
+        "C": "Cryptococcus",
+        "D": "Histoplasma"
+      },
+      "answer": "B",
+      "explanation": "Candida albicans forms germ tubes within a couple of hours in serum at 37°C — a rapid presumptive ID.",
+      "topic": "Mycology — yeasts, moulds, dimorphic, dermatophytes + antifungals"
+    },
+    {
+      "id": 86,
+      "type": "mcq",
+      "stem": "Malaria is transmitted by which vector, and the most dangerous species is:",
+      "options": {
+        "A": "Aedes; P. vivax",
+        "B": "Anopheles mosquito; Plasmodium falciparum",
+        "C": "Tsetse fly; P. ovale",
+        "D": "Sandfly; P. malariae"
+      },
+      "answer": "B",
+      "explanation": "Female Anopheles transmits Plasmodium; P. falciparum causes the most severe (cerebral) malaria.",
+      "topic": "Parasitology — protozoa & helminths (exam-critical)"
+    },
+    {
+      "id": 87,
+      "type": "mcq",
+      "stem": "Toxoplasma gondii's definitive host, and the main risk in pregnancy, is:",
+      "options": {
+        "A": "Dogs; neonatal sepsis",
+        "B": "Cats; congenital toxoplasmosis (chorioretinitis, hydrocephalus)",
+        "C": "Cattle; anaemia",
+        "D": "Humans; diarrhoea"
+      },
+      "answer": "B",
+      "explanation": "Cats are the definitive host; primary infection in pregnancy risks congenital toxoplasmosis with the classic triad.",
+      "topic": "Parasitology — protozoa & helminths (exam-critical)"
+    },
+    {
+      "id": 88,
+      "type": "mcq",
+      "stem": "A motile, flagellated protozoan causing vaginitis with a frothy discharge is:",
+      "options": {
+        "A": "Giardia lamblia",
+        "B": "Trichomonas vaginalis",
+        "C": "Entamoeba histolytica",
+        "D": "Leishmania"
+      },
+      "answer": "B",
+      "explanation": "Trichomonas vaginalis is a sexually transmitted flagellate causing frothy, malodorous discharge and 'strawberry cervix'; treated with metronidazole.",
+      "topic": "Parasitology — protozoa & helminths (exam-critical)"
+    },
+    {
+      "id": 89,
+      "type": "mcq",
+      "stem": "Giardia lamblia and Entamoeba histolytica are typically acquired by:",
+      "options": {
+        "A": "Mosquito bite",
+        "B": "Ingestion of cysts (faecal-oral, contaminated water)",
+        "C": "Sexual contact",
+        "D": "Inhalation"
+      },
+      "answer": "B",
+      "explanation": "Both are transmitted by ingesting cysts. Giardia → malabsorptive diarrhoea; E. histolytica → bloody dysentery and liver abscess.",
+      "topic": "Parasitology — protozoa & helminths (exam-critical)"
+    },
+    {
+      "id": 90,
+      "type": "mcq",
+      "stem": "The pinworm causing perianal itching, diagnosed by the adhesive-tape test, is:",
+      "options": {
+        "A": "Ascaris lumbricoides",
+        "B": "Enterobius vermicularis",
+        "C": "Taenia solium",
+        "D": "Echinococcus granulosus"
+      },
+      "answer": "B",
+      "explanation": "Enterobius (pinworm) causes nocturnal perianal pruritus; eggs are collected on cellophane tape in the morning.",
+      "topic": "Parasitology — protozoa & helminths (exam-critical)"
+    },
+    {
+      "id": 91,
+      "type": "mcq",
+      "stem": "The most sensitive and now first-line method for diagnosing most viral infections is:",
+      "options": {
+        "A": "Viral culture",
+        "B": "Nucleic acid amplification (PCR)",
+        "C": "Electron microscopy",
+        "D": "Serology alone"
+      },
+      "answer": "B",
+      "explanation": "Molecular NAAT/PCR is fast and highly sensitive, replacing culture as the first-line viral diagnostic for most agents.",
+      "topic": "Laboratory diagnosis (viral · fungal · syndromic)"
+    },
+    {
+      "id": 92,
+      "type": "mcq",
+      "stem": "Detection of virus-specific IgM in serum generally indicates:",
+      "options": {
+        "A": "Past infection / immunity",
+        "B": "Recent or acute infection",
+        "C": "Vaccination years ago",
+        "D": "No infection"
+      },
+      "answer": "B",
+      "explanation": "IgM appears early and is a marker of recent/acute infection; IgG indicates past exposure or immunity.",
+      "topic": "Laboratory diagnosis (viral · fungal · syndromic)"
+    },
+    {
+      "id": 93,
+      "type": "mcq",
+      "stem": "A four-fold rise in IgG titre between acute and convalescent sera indicates:",
+      "options": {
+        "A": "Chronic latent infection",
+        "B": "Recent active infection (seroconversion)",
+        "C": "Successful vaccination only",
+        "D": "Laboratory error"
+      },
+      "answer": "B",
+      "explanation": "A ≥4-fold rise in paired sera confirms recent active infection.",
+      "topic": "Laboratory diagnosis (viral · fungal · syndromic)"
+    },
+    {
+      "id": 94,
+      "type": "mcq",
+      "stem": "Cytopathic effect (CPE) observed in cell culture is used to:",
+      "options": {
+        "A": "Quantify antibodies",
+        "B": "Indicate viral growth/replication in the culture",
+        "C": "Measure interferon",
+        "D": "Detect fungal hyphae"
+      },
+      "answer": "B",
+      "explanation": "CPE (rounding, syncytia, inclusion bodies) signals viral replication in cell culture.",
+      "topic": "Laboratory diagnosis (viral · fungal · syndromic)"
+    },
+    {
+      "id": 95,
+      "type": "mcq",
+      "stem": "Which specimen/method is appropriate for diagnosing a suspected dermatophyte (tinea) infection?",
+      "options": {
+        "A": "Blood culture",
+        "B": "Skin/nail scraping with KOH prep (and fungal culture)",
+        "C": "CSF India ink",
+        "D": "Stool ova & parasites"
+      },
+      "answer": "B",
+      "explanation": "Skin/nail scraping with KOH prep reveals hyphae; Sabouraud culture confirms the dermatophyte.",
+      "topic": "Laboratory diagnosis (viral · fungal · syndromic)"
+    }
+  ]
+}
