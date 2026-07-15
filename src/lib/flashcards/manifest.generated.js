@@ -7,6 +7,7 @@
 
 import anatomy1Index from '../../../content/flashcards/anatomy-1/index.json';
 import biochemistryIndex from '../../../content/flashcards/biochemistry/index.json';
+import englishTerminologyIndex from '../../../content/flashcards/english-terminology/index.json';
 import generalHistologyIndex from '../../../content/flashcards/general-histology/index.json';
 import generalPhysiologyIndex from '../../../content/flashcards/general-physiology/index.json';
 
@@ -17,6 +18,9 @@ export const MANIFEST = {
   },
   "biochemistry": {
     index: biochemistryIndex,
+  },
+  "english-terminology": {
+    index: englishTerminologyIndex,
   },
   "general-histology": {
     index: generalHistologyIndex,

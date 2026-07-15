@@ -1,0 +1,17 @@
+{
+  "subject": "english-terminology",
+  "title": "English Terminology (Medical Terminology)",
+  "school": "ausom",
+  "semester": "semester-2",
+  "country": "gr",
+  "decks": [{
+    "id": "english-terminology",
+    "title": "English Terminology — Full medical vocabulary deck",
+    "description": "1,198 term-definition cards covering medical terminology word-building (prefixes, suffixes, plurals) plus system-by-system vocabulary: digestive, urinary, reproductive, cardiovascular, blood, respiratory, skeletal, and muscular systems. Text-only (rebuilt from a Quizlet-imported deck to strip audio and fit under the static-asset size limit).",
+    "cardCount": 1198,
+    "fileSizeBytes": 327898,
+    "file": "/flashcards/english-terminology/english-terminology.apkg",
+    "updated": "2026-07-15",
+    "year": 2026
+  }]
+}
