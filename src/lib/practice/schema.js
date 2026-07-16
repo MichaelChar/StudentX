@@ -62,7 +62,6 @@ export const ExplanationSchema = z
  * @property {Explanation} explanation
  * @property {string} topic         e.g. "upper-limb".
  * @property {'high' | 'medium'} yield
- * @property {string} [pastPaperRef] Mock exams only, e.g. "2024-Q12".
  */
 export const QuestionSchema = z
   .object({
@@ -83,7 +82,6 @@ export const QuestionSchema = z
     explanation: ExplanationSchema,
     topic: z.string().min(1),
     yield: z.enum(['high', 'medium']),
-    pastPaperRef: z.string().min(1).optional(),
   })
   // mcq / tf must carry a stem, options and a correct index
   .refine(
@@ -155,7 +153,7 @@ export const PracticeTestSchema = z.object({
 });
 
 /**
- * The simplified biochem format: a flat past-paper transcription with no
+ * The simplified biochem format: a flat MCQ/long-answer transcription with no
  * top-level `id`/`subject`/`kind` (the filename + index.json entry are the
  * only source of truth for those), letter-keyed `options`, an `answer`
  * letter instead of a `correct` index, and a `long_answer` type instead of
@@ -165,7 +163,7 @@ export const PracticeTestSchema = z.object({
  *
  * @typedef {Object} BiochemQuestion
  * @property {number} id
- * @property {string} [source]        Past-paper reference badge, e.g. "T1 Q12".
+ * @property {string} [source]        Reference badge, e.g. "T1 Q12".
  * @property {'mcq' | 'long_answer'} type
  * @property {string} stem
  * @property {Object<string,string>} [options]  Letter-keyed options (mcq only).
@@ -223,8 +221,6 @@ export const BiochemTestSchema = z.object({
  * @property {string} description   Shown verbatim on the /resources card.
  * @property {number} year          Exam/curriculum year the test targets (see
  *                                  src/lib/resources/taxonomy.js), e.g. 2026.
- * @property {'practice-test' | 'past-paper'} [resourceType] Card type on the
- *                                  /resources hub; defaults to 'practice-test'.
  */
 /**
  * @typedef {Object} SubjectIndex
@@ -252,10 +248,6 @@ export const SubjectIndexSchema = z.object({
       questionCount: z.number().int().nonnegative(),
       description: z.string().min(1),
       year: z.number().int().min(MIN_YEAR).max(MAX_YEAR),
-      // Optional; defaults to 'practice-test' when the /resources card type is
-      // derived (see scripts/generate-resources-manifest.mjs). 'past-paper'
-      // surfaces the test as a past paper on the hub.
-      resourceType: z.enum(['practice-test', 'past-paper']).optional(),
     }),
   ),
 });

@@ -12,7 +12,7 @@ Planned in a prior session; all decisions below are final — do not re-litigate
 - Facets: **Resource type**, **Semester**, **Country** — where *country* means **the country of the medical curriculum** the resource follows (e.g. AUSoM is a Greek-curriculum school in Greece and may share resources with other Greek med schools). It is NOT the school's location per se.
 - A facet is **only rendered when it has ≥2 distinct values** in the live data. Today only Resource type qualifies (all content is AUSoM / semester-2 / Greek curriculum); semester + country appear automatically once content varies. Build all three into the data model now.
 - Filters are a **compact horizontal chip row** above the card list — NOT a half-screen filter panel. Resources must be visible above the fold on mobile.
-- Each chip shows a **count** ("Past papers · 3"). Filtering happens **client-side** over the bundled manifest.
+- Each chip shows a **count** ("Practice tests · 12"). Filtering happens **client-side** over the bundled manifest.
 - Filter state lives in the **URL query string** (`/resources?type=practice-test&semester=2`) via `useSearchParams` — shareable/deep-linkable, back-button works.
 - **Never render an empty result set**: if the active combination matches nothing, show a "no exact matches" line followed by the nearest relaxation (e.g. drop the last-applied filter) so the page never dead-ends.
 - Data stays in **build-time JSON manifests** (existing pattern) — no Supabase, no runtime fs (Cloudflare Workers constraint).
@@ -30,7 +30,7 @@ Planned in a prior session; all decisions below are final — do not re-litigate
 ### 1. Data model
 
 - `src/lib/resources/taxonomy.js` — single source of truth for controlled vocabularies with labels:
-  - `RESOURCE_TYPES`: `practice-test`, `flashcard-deck` (add `past-paper`, `study-notes` to the enum now; unused is fine).
+  - `RESOURCE_TYPES`: `practice-test`, `flashcard-deck` (add `study-notes` to the enum now; unused is fine). `past-paper` was removed from the enum — past papers are not a supported resource type on this hub (copyright/liability; see resource-extraction skill).
   - `SEMESTERS`: `semester-1` … (label "Semester 1" …).
   - `COUNTRIES`: `gr` → "Greek curriculum" (extendable).
 - Extend each `content/**/index.json` with the facet fields it's missing: `type`, `semester`, `school`, `country`. Flashcards index needs `semester` + `country` + `school`; practice indexes need `country`. Per-item entries (each test / each deck) become one resource card each.

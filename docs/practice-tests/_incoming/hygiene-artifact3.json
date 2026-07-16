@@ -1,1 +1,615 @@
-{"source":"artifact-3 Hygiene MD1040","pastPapers":{"byYear":[{"year":"2020","label":"2020 (Feb)","count":25},{"year":"2022","label":"2022 (Jul)","count":32},{"year":"2023","label":"2023 (Jul B)","count":30},{"year":"2024A","label":"2024 (Group A)","count":30},{"year":"2024B","label":"2024 (Group B)","count":30}],"combinedCount":147,"questions":[{"id":1,"type":"mcq","stem":"According to current legislation, drinking water is allowed to contain up to:","options":{"A":"1 enterococcus per 100 mL","B":"100 enterococci per 100 mL","C":"0 enterococci per 100 mL","D":"10 enterococci per 100 mL"},"answer":"C","explanation":"Legislation requires 0 enterococci/100 mL — indicators of faecal contamination.","source":"2020 (Feb)"},{"id":2,"type":"mcq","stem":"Water is essential for the human body for all of the following, except:","options":{"A":"Provides elasticity to tissues","B":"Provides energy to muscles during initial effort","C":"Solvent/transport medium for nutrients","D":"Contributes to thermoregulation"},"answer":"B","explanation":"Water has no calories/energy — it cannot fuel muscles.","source":"2020 (Feb)"},{"id":3,"type":"mcq","stem":"Which is less polluting?","options":{"A":"Natural Gas","B":"Coal","C":"Oil","D":"Wood"},"answer":"A","explanation":"Natural gas is the cleanest-burning fossil fuel.","source":"2020 (Feb)"},{"id":4,"type":"mcq","stem":"Which energy is non-renewable?","options":{"A":"Wind","B":"Nuclear","C":"Solar","D":"Hydropower"},"answer":"B","explanation":"Nuclear uses finite uranium; the others are renewable.","source":"2020 (Feb)"},{"id":5,"type":"mcq","stem":"Regarding HEALTH EDUCATION methods, which is true?","options":{"A":"Social/audiovisual media improves the outcome","B":"Approach depends on characteristics & education level of trainees","C":"Small groups show the best results","D":"All are correct"},"answer":"B","explanation":"Tailor the approach to the audience's characteristics & education level.","source":"2020 (Feb)","_flag_ambiguous":true},{"id":6,"type":"mcq","stem":"Hospital epidemics must be investigated for all except:","options":{"A":"The mode of transmission","B":"Determine source & reservoir","C":"Let it evolve until natural immunity","D":"Intervene with specific measures"},"answer":"C","explanation":"You never let an outbreak run its course.","source":"2020 (Feb)"},{"id":7,"type":"mcq","stem":"Parasitic protozoa (emerging pathogens) include:","options":{"A":"Helicobacter pylori","B":"Cryptosporidium parvum","C":"Enteroviruses","D":"E. coli"},"answer":"B","explanation":"Cryptosporidium parvum is the emerging protozoan.","source":"2020 (Feb)"},{"id":8,"type":"mcq","stem":"Bottled water must contain zero cfu/mL of the following, except:","options":{"A":"Pseudomonas","B":"Heterotrophic flora","C":"Enterococci","D":"E. coli"},"answer":"B","explanation":"Heterotrophic flora is allowed a limit; true indicators must be 0.","source":"2020 (Feb)"},{"id":9,"type":"mcq","stem":"Waters free of microorganisms (intervention retains microbes during creation) are:","options":{"A":"Rainwater","B":"Surface waters","C":"Liquids in tanks","D":"Groundwater"},"answer":"D","explanation":"Groundwater is soil-filtered as it forms.","source":"2020 (Feb)"},{"id":10,"type":"mcq","stem":"Regarding BMI, which is true?","options":{"A":"18.5–25 normal for all ages","B":"25–30 overweight for all ages","C":"None are correct","D":"All are correct"},"answer":"C","explanation":"BMI cut-offs are not valid at all ages → none hold.","source":"2020 (Feb)"},{"id":11,"type":"mcq","stem":"Food contamination occurs by all the following, except:","options":{"A":"Intense ventilation of processing areas","B":"From rodents via feces","C":"From sick animals (salmonellosis)","D":"From food handlers"},"answer":"A","explanation":"Ventilation is not a contamination route.","source":"2020 (Feb)"},{"id":12,"type":"mcq","stem":"Regarding epidemic outbreaks, which is incorrect?","options":{"A":"Appropriate transmission to susceptibles","B":"A limited, clearly defined number of susceptibles","C":"Agent that has affected many","D":"Three basic characteristics needed"},"answer":"B","explanation":"An outbreak needs a sufficiently LARGE susceptible pool, not a limited one.","source":"2020 (Feb)"},{"id":13,"type":"mcq","stem":"Which pollutant is secondary?","options":{"A":"Hydrocarbons","B":"SO₂","C":"CO","D":"O₃"},"answer":"D","explanation":"Ground-level ozone (O₃) forms in the atmosphere → secondary.","source":"2020 (Feb)"},{"id":14,"type":"mcq","stem":"Microbes found in water include all except:","options":{"A":"Fungi","B":"Bacteroids","C":"Polysaccharides","D":"Algae"},"answer":"C","explanation":"Polysaccharides are molecules, not microbes.","source":"2020 (Feb)"},{"id":15,"type":"mcq","stem":"What does NOT constitute an air pollution control measure?","options":{"A":"High chimneys","B":"Improvement of fuels","C":"Increasing tree coverage","D":"Renewable energy sources"},"answer":"A","explanation":"Tall chimneys disperse — they don't reduce emissions.","source":"2020 (Feb)"},{"id":16,"type":"mcq","stem":"The main reason we do not have Nuclear Energy in Greece:","options":{"A":"Earthquake-prone country","B":"We don't trust the technology","C":"No uranium","D":"No plutonium"},"answer":"A","explanation":"Greece is highly seismic.","source":"2020 (Feb)"},{"id":17,"type":"mcq","stem":"Regarding investigation of outbreaks, which is true?","options":{"A":"Info only from affected people","B":"Confirmation precedes the outbreak","C":"Aims to identify the agent","D":"All are incorrect"},"answer":"C","explanation":"A central aim is identifying the causative agent.","source":"2020 (Feb)"},{"id":18,"type":"mcq","stem":"Regarding common source epidemics, which is true?","options":{"A":"Left-skewed histogram","B":"All are incorrect","C":"Right-skewed 'log distribution of outbreak'","D":"Differs from point-source when incubation is long"},"answer":"C","explanation":"Common/point-source curves are log-normal → right-skewed.","source":"2020 (Feb)"},{"id":19,"type":"mcq","stem":"Two toxins, each specific for diarrhea or vomiting, are produced by:","options":{"A":"Salmonella","B":"Bacillus cereus","C":"Listeria","D":"Yersinia"},"answer":"B","explanation":"Bacillus cereus — diarrhoeal + emetic toxins.","source":"2020 (Feb)"},{"id":20,"type":"mcq","stem":"Regarding foodborne infections, all apply except:","options":{"A":"Microorganism present in food","B":"Multiplies in the intestinal tract","C":"Individual susceptible","D":"Multiplies in the food in high concentration"},"answer":"D","explanation":"In-food multiplication = intoxication.","source":"2020 (Feb)"},{"id":21,"type":"mcq","stem":"Which method is NOT a way to disinfect drinking water?","options":{"A":"Ultraviolet radiation","B":"Chlorination","C":"Ozonation","D":"Addition of aluminum sulfate"},"answer":"D","explanation":"Aluminium sulfate = coagulant, not disinfectant.","source":"2020 (Feb)"},{"id":22,"type":"mcq","stem":"Regarding changes in weight:","options":{"A":"All are incorrect","B":"↑Carbs (>65%) increases weight","C":"↑Fat (>40%) increases weight","D":"Energy balance matters only with ideal macronutrients"},"answer":"A","explanation":"Weight = overall energy balance → the specific claims are all wrong.","source":"2020 (Feb)"},{"id":23,"type":"mcq","stem":"The primary greenhouse gas is:","options":{"A":"CO₂","B":"CH₄","C":"SO₂","D":"NOₓ"},"answer":"A","explanation":"CO₂.","source":"2020 (Feb)"},{"id":24,"type":"mcq","stem":"Stratospheric ozone is destroyed by:","options":{"A":"Sulfur oxides","B":"Nitrogen oxides","C":"Dioxins","D":"Chlorofluorocarbons"},"answer":"D","explanation":"CFCs.","source":"2020 (Feb)"},{"id":25,"type":"mcq","stem":"Which is correct regarding ideal intake?","options":{"A":"Target macronutrients to minimize fat","B":"Vitamins have the fewest calories","C":"None are correct","D":"Micronutrients not always necessary"},"answer":"C","explanation":"Vitamins provide no calories; micronutrients are necessary → none correct.","source":"2020 (Feb)"},{"id":26,"type":"mcq","stem":"Regarding the risk of chemicals in food, all are correct except:","options":{"A":"Antibiotics/chemotherapeutics in animals","B":"Thyrostatics & estrogens in animals","C":"Aquaculture in agriculture","D":"Pesticides/insecticides in agriculture"},"answer":"C","explanation":"'Aquaculture' is a farming practice, not a chemical hazard.","source":"2022 (Jul)"},{"id":27,"type":"mcq","stem":"A protozoan disease that can be waterborne is all except:","options":{"A":"Entamoeba histolytica","B":"Cryptosporidium spp.","C":"Giardia lamblia","D":"Onchocerciasis"},"answer":"D","explanation":"Onchocerciasis is a nematode spread by blackflies — not a waterborne protozoan.","source":"2022 (Jul)"},{"id":28,"type":"mcq","stem":"Bottled water must contain zero cfu/mL of the following, except:","options":{"A":"Pseudomonas","B":"E. coli","C":"Enterococci","D":"Heterotrophic flora"},"answer":"D","explanation":"Heterotrophic flora has an allowed limit.","source":"2022 (Jul)"},{"id":29,"type":"mcq","stem":"Regarding micronutrients:","options":{"A":"Not necessary for the whole population","B":"Essential in small doses via supplements","C":"Vitamins more useful than minerals","D":"All are wrong"},"answer":"D","explanation":"Needed by everyone, best from food → all wrong.","source":"2022 (Jul)"},{"id":30,"type":"mcq","stem":"Drinking water is allowed to contain up to:","options":{"A":"100 enterococci/100 mL","B":"0 enterococci/100 mL","C":"10 enterococci/100 mL","D":"1 enterococcus/100 mL"},"answer":"B","explanation":"0 enterococci/100 mL.","source":"2022 (Jul)"},{"id":31,"type":"mcq","stem":"Stratospheric ozone is destroyed by:","options":{"A":"Dioxins","B":"Sulfur oxides","C":"Chlorofluorocarbons","D":"Nitrogen oxides"},"answer":"C","explanation":"CFCs.","source":"2022 (Jul)"},{"id":32,"type":"mcq","stem":"Regarding BMI, which is true?","options":{"A":"18.5–25 normal at all ages","B":"25–30 overweight at all ages","C":"None are correct","D":"All are correct"},"answer":"C","explanation":"Cut-offs not valid at all ages → none.","source":"2022 (Jul)"},{"id":33,"type":"mcq","stem":"The most sensitive ecosystem on the planet is:","options":{"A":"North America","B":"Australia","C":"Africa","D":"The Mediterranean Sea"},"answer":"D","explanation":"The Mediterranean.","source":"2022 (Jul)"},{"id":34,"type":"mcq","stem":"Which is true for low-risk areas for traveler's diarrhea?","options":{"A":"None of the above","B":"Infection rate <30%","C":"Include Northern & Central Europe","D":"Include Russia"},"answer":"C","explanation":"Low-risk = developed regions incl. N & Central Europe.","source":"2022 (Jul)"},{"id":35,"type":"mcq","stem":"Respirable particles (PM10) do NOT cause:","options":{"A":"Cardiovascular diseases","B":"Premature mortality","C":"Respiratory problems","D":"Dermatological alterations"},"answer":"D","explanation":"PM10 harms heart/lungs, not skin.","source":"2022 (Jul)"},{"id":36,"type":"mcq","stem":"Regarding HEALTH EDUCATION methods, which is true?","options":{"A":"Small groups show best results","B":"All are correct","C":"Approach depends on characteristics/education level","D":"Media improves the outcome"},"answer":"C","explanation":"Tailor to the audience's characteristics & education level.","source":"2022 (Jul)","_flag_ambiguous":true},{"id":37,"type":"mcq","stem":"In foodborne infection, all true except:","options":{"A":"Individual susceptible","B":"Present in the food","C":"Multiplies in intestinal tract","D":"Multiplies in the food to high concentration"},"answer":"D","explanation":"In-food multiplication = intoxication.","source":"2022 (Jul)"},{"id":38,"type":"mcq","stem":"Which disease has increased risk in livestock farmers?","options":{"A":"Hepatitis A","B":"Tuberculosis","C":"Brucellosis","D":"Mumps"},"answer":"C","explanation":"Brucellosis.","source":"2022 (Jul)"},{"id":39,"type":"mcq","stem":"What does the attack rate indicate in an outbreak?","options":{"A":"Always the same for a communicable disease","B":"Describes the mode of transmission","C":"None of the above","D":"Quantitative indicator of the extent"},"answer":"D","explanation":"Attack rate measures how widespread the outbreak is.","source":"2022 (Jul)"},{"id":40,"type":"mcq","stem":"The primary greenhouse gas is:","options":{"A":"SO₂","B":"CO₂","C":"CH₄","D":"NOₓ"},"answer":"B","explanation":"CO₂.","source":"2022 (Jul)"},{"id":41,"type":"mcq","stem":"Microbes found in water include all except:","options":{"A":"Algae","B":"Bacteria","C":"Polysaccharides","D":"Fungi"},"answer":"C","explanation":"Polysaccharides aren't microbes.","source":"2022 (Jul)"},{"id":42,"type":"mcq","stem":"Which foods are safe for preventing traveler's diarrhea?","options":{"A":"Tap water","B":"Very hot, freshly cooked foods","C":"None of the above","D":"Cold salads"},"answer":"B","explanation":"Hot, freshly-cooked food is safest.","source":"2022 (Jul)"},{"id":43,"type":"mcq","stem":"Which pollutant is secondary?","options":{"A":"CO","B":"Carbohydrates","C":"O₃","D":"SO₂"},"answer":"C","explanation":"O₃ is secondary.","source":"2022 (Jul)"},{"id":44,"type":"mcq","stem":"Which is true regarding BASIC METABOLISM?","options":{"A":"Mainly influenced by external conditions","B":"Can be influenced both directions by medication","C":"Slightly increases with age in adulthood","D":"Significantly increases during pregnancy"},"answer":"B","explanation":"Drugs can raise or lower BMR (it falls with age).","source":"2022 (Jul)","_flag_ambiguous":true},{"id":45,"type":"mcq","stem":"Emerging pathogenic microorganisms include all except:","options":{"A":"Campylobacter","B":"Helicobacter pylori","C":"Parasitic protozoa","D":"Streptococcus pneumoniae"},"answer":"D","explanation":"S. pneumoniae is not emerging.","source":"2022 (Jul)"},{"id":46,"type":"mcq","stem":"Which air pollution source is NOT artificial?","options":{"A":"Dust from the Sahara","B":"Building heating","C":"Industry","D":"Transportation"},"answer":"A","explanation":"Saharan dust is natural.","source":"2022 (Jul)"},{"id":47,"type":"mcq","stem":"Which method is NOT a way to disinfect drinking water?","options":{"A":"Ozonolysis","B":"Ultraviolet radiation","C":"Chlorination","D":"Addition of aluminum sulfate"},"answer":"D","explanation":"Aluminium sulfate = coagulation.","source":"2022 (Jul)"},{"id":48,"type":"mcq","stem":"Which are characteristics of traveler's diarrhea?","options":{"A":"All of the above","B":"None of the above","C":"Never with fever or bloody stools","D":"≥3 unformed stools within 24 h"},"answer":"D","explanation":"Defined as ≥3 unformed stools/24 h.","source":"2022 (Jul)"},{"id":49,"type":"mcq","stem":"Two toxins, each specific for diarrhea or vomiting, are produced by:","options":{"A":"Salmonella","B":"Listeria","C":"Yersinia","D":"Bacillus cereus"},"answer":"D","explanation":"Bacillus cereus.","source":"2022 (Jul)"},{"id":50,"type":"mcq","stem":"In the hospital, all the following are reservoirs except:","options":{"A":"Inanimate hospital environment","B":"Colonized nursing staff","C":"Colonized/infected patients","D":"Visitors of hospital patients"},"answer":"D","explanation":"Visitors are the least-typical reservoir.","source":"2022 (Jul)","_flag_ambiguous":true},{"id":51,"type":"mcq","stem":"Asbestos harms health through:","options":{"A":"The eyes","B":"The respiratory tract","C":"Skin exposure","D":"Ingestion"},"answer":"B","explanation":"Inhaled fibres damage the respiratory tract.","source":"2022 (Jul)"},{"id":52,"type":"mcq","stem":"The most frequent cause of foodborne epidemics is:","options":{"A":"Bacillus","B":"Staphylococcus","C":"Salmonella","D":"Vibrio"},"answer":"C","explanation":"Salmonella.","source":"2022 (Jul)"},{"id":53,"type":"mcq","stem":"Regarding fluid intake, which is true?","options":{"A":"BMI>30 drink less to avoid retention","B":"~2–3 L/day enough under all conditions","C":"Sugary fluids don't count","D":"Physical activity affects the amount"},"answer":"D","explanation":"Needs rise with physical activity.","source":"2022 (Jul)"},{"id":54,"type":"mcq","stem":"Food contamination occurs from all except:","options":{"A":"Rodents' feces","B":"Water used for cleaning processing areas","C":"Diseased animals (salmonellosis)","D":"Microbial carriers handling food"},"answer":"B","explanation":"Clean processing water isn't a source; rodents, sick animals, carriers are.","source":"2022 (Jul)","_flag_ambiguous":true},{"id":55,"type":"mcq","stem":"Which is NOT associated with occupational lung disease?","options":{"A":"Silica","B":"Asbestos","C":"Coal","D":"Pollutant dust particles <10 μm"},"answer":"D","explanation":"Silica/asbestos/coal → specific pneumoconioses; generic ambient PM<10 μm is environmental.","source":"2022 (Jul)","_flag_ambiguous":true},{"id":56,"type":"mcq","stem":"Regarding investigation of outbreaks, which is true?","options":{"A":"Aims at identifying the agent","B":"Info only from infected people","C":"Confirmation precedes the outbreak","D":"All are wrong"},"answer":"A","explanation":"A key aim is identifying the agent.","source":"2022 (Jul)"},{"id":57,"type":"mcq","stem":"The Minamata disease (Japan 1953) was caused by:","options":{"A":"Lead","B":"Mercury","C":"Cadmium","D":"Aluminum"},"answer":"B","explanation":"Mercury (methylmercury).","source":"2022 (Jul)"},{"id":58,"type":"mcq","stem":"Which is NOT true regarding BMI?","options":{"A":"All are correct","B":"Higher in older individuals","C":"A valid indicator of physical health","D":"Decreases proportionally with height"},"answer":"D","explanation":"BMI = weight/height² — does not fall proportionally with height.","source":"2023 (Jul B)"},{"id":59,"type":"mcq","stem":"An epidemic outbreak requires the following, except:","options":{"A":"Appropriate transmission to susceptibles","B":"Vaccination of a large part of the population","C":"Large number of exposed susceptibles","D":"Agent that has infected many"},"answer":"B","explanation":"Vaccination prevents outbreaks — not a requirement.","source":"2023 (Jul B)"},{"id":60,"type":"mcq","stem":"Which natural resource is renewable?","options":{"A":"Natural gas","B":"Fertile soil","C":"Sand","D":"Copper"},"answer":"B","explanation":"Fertile soil is renewable if managed.","source":"2023 (Jul B)"},{"id":61,"type":"mcq","stem":"In foodborne infection, all true except:","options":{"A":"Multiplies in the food to high concentration","B":"Individual susceptible","C":"Present in the food","D":"Multiplies in intestinal tract"},"answer":"A","explanation":"In-food multiplication = intoxication.","source":"2023 (Jul B)"},{"id":62,"type":"mcq","stem":"Meta-analysis is:","options":{"A":"Qualitative synthesis","B":"Analysis of only interventional studies","C":"Simple statistical analysis of data","D":"Quantitative synthesis of results from individual studies"},"answer":"D","explanation":"Meta-analysis = quantitative pooling of study results.","source":"2023 (Jul B)"},{"id":63,"type":"mcq","stem":"Thermal inversion is:","options":{"A":"A result of particle pollution","B":"A meteorological phenomenon","C":"A result of calm weather","D":"A result of acid pollution"},"answer":"B","explanation":"A meteorological phenomenon that then traps pollution.","source":"2023 (Jul B)"},{"id":64,"type":"mcq","stem":"Highest mortality (5–10%) for foodborne diseases:","options":{"A":"Listeriosis","B":"Botulism (C. botulinum)","C":"Salmonellosis","D":"Campylobacteriosis"},"answer":"B","explanation":"Botulism — high case-fatality (listeriosis also high).","source":"2023 (Jul B)"},{"id":65,"type":"mcq","stem":"Factors contributing to emergence of infectious diseases include:","options":{"A":"Preventive measures taken","B":"UV solar radiation","C":"Development of modern & international transport","D":"Weakening of health care"},"answer":"C","explanation":"Fast international transport spreads emerging pathogens.","source":"2023 (Jul B)","_flag_ambiguous":true},{"id":66,"type":"mcq","stem":"HUS (diarrhea, blood, acute renal failure) is caused by:","options":{"A":"Campylobacter","B":"E. coli O157:H7","C":"Staphylococci","D":"Shigella strain C12"},"answer":"B","explanation":"E. coli O157:H7 (Shiga-toxin) → HUS.","source":"2023 (Jul B)"},{"id":67,"type":"mcq","stem":"In a double-blind RCT:","options":{"A":"Researcher knows, patient doesn't","B":"Both know","C":"Neither the researcher nor the patient knows","D":"Patient knows, researcher doesn't"},"answer":"C","explanation":"Neither party knows.","source":"2023 (Jul B)"},{"id":68,"type":"mcq","stem":"All true regarding bottled waters, except:","options":{"A":"Pseudomonas can be present","B":"6 °C better than 20 °C","C":"No concern for Giardia & Cryptosporidium","D":"Plastic favors microbes more than glass"},"answer":"C","explanation":"There IS concern for Giardia & Cryptosporidium.","source":"2023 (Jul B)"},{"id":69,"type":"mcq","stem":"Solar radiation does not contain:","options":{"A":"Infrared","B":"Radio waves","C":"Visible radiation","D":"Ultraviolet"},"answer":"B","explanation":"Solar radiation = IR+visible+UV; radio waves is the 'not contained' option.","source":"2023 (Jul B)"},{"id":70,"type":"mcq","stem":"Which is true regarding calories consumed?","options":{"A":"~25 kcal/kg ensures maintenance","B":"~1800 kcal/day enough for all","C":"Significantly affected by physical activity","D":"None are correct"},"answer":"C","explanation":"Needs vary with physical activity.","source":"2023 (Jul B)"},{"id":71,"type":"mcq","stem":"What is NOT an air pollution control measure?","options":{"A":"Tall chimneys","B":"Increased tree cover","C":"Renewable energy sources","D":"Improvement of fuels"},"answer":"A","explanation":"Tall chimneys disperse, don't reduce.","source":"2023 (Jul B)"},{"id":72,"type":"mcq","stem":"Respirable particles (PM10) do NOT cause:","options":{"A":"Dermatological alterations","B":"Respiratory problems","C":"Premature mortality","D":"Cardiovascular issues"},"answer":"A","explanation":"Not skin.","source":"2023 (Jul B)"},{"id":73,"type":"mcq","stem":"Which energy is non-renewable?","options":{"A":"Solar","B":"Hydropower","C":"Wind","D":"Nuclear"},"answer":"D","explanation":"Nuclear.","source":"2023 (Jul B)"},{"id":74,"type":"mcq","stem":"Percentage of antibiotics worldwide that goes to animals:","options":{"A":"5%","B":"50%","C":"10%","D":"2%"},"answer":"B","explanation":"Roughly half (≈50%+).","source":"2023 (Jul B)"},{"id":75,"type":"mcq","stem":"Which disease has increased risk in livestock farmers?","options":{"A":"Mumps","B":"Hepatitis A","C":"Tuberculosis","D":"Brucellosis"},"answer":"D","explanation":"Brucellosis.","source":"2023 (Jul B)"},{"id":76,"type":"mcq","stem":"Which is true regarding BASIC METABOLISM?","options":{"A":"Significantly increases during pregnancy","B":"Slightly increases with age","C":"Mainly influenced by external conditions","D":"Can be influenced both directions by medication"},"answer":"D","explanation":"Drugs shift BMR both ways (BMR falls with age).","source":"2023 (Jul B)"},{"id":77,"type":"mcq","stem":"Sulfates in water result in:","options":{"A":"Indigestion","B":"Liver damage","C":"Kidney damage","D":"Laxative effect"},"answer":"D","explanation":"High sulfate → laxative effect.","source":"2023 (Jul B)"},{"id":78,"type":"mcq","stem":"Of 100 wedding guests, 11 developed gastroenteritis within 24 h. Attack rate?","options":{"A":"11%","B":"0.1%","C":"1.1%","D":"80%"},"answer":"A","explanation":"11 ÷ 100 = 11%.","source":"2023 (Jul B)"},{"id":79,"type":"mcq","stem":"Which measure of association is estimated in a case-control study?","options":{"A":"Inverse of relative frequency","B":"Relative risk","C":"Odds ratio","D":"Relative frequency"},"answer":"C","explanation":"Case-control → odds ratio.","source":"2023 (Jul B)"},{"id":80,"type":"mcq","stem":"All true regarding dioxins, except:","options":{"A":"Produced by burning substances","B":"Effects include neoplasms","C":"Trap in animal fat via water","D":"They are hydrophilic/lipophobic"},"answer":"D","explanation":"Dioxins are lipophilic/hydrophobic — statement reversed.","source":"2023 (Jul B)"},{"id":81,"type":"mcq","stem":"Hospital epidemics investigated for all except:","options":{"A":"Intervene with special measures","B":"Determine source & reservoir","C":"Allow it to progress until natural immunity","D":"Determine mode of transmission"},"answer":"C","explanation":"Never 'natural immunity'.","source":"2023 (Jul B)"},{"id":82,"type":"mcq","stem":"Emerging pathogenic microorganisms include all except:","options":{"A":"Parasitic protozoa","B":"Helicobacter pylori","C":"Streptococcus pneumoniae","D":"Campylobacter"},"answer":"C","explanation":"S. pneumoniae is not emerging.","source":"2023 (Jul B)"},{"id":83,"type":"mcq","stem":"Upper acceptable noise limit for safe work:","options":{"A":"25 dB","B":"75 dB","C":"50 dB","D":"100 dB"},"answer":"B","explanation":"WHO ≈ <75 dB for 8-h shift.","source":"2023 (Jul B)"},{"id":84,"type":"mcq","stem":"Which is NOT important for defining a case in an outbreak?","options":{"A":"Symptoms","B":"Family history of each patient","C":"Incubation period","D":"Laboratory findings"},"answer":"B","explanation":"Not family history.","source":"2023 (Jul B)"},{"id":85,"type":"mcq","stem":"Regarding the Mediterranean diet pyramid, which is true?","options":{"A":"Outdated by newer data","B":"Limited meat, ~300–400 g/week","C":"All are wrong","D":"Overeating fruits/veg increases weight"},"answer":"B","explanation":"Med diet = limited meat.","source":"2023 (Jul B)"},{"id":86,"type":"mcq","stem":"What is true about hepatitis A?","options":{"A":"It is an STI","B":"Most common preventable disease in travelers developed→developing","C":"None of the above","D":"No vaccine against hepatitis A"},"answer":"B","explanation":"Hep A = most common vaccine-preventable travel infection (a vaccine exists).","source":"2023 (Jul B)","_flag_ambiguous":true},{"id":87,"type":"mcq","stem":"Aflatoxins can be found in:","options":{"A":"Fish and shellfish","B":"Citrus fruits","C":"Fruit juices","D":"Cereal grains and nuts"},"answer":"D","explanation":"Aflatoxins → cereal grains & nuts.","source":"2023 (Jul B)"},{"id":88,"type":"mcq","stem":"Which has one of the highest mortality rates (5–10%)?","options":{"A":"Toxin of Clostridium botulinum","B":"Toxin of Clostridium perfringens","C":"Campylobacter","D":"Traveler's diarrhea (E. coli strain)"},"answer":"A","explanation":"Botulinum toxin — high case-fatality.","source":"2024 (Group A)"},{"id":89,"type":"mcq","stem":"Cumulative incidence is used in which cohort, due to the absence of losses during follow-up?","options":{"A":"Fixed cohort","B":"Dynamic cohort","C":"Open cohort","D":"Closed cohort"},"answer":"D","explanation":"CI assumes complete follow-up (no losses) → a closed cohort.","source":"2024 (Group A)","_flag_ambiguous":true},{"id":90,"type":"mcq","stem":"After initial observations, what must follow for reliable conclusions?","options":{"A":"Case-control studies","B":"Cohort studies","C":"Epidemiological checks","D":"Mortality studies"},"answer":"C","explanation":"Descriptive observations → systematic epidemiological checks (analytic investigation).","source":"2024 (Group A)","_flag_ambiguous":true},{"id":91,"type":"mcq","stem":"Random-digit dialling identifies what type of controls?","options":{"A":"Population controls","B":"Friend/relative/spouse","C":"Hospital/clinical","D":"Deceased controls"},"answer":"A","explanation":"Sampling the general public → population controls.","source":"2024 (Group A)"},{"id":92,"type":"mcq","stem":"A prerequisite for foodborne infection includes all EXCEPT:","options":{"A":"Multiplies in the food","B":"Person susceptible","C":"Multiplies in intestinal tract","D":"Present in the food"},"answer":"A","explanation":"In-food multiplication = intoxication.","source":"2024 (Group A)"},{"id":93,"type":"mcq","stem":"The ___ Mortality Ratio quantifies increase/decrease vs a reference population:","options":{"A":"Crude","B":"Standardized","C":"Specific","D":"Standard"},"answer":"B","explanation":"Standardized Mortality Ratio (SMR).","source":"2024 (Group A)"},{"id":94,"type":"mcq","stem":"Which is true regarding calorie intake?","options":{"A":"~25 kcal/kg maintenance","B":"~1800 kcal/day enough for all","C":"Significantly influenced by physical activity","D":"None is correct"},"answer":"C","explanation":"Depends heavily on physical activity.","source":"2024 (Group A)"},{"id":95,"type":"mcq","stem":"Recommended daily carbohydrate intake?","options":{"A":"110 g/day","B":"120 g/dl","C":"130 g/dl","D":"140 g/dl"},"answer":"C","explanation":"≈ 130 g/day.","source":"2024 (Group A)"},{"id":96,"type":"mcq","stem":"John Snow's cholera hypothesis was that it spreads:","options":{"A":"Person to person via inhaled particles","B":"Through food or water","C":"None is correct","D":"From evaporation of volatile materials"},"answer":"B","explanation":"Snow proved spread via faecally-contaminated water.","source":"2024 (Group A)"},{"id":97,"type":"mcq","stem":"When RR of two factors together is GREATER than the product of individual RRs:","options":{"A":"Effect homogeneity","B":"Effect heterogeneity","C":"Statistical interaction","D":"Departure from multiplicativity"},"answer":"D","explanation":"Exceeding the product = departure from multiplicativity.","source":"2024 (Group A)","_flag_ambiguous":true},{"id":98,"type":"mcq","stem":"A bidirectional cohort study:","options":{"A":"Only prospective outcome, retrospective exposure","B":"Only prospective exposure, retrospective outcome","C":"Has both prospective and retrospective elements","D":"Only prospective elements"},"answer":"C","explanation":"Ambidirectional = both components.","source":"2024 (Group A)"},{"id":99,"type":"mcq","stem":"Which measure best describes women developing hypertension during 121,600 person-years?","options":{"A":"Prevalence","B":"Cumulative incidence","C":"Incidence rate","D":"None is correct"},"answer":"C","explanation":"Person-years → incidence rate.","source":"2024 (Group A)"},{"id":100,"type":"mcq","stem":"Bacterial indicators of water signify that:","options":{"A":"Toxic/chemical substances present","B":"Water mixed with intestinal contents","C":"Water suitable for use","D":"Viruses present"},"answer":"B","explanation":"They indicate faecal contamination.","source":"2024 (Group A)"},{"id":101,"type":"mcq","stem":"What ensures impartial assignment & balances known+unknown confounders (large n)?","options":{"A":"Literature review","B":"Randomization","C":"Matching","D":"Restriction"},"answer":"B","explanation":"Randomization balances unknown confounders.","source":"2024 (Group A)"},{"id":102,"type":"mcq","stem":"Which is true?","options":{"A":"PH & epi are separate branches","B":"Public health is a branch of epidemiology","C":"Both are branches of medical statistics","D":"Epidemiology is a branch of public health"},"answer":"D","explanation":"Epidemiology is a branch of public health.","source":"2024 (Group A)"},{"id":103,"type":"mcq","stem":"Which is NOT a component of clean, unpolluted air?","options":{"A":"Nitrogen","B":"Carbon dioxide","C":"Ammonia","D":"Argon"},"answer":"C","explanation":"Ammonia.","source":"2024 (Group A)"},{"id":104,"type":"mcq","stem":"When the excess RR for two factors is LESS than the sum of individual RRs:","options":{"A":"Synergy","B":"Validity","C":"Antagonism","D":"Precision"},"answer":"C","explanation":"Sub-additive = antagonism.","source":"2024 (Group A)"},{"id":105,"type":"mcq","stem":"The 'water crisis' is likely because:","options":{"A":"The water cycle remains stable","B":"Consumption is increasing","C":"Neither","D":"Both"},"answer":"D","explanation":"Both disrupted cycle + rising consumption.","source":"2024 (Group A)"},{"id":106,"type":"mcq","stem":"Regarding weight changes:","options":{"A":"Energy balance only with ideal macronutrients","B":"↑Carbs (>65%) increases weight","C":"All are false","D":"↑Fat (>40%) increases weight"},"answer":"C","explanation":"Weight = energy balance → specific claims false.","source":"2024 (Group A)"},{"id":107,"type":"mcq","stem":"The advantage of a matched case-control study is that:","options":{"A":"Type I error increased","B":"Study power reduced","C":"Study power is increased","D":"Type II error increased"},"answer":"C","explanation":"Matching → increases power/efficiency.","source":"2024 (Group A)"},{"id":108,"type":"mcq","stem":"A new treatment prolongs survival. Effect on disease prevalence?","options":{"A":"Prevalence will increase","B":"Will not change","C":"Not possible to know","D":"Will decrease"},"answer":"A","explanation":"Prevalence = incidence × duration → rises.","source":"2024 (Group A)"},{"id":109,"type":"mcq","stem":"Which waist circumference is normal for a woman?","options":{"A":"85 cm","B":"88 cm","C":"75 cm","D":"102 / 94 cm"},"answer":"C","explanation":"Women normal <80 cm → 75 cm.","source":"2024 (Group A)"},{"id":110,"type":"mcq","stem":"Which is NOT true about Burnout (ICD-11)?","options":{"A":"Reduced professional effectiveness","B":"Feelings of exhaustion","C":"Chronic unmanaged workplace stress","D":"Characterized by suicidal thoughts"},"answer":"D","explanation":"Burnout ≠ suicidal thoughts.","source":"2024 (Group A)"},{"id":111,"type":"mcq","stem":"Which term = analyzing who/where/when patterns over time?","options":{"A":"Disease frequency","B":"Disease distribution","C":"Disease determinants","D":"Disease control"},"answer":"B","explanation":"Who/where/when = disease distribution.","source":"2024 (Group A)"},{"id":112,"type":"mcq","stem":"Epidemiology (study of disease frequency) is NOT related to:","options":{"A":"Criteria for identifying the disease","B":"Cleaning the population size data","C":"Counting the disease cases","D":"All of the above"},"answer":"D","explanation":"All three ARE needed → all of the above.","source":"2024 (Group A)"},{"id":113,"type":"mcq","stem":"The 10 principles — first rules on human experimentation — were formulated in:","options":{"A":"U.S. Bioethics Commission code","B":"Declaration of Helsinki","C":"U.S. PHS Declaration","D":"The Nuremberg Code"},"answer":"D","explanation":"Nuremberg Code = 10 principles.","source":"2024 (Group A)"},{"id":114,"type":"mcq","stem":"Which waters require purification before use?","options":{"A":"None","B":"Surface waters","C":"Groundwater","D":"Both"},"answer":"D","explanation":"Both require treatment/disinfection.","source":"2024 (Group A)","_flag_ambiguous":true},{"id":115,"type":"mcq","stem":"The three components of the epidemiologic triangle:","options":{"A":"Pathogen, environment, immunity","B":"Host, environment, vaccine","C":"Host, pathogen, environment","D":"Host, pathogen, treatment"},"answer":"C","explanation":"Host · Pathogen · Environment.","source":"2024 (Group A)"},{"id":116,"type":"mcq","stem":"Who was the first epidemiologist/statistician/demographer (London death records)?","options":{"A":"James Lind","B":"David Lynch","C":"John Graunt","D":"John Snow"},"answer":"C","explanation":"John Graunt.","source":"2024 (Group A)"},{"id":117,"type":"mcq","stem":"Enroll women with preterm birth vs normal delivery, then interview about smoking. Study type?","options":{"A":"Prospective cohort","B":"Experimental","C":"Retrospective study","D":"Case-control study"},"answer":"D","explanation":"Sampling on outcome → case-control.","source":"2024 (Group A)"},{"id":118,"type":"mcq","stem":"Which study identifies cases + a sample of the source population without disease as controls?","options":{"A":"Ecological study","B":"Cross-sectional study","C":"Case-control study","D":"Cohort study"},"answer":"C","explanation":"Cases + population controls = case-control.","source":"2024 (Group B)"},{"id":119,"type":"mcq","stem":"Which represents a low to moderate level of effect modification?","options":{"A":"Statistical interaction","B":"Deviation from multiplicativity","C":"Deviation from additivity","D":"Outcome homogeneity"},"answer":"C","explanation":"Deviation from additivity = lower-scale effect modification.","source":"2024 (Group B)","_flag_ambiguous":true},{"id":120,"type":"mcq","stem":"When age-specific mortality rates in the study population are known, the appropriate method is:","options":{"A":"Both direct and indirect","B":"Indirect standardization","C":"Direct standardization","D":"Neither"},"answer":"C","explanation":"Known study-pop rates → direct (indirect is for unknown).","source":"2024 (Group B)"},{"id":121,"type":"mcq","stem":"Which inorganic element is NOT considered a trace element?","options":{"A":"Sulfur","B":"Magnesium","C":"Iron","D":"Sodium","E":"Chlorine"},"answer":"D","explanation":"Trace = iron. Sodium (like Cl, Mg, S) is a macromineral.","source":"2024 (Group B)","_flag_ambiguous":true},{"id":122,"type":"mcq","stem":"The three components of the epidemiological triangle:","options":{"A":"Host, pathogen, treatment","B":"Host, pathogen, environment","C":"Pathogen, environment, immunity","D":"Host, environment, vaccine"},"answer":"B","explanation":"Host · Pathogen · Environment.","source":"2024 (Group B)"},{"id":123,"type":"mcq","stem":"Epidemiology (study of disease frequency) is NOT related to:","options":{"A":"Criteria to identify the disease","B":"Determining population size","C":"Counting disease cases","D":"All describe necessary elements"},"answer":"D","explanation":"All ARE necessary → all describe necessary elements.","source":"2024 (Group B)"},{"id":124,"type":"mcq","stem":"Which are the most widespread of all mycotoxins?","options":{"A":"Clostridium neurotoxin","B":"Cryptosporidium oocysts","C":"E. coli toxin","D":"Aflatoxins from Aspergillus flavus"},"answer":"D","explanation":"Aflatoxins (A. flavus).","source":"2024 (Group B)"},{"id":125,"type":"mcq","stem":"What is NOT true about disease determinants?","options":{"A":"Identified through hypothesis testing","B":"Exclusively factors that cause disease in some people","C":"May be modifiable or non-modifiable","D":"Also referred to as exposures"},"answer":"B","explanation":"Determinants can be protective too — not 'exclusively' causative.","source":"2024 (Group B)"},{"id":126,"type":"mcq","stem":"The ability of a study to demonstrate an association if one truly exists is:","options":{"A":"Reliability","B":"Consistency","C":"Statistical power","D":"Validity"},"answer":"C","explanation":"Statistical power.","source":"2024 (Group B)"},{"id":127,"type":"mcq","stem":"Regarding the Mediterranean diet pyramid, which is correct?","options":{"A":"Outdated by newer data","B":"Excessive fruit/veg → weight gain","C":"All are wrong","D":"Limited meat, ~200–400 g/week"},"answer":"D","explanation":"Med diet = limited meat (~200–400 g/week).","source":"2024 (Group B)"},{"id":128,"type":"mcq","stem":"In the work environment, what is true regarding noise?","options":{"A":"A biological hazard","B":"It is any sound","C":"WHO recommends 75 dB for 8-h shifts","D":"None is correct"},"answer":"C","explanation":"WHO ≈ 75 dB for 8-h exposure.","source":"2024 (Group B)"},{"id":129,"type":"mcq","stem":"Two patients, same weight and height. Which is true?","options":{"A":"Different BMIs due to age","B":"No safe conclusions without body composition","C":"Same BMI, therefore same classification","D":"Same BMI so same fat distribution","E":"Different BMIs due to sex"},"answer":"C","explanation":"BMI depends only on weight & height → same BMI & classification.","source":"2024 (Group B)"},{"id":130,"type":"mcq","stem":"Which is NOT a component of clean, pollutant-free air?","options":{"A":"Carbon dioxide","B":"Argon","C":"Nitrogen","D":"Ammonia"},"answer":"D","explanation":"Ammonia.","source":"2024 (Group B)"},{"id":131,"type":"mcq","stem":"The thalidomide disaster mainly highlighted:","options":{"A":"Need for informed consent","B":"Privacy protection","C":"Protocol review by ethics committees","D":"Careful drug safety assessment"},"answer":"D","explanation":"→ need for rigorous drug-safety (teratogenicity) testing.","source":"2024 (Group B)"},{"id":132,"type":"mcq","stem":"Regarding fluid intake needs, which is true?","options":{"A":"Sugary fluids don't count","B":"Physical activity affects fluid requirements","C":"~2–3 L/day enough for all","D":"BMI>30 drink less"},"answer":"B","explanation":"Needs vary with physical activity.","source":"2024 (Group B)"},{"id":133,"type":"mcq","stem":"Two factors together cause disease MORE than expected:","options":{"A":"Validity","B":"Antagonism","C":"Accuracy","D":"Synergy"},"answer":"D","explanation":"Supra-additive = synergy.","source":"2024 (Group B)"},{"id":134,"type":"mcq","stem":"Bacterial dysentery (blood and mucus) is caused by:","options":{"A":"Campylobacter","B":"E. coli O157:H7","C":"Staphylococcus aureus","D":"Shigella"},"answer":"D","explanation":"Shigella.","source":"2024 (Group B)"},{"id":135,"type":"mcq","stem":"Random-digit dialling identifies what type of controls?","options":{"A":"Friend/relative/spouse","B":"Hospital/clinical","C":"Population controls","D":"Death controls"},"answer":"C","explanation":"Population controls.","source":"2024 (Group B)"},{"id":136,"type":"mcq","stem":"When RR of two factors together is GREATER than the product of individual RRs:","options":{"A":"Outcome homogeneity","B":"Statistical interaction","C":"Deviation from multiplicativity","D":"Outcome heterogeneity"},"answer":"C","explanation":"Beating the product = deviation from multiplicativity.","source":"2024 (Group B)","_flag_ambiguous":true},{"id":137,"type":"mcq","stem":"The main bacterial indicator is:","options":{"A":"Pseudomonas","B":"E. coli","C":"Rotavirus","D":"Legionella"},"answer":"B","explanation":"E. coli.","source":"2024 (Group B)"},{"id":138,"type":"mcq","stem":"Greatest disadvantage of using the general population as a comparison group:","options":{"A":"Healthy worker effect","B":"Selection bias","C":"Counterfactual ideal","D":"Confounding"},"answer":"A","explanation":"Workers healthier than the public → healthy worker effect.","source":"2024 (Group B)"},{"id":139,"type":"mcq","stem":"The EU limits for the Air Quality Index:","options":{"A":"Same as WHO","B":"Less strict than WHO","C":"Stricter than WHO","D":"Cannot be directly compared"},"answer":"B","explanation":"WHO stricter (health-based); EU less strict.","source":"2024 (Group B)","_flag_ambiguous":true},{"id":140,"type":"mcq","stem":"Conducted one of the first recorded clinical trials (17th c. onward):","options":{"A":"James Lind","B":"John Snow","C":"John Graunt","D":"William Farr"},"answer":"A","explanation":"James Lind.","source":"2024 (Group B)"},{"id":141,"type":"mcq","stem":"Standardization estimates the ___ role of certain variables:","options":{"A":"Confounding","B":"Different","C":"Synergistic","D":"Significant"},"answer":"A","explanation":"Removes the confounding role (esp. age).","source":"2024 (Group B)"},{"id":142,"type":"mcq","stem":"Which study uses the population (not the individual) as the unit of analysis?","options":{"A":"Case-control","B":"Cohort","C":"Ecological study","D":"Cross-sectional"},"answer":"C","explanation":"Ecological studies.","source":"2024 (Group B)"},{"id":143,"type":"mcq","stem":"Which is an example of incidence rate?","options":{"A":"Men with high BP at annual check-up","B":"Drivers on phone per 1,000 crashes","C":"New breast cancer cases during 200 person-years","D":"Children with spina bifida per 1,000 births"},"answer":"C","explanation":"Person-years denominator = incidence rate.","source":"2024 (Group B)"},{"id":144,"type":"mcq","stem":"Regarding management of food poisoning, all are true except:","options":{"A":"Antidiarrheals not given initially","B":"Antimicrobials not administered","C":"Personal hygiene is crucial","D":"Fluids are not given orally"},"answer":"D","explanation":"Oral rehydration IS given → this statement is false.","source":"2024 (Group B)"},{"id":145,"type":"mcq","stem":"Who was the first epidemiologist/statistician/demographer?","options":{"A":"James Lind","B":"David Lynch","C":"John Graunt","D":"John Snow"},"answer":"C","explanation":"John Graunt.","source":"2024 (Group B)"},{"id":146,"type":"mcq","stem":"A prerequisite for foodborne INTOXICATION is all except:","options":{"A":"Multiplies in the intestinal tract","B":"Multiplies in the food","C":"Individual sensitive to the toxin","D":"Present in the food"},"answer":"A","explanation":"Intoxication is toxin-driven — does not require intestinal multiplication.","source":"2024 (Group B)"},{"id":147,"type":"mcq","stem":"How is climate change likely to affect malaria prevalence?","options":{"A":"By reducing the mosquito population","B":"Through temperature/rainfall changes favoring breeding","C":"By reducing geographic spread","D":"By increasing drug resistance"},"answer":"B","explanation":"Warming + rainfall shifts favour mosquito breeding.","source":"2024 (Group B)"}]},"recalls":{"count":38,"questions":[{"id":1,"topic":"Frequency","type":"mcq","stem":"Cumulative incidence (average risk) is the measure of choice in which cohort, because there are no losses during follow-up?","options":{"A":"Dynamic cohort","B":"Open cohort","C":"Closed / fixed cohort","D":"Ecological cohort"},"answer":"C","explanation":"Closed (fixed) cohort. Cumulative incidence assumes everyone is followed for the whole period with no loss to follow-up."},{"id":2,"topic":"History","type":"mcq","stem":"James Lind is best known for which contribution?","options":{"A":"Mapping the Broad Street pump","B":"The first recorded controlled clinical trial (scurvy → citrus)","C":"Inventing the life table","D":"Formulating the epidemiologic triangle"},"answer":"B","explanation":"The first recorded controlled clinical trial — HMS Salisbury, 1747, citrus fruit cures scurvy."},{"id":3,"topic":"Water","type":"mcq","stem":"Bacterial indicators of water signify that:","options":{"A":"Toxic chemicals are present","B":"The water has mixed with intestinal (faecal) contents","C":"The water is safe to drink","D":"Viruses are present"},"answer":"B","explanation":"The water has mixed with intestinal contents — faecal contamination, correlated with pathogens."},{"id":4,"topic":"Designs","type":"mcq","stem":"An advantage of a matched case-control study is that:","options":{"A":"Type I error increases","B":"Study power is reduced","C":"Study power is increased","D":"It removes the need for controls"},"answer":"C","explanation":"Study power is increased — matching improves efficiency and controls confounding."},{"id":5,"topic":"Frequency","type":"mcq","stem":"A new treatment prolongs survival but doesn't cure. Effect on disease prevalence?","options":{"A":"Prevalence decreases","B":"Prevalence stays the same","C":"Prevalence increases","D":"Impossible to predict"},"answer":"C","explanation":"Prevalence increases. Prevalence = incidence × duration; longer survival lengthens duration."},{"id":6,"topic":"Definitions","type":"mcq","stem":"The study of disease frequency is NOT related to which of the following?","options":{"A":"Criteria to identify the disease","B":"Counting the disease cases","C":"Determining the population size","D":"None — all are necessary elements"},"answer":"D","explanation":"None — all of them are necessary (criteria, numerator of cases, denominator population)."},{"id":7,"topic":"Designs","type":"mcq","stem":"A case-control study is characterised by:","options":{"A":"Sampling by exposure and following forward","B":"Sampling by disease status and looking back at exposure, using the odds ratio","C":"Using the population as the unit of analysis","D":"Randomly allocating an intervention"},"answer":"B","explanation":"Sampling by disease status, looking back at exposure; measure = odds ratio. Ideal for rare diseases."},{"id":8,"topic":"Bias","type":"mcq","stem":"Which best describes the ecological fallacy?","options":{"A":"Confusing correlation with causation in one person","B":"Inferring individual-level relationships from group-level data","C":"Losing subjects to follow-up","D":"Failing to blind the assessor"},"answer":"B","explanation":"Inferring individual-level associations from group (population)-level data."},{"id":9,"topic":"Ethics","type":"mcq","stem":"'Equipoise' in a clinical trial means:","options":{"A":"Equal group sizes","B":"Genuine uncertainty about which treatment is better — required for an ethical RCT","C":"Balanced confounders after randomization","D":"Equal dosing between arms"},"answer":"B","explanation":"Genuine uncertainty about which treatment is superior. An RCT is only ethical when equipoise exists."},{"id":10,"topic":"Water","type":"mcq","stem":"What is added in the FINAL step of drinking-water treatment?","options":{"A":"Aluminium sulfate","B":"Chlorine","C":"Iron","D":"Sulfur"},"answer":"B","explanation":"Chlorine (chlorination) — the final disinfection step, leaving a protective residual. Aluminium sulfate is an earlier coagulation step."},{"id":11,"topic":"Ethics","type":"mcq","stem":"The thalidomide disaster mainly highlighted the need for:","options":{"A":"Informed consent","B":"Privacy protection","C":"Careful drug safety (teratogenicity) assessment","D":"Ethics-committee protocol review"},"answer":"C","explanation":"Careful drug safety assessment, especially teratogenicity testing in pregnancy."},{"id":12,"topic":"Water","type":"mcq","stem":"The main bacterial indicator organism for water is:","options":{"A":"Pseudomonas","B":"E. coli","C":"Rotavirus","D":"Legionella"},"answer":"B","explanation":"E. coli (faecal coliform) — the principal indicator of faecal contamination."},{"id":13,"topic":"Air","type":"mcq","stem":"Compared with WHO guidelines, the EU air-quality limits are:","options":{"A":"Identical","B":"Less strict","C":"Stricter","D":"Not comparable"},"answer":"B","explanation":"Less strict. WHO guidelines are purely health-based; EU limits balance economics/feasibility, so they're more lenient."},{"id":14,"topic":"Stats","type":"mcq","stem":"Standardization is a method used to estimate the ___ role of certain variables so populations are comparable:","options":{"A":"Synergistic","B":"Confounding","C":"Significant","D":"Random"},"answer":"B","explanation":"Confounding. Standardization removes the confounding effect (usually of age)."},{"id":15,"topic":"Stats","type":"mcq","stem":"The Standardized Mortality Ratio (SMR) formula is:","options":{"A":"Expected ÷ observed deaths","B":"Observed ÷ expected deaths (×100)","C":"Deaths ÷ population","D":"New cases ÷ person-years"},"answer":"B","explanation":"SMR = observed ÷ expected deaths (×100). From indirect standardization."},{"id":16,"topic":"Stats","type":"mcq","stem":"Meta-analysis is best defined as:","options":{"A":"A qualitative summary of studies","B":"The quantitative (statistical) synthesis of results from individual studies","C":"Analysis of a single large trial","D":"A narrative literature review"},"answer":"B","explanation":"The quantitative synthesis of results from individual studies — an optional statistical part of a systematic review."},{"id":17,"topic":"Air","type":"mcq","stem":"Thermal inversion is:","options":{"A":"A pollutant","B":"A meteorological phenomenon that traps pollutants near the ground","C":"A type of secondary aerosol","D":"A water-treatment step"},"answer":"B","explanation":"A meteorological phenomenon — a warm air layer traps cooler air below, so pollutants accumulate."},{"id":18,"topic":"Association","type":"mcq","stem":"Which statement about RR and OR is correct?","options":{"A":"Both equal 0 under the null","B":"Both equal 1 under the null; OR is the measure of case-control studies","C":"OR is used in cohort studies only","D":"RR can only be < 1"},"answer":"B","explanation":"RR = OR = 1 under the null (no association); the OR (cross-product ratio) is the measure of case-control studies."},{"id":19,"topic":"Outbreak","type":"mcq","stem":"'Genomic surveillance' refers to:","options":{"A":"Sequencing pathogen genomes to track spread and variants","B":"Counting cases in a hospital","C":"Measuring air-pollutant genomes","D":"Screening humans for genetic disease"},"answer":"A","explanation":"Sequencing pathogen genomes to monitor transmission, evolution and emerging variants."},{"id":20,"topic":"Occupational","type":"mcq","stem":"Asbestos primarily harms health through:","options":{"A":"The eyes","B":"Skin exposure","C":"The respiratory tract","D":"Ingestion"},"answer":"C","explanation":"The respiratory tract — inhaled fibres cause asbestosis, lung cancer, mesothelioma."},{"id":21,"topic":"Association","type":"mcq","stem":"If a relative comparison measure equals 0.81 (less than one), the exposure is:","options":{"A":"Harmful","B":"Protective / prevents disease","C":"Neutral","D":"Not interpretable"},"answer":"B","explanation":"Protective. An RR/OR below 1 = lower disease risk (prevents disease)."},{"id":22,"topic":"Ethics","type":"mcq","stem":"The Tuskegee Syphilis Study is remembered as research that was:","options":{"A":"Ethical and well-consented","B":"Legal at the time but deeply unethical (no informed consent)","C":"A properly randomized trial","D":"Conducted with full IRB oversight"},"answer":"B","explanation":"Legal at the time but unethical — men weren't told their diagnosis or that treatment was withheld; drove modern consent/IRB rules."},{"id":23,"topic":"Stats","type":"mcq","stem":"'Excess mortality' (used for Storm Daniel, Thessaly 2023) is defined as:","options":{"A":"Observed minus expected deaths","B":"Deaths from a single cause","C":"The crude death rate","D":"The case-fatality rate"},"answer":"A","explanation":"Observed − expected deaths — the extra deaths beyond what would normally be expected."},{"id":24,"topic":"Frequency","type":"mcq","stem":"Of 1,000 newborns, 100 had serious birth defects and 20 of those died in year 1; 90 of the 900 without defects also died. Cumulative incidence of mortality in the whole population?","options":{"A":"2%","B":"9%","C":"11%","D":"20%"},"answer":"C","explanation":"11%. Total deaths = 20 + 90 = 110; 110 ÷ 1,000 = 0.11 = 11%."},{"id":25,"topic":"Occupational","type":"mcq","stem":"True or False: 'Occupational risk is anything that has the potential to cause harm.'","options":{"A":"True","B":"False — that defines a HAZARD, not risk"},"answer":"B","explanation":"False. That defines a hazard. Occupational risk = the likelihood AND severity of injury/disease from exposure to a hazard."},{"id":26,"topic":"Association","type":"mcq","stem":"If there is NO association, the values of (risk ratio, odds ratio, risk difference) are:","options":{"A":"0, 0, 1","B":"1, 1, 0","C":"1, 0, 1","D":"0, 1, 0"},"answer":"B","explanation":"1, 1, 0. Ratios (RR, OR) = 1 under the null; the risk difference (absolute) = 0."},{"id":27,"topic":"Causality","type":"mcq","stem":"Which of these is NOT one of the Bradford Hill criteria for causation?","options":{"A":"Specificity","B":"Plausibility","C":"Complexity","D":"Consistency"},"answer":"C","explanation":"Complexity. The nine Hill criteria: strength, consistency, specificity, temporality, biological gradient, plausibility, coherence, experiment, analogy."},{"id":28,"topic":"Water","type":"mcq","stem":"The 1993 Milwaukee waterborne outbreak was caused by:","options":{"A":"A bacterium (Salmonella)","B":"Cryptosporidium — a protozoan parasite","C":"A virus (Rotavirus)","D":"A toxin (aflatoxin)"},"answer":"B","explanation":"Cryptosporidium, a protozoan parasite (not a bacterium!). ~400,000 affected — largest US waterborne outbreak, following heavy rainfall."},{"id":29,"topic":"Food","type":"mcq","stem":"In plants, increased atmospheric CO₂ tends to:","options":{"A":"Increase carbohydrate content (and lower protein/micronutrients)","B":"Increase protein content","C":"Decrease carbohydrate content","D":"Have no effect on composition"},"answer":"A","explanation":"Increase carbohydrate content while diluting protein and micronutrients."},{"id":30,"topic":"Water","type":"mcq","stem":"Which CANNOT be caused by waterborne infection?","options":{"A":"Diarrhoea","B":"Cholera","C":"Typhoid","D":"Myocardial infarction"},"answer":"D","explanation":"Myocardial infarction. Diarrhoea, cholera and typhoid are waterborne; a heart attack is not an infectious waterborne disease."},{"id":31,"topic":"History","type":"mcq","stem":"Who developed the concept of the life table by analysing London death records?","options":{"A":"John Snow","B":"John Graunt","C":"James Lind","D":"William Farr"},"answer":"B","explanation":"John Graunt — father of demography; first epidemiologist/statistician/demographer."},{"id":32,"topic":"Designs","type":"mcq","stem":"An ambidirectional (bidirectional) study is a type of:","options":{"A":"Case-control study","B":"Cohort study with both prospective and retrospective elements","C":"Cross-sectional study","D":"Ecological study"},"answer":"B","explanation":"A cohort study with both prospective and retrospective components."},{"id":33,"topic":"Food","type":"mcq","stem":"Malnutrition differs from undernutrition in that malnutrition:","options":{"A":"Only means starvation","B":"Encompasses ALL forms — under-, over-nutrition and micronutrient imbalance","C":"Is the same as obesity","D":"Only refers to children"},"answer":"B","explanation":"Malnutrition is the umbrella term (under-, over-nutrition, micronutrient deficiency); undernutrition is specifically deficiency."},{"id":34,"topic":"Designs","type":"mcq","stem":"The odds ratio is the characteristic measure of which design?","options":{"A":"Cohort study","B":"Cross-sectional study","C":"Case-control study","D":"Ecological study"},"answer":"C","explanation":"Case-control study."},{"id":35,"topic":"Air","type":"mcq","stem":"Which is NOT a type of environmental pollution?","options":{"A":"Noise pollution","B":"Thermal pollution","C":"Technology","D":"Light pollution"},"answer":"C","explanation":"Technology. Recognised types: water, air, soil, thermal, noise, light."},{"id":36,"topic":"Definitions","type":"mcq","stem":"Epidemiology is best described as:","options":{"A":"A branch of public health","B":"A branch of medical statistics","C":"Separate from public health","D":"A branch of clinical pharmacology"},"answer":"A","explanation":"A branch of public health — one of its basic sciences."},{"id":37,"topic":"Ethics","type":"mcq","stem":"The Belmont Report's three core principles are:","options":{"A":"Autonomy, beneficence, justice","B":"Consent, privacy, safety","C":"Randomization, blinding, follow-up","D":"Strength, consistency, plausibility"},"answer":"A","explanation":"Respect for autonomy, beneficence, justice. (Distinct from Nuremberg's 10 principles.)"},{"id":38,"topic":"Designs","type":"mcq","stem":"A cross-sectional study is best described as:","options":{"A":"A 'snapshot' measuring exposure and outcome at a single point in time","B":"A long forward follow-up","C":"Sampling on disease status","D":"Randomly allocating treatment"},"answer":"A","explanation":"A snapshot at one point in time — good for prevalence."}]},"notes":{"count":12,"sections":[{"id":1,"tag":"Epi","title":"1 · What Epidemiology Is + Key History","html":"\n  <div class=\"note-block\">\n   <p><b>Epidemiology</b> = study of the <span class=\"hl\">distribution &amp; determinants of disease frequency</span> in human populations, and applying this to <b>control</b> health problems.</p>\n   <p><b>Epidemiology is a branch of PUBLIC HEALTH</b> (not vice-versa) — one of its basic sciences.</p>\n   <ul>\n     <li><b>Distribution</b> = who, where, when (person, place, time).</li>\n     <li><b>Determinants</b> = exposures/risk factors; modifiable or not, and can be <b>protective OR causative</b> (not exclusively harmful).</li>\n     <li><b>Epidemiologic triangle:</b> <span class=\"pill\">Host</span> <span class=\"pill\">Pathogen (agent)</span> <span class=\"pill\">Environment</span></li>\n   </ul>\n   <h4>The 3 founding figures</h4>\n   <table class=\"tt\">\n     <tr><th>Figure</th><th>Century</th><th>Claim to fame</th></tr>\n     <tr><td>John Graunt</td><td>17th</td><td><b>Father of demography.</b> Analysed London parish <b>death records (from ~1532)</b>, built the <b>life table</b>. \"First epidemiologist, statistician &amp; demographer.\"</td></tr>\n     <tr><td>James Lind</td><td>18th</td><td>Royal-Navy physician. <b>First recorded controlled clinical trial</b> (HMS Salisbury, 1747) — citrus cures <b>scurvy</b>.</td></tr>\n     <tr><td>John Snow</td><td>19th</td><td>Showed <b>cholera spreads via faecally-contaminated drinking water</b> (Broad St pump). Killed the \"miasma\" idea.</td></tr>\n   </table>\n   <div class=\"callout\"><b>Trap:</b> \"first clinical trial\" = <b>Lind</b>; \"first epidemiologist / death records / life table\" = <b>Graunt</b>. Don't swap.</div>\n  </div>"},{"id":2,"tag":"Measures","title":"2 · Measures of Disease Frequency","html":"\n  <div class=\"note-block\">\n   <h4>Populations</h4>\n   <ul>\n     <li><b>Fixed / closed cohort:</b> permanent membership, defined by an event (born 1982, study enrollees). No new entries.</li>\n     <li><b>Dynamic / open cohort:</b> transient membership by a state (residents of a city).</li>\n   </ul>\n   <h4>Prevalence vs Incidence</h4>\n   <table class=\"tt\">\n     <tr><th></th><th>Prevalence</th><th>Incidence</th></tr>\n     <tr><td>Counts</td><td><b>Existing</b> cases</td><td><b>New</b> cases</td></tr>\n     <tr><td>Denominator</td><td><b>Total</b> population</td><td>Population <b>at risk</b> only</td></tr>\n     <tr><td>Use</td><td>Burden, planning, resources</td><td>Aetiologic research, evaluating prevention</td></tr>\n   </table>\n   <h4>Two flavours of incidence</h4>\n   <ul>\n     <li><b>Cumulative incidence (CI) = risk.</b> New cases ÷ pop. at risk at <i>start</i>; time in words. <span class=\"hl\">Assumes NO loss to follow-up</span> → best in a <b>closed/fixed cohort</b>.</li>\n     <li><b>Incidence rate (IR) = speed.</b> New cases ÷ <b>person-time</b>; time is intrinsic to the denominator. Handles losses → clue \"<b>person-years</b>\" = incidence rate.</li>\n   </ul>\n   <h4>Special \"rates\"</h4>\n   <ul>\n     <li><b>Attack rate</b> = new cases ÷ pop. at risk in an outbreak → quantifies the <b>extent</b> (11 of 100 ill = <span class=\"pill\">11%</span>).</li>\n     <li><b>Case-fatality rate</b> = deaths from X ÷ people with X.</li>\n   </ul>\n   <div class=\"callout\"><b>Prevalence = Incidence × Duration.</b> A treatment that <b>prolongs survival</b> (↑duration) → <b>prevalence RISES</b>.</div>\n  </div>"},{"id":3,"tag":"Measures","title":"3 · Measures of Association (RR / OR / RD)","html":"\n  <div class=\"note-block\">\n   <table class=\"tt\">\n     <tr><th>Measure</th><th>Type</th><th>Null</th><th>Protective</th><th>Harmful</th></tr>\n     <tr><td>Risk Difference (RD)</td><td>Absolute</td><td><span class=\"pill\">0</span></td><td>&lt; 0</td><td>&gt; 0</td></tr>\n     <tr><td>Risk/Rate Ratio (RR)</td><td>Relative</td><td><span class=\"pill\">1</span></td><td>&lt; 1</td><td>&gt; 1</td></tr>\n     <tr><td>Odds Ratio (OR)</td><td>Relative (ad/bc)</td><td><span class=\"pill\">1</span></td><td>&lt; 1</td><td>&gt; 1</td></tr>\n   </table>\n   <ul>\n     <li><b>No association</b> ⇒ RR = 1, OR = 1, <b>RD = 0</b> → the \"1, 1, 0\" answer.</li>\n     <li>A relative measure of <b>0.81 (&lt;1)</b> ⇒ <b>protective / prevents disease</b>.</li>\n     <li><b>\"Relative risk\"</b> = umbrella for all relative measures; usually the risk ratio.</li>\n     <li><b>OR is the measure of a case-control study.</b></li>\n   </ul>\n  </div>"},{"id":4,"tag":"Designs","title":"4 · Study Designs","html":"\n  <div class=\"note-block\">\n   <ul>\n     <li><b>Descriptive</b> = describes disease by <b>person, place, time</b> (case report/series, cross-sectional, ecological). Generates hypotheses.</li>\n     <li><b>Analytic</b> = tests hypotheses (case-control, cohort, experimental).</li>\n   </ul>\n   <table class=\"tt\">\n     <tr><th>Design</th><th>Logic</th><th>Best for</th><th>Measure</th></tr>\n     <tr><td>Cross-sectional</td><td>\"Snapshot\" at one time</td><td>Prevalence</td><td>Prevalence ratio</td></tr>\n     <tr><td>Ecological</td><td><b>Population</b> is unit of analysis</td><td>Hypothesis generation</td><td>—</td></tr>\n     <tr><td>Case-control</td><td>Sample by <b>disease</b>, look <b>back</b> at exposure</td><td><b>Rare diseases</b>, long latency</td><td><b>Odds ratio</b></td></tr>\n     <tr><td>Cohort</td><td>Sample by <b>exposure</b>, follow forward</td><td>Rare exposures, single agent</td><td>RR / IRR</td></tr>\n   </table>\n   <h4>Cohort timing</h4>\n   <ul>\n     <li><b>Prospective:</b> exposure now → future outcome.</li>\n     <li><b>Retrospective:</b> both already happened (records).</li>\n     <li><b>Ambidirectional / bidirectional:</b> <b>both</b> prospective and retrospective elements.</li>\n   </ul>\n   <h4>Case-control specifics</h4>\n   <ul>\n     <li><b>Control types:</b> population (<b>random-digit dialling</b>, voter/tax lists), hospital/clinical, friend/relative/spouse, deceased.</li>\n     <li>Hospital controls should share the cases' catchment area.</li>\n     <li><b>Matching</b> controls confounding &amp; <b>increases power/efficiency</b>. Ratio up to <b>4:1</b> boosts power.</li>\n   </ul>\n   <div class=\"callout\"><b>\"Enroll women with preterm birth vs normal delivery, then ask about smoking\"</b> = sampling on <b>outcome</b> → <b>case-control</b>.</div>\n  </div>"},{"id":5,"tag":"Designs","title":"5 · Experimental Studies / RCTs + Ethics","html":"\n  <div class=\"note-block\">\n   <ul>\n     <li>Experiments are always <b>prospective</b>; not all are randomised.</li>\n     <li><b>Double-blind:</b> <span class=\"hl\">neither researcher nor patient</span> knows the allocation.</li>\n     <li><b>Randomization:</b> balances <b>known AND unknown confounders</b> (large n).</li>\n     <li><b>Equipoise:</b> genuine uncertainty which treatment is better — RCT only <b>ethical when equipoise exists</b>.</li>\n     <li><b>IRB / ethics committee</b> approves the protocol (consent, recruitment) <b>before</b> starting.</li>\n   </ul>\n   <table class=\"tt\">\n     <tr><th>Doc / event</th><th>Key point</th></tr>\n     <tr><td><b>Nuremberg Code</b></td><td>Post-Nazi trials. The <b>10 principles</b>; emphasised <b>voluntary informed consent</b>.</td></tr>\n     <tr><td><b>Declaration of Helsinki</b></td><td>With Nuremberg, basis of human-subjects ethics.</td></tr>\n     <tr><td><b>Tuskegee</b></td><td>US PHS, 1932. <b>Legal but unethical</b> — no consent, treatment withheld.</td></tr>\n     <tr><td><b>Thalidomide</b></td><td>Teratogenic → need for <b>careful drug-safety assessment</b>.</td></tr>\n     <tr><td><b>Belmont</b></td><td>Respect for autonomy, <b>beneficence</b>, <b>justice</b>.</td></tr>\n   </table>\n  </div>"},{"id":6,"tag":"Bias","title":"6 · Confounding, Effect Modification & Causality","html":"\n  <div class=\"note-block\">\n   <h4>Confounding — the \"3rd variable\" problem</h4>\n   <p>Distorts (mixes) the exposure–disease link. Must be (1) associated with exposure, (2) an independent risk factor for disease, (3) <b>NOT on the causal pathway</b>. Shown with a <b>DAG</b>.</p>\n   <p><b>Control by:</b> restriction, <b>randomization</b>, matching, <b>stratified</b> &amp; <b>multivariable</b> analysis.</p>\n   <h4>Effect modification / interaction</h4>\n   <ul>\n     <li><b>Synergy</b> = combined effect <b>more</b> than expected.</li>\n     <li><b>Antagonism</b> = combined excess RR <b>less than the sum</b> of individual RRs.</li>\n     <li>Combined RR <b>&gt; product</b> of individual RRs → <b>departure from multiplicativity</b>.</li>\n     <li>Deviation from <b>additivity</b> = lower/moderate effect modification.</li>\n   </ul>\n   <h4>Bradford Hill criteria (9)</h4>\n   <p><b>Strength · Consistency · Specificity · Temporality · Biological gradient · Plausibility · Coherence · Experiment · Analogy.</b></p>\n   <div class=\"callout\"><b>Trap:</b> \"<b>Complexity</b>\" is NOT a Hill criterion. If a stem lists Association/Specificity/Plausibility/<b>Complexity</b>, the odd one is Complexity (real one = <b>Consistency</b>).</div>\n   <p><b>Ecological fallacy</b> = inferring <b>individual-level</b> relationships from <b>group-level</b> data.</p>\n  </div>"},{"id":7,"tag":"Stats","title":"7 · Standardization, SMR & Meta-analysis","html":"\n  <div class=\"note-block\">\n   <p><b>Standardization</b> removes the <span class=\"hl\">confounding</span> role of variables (esp. <b>age</b>) so populations can be compared. Crude rates can't be compared directly (age structures differ).</p>\n   <table class=\"tt\">\n     <tr><th></th><th>Direct</th><th>Indirect (→ SMR)</th></tr>\n     <tr><td>Uses</td><td>Age-specific rates of the <b>study</b> pop. + standard pop.</td><td>Age-specific rates of the <b>standard</b> pop. + age distribution of study pop.</td></tr>\n     <tr><td>When</td><td>Study-pop. rates are <b>KNOWN</b></td><td>Study-pop. rates <b>unknown</b>/unstable</td></tr>\n   </table>\n   <ul>\n     <li><b>SMR = observed ÷ expected deaths</b> (×100).</li>\n     <li><b>Excess mortality</b> = observed − expected deaths (e.g. Storm Daniel, Thessaly 2023).</li>\n     <li><b>Meta-analysis = the QUANTITATIVE (statistical) synthesis</b> of individual studies (optional part of a systematic review).</li>\n     <li><b>Statistical power</b> = ability to detect an association <b>if one truly exists</b>.</li>\n   </ul>\n  </div>"},{"id":8,"tag":"Water","title":"8 · Hygiene of Water","html":"\n  <div class=\"note-block\">\n   <h4>Sources</h4>\n   <ul>\n     <li><b>Groundwater / aquifer:</b> soil-filtered, cleanest.</li>\n     <li><b>Surface water:</b> unsafe raw, needs treatment. Both types generally need purification/disinfection.</li>\n   </ul>\n   <h4>Indicator organisms</h4>\n   <ul>\n     <li><b>Main bacterial indicator = <span class=\"hl\">E. coli</span></b> (faecal coliform).</li>\n     <li><b>Indicators signify faecal contamination</b> — water mixed with intestinal contents.</li>\n     <li>Drinking water: <span class=\"pill\">0 enterococci / 100 mL</span>.</li>\n     <li>Bottled water: <b>0 cfu/mL</b> of E. coli, enterococci, Pseudomonas — <b>heterotrophic flora has an allowed limit</b> (the \"except\").</li>\n   </ul>\n   <h4>Disinfection / treatment</h4>\n   <ul>\n     <li>Methods: <b>chlorination, ozonation, UV</b>.</li>\n     <li><b>Aluminium sulfate = coagulation</b>, <span class=\"hl\">NOT disinfection</span>.</li>\n     <li><b>Chlorine is the FINAL step</b> (residual disinfection).</li>\n   </ul>\n   <h4>Waterborne disease</h4>\n   <ul>\n     <li>Bacteria: cholera, typhoid, E. coli O157:H7, Salmonella, Campylobacter.</li>\n     <li>Protozoa: <b>Cryptosporidium</b>, Giardia, Entamoeba (amoebic dysentery).</li>\n     <li>Sulfates → <b>laxative effect</b>.</li>\n   </ul>\n   <div class=\"callout\"><b>Milwaukee 1993:</b> biggest US waterborne outbreak — <b>Cryptosporidium</b> (a <u>protozoan</u>, NOT bacteria). Follows heavy rain, like Storm Daniel 2023.</div>\n  </div>"},{"id":9,"tag":"Air","title":"9 · The Air We Breathe / Pollution","html":"\n  <div class=\"note-block\">\n   <h4>Clean air</h4>\n   <p>N₂ ≈ 78% · O₂ ≈ 21% · Ar ≈ 0.93% · CO₂ &lt; 0.04% + trace gases.</p>\n   <div class=\"callout\"><b>Ammonia is NOT a component of clean air.</b> (Repeatedly tested.)</div>\n   <h4>Pollutants</h4>\n   <ul>\n     <li><b>Primary</b> = emitted directly (CO, SO₂, NOₓ, hydrocarbons, PM).</li>\n     <li><b>Secondary</b> = formed by reactions → <b>ground-level ozone (O₃)</b>.</li>\n     <li><b>Thermal inversion</b> = a <b>meteorological phenomenon</b> that traps pollutants (Great London Smog 1952).</li>\n     <li><b>PM10</b> → cardiovascular/respiratory harm + premature mortality — <b>NOT skin</b>.</li>\n   </ul>\n   <h4>Greenhouse / ozone</h4>\n   <ul>\n     <li>Primary greenhouse gas = <b>CO₂</b>.</li>\n     <li>Stratospheric ozone destroyed by <b>CFCs</b>.</li>\n   </ul>\n   <h4>AQI &amp; standards</h4>\n   <ul>\n     <li><b>AQI:</b> 0–500, higher = worse; set by the \"dominant pollutant\".</li>\n     <li><b>WHO stricter</b> (health-based only); <b>EU limits less strict</b> (balance economics/feasibility).</li>\n   </ul>\n   <h4>Control &amp; energy</h4>\n   <ul>\n     <li>Real controls: cleaner fuels, renewables, tree cover. <b>Tall chimneys are NOT a real control</b> (just disperse).</li>\n     <li>Least polluting fuel = <b>natural gas</b>; non-renewable = <b>nuclear</b>; renewable = wind/solar/hydro/fertile soil.</li>\n     <li>No nuclear in Greece → <b>earthquake-prone</b>.</li>\n   </ul>\n  </div>"},{"id":10,"tag":"Food","title":"10 · Food & Nutrition","html":"\n  <div class=\"note-block\">\n   <h4>Foodborne INFECTION vs INTOXICATION</h4>\n   <table class=\"tt\">\n     <tr><th></th><th>Infection</th><th>Intoxication</th></tr>\n     <tr><td>Cause</td><td>Live microbe ingested</td><td><b>Pre-formed toxin</b> in food</td></tr>\n     <tr><td>Multiply in food?</td><td>No (just present)</td><td><b>Yes</b></td></tr>\n     <tr><td>Multiply in gut?</td><td><b>Yes</b></td><td>No</td></tr>\n   </table>\n   <div class=\"callout\"><b>Infection \"except\"</b> = \"must multiply in the food\" (that's intoxication). <b>Intoxication \"except\"</b> = \"multiplies in the intestinal tract\" (that's infection).</div>\n   <h4>Key organisms</h4>\n   <ul>\n     <li><b>Highest mortality (5–10%): botulism (C. botulinum)</b> &amp; listeriosis.</li>\n     <li><b>Bacillus cereus</b> = two toxins (diarrhoeal + emetic).</li>\n     <li>Most foodborne <b>epidemics = Salmonella</b>; most common EU zoonosis = <b>Campylobacter</b>.</li>\n     <li>Bacterial dysentery = <b>Shigella</b>; HUS (bloody diarrhoea + AKI) = <b>E. coli O157:H7</b>.</li>\n   </ul>\n   <h4>Toxins</h4>\n   <ul>\n     <li><b>Aflatoxins</b> (Aspergillus flavus) = most widespread mycotoxins; in <b>cereal grains &amp; nuts</b>.</li>\n     <li><b>Dioxins</b> = <b>lipophilic/hydrophobic</b>, accumulate in fat, carcinogenic.</li>\n   </ul>\n   <h4>Nutrition</h4>\n   <ul>\n     <li><b>BMI:</b> 18.5–25 normal but <b>not at all ages</b> → \"none correct\". Same weight+height = same BMI &amp; classification (ignores body composition).</li>\n     <li>Calorie needs depend on <b>physical activity</b>; BMR shifted <b>both ways by medication</b>.</li>\n     <li>Recommended carbohydrate ≈ <b>130 g/day</b>; Mediterranean diet meat ≈ <b>200–400 g/week</b>.</li>\n     <li><b>Trace elements</b> = iron/zinc; Na, Cl, Mg, S, Ca, K are <b>macrominerals</b>.</li>\n     <li>Weight = <b>energy balance</b>, not one macronutrient.</li>\n   </ul>\n   <h4>Traveller's diarrhoea</h4>\n   <ul>\n     <li>≥ <b>3 unformed stools/24 h</b>; low-risk = developed regions.</li>\n     <li>Safe = <b>very hot, freshly cooked</b>; Hep A = most common vaccine-preventable travel infection.</li>\n   </ul>\n  </div>"},{"id":11,"tag":"Occ","title":"11 · Occupational & Environmental Hygiene","html":"\n  <div class=\"note-block\">\n   <ul>\n     <li><b>Hazard</b> = anything with <b>potential to cause harm</b>.</li>\n     <li><b>Occupational risk</b> = <b>likelihood AND severity</b> of injury/disease from a hazard.</li>\n   </ul>\n   <div class=\"callout\"><b>T/F trap:</b> \"Occupational risk is anything with potential to cause harm\" → <b>FALSE</b>. That's a <u>hazard</u>.</div>\n   <ul>\n     <li><b>Noise: WHO safe &lt; 75 dB</b> for an 8-h shift.</li>\n     <li><b>Asbestos</b> harms via <b>respiratory tract</b> → asbestosis, mesothelioma.</li>\n     <li>Occupational lung agents: <b>silica, asbestos, coal</b>.</li>\n     <li>Livestock farmers → <b>brucellosis</b> (and TB).</li>\n     <li><b>Healthy worker effect:</b> workers healthier than general public → main <b>disadvantage of using the general population as comparison</b>.</li>\n   </ul>\n   <h4>Burnout (ICD-11)</h4>\n   <p>From <b>chronic unmanaged workplace stress</b>: exhaustion, cynicism, reduced efficacy. <span class=\"hl\">NOT suicidal thoughts</span> (the \"not true\" option).</p>\n   <h4>Pollution types</h4>\n   <p>Water · Air · Soil · Thermal · Noise · Light. <b>\"Technology\" is NOT a pollution type.</b> Minamata 1953 = <b>mercury</b>; most sensitive ecosystem = <b>Mediterranean Sea</b>.</p>\n  </div>"},{"id":12,"tag":"Outbreak","title":"12 · Outbreak Investigation & Emerging Diseases","html":"\n  <div class=\"note-block\">\n   <h4>Outbreak — 3 necessary conditions</h4>\n   <ul>\n     <li>A pathogenic agent infecting many.</li>\n     <li>An appropriate <b>mode of transmission</b>.</li>\n     <li>A <b>sufficiently LARGE</b> susceptible pool (NOT \"limited\"; vaccination is not required — it prevents outbreaks).</li>\n   </ul>\n   <h4>Investigation aims</h4>\n   <ul>\n     <li>Identify <b>agent</b>, source/reservoir, transmission, then <b>intervene</b>.</li>\n     <li><b>Never</b> \"let it evolve to natural immunity\".</li>\n     <li><b>Case definition</b> = symptoms, incubation, lab findings — <b>NOT family history</b>.</li>\n     <li>Hospital reservoirs: environment, colonised staff, colonised/infected patients (visitors least).</li>\n   </ul>\n   <h4>Emerging pathogens</h4>\n   <ul>\n     <li>Examples: protozoa (Cryptosporidium), H. pylori, Campylobacter. <b>S. pneumoniae is NOT emerging</b>.</li>\n     <li>Drivers: international transport, weak health systems, climate change, human–animal contact.</li>\n   </ul>\n   <h4>Climate change</h4>\n   <ul>\n     <li>Warming favours Cryptosporidium/Cyclospora; floods precede outbreaks.</li>\n     <li>Malaria: shifts <b>temperature &amp; rainfall favouring mosquito breeding</b>.</li>\n     <li>↑CO₂ in plants → ↑<b>carbohydrate</b>, ↓protein/micronutrients.</li>\n   </ul>\n   <h4>Health education</h4>\n   <p>Approach <b>depends on the audience's characteristics &amp; education level</b>; small groups best.</p>\n  </div>"}]}}
+{
+  "source": "artifact-3 Hygiene MD1040",
+  "recalls": {
+    "count": 38,
+    "questions": [
+      {
+        "id": 1,
+        "topic": "Frequency",
+        "type": "mcq",
+        "stem": "Cumulative incidence (average risk) is the measure of choice in which cohort, because there are no losses during follow-up?",
+        "options": {
+          "A": "Dynamic cohort",
+          "B": "Open cohort",
+          "C": "Closed / fixed cohort",
+          "D": "Ecological cohort"
+        },
+        "answer": "C",
+        "explanation": "Closed (fixed) cohort. Cumulative incidence assumes everyone is followed for the whole period with no loss to follow-up."
+      },
+      {
+        "id": 2,
+        "topic": "History",
+        "type": "mcq",
+        "stem": "James Lind is best known for which contribution?",
+        "options": {
+          "A": "Mapping the Broad Street pump",
+          "B": "The first recorded controlled clinical trial (scurvy → citrus)",
+          "C": "Inventing the life table",
+          "D": "Formulating the epidemiologic triangle"
+        },
+        "answer": "B",
+        "explanation": "The first recorded controlled clinical trial — HMS Salisbury, 1747, citrus fruit cures scurvy."
+      },
+      {
+        "id": 3,
+        "topic": "Water",
+        "type": "mcq",
+        "stem": "Bacterial indicators of water signify that:",
+        "options": {
+          "A": "Toxic chemicals are present",
+          "B": "The water has mixed with intestinal (faecal) contents",
+          "C": "The water is safe to drink",
+          "D": "Viruses are present"
+        },
+        "answer": "B",
+        "explanation": "The water has mixed with intestinal contents — faecal contamination, correlated with pathogens."
+      },
+      {
+        "id": 4,
+        "topic": "Designs",
+        "type": "mcq",
+        "stem": "An advantage of a matched case-control study is that:",
+        "options": {
+          "A": "Type I error increases",
+          "B": "Study power is reduced",
+          "C": "Study power is increased",
+          "D": "It removes the need for controls"
+        },
+        "answer": "C",
+        "explanation": "Study power is increased — matching improves efficiency and controls confounding."
+      },
+      {
+        "id": 5,
+        "topic": "Frequency",
+        "type": "mcq",
+        "stem": "A new treatment prolongs survival but doesn't cure. Effect on disease prevalence?",
+        "options": {
+          "A": "Prevalence decreases",
+          "B": "Prevalence stays the same",
+          "C": "Prevalence increases",
+          "D": "Impossible to predict"
+        },
+        "answer": "C",
+        "explanation": "Prevalence increases. Prevalence = incidence × duration; longer survival lengthens duration."
+      },
+      {
+        "id": 6,
+        "topic": "Definitions",
+        "type": "mcq",
+        "stem": "The study of disease frequency is NOT related to which of the following?",
+        "options": {
+          "A": "Criteria to identify the disease",
+          "B": "Counting the disease cases",
+          "C": "Determining the population size",
+          "D": "None — all are necessary elements"
+        },
+        "answer": "D",
+        "explanation": "None — all of them are necessary (criteria, numerator of cases, denominator population)."
+      },
+      {
+        "id": 7,
+        "topic": "Designs",
+        "type": "mcq",
+        "stem": "A case-control study is characterised by:",
+        "options": {
+          "A": "Sampling by exposure and following forward",
+          "B": "Sampling by disease status and looking back at exposure, using the odds ratio",
+          "C": "Using the population as the unit of analysis",
+          "D": "Randomly allocating an intervention"
+        },
+        "answer": "B",
+        "explanation": "Sampling by disease status, looking back at exposure; measure = odds ratio. Ideal for rare diseases."
+      },
+      {
+        "id": 8,
+        "topic": "Bias",
+        "type": "mcq",
+        "stem": "Which best describes the ecological fallacy?",
+        "options": {
+          "A": "Confusing correlation with causation in one person",
+          "B": "Inferring individual-level relationships from group-level data",
+          "C": "Losing subjects to follow-up",
+          "D": "Failing to blind the assessor"
+        },
+        "answer": "B",
+        "explanation": "Inferring individual-level associations from group (population)-level data."
+      },
+      {
+        "id": 9,
+        "topic": "Ethics",
+        "type": "mcq",
+        "stem": "'Equipoise' in a clinical trial means:",
+        "options": {
+          "A": "Equal group sizes",
+          "B": "Genuine uncertainty about which treatment is better — required for an ethical RCT",
+          "C": "Balanced confounders after randomization",
+          "D": "Equal dosing between arms"
+        },
+        "answer": "B",
+        "explanation": "Genuine uncertainty about which treatment is superior. An RCT is only ethical when equipoise exists."
+      },
+      {
+        "id": 10,
+        "topic": "Water",
+        "type": "mcq",
+        "stem": "What is added in the FINAL step of drinking-water treatment?",
+        "options": {
+          "A": "Aluminium sulfate",
+          "B": "Chlorine",
+          "C": "Iron",
+          "D": "Sulfur"
+        },
+        "answer": "B",
+        "explanation": "Chlorine (chlorination) — the final disinfection step, leaving a protective residual. Aluminium sulfate is an earlier coagulation step."
+      },
+      {
+        "id": 11,
+        "topic": "Ethics",
+        "type": "mcq",
+        "stem": "The thalidomide disaster mainly highlighted the need for:",
+        "options": {
+          "A": "Informed consent",
+          "B": "Privacy protection",
+          "C": "Careful drug safety (teratogenicity) assessment",
+          "D": "Ethics-committee protocol review"
+        },
+        "answer": "C",
+        "explanation": "Careful drug safety assessment, especially teratogenicity testing in pregnancy."
+      },
+      {
+        "id": 12,
+        "topic": "Water",
+        "type": "mcq",
+        "stem": "The main bacterial indicator organism for water is:",
+        "options": {
+          "A": "Pseudomonas",
+          "B": "E. coli",
+          "C": "Rotavirus",
+          "D": "Legionella"
+        },
+        "answer": "B",
+        "explanation": "E. coli (faecal coliform) — the principal indicator of faecal contamination."
+      },
+      {
+        "id": 13,
+        "topic": "Air",
+        "type": "mcq",
+        "stem": "Compared with WHO guidelines, the EU air-quality limits are:",
+        "options": {
+          "A": "Identical",
+          "B": "Less strict",
+          "C": "Stricter",
+          "D": "Not comparable"
+        },
+        "answer": "B",
+        "explanation": "Less strict. WHO guidelines are purely health-based; EU limits balance economics/feasibility, so they're more lenient."
+      },
+      {
+        "id": 14,
+        "topic": "Stats",
+        "type": "mcq",
+        "stem": "Standardization is a method used to estimate the ___ role of certain variables so populations are comparable:",
+        "options": {
+          "A": "Synergistic",
+          "B": "Confounding",
+          "C": "Significant",
+          "D": "Random"
+        },
+        "answer": "B",
+        "explanation": "Confounding. Standardization removes the confounding effect (usually of age)."
+      },
+      {
+        "id": 15,
+        "topic": "Stats",
+        "type": "mcq",
+        "stem": "The Standardized Mortality Ratio (SMR) formula is:",
+        "options": {
+          "A": "Expected ÷ observed deaths",
+          "B": "Observed ÷ expected deaths (×100)",
+          "C": "Deaths ÷ population",
+          "D": "New cases ÷ person-years"
+        },
+        "answer": "B",
+        "explanation": "SMR = observed ÷ expected deaths (×100). From indirect standardization."
+      },
+      {
+        "id": 16,
+        "topic": "Stats",
+        "type": "mcq",
+        "stem": "Meta-analysis is best defined as:",
+        "options": {
+          "A": "A qualitative summary of studies",
+          "B": "The quantitative (statistical) synthesis of results from individual studies",
+          "C": "Analysis of a single large trial",
+          "D": "A narrative literature review"
+        },
+        "answer": "B",
+        "explanation": "The quantitative synthesis of results from individual studies — an optional statistical part of a systematic review."
+      },
+      {
+        "id": 17,
+        "topic": "Air",
+        "type": "mcq",
+        "stem": "Thermal inversion is:",
+        "options": {
+          "A": "A pollutant",
+          "B": "A meteorological phenomenon that traps pollutants near the ground",
+          "C": "A type of secondary aerosol",
+          "D": "A water-treatment step"
+        },
+        "answer": "B",
+        "explanation": "A meteorological phenomenon — a warm air layer traps cooler air below, so pollutants accumulate."
+      },
+      {
+        "id": 18,
+        "topic": "Association",
+        "type": "mcq",
+        "stem": "Which statement about RR and OR is correct?",
+        "options": {
+          "A": "Both equal 0 under the null",
+          "B": "Both equal 1 under the null; OR is the measure of case-control studies",
+          "C": "OR is used in cohort studies only",
+          "D": "RR can only be < 1"
+        },
+        "answer": "B",
+        "explanation": "RR = OR = 1 under the null (no association); the OR (cross-product ratio) is the measure of case-control studies."
+      },
+      {
+        "id": 19,
+        "topic": "Outbreak",
+        "type": "mcq",
+        "stem": "'Genomic surveillance' refers to:",
+        "options": {
+          "A": "Sequencing pathogen genomes to track spread and variants",
+          "B": "Counting cases in a hospital",
+          "C": "Measuring air-pollutant genomes",
+          "D": "Screening humans for genetic disease"
+        },
+        "answer": "A",
+        "explanation": "Sequencing pathogen genomes to monitor transmission, evolution and emerging variants."
+      },
+      {
+        "id": 20,
+        "topic": "Occupational",
+        "type": "mcq",
+        "stem": "Asbestos primarily harms health through:",
+        "options": {
+          "A": "The eyes",
+          "B": "Skin exposure",
+          "C": "The respiratory tract",
+          "D": "Ingestion"
+        },
+        "answer": "C",
+        "explanation": "The respiratory tract — inhaled fibres cause asbestosis, lung cancer, mesothelioma."
+      },
+      {
+        "id": 21,
+        "topic": "Association",
+        "type": "mcq",
+        "stem": "If a relative comparison measure equals 0.81 (less than one), the exposure is:",
+        "options": {
+          "A": "Harmful",
+          "B": "Protective / prevents disease",
+          "C": "Neutral",
+          "D": "Not interpretable"
+        },
+        "answer": "B",
+        "explanation": "Protective. An RR/OR below 1 = lower disease risk (prevents disease)."
+      },
+      {
+        "id": 22,
+        "topic": "Ethics",
+        "type": "mcq",
+        "stem": "The Tuskegee Syphilis Study is remembered as research that was:",
+        "options": {
+          "A": "Ethical and well-consented",
+          "B": "Legal at the time but deeply unethical (no informed consent)",
+          "C": "A properly randomized trial",
+          "D": "Conducted with full IRB oversight"
+        },
+        "answer": "B",
+        "explanation": "Legal at the time but unethical — men weren't told their diagnosis or that treatment was withheld; drove modern consent/IRB rules."
+      },
+      {
+        "id": 23,
+        "topic": "Stats",
+        "type": "mcq",
+        "stem": "'Excess mortality' (used for Storm Daniel, Thessaly 2023) is defined as:",
+        "options": {
+          "A": "Observed minus expected deaths",
+          "B": "Deaths from a single cause",
+          "C": "The crude death rate",
+          "D": "The case-fatality rate"
+        },
+        "answer": "A",
+        "explanation": "Observed − expected deaths — the extra deaths beyond what would normally be expected."
+      },
+      {
+        "id": 24,
+        "topic": "Frequency",
+        "type": "mcq",
+        "stem": "Of 1,000 newborns, 100 had serious birth defects and 20 of those died in year 1; 90 of the 900 without defects also died. Cumulative incidence of mortality in the whole population?",
+        "options": {
+          "A": "2%",
+          "B": "9%",
+          "C": "11%",
+          "D": "20%"
+        },
+        "answer": "C",
+        "explanation": "11%. Total deaths = 20 + 90 = 110; 110 ÷ 1,000 = 0.11 = 11%."
+      },
+      {
+        "id": 25,
+        "topic": "Occupational",
+        "type": "mcq",
+        "stem": "True or False: 'Occupational risk is anything that has the potential to cause harm.'",
+        "options": {
+          "A": "True",
+          "B": "False — that defines a HAZARD, not risk"
+        },
+        "answer": "B",
+        "explanation": "False. That defines a hazard. Occupational risk = the likelihood AND severity of injury/disease from exposure to a hazard."
+      },
+      {
+        "id": 26,
+        "topic": "Association",
+        "type": "mcq",
+        "stem": "If there is NO association, the values of (risk ratio, odds ratio, risk difference) are:",
+        "options": {
+          "A": "0, 0, 1",
+          "B": "1, 1, 0",
+          "C": "1, 0, 1",
+          "D": "0, 1, 0"
+        },
+        "answer": "B",
+        "explanation": "1, 1, 0. Ratios (RR, OR) = 1 under the null; the risk difference (absolute) = 0."
+      },
+      {
+        "id": 27,
+        "topic": "Causality",
+        "type": "mcq",
+        "stem": "Which of these is NOT one of the Bradford Hill criteria for causation?",
+        "options": {
+          "A": "Specificity",
+          "B": "Plausibility",
+          "C": "Complexity",
+          "D": "Consistency"
+        },
+        "answer": "C",
+        "explanation": "Complexity. The nine Hill criteria: strength, consistency, specificity, temporality, biological gradient, plausibility, coherence, experiment, analogy."
+      },
+      {
+        "id": 28,
+        "topic": "Water",
+        "type": "mcq",
+        "stem": "The 1993 Milwaukee waterborne outbreak was caused by:",
+        "options": {
+          "A": "A bacterium (Salmonella)",
+          "B": "Cryptosporidium — a protozoan parasite",
+          "C": "A virus (Rotavirus)",
+          "D": "A toxin (aflatoxin)"
+        },
+        "answer": "B",
+        "explanation": "Cryptosporidium, a protozoan parasite (not a bacterium!). ~400,000 affected — largest US waterborne outbreak, following heavy rainfall."
+      },
+      {
+        "id": 29,
+        "topic": "Food",
+        "type": "mcq",
+        "stem": "In plants, increased atmospheric CO₂ tends to:",
+        "options": {
+          "A": "Increase carbohydrate content (and lower protein/micronutrients)",
+          "B": "Increase protein content",
+          "C": "Decrease carbohydrate content",
+          "D": "Have no effect on composition"
+        },
+        "answer": "A",
+        "explanation": "Increase carbohydrate content while diluting protein and micronutrients."
+      },
+      {
+        "id": 30,
+        "topic": "Water",
+        "type": "mcq",
+        "stem": "Which CANNOT be caused by waterborne infection?",
+        "options": {
+          "A": "Diarrhoea",
+          "B": "Cholera",
+          "C": "Typhoid",
+          "D": "Myocardial infarction"
+        },
+        "answer": "D",
+        "explanation": "Myocardial infarction. Diarrhoea, cholera and typhoid are waterborne; a heart attack is not an infectious waterborne disease."
+      },
+      {
+        "id": 31,
+        "topic": "History",
+        "type": "mcq",
+        "stem": "Who developed the concept of the life table by analysing London death records?",
+        "options": {
+          "A": "John Snow",
+          "B": "John Graunt",
+          "C": "James Lind",
+          "D": "William Farr"
+        },
+        "answer": "B",
+        "explanation": "John Graunt — father of demography; first epidemiologist/statistician/demographer."
+      },
+      {
+        "id": 32,
+        "topic": "Designs",
+        "type": "mcq",
+        "stem": "An ambidirectional (bidirectional) study is a type of:",
+        "options": {
+          "A": "Case-control study",
+          "B": "Cohort study with both prospective and retrospective elements",
+          "C": "Cross-sectional study",
+          "D": "Ecological study"
+        },
+        "answer": "B",
+        "explanation": "A cohort study with both prospective and retrospective components."
+      },
+      {
+        "id": 33,
+        "topic": "Food",
+        "type": "mcq",
+        "stem": "Malnutrition differs from undernutrition in that malnutrition:",
+        "options": {
+          "A": "Only means starvation",
+          "B": "Encompasses ALL forms — under-, over-nutrition and micronutrient imbalance",
+          "C": "Is the same as obesity",
+          "D": "Only refers to children"
+        },
+        "answer": "B",
+        "explanation": "Malnutrition is the umbrella term (under-, over-nutrition, micronutrient deficiency); undernutrition is specifically deficiency."
+      },
+      {
+        "id": 34,
+        "topic": "Designs",
+        "type": "mcq",
+        "stem": "The odds ratio is the characteristic measure of which design?",
+        "options": {
+          "A": "Cohort study",
+          "B": "Cross-sectional study",
+          "C": "Case-control study",
+          "D": "Ecological study"
+        },
+        "answer": "C",
+        "explanation": "Case-control study."
+      },
+      {
+        "id": 35,
+        "topic": "Air",
+        "type": "mcq",
+        "stem": "Which is NOT a type of environmental pollution?",
+        "options": {
+          "A": "Noise pollution",
+          "B": "Thermal pollution",
+          "C": "Technology",
+          "D": "Light pollution"
+        },
+        "answer": "C",
+        "explanation": "Technology. Recognised types: water, air, soil, thermal, noise, light."
+      },
+      {
+        "id": 36,
+        "topic": "Definitions",
+        "type": "mcq",
+        "stem": "Epidemiology is best described as:",
+        "options": {
+          "A": "A branch of public health",
+          "B": "A branch of medical statistics",
+          "C": "Separate from public health",
+          "D": "A branch of clinical pharmacology"
+        },
+        "answer": "A",
+        "explanation": "A branch of public health — one of its basic sciences."
+      },
+      {
+        "id": 37,
+        "topic": "Ethics",
+        "type": "mcq",
+        "stem": "The Belmont Report's three core principles are:",
+        "options": {
+          "A": "Autonomy, beneficence, justice",
+          "B": "Consent, privacy, safety",
+          "C": "Randomization, blinding, follow-up",
+          "D": "Strength, consistency, plausibility"
+        },
+        "answer": "A",
+        "explanation": "Respect for autonomy, beneficence, justice. (Distinct from Nuremberg's 10 principles.)"
+      },
+      {
+        "id": 38,
+        "topic": "Designs",
+        "type": "mcq",
+        "stem": "A cross-sectional study is best described as:",
+        "options": {
+          "A": "A 'snapshot' measuring exposure and outcome at a single point in time",
+          "B": "A long forward follow-up",
+          "C": "Sampling on disease status",
+          "D": "Randomly allocating treatment"
+        },
+        "answer": "A",
+        "explanation": "A snapshot at one point in time — good for prevalence."
+      }
+    ]
+  },
+  "notes": {
+    "count": 12,
+    "sections": [
+      {
+        "id": 1,
+        "tag": "Epi",
+        "title": "1 · What Epidemiology Is + Key History",
+        "html": "\n  <div class=\"note-block\">\n   <p><b>Epidemiology</b> = study of the <span class=\"hl\">distribution &amp; determinants of disease frequency</span> in human populations, and applying this to <b>control</b> health problems.</p>\n   <p><b>Epidemiology is a branch of PUBLIC HEALTH</b> (not vice-versa) — one of its basic sciences.</p>\n   <ul>\n     <li><b>Distribution</b> = who, where, when (person, place, time).</li>\n     <li><b>Determinants</b> = exposures/risk factors; modifiable or not, and can be <b>protective OR causative</b> (not exclusively harmful).</li>\n     <li><b>Epidemiologic triangle:</b> <span class=\"pill\">Host</span> <span class=\"pill\">Pathogen (agent)</span> <span class=\"pill\">Environment</span></li>\n   </ul>\n   <h4>The 3 founding figures</h4>\n   <table class=\"tt\">\n     <tr><th>Figure</th><th>Century</th><th>Claim to fame</th></tr>\n     <tr><td>John Graunt</td><td>17th</td><td><b>Father of demography.</b> Analysed London parish <b>death records (from ~1532)</b>, built the <b>life table</b>. \"First epidemiologist, statistician &amp; demographer.\"</td></tr>\n     <tr><td>James Lind</td><td>18th</td><td>Royal-Navy physician. <b>First recorded controlled clinical trial</b> (HMS Salisbury, 1747) — citrus cures <b>scurvy</b>.</td></tr>\n     <tr><td>John Snow</td><td>19th</td><td>Showed <b>cholera spreads via faecally-contaminated drinking water</b> (Broad St pump). Killed the \"miasma\" idea.</td></tr>\n   </table>\n   <div class=\"callout\"><b>Trap:</b> \"first clinical trial\" = <b>Lind</b>; \"first epidemiologist / death records / life table\" = <b>Graunt</b>. Don't swap.</div>\n  </div>"
+      },
+      {
+        "id": 2,
+        "tag": "Measures",
+        "title": "2 · Measures of Disease Frequency",
+        "html": "\n  <div class=\"note-block\">\n   <h4>Populations</h4>\n   <ul>\n     <li><b>Fixed / closed cohort:</b> permanent membership, defined by an event (born 1982, study enrollees). No new entries.</li>\n     <li><b>Dynamic / open cohort:</b> transient membership by a state (residents of a city).</li>\n   </ul>\n   <h4>Prevalence vs Incidence</h4>\n   <table class=\"tt\">\n     <tr><th></th><th>Prevalence</th><th>Incidence</th></tr>\n     <tr><td>Counts</td><td><b>Existing</b> cases</td><td><b>New</b> cases</td></tr>\n     <tr><td>Denominator</td><td><b>Total</b> population</td><td>Population <b>at risk</b> only</td></tr>\n     <tr><td>Use</td><td>Burden, planning, resources</td><td>Aetiologic research, evaluating prevention</td></tr>\n   </table>\n   <h4>Two flavours of incidence</h4>\n   <ul>\n     <li><b>Cumulative incidence (CI) = risk.</b> New cases ÷ pop. at risk at <i>start</i>; time in words. <span class=\"hl\">Assumes NO loss to follow-up</span> → best in a <b>closed/fixed cohort</b>.</li>\n     <li><b>Incidence rate (IR) = speed.</b> New cases ÷ <b>person-time</b>; time is intrinsic to the denominator. Handles losses → clue \"<b>person-years</b>\" = incidence rate.</li>\n   </ul>\n   <h4>Special \"rates\"</h4>\n   <ul>\n     <li><b>Attack rate</b> = new cases ÷ pop. at risk in an outbreak → quantifies the <b>extent</b> (11 of 100 ill = <span class=\"pill\">11%</span>).</li>\n     <li><b>Case-fatality rate</b> = deaths from X ÷ people with X.</li>\n   </ul>\n   <div class=\"callout\"><b>Prevalence = Incidence × Duration.</b> A treatment that <b>prolongs survival</b> (↑duration) → <b>prevalence RISES</b>.</div>\n  </div>"
+      },
+      {
+        "id": 3,
+        "tag": "Measures",
+        "title": "3 · Measures of Association (RR / OR / RD)",
+        "html": "\n  <div class=\"note-block\">\n   <table class=\"tt\">\n     <tr><th>Measure</th><th>Type</th><th>Null</th><th>Protective</th><th>Harmful</th></tr>\n     <tr><td>Risk Difference (RD)</td><td>Absolute</td><td><span class=\"pill\">0</span></td><td>&lt; 0</td><td>&gt; 0</td></tr>\n     <tr><td>Risk/Rate Ratio (RR)</td><td>Relative</td><td><span class=\"pill\">1</span></td><td>&lt; 1</td><td>&gt; 1</td></tr>\n     <tr><td>Odds Ratio (OR)</td><td>Relative (ad/bc)</td><td><span class=\"pill\">1</span></td><td>&lt; 1</td><td>&gt; 1</td></tr>\n   </table>\n   <ul>\n     <li><b>No association</b> ⇒ RR = 1, OR = 1, <b>RD = 0</b> → the \"1, 1, 0\" answer.</li>\n     <li>A relative measure of <b>0.81 (&lt;1)</b> ⇒ <b>protective / prevents disease</b>.</li>\n     <li><b>\"Relative risk\"</b> = umbrella for all relative measures; usually the risk ratio.</li>\n     <li><b>OR is the measure of a case-control study.</b></li>\n   </ul>\n  </div>"
+      },
+      {
+        "id": 4,
+        "tag": "Designs",
+        "title": "4 · Study Designs",
+        "html": "\n  <div class=\"note-block\">\n   <ul>\n     <li><b>Descriptive</b> = describes disease by <b>person, place, time</b> (case report/series, cross-sectional, ecological). Generates hypotheses.</li>\n     <li><b>Analytic</b> = tests hypotheses (case-control, cohort, experimental).</li>\n   </ul>\n   <table class=\"tt\">\n     <tr><th>Design</th><th>Logic</th><th>Best for</th><th>Measure</th></tr>\n     <tr><td>Cross-sectional</td><td>\"Snapshot\" at one time</td><td>Prevalence</td><td>Prevalence ratio</td></tr>\n     <tr><td>Ecological</td><td><b>Population</b> is unit of analysis</td><td>Hypothesis generation</td><td>—</td></tr>\n     <tr><td>Case-control</td><td>Sample by <b>disease</b>, look <b>back</b> at exposure</td><td><b>Rare diseases</b>, long latency</td><td><b>Odds ratio</b></td></tr>\n     <tr><td>Cohort</td><td>Sample by <b>exposure</b>, follow forward</td><td>Rare exposures, single agent</td><td>RR / IRR</td></tr>\n   </table>\n   <h4>Cohort timing</h4>\n   <ul>\n     <li><b>Prospective:</b> exposure now → future outcome.</li>\n     <li><b>Retrospective:</b> both already happened (records).</li>\n     <li><b>Ambidirectional / bidirectional:</b> <b>both</b> prospective and retrospective elements.</li>\n   </ul>\n   <h4>Case-control specifics</h4>\n   <ul>\n     <li><b>Control types:</b> population (<b>random-digit dialling</b>, voter/tax lists), hospital/clinical, friend/relative/spouse, deceased.</li>\n     <li>Hospital controls should share the cases' catchment area.</li>\n     <li><b>Matching</b> controls confounding &amp; <b>increases power/efficiency</b>. Ratio up to <b>4:1</b> boosts power.</li>\n   </ul>\n   <div class=\"callout\"><b>\"Enroll women with preterm birth vs normal delivery, then ask about smoking\"</b> = sampling on <b>outcome</b> → <b>case-control</b>.</div>\n  </div>"
+      },
+      {
+        "id": 5,
+        "tag": "Designs",
+        "title": "5 · Experimental Studies / RCTs + Ethics",
+        "html": "\n  <div class=\"note-block\">\n   <ul>\n     <li>Experiments are always <b>prospective</b>; not all are randomised.</li>\n     <li><b>Double-blind:</b> <span class=\"hl\">neither researcher nor patient</span> knows the allocation.</li>\n     <li><b>Randomization:</b> balances <b>known AND unknown confounders</b> (large n).</li>\n     <li><b>Equipoise:</b> genuine uncertainty which treatment is better — RCT only <b>ethical when equipoise exists</b>.</li>\n     <li><b>IRB / ethics committee</b> approves the protocol (consent, recruitment) <b>before</b> starting.</li>\n   </ul>\n   <table class=\"tt\">\n     <tr><th>Doc / event</th><th>Key point</th></tr>\n     <tr><td><b>Nuremberg Code</b></td><td>Post-Nazi trials. The <b>10 principles</b>; emphasised <b>voluntary informed consent</b>.</td></tr>\n     <tr><td><b>Declaration of Helsinki</b></td><td>With Nuremberg, basis of human-subjects ethics.</td></tr>\n     <tr><td><b>Tuskegee</b></td><td>US PHS, 1932. <b>Legal but unethical</b> — no consent, treatment withheld.</td></tr>\n     <tr><td><b>Thalidomide</b></td><td>Teratogenic → need for <b>careful drug-safety assessment</b>.</td></tr>\n     <tr><td><b>Belmont</b></td><td>Respect for autonomy, <b>beneficence</b>, <b>justice</b>.</td></tr>\n   </table>\n  </div>"
+      },
+      {
+        "id": 6,
+        "tag": "Bias",
+        "title": "6 · Confounding, Effect Modification & Causality",
+        "html": "\n  <div class=\"note-block\">\n   <h4>Confounding — the \"3rd variable\" problem</h4>\n   <p>Distorts (mixes) the exposure–disease link. Must be (1) associated with exposure, (2) an independent risk factor for disease, (3) <b>NOT on the causal pathway</b>. Shown with a <b>DAG</b>.</p>\n   <p><b>Control by:</b> restriction, <b>randomization</b>, matching, <b>stratified</b> &amp; <b>multivariable</b> analysis.</p>\n   <h4>Effect modification / interaction</h4>\n   <ul>\n     <li><b>Synergy</b> = combined effect <b>more</b> than expected.</li>\n     <li><b>Antagonism</b> = combined excess RR <b>less than the sum</b> of individual RRs.</li>\n     <li>Combined RR <b>&gt; product</b> of individual RRs → <b>departure from multiplicativity</b>.</li>\n     <li>Deviation from <b>additivity</b> = lower/moderate effect modification.</li>\n   </ul>\n   <h4>Bradford Hill criteria (9)</h4>\n   <p><b>Strength · Consistency · Specificity · Temporality · Biological gradient · Plausibility · Coherence · Experiment · Analogy.</b></p>\n   <div class=\"callout\"><b>Trap:</b> \"<b>Complexity</b>\" is NOT a Hill criterion. If a stem lists Association/Specificity/Plausibility/<b>Complexity</b>, the odd one is Complexity (real one = <b>Consistency</b>).</div>\n   <p><b>Ecological fallacy</b> = inferring <b>individual-level</b> relationships from <b>group-level</b> data.</p>\n  </div>"
+      },
+      {
+        "id": 7,
+        "tag": "Stats",
+        "title": "7 · Standardization, SMR & Meta-analysis",
+        "html": "\n  <div class=\"note-block\">\n   <p><b>Standardization</b> removes the <span class=\"hl\">confounding</span> role of variables (esp. <b>age</b>) so populations can be compared. Crude rates can't be compared directly (age structures differ).</p>\n   <table class=\"tt\">\n     <tr><th></th><th>Direct</th><th>Indirect (→ SMR)</th></tr>\n     <tr><td>Uses</td><td>Age-specific rates of the <b>study</b> pop. + standard pop.</td><td>Age-specific rates of the <b>standard</b> pop. + age distribution of study pop.</td></tr>\n     <tr><td>When</td><td>Study-pop. rates are <b>KNOWN</b></td><td>Study-pop. rates <b>unknown</b>/unstable</td></tr>\n   </table>\n   <ul>\n     <li><b>SMR = observed ÷ expected deaths</b> (×100).</li>\n     <li><b>Excess mortality</b> = observed − expected deaths (e.g. Storm Daniel, Thessaly 2023).</li>\n     <li><b>Meta-analysis = the QUANTITATIVE (statistical) synthesis</b> of individual studies (optional part of a systematic review).</li>\n     <li><b>Statistical power</b> = ability to detect an association <b>if one truly exists</b>.</li>\n   </ul>\n  </div>"
+      },
+      {
+        "id": 8,
+        "tag": "Water",
+        "title": "8 · Hygiene of Water",
+        "html": "\n  <div class=\"note-block\">\n   <h4>Sources</h4>\n   <ul>\n     <li><b>Groundwater / aquifer:</b> soil-filtered, cleanest.</li>\n     <li><b>Surface water:</b> unsafe raw, needs treatment. Both types generally need purification/disinfection.</li>\n   </ul>\n   <h4>Indicator organisms</h4>\n   <ul>\n     <li><b>Main bacterial indicator = <span class=\"hl\">E. coli</span></b> (faecal coliform).</li>\n     <li><b>Indicators signify faecal contamination</b> — water mixed with intestinal contents.</li>\n     <li>Drinking water: <span class=\"pill\">0 enterococci / 100 mL</span>.</li>\n     <li>Bottled water: <b>0 cfu/mL</b> of E. coli, enterococci, Pseudomonas — <b>heterotrophic flora has an allowed limit</b> (the \"except\").</li>\n   </ul>\n   <h4>Disinfection / treatment</h4>\n   <ul>\n     <li>Methods: <b>chlorination, ozonation, UV</b>.</li>\n     <li><b>Aluminium sulfate = coagulation</b>, <span class=\"hl\">NOT disinfection</span>.</li>\n     <li><b>Chlorine is the FINAL step</b> (residual disinfection).</li>\n   </ul>\n   <h4>Waterborne disease</h4>\n   <ul>\n     <li>Bacteria: cholera, typhoid, E. coli O157:H7, Salmonella, Campylobacter.</li>\n     <li>Protozoa: <b>Cryptosporidium</b>, Giardia, Entamoeba (amoebic dysentery).</li>\n     <li>Sulfates → <b>laxative effect</b>.</li>\n   </ul>\n   <div class=\"callout\"><b>Milwaukee 1993:</b> biggest US waterborne outbreak — <b>Cryptosporidium</b> (a <u>protozoan</u>, NOT bacteria). Follows heavy rain, like Storm Daniel 2023.</div>\n  </div>"
+      },
+      {
+        "id": 9,
+        "tag": "Air",
+        "title": "9 · The Air We Breathe / Pollution",
+        "html": "\n  <div class=\"note-block\">\n   <h4>Clean air</h4>\n   <p>N₂ ≈ 78% · O₂ ≈ 21% · Ar ≈ 0.93% · CO₂ &lt; 0.04% + trace gases.</p>\n   <div class=\"callout\"><b>Ammonia is NOT a component of clean air.</b> (Repeatedly tested.)</div>\n   <h4>Pollutants</h4>\n   <ul>\n     <li><b>Primary</b> = emitted directly (CO, SO₂, NOₓ, hydrocarbons, PM).</li>\n     <li><b>Secondary</b> = formed by reactions → <b>ground-level ozone (O₃)</b>.</li>\n     <li><b>Thermal inversion</b> = a <b>meteorological phenomenon</b> that traps pollutants (Great London Smog 1952).</li>\n     <li><b>PM10</b> → cardiovascular/respiratory harm + premature mortality — <b>NOT skin</b>.</li>\n   </ul>\n   <h4>Greenhouse / ozone</h4>\n   <ul>\n     <li>Primary greenhouse gas = <b>CO₂</b>.</li>\n     <li>Stratospheric ozone destroyed by <b>CFCs</b>.</li>\n   </ul>\n   <h4>AQI &amp; standards</h4>\n   <ul>\n     <li><b>AQI:</b> 0–500, higher = worse; set by the \"dominant pollutant\".</li>\n     <li><b>WHO stricter</b> (health-based only); <b>EU limits less strict</b> (balance economics/feasibility).</li>\n   </ul>\n   <h4>Control &amp; energy</h4>\n   <ul>\n     <li>Real controls: cleaner fuels, renewables, tree cover. <b>Tall chimneys are NOT a real control</b> (just disperse).</li>\n     <li>Least polluting fuel = <b>natural gas</b>; non-renewable = <b>nuclear</b>; renewable = wind/solar/hydro/fertile soil.</li>\n     <li>No nuclear in Greece → <b>earthquake-prone</b>.</li>\n   </ul>\n  </div>"
+      },
+      {
+        "id": 10,
+        "tag": "Food",
+        "title": "10 · Food & Nutrition",
+        "html": "\n  <div class=\"note-block\">\n   <h4>Foodborne INFECTION vs INTOXICATION</h4>\n   <table class=\"tt\">\n     <tr><th></th><th>Infection</th><th>Intoxication</th></tr>\n     <tr><td>Cause</td><td>Live microbe ingested</td><td><b>Pre-formed toxin</b> in food</td></tr>\n     <tr><td>Multiply in food?</td><td>No (just present)</td><td><b>Yes</b></td></tr>\n     <tr><td>Multiply in gut?</td><td><b>Yes</b></td><td>No</td></tr>\n   </table>\n   <div class=\"callout\"><b>Infection \"except\"</b> = \"must multiply in the food\" (that's intoxication). <b>Intoxication \"except\"</b> = \"multiplies in the intestinal tract\" (that's infection).</div>\n   <h4>Key organisms</h4>\n   <ul>\n     <li><b>Highest mortality (5–10%): botulism (C. botulinum)</b> &amp; listeriosis.</li>\n     <li><b>Bacillus cereus</b> = two toxins (diarrhoeal + emetic).</li>\n     <li>Most foodborne <b>epidemics = Salmonella</b>; most common EU zoonosis = <b>Campylobacter</b>.</li>\n     <li>Bacterial dysentery = <b>Shigella</b>; HUS (bloody diarrhoea + AKI) = <b>E. coli O157:H7</b>.</li>\n   </ul>\n   <h4>Toxins</h4>\n   <ul>\n     <li><b>Aflatoxins</b> (Aspergillus flavus) = most widespread mycotoxins; in <b>cereal grains &amp; nuts</b>.</li>\n     <li><b>Dioxins</b> = <b>lipophilic/hydrophobic</b>, accumulate in fat, carcinogenic.</li>\n   </ul>\n   <h4>Nutrition</h4>\n   <ul>\n     <li><b>BMI:</b> 18.5–25 normal but <b>not at all ages</b> → \"none correct\". Same weight+height = same BMI &amp; classification (ignores body composition).</li>\n     <li>Calorie needs depend on <b>physical activity</b>; BMR shifted <b>both ways by medication</b>.</li>\n     <li>Recommended carbohydrate ≈ <b>130 g/day</b>; Mediterranean diet meat ≈ <b>200–400 g/week</b>.</li>\n     <li><b>Trace elements</b> = iron/zinc; Na, Cl, Mg, S, Ca, K are <b>macrominerals</b>.</li>\n     <li>Weight = <b>energy balance</b>, not one macronutrient.</li>\n   </ul>\n   <h4>Traveller's diarrhoea</h4>\n   <ul>\n     <li>≥ <b>3 unformed stools/24 h</b>; low-risk = developed regions.</li>\n     <li>Safe = <b>very hot, freshly cooked</b>; Hep A = most common vaccine-preventable travel infection.</li>\n   </ul>\n  </div>"
+      },
+      {
+        "id": 11,
+        "tag": "Occ",
+        "title": "11 · Occupational & Environmental Hygiene",
+        "html": "\n  <div class=\"note-block\">\n   <ul>\n     <li><b>Hazard</b> = anything with <b>potential to cause harm</b>.</li>\n     <li><b>Occupational risk</b> = <b>likelihood AND severity</b> of injury/disease from a hazard.</li>\n   </ul>\n   <div class=\"callout\"><b>T/F trap:</b> \"Occupational risk is anything with potential to cause harm\" → <b>FALSE</b>. That's a <u>hazard</u>.</div>\n   <ul>\n     <li><b>Noise: WHO safe &lt; 75 dB</b> for an 8-h shift.</li>\n     <li><b>Asbestos</b> harms via <b>respiratory tract</b> → asbestosis, mesothelioma.</li>\n     <li>Occupational lung agents: <b>silica, asbestos, coal</b>.</li>\n     <li>Livestock farmers → <b>brucellosis</b> (and TB).</li>\n     <li><b>Healthy worker effect:</b> workers healthier than general public → main <b>disadvantage of using the general population as comparison</b>.</li>\n   </ul>\n   <h4>Burnout (ICD-11)</h4>\n   <p>From <b>chronic unmanaged workplace stress</b>: exhaustion, cynicism, reduced efficacy. <span class=\"hl\">NOT suicidal thoughts</span> (the \"not true\" option).</p>\n   <h4>Pollution types</h4>\n   <p>Water · Air · Soil · Thermal · Noise · Light. <b>\"Technology\" is NOT a pollution type.</b> Minamata 1953 = <b>mercury</b>; most sensitive ecosystem = <b>Mediterranean Sea</b>.</p>\n  </div>"
+      },
+      {
+        "id": 12,
+        "tag": "Outbreak",
+        "title": "12 · Outbreak Investigation & Emerging Diseases",
+        "html": "\n  <div class=\"note-block\">\n   <h4>Outbreak — 3 necessary conditions</h4>\n   <ul>\n     <li>A pathogenic agent infecting many.</li>\n     <li>An appropriate <b>mode of transmission</b>.</li>\n     <li>A <b>sufficiently LARGE</b> susceptible pool (NOT \"limited\"; vaccination is not required — it prevents outbreaks).</li>\n   </ul>\n   <h4>Investigation aims</h4>\n   <ul>\n     <li>Identify <b>agent</b>, source/reservoir, transmission, then <b>intervene</b>.</li>\n     <li><b>Never</b> \"let it evolve to natural immunity\".</li>\n     <li><b>Case definition</b> = symptoms, incubation, lab findings — <b>NOT family history</b>.</li>\n     <li>Hospital reservoirs: environment, colonised staff, colonised/infected patients (visitors least).</li>\n   </ul>\n   <h4>Emerging pathogens</h4>\n   <ul>\n     <li>Examples: protozoa (Cryptosporidium), H. pylori, Campylobacter. <b>S. pneumoniae is NOT emerging</b>.</li>\n     <li>Drivers: international transport, weak health systems, climate change, human–animal contact.</li>\n   </ul>\n   <h4>Climate change</h4>\n   <ul>\n     <li>Warming favours Cryptosporidium/Cyclospora; floods precede outbreaks.</li>\n     <li>Malaria: shifts <b>temperature &amp; rainfall favouring mosquito breeding</b>.</li>\n     <li>↑CO₂ in plants → ↑<b>carbohydrate</b>, ↓protein/micronutrients.</li>\n   </ul>\n   <h4>Health education</h4>\n   <p>Approach <b>depends on the audience's characteristics &amp; education level</b>; small groups best.</p>\n  </div>"
+      }
+    ]
+  }
+}

@@ -6,15 +6,6 @@
   "country": "gr",
   "tests": [
     {
-      "id": "past-papers",
-      "title": "Microbiology II — Past Papers",
-      "kind": "mock",
-      "resourceType": "past-paper",
-      "questionCount": 70,
-      "description": "70 real past-paper MCQs (2020–2022, Greek programme), each tagged with its exam year.",
-      "year": 2026
-    },
-    {
       "id": "recalls",
       "title": "Microbiology II — Recalled MCQs",
       "kind": "topic",

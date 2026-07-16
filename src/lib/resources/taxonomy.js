@@ -14,7 +14,6 @@
 export const RESOURCE_TYPES = [
   { value: 'practice-test', label: 'Practice test' },
   { value: 'flashcard-deck', label: 'Flashcard deck' },
-  { value: 'past-paper', label: 'Past paper' },
   { value: 'study-notes', label: 'Study notes' },
 ];
 

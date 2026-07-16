@@ -91,10 +91,8 @@ function collectPracticeEntries() {
       if (index.title) subjectLabels.set(subject, index.title);
       for (const test of index.tests) {
         entries.push({
-          // The card type defaults to 'practice-test'; a test can opt into
-          // 'past-paper' via `resourceType` in its index.json entry.
           id: `practice:${subject}:${test.id}`,
-          type: test.resourceType || 'practice-test',
+          type: 'practice-test',
           title: test.title,
           description: test.description,
           href: `/student/ausom/${semester}/${subject}/${test.id}`,

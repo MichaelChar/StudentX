@@ -2,15 +2,16 @@
 name: resource-extraction
 description: >-
   Extract a study resource from any source and convert it into native StudentX
-  content — practice tests, past-paper banks, recall banks, in-app flashcard
-  (reveal) decks, downloadable Anki decks, or study notes. Handles Claude
-  artifacts (claude.ai/public/artifacts/... links), Anki .apkg decks, notes
-  documents (.docx/.pdf/.md), and raw question sets. Use when the founder shares
-  a resource (a link, a file on the Desktop, a doc) and wants it added to
+  content — practice tests, recall banks, in-app flashcard (reveal) decks,
+  downloadable Anki decks, or study notes. Handles Claude artifacts
+  (claude.ai/public/artifacts/... links), Anki .apkg decks, notes documents
+  (.docx/.pdf/.md), and raw question sets. Use when the founder shares a
+  resource (a link, a file on the Desktop, a doc) and wants it added to
   StudentX / the /resources hub. Triggers: "extract this", "convert this into a
   practice test / notes / deck", "add this artifact/deck/doc to StudentX",
   "integrate this resource". To AUTHOR tests from raw class materials instead,
-  use generate-practice-test.
+  use generate-practice-test. Past papers are NOT a supported output — see the
+  guardrail below.
 ---
 
 # Resource extraction & conversion → StudentX
@@ -20,6 +21,23 @@ input-type recipes, extraction channels, target schemas, transfer gotchas, git
 rules, review checklist — is in
 [reference/extraction-and-conversion.md](reference/extraction-and-conversion.md).
 **Read it, and the run-memory (below), before starting.**
+
+## Past papers are out of scope — flag, don't scrape
+
+StudentX does not carry past-paper banks (copyright/liability; removed from
+`/resources` and the `past-paper` resourceType/taxonomy entry). If a source
+you're extracting contains or is framed as a past paper (exam-board MCQs
+tagged by sitting/year, a "past paper PDF", an artifact section literally
+titled "Past Papers"), **do not convert or stage that part.** Instead:
+
+1. Call it out explicitly to the founder in your response — name the file/
+   section and say you're skipping it because past papers aren't a supported
+   resource type.
+2. Still extract anything else in the same source that isn't a past paper
+   (recalls, topic practice, notes, flashcards) — don't drop the whole
+   resource over one section.
+3. Never silently rename a past paper into `kind: "topic"` or a generic
+   description to sneak it through — skip it, and say so.
 
 ## Run-memory — read first, update at the end (sparingly)
 

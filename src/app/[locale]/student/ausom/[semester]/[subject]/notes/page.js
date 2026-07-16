@@ -218,13 +218,13 @@ const NOTES_CSS = `
 .notes-prose .rc p { margin: 0; font-size: 13px; color: var(--notes-muted); }
 .notes-prose .rc p b { color: var(--notes-ink); }
 
-/* Past-paper fact flag (the label lived in the source's ::before) */
+/* High-yield exam fact flag (the label lived in the source's ::before) */
 .notes-prose .mcq-flag {
   margin: 10px 0; padding: 9px 13px; border-radius: 8px; font-size: 13.5px;
   background: rgba(255, 95, 162, 0.08); border-left: 3px solid var(--notes-magenta);
 }
 .notes-prose .mcq-flag::before {
-  content: "📄 PAST-PAPER FACT"; display: block; margin-bottom: 4px;
+  content: "📄 EXAM FACT"; display: block; margin-bottom: 4px;
   font-family: var(--notes-mono); font-size: 10px; font-weight: 700; letter-spacing: 0.06em; color: var(--notes-magenta);
 }
 .notes-prose .mcq-flag b { color: var(--notes-magenta); }

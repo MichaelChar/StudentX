@@ -77,7 +77,7 @@ export const RESOURCES = [
     "id": "flashcard:general-physiology:general-physiology",
     "type": "flashcard-deck",
     "title": "General Physiology",
-    "description": "Reviewing this Anki deck to perfection provides 100% of the knowledge necessary to get full marks for the first four past papers",
+    "description": "Reviewing this Anki deck to perfection provides 100% of the knowledge necessary to get full marks for the first four exam sittings",
     "href": "/flashcards/general-physiology/general-physiology.apkg",
     "school": "ausom",
     "semester": "semester-2",
@@ -282,22 +282,6 @@ export const RESOURCES = [
     "subjectLabel": "ENT — Oral Exam (MD1039)"
   },
   {
-    "id": "practice:ent-written:past-papers",
-    "type": "past-paper",
-    "title": "ENT Written — Past Papers",
-    "description": "145 written past-paper MCQs (2020–2022), each tagged with its exam year.",
-    "href": "/student/ausom/semester-6/ent-written/past-papers",
-    "school": "ausom",
-    "semester": "semester-6",
-    "country": "gr",
-    "year": 2026,
-    "subject": "ent-written",
-    "meta": {
-      "questionCount": 145
-    },
-    "subjectLabel": "ENT — Written Exam (MD1039)"
-  },
-  {
     "id": "practice:ent-written:recalls",
     "type": "practice-test",
     "title": "ENT Written — Recalled MCQs",
@@ -381,7 +365,7 @@ export const RESOURCES = [
     "id": "practice:general-physiology:predicted-mcq-repeaters",
     "type": "practice-test",
     "title": "General Physiology I — Predicted Exam Questions (Repeaters)",
-    "description": "33 MCQ repeated across 2+ past papers. Obviously important content",
+    "description": "33 MCQ repeated across 2+ exam sittings. Obviously important content",
     "href": "/student/ausom/semester-2/general-physiology/predicted-mcq-repeaters",
     "school": "ausom",
     "semester": "semester-2",
@@ -392,22 +376,6 @@ export const RESOURCES = [
       "questionCount": 33
     },
     "subjectLabel": "General Physiology (MD1012)"
-  },
-  {
-    "id": "practice:hygiene-epidemiology:past-papers-2020-2024",
-    "type": "past-paper",
-    "title": "MD1040 Hygiene & Epidemiology — Past Papers (2020–2024)",
-    "description": "147 real MCQs from five sittings.",
-    "href": "/student/ausom/semester-6/hygiene-epidemiology/past-papers-2020-2024",
-    "school": "ausom",
-    "semester": "semester-6",
-    "country": "gr",
-    "year": 2026,
-    "subject": "hygiene-epidemiology",
-    "meta": {
-      "questionCount": 147
-    },
-    "subjectLabel": "Hygiene & Epidemiology (MD1040)"
   },
   {
     "id": "practice:hygiene-epidemiology:predicted-paper-1",
@@ -487,22 +455,6 @@ export const RESOURCES = [
     "subjectLabel": "Medical Informatics (MD1008)"
   },
   {
-    "id": "practice:microbiology-ii:past-papers",
-    "type": "past-paper",
-    "title": "Microbiology II — Past Papers",
-    "description": "70 real past-paper MCQs (2020–2022, Greek programme), each tagged with its exam year.",
-    "href": "/student/ausom/semester-6/microbiology-ii/past-papers",
-    "school": "ausom",
-    "semester": "semester-6",
-    "country": "gr",
-    "year": 2026,
-    "subject": "microbiology-ii",
-    "meta": {
-      "questionCount": 70
-    },
-    "subjectLabel": "Microbiology II (MD1043)"
-  },
-  {
     "id": "practice:microbiology-ii:recalls",
     "type": "practice-test",
     "title": "Microbiology II — Recalled MCQs",
@@ -551,70 +503,6 @@ export const RESOURCES = [
     "subjectLabel": "Ophthalmology (MD1038)"
   },
   {
-    "id": "practice:ophthalmology:past-paper-2021",
-    "type": "past-paper",
-    "title": "Ophthalmology — 2021 Past Paper",
-    "description": "60 real MCQs from the 2021 sitting, with explanations.",
-    "href": "/student/ausom/semester-6/ophthalmology/past-paper-2021",
-    "school": "ausom",
-    "semester": "semester-6",
-    "country": "gr",
-    "year": 2026,
-    "subject": "ophthalmology",
-    "meta": {
-      "questionCount": 60
-    },
-    "subjectLabel": "Ophthalmology (MD1038)"
-  },
-  {
-    "id": "practice:ophthalmology:past-paper-2022",
-    "type": "past-paper",
-    "title": "Ophthalmology — 2022 Past Paper",
-    "description": "60 real MCQs from the 2022 sitting, with explanations.",
-    "href": "/student/ausom/semester-6/ophthalmology/past-paper-2022",
-    "school": "ausom",
-    "semester": "semester-6",
-    "country": "gr",
-    "year": 2026,
-    "subject": "ophthalmology",
-    "meta": {
-      "questionCount": 60
-    },
-    "subjectLabel": "Ophthalmology (MD1038)"
-  },
-  {
-    "id": "practice:ophthalmology:past-paper-2023",
-    "type": "past-paper",
-    "title": "Ophthalmology — 2023 Past Paper",
-    "description": "50 real MCQs from the 2023 sitting, with explanations.",
-    "href": "/student/ausom/semester-6/ophthalmology/past-paper-2023",
-    "school": "ausom",
-    "semester": "semester-6",
-    "country": "gr",
-    "year": 2026,
-    "subject": "ophthalmology",
-    "meta": {
-      "questionCount": 50
-    },
-    "subjectLabel": "Ophthalmology (MD1038)"
-  },
-  {
-    "id": "practice:pathophysiology:past-papers",
-    "type": "past-paper",
-    "title": "Pathophysiology — Past Papers",
-    "description": "150 real past-paper MCQs from three sittings (Feb 2021–July 2023), each tagged with its exam.",
-    "href": "/student/ausom/semester-6/pathophysiology/past-papers",
-    "school": "ausom",
-    "semester": "semester-6",
-    "country": "gr",
-    "year": 2026,
-    "subject": "pathophysiology",
-    "meta": {
-      "questionCount": 150
-    },
-    "subjectLabel": "Pathophysiology"
-  },
-  {
     "id": "practice:pathophysiology:recall-drills",
     "type": "practice-test",
     "title": "Pathophysiology — Recall Drills",
@@ -629,22 +517,6 @@ export const RESOURCES = [
       "questionCount": 83
     },
     "subjectLabel": "Pathophysiology"
-  },
-  {
-    "id": "practice:social-medicine:past-papers",
-    "type": "past-paper",
-    "title": "Social Medicine & Public Health — Past Papers",
-    "description": "105 real past-paper MCQs from four sittings (2020–2022), each tagged with its exam.",
-    "href": "/student/ausom/semester-6/social-medicine/past-papers",
-    "school": "ausom",
-    "semester": "semester-6",
-    "country": "gr",
-    "year": 2026,
-    "subject": "social-medicine",
-    "meta": {
-      "questionCount": 105
-    },
-    "subjectLabel": "Social Medicine & Public Health (MD1041)"
   },
   {
     "id": "practice:social-medicine:recalls",

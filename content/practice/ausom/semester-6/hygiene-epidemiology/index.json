@@ -36,15 +36,6 @@
       "questionCount": 30,
       "description": "Predicted exam, 25 MCQs + 5 calculation questions.",
       "year": 2026
-    },
-    {
-      "id": "past-papers-2020-2024",
-      "title": "MD1040 Hygiene & Epidemiology — Past Papers (2020–2024)",
-      "kind": "mock",
-      "questionCount": 147,
-      "description": "147 real MCQs from five sittings.",
-      "year": 2026,
-      "resourceType": "past-paper"
     }
   ]
 }

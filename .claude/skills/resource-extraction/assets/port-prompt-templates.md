@@ -23,20 +23,25 @@ any content. Every question, card, and note section must come VERBATIM from the
 input files. Do not "improve" or rewrite content.
 ```
 
-## Meta MCQ / past-paper / recall bank
+## Meta MCQ / recall bank
 
 ```
 INPUT (read-only, absolute; do not copy/commit): <abs path to staged .json>
   → { <bank>:{ questions:[{id,type,stem,options,answer,explanation,source?}] (N) } }
+GUARDRAIL — past papers are NOT a supported output. If the input is framed as a
+past paper (exam-board MCQs tagged by sitting/year, a section titled "Past
+Papers"), STOP and report "PAST PAPER — skipping, not a supported resource
+type" instead of porting it. Only port banks that are recalls / topic practice
+(student-recalled or topic-tagged, not verbatim past-exam transcriptions).
 Questions are already meta-shape — wrap + wire only. READ
-content/practice/ausom/semester-6/hygiene-epidemiology/past-papers-2020-2024.json as the template.
+content/practice/ausom/semester-6/social-medicine/recalls.json as the template.
 Create content/practice/ausom/<sem>/<subject>/<id>.json:
   meta:{ title:"<Title>", course:"<MDxxxx Subject>", semester:"Semester N",
          total_questions:N, mcq_count:N, long_answer_count:0, year:2026,
          behaviour:{ mcq:"Select one option. Answer revealed immediately on selection." } }
-  questions: the input questions verbatim (keep `source` for past papers).
-Add/extend content/practice/ausom/<sem>/<subject>/index.json (SubjectIndexSchema); past papers get
-"resourceType":"past-paper" and "kind":"mock"; recalls "kind":"topic".
+  questions: the input questions verbatim.
+Add/extend content/practice/ausom/<sem>/<subject>/index.json (SubjectIndexSchema); recalls get
+"kind":"topic".
 ```
 
 ## In-app reveal (flip-card) deck

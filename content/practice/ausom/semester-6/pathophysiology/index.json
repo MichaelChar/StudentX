@@ -12,15 +12,6 @@
       "questionCount": 83,
       "description": "83 flip-card recall drills across 7 systems — rapid Q&A on core mechanisms.",
       "year": 2026
-    },
-    {
-      "id": "past-papers",
-      "title": "Pathophysiology — Past Papers",
-      "kind": "mock",
-      "questionCount": 150,
-      "description": "150 real past-paper MCQs from three sittings (Feb 2021–July 2023), each tagged with its exam.",
-      "year": 2026,
-      "resourceType": "past-paper"
     }
   ]
 }
