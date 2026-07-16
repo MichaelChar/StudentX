@@ -8,15 +8,14 @@ alongside `SKILL.md` and `memory/LEARNINGS.md`.
 | Target | Schema | Player / surface | Content path | Rules that bite |
 |---|---|---|---|---|
 | Practice test / quiz (MCQ) | meta (`BiochemTestSchema`) | BiochemTestPlayer | `content/practice/ausom/<sem>/<subject>/*.json` | letter-keyed `options`, `answer` letter, `explanation` string |
-| Past-paper bank | meta + `resourceType:'past-paper'` in index | BiochemTestPlayer | same | keep per-Q `source` (exam/year) — renders as a badge |
-| Recall bank (MCQ) | meta, `kind:'topic'` | BiochemTestPlayer | same | — |
+| Recall bank (MCQ) | meta, `kind:'topic'` | BiochemTestPlayer | same | per-Q `source` optional (e.g. topic tag); do NOT use it to tag exam sitting/year — see "Past papers are out of scope" in `SKILL.md` |
 | In-app flashcards (Q→A) | **standard** `PracticeTestSchema`, all `type:'reveal'` | FlashcardPlayer | same | `{id,type:'reveal',stem:front,explanation:{text:back},topic,yield}`; ALL-reveal → FlashcardPlayer |
 | Study notes / cheat tables / OSCE | `NotesDocSchema` | notes reader route `/…/<subject>/notes` | `content/notes/ausom/<sem>/<subject>.json` | `sections:[{id,title,html}]`; strip source styling → `.notes-prose` |
 | Downloadable Anki deck | flashcards `DeckSchema` | .apkg download card | `content/flashcards/<subject>/index.json` + `public/flashcards/<subject>/<id>.apkg` | needs `cardCount`, `fileSizeBytes` |
 
 **Meta format is the house style for all MCQ.** `{meta:{title,course,semester,total_questions,mcq_count,long_answer_count,year,behaviour},questions:[{id,source?,topic?,type:'mcq',stem,options:{A,B…},answer,explanation}]}`. The `reveal` type is the ONLY thing that uses the standard `PracticeTestSchema` (histology images, physiology lab exam, and any Q→A flip-card deck). The `[testId]` page routes: `test.meta` → BiochemTestPlayer; else all-`reveal` → FlashcardPlayer; else TestPlayer.
 
-Subject `index.json` (`SubjectIndexSchema`): `{subject,title,school:'ausom',semester:/^semester-\d+$/,country:'gr',tests:[{id,title,kind:'topic'|'mock',questionCount,description,year,resourceType?}]}`. Regenerate after any change: `npm run practice:manifest` / `notes:manifest` / `flashcards:manifest`, then `resources:manifest`; validate with `validate:tests`/`validate:notes`/`validate:flashcards`. /resources cards are auto-derived from these — never hand-author them.
+Subject `index.json` (`SubjectIndexSchema`): `{subject,title,school:'ausom',semester:/^semester-\d+$/,country:'gr',tests:[{id,title,kind:'topic'|'mock',questionCount,description,year}]}`. Regenerate after any change: `npm run practice:manifest` / `notes:manifest` / `flashcards:manifest`, then `resources:manifest`; validate with `validate:tests`/`validate:notes`/`validate:flashcards`. /resources cards are auto-derived from these — never hand-author them.
 
 **Conventions (confirm creative bits):** course code in the SUBJECT title only, e.g. `"Hygiene & Epidemiology (MD1040)"` (drives the subject facet); resource titles stay clean. Terse descriptions. Ambiguous/flagged questions: ask (past choices: keep+mark, or keep-as-is). Sem-6 course codes: Dermatology MD1037, Ophthalmology MD1038, ENT/Otorhinolaryngology MD1039, Hygiene MD1040, Social Medicine MD1041, Pathophysiology MD1042, Microbiology II MD1043.
 

@@ -26,10 +26,13 @@ Append sparingly (see README). Newest at top.
   beats ~100 verified chunks. NB the founder may paste it into their shell by
   mistake — say "browser DevTools console (⌥⌘J), not Terminal".
 - **`macOS base64 -d` needs stdin** (`base64 -d < file`), not a positional path.
-- **Standard-schema `kind:"mock"` requires a `pastPaperRef` on every question**
-  (validate-tests); meta-format mocks bypass it. A predicted/clinical exam has no
-  real past-paper ref → make it `kind:"topic"` (histology/physio precedent), and
-  keep the test file's top-level `kind` and the index.json entry in agreement.
+- **Past papers were removed as a resourceType/field entirely (2026-07-16)** —
+  `pastPaperRef`, the `past-paper` taxonomy/schema enum value, and the
+  standard-schema `kind:"mock"` requirement that used to key off it are gone.
+  Extraction never produces past-paper content now (see "Past papers are out
+  of scope" in `SKILL.md`); a predicted/clinical exam still goes `kind:"topic"`
+  (histology/physio precedent) — keep the test file's top-level `kind` and the
+  index.json entry in agreement.
 - **validate-tests asserts `q.image`/`explanation.image` files exist under
   public/** — images must be on disk before the PR goes green (not just referenced).
 - **TestPlayer also reveals feedback per-question** (like BiochemTestPlayer), so

@@ -138,14 +138,6 @@ function validateTest(rel, test, expectedSubject, fallbackId, fallbackKind) {
         err(rel, `question "${q.id}": image "${q.image}" not found under public/`);
       }
     }
-
-    // mock <=> pastPaperRef
-    if (t.kind === 'mock' && !q.pastPaperRef) {
-      err(rel, `question "${q.id}": mock test requires a pastPaperRef`);
-    }
-    if (t.kind === 'topic' && q.pastPaperRef) {
-      err(rel, `question "${q.id}": topic test must not have a pastPaperRef`);
-    }
   }
 
   return t;
