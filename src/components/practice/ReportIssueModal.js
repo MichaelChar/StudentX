@@ -1,7 +1,8 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
+import useModalA11y from '@/lib/useModalA11y';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { PrimaryButton } from './PlayerButton';
 
@@ -30,15 +31,9 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
   const dialogRef = useRef(null);
   const firstFieldRef = useRef(null);
 
-  // Escape closes; focus the first field on open.
-  useEffect(() => {
-    function onKey(e) {
-      if (e.key === 'Escape') onClose();
-    }
-    window.addEventListener('keydown', onKey);
-    firstFieldRef.current?.focus();
-    return () => window.removeEventListener('keydown', onKey);
-  }, [onClose]);
+  // Focus trap, Esc-to-close, scroll lock, initial focus on the first field,
+  // and focus restore — shared with every other modal.
+  useModalA11y(dialogRef, { onClose, initialFocusRef: firstFieldRef });
 
   const trimmedMessage = message.trim();
   const canSubmit = !submitting && trimmedMessage.length >= MESSAGE_MIN;

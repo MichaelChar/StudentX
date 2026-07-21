@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+
+import useModalA11y from '@/lib/useModalA11y';
 import { useTranslations } from 'next-intl';
 
 import ListingGallery from '@/components/listing/ListingGallery';
@@ -41,45 +43,9 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
   const dialogRef = useRef(null);
   const closeBtnRef = useRef(null);
 
-  // Lock body scroll, wire Esc + focus trap, restore focus on unmount.
-  // Mirrors the ConfirmDialog / ListingLightbox pattern.
-  useEffect(() => {
-    const previouslyFocused = document.activeElement;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    closeBtnRef.current?.focus();
-
-    function onKeyDown(e) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        onClose?.();
-        return;
-      }
-      if (e.key !== 'Tab') return;
-      const node = dialogRef.current;
-      if (!node) return;
-      const focusable = node.querySelectorAll(
-        'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-      );
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    }
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      document.body.style.overflow = prevOverflow;
-      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
-    };
-  }, [onClose]);
+  // Lock body scroll, wire Esc + focus trap, restore focus on unmount —
+  // shared with every other modal.
+  useModalA11y(dialogRef, { onClose, initialFocusRef: closeBtnRef });
 
   // Map the form state into the flattened shape the detail layout reads.
   // (See src/lib/transformListing.js for the canonical field set.)

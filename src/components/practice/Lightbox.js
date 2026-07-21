@@ -1,39 +1,28 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useRef } from 'react';
+import useModalA11y from '@/lib/useModalA11y';
 
 // Full-screen image lightbox for FeedbackPanel screenshots. Inline-styled to
 // stay in the practice-test "Stripe-modern" family. Closes on Escape and on a
 // click outside the image; locks body scroll and restores focus on unmount.
 
 export default function Lightbox({ src, alt, label, closeLabel, onClose }) {
+  const dialogRef = useRef(null);
   const closeBtnRef = useRef(null);
 
-  useEffect(() => {
-    const previouslyFocused = document.activeElement;
-    const prevOverflow = document.body.style.overflow;
-    document.body.style.overflow = 'hidden';
-    closeBtnRef.current?.focus();
-
-    function onKeyDown(e) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        e.stopPropagation();
-        onClose();
-      }
-    }
-    // Capture phase so Escape closes the lightbox before any other listener.
-    window.addEventListener('keydown', onKeyDown, true);
-
-    return () => {
-      window.removeEventListener('keydown', onKeyDown, true);
-      document.body.style.overflow = prevOverflow;
-      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
-    };
-  }, [onClose]);
+  // Shared modal a11y. escapeCapture keeps the original behaviour: this
+  // lightbox often sits above another modal, so Esc must close it (in the
+  // capture phase) before any listener beneath it reacts.
+  useModalA11y(dialogRef, {
+    onClose,
+    initialFocusRef: closeBtnRef,
+    escapeCapture: true,
+  });
 
   return (
     <div
+      ref={dialogRef}
       role="dialog"
       aria-modal="true"
       aria-label={label}
