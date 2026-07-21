@@ -1,0 +1,406 @@
+{
+  "meta": {
+    "title": "Prediction Paper 2",
+    "course": "Dermatology (MD1037)",
+    "semester": "Semester 6",
+    "total_questions": 30,
+    "mcq_count": 30,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "The layers of the epidermis from deep to superficial are:",
+      "options": {
+        "A": "Corneum → granulosum → spinosum → basale",
+        "B": "Basale → spinosum → granulosum → corneum",
+        "C": "Spinosum → basale → corneum → granulosum",
+        "D": "Granulosum → corneum → basale → spinosum"
+      },
+      "answer": "B",
+      "explanation": "From the basement membrane upward: stratum <b>basale → spinosum → granulosum → (lucidum) → corneum</b>. Keratinocytes mature and flatten as they ascend, forming the protective cornified layer."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "The pigment-producing cell of the epidermis, located in the basal layer, is the:",
+      "options": {
+        "A": "Langerhans cell",
+        "B": "Melanocyte",
+        "C": "Merkel cell",
+        "D": "Keratinocyte"
+      },
+      "answer": "B",
+      "explanation": "<b>Melanocytes</b> (neural-crest derived, basal layer) make melanin in melanosomes and transfer it to keratinocytes to shield nuclear DNA from UV. Langerhans cells are antigen-presenting; Merkel cells mediate touch."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Allergic contact dermatitis is an example of which hypersensitivity reaction?",
+      "options": {
+        "A": "Type I (IgE-mediated)",
+        "B": "Type II (cytotoxic)",
+        "C": "Type III (immune complex)",
+        "D": "Type IV (delayed, T-cell mediated)"
+      },
+      "answer": "D",
+      "explanation": "ACD is a <b>type IV</b> delayed hypersensitivity, sensitising over ~48–72&nbsp;h and diagnosed by <b>patch testing</b>. Common allergens: nickel, fragrances, rubber, para-phenylenediamine."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "A herald patch followed days later by a “Christmas-tree” distribution of oval scaly plaques on the trunk suggests:",
+      "options": {
+        "A": "Pityriasis rosea",
+        "B": "Guttate psoriasis",
+        "C": "Tinea corporis",
+        "D": "Secondary syphilis"
+      },
+      "answer": "A",
+      "explanation": "<b>Pityriasis rosea</b>: a single “herald patch” precedes an eruption following skin cleavage lines (“Christmas-tree” on the back). It is self-limiting over 6–8 weeks; <b>systemic retinoids are not indicated</b>."
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "Wickham striae — fine white lines on the surface of violaceous flat-topped papules — are characteristic of:",
+      "options": {
+        "A": "Lichen planus",
+        "B": "Psoriasis",
+        "C": "Lichen sclerosus",
+        "D": "Pityriasis versicolor"
+      },
+      "answer": "A",
+      "explanation": "<b>Lichen planus</b>: the “6 Ps” — pruritic, purple, polygonal, planar (flat-topped) papules/plaques — with lacy white <b>Wickham striae</b>; may involve oral mucosa and nails, and shows the Koebner phenomenon."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Pityriasis (tinea) versicolor is caused by:",
+      "options": {
+        "A": "Malassezia (Pityrosporum) yeasts",
+        "B": "Trichophyton rubrum",
+        "C": "Candida albicans",
+        "D": "Sarcoptes scabiei"
+      },
+      "answer": "A",
+      "explanation": "Overgrowth of commensal <b>Malassezia</b> yeast produces hypo-/hyperpigmented scaly macules on the trunk; KOH shows a “spaghetti-and-meatballs” pattern of hyphae and spores."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "On Wood’s light examination, which finding is expected in erythrasma (Corynebacterium minutissimum)?",
+      "options": {
+        "A": "Coral-red fluorescence",
+        "B": "Bright green fluorescence",
+        "C": "Blue-white fluorescence",
+        "D": "No fluorescence"
+      },
+      "answer": "A",
+      "explanation": "Erythrasma fluoresces <b>coral-red</b> (coproporphyrin). Some scalp <i>Microsporum</i> tineas fluoresce green; vitiligo shows accentuated depigmentation; pseudomonas may fluoresce green."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Which is the classic morphology of molluscum contagiosum?",
+      "options": {
+        "A": "Umbilicated dome-shaped papules",
+        "B": "Honey-crusted erosions",
+        "C": "Target lesions",
+        "D": "Verrucous cauliflower plaques"
+      },
+      "answer": "A",
+      "explanation": "Molluscum (a <b>poxvirus</b>) causes pearly, <b>umbilicated</b> papules; common in children and in HIV. Anogenital warts (HPV) are verrucous; “target” lesions suggest erythema multiforme."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Shingles (herpes zoster) is characterised by:",
+      "options": {
+        "A": "A vesicular eruption confined to a single dermatome",
+        "B": "Symmetrical flexural eczema",
+        "C": "Painless genital ulcers",
+        "D": "Generalised urticaria"
+      },
+      "answer": "A",
+      "explanation": "Zoster = reactivation of varicella-zoster virus in a sensory ganglion → painful <b>dermatomal</b> vesicles. Complications include post-herpetic neuralgia and, occasionally, segmental <b>motor</b> weakness."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Impetigo is most commonly caused by:",
+      "options": {
+        "A": "Staphylococcus aureus (± Streptococcus pyogenes)",
+        "B": "Pseudomonas aeruginosa",
+        "C": "Candida albicans",
+        "D": "Herpes simplex virus"
+      },
+      "answer": "A",
+      "explanation": "Impetigo (honey-coloured crusts) is usually due to <b>S. aureus</b>, sometimes <b>S. pyogenes</b>. Bullous impetigo is caused by staphylococcal exfoliative toxin."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "A well-demarcated, tender, spreading erythema with a raised advancing edge on the lower leg, with fever, suggests:",
+      "options": {
+        "A": "Erysipelas",
+        "B": "Stasis eczema",
+        "C": "Contact dermatitis",
+        "D": "Erythema nodosum"
+      },
+      "answer": "A",
+      "explanation": "<b>Erysipelas</b> = superficial dermal streptococcal infection with a <b>sharply demarcated, raised</b> border (deeper, less-defined = cellulitis). Systemic upset is common; treat with penicillin-class antibiotics."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Alopecia areata is best recognised by:",
+      "options": {
+        "A": "Scarring patches with loss of follicular openings",
+        "B": "Non-scarring round patches with “exclamation-mark” hairs",
+        "C": "Diffuse shedding 3 months after a stressor",
+        "D": "Gradual bitemporal recession"
+      },
+      "answer": "B",
+      "explanation": "Alopecia areata = autoimmune, <b>non-scarring</b> round patches with tapering <b>“exclamation-mark”</b> hairs at the margin; nail pitting may coexist. Telogen effluvium is diffuse post-stress shedding; androgenetic alopecia causes patterned recession."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Telogen effluvium classically presents as:",
+      "options": {
+        "A": "Diffuse non-scarring hair shedding ~2–4 months after a physiological stressor",
+        "B": "Localised scarring alopecia",
+        "C": "Broken hairs of irregular length from pulling",
+        "D": "Exclamation-mark hairs"
+      },
+      "answer": "A",
+      "explanation": "A stressor (childbirth, illness, surgery, crash diet) shifts follicles synchronously into telogen; <b>diffuse shedding</b> follows months later and usually recovers spontaneously."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Which tumour is a benign vascular lesion that often bleeds and grows rapidly, frequently after minor trauma?",
+      "options": {
+        "A": "Pyogenic granuloma",
+        "B": "Basal cell carcinoma",
+        "C": "Keratoacanthoma",
+        "D": "Dermatofibroma"
+      },
+      "answer": "A",
+      "explanation": "<b>Pyogenic granuloma</b> (lobular capillary haemangioma) is a benign, friable, rapidly growing red nodule that bleeds easily; common in pregnancy and after trauma."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Seborrhoeic keratoses are:",
+      "options": {
+        "A": "Benign epidermal lesions with a “stuck-on” greasy appearance",
+        "B": "Premalignant lesions from sun damage",
+        "C": "Derived from melanocytes",
+        "D": "Caused by HPV"
+      },
+      "answer": "A",
+      "explanation": "Seborrhoeic keratoses are common <b>benign</b> keratinocyte proliferations — warty, greasy, <b>“stuck-on”</b> pigmented papules. A sudden shower of them (Leser-Trélat sign) can rarely signal internal malignancy."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Regarding melanocytic naevi, which statement is correct?",
+      "options": {
+        "A": "They pass through junctional → compound → intradermal phases over time",
+        "B": "They are premalignant and should all be excised",
+        "C": "They only appear at birth",
+        "D": "They arise from keratinocytes"
+      },
+      "answer": "A",
+      "explanation": "Acquired naevi evolve through <b>junctional → compound → intradermal</b> phases as nests migrate into the dermis. Most are benign; changing or atypical lesions warrant review."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Stevens-Johnson syndrome / toxic epidermal necrolysis is most often triggered by:",
+      "options": {
+        "A": "Drugs (e.g. sulfonamides, anticonvulsants, allopurinol)",
+        "B": "Dietary gluten",
+        "C": "House-dust mite",
+        "D": "UV exposure"
+      },
+      "answer": "A",
+      "explanation": "SJS/TEN is usually a severe <b>drug reaction</b> (sulfonamides, carbamazepine/lamotrigine, allopurinol, NSAIDs) with mucosal erosions and skin detachment. TEN = &gt;30% body-surface detachment; Nikolsky positive."
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "The difference between SJS and TEN is based mainly on:",
+      "options": {
+        "A": "The percentage of body-surface-area epidermal detachment",
+        "B": "The causative drug",
+        "C": "The presence of fever",
+        "D": "Serum IgE level"
+      },
+      "answer": "A",
+      "explanation": "SJS &lt;10% BSA, SJS/TEN overlap 10–30%, <b>TEN &gt;30%</b> epidermal detachment. Higher detachment = higher mortality; management is supportive, often in a burns unit, with drug withdrawal."
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Which finding favours systemic sclerosis / CREST?",
+      "options": {
+        "A": "Sclerodactyly, Raynaud phenomenon and telangiectasia",
+        "B": "Honey-crusted erosions",
+        "C": "Herald patch",
+        "D": "Nail pitting"
+      },
+      "answer": "A",
+      "explanation": "CREST = <b>C</b>alcinosis, <b>R</b>aynaud, o<b>E</b>sophageal dysmotility, <b>S</b>clerodactyly, <b>T</b>elangiectasia (limited systemic sclerosis, anti-centromere antibody). Raynaud is often the first feature."
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "Discoid lupus erythematosus typically causes:",
+      "options": {
+        "A": "Scarring alopecia with atrophic, pigmented plaques",
+        "B": "Tense sub-epidermal blisters",
+        "C": "Umbilicated papules",
+        "D": "Flexural lichenification"
+      },
+      "answer": "A",
+      "explanation": "DLE = chronic photosensitive plaques with follicular plugging, scaling and <b>scarring</b> (including scarring alopecia) and dyspigmentation. Only a minority progress to systemic lupus."
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "The commonest organism in a furuncle (boil) is:",
+      "options": {
+        "A": "Staphylococcus aureus",
+        "B": "Streptococcus pyogenes",
+        "C": "Pseudomonas aeruginosa",
+        "D": "Candida albicans"
+      },
+      "answer": "A",
+      "explanation": "A furuncle is a deep infection of the hair follicle, almost always due to <b>S. aureus</b> (not Streptococcus). Coalescence of several furuncles forms a carbuncle."
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Which statement about warts (verrucae) is correct?",
+      "options": {
+        "A": "They are caused by human papillomavirus",
+        "B": "They are premalignant and should always be excised",
+        "C": "They are caused by a poxvirus",
+        "D": "They fluoresce coral-red under Wood’s light"
+      },
+      "answer": "A",
+      "explanation": "Common, plantar and anogenital warts are caused by <b>HPV</b>. Most cutaneous warts are benign and self-limiting; certain mucosal HPV types (16, 18) are oncogenic."
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Koebner phenomenon (lesions appearing at sites of trauma) is typically seen in all EXCEPT:",
+      "options": {
+        "A": "Psoriasis",
+        "B": "Lichen planus",
+        "C": "Vitiligo",
+        "D": "Basal cell carcinoma"
+      },
+      "answer": "D",
+      "explanation": "Koebnerisation occurs in <b>psoriasis, lichen planus, vitiligo</b> and warts, among others. BCC is a malignancy and does not koebnerise."
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "First-line topical treatment for uncomplicated scabies is:",
+      "options": {
+        "A": "Permethrin 5% cream",
+        "B": "Topical acyclovir",
+        "C": "Topical corticosteroid alone",
+        "D": "Oral fluconazole"
+      },
+      "answer": "A",
+      "explanation": "<b>Permethrin 5%</b> applied to the whole body is first line; treat close contacts simultaneously and launder bedding/clothing. Oral ivermectin is used for crusted or resistant cases."
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Which best describes vitiligo?",
+      "options": {
+        "A": "Autoimmune destruction of melanocytes causing well-demarcated depigmented macules",
+        "B": "A fungal infection causing scaly hypopigmented patches",
+        "C": "A premalignant pigmented lesion",
+        "D": "Post-inflammatory hyperpigmentation"
+      },
+      "answer": "A",
+      "explanation": "Vitiligo = <b>autoimmune</b> loss of melanocytes → sharply demarcated <b>depigmented</b> (chalk-white) macules that koebnerise; associated with thyroid and other autoimmune disease."
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "The most appropriate biopsy/measurement to determine melanoma prognosis is:",
+      "options": {
+        "A": "Excisional biopsy allowing measurement of Breslow thickness",
+        "B": "Shave biopsy of the surface only",
+        "C": "Punch biopsy of adjacent normal skin",
+        "D": "No biopsy — clinical diagnosis suffices"
+      },
+      "answer": "A",
+      "explanation": "Suspected melanoma should have a full-thickness <b>excisional biopsy</b> so <b>Breslow thickness</b> can be measured accurately; shave biopsy risks transecting the tumour and losing depth information."
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Which drug class is a mainstay of moderate-to-severe plaque psoriasis by targeting IL-17 or IL-23?",
+      "options": {
+        "A": "Biologic agents (e.g. secukinumab, ustekinumab)",
+        "B": "Oral antihistamines",
+        "C": "Topical permethrin",
+        "D": "Systemic acyclovir"
+      },
+      "answer": "A",
+      "explanation": "Modern psoriasis <b>biologics</b> target TNF-α, IL-17 (secukinumab/ixekizumab), IL-23 (guselkumab) or IL-12/23 (ustekinumab). They are highly effective for extensive disease and psoriatic arthritis."
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "A honey-coloured crusted plaque around a child’s nose and mouth is most consistent with:",
+      "options": {
+        "A": "Impetigo",
+        "B": "Atopic eczema",
+        "C": "Tinea faciei",
+        "D": "Herpes zoster"
+      },
+      "answer": "A",
+      "explanation": "<b>Impetigo</b>: superficial staphylococcal/streptococcal infection with characteristic <b>honey-coloured crusts</b>, common around the nose/mouth in children; treat with topical or oral antibiotics."
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "Which is a major (essential) diagnostic criterion of atopic dermatitis?",
+      "options": {
+        "A": "Pruritus (itch)",
+        "B": "Nail pitting",
+        "C": "Painless genital ulcer",
+        "D": "Coral-red Wood’s-light fluorescence"
+      },
+      "answer": "A",
+      "explanation": "<b>Itch (pruritus)</b> is an essential criterion for atopic dermatitis, alongside a typical age-related distribution, chronic relapsing course and personal/family atopy."
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "Which best distinguishes cellulitis from erysipelas?",
+      "options": {
+        "A": "Cellulitis involves the deeper dermis/subcutis with a less well-defined border",
+        "B": "Cellulitis has a sharply raised demarcated edge",
+        "C": "Cellulitis is caused by a virus",
+        "D": "Cellulitis never causes fever"
+      },
+      "answer": "A",
+      "explanation": "<b>Cellulitis</b> is a deeper dermal/subcutaneous infection with an <b>ill-defined</b> spreading border, whereas erysipelas is more superficial with a sharply <b>raised, demarcated</b> edge. Both are usually streptococcal/staphylococcal and can cause systemic upset."
+    }
+  ]
+}

@@ -1,0 +1,406 @@
+{
+  "meta": {
+    "title": "Prediction Paper 1",
+    "course": "Dermatology (MD1037)",
+    "semester": "Semester 6",
+    "total_questions": 30,
+    "mcq_count": 30,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "The single most important prognostic factor in cutaneous melanoma is:",
+      "options": {
+        "A": "Lesion diameter",
+        "B": "Breslow thickness",
+        "C": "Presence of itching",
+        "D": "Anatomical location"
+      },
+      "answer": "B",
+      "explanation": "<b>Breslow thickness</b> (depth in mm from the granular layer to the deepest tumour cell) is the strongest prognostic factor, together with <b>ulceration</b> and mitotic rate. Clark level is now largely historical."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "In the ABCDE rule for melanoma, the “E” stands for:",
+      "options": {
+        "A": "Erythema",
+        "B": "Elevation",
+        "C": "Evolution (change over time)",
+        "D": "Erosion"
+      },
+      "answer": "C",
+      "explanation": "<b>A</b>symmetry, <b>B</b>order irregularity, <b>C</b>olour variegation, <b>D</b>iameter &gt;6&nbsp;mm, <b>E</b>volution. A changing lesion is one of the most important warning signs."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Actinic (solar) keratosis is best described as:",
+      "options": {
+        "A": "A benign lesion with no malignant potential",
+        "B": "A premalignant lesion that may progress to squamous cell carcinoma",
+        "C": "A subtype of basal cell carcinoma",
+        "D": "A viral wart"
+      },
+      "answer": "B",
+      "explanation": "AK is an intra-epidermal dysplasia driven by <b>cumulative UV exposure</b>; a proportion progress to invasive SCC (part of the SCC-in-situ spectrum). It is considered premalignant and cannot itself metastasise."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "Cutaneous squamous cell carcinoma most commonly metastasises via:",
+      "options": {
+        "A": "Regional (draining) lymph nodes",
+        "B": "Haematogenous spread to lung",
+        "C": "Perineural spread only",
+        "D": "It essentially never metastasises"
+      },
+      "answer": "A",
+      "explanation": "SCC can metastasise — most often first to <b>regional lymph nodes</b>. Risk is higher on lip/ear, in immunosuppressed patients, and with poor differentiation. (BCC, by contrast, almost never metastasises.)"
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "A slowly growing pearly papule with a rolled border and surface telangiectasia on the face is most typical of:",
+      "options": {
+        "A": "Seborrhoeic keratosis",
+        "B": "Basal cell carcinoma",
+        "C": "Squamous cell carcinoma",
+        "D": "Amelanotic melanoma"
+      },
+      "answer": "B",
+      "explanation": "Nodular <b>BCC</b>: pearly/translucent papule, rolled telangiectatic edge, may ulcerate centrally (“rodent ulcer”). It is the commonest skin cancer — locally invasive but rarely metastasising."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "A positive Nikolsky sign is characteristically found in:",
+      "options": {
+        "A": "Bullous pemphigoid",
+        "B": "Psoriasis",
+        "C": "Pemphigus vulgaris",
+        "D": "Lichen planus"
+      },
+      "answer": "C",
+      "explanation": "Nikolsky (lateral pressure shears the epidermis) is positive in <b>pemphigus</b> (intra-epidermal acantholysis) and in SJS/TEN. It is <b>negative</b> in bullous pemphigoid, where blisters are sub-epidermal and tense."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "The autoantibodies in pemphigus vulgaris are directed against:",
+      "options": {
+        "A": "BP180 / BP230",
+        "B": "Desmoglein 3 (± desmoglein 1)",
+        "C": "Type VII collagen",
+        "D": "Laminin-332"
+      },
+      "answer": "B",
+      "explanation": "PV = IgG against <b>desmoglein 3</b> (± dsg1) in desmosomes → intra-epidermal acantholysis, <b>flaccid</b> blisters and painful <b>oral erosions</b>. DIF shows intercellular “chicken-wire” IgG/C3."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Direct immunofluorescence in bullous pemphigoid classically shows:",
+      "options": {
+        "A": "Intercellular IgG (chicken-wire pattern)",
+        "B": "Linear IgG/C3 along the basement membrane",
+        "C": "Granular IgA in the dermal papillae",
+        "D": "No immune deposits"
+      },
+      "answer": "B",
+      "explanation": "BP = <b>linear IgG/C3</b> along the dermo-epidermal junction (targets BP180/BP230 in hemidesmosomes). Presents in the elderly with itchy, <b>tense</b> blisters; mucosa usually spared."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Dermatitis herpetiformis is most strongly associated with:",
+      "options": {
+        "A": "Coeliac disease",
+        "B": "Diabetes mellitus",
+        "C": "Ulcerative colitis",
+        "D": "Hyperthyroidism"
+      },
+      "answer": "A",
+      "explanation": "DH = intensely pruritic grouped vesicles on <b>extensor</b> surfaces; DIF shows <b>granular IgA in dermal papillae</b>. It is the cutaneous expression of gluten-sensitive enteropathy — treat with a gluten-free diet ± dapsone."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Which nail change is most characteristic of psoriasis and correlates with psoriatic arthritis?",
+      "options": {
+        "A": "Koilonychia",
+        "B": "Nail pitting",
+        "C": "Beau’s lines",
+        "D": "Leukonychia"
+      },
+      "answer": "B",
+      "explanation": "Psoriatic nails show <b>pitting</b>, onycholysis, “oil-drop” (salmon) patches and subungual hyperkeratosis. Nail involvement is a marker of increased <b>psoriatic arthritis</b> risk."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "The Auspitz sign (pinpoint bleeding when scale is removed) is seen in:",
+      "options": {
+        "A": "Eczema",
+        "B": "Psoriasis",
+        "C": "Lichen planus",
+        "D": "Tinea corporis"
+      },
+      "answer": "B",
+      "explanation": "Removing the silvery scale of a psoriatic plaque exposes dilated dermal papillary capillaries → <b>pinpoint bleeding</b> (Auspitz sign). Psoriasis shows the Koebner phenomenon too."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "The characteristic sun-exposure–related eruption of systemic lupus erythematosus is:",
+      "options": {
+        "A": "A malar (butterfly) rash sparing the nasolabial folds",
+        "B": "A heliotrope rash of the eyelids",
+        "C": "Gottron papules over the knuckles",
+        "D": "A herald patch followed by a Christmas-tree pattern"
+      },
+      "answer": "A",
+      "explanation": "Acute cutaneous lupus = photosensitive <b>malar/butterfly</b> erythema that characteristically <b>spares the nasolabial folds</b>. Heliotrope and Gottron papules belong to dermatomyositis."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "Gottron papules and a heliotrope rash are diagnostic clues to:",
+      "options": {
+        "A": "Systemic sclerosis",
+        "B": "Dermatomyositis",
+        "C": "Discoid lupus",
+        "D": "Psoriasis"
+      },
+      "answer": "B",
+      "explanation": "<b>Dermatomyositis</b>: violaceous <b>heliotrope</b> eyelid rash and <b>Gottron papules</b> over the MCP/IP joints, plus proximal myopathy. In adults it carries an association with underlying malignancy."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "The painless, indurated genital ulcer of primary syphilis is called a:",
+      "options": {
+        "A": "Chancroid",
+        "B": "Chancre",
+        "C": "Condyloma latum",
+        "D": "Gumma"
+      },
+      "answer": "B",
+      "explanation": "Primary syphilis = a solitary, <b>painless</b>, indurated <b>chancre</b> at the inoculation site. (Painful ulcers suggest chancroid/HSV; condylomata lata are moist secondary-stage papules.)"
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Hutchinson’s triad of congenital syphilis comprises interstitial keratitis, Hutchinson teeth and:",
+      "options": {
+        "A": "Sensorineural (VIII nerve) deafness",
+        "B": "Neurosyphilis",
+        "C": "Aortic aneurysm",
+        "D": "Gummatous ulcers"
+      },
+      "answer": "A",
+      "explanation": "The triad is interstitial <b>keratitis</b>, notched <b>Hutchinson incisors</b> and <b>eighth-nerve deafness</b>. Neurosyphilis and aortitis are late acquired complications, not part of the triad."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "Which is TRUE of scabies?",
+      "options": {
+        "A": "The pruritus typically begins within hours of infestation",
+        "B": "Itch and rash reflect a delayed hypersensitivity reaction developing over ~4–6 weeks",
+        "C": "It is caused by a louse",
+        "D": "First-line treatment is oral acyclovir"
+      },
+      "answer": "B",
+      "explanation": "In a first infestation, symptoms of <b>Sarcoptes scabiei</b> take about <b>4–6 weeks</b> to appear — a delayed hypersensitivity to the mite. Look for burrows in finger web spaces; treat with topical <b>permethrin</b>."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "Crusted (Norwegian) scabies is most typically seen in:",
+      "options": {
+        "A": "Young healthy adults",
+        "B": "Immunocompromised patients (e.g. HIV, elderly, steroids)",
+        "C": "Only in children",
+        "D": "Patients with atopic eczema alone"
+      },
+      "answer": "B",
+      "explanation": "Crusted scabies = huge mite burden with thick hyperkeratotic crusts, occurring in the <b>immunosuppressed</b> (HIV, elderly, corticosteroids). It is highly contagious and may need oral ivermectin plus topical therapy."
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "A recognised cutaneous side-effect of potent topical corticosteroids is:",
+      "options": {
+        "A": "Skin atrophy with striae and telangiectasia",
+        "B": "Hypertrichosis of the scalp",
+        "C": "Nail pitting",
+        "D": "Comedone formation on the trunk"
+      },
+      "answer": "A",
+      "explanation": "Prolonged potent topical steroids cause <b>atrophy, striae, telangiectasia</b>, perioral dermatitis, tachyphylaxis and (on the face) a steroid-rosacea/acneiform eruption."
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "Isotretinoin for severe acne requires strict precautions mainly because it is:",
+      "options": {
+        "A": "Hepatotoxic and requires weekly liver biopsy",
+        "B": "A potent teratogen requiring reliable contraception",
+        "C": "Nephrotoxic",
+        "D": "A common cause of agranulocytosis"
+      },
+      "answer": "B",
+      "explanation": "Oral isotretinoin is highly <b>teratogenic</b> — pregnancy prevention is mandatory. Monitor lipids and liver enzymes; other effects include cheilitis, dryness, myalgia and mood changes."
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "Which factor is NOT part of the pathogenesis of acne vulgaris?",
+      "options": {
+        "A": "Follicular hyperkeratinisation",
+        "B": "Increased sebum production",
+        "C": "Cutibacterium (Propionibacterium) acnes proliferation",
+        "D": "Autoantibodies against desmoglein"
+      },
+      "answer": "D",
+      "explanation": "Acne pathogenesis = follicular <b>hyperkeratinisation</b>, androgen-driven <b>sebum</b>, <b>C. acnes</b> colonisation and inflammation. Anti-desmoglein antibodies belong to pemphigus, not acne."
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "A feature that distinguishes rosacea from acne vulgaris is:",
+      "options": {
+        "A": "Presence of comedones",
+        "B": "Absence of comedones with a background of flushing/telangiectasia",
+        "C": "Occurrence mainly in teenagers",
+        "D": "Response to gluten-free diet"
+      },
+      "answer": "B",
+      "explanation": "Rosacea has <b>no comedones</b> (unlike acne) and features central-face flushing, erythema, telangiectasia, papules/pustules and (late) rhinophyma. Ocular involvement is common."
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "Erythema nodosum is best characterised as:",
+      "options": {
+        "A": "A septal panniculitis presenting as tender red nodules on the shins",
+        "B": "A vesicular eruption of the trunk",
+        "C": "A blistering autoimmune disease",
+        "D": "A premalignant skin lesion"
+      },
+      "answer": "A",
+      "explanation": "EN is a <b>septal panniculitis</b> — tender erythematous nodules on the <b>shins</b> that resolve like a bruise without ulceration. Triggers: streptococcal infection, sarcoidosis, IBD, TB, drugs (e.g. sulfonamides, OCP)."
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "The commonest malignant tumour of the skin overall is:",
+      "options": {
+        "A": "Squamous cell carcinoma",
+        "B": "Basal cell carcinoma",
+        "C": "Malignant melanoma",
+        "D": "Merkel cell carcinoma"
+      },
+      "answer": "B",
+      "explanation": "<b>Basal cell carcinoma</b> is the most common skin cancer (and the most common human cancer). SCC is second; melanoma is far less common but causes most skin-cancer deaths."
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Which is a recognised risk factor for melanoma?",
+      "options": {
+        "A": "Brown (dark) eye colour",
+        "B": "A high number of atypical (dysplastic) naevi",
+        "C": "Fitzpatrick skin type VI",
+        "D": "Regular sunscreen use"
+      },
+      "answer": "B",
+      "explanation": "Melanoma risk rises with <b>numerous / atypical naevi</b>, fair skin, light eyes, red-blond hair, family/personal history and intermittent blistering sunburn. Dark eyes and darker phototypes are relatively protective."
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "The autoantibody target in bullous pemphigoid is a component of the:",
+      "options": {
+        "A": "Desmosome",
+        "B": "Hemidesmosome (BP180 / BP230)",
+        "C": "Gap junction",
+        "D": "Nuclear membrane"
+      },
+      "answer": "B",
+      "explanation": "BP antibodies target the <b>hemidesmosome</b> proteins BP180 (collagen XVII) and BP230, producing a sub-epidermal split — hence tense blisters and a negative Nikolsky sign."
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "First-line drug treatment for acute urticaria is:",
+      "options": {
+        "A": "Systemic corticosteroids for all patients",
+        "B": "Non-sedating H1 antihistamines",
+        "C": "Topical permethrin",
+        "D": "Oral isotretinoin"
+      },
+      "answer": "B",
+      "explanation": "Urticaria (transient wheals lasting &lt;24&nbsp;h, histamine-mediated) is treated first with <b>non-sedating H1 antihistamines</b>, up-dosed as needed. Watch for associated angio-oedema."
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "Which statement about basal cell carcinoma is correct?",
+      "options": {
+        "A": "It frequently metastasises to lung",
+        "B": "It is locally invasive but very rarely metastasises",
+        "C": "It arises from melanocytes",
+        "D": "It is caused by HPV"
+      },
+      "answer": "B",
+      "explanation": "BCC arises from basal keratinocytes, is <b>locally destructive</b> but <b>almost never metastasises</b>. Main risk factor is chronic UV exposure; commonest on the head and neck."
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "A patient develops widespread flaccid blisters and painful mouth erosions; biopsy shows intra-epidermal acantholysis. The most likely diagnosis is:",
+      "options": {
+        "A": "Bullous pemphigoid",
+        "B": "Pemphigus vulgaris",
+        "C": "Dermatitis herpetiformis",
+        "D": "Erythema multiforme"
+      },
+      "answer": "B",
+      "explanation": "Intra-epidermal split with <b>acantholysis</b>, flaccid blisters and prominent <b>mucosal</b> involvement = <b>pemphigus vulgaris</b>. Untreated it can be life-threatening; needs systemic immunosuppression."
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "Which laboratory test is used to monitor treatment response / activity in syphilis?",
+      "options": {
+        "A": "TPHA titre",
+        "B": "Non-treponemal test (VDRL/RPR) titre",
+        "C": "FTA-ABS",
+        "D": "Dark-field microscopy"
+      },
+      "answer": "B",
+      "explanation": "Non-treponemal tests (<b>VDRL/RPR</b>) are quantitative and fall with successful treatment, so they are used to <b>monitor</b> activity. Treponemal tests (TPHA, FTA-ABS) usually stay positive for life."
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "Dupilumab, increasingly used in severe atopic dermatitis, is a monoclonal antibody that blocks:",
+      "options": {
+        "A": "TNF-α",
+        "B": "The shared IL-4/IL-13 receptor α subunit",
+        "C": "IL-17A",
+        "D": "IgE only"
+      },
+      "answer": "B",
+      "explanation": "Dupilumab targets <b>IL-4Rα</b>, blocking IL-4 and IL-13 signalling (the Th2 axis central to atopic dermatitis). It has transformed treatment of moderate-to-severe eczema and is also used in asthma."
+    }
+  ]
+}

@@ -1,0 +1,497 @@
+{
+  "meta": {
+    "title": "Recall Bank",
+    "course": "Dermatology (MD1037)",
+    "semester": "Semester 6",
+    "total_questions": 37,
+    "mcq_count": 37,
+    "long_answer_count": 0,
+    "year": 2026,
+    "behaviour": {
+      "mcq": "Select one option. Answer revealed immediately on selection."
+    }
+  },
+  "questions": [
+    {
+      "id": 1,
+      "type": "mcq",
+      "stem": "Norwegian (crusted) scabies is classically associated with:",
+      "options": {
+        "A": "Atopy",
+        "B": "HIV/AIDS and immunosuppression",
+        "C": "Pregnancy",
+        "D": "Diabetes"
+      },
+      "answer": "B",
+      "explanation": "<b>Crusted (Norwegian) scabies</b> = huge mite burden with thick hyperkeratotic crusts, seen in the <b>immunosuppressed (HIV/AIDS, elderly, steroids)</b>. Highly contagious; needs oral ivermectin + topical scabicide."
+    },
+    {
+      "id": 2,
+      "type": "mcq",
+      "stem": "Nail pitting is most characteristically seen in:",
+      "options": {
+        "A": "Psoriasis",
+        "B": "Onychomycosis",
+        "C": "Lichen planus",
+        "D": "Iron deficiency"
+      },
+      "answer": "A",
+      "explanation": "<b>Psoriasis</b> causes nail <b>pitting</b>, oil-drop (salmon) patches, onycholysis and subungual hyperkeratosis. Pitting also occurs in alopecia areata."
+    },
+    {
+      "id": 3,
+      "type": "mcq",
+      "stem": "Onycholysis (nail plate separating from the bed) is a classic sign of:",
+      "options": {
+        "A": "Lichen planus",
+        "B": "Psoriasis",
+        "C": "Alopecia areata",
+        "D": "Vitiligo"
+      },
+      "answer": "B",
+      "explanation": "<b>Psoriasis</b> commonly causes <b>onycholysis</b> (distal separation of the plate from the nail bed), along with pitting and subungual hyperkeratosis. Fungal infection is another cause."
+    },
+    {
+      "id": 4,
+      "type": "mcq",
+      "stem": "The characteristic cutaneous/vascular sign of systemic sclerosis is:",
+      "options": {
+        "A": "Raynaud phenomenon",
+        "B": "Heliotrope rash",
+        "C": "Butterfly rash",
+        "D": "Gottron's papules"
+      },
+      "answer": "A",
+      "explanation": "<b>Raynaud phenomenon</b> (episodic white→blue→red digital colour change) is usually the earliest sign of systemic sclerosis; other clues: sclerodactyly, telangiectasia, calcinosis, perioral furrowing, microstomia, beaked nose (CREST)."
+    },
+    {
+      "id": 5,
+      "type": "mcq",
+      "stem": "A typical adverse effect of long-term potent topical corticosteroids is:",
+      "options": {
+        "A": "Hyperpigmentation",
+        "B": "Striae (stretch marks) and skin atrophy",
+        "C": "Hypertrichosis loss",
+        "D": "Comedones only"
+      },
+      "answer": "B",
+      "explanation": "Chronic topical steroids cause <b>skin atrophy, striae (stretch marks), telangiectasia, easy bruising, hypopigmentation, perioral dermatitis and tachyphylaxis</b>."
+    },
+    {
+      "id": 6,
+      "type": "mcq",
+      "stem": "Erythema nodosum most characteristically presents as:",
+      "options": {
+        "A": "Tender red nodules on the shins",
+        "B": "Painless ulcers",
+        "C": "Silvery plaques",
+        "D": "Flaccid blisters"
+      },
+      "answer": "A",
+      "explanation": "<b>Erythema nodosum</b> = tender, red, ill-defined nodules on the <b>anterior shins</b> (a septal panniculitis). Causes: streptococcal infection, <b>primary TB</b>, sarcoidosis, IBD, drugs (sulfonamides, OCP), pregnancy."
+    },
+    {
+      "id": 7,
+      "type": "mcq",
+      "stem": "Nikolsky's sign (skin sloughs with lateral pressure) is positive in:",
+      "options": {
+        "A": "Psoriasis",
+        "B": "Pemphigus vulgaris (and SJS/TEN, SSSS)",
+        "C": "Bullous pemphigoid",
+        "D": "Dermatitis herpetiformis"
+      },
+      "answer": "B",
+      "explanation": "<b>Nikolsky positive</b> = pemphigus vulgaris, SJS/TEN, staphylococcal scalded skin. It is <b>negative</b> in bullous pemphigoid (sub-epidermal, tense blisters)."
+    },
+    {
+      "id": 8,
+      "type": "mcq",
+      "stem": "Which finding suggests tuberous sclerosis?",
+      "options": {
+        "A": "Auspitz sign",
+        "B": "Periungual fibromas (Koenen tumours), ash-leaf macules, adenoma sebaceum",
+        "C": "Wickham striae",
+        "D": "Nikolsky sign"
+      },
+      "answer": "B",
+      "explanation": "Tuberous sclerosis skin signs: <b>ash-leaf hypomelanotic macules, facial angiofibromas (adenoma sebaceum), shagreen patch, periungual (Koenen) fibromas</b>. Distractor 'Crowe sign' (axillary freckling) belongs to neurofibromatosis-1."
+    },
+    {
+      "id": 9,
+      "type": "mcq",
+      "stem": "Seborrheic keratosis is best described as:",
+      "options": {
+        "A": "A malignant melanocytic tumour",
+        "B": "A benign 'stuck-on', warty keratinocytic tumour",
+        "C": "A vascular tumour",
+        "D": "A precancerous lesion"
+      },
+      "answer": "B",
+      "explanation": "Benign keratinocytic tumour with a <b>'stuck-on', warty, brain-like</b> surface; dermoscopy shows milia-like cysts and comedo-like openings. Eruptive onset = Leser-Trélat sign."
+    },
+    {
+      "id": 10,
+      "type": "mcq",
+      "stem": "Psoriasis can be associated with:",
+      "options": {
+        "A": "Psoriatic arthritis and metabolic/cardiovascular comorbidity",
+        "B": "Celiac disease",
+        "C": "Gonorrhea",
+        "D": "Melanoma"
+      },
+      "answer": "A",
+      "explanation": "Psoriasis is associated with <b>psoriatic arthritis</b> and systemic comorbidities: metabolic syndrome, cardiovascular disease, obesity, depression, IBD, uveitis."
+    },
+    {
+      "id": 11,
+      "type": "mcq",
+      "stem": "The treatment of squamous cell carcinoma is:",
+      "options": {
+        "A": "Cryotherapy",
+        "B": "Surgical resection to healthy (clear) margins",
+        "C": "Antibiotics",
+        "D": "Observation"
+      },
+      "answer": "B",
+      "explanation": "Invasive SCC → <b>surgical excision with clear margins</b> (Mohs for high-risk sites); nodal/imaging staging if needed."
+    },
+    {
+      "id": 12,
+      "type": "mcq",
+      "stem": "Which HPV types are responsible for genital warts (condylomata)?",
+      "options": {
+        "A": "16 and 18",
+        "B": "6 and 11",
+        "C": "31 and 33",
+        "D": "1 and 2"
+      },
+      "answer": "B",
+      "explanation": "<b>Low-risk HPV 6 and 11</b> cause anogenital warts. High-risk <b>16 and 18</b> drive cervical/oropharyngeal SCC. The 9-valent vaccine covers 6/11 + 7 oncogenic types."
+    },
+    {
+      "id": 13,
+      "type": "mcq",
+      "stem": "In which disease is the papule the main (primary) lesion?",
+      "options": {
+        "A": "Lichen planus",
+        "B": "Bullous pemphigoid",
+        "C": "Pemphigus",
+        "D": "Vitiligo"
+      },
+      "answer": "A",
+      "explanation": "<b>Lichen planus</b> = the 5 Ps: <b>Purple, Polygonal, Pruritic, Planar Papules</b>, with Wickham striae. Papule = solid elevation <0.5 cm."
+    },
+    {
+      "id": 14,
+      "type": "mcq",
+      "stem": "Which is NOT a risk factor for developing squamous cell carcinoma?",
+      "options": {
+        "A": "Immunosuppression",
+        "B": "Chronic sun exposure",
+        "C": "Metabolic syndrome",
+        "D": "Burn scar"
+      },
+      "answer": "C",
+      "explanation": "<b>Metabolic syndrome</b> is not an SCC risk factor. SCC risks: chronic UV, immunosuppression, scars/chronic wounds (Marjolin), HPV, radiation, arsenic."
+    },
+    {
+      "id": 15,
+      "type": "mcq",
+      "stem": "Norwegian scabies is associated with:",
+      "options": {
+        "A": "HIV/AIDS (immunosuppression)",
+        "B": "Fair skin",
+        "C": "Young healthy adults",
+        "D": "Sun exposure"
+      },
+      "answer": "A",
+      "explanation": "Crusted (Norwegian) scabies occurs with <b>immunosuppression (HIV/AIDS)</b>, huge mite loads and hyperkeratotic crusting."
+    },
+    {
+      "id": 16,
+      "type": "mcq",
+      "stem": "The adverse effect of topical corticosteroids highlighted in the exam is:",
+      "options": {
+        "A": "Striae (stretch marks)",
+        "B": "Hyperkeratosis",
+        "C": "Vitiligo",
+        "D": "Comedones"
+      },
+      "answer": "A",
+      "explanation": "<b>Striae</b> + skin atrophy, telangiectasia, bruising, perioral dermatitis are classic topical-steroid side-effects."
+    },
+    {
+      "id": 17,
+      "type": "mcq",
+      "stem": "In a first (primary) scabies infestation, signs/itching appear after about:",
+      "options": {
+        "A": "24 hours",
+        "B": "3 days",
+        "C": "6 weeks",
+        "D": "1 year"
+      },
+      "answer": "C",
+      "explanation": "Primary infestation → pruritus after <b>~4–6 weeks</b> (sensitisation). Re-infestation → symptoms within 24–48 h."
+    },
+    {
+      "id": 18,
+      "type": "mcq",
+      "stem": "Bullous pemphigoid is:",
+      "options": {
+        "A": "Common in children",
+        "B": "Common in the elderly",
+        "C": "Congenital",
+        "D": "Only in pregnancy"
+      },
+      "answer": "B",
+      "explanation": "BP is the commonest autoimmune blistering disease, typically in the <b>elderly</b>; tense sub-epidermal blisters, Nikolsky negative, anti-BP180/230."
+    },
+    {
+      "id": 19,
+      "type": "mcq",
+      "stem": "The blister in pemphigus vulgaris is:",
+      "options": {
+        "A": "Sub-epidermal",
+        "B": "Intra-epidermal (suprabasal, acantholytic)",
+        "C": "Sub-corneal only",
+        "D": "Dermal"
+      },
+      "answer": "B",
+      "explanation": "PV = <b>intra-epidermal, suprabasal acantholytic</b> split (anti-DSG3). Contrast: pemphigoid = sub-epidermal."
+    },
+    {
+      "id": 20,
+      "type": "mcq",
+      "stem": "Squamous cell carcinoma most commonly metastasizes first to:",
+      "options": {
+        "A": "Lungs",
+        "B": "Regional lymph nodes",
+        "C": "Liver",
+        "D": "Bone"
+      },
+      "answer": "B",
+      "explanation": "Cutaneous SCC spreads first to <b>regional lymph nodes</b>. Metastatic risk rises for lesions on mucosa, scars/burns, and in immunosuppression."
+    },
+    {
+      "id": 21,
+      "type": "mcq",
+      "stem": "A result of chronic (cumulative) radiation/UV exposure is:",
+      "options": {
+        "A": "Actinic keratosis",
+        "B": "Psoriasis",
+        "C": "Vitiligo",
+        "D": "Pyogenic granuloma"
+      },
+      "answer": "A",
+      "explanation": "Chronic UV/radiation → <b>actinic keratosis</b> (SCC precursor). SCC has the strongest association with cumulative sun exposure."
+    },
+    {
+      "id": 22,
+      "type": "mcq",
+      "stem": "The vascular sign of systemic scleroderma is:",
+      "options": {
+        "A": "Raynaud's phenomenon",
+        "B": "Heliotrope rash",
+        "C": "Auspitz sign",
+        "D": "Koebner phenomenon"
+      },
+      "answer": "A",
+      "explanation": "<b>Raynaud's phenomenon</b> — often the first sign of systemic sclerosis."
+    },
+    {
+      "id": 23,
+      "type": "mcq",
+      "stem": "Herpes zoster can cause:",
+      "options": {
+        "A": "Only sensory symptoms",
+        "B": "Motor nerve involvement/paralysis (e.g. Ramsay-Hunt, segmental weakness)",
+        "C": "No neurological effect",
+        "D": "Permanent blindness in all cases"
+      },
+      "answer": "B",
+      "explanation": "Beyond the painful dermatomal rash, VZV reactivation can cause <b>motor involvement</b> (segmental paresis, Ramsay-Hunt facial palsy, ophthalmic zoster). Commonest complication = post-herpetic neuralgia."
+    },
+    {
+      "id": 24,
+      "type": "mcq",
+      "stem": "Basal cell carcinoma (nodular type) classically appears as:",
+      "options": {
+        "A": "A tender red plaque with silvery scale",
+        "B": "A pearly nodule with telangiectasia and a rolled (pearly-papule) border",
+        "C": "A blistering eruption",
+        "D": "A brown 'stuck-on' papule"
+      },
+      "answer": "B",
+      "explanation": "Nodular BCC = a <b>pearly/translucent nodule with arborising telangiectasia</b>, rolled edge with pearly papules at the periphery, often ulcerated ('rodent ulcer'). Dermoscopy: arborising vessels, blue-grey ovoid nests, leaf-like areas."
+    },
+    {
+      "id": 25,
+      "type": "mcq",
+      "stem": "Tuberous sclerosis — which is a genuine sign? a) Auspitz b) freckles c) periungual fibroma d) Crowe sign",
+      "options": {
+        "A": "Auspitz sign",
+        "B": "Freckles",
+        "C": "Periungual (Koenen) fibroma",
+        "D": "Crowe sign"
+      },
+      "answer": "C",
+      "explanation": "<b>Periungual (Koenen) fibromas</b> are a tuberous-sclerosis feature. <b>Crowe sign (axillary freckling)</b> is a distractor — it belongs to neurofibromatosis-1."
+    },
+    {
+      "id": 26,
+      "type": "mcq",
+      "stem": "The most common type of alopecia in the white population is:",
+      "options": {
+        "A": "Alopecia areata",
+        "B": "Androgenetic alopecia",
+        "C": "Trichotillomania",
+        "D": "Telogen effluvium"
+      },
+      "answer": "B",
+      "explanation": "<b>Androgenetic alopecia</b> is the commonest hair loss (higher incidence in white populations): progressive, non-scarring, symmetrical, androgen-dependent, genetically predisposed."
+    },
+    {
+      "id": 27,
+      "type": "mcq",
+      "stem": "The alopecia associated with a psychological cause is:",
+      "options": {
+        "A": "Androgenetic alopecia",
+        "B": "Alopecia areata",
+        "C": "Trichotillomania",
+        "D": "Traction alopecia"
+      },
+      "answer": "C",
+      "explanation": "<b>Trichotillomania</b> = compulsive hair-pulling (often children, right temporal region in right-handers). Non-scarring, hairs broken at varying lengths, normal scalp."
+    },
+    {
+      "id": 28,
+      "type": "mcq",
+      "stem": "Perioral furrowing and microstomia are seen in:",
+      "options": {
+        "A": "Systemic sclerosis",
+        "B": "Atopic dermatitis",
+        "C": "Psoriasis",
+        "D": "Lichen planus"
+      },
+      "answer": "A",
+      "explanation": "<b>Systemic sclerosis</b>: skin tightening → perioral radial furrowing, <b>microstomia</b> (small mouth), beaked nose, sclerodactyly, salt-and-pepper pigmentation."
+    },
+    {
+      "id": 29,
+      "type": "mcq",
+      "stem": "Itching (pruritus) is a MAJOR criterion of which condition?",
+      "options": {
+        "A": "Psoriasis",
+        "B": "Atopic dermatitis",
+        "C": "Seborrheic keratosis",
+        "D": "Vitiligo"
+      },
+      "answer": "B",
+      "explanation": "In the Hanifin–Rajka criteria, <b>pruritus is an essential (major) criterion of atopic dermatitis</b> — the itch-scratch cycle drives the disease."
+    },
+    {
+      "id": 30,
+      "type": "mcq",
+      "stem": "Which nail change is linked to psoriasis rather than lichen planus (onycholysis question)?",
+      "options": {
+        "A": "Pterygium",
+        "B": "Onycholysis",
+        "C": "Wickham striae",
+        "D": "Trachyonychia only"
+      },
+      "answer": "B",
+      "explanation": "<b>Onycholysis</b> (with pitting, oil-drop sign) → psoriasis. Lichen planus nails → longitudinal ridging, <b>pterygium</b>, thinning."
+    },
+    {
+      "id": 31,
+      "type": "mcq",
+      "stem": "Which is NOT part of Hutchinson's triad?",
+      "options": {
+        "A": "Notched (Hutchinson) incisors",
+        "B": "Interstitial keratitis",
+        "C": "Sensorineural deafness",
+        "D": "Neurosyphilis"
+      },
+      "answer": "D",
+      "explanation": "Hutchinson's triad (congenital syphilis) = notched teeth + interstitial keratitis + VIII-nerve deafness. <b>Neurosyphilis</b> is not included."
+    },
+    {
+      "id": 32,
+      "type": "mcq",
+      "stem": "Erythema nodosum is associated with:",
+      "options": {
+        "A": "Primary tuberculosis (and strep, sarcoid, IBD, drugs)",
+        "B": "Melanoma",
+        "C": "Psoriasis",
+        "D": "Rheumatoid arthritis"
+      },
+      "answer": "A",
+      "explanation": "EN causes: streptococcal infection, <b>primary TB</b>, sarcoidosis, IBD, drugs (sulfonamides, OCP), pregnancy, Behçet. It is NOT classically linked to rheumatoid arthritis."
+    },
+    {
+      "id": 33,
+      "type": "mcq",
+      "stem": "Gottron's papules are seen in:",
+      "options": {
+        "A": "Dermatomyositis",
+        "B": "Lupus",
+        "C": "Scleroderma",
+        "D": "Psoriasis"
+      },
+      "answer": "A",
+      "explanation": "<b>Gottron's papules</b> (violaceous papules over knuckles) + heliotrope rash + shawl/V-sign = dermatomyositis. Adult DM: screen for underlying malignancy."
+    },
+    {
+      "id": 34,
+      "type": "mcq",
+      "stem": "The most common form of skin cancer is:",
+      "options": {
+        "A": "Melanoma",
+        "B": "Basal cell carcinoma",
+        "C": "Squamous cell carcinoma",
+        "D": "Merkel cell carcinoma"
+      },
+      "answer": "B",
+      "explanation": "<b>Basal cell carcinoma</b> is the commonest skin cancer — locally invasive, very rarely metastasises."
+    },
+    {
+      "id": 35,
+      "type": "mcq",
+      "stem": "Which drug is NOT used in acne treatment?",
+      "options": {
+        "A": "Isotretinoin",
+        "B": "Tetracyclines",
+        "C": "Cyclosporine",
+        "D": "Benzoyl peroxide"
+      },
+      "answer": "C",
+      "explanation": "<b>Cyclosporine</b> is not used for acne (can induce it). Acne: topical retinoids, benzoyl peroxide, azelaic acid, antibiotics, hormones, isotretinoin."
+    },
+    {
+      "id": 36,
+      "type": "mcq",
+      "stem": "Erythema nodosum is NOT typically associated with:",
+      "options": {
+        "A": "Streptococcal infection",
+        "B": "Sarcoidosis",
+        "C": "Rheumatoid arthritis",
+        "D": "Inflammatory bowel disease"
+      },
+      "answer": "C",
+      "explanation": "EN links to strep, TB, sarcoidosis, IBD, drugs and pregnancy. <b>Rheumatoid arthritis</b> is not a classic EN trigger (it was the exam distractor)."
+    },
+    {
+      "id": 37,
+      "type": "mcq",
+      "stem": "What is NOT caused by streptococci?",
+      "options": {
+        "A": "Erysipelas",
+        "B": "Furuncle (boil)",
+        "C": "Impetigo (non-bullous)",
+        "D": "Scarlet fever"
+      },
+      "answer": "B",
+      "explanation": "<b>Furuncle</b> is a Staphylococcus aureus perifollicular abscess. Streptococci cause erysipelas, non-bullous impetigo, scarlet fever, cellulitis."
+    }
+  ]
+}

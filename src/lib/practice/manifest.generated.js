@@ -15,6 +15,11 @@ import semester2GeneralPhysiologyIndex from '../../../content/practice/ausom/sem
 import semester2GeneralPhysiologyTestPredictedLabExam from '../../../content/practice/ausom/semester-2/general-physiology/predicted-lab-exam.json';
 import semester2GeneralPhysiologyTestPredictedMcqOneoffs from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-oneoffs.json';
 import semester2GeneralPhysiologyTestPredictedMcqRepeaters from '../../../content/practice/ausom/semester-2/general-physiology/predicted-mcq-repeaters.json';
+import semester6DermatologyIndex from '../../../content/practice/ausom/semester-6/dermatology/index.json';
+import semester6DermatologyTestPrediction1 from '../../../content/practice/ausom/semester-6/dermatology/prediction-1.json';
+import semester6DermatologyTestPrediction2 from '../../../content/practice/ausom/semester-6/dermatology/prediction-2.json';
+import semester6DermatologyTestPrediction3 from '../../../content/practice/ausom/semester-6/dermatology/prediction-3.json';
+import semester6DermatologyTestRecalls from '../../../content/practice/ausom/semester-6/dermatology/recalls.json';
 import semester6EntOralIndex from '../../../content/practice/ausom/semester-6/ent-oral/index.json';
 import semester6EntOralTestFlashcards from '../../../content/practice/ausom/semester-6/ent-oral/flashcards.json';
 import semester6EntOralTestQuiz from '../../../content/practice/ausom/semester-6/ent-oral/quiz.json';
@@ -67,6 +72,15 @@ export const MANIFEST = {
     },
   },
   "semester-6": {
+    "dermatology": {
+      index: semester6DermatologyIndex,
+      tests: {
+        "prediction-1": semester6DermatologyTestPrediction1,
+        "prediction-2": semester6DermatologyTestPrediction2,
+        "prediction-3": semester6DermatologyTestPrediction3,
+        "recalls": semester6DermatologyTestRecalls,
+      },
+    },
     "ent-oral": {
       index: semester6EntOralIndex,
       tests: {
