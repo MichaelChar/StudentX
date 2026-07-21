@@ -1,8 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
+import useModalA11y from '@/lib/useModalA11y';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import Button from '@/components/ui/Button';
@@ -37,6 +38,8 @@ export default function ReportListingModal({ listingId }) {
   const [status, setStatus] = useState('idle'); // 'idle' | 'success' | 'error'
   const [error, setError] = useState('');
 
+  const dialogRef = useRef(null);
+
   function close() {
     if (submitting) return;
     setOpen(false);
@@ -47,6 +50,15 @@ export default function ReportListingModal({ listingId }) {
     setStatus('idle');
     setError('');
   }
+
+  // Focus trap, Esc-to-close, scroll lock, focus restore — shared with every
+  // other modal. Esc is suppressed while a submit is in flight (close() also
+  // guards on `submitting`); the trap stays live.
+  useModalA11y(dialogRef, {
+    onClose: close,
+    active: open,
+    closeOnEscape: !submitting,
+  });
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -98,6 +110,7 @@ export default function ReportListingModal({ listingId }) {
 
       {open && (
         <div
+          ref={dialogRef}
           className="fixed inset-0 z-50 flex items-center justify-center p-4"
           role="dialog"
           aria-modal="true"

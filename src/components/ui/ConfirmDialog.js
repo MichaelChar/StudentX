@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useId, useRef } from 'react';
+import { useId, useRef } from 'react';
+
+import useModalA11y from '@/lib/useModalA11y';
 
 /*
   Accessible confirm dialog — replaces native window.confirm() for
@@ -31,43 +33,16 @@ export default function ConfirmDialog({
   const cancelRef = useRef(null);
   const titleId = useId();
 
-  // Trap focus, wire Esc, and restore focus to the trigger on unmount.
-  useEffect(() => {
-    if (!open) return undefined;
-    const previouslyFocused = document.activeElement;
-    // Defer initial focus to after paint so the node exists.
-    cancelRef.current?.focus();
-
-    function onKeyDown(e) {
-      if (e.key === 'Escape') {
-        e.preventDefault();
-        if (!busy) onCancel?.();
-        return;
-      }
-      if (e.key !== 'Tab') return;
-      const node = dialogRef.current;
-      if (!node) return;
-      const focusable = node.querySelectorAll(
-        'button:not([disabled]), [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-      );
-      if (focusable.length === 0) return;
-      const first = focusable[0];
-      const last = focusable[focusable.length - 1];
-      if (e.shiftKey && document.activeElement === first) {
-        e.preventDefault();
-        last.focus();
-      } else if (!e.shiftKey && document.activeElement === last) {
-        e.preventDefault();
-        first.focus();
-      }
-    }
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => {
-      document.removeEventListener('keydown', onKeyDown);
-      if (previouslyFocused instanceof HTMLElement) previouslyFocused.focus();
-    };
-  }, [open, busy, onCancel]);
+  // Focus trap, Esc, and focus restore — shared with every other modal.
+  // Focus lands on Cancel (safe default for destructive flows); Esc is
+  // suppressed while busy so a pending action can't be cancelled mid-flight.
+  useModalA11y(dialogRef, {
+    onClose: onCancel,
+    active: open,
+    initialFocusRef: cancelRef,
+    lockScroll: false,
+    closeOnEscape: !busy,
+  });
 
   if (!open) return null;
 
