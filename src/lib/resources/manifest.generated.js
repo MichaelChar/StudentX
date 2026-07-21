@@ -106,6 +106,22 @@ export const RESOURCES = [
     "subjectLabel": "Anatomy I (MD1009)"
   },
   {
+    "id": "notes:dermatology",
+    "type": "study-notes",
+    "title": "Dermatology High-Yield Notes",
+    "description": "High-yield dermatology revision notes across 20 topics.",
+    "href": "/student/ausom/semester-6/dermatology/notes",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "dermatology",
+    "meta": {
+      "sectionCount": 20
+    },
+    "subjectLabel": "Dermatology (MD1037)"
+  },
+  {
     "id": "notes:ent-oral",
     "type": "study-notes",
     "title": "ENT Oral — Exam Notes",
@@ -248,6 +264,70 @@ export const RESOURCES = [
       "questionCount": 48
     },
     "subjectLabel": "Biochemistry I (MD1011)"
+  },
+  {
+    "id": "practice:dermatology:prediction-1",
+    "type": "practice-test",
+    "title": "Prediction Paper 1",
+    "description": "High-probability topics from recurring past-paper and recall patterns.",
+    "href": "/student/ausom/semester-6/dermatology/prediction-1",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "dermatology",
+    "meta": {
+      "questionCount": 30
+    },
+    "subjectLabel": "Dermatology (MD1037)"
+  },
+  {
+    "id": "practice:dermatology:prediction-2",
+    "type": "practice-test",
+    "title": "Prediction Paper 2",
+    "description": "A balanced mock spanning the whole syllabus at exam-style difficulty.",
+    "href": "/student/ausom/semester-6/dermatology/prediction-2",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "dermatology",
+    "meta": {
+      "questionCount": 30
+    },
+    "subjectLabel": "Dermatology (MD1037)"
+  },
+  {
+    "id": "practice:dermatology:prediction-3",
+    "type": "practice-test",
+    "title": "Prediction Paper 3",
+    "description": "Under-tested but examinable topics: genodermatoses, nail signs, drug eruptions, phototherapy, skin signs of systemic disease.",
+    "href": "/student/ausom/semester-6/dermatology/prediction-3",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "dermatology",
+    "meta": {
+      "questionCount": 30
+    },
+    "subjectLabel": "Dermatology (MD1037)"
+  },
+  {
+    "id": "practice:dermatology:recalls",
+    "type": "practice-test",
+    "title": "Recall Bank",
+    "description": "Student-recalled dermatology MCQs, all answers explained.",
+    "href": "/student/ausom/semester-6/dermatology/recalls",
+    "school": "ausom",
+    "semester": "semester-6",
+    "country": "gr",
+    "year": 2026,
+    "subject": "dermatology",
+    "meta": {
+      "questionCount": 37
+    },
+    "subjectLabel": "Dermatology (MD1037)"
   },
   {
     "id": "practice:ent-oral:flashcards",

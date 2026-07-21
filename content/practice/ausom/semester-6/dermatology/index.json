@@ -1,0 +1,41 @@
+{
+  "subject": "dermatology",
+  "title": "Dermatology (MD1037)",
+  "school": "ausom",
+  "semester": "semester-6",
+  "country": "gr",
+  "tests": [
+    {
+      "id": "recalls",
+      "title": "Recall Bank",
+      "kind": "topic",
+      "questionCount": 37,
+      "description": "Student-recalled dermatology MCQs, all answers explained.",
+      "year": 2026
+    },
+    {
+      "id": "prediction-1",
+      "title": "Prediction Paper 1",
+      "kind": "topic",
+      "questionCount": 30,
+      "description": "High-probability topics from recurring past-paper and recall patterns.",
+      "year": 2026
+    },
+    {
+      "id": "prediction-2",
+      "title": "Prediction Paper 2",
+      "kind": "topic",
+      "questionCount": 30,
+      "description": "A balanced mock spanning the whole syllabus at exam-style difficulty.",
+      "year": 2026
+    },
+    {
+      "id": "prediction-3",
+      "title": "Prediction Paper 3",
+      "kind": "topic",
+      "questionCount": 30,
+      "description": "Under-tested but examinable topics: genodermatoses, nail signs, drug eruptions, phototherapy, skin signs of systemic disease.",
+      "year": 2026
+    }
+  ]
+}
