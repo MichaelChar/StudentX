@@ -21,11 +21,16 @@ describe('pickMessages', () => {
   });
 });
 
-// --- Allow-list completeness: scan 'use client' files and make sure every
-// namespace they pass to useTranslations() is covered by CLIENT_NAMESPACES.
-// This is the safety net for the #260 message-filtering optimization: if a
-// client component starts using a new namespace and nobody updates the list,
-// this fails instead of shipping a runtime MISSING_MESSAGE to users.
+// --- Allow-list completeness: scan 'use client' files AND everything they
+// import (transitively) and make sure every namespace reachable from them
+// via useTranslations() is covered by CLIENT_NAMESPACES. This is the safety
+// net for the #260 message-filtering optimization: if a client component (or
+// a plain component it imports — e.g. ListingCard.js has no directive of its
+// own but is pulled into the client bundle by SavedListings.js) starts using
+// a new namespace and nobody updates the list, this fails instead of shipping
+// a runtime MISSING_MESSAGE to users.
+
+const srcDir = join(process.cwd(), 'src');
 
 function walk(dir) {
   const out = [];
@@ -39,22 +44,83 @@ function walk(dir) {
   return out;
 }
 
+function resolveImport(fromFile, specifier) {
+  if (specifier.startsWith('@/')) {
+    return resolveModulePath(join(srcDir, specifier.slice(2)));
+  }
+  if (specifier.startsWith('.')) {
+    return resolveModulePath(join(join(fromFile, '..'), specifier));
+  }
+  return null; // external package — not part of our source graph
+}
+
+function resolveModulePath(base) {
+  const candidates = [
+    base,
+    `${base}.js`,
+    `${base}.jsx`,
+    join(base, 'index.js'),
+    join(base, 'index.jsx'),
+  ];
+  for (const candidate of candidates) {
+    try {
+      if (statSync(candidate).isFile()) return candidate;
+    } catch {
+      // not this candidate
+    }
+  }
+  return null;
+}
+
+function importsOf(code, file) {
+  const specifiers = [];
+  const re = /(?:import|export)\s[^;]*?from\s+['"]([^'"]+)['"]|import\(\s*['"]([^'"]+)['"]\s*\)/g;
+  let m;
+  while ((m = re.exec(code)) !== null) {
+    specifiers.push(m[1] || m[2]);
+  }
+  return specifiers
+    .map((spec) => resolveImport(file, spec))
+    .filter(Boolean);
+}
+
+function namespacesInFile(code) {
+  const re = /useTranslations\(\s*['"]([^'"]+)['"]\s*\)/g;
+  const out = [];
+  let m;
+  while ((m = re.exec(code)) !== null) out.push(m[1].split('.')[0]);
+  return out;
+}
+
 function clientNamespacesUsed() {
-  const srcDir = join(process.cwd(), 'src');
   const used = new Map(); // topLevel -> file where first seen
+  const visited = new Set();
+
+  function visit(file) {
+    if (visited.has(file)) return;
+    visited.add(file);
+    let code;
+    try {
+      code = readFileSync(file, 'utf8');
+    } catch {
+      return;
+    }
+    for (const ns of namespacesInFile(code)) {
+      if (!used.has(ns)) used.set(ns, file);
+    }
+    for (const dep of importsOf(code, file)) visit(dep);
+  }
+
   for (const file of walk(srcDir)) {
     const code = readFileSync(file, 'utf8');
     // A real client component declares the directive as its first statement.
     // Checking the trimmed start (not includes) avoids matching files that
-    // merely mention 'use client' inside a comment or string.
+    // merely mention 'use client' inside a comment or string. Every module it
+    // imports — directly or transitively — ships in the same client bundle,
+    // so we have to follow the import graph, not just this one file.
     const head = code.trimStart();
     if (!head.startsWith("'use client'") && !head.startsWith('"use client"')) continue;
-    const re = /useTranslations\(\s*['"]([^'"]+)['"]\s*\)/g;
-    let m;
-    while ((m = re.exec(code)) !== null) {
-      const top = m[1].split('.')[0];
-      if (!used.has(top)) used.set(top, file);
-    }
+    visit(file);
   }
   return used;
 }
