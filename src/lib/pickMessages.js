@@ -17,19 +17,20 @@ export function pickMessages(messages, topLevelKeys) {
 }
 
 // Top-level message namespaces consumed by 'use client' components — the only
-// ones the browser needs. Regenerate with:
-//
-//   grep -rln "'use client'" src | xargs grep -hoE "useTranslations\('[^']+'\)" \
-//     | sed "s/useTranslations('//;s/')//" | cut -d. -f1 | sort -u
-//
-// The completeness test (__tests__/lib/pickMessages.test.js) re-runs that scan
-// and fails if a client component starts using a namespace missing here, so
-// this list can't silently rot into a MISSING_MESSAGE bug.
+// ones the browser needs. This includes namespaces used by plain components
+// that carry no 'use client' directive of their own but get pulled into a
+// client bundle by import (e.g. ListingCard.js, imported by SavedListings.js)
+// — the directive travels with whatever imports the module, not just the
+// literal file. The completeness test (__tests__/lib/pickMessages.test.js)
+// walks the import graph from every 'use client' entry point and fails if a
+// reachable namespace is missing here, so this list can't silently rot into
+// a MISSING_MESSAGE bug.
 export const CLIENT_NAMESPACES = [
   'admin',
   'gigs',
   'landlord',
   'listing',
+  'listingCard',
   'loaders',
   'nav',
   'propylaea',
