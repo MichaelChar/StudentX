@@ -455,8 +455,11 @@ export default function HubDiagram() {
         flexDirection: 'column',
       }}
     >
-      {/* Header row — wordmark + global student count */}
-      <div className="px-5 pt-5 md:px-14 md:pt-8 flex items-end justify-between flex-wrap gap-4 md:gap-10">
+      {/* Header row — wordmark + global student count. Extra right padding on
+          desktop reserves a lane for the fixed SIGN IN pill (Navbar,
+          top-11 right-5) so the right-aligned stat doesn't render under it.
+          On narrow screens the row wraps, dropping the stat below the pill. */}
+      <div className="pl-5 pr-5 pt-5 md:pl-14 md:pr-40 md:pt-8 flex items-end justify-between flex-wrap gap-4 md:gap-10">
         <h1
           className="text-[40px] md:text-[72px] tracking-[-1.5px] md:tracking-[-2.5px]"
           style={{
