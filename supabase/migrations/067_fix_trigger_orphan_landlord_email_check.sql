@@ -1,6 +1,27 @@
 -- ============================================================
--- Migration 051: Tighten email-based dual-role checks to ignore
+-- Migration 067: Tighten email-based dual-role checks to ignore
 -- unlinked (pre-seeded) rows.
+--
+-- RENUMBERED FROM 051 (was 051_fix_trigger_orphan_landlord_email_check).
+-- Two problems, one move:
+--
+--   1. Number collision. 051_rls_phantom_tables_batch2.sql already owned
+--      051, and `supabase start` keys schema_migrations on the filename's
+--      leading digits — so a clean-stack apply inserted version 051 twice
+--      and died on the PK. That is what broke the migration-check CI job.
+--
+--   2. Order bug this collision was hiding. 052_security_performance_
+--      hardening.sql ALSO does CREATE OR REPLACE on prevent_dual_role,
+--      and its copy predates this fix — it has no `auth_user_id IS NOT
+--      NULL` guard. Running at 051, this fix landed BEFORE 052, so 052
+--      silently reverted it and a clean stack rebuilt the original bug.
+--      Prod is unaffected: the functions there do carry the guard,
+--      because this was applied out-of-band AFTER 052 (2026-05-17 vs
+--      2026-05-13). Moving to 067 makes the file order match the order
+--      prod was actually built in.
+--
+-- Nothing between 053 and 066 touches handle_new_student_user or
+-- prevent_dual_role, so 067 is the first safe slot after 052.
 --
 -- BUG: A student (morneg101@hotmail.com) signed up but
 -- handle_new_student_user skipped row creation because a
