@@ -234,3 +234,29 @@ INSERT INTO inquiries (listing_id, student_name, student_email, student_phone, m
   ('0005002', 'Maria Tsalikidou',   'mtsalik@auth.gr',          NULL,
    'Hi, I am a Veterinary student at AUTH Agriculture campus. The Stavroupoli room fits my budget. What bus line goes to campus?',
    'auth-agriculture', 'pending');
+
+-- ----------------------------------------
+-- Listing → university distances (metres, landlord-reported)
+-- ----------------------------------------
+-- Deliberately PARTIAL: the field is optional and there is no backfill, so a
+-- realistic seed has some listings with all three universities filled, some
+-- with one, and some with none. That way local dev exercises both the populated
+-- card line and the render-nothing empty case.
+-- ----------------------------------------
+INSERT INTO listing_university_distances (listing_id, university_id, distance_meters) VALUES
+  -- 0001001 (Tsimiski 45, Kentro) — all three
+  ('0001001', 'auth', 1400), ('0001001', 'uom', 1900), ('0001001', 'ihu', 14000),
+  -- 0001002 (Egnatia 132, Kamara) — all three
+  ('0001002', 'auth', 750),  ('0001002', 'uom', 2200), ('0001002', 'ihu', 13500),
+  -- 0002001 (Kalamaria) — AUTH + UoM only
+  ('0002001', 'auth', 4800), ('0002001', 'uom', 3100),
+  -- 0003001 (Ano Poli) — AUTH only. 900 m on the map, a long uphill walk in
+  -- practice: exactly why this field is metres, not a travel-time claim.
+  ('0003001', 'auth', 900),
+  -- 0004001 (Triandria) — all three
+  ('0004001', 'auth', 2600), ('0004001', 'uom', 1200), ('0004001', 'ihu', 11000),
+  -- 0004002 (Ethnikis Amynis) — AUTH only
+  ('0004002', 'auth', 550),
+  -- 0005002 (Stavroupoli) — IHU Sindos side of town
+  ('0005002', 'auth', 6400), ('0005002', 'ihu', 7200);
+  -- 0002002, 0003002, 0005001 intentionally left with no rows.

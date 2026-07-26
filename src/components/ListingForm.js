@@ -10,6 +10,7 @@ import { TITLE_MAX_LENGTH, codepointLength } from '@/lib/listingTitle';
 import { arrayMove } from '@/lib/arrayMove';
 import { resizeToVariants } from '@/lib/imageResize';
 import { variantUrl } from '@/lib/photoVariants';
+import { MAX_DISTANCE_METERS } from '@/lib/universityDistances';
 
 const NEIGHBORHOODS_FALLBACK = [
   'Ano Poli', 'Center', 'Faliro', 'Kalamaria', 'Kentro',
@@ -41,12 +42,16 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     available_from: '',
     min_duration_months: '9',
     amenity_ids: [],
+    // [{ university_id, distance_meters }] — landlord-typed metres, optional.
+    // Starts empty: there is no prefill or auto-compute (migration 066).
+    university_distances: [],
     photos: [],
     ...initialValues,
   });
 
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [amenities, setAmenities] = useState([]);
+  const [universities, setUniversities] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
@@ -79,7 +84,11 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user?.id) setUserId(session.user.id);
 
-      const fetches = [fetch('/api/property-types'), fetch('/api/amenities')];
+      const fetches = [
+        fetch('/api/property-types'),
+        fetch('/api/amenities'),
+        fetch('/api/universities'),
+      ];
       if (session?.access_token) {
         fetches.push(
           fetch('/api/landlord/billing/subscription', {
@@ -88,7 +97,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
         );
       }
 
-      const [ptRes, amRes, billingRes] = await Promise.all(fetches);
+      const [ptRes, amRes, uniRes, billingRes] = await Promise.all(fetches);
 
       if (ptRes.ok) {
         const { propertyTypes: pts } = await ptRes.json();
@@ -97,6 +106,13 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       if (amRes.ok) {
         const { amenities: ams } = await amRes.json();
         setAmenities(ams || []);
+      }
+      // Soft-fails to an empty list, which hides the whole distance section —
+      // the field is optional, so a missing /api/universities (or a pre-066
+      // database) must not block the rest of the form.
+      if (uniRes.ok) {
+        const { universities: unis } = await uniRes.json();
+        setUniversities(unis || []);
       }
       if (billingRes?.ok) {
         const { verifiedTier } = await billingRes.json();
@@ -121,6 +137,37 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
         : [...prev.amenity_ids, amenityId],
     }));
     setIsDirty(true);
+  }
+
+  // ── University distances ─────────────────────────────────────────────
+  // Landlord-typed metres, one row per university. Rows are added explicitly:
+  // nothing is prefilled or computed from the map pin, so an untouched form
+  // saves no rows at all.
+
+  function addUniversityRow() {
+    const taken = new Set(form.university_distances.map((d) => d.university_id));
+    const next = universities.find((u) => !taken.has(u.university_id));
+    if (!next) return;
+    set('university_distances', [
+      ...form.university_distances,
+      { university_id: next.university_id, distance_meters: '' },
+    ]);
+  }
+
+  function updateUniversityRow(index, field, value) {
+    set(
+      'university_distances',
+      form.university_distances.map((row, i) =>
+        i === index ? { ...row, [field]: value } : row,
+      ),
+    );
+  }
+
+  function removeUniversityRow(index) {
+    set(
+      'university_distances',
+      form.university_distances.filter((_, i) => i !== index),
+    );
   }
 
   async function handlePhotoFiles(files) {
@@ -265,7 +312,19 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     setError('');
     setLoading(true);
     try {
-      await onSubmit(form);
+      // Drop half-filled distance rows (a university picked but no number
+      // typed) and hand the API real integers rather than input strings.
+      // Sending the key unconditionally preserves replace-all semantics, so
+      // clearing every row on an edit actually clears them server-side.
+      await onSubmit({
+        ...form,
+        university_distances: form.university_distances
+          .filter((d) => String(d.distance_meters).trim() !== '')
+          .map((d) => ({
+            university_id: d.university_id,
+            distance_meters: Number(d.distance_meters),
+          })),
+      });
       setIsDirty(false);
     } catch (err) {
       setError(err.message || t('errorGeneric'));
@@ -466,6 +525,89 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
               </select>
             </div>
           </div>
+
+          {/* Distance to universities — optional, landlord-typed metres.
+              Hidden entirely when the universities lookup came back empty
+              (pre-066 database, or a city with no universities seeded). */}
+          {universities.length > 0 && (
+            <div>
+              <div className="flex items-center justify-between gap-3 mb-1">
+                <label className={labelClass + ' mb-0'}>
+                  {t('universityDistanceLabel')}
+                </label>
+                {form.university_distances.length < universities.length && (
+                  <button
+                    type="button"
+                    onClick={addUniversityRow}
+                    className="text-sm font-medium text-blue hover:underline"
+                  >
+                    {t('universityDistanceAdd')}
+                  </button>
+                )}
+              </div>
+              <p className="mb-3 text-xs text-night/50 leading-relaxed">
+                {t('universityDistanceTip')}
+              </p>
+
+              <div className="space-y-2">
+                {form.university_distances.map((row, i) => {
+                  // Every university except the ones other rows already claim.
+                  const taken = new Set(
+                    form.university_distances
+                      .filter((_, j) => j !== i)
+                      .map((d) => d.university_id),
+                  );
+                  return (
+                    <div key={row.university_id} className="flex items-center gap-2">
+                      <select
+                        value={row.university_id}
+                        onChange={(e) =>
+                          updateUniversityRow(i, 'university_id', e.target.value)
+                        }
+                        className={inputClass + ' flex-1'}
+                      >
+                        {universities.map((u) => (
+                          <option
+                            key={u.university_id}
+                            value={u.university_id}
+                            disabled={taken.has(u.university_id)}
+                          >
+                            {u.short_name} — {u.name}
+                          </option>
+                        ))}
+                      </select>
+                      <div className="relative w-40 shrink-0">
+                        <input
+                          type="number"
+                          min="1"
+                          max={MAX_DISTANCE_METERS}
+                          step="10"
+                          value={row.distance_meters}
+                          onChange={(e) =>
+                            updateUniversityRow(i, 'distance_meters', e.target.value)
+                          }
+                          className={inputClass + ' pr-14'}
+                          placeholder={t('universityDistancePlaceholder')}
+                          aria-label={t('universityDistanceMetresLabel')}
+                        />
+                        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-night/40">
+                          {t('universityDistanceUnit')}
+                        </span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => removeUniversityRow(i)}
+                        className="shrink-0 p-2 text-night/40 hover:text-night rounded-lg"
+                        aria-label={t('universityDistanceRemove')}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div>
             <label className={labelClass}>{t('descriptionLabel')}</label>

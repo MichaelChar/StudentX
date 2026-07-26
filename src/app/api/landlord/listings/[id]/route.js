@@ -4,6 +4,11 @@ import { extractToken, getUserFromToken, getSupabaseWithToken, getSupabaseAsServ
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { normalizeTitle } from '@/lib/listingTitle';
 import { normalizeSingleLine, normalizeMultiLine } from '@/lib/textNormalize';
+import {
+  getCityUniversityIds,
+  parseUniversityDistances,
+  writeUniversityDistances,
+} from '@/lib/universityDistances';
 
 const ALLOWED_MIN_DURATIONS = [1, 5, 9];
 
@@ -49,7 +54,8 @@ export async function GET(request, { params }) {
     rent ( rent_id, monthly_price, bills_included, deposit ),
     location ( location_id, address, neighborhood, lat, lng ),
     property_types ( property_type_id, name ),
-    listing_amenities ( amenities ( amenity_id, name ) )
+    listing_amenities ( amenities ( amenity_id, name ) ),
+    listing_university_distances ( university_id, distance_meters )
   `;
   // Pre-migration fallback: keep in sync with SINGLE_LISTING_SELECT minus
   // any column that may not yet exist in prod (see route.js sibling for
@@ -241,6 +247,27 @@ export async function PATCH(request, { params }) {
     if (listingError) {
       console.error('Failed to update listing:', listingError);
       return NextResponse.json({ error: 'Failed to update listing' }, { status: 500 });
+    }
+  }
+
+  // Replace university distances if provided. Same replace-all semantics as
+  // amenities below: an empty array clears the field, an absent key leaves it
+  // alone. Validation errors 400; a write failure is logged and swallowed.
+  if (body.university_distances !== undefined) {
+    const validIds = await getCityUniversityIds(getSupabase());
+    if (validIds) {
+      const parsed = parseUniversityDistances(body.university_distances, validIds);
+      if (parsed.error) {
+        return NextResponse.json({ error: parsed.error }, { status: 400 });
+      }
+      const { error: distanceError } = await writeUniversityDistances(
+        authedSupabase,
+        id,
+        parsed.rows,
+      );
+      if (distanceError) {
+        console.error('Failed to update university distances:', distanceError);
+      }
     }
   }
 

@@ -7,6 +7,7 @@ import FavoriteButton from '@/components/FavoriteButton';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
 import { variantUrl } from '@/lib/photoVariants';
 import { formatPropertyType } from '@/lib/propertyType';
+import { formatDistance } from '@/lib/formatDistance';
 
 /*
   Propylaea listing card — matches page 06 of the reference design.
@@ -43,6 +44,11 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
   const href = fromQuery
     ? `/property/thessaloniki/listing/${listing.listing_id}?from=${encodeURIComponent(fromQuery)}`
     : `/property/thessaloniki/listing/${listing.listing_id}`;
+
+  // Already sorted nearest-first by transformListing; slice, don't re-sort.
+  const nearestUniversities = (listing.university_distances ?? [])
+    .filter((u) => u.short_name && u.distance_meters > 0)
+    .slice(0, 2);
 
   // landlord_id is the first 4 chars of every listing_id (LLLLNNN — see
   // docs/schema.md), so the profile link needs no extra field. The chip only
@@ -86,6 +92,28 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         <p className="label-caps text-night/50">
           {listing.neighborhood} &middot; Thessaloniki
         </p>
+
+        {/* Distance to the nearest universities. Fixed slot at the top of the
+            card body so the eye can run down a column of cards and compare
+            without the line drifting when a title wraps to two lines.
+            Nearest two only — three overflows the card at the sm breakpoint;
+            the rest are on the detail page. Renders nothing when the landlord
+            left the field empty (no backfill exists, so that is common).
+
+            Deliberately NOT .label-caps despite sitting next to it: that class
+            uppercases, which turns "1.6 km UoM" into "1.6 KM UOM" — mangling
+            the unit and losing the universities' own casing. Size and tracking
+            are matched by hand so it still reads as the same family. */}
+        {nearestUniversities.length > 0 && (
+          <p className="mt-1.5 flex items-center gap-1.5 text-[0.7rem] font-semibold tracking-[0.08em] text-night/55">
+            <Icon name="map-pin" className="w-3 h-3 shrink-0 text-night/35" />
+            <span className="truncate">
+              {nearestUniversities
+                .map((u) => `${formatDistance(u.distance_meters)} ${u.short_name}`)
+                .join(' · ')}
+            </span>
+          </p>
+        )}
         <h3 className="mt-1.5 font-display text-2xl text-night leading-tight line-clamp-2">
           {listing.title || listing.address}
         </h3>

@@ -54,6 +54,13 @@ export default function EditListingPage() {
         available_from: listing.available_from || '',
         min_duration_months: String(listing.min_duration_months ?? 9),
         amenity_ids: listing.listing_amenities?.map((la) => la.amenities.amenity_id) || [],
+        // Rows are stored per university; the form edits them as strings so the
+        // number inputs stay controlled. Absent on a pre-066 fallback fetch.
+        university_distances:
+          listing.listing_university_distances?.map((ud) => ({
+            university_id: ud.university_id,
+            distance_meters: String(ud.distance_meters),
+          })) || [],
         photos: listing.photos || [],
       });
       setLoading(false);
