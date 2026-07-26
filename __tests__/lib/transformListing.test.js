@@ -31,6 +31,19 @@ const fullRow = {
       faculties: { name: 'CS', university: 'AUTH' },
     },
   ],
+  // Deliberately out of order — transformListing sorts nearest-first.
+  listing_university_distances: [
+    {
+      university_id: 'uom',
+      distance_meters: 1900,
+      universities: { name: 'University of Macedonia', short_name: 'UoM' },
+    },
+    {
+      university_id: 'auth',
+      distance_meters: 750,
+      universities: { name: 'Aristotle University of Thessaloniki', short_name: 'AUTH' },
+    },
+  ],
 };
 
 describe('transformListing', () => {
@@ -60,6 +73,20 @@ describe('transformListing', () => {
         name: 'Alice',
         profile_photo_url: 'https://cdn.example/landlord-photos/uid/alice.webp',
       },
+      university_distances: [
+        {
+          university_id: 'auth',
+          short_name: 'AUTH',
+          name: 'Aristotle University of Thessaloniki',
+          distance_meters: 750,
+        },
+        {
+          university_id: 'uom',
+          short_name: 'UoM',
+          name: 'University of Macedonia',
+          distance_meters: 1900,
+        },
+      ],
       faculty_distances: [
         {
           faculty_id: 'auth-cs',
@@ -70,6 +97,17 @@ describe('transformListing', () => {
         },
       ],
     });
+  });
+
+  it('sorts university distances nearest-first', () => {
+    const out = transformListing(fullRow);
+    expect(out.university_distances.map((u) => u.university_id)).toEqual(['auth', 'uom']);
+  });
+
+  it('returns an empty array when the listing has no university distances', () => {
+    // The common case at launch: the field is optional and nothing backfills it.
+    const row = { ...fullRow, listing_university_distances: null };
+    expect(transformListing(row).university_distances).toEqual([]);
   });
 
   it('never exposes landlord contact_info, even when present on the row', () => {

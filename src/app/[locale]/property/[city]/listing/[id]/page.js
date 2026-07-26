@@ -17,6 +17,7 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import { formatPropertyType } from '@/lib/propertyType';
+import { formatDistance } from '@/lib/formatDistance';
 
 // Cap on the untrusted ?from= URL param. Real /results querystrings are
 // well under this; anything bigger is almost certainly an attempt to
@@ -182,6 +183,34 @@ export default async function ListingPage({ params, searchParams }) {
               <p className="text-night/80 leading-relaxed text-lg font-sans">
                 {listing.description}
               </p>
+            </section>
+          )}
+
+          {/* Distance to universities — every university the landlord filled
+              in, nearest first (sorted in transformListing). The caption is
+              deliberate: this number is typed by the landlord, not measured by
+              us, and the copy should not imply otherwise. */}
+          {listing.university_distances?.length > 0 && (
+            <section className="mb-10">
+              <p className="label-caps text-night/80 mb-1">
+                {t('universityDistancesEnglish')}
+              </p>
+              <p className="text-sm text-night/50 mb-4">
+                {t('universityDistancesSource')}
+              </p>
+              <dl className="flex flex-wrap gap-x-10 gap-y-4">
+                {listing.university_distances.map((u) => (
+                  <div key={u.university_id}>
+                    {/* Not label-caps: it would uppercase "UoM" to "UOM". */}
+                    <dt className="text-[0.7rem] font-semibold tracking-[0.18em] text-night/50">
+                      {u.short_name}
+                    </dt>
+                    <dd className="font-display text-2xl text-night">
+                      {formatDistance(u.distance_meters)}
+                    </dd>
+                  </div>
+                ))}
+              </dl>
             </section>
           )}
 

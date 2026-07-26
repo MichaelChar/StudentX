@@ -6,6 +6,11 @@ import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { normalizeTitle } from '@/lib/listingTitle';
 import { normalizeSingleLine, normalizeMultiLine } from '@/lib/textNormalize';
 import { selectLandlordListings } from '@/lib/landlordListingSelect';
+import {
+  getCityUniversityIds,
+  parseUniversityDistances,
+  writeUniversityDistances,
+} from '@/lib/universityDistances';
 
 const ALLOWED_MIN_DURATIONS = [1, 5, 9];
 
@@ -115,6 +120,22 @@ export async function POST(request) {
       return NextResponse.json({ error: err.message }, { status: 400 });
     }
     throw err;
+  }
+
+  // Validate the optional university-distance rows BEFORE anything is written,
+  // so a bad number is a 400 the form can show rather than a half-created
+  // listing. A failed universities lookup (migration 066 not applied yet) is
+  // treated as "skip the field", not "reject the listing".
+  let universityDistanceRows = null;
+  if (body.university_distances !== undefined) {
+    const validIds = await getCityUniversityIds(getSupabase());
+    if (validIds) {
+      const parsed = parseUniversityDistances(body.university_distances, validIds);
+      if (parsed.error) {
+        return NextResponse.json({ error: parsed.error }, { status: 400 });
+      }
+      universityDistanceRows = parsed.rows;
+    }
   }
 
   // Enforce photo cap for free-tier landlords (server-side)
@@ -249,6 +270,20 @@ export async function POST(request) {
     const { error: amenityError } = await authedSupabase.from('listing_amenities').insert(rows);
     if (amenityError) {
       console.error('Failed to insert amenities:', amenityError);
+    }
+  }
+
+  // Insert the landlord's university distances. Token-scoped client: the RLS
+  // policy from migration 066 is what proves ownership. Non-fatal — an optional
+  // field must never turn a successful create into a failure.
+  if (universityDistanceRows?.length > 0) {
+    const { error: distanceError } = await writeUniversityDistances(
+      authedSupabase,
+      listingId,
+      universityDistanceRows,
+    );
+    if (distanceError) {
+      console.error('Failed to insert university distances:', distanceError);
     }
   }
 

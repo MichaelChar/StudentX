@@ -13,7 +13,8 @@ const LISTING_SELECT = `
   property_types ( name ),
   landlords ( name, verified_tier, is_verified, profile_photo_url ),
   listing_amenities ( amenities ( amenity_id, name ) ),
-  faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
+  faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) ),
+  listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) )
 `;
 
 // Fallback SELECT without verified_tier for branch DBs that haven't run
