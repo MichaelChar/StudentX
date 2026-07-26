@@ -1,6 +1,19 @@
 -- ============================================================
--- Migration 052: Drop the saved-searches / alerts feature.
+-- Migration 068: Drop the saved-searches / alerts feature.
 -- ============================================================
+--
+-- RENUMBERED FROM 052 (was 052_drop_saved_searches). It collided with
+-- 052_security_performance_hardening.sql, and `supabase start` keys
+-- schema_migrations on the filename's leading digits, so a clean apply
+-- tried to insert version 052 twice and failed on the PK.
+--
+-- Moving later is safe: this only needs to run after 015 (creates the
+-- table), 022 (creates the RPC), 048 (adds its policies) and 049 (locks
+-- the RPC down). Nothing after 052 recreates saved_searches or
+-- claim_digest_send — verified by grep across supabase/migrations.
+--
+-- Prod already has this applied, recorded under the unprefixed name
+-- `drop_saved_searches`.
 --
 -- The saved-searches (email-alert) feature was retired. This removes its
 -- two database objects:

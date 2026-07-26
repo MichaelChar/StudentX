@@ -271,6 +271,13 @@ surface in `wrangler tail`.
 - **Migrations:** `supabase/migrations/` (NOT a top-level `migrations/`),
   numbered `NNN_name.sql`. CI applies them on every PR via
   `.github/workflows/migration-check.yml` (PR #45) using `supabase start`.
+- **Never reuse an `NNN` prefix, even for unrelated migrations.**
+  `supabase start` keys `schema_migrations` on the filename's leading
+  digits, so two files sharing a number fail the clean-stack apply with
+  `duplicate key ... schema_migrations_pkey`. Worse, the collision hides
+  ordering bugs: a duplicate pair can put a fix before a later migration
+  that reverts it. Both happened — see migrations 067 and 068, which were
+  renumbered out of 051/052 for exactly this.
 - **Prod has migration drift — number new migrations off prod's highest
   *applied* migration, not the repo's highest file.** Prod has applied
   migrations that have no corresponding repo file, so the repo cannot
