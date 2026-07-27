@@ -12,6 +12,7 @@ export default async function sitemap() {
     { url: `${SITE_URL}/property/thessaloniki`, lastModified: new Date(), changeFrequency: "daily", priority: 0.95 },
     { url: `${SITE_URL}/property/thessaloniki/results`, lastModified: new Date(), changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/resources`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    { url: `${SITE_URL}/admissions`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
   ];
 
   // Dynamic listing pages
