@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import AdmissionsHero from '@/components/admissions/AdmissionsHero';
+import ThreadsStage from '@/components/admissions/ThreadsStage';
 import CtaButton from '@/components/admissions/CtaButton';
 import { CONTACT_EMAIL } from '@/components/admissions/config';
 
@@ -133,9 +134,9 @@ export default async function AdmissionsPage({ params }) {
         </div>
       </section>
 
-      {/* Closing CTA */}
-      <section className="bg-night text-white">
-        <div className="mx-auto max-w-3xl px-5 py-20 md:py-24 text-center">
+      {/* Closing CTA — same stage as the hero, shader flipped to bookend it. */}
+      <ThreadsStage flip scrim="center" className="text-white">
+        <div className="mx-auto max-w-3xl px-5 py-24 md:py-28 text-center">
           <h2 className="font-display text-3xl md:text-4xl">{t('cta.heading')}</h2>
           <p className="mt-5 text-lg text-white/70 leading-relaxed">{t('cta.body')}</p>
           <div className="mt-9">
@@ -146,7 +147,7 @@ export default async function AdmissionsPage({ params }) {
             {t('cta.emailFallbackNote', { email: CONTACT_EMAIL })}
           </p>
         </div>
-      </section>
+      </ThreadsStage>
     </>
   );
 }
