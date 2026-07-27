@@ -1036,29 +1036,20 @@
   "admissions": {
     "meta": {
       "title": "Medical School Admissions",
-      "description": "One-to-one medical school admissions coaching — application strategy, personal statement, UCAT and interview preparation, backed by a money-back guarantee."
+      "description": "One-to-one medical school admissions coaching — application strategy, personal statement and interview preparation, backed by a money-back guarantee."
     },
     "hero": {
       "eyebrow": "Medical school admissions",
       "headline": "We get you into your medical school of choice or you keep your money.",
-      "subhead": "One-to-one coaching through every stage of your application — strategy, personal statement, UCAT and interviews. We only take students we believe we can get in.",
-      "ctaPrimary": "Book a free diagnostic call",
+      "subhead": "One-to-one coaching through every stage of your application — strategy, personal statement and interviews. We only take students we believe we can get in.",
+      "ctaPrimary": "Find out if you're a fit",
       "ctaSecondary": "How it works"
     },
     "guarantee": {
       "heading": "The guarantee",
       "promise": "We get you into your medical school of choice or you keep your money.",
-      "detail": "We only work with students we think we can place, and we tell you honestly at the diagnostic call if that isn't you. If you complete the programme, meet every deadline we set, and still receive no offer, you pay nothing.",
+      "detail": "We only work with students we think we can place, and we tell you honestly at the diagnostic call if that isn't you.",
       "termsLinkLabel": "Read the full guarantee terms"
-    },
-    "who": {
-      "heading": "Who this is for",
-      "item1": "Applicants to UK and European medical schools, applying this cycle or next.",
-      "item2": "Students who will do the work — this is coaching, not a service that applies for you.",
-      "item3": "Anyone who wants an honest read on their chances before spending a year on it.",
-      "notForHeading": "Who it isn't for",
-      "notFor1": "Anyone looking to have a personal statement written for them. We coach; you write.",
-      "notFor2": "Applicants who come to us after the cycle's deadlines have already passed."
     },
     "steps": {
       "heading": "How it works",
@@ -1066,9 +1057,9 @@
       "s1Title": "Diagnostic call",
       "s1Body": "Free, no obligation. We look at your grades, your predicted results and your target schools, and tell you plainly whether we can help.",
       "s2Title": "Application strategy",
-      "s2Body": "Which schools, in which order, and why. School choice is the single biggest lever most applicants get wrong.",
-      "s3Title": "Personal statement and UCAT",
-      "s3Body": "Structured drafting and review of your statement, plus a timed UCAT preparation plan built around your weakest sections.",
+      "s2Body": "Which schools, in which order, and why.",
+      "s3Title": "Personal statement",
+      "s3Body": "Structured drafting and review of your statement, from first outline to final submission.",
       "s4Title": "Interview preparation",
       "s4Body": "Mock MMI and panel interviews with feedback, run to the format of the schools that invite you."
     },
@@ -1079,28 +1070,27 @@
       "stat2Value": "4",
       "stat2Label": "Stages of support, from school choice through to your final interview.",
       "stat3Value": "0",
-      "stat3Label": "Cost if you complete the programme and receive no offer.",
-      "disclaimer": "StudentX is an independent coaching service. We are not affiliated with, endorsed by, or acting on behalf of any university or admissions body."
+      "stat3Label": "Cost if you complete the programme and receive no offer."
     },
     "faq": {
       "heading": "Questions",
       "q1": "What counts as \"my medical school of choice\"?",
-      "a1": "It's agreed in writing with you at the start of the programme, based on what your grades realistically support. The full definition is in the guarantee terms.",
-      "q2": "What do I have to do to keep the guarantee?",
-      "a2": "Complete the programme, hit every deadline we set, and submit the applications we agree on. The terms set this out in full.",
+      "a1": "We'll provide options based on what you are looking for. You'll indicate your dream schools from those choices, and we'll get you in there.",
+      "q2": "How does the guarantee work?",
+      "a2": "Either we get you into your dream university, or you don't pay.",
       "q3": "How much does it cost?",
-      "a3": "Fees depend on how much of the cycle you have left and how many schools you're targeting. We quote you after the free diagnostic call, before you commit to anything.",
+      "a3": "€3,000.",
       "q4": "Do you write my personal statement?",
       "a4": "No. Admissions tutors can tell, and most schools now screen for it. We coach you through structure, content and redrafting — the writing is yours.",
       "q5": "Which countries do you cover?",
-      "a5": "UK and European medical schools. Tell us your target list on the diagnostic call and we'll say honestly whether we know those schools well enough to help.",
+      "a5": "UK and European medical schools.",
       "q6": "What happens on the diagnostic call?",
-      "a6": "Thirty minutes, free. We look at where you actually stand and give you a straight answer about your chances — including if that answer is that you don't need us."
+      "a6": "You tell us about you and we tell you about us. We'll provide medical school options based on what you are looking for. After, you'll indicate your dream schools from those choices, and we'll get you in there."
     },
     "cta": {
       "heading": "Start with an honest conversation",
       "body": "The diagnostic call is free and there's no obligation. If we don't think we can get you in, we'll tell you on the call.",
-      "buttonLabel": "Book a free diagnostic call",
+      "buttonLabel": "Find out if you're a fit",
       "emailFallbackNote": "Or email us directly at {email}"
     },
     "terms": {

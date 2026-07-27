@@ -50,64 +50,40 @@ export default async function AdmissionsPage({ params }) {
         ctaSecondary={t('hero.ctaSecondary')}
       />
 
-      {/* Guarantee — directly below the fold. This is the whole proposition. */}
-      <section className="bg-blue text-white">
+      {/*
+        Guarantee — directly below the fold. This is the whole proposition.
+        iris-soft is the palette's designated section-background token; solid
+        `bg-blue` reads as an oversized CTA and fights the iris buttons.
+      */}
+      <section className="bg-iris-soft">
         <div className="mx-auto max-w-4xl px-5 py-20 md:py-24 text-center">
-          <p className="font-display text-xs uppercase tracking-[0.2em] text-white/60">
+          <p className="font-display text-xs uppercase tracking-[0.2em] text-blue">
             {t('guarantee.heading')}
           </p>
-          <p className="mt-6 font-display text-2xl md:text-4xl leading-[1.2]">
+          <p className="mt-6 font-display text-2xl md:text-4xl leading-[1.2] text-night">
             {t('guarantee.promise')}
           </p>
-          <p className="mt-6 text-base md:text-lg leading-relaxed text-white/80 max-w-2xl mx-auto">
+          <p className="mt-6 text-base md:text-lg leading-relaxed text-night/70 max-w-2xl mx-auto">
             {t('guarantee.detail')}
           </p>
           <Link
             href="/admissions/terms"
-            className="mt-6 inline-block text-sm underline underline-offset-4 text-white/70 hover:text-white"
+            className="mt-6 inline-block text-sm underline underline-offset-4 text-night/60 hover:text-blue"
           >
             {t('guarantee.termsLinkLabel')}
           </Link>
         </div>
       </section>
 
-      {/* Who it's for / not for */}
-      <section className="bg-stone">
-        <div className="mx-auto max-w-5xl px-5 py-20 md:py-24 grid gap-12 md:grid-cols-2">
-          <div>
-            <h2 className="font-display text-2xl md:text-3xl text-night">{t('who.heading')}</h2>
-            <ul className="mt-6 space-y-4">
-              {[1, 2, 3].map((n) => (
-                <li key={n} className="flex gap-3 text-night/75 leading-relaxed">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-blue" />
-                  {t(`who.item${n}`)}
-                </li>
-              ))}
-            </ul>
-          </div>
-          <div>
-            <h2 className="font-display text-2xl md:text-3xl text-night">{t('who.notForHeading')}</h2>
-            <ul className="mt-6 space-y-4">
-              {[1, 2].map((n) => (
-                <li key={n} className="flex gap-3 text-night/60 leading-relaxed">
-                  <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-night/25" />
-                  {t(`who.notFor${n}`)}
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      </section>
-
       {/* How it works */}
-      <section id="how-it-works" className="bg-parchment scroll-mt-8">
+      <section id="how-it-works" className="bg-stone scroll-mt-8">
         <div className="mx-auto max-w-5xl px-5 py-20 md:py-24">
           <h2 className="font-display text-3xl md:text-4xl text-night">{t('steps.heading')}</h2>
           <p className="mt-3 text-night/60 text-lg">{t('steps.subhead')}</p>
 
           <ol className="mt-12 grid gap-8 sm:grid-cols-2">
             {steps.map((step) => (
-              <li key={step.n} className="rounded-2xl bg-white p-7 border border-night/10">
+              <li key={step.n} className="rounded-2xl bg-parchment p-7 border border-night/10">
                 <span className="font-display text-sm font-semibold text-blue">
                   {String(step.n).padStart(2, '0')}
                 </span>
@@ -120,25 +96,22 @@ export default async function AdmissionsPage({ params }) {
       </section>
 
       {/* What you get */}
-      <section className="bg-stone">
+      <section className="bg-parchment">
         <div className="mx-auto max-w-5xl px-5 py-20 md:py-24">
           <h2 className="font-display text-3xl md:text-4xl text-night">{t('proof.heading')}</h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
             {stats.map((stat) => (
-              <div key={stat.n} className="rounded-2xl bg-parchment p-7">
+              <div key={stat.n} className="rounded-2xl bg-white p-7">
                 <p className="font-display text-4xl text-blue">{stat.value}</p>
                 <p className="mt-3 text-sm text-night/70 leading-relaxed">{stat.label}</p>
               </div>
             ))}
           </div>
-          <p className="mt-8 text-xs text-night/45 leading-relaxed max-w-2xl">
-            {t('proof.disclaimer')}
-          </p>
         </div>
       </section>
 
       {/* FAQ — <details> keeps it zero-JS, accessible and crawlable. */}
-      <section className="bg-parchment">
+      <section className="bg-stone">
         <div className="mx-auto max-w-3xl px-5 py-20 md:py-24">
           <h2 className="font-display text-3xl md:text-4xl text-night">{t('faq.heading')}</h2>
           <div className="mt-10 divide-y divide-night/10 border-y border-night/10">

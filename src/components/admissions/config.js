@@ -12,7 +12,7 @@
   out (what this is) is unaffected.
 */
 
-export const CONTACT_EMAIL = 'admissions@studentx.uk';
+export const CONTACT_EMAIL = 'michael@studentx.uk';
 
 const SUBJECT = encodeURIComponent('Medical school admissions — enquiry');
 
