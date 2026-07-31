@@ -42,7 +42,21 @@ export function isJobDue(cadence, now = new Date()) {
     ) {
       return false;
     }
-    return hours === targetHour && minutes === targetMinute;
+    // Bucket-match, not exact-match. Cloudflare fires scheduled events on a
+    // best-effort basis, so a tick meant for 09:15 can land at 09:16 — an
+    // exact comparison would silently skip the job for a whole day. Matching
+    // on the 5-minute bucket absorbs that jitter, and also means a cadence
+    // whose minute isn't a tick boundary (e.g. daily@09:17) still fires
+    // rather than never running at all.
+    //
+    // Trade-off: this is at-least-once. If a tick ever fired twice inside one
+    // bucket, a daily job would run twice — fine for idempotent jobs like
+    // recompute-distances. Any future non-idempotent daily job needs its own
+    // guard.
+    return (
+      hours === targetHour &&
+      Math.floor(minutes / 5) === Math.floor(targetMinute / 5)
+    );
   }
 
   return false;

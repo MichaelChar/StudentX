@@ -67,15 +67,32 @@ describe('isJobDue', () => {
       );
     });
 
-    it('is not due one minute before (09:14)', () => {
+    it('is not due in the previous bucket (09:14)', () => {
       expect(isJobDue('daily@09:15', utcDate({ hours: 9, minutes: 14 }))).toBe(
         false,
       );
     });
 
-    it('is not due one minute after (09:16)', () => {
+    // Cloudflare fires scheduled events best-effort, so a 09:15 tick can land
+    // late. Dueness is bucket-based so jitter inside the 5-minute window still
+    // runs the job instead of silently skipping it for 24 hours.
+    it('is still due when the tick lands late inside the bucket (09:16)', () => {
       expect(isJobDue('daily@09:15', utcDate({ hours: 9, minutes: 16 }))).toBe(
+        true,
+      );
+    });
+
+    it('is not due once the bucket has passed (09:20)', () => {
+      expect(isJobDue('daily@09:15', utcDate({ hours: 9, minutes: 20 }))).toBe(
         false,
+      );
+    });
+
+    // A cadence whose minute is not a tick boundary would never fire under
+    // exact matching; bucketing makes it run in the 09:15 tick.
+    it('fires a non-tick-aligned cadence (daily@09:17) in its bucket', () => {
+      expect(isJobDue('daily@09:17', utcDate({ hours: 9, minutes: 15 }))).toBe(
+        true,
       );
     });
 
