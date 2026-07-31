@@ -331,7 +331,6 @@ Outbound paths sending from `alerts@studentx.uk`:
 - Student message digest (`/api/cron/student-message-digest`)
 - Inquiry notifications (`src/lib/inquiryEmail.js`)
 - Gig inquiry notifications (`src/lib/gigInquiryEmail.js`)
-- Subscription welcome (`src/lib/subscriptionEmail.js`)
 
 Suppression handling lives in `src/lib/emailSuppressions.js`. Email HTML
 is inlined in those lib files (the old `templates/*.html` are gone).
