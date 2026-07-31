@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getResend } from '@/lib/resend';
+import { isCronAuthorized } from '../auth';
 
 // Synthetic uptime check guarding against the regression class fixed in PR #48
 // (see issue #49 + docs/runbooks/synthetic-en-listing.md). Originally just
@@ -13,16 +14,18 @@ import { getResend } from '@/lib/resend';
 // All assertions run independently; one failing does not block the others.
 // On any failure, emails SYNTHETIC_ALERT_EMAIL via Resend (if RESEND_API_KEY
 // configured) and returns 500 with the failure list. On all-pass returns 200
-// with the per-check status. Triggered by cf/worker-entry.mjs on the
-// */15 * * * * cron. Also callable manually with the CRON_SECRET for local
-// sanity checks.
+// with the per-check status.
+//
+// Production scheduling: /api/cron/tick registry, cadence '15m'. This route
+// remains as a thin manual-trigger wrapper (CRON_SECRET) for local sanity
+// checks and the curl command in CLAUDE.md.
 
 const DEFAULT_LISTING_ID = '0106002';
 // 15s gives Supabase cold starts (off-peak hours) room to complete the
 // 9-table listing query. Heavy WebGL page renders get a longer cap below
-// (HEAVY_PAGE_TIMEOUT_MS); the cron dispatcher's outer timeout
-// (cf/worker-entry.mjs, 60s) is sized to cover the sum of these sequential
-// inner caps so a slow-but-recovering render never aborts the whole run.
+// (HEAVY_PAGE_TIMEOUT_MS). The master tick shares a ~25s budget across
+// concurrent due jobs; this canary may time out under load — that is an
+// accepted W9 risk (log line surfaces it; digests still complete).
 const FETCH_TIMEOUT_MS = 15_000;
 // The three heavy property-page checks SSR WebGL components (HubBackground
 // 240k particles, HubDiagram, StripeGradientMesh) via the self service
@@ -66,15 +69,6 @@ export function skipIfInconclusiveError(name, err) {
     return { name, ok: true, skipped: true, reason: `skipped: ${err.name}` };
   }
   return null;
-}
-
-function isCronAuthorized(request) {
-  const secret = process.env.CRON_SECRET;
-  if (!secret) return false;
-  const headerSecret = request.headers.get('x-cron-secret');
-  if (headerSecret === secret) return true;
-  const { searchParams } = new URL(request.url);
-  return searchParams.get('secret') === secret;
 }
 
 // Synthetic-only stub cookie. Middleware checks for cookie *presence*
@@ -436,16 +430,12 @@ async function checkEnLocale({ name, url, anyEnMarker, timeoutMs }) {
 
 // The cron expressions we INTEND Cloudflare to have registered. MUST stay in
 // sync with wrangler.jsonc `triggers.crons` (and cf/worker-entry.mjs
-// CRON_ROUTES). This canary exists because the deploy pipeline does NOT sync
-// trigger changes to the live Worker, and the Free plan silently rejects a
-// 6th trigger (API error 10072) — which dropped student-message-digest for 3
-// days before anyone noticed (#152, PR #150).
+// CRON_ROUTES). After W9 there is a single master tick; job cadences live in
+// /api/cron/tick's registry, not as separate CF triggers. This canary exists
+// because the deploy pipeline does NOT sync trigger changes to the live
+// Worker, and the Free plan silently rejects a 6th trigger (API error 10072).
 const EXPECTED_CRONS = [
-  '0 9 * * *',
-  '15 9 * * *',
   '*/5 * * * *',
-  '2-58/5 * * * *',
-  '*/15 * * * *',
 ];
 
 // Diff EXPECTED_CRONS against the schedules Cloudflare actually has registered
@@ -500,11 +490,14 @@ async function sendAlert({ to, subject, lines }) {
   });
 }
 
-export async function POST(request) {
-  if (!isCronAuthorized(request)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
-
+/**
+ * Core synthetic canary work (no auth). Used by the master-tick registry
+ * and by the POST thin wrapper below. Returns a plain result object so
+ * the tick job can log outcome without needing a Response.
+ *
+ * @returns {Promise<{ ok: boolean, checks?: unknown[], failures?: unknown[] }>}
+ */
+export async function runSyntheticEnListing() {
   const listingId = process.env.SYNTHETIC_LISTING_ID || DEFAULT_LISTING_ID;
   const alertEmail = process.env.SYNTHETIC_ALERT_EMAIL;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
@@ -633,8 +626,20 @@ export async function POST(request) {
         failures.map((f) => `${f.name}: ${f.reason}`).join('; '),
       );
     }
-    return NextResponse.json({ ok: false, failures, checks }, { status: 500 });
+    return { ok: false, failures, checks };
   }
 
-  return NextResponse.json({ ok: true, checks });
+  return { ok: true, checks };
 }
+
+// Thin wrapper: auth gate + HTTP status. Manual curl and the old path
+// still work; production scheduling is /api/cron/tick.
+export async function POST(request) {
+  if (!isCronAuthorized(request)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const result = await runSyntheticEnListing();
+  return NextResponse.json(result, { status: result.ok ? 200 : 500 });
+}
+

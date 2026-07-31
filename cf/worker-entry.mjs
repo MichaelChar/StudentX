@@ -14,19 +14,14 @@ import openNextWorker, {
 export { DOQueueHandler, DOShardedTagCache, BucketCachePurge };
 
 // Map cron expressions in wrangler.jsonc to the route to POST. Keep in sync
-// with the `triggers.crons` array. `path` is the API route under
-// NEXT_PUBLIC_APP_URL; `query` is appended verbatim if present. Adding a new
-// scheduled route is a one-line addition here plus the cron pattern in
-// wrangler.jsonc.
-// NB: this map must stay under Cloudflare's Free-plan limit of 5 cron
-// triggers per Worker. It currently has 4 entries (the saved-searches-digest
-// route was removed with the saved-searches/alerts feature), leaving one
-// free slot.
+// with the `triggers.crons` array. After W9 there is a single master tick
+// (`*/5 * * * *` → /api/cron/tick); individual job cadences live in the
+// route's registry, not as separate Cloudflare triggers.
+// NB: Cloudflare's Free plan caps a Worker at 5 cron triggers (6th is
+// silently rejected with API error 10072). One trigger leaves 4 free slots
+// and removes the need to burn a slot per new marketplace timer.
 const CRON_ROUTES = {
-  "15 9 * * *":     { name: "recompute-distances",     path: "/api/cron/recompute-distances",     query: null },
-  "*/5 * * * *":    { name: "landlord-message-digest", path: "/api/cron/landlord-message-digest", query: null },
-  "2-58/5 * * * *": { name: "student-message-digest",  path: "/api/cron/student-message-digest",  query: null },
-  "*/15 * * * *":   { name: "synthetic-en-listing",    path: "/api/cron/synthetic-en-listing",    query: null },
+  "*/5 * * * *": { name: "tick", path: "/api/cron/tick", query: null },
 };
 
 async function runCron(event, env, ctx) {
@@ -62,15 +57,11 @@ async function runCron(event, env, ctx) {
     const request = new Request(url, {
       method: "POST",
       headers: { "x-cron-secret": secret },
-      // 60s, not 25s: the synthetic-en-listing handler runs several checks
-      // whose per-fetch caps sum well past 25s in the worst case (two 15s
-      // listing fetches plus three sequential heavy-page SSRs that can take
-      // ~20s each on a cold isolate). The old 25s cap could abort the WHOLE
-      // run — yielding no alert email and no per-check results — exactly when
-      // a heavy page was legitimately slow-but-recovering. These checks are
-      // I/O-bound (sub-fetches), so the extra wall-clock is waiting, not CPU.
-      // Other cron routes finish in <2s, so the higher ceiling never bites them.
-      signal: AbortSignal.timeout(60_000),
+      // 25s shared budget for all due jobs inside /api/cron/tick
+      // (Promise.allSettled + per-job timeouts). Under CF's ~30 s
+      // scheduled-handler limit. One slow job must not exceed this —
+      // the tick route enforces PER_JOB_TIMEOUT_MS per handler.
+      signal: AbortSignal.timeout(25_000),
     });
     const res = await openNextWorker.fetch(request, env, ctx);
     const elapsed = Date.now() - startedAt;
@@ -82,8 +73,9 @@ async function runCron(event, env, ctx) {
       return;
     }
     const result = await res.json().catch(() => ({}));
+    const due = Array.isArray(result.due) ? result.due.join(",") : "?";
     console.log(
-      `[cron] ${route.name} ok: processed=${result.processed ?? "?"} sent=${result.emailsSent ?? "?"} claimed=${result.alreadyClaimed ?? "?"} (${elapsed}ms)`,
+      `[cron] ${route.name} ok: due=${due || "(none)"} ok=${result.ok ?? "?"} (${elapsed}ms)`,
     );
   } catch (err) {
     console.error(`[cron] ${route.name} threw:`, err);
