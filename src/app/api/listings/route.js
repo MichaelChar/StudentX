@@ -163,6 +163,20 @@ export async function GET(request) {
           { status: 500 }
         );
       }
+
+      // The fallback SELECT has no is_verified join, so applyListingFilters
+      // skips verified_only on this path. Returning the unfiltered rows would
+      // silently answer "show me verified listings only" with every listing —
+      // a safety claim the data can't back. Fail closed instead: empty result
+      // plus an explicit `degraded` marker, so the caller can say "temporarily
+      // unavailable" rather than "no matches".
+      if (f.verifiedOnly) {
+        console.error(
+          "verified_only requested but the fallback SELECT cannot honour it — returning empty",
+        );
+        return NextResponse.json({ listings: [], degraded: true });
+      }
+
       data = fallbackResult.data;
     }
 
