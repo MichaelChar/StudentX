@@ -12,7 +12,6 @@ import Icon from '@/components/ui/Icon';
 export default function LandlordVerificationPage() {
   const accessToken = useAccessToken();
   const [loading, setLoading] = useState(true);
-  const [verifiedTier, setVerifiedTier] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
   const [latestRequest, setLatestRequest] = useState(null);
   const [file, setFile] = useState(null);
@@ -36,7 +35,6 @@ export default function LandlordVerificationPage() {
         });
         if (res.ok) {
           const data = await res.json();
-          setVerifiedTier(data.verifiedTier ?? 'none');
           setIsVerified(data.isVerified === true);
           setLatestRequest(data.latestRequest ?? null);
         }
@@ -93,7 +91,6 @@ export default function LandlordVerificationPage() {
             <div className="h-32 bg-parchment rounded-sm" />
           </div>
         ) : isVerified ? (
-          /* ID approved — fully verified once a paid tier is also active */
           <Card tone="parchment" className="px-6 py-5 flex items-start gap-4">
             <div className="mt-0.5 flex-shrink-0 w-9 h-9 rounded-full bg-blue/10 flex items-center justify-center text-blue">
               <Icon name="shieldCheck" className="w-5 h-5" />
@@ -103,9 +100,7 @@ export default function LandlordVerificationPage() {
                 Your ID is approved
               </p>
               <p className="text-sm text-night/70">
-                {verifiedTier && verifiedTier !== 'none'
-                  ? 'Your listings display the SuperLandlord badge automatically.'
-                  : 'Subscribe to SuperLandlord to display the badge on your listings.'}
+                You&apos;re a verified landlord. Students can trust your listings.
               </p>
             </div>
           </Card>
@@ -144,7 +139,6 @@ export default function LandlordVerificationPage() {
               submitError={submitError}
               submitSuccess={submitSuccess}
               onSubmit={handleSubmit}
-              subscribed={verifiedTier && verifiedTier !== 'none'}
             />
           </div>
         ) : (
@@ -164,7 +158,7 @@ export default function LandlordVerificationPage() {
   );
 }
 
-function UploadForm({ file, setFile, fileInputRef, submitting, submitError, submitSuccess, onSubmit, subscribed = false }) {
+function UploadForm({ file, setFile, fileInputRef, submitting, submitError, submitSuccess, onSubmit }) {
   if (submitSuccess) {
     return (
       <Card tone="parchment" className="px-6 py-5 flex items-start gap-4">
@@ -174,9 +168,7 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
         <div>
           <p className="font-display text-lg text-night mb-1">Document submitted</p>
           <p className="text-sm text-night/70">
-            {subscribed
-              ? <>We&apos;ll review your ID within 1–2 business days and notify you when your badge is activated.</>
-              : <>We&apos;ll review your ID within 1–2 business days. A SuperLandlord subscription is also required for the badge to appear publicly on your listings — you can subscribe at any time, before or after your ID is approved.</>}
+            We&apos;ll review your ID within 1–2 business days and notify you when verification is complete.
           </p>
         </div>
       </Card>

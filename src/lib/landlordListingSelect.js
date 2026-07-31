@@ -6,7 +6,6 @@
 export const LANDLORD_LISTING_SELECT = `
   listing_id,
   landlord_id,
-  is_featured,
   title,
   rent_id,
   location_id,
@@ -32,7 +31,6 @@ export const LANDLORD_LISTING_SELECT = `
 export const LANDLORD_LISTING_SELECT_FALLBACK = `
   listing_id,
   landlord_id,
-  is_featured,
   title,
   rent_id,
   location_id,

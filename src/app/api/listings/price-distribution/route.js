@@ -36,12 +36,12 @@ const PRICE_SELECT = `
   rent!inner ( monthly_price, bills_included ),
   location!inner ( neighborhood ),
   property_types!inner ( name ),
-  landlords!inner ( verified_tier, is_verified ),
+  landlords!inner ( is_verified ),
   faculty_distances ( faculty_id ),
   listing_amenities ( amenities ( name ) )
 `;
 
-// Fallback SELECT without verified_tier/is_verified for pre-migration compat
+// Fallback SELECT without is_verified for pre-migration compat
 // (mirrors /api/listings' fallback — verified_only is skipped on this path).
 const PRICE_SELECT_FALLBACK = `
   rent!inner ( monthly_price, bills_included ),
@@ -112,7 +112,7 @@ export async function GET(request) {
     // Retry without verified columns if they aren't migrated yet (mirrors
     // /api/listings — verified_only is dropped on the fallback path).
     if (error) {
-      console.warn("price-distribution query failed, retrying without verified_tier:", error.message);
+      console.warn("price-distribution query failed, retrying without is_verified:", error.message);
       let fallbackQuery = supabase.from("listings").select(PRICE_SELECT_FALLBACK);
       fallbackQuery = applyListingFilters(fallbackQuery, f, { fallback: true, amenityListingIds });
       const fallbackResult = await fallbackQuery;

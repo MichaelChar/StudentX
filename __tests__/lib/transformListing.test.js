@@ -1,12 +1,12 @@
 import { describe, it, expect } from 'vitest';
-import { transformListing } from '@/lib/transformListing';
+import { transformListing, listingCompleteness } from '@/lib/transformListing';
 
 const fullRow = {
   listing_id: '0100006',
-  is_featured: true,
   title: 'Sunny studio near Medical School',
   description: 'Sunny studio',
   floor: 3,
+  sqm: 45,
   photos: ['a.jpg', 'b.jpg'],
   min_duration_months: 9,
   rent: { monthly_price: 450, currency: 'EUR', bills_included: true, deposit: 900 },
@@ -15,7 +15,6 @@ const fullRow = {
   landlords: {
     name: 'Alice',
     contact_info: 'a@example.com',
-    verified_tier: 'gold',
     is_verified: true,
     profile_photo_url: 'https://cdn.example/landlord-photos/uid/alice.webp',
   },
@@ -50,10 +49,7 @@ describe('transformListing', () => {
   it('flattens a fully-populated row to the API shape', () => {
     expect(transformListing(fullRow)).toEqual({
       listing_id: '0100006',
-      is_featured: true,
-      verified_tier: 'gold',
       is_verified: true,
-      is_superlandlord: true,
       title: 'Sunny studio near Medical School',
       address: '12 Egnatias',
       neighborhood: 'Center',
@@ -67,6 +63,7 @@ describe('transformListing', () => {
       amenities: ['wifi', 'heating'],
       description: 'Sunny studio',
       floor: 3,
+      sqm: 45,
       photos: ['a.jpg', 'b.jpg'],
       min_duration_months: 9,
       landlord: {
@@ -145,11 +142,6 @@ describe('transformListing', () => {
     expect(out.lng).toBeNull();
   });
 
-  it('defaults verified_tier to "none" when landlord row lacks it', () => {
-    const row = { ...fullRow, landlords: { name: 'Bob', contact_info: null } };
-    expect(transformListing(row).verified_tier).toBe('none');
-  });
-
   it('defaults is_verified to false when landlord row lacks it', () => {
     const row = { ...fullRow, landlords: { name: 'Bob', contact_info: null } };
     expect(transformListing(row).is_verified).toBe(false);
@@ -162,30 +154,29 @@ describe('transformListing', () => {
     expect(out.faculty_distances).toEqual([]);
   });
 
-  it('treats is_featured as false when not set', () => {
-    const row = { ...fullRow };
-    delete row.is_featured;
-    expect(transformListing(row).is_featured).toBe(false);
+  it('does not expose paid-tier fields', () => {
+    const out = transformListing(fullRow);
+    expect(out).not.toHaveProperty('is_featured');
+    expect(out).not.toHaveProperty('verified_tier');
+    expect(out).not.toHaveProperty('is_superlandlord');
+  });
+});
+
+describe('listingCompleteness', () => {
+  it('counts populated optional fields', () => {
+    const full = transformListing(fullRow);
+    expect(listingCompleteness(full)).toBe(5);
   });
 
-  describe('is_superlandlord (paying AND verified)', () => {
-    it('is true when the landlord is paying and fully verified', () => {
-      // fullRow: is_featured + verified_tier 'gold' + is_verified true
-      expect(transformListing(fullRow).is_superlandlord).toBe(true);
-    });
-
-    it('is false when verified but not paying (is_featured false)', () => {
-      expect(transformListing({ ...fullRow, is_featured: false }).is_superlandlord).toBe(false);
-    });
-
-    it('is false when paying but ID not approved (is_verified false)', () => {
-      const row = { ...fullRow, landlords: { ...fullRow.landlords, is_verified: false } };
-      expect(transformListing(row).is_superlandlord).toBe(false);
-    });
-
-    it('is false when paying and ID-approved but verified_tier is "none"', () => {
-      const row = { ...fullRow, landlords: { ...fullRow.landlords, verified_tier: 'none' } };
-      expect(transformListing(row).is_superlandlord).toBe(false);
-    });
+  it('counts zero for an empty listing', () => {
+    expect(
+      listingCompleteness({
+        photos: [],
+        description: null,
+        amenities: [],
+        sqm: null,
+        floor: null,
+      }),
+    ).toBe(0);
   });
 });

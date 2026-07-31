@@ -206,16 +206,12 @@
       "edit": "Edit",
       "delete": "Delete",
       "deleting": "Deleting…",
-      "featured": "Featured",
-      "superLandlord": "SuperLandlord",
-      "unfeatured": "Set as featured",
       "noListings": "No listings yet.",
       "addFirst": "Add your first listing",
       "views": "Views",
       "inquiries": "Inquiries",
       "conversionRate": "Conversion rate",
       "logout": "Log out",
-      "billingTitle": "Billing & Subscription",
       "analyticsTitle": "Analytics",
       "views30d": "Views (30d)",
       "inquiries30d": "Inquiries (30d)",
@@ -228,19 +224,10 @@
       "deleteBody": "Delete {address}? This permanently removes the listing and its inquiries. This cannot be undone.",
       "cancel": "Cancel",
       "deleteError": "Failed to delete listing. Please try again.",
-      "featuredError": "Failed to update featured status.",
       "noAddress": "No address",
       "priceOnRequest": "Price on request",
       "getVerified": "Get Verified",
       "getVerifiedDesc": "Upload your ID for a free Verified badge — shown on all your listings."
-    },
-    "getVerified": {
-      "title": "Get Verified",
-      "description": "Verification is central to the safety of the StudentX community. It lets students know that you are a genuine account holder. The SuperLandlord badge appears publicly over your property, and also gives you priority search placement.",
-      "chooseTier": "Choose this plan",
-      "stripeNote": "Secure checkout via Stripe. Cancel anytime.",
-      "backToDashboard": "Back to dashboard",
-      "tierBadge": "SuperLandlord"
     },
     "listingForm": {
       "locationSection": "Location",
@@ -294,8 +281,8 @@
       "minDurationAcademicMonths": "9 months",
       "photosSection": "Photos",
       "photosLabel": "Add photos",
-      "photosHint": "JPG, PNG or WebP · max 10 MB each · up to 6 photos",
-      "photosHintUnlimited": "JPG, PNG or WebP · max 10 MB each · unlimited photos",
+      "photosHint": "JPG, PNG or WebP · max 10 MB each · up to 20 photos",
+
       "photosUploading": "Uploading…",
       "photosRemove": "Remove",
       "photosError": "Some files could not be uploaded.",
@@ -330,32 +317,6 @@
       "title": "Edit listing",
       "notFoundError": "Listing not found or you do not have permission to edit it.",
       "failedToUpdate": "Failed to update listing"
-    },
-    "billing": {
-      "freeListings": "Free Listings",
-      "tierFree": "Landlord Light",
-      "tierVerified": "SuperLandlord",
-      "tierVerifiedPro": "SuperLandlord Heavy",
-      "listingsCount": "{count, plural, one {# active listing} other {# active listings}}",
-      "billingAnnual": "Annual",
-      "billingSuffix": "billing",
-      "cancelAtPeriodEnd": "cancels at period end",
-      "renews": "Renews",
-      "manageBilling": "Manage billing",
-      "boostListings": "Boost your listings",
-      "verifiedDescription": "Verified landlords get a badge, search boost, and more inquiries.",
-      "perYear": "/year",
-      "benefitBadge": "SuperLandlord badge on all listings",
-      "benefitSearchBoost": "Higher ranking in search results",
-      "benefitPriorityPlacement": "Priority placement in results",
-      "benefitAnalytics": "Advanced analytics dashboard",
-      "getVerified": "Get SuperLandlord — €49/year",
-      "getVerifiedPro": "Get SuperLandlord Heavy — €99/year",
-      "upgradeToVerifiedPro": "Upgrade to SuperLandlord Heavy",
-      "upgradeProDescription": "Get priority placement and advanced analytics on top of your SuperLandlord benefits.",
-      "upgradeButton99": "Upgrade — €99/year",
-      "checkoutError": "Failed to start checkout",
-      "portalError": "Failed to open billing portal"
     },
     "verifyEmail": {
       "title": "Check your inbox",
@@ -617,7 +578,6 @@
         "listings": "Listings",
         "inquiries": "Inquiries",
         "verification": "Verification",
-        "billing": "Billing",
         "settings": "Settings",
         "signOut": "Sign out"
       },
@@ -660,13 +620,7 @@
         "pendingTitle": "Verification pending",
         "pendingBody": "We're reviewing your documents.",
         "unverifiedTitle": "Get verified",
-        "unverifiedBody": "Show students you're a real landlord — seal, priority, more inquiries.",
-        "subscribedAwaitingIdTitle": "Welcome to SuperLandlord",
-        "subscribedAwaitingIdBody": "One last step — upload an ID to activate the SuperLandlord badge on your listings.",
-        "submitIdCta": "Upload ID",
-        "idApprovedAwaitingSubscriptionTitle": "Your ID is approved",
-        "idApprovedAwaitingSubscriptionBody": "Last step — subscribe to become a publicly verified landlord.",
-        "chooseSubscription": "Choose subscription"
+        "unverifiedBody": "Show students you're a real landlord — free ID verification."
       }
     }
   },

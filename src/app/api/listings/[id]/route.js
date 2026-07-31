@@ -14,19 +14,20 @@ export async function GET(request, { params }) {
       );
     }
 
-    let { data, error } = await getSupabase()
+    const { data, error } = await getSupabase()
       .from("listings")
       .select(
         `
         listing_id,
-        is_featured,
         title,
         description,
         photos,
+        floor,
+        sqm,
         rent ( monthly_price, currency, bills_included, deposit ),
         location ( address, neighborhood, lat, lng ),
         property_types ( name ),
-        landlords ( name, verified_tier, is_verified, profile_photo_url ),
+        landlords ( name, is_verified, profile_photo_url ),
         listing_amenities ( amenities ( amenity_id, name ) ),
         faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) ),
         listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) )
@@ -34,30 +35,6 @@ export async function GET(request, { params }) {
       )
       .eq("listing_id", id)
       .single();
-
-    // Retry without verified_tier if column doesn't exist yet
-    if (error && error.code !== "PGRST116") {
-      const fallback = await getSupabase()
-        .from("listings")
-        .select(
-          `
-          listing_id,
-          title,
-          description,
-          photos,
-          rent ( monthly_price, currency, bills_included, deposit ),
-          location ( address, neighborhood, lat, lng ),
-          property_types ( name ),
-          landlords ( name ),
-          listing_amenities ( amenities ( amenity_id, name ) ),
-          faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
-        `
-        )
-        .eq("listing_id", id)
-        .single();
-      data = fallback.data;
-      error = fallback.error;
-    }
 
     if (error) {
       if (error.code === "PGRST116") {

@@ -124,8 +124,7 @@ describe('GET /api/listings/price-distribution', () => {
       ([name, col]) => name === 'in' && col === 'property_types.name'
     );
     expect(typeClause[2]).toEqual(['Studio', '1-Bedroom']);
-    // verified_only → both verified clauses applied
-    expect(supa._calls).toContainEqual(['neq', 'landlords.verified_tier', 'none']);
+    // verified_only → is_verified alone
     expect(supa._calls).toContainEqual(['eq', 'landlords.is_verified', true]);
     // budget never applied
     expect(supa._calls.some(([name]) => name === 'gte' || name === 'lte')).toBe(false);

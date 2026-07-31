@@ -11,8 +11,8 @@ import { formatDistance } from '@/lib/formatDistance';
 
 /*
   Propylaea listing card — matches page 06 of the reference design.
-  Parchment frame, photo with gold verified seal overlay, small-caps
-  neighborhood, EB Garamond address, type + price row, amenity pills.
+  Parchment frame, photo, small-caps neighborhood, EB Garamond address,
+  type + price row, amenity pills.
 
   Link structure: the whole card is a "stretched link" to the listing (an
   absolute overlay, z-0), so the card stays fully clickable while still letting
@@ -33,10 +33,6 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
   // floor, flag it so they ask before viewing rather than discovering on the
   // day (NULL floors are kept in results, not filtered out — see #100).
   const floorUnspecified = groundFloorDealbreaker && listing.floor == null;
-  // SuperLandlord = the single elevated status (paying AND verified), computed
-  // once in transformListing. Drives the golden frame, the badge, and the
-  // landlord chip below.
-  const isSuper = listing.is_superlandlord;
 
   // Thread current results search-state into the listing URL so the
   // detail page's back link returns to the same filtered view. Caller
@@ -52,26 +48,17 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
 
   // landlord_id is the first 4 chars of every listing_id (LLLLNNN — see
   // docs/schema.md), so the profile link needs no extra field. The chip only
-  // renders for SuperLandlords (public profiles are a SuperLandlord perk).
+  // renders for verified landlords (public profiles require free ID approval).
   const landlordId = listing.listing_id?.slice(0, 4);
   const landlordName = listing.landlord?.name;
-  const showLandlord = isSuper && landlordId && landlordName;
+  const showLandlord = listing.is_verified && landlordId && landlordName;
 
   return (
     <div
-      className={`group relative bg-white rounded-sm overflow-hidden transition-all ${
-        isSuper
-          ? 'border-2 border-yellow/60 shadow-[0_0_12px_-2px_rgba(255,203,87,0.4)] hover:shadow-[0_0_18px_-2px_rgba(255,203,87,0.55)]'
-          : 'border border-night/10 hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)]'
-      }`}
+      className="group relative bg-white rounded-sm overflow-hidden transition-all border border-night/10 hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)]"
     >
       {/* Photo */}
       <div className="relative aspect-[4/3] bg-parchment">
-        {isSuper && (
-          <span className="absolute top-3 right-3 z-10">
-            <Pill variant="verified">{tCard('verified')}</Pill>
-          </span>
-        )}
         {photo ? (
           <Image
             src={variantUrl(photo, 'card')}
@@ -174,8 +161,7 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         className="absolute inset-0 z-0 rounded-sm focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
       />
 
-      {/* Save toggle — over the photo's top-left, above the stretched link.
-          Right corner is reserved for the verified seal. */}
+      {/* Save toggle — over the photo's top-left, above the stretched link. */}
       <FavoriteButton
         listingId={listing.listing_id}
         className="absolute top-3 left-3 z-10"

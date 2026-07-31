@@ -27,9 +27,9 @@ import VerifiedSeal from '@/components/ui/VerifiedSeal';
   <Suspense> as its query resolves. requireLandlord() is React.cache()'d, so
   every loader below resolves it from the per-request cache (one round-trip).
 
-  All five API routes (/api/landlord/{listings,inquiries,analytics,
-  response-time,billing/subscription}) are preserved — other pages and client
-  flows still consume them. The loaders here copy those routes' queries.
+  API routes (/api/landlord/{listings,inquiries,analytics,response-time})
+  are preserved — other pages and client flows still consume them. The
+  loaders here copy those routes' queries.
 */
 
 // ---- Per-request data loaders (cache()'d → one query each per request) ----
@@ -44,17 +44,13 @@ const loadListings = cache(async () => {
 
 const loadVerification = cache(async () => {
   const auth = await requireLandlord();
-  if (!auth || auth.kind === 'wrong-role') return { verifiedTier: 'none', isVerified: false };
-  // verified_tier / is_verified live on the landlords row (NOT Stripe), so the
-  // dashboard reads them directly rather than hitting the billing route's
-  // getActiveSubscription — no Stripe latency on the render path.
+  if (!auth || auth.kind === 'wrong-role') return { isVerified: false };
   const { data } = await auth.supabase
     .from('landlords')
-    .select('verified_tier, is_verified')
+    .select('is_verified')
     .eq('landlord_id', auth.landlord.landlord_id)
     .maybeSingle();
   return {
-    verifiedTier: data?.verified_tier ?? 'none',
     isVerified: data?.is_verified === true,
   };
 });
@@ -232,8 +228,7 @@ async function StatsRow({ locale }) {
 async function ListingsWidget({ locale }) {
   const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
   const tLegacy = await getTranslations({ locale, namespace: 'landlord.dashboard' });
-  const [listings, verification] = await Promise.all([loadListings(), loadVerification()]);
-  const isSuper = verification.isVerified && verification.verifiedTier !== 'none';
+  const listings = await loadListings();
 
   return (
     <Card tone="white" className="p-6">
@@ -258,7 +253,7 @@ async function ListingsWidget({ locale }) {
         <ul className="divide-y divide-night/10">
           {listings.slice(0, 5).map((listing) => (
             <li key={listing.listing_id} className="py-4 first:pt-0 last:pb-0">
-              <ListingRow listing={listing} isSuper={isSuper} />
+              <ListingRow listing={listing} />
             </li>
           ))}
         </ul>
@@ -300,8 +295,8 @@ async function InquiriesWidget({ locale }) {
 
 async function VerificationWidget({ locale }) {
   const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
-  const { verifiedTier, isVerified } = await loadVerification();
-  return <VerificationCard tier={verifiedTier} isVerified={isVerified} t={t} />;
+  const { isVerified } = await loadVerification();
+  return <VerificationCard isVerified={isVerified} t={t} />;
 }
 
 // ---- Presentational (pure JSX, no hooks — safe in RSC) ----
@@ -328,14 +323,11 @@ function StatTile({ label, value, accent, caption }) {
   );
 }
 
-function ListingRow({ listing, isSuper }) {
+function ListingRow({ listing }) {
   const photo = listing.photos?.find((url) => typeof url === 'string' && url.startsWith('http'));
   const address = listing.location?.address || 'Untitled listing';
   const neighborhood = listing.location?.neighborhood;
   const price = listing.rent?.monthly_price;
-  // is_featured (paying) alone is not enough — a subscribed-but-unverified
-  // landlord isn't a SuperLandlord and gets no halo/ranking, so don't imply it.
-  const status = isSuper && listing.is_featured ? 'SuperLandlord' : null;
 
   return (
     <div className="flex items-center gap-4">
@@ -358,7 +350,6 @@ function ListingRow({ listing, isSuper }) {
       </div>
 
       <div className="flex items-center gap-2 shrink-0">
-        {status && <Pill variant="verified">{status}</Pill>}
         <Link
           href={`/property/thessaloniki/landlord/listings/${listing.listing_id}/edit`}
           className="label-caps text-blue hover:text-night transition-colors"
@@ -396,11 +387,8 @@ function InquiryRow({ inquiry }) {
   );
 }
 
-function VerificationCard({ tier, isVerified, t }) {
-  const isSubscribed = tier === 'verified' || tier === 'verified_pro';
-
-  // Fully verified — paid AND admin-approved ID.
-  if (isSubscribed && isVerified) {
+function VerificationCard({ isVerified, t }) {
+  if (isVerified) {
     return (
       <Card tone="parchment" className="p-6 flex items-center gap-5">
         <VerifiedSeal size={52} />
@@ -413,53 +401,6 @@ function VerificationCard({ tier, isVerified, t }) {
     );
   }
 
-  // Subscribed but ID not yet approved — congratulate + nudge to upload.
-  if (isSubscribed) {
-    return (
-      <Card tone="parchment" className="p-6 md:p-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-          <div className="flex items-center gap-5">
-            <VerifiedSeal size={52} />
-            <div>
-              <p className="label-caps text-yellow">{t('widgetVerification')}</p>
-              <p className="font-display text-2xl text-night mt-1">{t('subscribedAwaitingIdTitle')}</p>
-              <p className="text-night/70 text-sm mt-1 max-w-md">{t('subscribedAwaitingIdBody')}</p>
-            </div>
-          </div>
-          <Button href="/property/thessaloniki/landlord/verification" variant="gold" size="md">
-            {t('submitIdCta')}
-          </Button>
-        </div>
-      </Card>
-    );
-  }
-
-  // ID approved but no subscription — show their progress + nudge to subscribe.
-  if (isVerified) {
-    return (
-      <Card tone="parchment" className="p-6 md:p-8">
-        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-          <div className="flex items-center gap-5">
-            <VerifiedSeal size={52} />
-            <div>
-              <p className="label-caps text-yellow">{t('widgetVerification')}</p>
-              <p className="font-display text-2xl text-night mt-1">
-                {t('idApprovedAwaitingSubscriptionTitle')}
-              </p>
-              <p className="text-night/70 text-sm mt-1 max-w-md">
-                {t('idApprovedAwaitingSubscriptionBody')}
-              </p>
-            </div>
-          </div>
-          <Button href="/property/thessaloniki/landlord/get-verified" variant="gold" size="md">
-            {t('chooseSubscription')}
-          </Button>
-        </div>
-      </Card>
-    );
-  }
-
-  // No subscription, no approved ID — original CTA to upgrade.
   return (
     <Card tone="night" className="p-6 md:p-8">
       <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
@@ -473,7 +414,7 @@ function VerificationCard({ tier, isVerified, t }) {
             <p className="text-stone/70 text-sm mt-1 max-w-md">{t('unverifiedBody')}</p>
           </div>
         </div>
-        <Button href="/property/thessaloniki/landlord/get-verified" variant="gold" size="md">
+        <Button href="/property/thessaloniki/landlord/verification" variant="gold" size="md">
           {t('quickVerify')}
         </Button>
       </div>
