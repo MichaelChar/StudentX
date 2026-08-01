@@ -81,6 +81,21 @@ const loadInquiries = cache(async () => {
   };
 });
 
+const loadPendingBookings = cache(async () => {
+  const auth = await requireLandlord();
+  if (!auth || auth.kind === 'wrong-role') return { count: 0 };
+  const listings = await loadListings();
+  const listingIds = listings.map((l) => l.listing_id).filter(Boolean);
+  if (listingIds.length === 0) return { count: 0 };
+  const { data, error } = await auth.supabase
+    .from('bookings')
+    .select('booking_id')
+    .in('listing_id', listingIds)
+    .eq('state', 'requested');
+  if (error) return { count: 0 };
+  return { count: (data || []).length };
+});
+
 const loadAnalytics = cache(async () => {
   const auth = await requireLandlord();
   if (!auth || auth.kind === 'wrong-role') return { conversion_rate: 0, views_last_30_days: 0 };
@@ -196,23 +211,32 @@ export default async function LandlordDashboardPage({ params }) {
 
 async function StatsRow({ locale }) {
   const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
-  const [listings, analytics, inquiries, responseTime] = await Promise.all([
-    loadListings(),
-    loadAnalytics(),
-    loadInquiries(),
-    loadResponseTime(),
-  ]);
+  const [listings, analytics, inquiries, responseTime, pendingBookings] =
+    await Promise.all([
+      loadListings(),
+      loadAnalytics(),
+      loadInquiries(),
+      loadResponseTime(),
+      loadPendingBookings(),
+    ]);
 
   const activeListings = listings.length;
   const pendingInquiryCount = inquiries.pendingCount;
+  const pendingRequestCount = pendingBookings.count;
   const views30d = analytics?.views_last_30_days ?? 0;
   const conversionPct = analytics?.conversion_rate ?? 0;
   const hasReplies = (responseTime?.count ?? 0) > 0;
   const responseTimeValue = hasReplies ? responseTime.formatted : '—';
 
   return (
-    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
+    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
       <StatTile label={t('statListings')} value={activeListings} />
+      <StatTile
+        label={t('statPendingRequests')}
+        value={pendingRequestCount}
+        accent={pendingRequestCount > 0}
+        href="/property/thessaloniki/landlord/reservations"
+      />
       <StatTile label={t('statInquiries')} value={pendingInquiryCount} accent={pendingInquiryCount > 0} />
       <StatTile label={t('statViews')} value={views30d} />
       <StatTile label={t('statConversion')} value={`${conversionPct}%`} />
@@ -301,12 +325,12 @@ async function VerificationWidget({ locale }) {
 
 // ---- Presentational (pure JSX, no hooks — safe in RSC) ----
 
-function StatTile({ label, value, accent, caption }) {
-  return (
+function StatTile({ label, value, accent, caption, href }) {
+  const inner = (
     <Card
       tone={accent ? 'night' : 'parchment'}
       border={false}
-      className={`p-5 ${accent ? 'text-stone' : ''}`}
+      className={`p-5 ${accent ? 'text-stone' : ''} ${href ? 'hover:shadow-[0_2px_14px_-6px_rgba(10,20,54,0.25)] transition-shadow' : ''}`}
     >
       <p className={`label-caps ${accent ? 'text-yellow' : 'text-night/60'}`}>{label}</p>
       <p
@@ -321,6 +345,14 @@ function StatTile({ label, value, accent, caption }) {
       )}
     </Card>
   );
+  if (href) {
+    return (
+      <Link href={href} className="block focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-sm">
+        {inner}
+      </Link>
+    );
+  }
+  return inner;
 }
 
 function ListingRow({ listing }) {

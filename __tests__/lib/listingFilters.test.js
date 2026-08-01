@@ -58,6 +58,20 @@ describe('parseListingFilters', () => {
     expect(parseListingFilters(sp('available_from=nope')).error).toMatch(/available_from/);
   });
 
+  it('parses move_in / move_out stay pair', () => {
+    const f = parseListingFilters(sp('move_in=2026-09-01&move_out=2026-12-01'));
+    expect(f.error).toBeUndefined();
+    expect(f.moveInDate).toBe('2026-09-01');
+    expect(f.moveOutDate).toBe('2026-12-01');
+  });
+
+  it('rejects incomplete or inverted stay ranges', () => {
+    expect(parseListingFilters(sp('move_in=2026-09-01')).error).toMatch(/both/);
+    expect(parseListingFilters(sp('move_in=2026-12-01&move_out=2026-09-01')).error).toMatch(
+      /after/,
+    );
+  });
+
   it('rejects bad sort + the sort-needs-faculty rule + bad faculty id', () => {
     expect(parseListingFilters(sp('sort_by=banana')).error).toMatch(/sort_by/);
     expect(parseListingFilters(sp('sort_order=sideways')).error).toMatch(/sort_order/);

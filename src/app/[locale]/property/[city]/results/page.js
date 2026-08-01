@@ -123,6 +123,8 @@ function ResultsContent() {
     const minDuration = [1, 5, 9].includes(minDurationRaw) ? minDurationRaw : null;
     const dealbreakersRaw = searchParams.get('dealbreakers');
     const availableFromRaw = searchParams.get('available_from');
+    const moveInRaw = searchParams.get('move_in') || availableFromRaw;
+    const moveOutRaw = searchParams.get('move_out');
     return {
       maxBudget: Number.isFinite(budget) && budget > 0 ? budget : DEFAULT_BUDGET,
       selectedTypes: types ? types.split(',').filter(Boolean) : [],
@@ -130,7 +132,10 @@ function ResultsContent() {
       verifiedOnly: searchParams.get('verified_only') === 'true',
       minDuration,
       dealbreakers: dealbreakersRaw ? dealbreakersRaw.split(',').filter(Boolean) : [],
+      // Legacy single available_from still seeds moveIn for shareable URLs.
       availableFrom: isValidDateString(availableFromRaw) ? availableFromRaw : '',
+      moveIn: isValidDateString(moveInRaw) ? moveInRaw : '',
+      moveOut: isValidDateString(moveOutRaw) ? moveOutRaw : '',
     };
   });
 
@@ -168,7 +173,12 @@ function ResultsContent() {
         if (filters.dealbreakers.includes('bills_not_included'))
           params.set('require_bills_included', 'true');
       }
-      if (filters.availableFrom) params.set('available_from', filters.availableFrom);
+      if (filters.moveIn && filters.moveOut) {
+        params.set('move_in', filters.moveIn);
+        params.set('move_out', filters.moveOut);
+      } else if (filters.moveIn || filters.availableFrom) {
+        params.set('available_from', filters.moveIn || filters.availableFrom);
+      }
       // Budget (max_budget/min_budget) is deliberately omitted — the histogram
       // must keep above-budget supply visible behind the marker.
       const qs = params.toString();
@@ -186,6 +196,8 @@ function ResultsContent() {
     filters.minDuration,
     filters.dealbreakers,
     filters.availableFrom,
+    filters.moveIn,
+    filters.moveOut,
   ]);
 
   // Debounced refetch when the non-budget filters change (coalesces rapid
@@ -216,7 +228,14 @@ function ResultsContent() {
     if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
     if (filters.dealbreakers.length > 0)
       params.set('dealbreakers', filters.dealbreakers.join(','));
-    if (filters.availableFrom) params.set('available_from', filters.availableFrom);
+    if (filters.moveIn && filters.moveOut) {
+      params.set('move_in', filters.moveIn);
+      params.set('move_out', filters.moveOut);
+    } else if (filters.moveIn) {
+      params.set('move_in', filters.moveIn);
+    } else if (filters.availableFrom) {
+      params.set('available_from', filters.availableFrom);
+    }
     if (sortBy !== 'match') params.set('sort_by', sortBy);
     if (viewMode === 'map') params.set('view', 'map');
     const next = params.toString();
@@ -249,7 +268,12 @@ function ResultsContent() {
         if (filters.dealbreakers.includes('bills_not_included'))
           params.set('require_bills_included', 'true');
       }
-      if (filters.availableFrom) params.set('available_from', filters.availableFrom);
+      if (filters.moveIn && filters.moveOut) {
+        params.set('move_in', filters.moveIn);
+        params.set('move_out', filters.moveOut);
+      } else if (filters.moveIn || filters.availableFrom) {
+        params.set('available_from', filters.moveIn || filters.availableFrom);
+      }
       // 'match' is the UI default; the API enforces verified/featured tier
       // priority in route.js regardless of sort_by, so 'match' collapses to
       // 'price' asc.
@@ -391,7 +415,8 @@ function ResultsContent() {
               histogram={priceHistogram}
               aboveCount={aboveBudgetCount}
               onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
-              onAvailableFrom={(v) => setFilters((p) => ({ ...p, availableFrom: v }))}
+              onMoveIn={(v) => setFilters((p) => ({ ...p, moveIn: v, availableFrom: v }))}
+              onMoveOut={(v) => setFilters((p) => ({ ...p, moveOut: v }))}
               onToggleType={(vals) => {
                 setFilters((prev) => {
                   const allPresent = vals.every((v) => prev.selectedTypes.includes(v));
@@ -520,7 +545,8 @@ function ResultsContent() {
               histogram={priceHistogram}
               aboveCount={aboveBudgetCount}
               onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
-              onAvailableFrom={(v) => setFilters((p) => ({ ...p, availableFrom: v }))}
+              onMoveIn={(v) => setFilters((p) => ({ ...p, moveIn: v, availableFrom: v }))}
+              onMoveOut={(v) => setFilters((p) => ({ ...p, moveOut: v }))}
               onToggleType={(vals) => {
                 setFilters((prev) => {
                   const allPresent = vals.every((v) => prev.selectedTypes.includes(v));
@@ -643,7 +669,8 @@ function FilterPanel({
   histogram,
   aboveCount,
   onBudget,
-  onAvailableFrom,
+  onMoveIn,
+  onMoveOut,
   onToggleType,
   onToggleNeighborhood,
   onToggleVerified,
@@ -686,30 +713,57 @@ function FilterPanel({
         />
       </section>
 
-      {/* Available from (move-in date) */}
+      {/* Stay dates — move-in / move-out pair */}
       <section className="mb-8">
-        <p className="label-caps text-night/60 mb-3">{t('availableFrom')}</p>
-        <div className="flex items-center gap-2">
-          <input
-            type="date"
-            value={filters.availableFrom || ''}
-            onChange={(e) => onAvailableFrom(e.target.value)}
-            className="flex-1 rounded-sm border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
-            aria-label={t('availableFrom')}
-          />
-          {filters.availableFrom && (
-            <button
-              type="button"
-              onClick={() => onAvailableFrom('')}
-              aria-label={t('availableFromClear')}
-              className="p-2 text-night/50 hover:text-night transition-colors"
-            >
-              <Icon name="x" className="w-4 h-4" aria-hidden="true" />
-            </button>
-          )}
+        <p className="label-caps text-night/60 mb-3">{t('stayDates')}</p>
+        <div className="space-y-2">
+          <label className="block">
+            <span className="text-[11px] text-night/50 font-sans">{t('moveIn')}</span>
+            <div className="mt-1 flex items-center gap-2">
+              <input
+                type="date"
+                value={filters.moveIn || ''}
+                onChange={(e) => onMoveIn(e.target.value)}
+                className="flex-1 rounded-sm border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
+                aria-label={t('moveIn')}
+              />
+              {filters.moveIn && (
+                <button
+                  type="button"
+                  onClick={() => onMoveIn('')}
+                  aria-label={t('moveInClear')}
+                  className="p-2 text-night/50 hover:text-night transition-colors"
+                >
+                  <Icon name="x" className="w-4 h-4" aria-hidden="true" />
+                </button>
+              )}
+            </div>
+          </label>
+          <label className="block">
+            <span className="text-[11px] text-night/50 font-sans">{t('moveOut')}</span>
+            <div className="mt-1 flex items-center gap-2">
+              <input
+                type="date"
+                value={filters.moveOut || ''}
+                onChange={(e) => onMoveOut(e.target.value)}
+                className="flex-1 rounded-sm border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
+                aria-label={t('moveOut')}
+              />
+              {filters.moveOut && (
+                <button
+                  type="button"
+                  onClick={() => onMoveOut('')}
+                  aria-label={t('moveOutClear')}
+                  className="p-2 text-night/50 hover:text-night transition-colors"
+                >
+                  <Icon name="x" className="w-4 h-4" aria-hidden="true" />
+                </button>
+              )}
+            </div>
+          </label>
         </div>
         <p className="mt-2 text-[11px] text-night/50 font-sans">
-          {t('availableFromHint')}
+          {t('stayDatesHint')}
         </p>
       </section>
 

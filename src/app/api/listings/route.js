@@ -10,6 +10,8 @@ import {
   hasGroundFloorTag,
   hasAllRequiredAmenities,
 } from "@/lib/listingFilters";
+import { stayDurationMonths, durationFitsListing } from "@/lib/bookingDates";
+import { listingIdsBlockedInRange } from "@/lib/bookingBlocks";
 
 const LISTING_SELECT = `
   listing_id,
@@ -18,7 +20,16 @@ const LISTING_SELECT = `
   photos,
   floor,
   sqm,
+  bedrooms,
+  bathrooms,
+  agency_fee,
+  available_from,
+  available_to,
   min_duration_months,
+  max_duration_months,
+  smoking_allowed,
+  pets_allowed,
+  additional_rules,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
@@ -115,6 +126,17 @@ export async function GET(request) {
       return response;
     }
 
+    // Stay-range search: listing ids with overlapping pending/booked holds.
+    // Filtered in JS after transform (avoids PostgREST not.in quoting quirks).
+    let blockedIds = [];
+    if (f.moveInDate && f.moveOutDate) {
+      try {
+        blockedIds = await listingIdsBlockedInRange(f.moveInDate, f.moveOutDate);
+      } catch (err) {
+        console.warn("listingIdsBlockedInRange failed:", err?.message || err);
+      }
+    }
+
     // Build query
     let query = supabase.from("listings").select(LISTING_SELECT);
     query = applyListingFilters(query, f, { amenityListingIds });
@@ -194,6 +216,18 @@ export async function GET(request) {
     if (f.excludeAmenities && amenityRpcFailed) {
       const required = f.excludeAmenities.split(",").map((a) => a.trim());
       results = results.filter((listing) => hasAllRequiredAmenities(listing.amenities, required));
+    }
+
+    // Stay-range: drop blocked calendars + enforce min/max duration fit.
+    // SQL already applied available_from / available_to via applyListingFilters.
+    if (f.moveInDate && f.moveOutDate) {
+      const blocked = new Set(blockedIds);
+      const months = stayDurationMonths(f.moveInDate, f.moveOutDate);
+      results = results.filter(
+        (listing) =>
+          !blocked.has(listing.listing_id) &&
+          durationFitsListing(listing, months),
+      );
     }
 
     // Ranking keys (highest priority first):

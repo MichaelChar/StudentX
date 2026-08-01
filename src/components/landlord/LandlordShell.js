@@ -22,6 +22,7 @@ import BauhausLoader from '@/components/BauhausLoader';
 const NAV_ITEMS = [
   { key: 'dashboard', href: '/property/thessaloniki/landlord/dashboard', icon: 'home' },
   { key: 'listings', href: '/property/thessaloniki/landlord/listings', icon: 'book' },
+  { key: 'reservations', href: '/property/thessaloniki/landlord/reservations', icon: 'calendar' },
   { key: 'inquiries', href: '/property/thessaloniki/landlord/inquiries', icon: 'message' },
   { key: 'verification', href: '/property/thessaloniki/landlord/verification', icon: 'shield' },
   { key: 'settings', href: '/property/thessaloniki/landlord/settings', icon: 'cog' },

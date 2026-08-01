@@ -6,8 +6,8 @@ import { getListingForRender } from '@/lib/listingForRender';
 import { requireStudent } from '@/lib/requireStudent';
 
 import ListingGallery from '@/components/listing/ListingGallery';
-import ContactRail from '@/components/listing/ContactRail';
-import ContactGate from '@/components/listing/ContactGate';
+import BookingWidget from '@/components/listing/BookingWidget';
+import AvailabilityCalendar from '@/components/listing/AvailabilityCalendar';
 import ViewTracker from '@/components/listing/ViewTracker';
 import ReportListingModal from '@/components/listing/ReportListingModal';
 import FavoriteButton from '@/components/FavoriteButton';
@@ -133,7 +133,7 @@ export default async function ListingPage({ params, searchParams }) {
             </Link>
           )}
 
-          {/* Bilingual field grid */}
+          {/* Field grid — rent, deposit, type + marketplace fields */}
           <Card tone="parchment" border={false} className="p-6 md:p-8 mb-10">
             <dl className="grid grid-cols-1 sm:grid-cols-3 gap-6">
               <BilingualField
@@ -163,6 +163,44 @@ export default async function ListingPage({ params, searchParams }) {
                 english={t('typeEnglish')}
                 value={formatPropertyType(listing.property_type, locale)}
               />
+              <BilingualField
+                english={t('billsEnglish')}
+                value={
+                  listing.bills_included
+                    ? tListing('billsIncluded')
+                    : tListing('billsNotIncluded')
+                }
+              />
+              <BilingualField
+                english={t('minDurationEnglish')}
+                value={
+                  listing.min_duration_months != null
+                    ? t('minDurationValue', { n: listing.min_duration_months })
+                    : '—'
+                }
+              />
+              <BilingualField
+                english={t('sqmEnglish')}
+                value={listing.sqm != null ? t('sqmValue', { n: listing.sqm }) : '—'}
+              />
+              <BilingualField
+                english={t('floorEnglish')}
+                value={listing.floor != null ? String(listing.floor) : '—'}
+              />
+              <BilingualField
+                english={t('bedroomsEnglish')}
+                value={listing.bedrooms != null ? String(listing.bedrooms) : '—'}
+              />
+              <BilingualField
+                english={t('bathroomsEnglish')}
+                value={listing.bathrooms != null ? String(listing.bathrooms) : '—'}
+              />
+              {listing.agency_fee != null && Number(listing.agency_fee) > 0 && (
+                <BilingualField
+                  english={t('agencyFeeEnglish')}
+                  value={`€${listing.agency_fee}`}
+                />
+              )}
             </dl>
           </Card>
 
@@ -177,6 +215,35 @@ export default async function ListingPage({ params, searchParams }) {
               </p>
             </section>
           )}
+
+          {/* House rules */}
+          {(listing.smoking_allowed != null ||
+            listing.pets_allowed != null ||
+            listing.additional_rules) && (
+            <section className="mb-10">
+              <p className="label-caps text-night/80 mb-4">{t('houseRulesEnglish')}</p>
+              <ul className="space-y-2 text-night/80 text-lg font-sans">
+                {listing.smoking_allowed != null && (
+                  <li>
+                    {listing.smoking_allowed
+                      ? t('smokingAllowed')
+                      : t('smokingNotAllowed')}
+                  </li>
+                )}
+                {listing.pets_allowed != null && (
+                  <li>
+                    {listing.pets_allowed ? t('petsAllowed') : t('petsNotAllowed')}
+                  </li>
+                )}
+                {listing.additional_rules && (
+                  <li className="leading-relaxed">{listing.additional_rules}</li>
+                )}
+              </ul>
+            </section>
+          )}
+
+          {/* Availability calendar */}
+          <AvailabilityCalendar listingId={listing.listing_id} />
 
           {/* Distance to universities — every university the landlord filled
               in, nearest first (sorted in transformListing). The caption is
@@ -230,12 +297,11 @@ export default async function ListingPage({ params, searchParams }) {
           </div>
         </div>
 
-        {/* Right column — sticky inquiry rail (client-side for modal state) */}
-        {isAuthed ? (
-          <ContactRail listing={listing} />
-        ) : (
-          <ContactGate listing={listing} locale={locale} fromRaw={fromRaw} />
-        )}
+        {/* Right column — booking widget for everyone (gate only on submit). */}
+        <BookingWidget
+          listing={listing}
+          nextPath={`/property/thessaloniki/listing/${listing.listing_id}${fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : ''}`}
+        />
       </div>
     </div>
   );
