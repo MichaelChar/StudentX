@@ -40,16 +40,17 @@ ALTER TABLE listings
   ADD COLUMN IF NOT EXISTS additional_rules    TEXT,
   ADD COLUMN IF NOT EXISTS max_duration_months SMALLINT;
 
--- Widen min_duration_months from {1,5,9} → 2..12 (mid-term lets).
--- API still hard-validates 1|5|9 in landlord listings route; DB only
--- permits the wider range so the API can loosen later without a
--- follow-up migration. Existing rows with value 1 are bumped to 2
--- before the constraint is tightened so the ALTER never fails on data.
-UPDATE listings
-   SET min_duration_months = 2
- WHERE min_duration_months IS NOT NULL
-   AND min_duration_months < 2;
-
+-- Widen min_duration_months from the {1,5,9} enum to a 1..12 range.
+--
+-- The floor stays at 1, NOT 2. The spec's mid-term positioning implies a
+-- 2-month minimum, but "Flexible (1 month)" is a live option in the listing
+-- form and `parseMinDuration` in src/app/api/landlord/listings/route.js still
+-- accepts 1. A DB floor of 2 would let the API accept a value the database
+-- then rejects, 500ing every landlord who picks that option.
+--
+-- Raising the floor to 2 is a product decision, not a schema one. Make it
+-- deliberately alongside the API and form change — not here, and not by
+-- silently rewriting existing listings' advertised terms.
 ALTER TABLE listings
   DROP CONSTRAINT IF EXISTS listings_min_duration_months_check;
 
@@ -57,7 +58,7 @@ ALTER TABLE listings
   ADD CONSTRAINT listings_min_duration_months_check
   CHECK (
     min_duration_months IS NULL
-    OR (min_duration_months >= 2 AND min_duration_months <= 12)
+    OR (min_duration_months >= 1 AND min_duration_months <= 12)
   );
 
 ALTER TABLE listings
@@ -68,7 +69,7 @@ ALTER TABLE listings
   CHECK (
     max_duration_months IS NULL
     OR (
-      max_duration_months >= 2
+      max_duration_months >= 1
       AND max_duration_months <= 12
       AND (
         min_duration_months IS NULL
