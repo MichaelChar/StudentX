@@ -47,13 +47,21 @@ The `listings` table enforces that the first 4 characters of `listing_id` match 
 
 ### `landlords`
 
-Landlord/company information.
+Landlord/company information. Auth and billing columns were added in later
+migrations (004+); marketplace columns land in 100.
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
 | `landlord_id` | TEXT | PK, CHECK `^\d{4}$` | 4-digit landlord identifier |
 | `name` | TEXT | NOT NULL | Landlord or company name |
-| `contact_info` | TEXT | NOT NULL | Phone, email, or website URL |
+| `contact_info` | TEXT | NOT NULL | Legacy free-text contact (email/phone/URL) |
+| `auth_user_id` | UUID | UNIQUE, FK → auth.users | Supabase auth link (nullable until claimed) |
+| `email` | TEXT | UNIQUE | Account email |
+| `phone` | TEXT | — (nullable) | Phone / WhatsApp for video-call scheduling (100) |
+| `avg_response_ms` | BIGINT | CHECK ≥ 0 (nullable) | Rolling average host response latency (100) |
+| `response_stats_at` | TIMESTAMPTZ | — (nullable) | When `avg_response_ms` was last recomputed (100) |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Account creation time |
+| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update time |
 
 ### `rent`
 
@@ -77,11 +85,26 @@ Geographic information for a listing.
 |--------|------|-------------|-------------|
 | `location_id` | SERIAL | PK | Auto-increment ID |
 | `address` | TEXT | NOT NULL | Street address (may be approximate) |
-| `neighborhood` | TEXT | NOT NULL | Thessaloniki neighborhood name |
-| `lat` | NUMERIC | NOT NULL, CHECK 40.55–40.70 | Latitude |
-| `lng` | NUMERIC | NOT NULL, CHECK 22.80–23.05 | Longitude |
+| `neighborhood` | TEXT | NOT NULL | Thessaloniki neighborhood name (free text; controlled list lives in `neighborhoods`) |
+| `lat` | NUMERIC | nullable (post-014), CHECK 40.55–40.70 when set | Latitude |
+| `lng` | NUMERIC | nullable (post-014), CHECK 22.80–23.05 when set | Longitude |
 
 **Index:** `idx_location_neighborhood` on `neighborhood`
+
+### `neighborhoods`
+
+Controlled reference list for the listing form select and results facet
+(migration 100). Seeded from `DISTINCT location.neighborhood` on apply, plus
+explicit rows in `supabase/seed.sql` for fresh local stacks. `location.neighborhood`
+stays free text (no FK) so ingest and legacy rows keep working.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `neighborhood_id` | SERIAL | PK | Auto-increment ID |
+| `name` | TEXT | NOT NULL, UNIQUE | Canonical neighborhood label |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Row creation time |
+
+**RLS:** public SELECT; writes are service_role / seed only.
 
 ### `property_types`
 
@@ -139,20 +162,59 @@ Central table connecting all dimensions.
 | `rent_id` | INTEGER | NOT NULL, FK → rent | Associated rent record |
 | `location_id` | INTEGER | NOT NULL, FK → location | Associated location record |
 | `property_type_id` | INTEGER | NOT NULL, FK → property_types | Property category |
+| `title` | TEXT | NOT NULL | Card/heading title (038) |
 | `description` | TEXT | — | Free-text listing description |
 | `photos` | TEXT[] | DEFAULT '{}' | Array of photo URLs |
 | `sqm` | INTEGER | CHECK > 0 (nullable) | Square meters. NULL = not listed |
 | `floor` | INTEGER | — (nullable) | Floor number. NULL = not listed |
 | `source_url` | TEXT | — (nullable) | Original listing URL |
 | `available_from` | DATE | — (nullable) | Earliest availability date |
-| `rental_duration` | TEXT | — (nullable) | Typical rental period (e.g., "academic_year") |
+| `available_to` | DATE | — (nullable) | Latest availability end; NULL = open-ended (100) |
+| `min_duration_months` | SMALLINT | CHECK 2..12 (nullable) | Minimum stay in months (037; widened 100) |
+| `max_duration_months` | SMALLINT | CHECK 2..12, ≥ min when both set (nullable) | Maximum stay in months (100) |
+| `bedrooms` | SMALLINT | CHECK ≥ 0 (nullable) | Bedroom count (100) |
+| `bathrooms` | SMALLINT | CHECK ≥ 0 (nullable) | Bathroom count (100) |
+| `agency_fee` | NUMERIC | CHECK ≥ 0 (nullable) | One-time agency fee disclosed on listing (100) |
+| `video_url` | TEXT | — (nullable) | Optional listing video URL (100) |
+| `smoking_allowed` | BOOLEAN | — (nullable) | House rule (100) |
+| `pets_allowed` | BOOLEAN | — (nullable) | House rule (100) |
+| `additional_rules` | TEXT | — (nullable) | Free-text house rules (100) |
 | `flags` | JSONB | DEFAULT '{}' | Data quality flags (PRICE_MISSING, COORDS_APPROXIMATE, etc.) |
 | `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Record creation time |
 | `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update time (auto-trigger) |
 
-**Indexes:** `idx_listings_property_type_id`, `idx_listings_landlord_id`, `idx_listings_rent_id`, `idx_listings_location_id`
+**Indexes:** `idx_listings_property_type_id`, `idx_listings_landlord_id`, `idx_listings_rent_id`, `idx_listings_location_id`, `idx_listings_min_duration_months`, `idx_listings_available_to`
 
 **Trigger:** `trigger_listings_updated_at` — auto-updates `updated_at` on row modification.
+
+**Note:** The landlord listings API still hard-validates `min_duration_months ∈ {1,5,9}`; migration 100 only widens the DB constraint so the API can loosen later without another schema change.
+
+### `students`
+
+Authenticated student accounts (migration 026). Guest-profile columns for the
+host pre-accept view land in 100; all profile fields below are nullable so
+existing rows keep working (completion is enforced at request-to-book in app code).
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `student_id` | UUID | PK, DEFAULT gen_random_uuid() | Student identifier |
+| `auth_user_id` | UUID | UNIQUE NOT NULL, FK → auth.users | Supabase auth link |
+| `email` | TEXT | UNIQUE NOT NULL, lowercase | Account email |
+| `display_name` | TEXT | NOT NULL | Display name |
+| `preferred_locale` | TEXT | NOT NULL | UI locale preference |
+| `date_of_birth` | DATE | — (nullable) | DOB; age derived for host view (100) |
+| `gender` | TEXT | — (nullable) | Guest gender (100) |
+| `nationality` | TEXT | — (nullable) | Nationality (100) |
+| `languages` | TEXT[] | NOT NULL, DEFAULT '{}' | Spoken languages (100) |
+| `bio` | TEXT | — (nullable) | Short bio shown to host (100) |
+| `home_university` | TEXT | — (nullable) | Home / sending university (100) |
+| `receiving_university` | TEXT | — (nullable) | Host-city university (100) |
+| `receiving_faculty` | TEXT | — (nullable) | Faculty / programme (100) |
+| `funding_source` | TEXT | — (nullable) | How the stay is funded (100) |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Account creation time |
+| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update time |
+
+**RLS:** students may SELECT/UPDATE only their own row (`auth_user_id = auth.uid()`). INSERT via SECURITY DEFINER RPC / auth trigger.
 
 ### `listing_amenities` (Join Table)
 
@@ -177,6 +239,113 @@ Walk and transit times from each listing to each faculty.
 | `transit_minutes` | INTEGER | NOT NULL, CHECK >= 0 | Transit time in minutes (OSRM driving × 1.5) |
 
 **Index:** `idx_faculty_distances_faculty_id` on `faculty_id`
+
+---
+
+## Marketplace tables (migration 100)
+
+### `listing_availability_blocks`
+
+Per-listing calendar holds for the booking marketplace (W1).
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `block_id` | UUID | PK | Row ID |
+| `listing_id` | TEXT | NOT NULL, FK → listings ON DELETE CASCADE | Listing |
+| `start_date` | DATE | NOT NULL | Inclusive start |
+| `end_date` | DATE | NOT NULL, ≥ start_date | Inclusive end |
+| `kind` | TEXT | NOT NULL, IN (`booked`, `pending`, `blackout`) | Block type |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Created |
+| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Updated |
+
+**RLS:** public SELECT (calendar is browse-visible). Landlords ALL on blocks for their own listings. Pending/booked rows are normally written by the service role when bookings transition.
+
+### `bookings`
+
+Reservation request / stay record (W2). No payment states in this phase —
+`confirmed` means the landlord accepted and parties settle offline.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `booking_id` | UUID | PK | Booking ID |
+| `student_id` | UUID | NOT NULL, FK → students ON DELETE RESTRICT | Guest |
+| `listing_id` | TEXT | NOT NULL, FK → listings ON DELETE RESTRICT | Listing |
+| `move_in` | DATE | NOT NULL | Requested check-in |
+| `move_out` | DATE | NOT NULL, > move_in | Requested check-out |
+| `monthly_rent` | NUMERIC | NOT NULL, > 0 | Rent snapshot at request time |
+| `total_stay_value` | NUMERIC | NOT NULL, > 0 | Full-stay value snapshot |
+| `state` | TEXT | NOT NULL, DEFAULT `requested` | See states below |
+| `last_activity_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Inactivity / expiry timer input |
+| `accepted_at` | TIMESTAMPTZ | — (nullable) | When host accepted |
+| `confirmed_at` | TIMESTAMPTZ | — (nullable) | When booking confirmed (offline settle) |
+| `declined_at` | TIMESTAMPTZ | — (nullable) | When host declined |
+| `expired_at` | TIMESTAMPTZ | — (nullable) | When accept/confirm window lapsed |
+| `cancelled_at` | TIMESTAMPTZ | — (nullable) | When cancelled |
+| `disputed_at` | TIMESTAMPTZ | — (nullable) | When disputed |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Request time (`requested`) |
+| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last row update |
+
+**States:** `requested` · `accepted` · `confirmed` · `declined` · `expired` · `cancelled` · `disputed`
+
+**RLS:**
+- Student: SELECT / INSERT (own rows, insert only as `requested`) / UPDATE own rows
+- Landlord: SELECT / UPDATE bookings whose listing belongs to them
+- No public access (bookings carry personal data)
+
+### `booking_events`
+
+Append-only audit log of state transitions.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `event_id` | UUID | PK | Event ID |
+| `booking_id` | UUID | NOT NULL, FK → bookings ON DELETE CASCADE | Parent booking |
+| `from_state` | TEXT | nullable; same enum as bookings when set | Prior state (NULL on create) |
+| `to_state` | TEXT | NOT NULL | New state |
+| `actor` | TEXT | NOT NULL, IN (`student`, `landlord`, `system`, `admin`) | Who caused the transition |
+| `metadata` | JSONB | NOT NULL, DEFAULT `{}` | Extra context (no bank details) |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Event time |
+
+**RLS:** participants (student or listing's landlord) may SELECT and INSERT events for bookings they can see. No UPDATE/DELETE.
+
+### `payouts`
+
+Fee / transfer record modelled now so components can be persisted at booking
+time (W3). **No bank details, ever** — collect payout coordinates out-of-band
+or via Stripe later. Money movement is ops/manual until Connect lands.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `payout_id` | UUID | PK | Payout ID |
+| `booking_id` | UUID | NOT NULL, UNIQUE, FK → bookings | One payout row per booking |
+| `gross_rent` | NUMERIC | NOT NULL, ≥ 0 | First-month (or gross) rent held |
+| `commission_net` | NUMERIC | NOT NULL, ≥ 0 | Host commission ex-VAT |
+| `vat` | NUMERIC | NOT NULL, ≥ 0 | VAT on commission |
+| `amount` | NUMERIC | NOT NULL, ≥ 0 | Amount due to landlord |
+| `state` | TEXT | NOT NULL, DEFAULT `pending` | `pending` · `due` · `paid` · `cancelled` |
+| `paid_at` | TIMESTAMPTZ | — (nullable) | When marked paid |
+| `reference` | TEXT | — (nullable) | External transfer reference |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Created |
+| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Updated |
+
+**RLS:** student and listing landlord may SELECT their booking's payout. Writes are service_role / ops only.
+
+### `property_verifications`
+
+Video-call (or other) property verification record (W4 table early).
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `verification_id` | UUID | PK | Verification ID |
+| `listing_id` | TEXT | NOT NULL, FK → listings ON DELETE CASCADE | Listing verified |
+| `method` | TEXT | NOT NULL, IN (`video_call`, `in_person`, `document`, `other`) | How it was verified |
+| `verified_by` | TEXT | — (nullable) | Admin / operator identifier |
+| `verified_at` | TIMESTAMPTZ | — (nullable) | Completion time; NULL = in progress |
+| `checklist_json` | JSONB | NOT NULL, DEFAULT `{}` | Checklist answers |
+| `notes` | TEXT | — (nullable) | Free-text notes |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Created |
+
+**RLS:** public SELECT where `verified_at IS NOT NULL` (badge/tooltip). Landlords SELECT rows for their own listings (including in-progress). Writes are service_role / admin only.
 
 ---
 
@@ -209,6 +378,12 @@ Listings from real scraped data may have incomplete information. The `flags` JSO
 | Coordinates within Thessaloniki | location | `CHECK (lat BETWEEN 40.55 AND 40.70)`, `CHECK (lng BETWEEN 22.80 AND 23.05)` |
 | Distance times non-negative | faculty_distances | `CHECK (walk_minutes >= 0)`, `CHECK (transit_minutes >= 0)` |
 | University must be valid | faculties | `CHECK (university IN ('AUTH', 'UoM', 'IHU'))` |
+| Min stay 2–12 months when set | listings | `CHECK (min_duration_months IS NULL OR BETWEEN 2 AND 12)` |
+| Max stay 2–12 and ≥ min when set | listings | `listings_max_duration_months_check` |
+| Booking move-out after move-in | bookings | `CHECK (move_out > move_in)` |
+| Booking state enum | bookings | `requested`…`disputed` (see above) |
+| Availability block kind | listing_availability_blocks | `booked` \| `pending` \| `blackout` |
+| No bank details on payouts | payouts | schema has no IBAN/account columns by design |
 
 ---
 
@@ -219,7 +394,8 @@ Listings from real scraped data may have incomplete information. The `flags` JSO
 | `supabase/migrations/001_create_schema.sql` | All tables, constraints, indexes, triggers |
 | `supabase/migrations/002_seed_faculties.sql` | Faculty reference data (6 points) |
 | `supabase/migrations/003_schema_evolution.sql` | Schema evolution for real-world data (nullable prices, new columns, new amenities) |
-| `supabase/seed.sql` | 10 seed listings with all dimensions (7-digit IDs) |
+| `supabase/migrations/100_marketplace_schema.sql` | Marketplace pivot: bookings, availability blocks, payouts, property verifications, neighborhoods, listing/student/landlord columns |
+| `supabase/seed.sql` | 10 seed listings with all dimensions (7-digit IDs) + neighborhoods |
 
 ---
 
