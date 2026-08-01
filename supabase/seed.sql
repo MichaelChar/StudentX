@@ -62,6 +62,23 @@ INSERT INTO rent (rent_id, monthly_price, currency, bills_included, deposit) VAL
   (10, 500, 'EUR', true,  500);   -- 0005002 Room, Stavroupoli (bills incl)
 
 -- ----------------------------------------
+-- Neighborhoods (controlled reference — migration 100)
+-- ----------------------------------------
+-- Migration 100 seeds neighborhoods from DISTINCT location.neighborhood,
+-- but on a fresh `supabase start` location is empty when migrations run.
+-- Insert the names used by seed listings so local stacks match prod shape.
+INSERT INTO neighborhoods (name) VALUES
+  ('Kentro'),
+  ('Kamara'),
+  ('Kalamaria'),
+  ('Ano Poli'),
+  ('Rotonda'),
+  ('Triandria'),
+  ('Toumba'),
+  ('Stavroupoli')
+ON CONFLICT (name) DO NOTHING;
+
+-- ----------------------------------------
 -- Location records (10, one per listing)
 -- ----------------------------------------
 INSERT INTO location (location_id, address, neighborhood, lat, lng) VALUES
