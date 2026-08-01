@@ -69,9 +69,8 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: 'Failed to update request' }, { status: 500 });
   }
 
-  // On approve: flip is_verified only. Subscription tier (verified_tier) is
-  // independent — the public badge requires both is_verified=true AND a paid
-  // tier, so admin ID approval shouldn't grant a free subscription.
+  // On approve: flip is_verified. Free verification — admin ID approval is
+  // the sole gate for the public verified status.
   if (action === 'approve') {
     const { error: landlordError } = await supabase
       .from('landlords')

@@ -15,7 +15,6 @@ import LandlordAvatar from '@/components/landlord/LandlordAvatar';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
-import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatDistance } from '@/lib/formatDistance';
 
@@ -46,10 +45,9 @@ export default async function ListingPage({ params, searchParams }) {
   const photos = (listing.photos || []).filter(
     (url) => typeof url === 'string' && url.startsWith('http'),
   );
-  // SuperLandlord = the single elevated status (paying AND verified), computed
-  // once in transformListing. Drives the seal, the badge, and the "listed by"
-  // profile link below.
-  const isSuper = listing.is_superlandlord;
+  // Free admin-approved verification. Gates the "listed by" profile link
+  // (public landlord profiles require is_verified).
+  const isVerified = listing.is_verified === true;
 
   return (
     <div className="mx-auto max-w-6xl px-5 pt-8 pb-28 sm:pb-12 md:py-12">
@@ -84,15 +82,9 @@ export default async function ListingPage({ params, searchParams }) {
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10">
         {/* Left column */}
         <div>
-          {/* Hero stripe — verified seal + address */}
+          {/* Hero stripe — address */}
           <div className="flex flex-col md:flex-row md:items-start gap-5 mb-8">
-            {isSuper && <VerifiedSeal size={52} />}
             <div className="flex-1">
-              {isSuper && (
-                <div className="flex flex-wrap items-center gap-2 mb-3">
-                  <Pill variant="verified">{t('verified')}</Pill>
-                </div>
-              )}
               <p className="label-caps text-night/50">
                 {listing.neighborhood} &middot; Thessaloniki
               </p>
@@ -118,9 +110,9 @@ export default async function ListingPage({ params, searchParams }) {
             />
           </div>
 
-          {/* Listed by — SuperLandlords link to their public profile.
+          {/* Listed by — verified landlords link to their public profile.
               landlord_id is the first 4 chars of the listing_id (see schema). */}
-          {isSuper && listing.landlord?.name && (
+          {isVerified && listing.landlord?.name && (
             <Link
               href={`/property/thessaloniki/landlords/${listing.listing_id.slice(0, 4)}`}
               className="group inline-flex items-center gap-3 mb-10 rounded-sm focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"

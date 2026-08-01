@@ -222,7 +222,21 @@ export async function PATCH(request, { params }) {
   if (body.description !== undefined) {
     listingUpdate.description = normalizeMultiLine(body.description);
   }
-  if (body.photos !== undefined) listingUpdate.photos = body.photos;
+  if (body.photos !== undefined) {
+    const photos = Array.isArray(body.photos) ? body.photos : [];
+    const external = Array.isArray(body.external_photo_urls) ? body.external_photo_urls : [];
+    // When external_photo_urls isn't in the payload, only count uploaded photos.
+    const total = body.external_photo_urls !== undefined
+      ? photos.length + external.length
+      : photos.length;
+    if (total > 20) {
+      return NextResponse.json(
+        { error: 'Listings are limited to 20 photos.' },
+        { status: 400 }
+      );
+    }
+    listingUpdate.photos = body.photos;
+  }
   if (body.sqm !== undefined) listingUpdate.sqm = body.sqm || null;
   if (body.floor !== undefined) listingUpdate.floor = body.floor != null && body.floor !== '' ? parseInt(body.floor, 10) : null;
   if (body.available_from !== undefined) listingUpdate.available_from = body.available_from || null;

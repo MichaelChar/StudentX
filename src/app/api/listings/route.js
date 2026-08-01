@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabase";
-import { transformListing } from "@/lib/transformListing";
+import { getSupabaseAsService } from "@/lib/supabaseServer";
+import { transformListing, listingCompleteness } from "@/lib/transformListing";
+import { getLandlordResponseTime } from "@/lib/landlordResponseTime";
 import {
   parseListingFilters,
   resolveRequiredAmenityIds,
@@ -11,25 +13,24 @@ import {
 
 const LISTING_SELECT = `
   listing_id,
-  is_featured,
   title,
   description,
   photos,
   floor,
+  sqm,
   min_duration_months,
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
-  landlords!inner ( name, verified_tier, is_verified, profile_photo_url ),
+  landlords!inner ( name, is_verified, profile_photo_url ),
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) ),
   listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) )
 `;
 
-// Fallback SELECT without is_featured/verified_tier for pre-migration compatibility.
-// Deliberately omits listing_university_distances too (migration 066): if that
-// table is missing the primary SELECT errors and this one still answers, so the
-// route degrades to no-distances rather than 500ing on a half-migrated env.
+// Fallback SELECT for pre-migration compatibility (e.g. missing
+// listing_university_distances from migration 066). Omits is_verified so a
+// half-migrated env still answers; verified_only is skipped on that path.
 const LISTING_SELECT_FALLBACK = `
   listing_id,
   title,
@@ -43,6 +44,44 @@ const LISTING_SELECT_FALLBACK = `
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
+
+/**
+ * Batch average first-response time (ms) per landlord for the listings in
+ * the current result set. Reuses getLandlordResponseTime; service role so
+ * the public listings route can read inquiries without a landlord JWT.
+ */
+async function responseTimeByLandlord(listings) {
+  const byLandlord = new Map();
+  for (const listing of listings) {
+    const lid = listing.listing_id?.slice(0, 4);
+    if (!lid) continue;
+    if (!byLandlord.has(lid)) byLandlord.set(lid, []);
+    byLandlord.get(lid).push(listing.listing_id);
+  }
+
+  const map = new Map();
+  if (byLandlord.size === 0) return map;
+
+  let service;
+  try {
+    service = getSupabaseAsService();
+  } catch {
+    // Missing service-role env in some test/dev envs — rank without response time.
+    return map;
+  }
+
+  await Promise.all(
+    [...byLandlord.entries()].map(async ([landlordId, listingIds]) => {
+      try {
+        const stats = await getLandlordResponseTime(service, listingIds);
+        map.set(landlordId, stats.avgMs);
+      } catch {
+        map.set(landlordId, null);
+      }
+    }),
+  );
+  return map;
+}
 
 export async function GET(request) {
   try {
@@ -104,13 +143,11 @@ export async function GET(request) {
       query = query.lte("rent.monthly_price", budget);
     }
 
-    // No DB-level ordering: ranking is computed in JS after transform (see the
-    // sort below). The SuperLandlord predicate spans listing + joined landlord
-    // columns, which a single .order() can't express cleanly.
+    // No DB-level ordering: ranking is computed in JS after transform.
     let { data, error } = await query;
 
-    // If query fails (e.g. the verified columns aren't migrated yet), retry
-    // with the reduced SELECT that omits them.
+    // If query fails (e.g. is_verified not migrated yet), retry with the
+    // reduced SELECT that omits it.
     if (error) {
       console.warn("Listings query failed, retrying without verified columns:", error.message);
       let fallbackQuery = supabase.from("listings").select(LISTING_SELECT_FALLBACK);
@@ -126,6 +163,20 @@ export async function GET(request) {
           { status: 500 }
         );
       }
+
+      // The fallback SELECT has no is_verified join, so applyListingFilters
+      // skips verified_only on this path. Returning the unfiltered rows would
+      // silently answer "show me verified listings only" with every listing —
+      // a safety claim the data can't back. Fail closed instead: empty result
+      // plus an explicit `degraded` marker, so the caller can say "temporarily
+      // unavailable" rather than "no matches".
+      if (f.verifiedOnly) {
+        console.error(
+          "verified_only requested but the fallback SELECT cannot honour it — returning empty",
+        );
+        return NextResponse.json({ listings: [], degraded: true });
+      }
+
       data = fallbackResult.data;
     }
 
@@ -145,23 +196,38 @@ export async function GET(request) {
       results = results.filter((listing) => hasAllRequiredAmenities(listing.amenities, required));
     }
 
-    // Ranking: SuperLandlords (the single elevated status — paying AND
-    // verified) float to the top, then the student's chosen metric within each
-    // group, then newest-first as a deterministic tiebreaker. Done in JS for
-    // every sort mode because the SuperLandlord predicate spans listing +
-    // joined landlord columns and faculty_distances is a to-many join — neither
-    // expressible as a single .order(). (The old verified_tier_rank → featured
-    // gradient collapsed to this binary predicate in the SuperLandlord merge,
-    // so verified_pro no longer outranks verified.)
+    // Ranking keys (highest priority first):
+    //   1. landlords.is_verified
+    //   2. listing completeness (photos, description, amenities, sqm, floor)
+    //   3. landlord response time (faster first; null last)
+    // then the student's chosen metric, then newest as tiebreaker.
+    const responseMsByLandlord = await responseTimeByLandlord(results);
+
     const metricValue = (listing) => {
       if (f.sortBy === "price") return listing.monthly_price;
       if (f.sortBy === "walk_minutes") return listing.faculty_distances[0]?.walk_minutes ?? null;
       if (f.sortBy === "transit_minutes") return listing.faculty_distances[0]?.transit_minutes ?? null;
-      return null; // 'match'/default: SuperLandlord-first, then newest
+      return null;
     };
 
     results.sort((a, b) => {
-      if (a.is_superlandlord !== b.is_superlandlord) return a.is_superlandlord ? -1 : 1;
+      const aVerified = a.is_verified === true;
+      const bVerified = b.is_verified === true;
+      if (aVerified !== bVerified) return aVerified ? -1 : 1;
+
+      const aComplete = listingCompleteness(a);
+      const bComplete = listingCompleteness(b);
+      if (aComplete !== bComplete) return bComplete - aComplete;
+
+      const aLandlord = a.listing_id?.slice(0, 4);
+      const bLandlord = b.listing_id?.slice(0, 4);
+      const aRt = responseMsByLandlord.get(aLandlord) ?? null;
+      const bRt = responseMsByLandlord.get(bLandlord) ?? null;
+      if (aRt != null || bRt != null) {
+        if (aRt == null) return 1;
+        if (bRt == null) return -1;
+        if (aRt !== bRt) return aRt - bRt;
+      }
 
       const valA = metricValue(a);
       const valB = metricValue(b);

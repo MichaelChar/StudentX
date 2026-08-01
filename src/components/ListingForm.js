@@ -17,7 +17,7 @@ const NEIGHBORHOODS_FALLBACK = [
   'Ladadika', 'Neapoli', 'Toumba', 'Vardaris',
 ];
 
-const FREE_PHOTO_LIMIT = 6;
+const PHOTO_LIMIT = 20;
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
@@ -56,8 +56,6 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
   const [photoError, setPhotoError] = useState('');
-  // null = unlimited (paid tiers), number = cap (free tier)
-  const [photoLimit, setPhotoLimit] = useState(FREE_PHOTO_LIMIT);
   const [dragIndex, setDragIndex] = useState(null);
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [isDirty, setIsDirty] = useState(false);
@@ -84,20 +82,11 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       const { data: { session } } = await supabase.auth.getSession();
       if (session?.user?.id) setUserId(session.user.id);
 
-      const fetches = [
+      const [ptRes, amRes, uniRes] = await Promise.all([
         fetch('/api/property-types'),
         fetch('/api/amenities'),
         fetch('/api/universities'),
-      ];
-      if (session?.access_token) {
-        fetches.push(
-          fetch('/api/landlord/billing/subscription', {
-            headers: { Authorization: `Bearer ${session.access_token}` },
-          })
-        );
-      }
-
-      const [ptRes, amRes, uniRes, billingRes] = await Promise.all(fetches);
+      ]);
 
       if (ptRes.ok) {
         const { propertyTypes: pts } = await ptRes.json();
@@ -113,12 +102,6 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       if (uniRes.ok) {
         const { universities: unis } = await uniRes.json();
         setUniversities(unis || []);
-      }
-      if (billingRes?.ok) {
-        const { verifiedTier } = await billingRes.json();
-        if (verifiedTier === 'verified' || verifiedTier === 'verified_pro') {
-          setPhotoLimit(null); // unlimited for paid tiers
-        }
       }
     }
     loadOptions();
@@ -174,13 +157,13 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     setPhotoError('');
     const current = form.photos || [];
     const externalCount = (form.external_photo_urls || []).length;
-    const remaining = photoLimit === null ? Infinity : photoLimit - current.length - externalCount;
+    const remaining = PHOTO_LIMIT - current.length - externalCount;
     if (remaining <= 0) {
-      setPhotoError(photoLimit === null ? t('photosTooMany') : `Maximum ${photoLimit} photos allowed.`);
+      setPhotoError(t('photosTooMany'));
       return;
     }
 
-    const toUpload = Array.from(files).slice(0, remaining === Infinity ? files.length : remaining);
+    const toUpload = Array.from(files).slice(0, remaining);
     const wrongType = [];
     const tooLarge = [];
     for (const file of toUpload) {
@@ -834,7 +817,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
           )}
 
           {/* Upload button */}
-          {(photoLimit === null || ((form.photos || []).length + (form.external_photo_urls || []).length) < photoLimit) && (
+          {((form.photos || []).length + (form.external_photo_urls || []).length) < PHOTO_LIMIT && (
             <div>
               <input
                 ref={fileInputRef}
@@ -868,7 +851,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
                 )}
               </label>
               <p className="mt-1.5 text-xs text-night/50">
-                {photoLimit === null ? t('photosHintUnlimited') : t('photosHint')}
+                {t('photosHint')}
               </p>
             </div>
           )}

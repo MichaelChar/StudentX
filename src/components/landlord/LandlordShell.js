@@ -24,7 +24,6 @@ const NAV_ITEMS = [
   { key: 'listings', href: '/property/thessaloniki/landlord/listings', icon: 'book' },
   { key: 'inquiries', href: '/property/thessaloniki/landlord/inquiries', icon: 'message' },
   { key: 'verification', href: '/property/thessaloniki/landlord/verification', icon: 'shield' },
-  { key: 'billing', href: '/property/thessaloniki/landlord/get-verified', icon: 'euro' },
   { key: 'settings', href: '/property/thessaloniki/landlord/settings', icon: 'cog' },
 ];
 

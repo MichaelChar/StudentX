@@ -80,16 +80,16 @@ async function SavedSection({ locale }) {
       created_at,
       listings (
         listing_id,
-        is_featured,
         title,
         description,
         photos,
         floor,
+        sqm,
         min_duration_months,
         rent ( monthly_price, currency, bills_included, deposit ),
         location ( address, neighborhood, lat, lng ),
         property_types ( name ),
-        landlords ( name, verified_tier, is_verified ),
+        landlords ( name, is_verified ),
         listing_amenities ( amenities ( amenity_id, name ) ),
         faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
       )

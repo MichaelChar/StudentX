@@ -7,13 +7,13 @@ import { transformListing } from '@/lib/transformListing';
 // never be selected on this anon/public path. profile_photo_url was granted to
 // anon in migration 057; created_at powers the "member since" line.
 const LANDLORD_SELECT =
-  'landlord_id, name, verified_tier, is_verified, verified_tier_rank, profile_photo_url, created_at';
+  'landlord_id, name, is_verified, profile_photo_url, created_at';
 
 // Fallback for an environment that hasn't run migration 057 yet (no
 // profile_photo_url column/grant). The verified gate still works — only the
 // avatar is missing and the UI falls back to a monogram.
 const LANDLORD_SELECT_FALLBACK =
-  'landlord_id, name, verified_tier, is_verified, verified_tier_rank, created_at';
+  'landlord_id, name, is_verified, created_at';
 
 // Listings for one landlord — mirrors the public /api/listings shape so the
 // reused <ListingCard> renders identically. Main select carries
@@ -21,16 +21,16 @@ const LANDLORD_SELECT_FALLBACK =
 // half-migrated DB never 500s the profile page.
 const LISTINGS_SELECT = `
   listing_id,
-  is_featured,
   title,
   description,
   photos,
   floor,
+  sqm,
   min_duration_months,
   rent ( monthly_price, currency, bills_included, deposit ),
   location ( address, neighborhood, lat, lng ),
   property_types ( name ),
-  landlords ( name, verified_tier, is_verified, verified_tier_rank, profile_photo_url ),
+  landlords ( name, is_verified, profile_photo_url ),
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) ),
   listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) )
@@ -50,27 +50,19 @@ const LISTINGS_SELECT_FALLBACK = `
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
 
-// The "verified half" of SuperLandlord status: a paid verified tier + admin ID
-// approval. getLandlordProfile combines this with the "paying half" (an active
-// subscription, read from is_featured on the landlord's listings) to gate the
-// public profile, which is a SuperLandlord perk. Kept here so the verified
-// predicate lives in one place.
+// Free admin-approved ID verification. Public landlord profiles are gated
+// on this alone (paid SuperLandlord tier removed).
 export function isVerifiedLandlord(landlord) {
-  return Boolean(
-    landlord &&
-      landlord.is_verified === true &&
-      landlord.verified_tier &&
-      landlord.verified_tier !== 'none',
-  );
+  return Boolean(landlord && landlord.is_verified === true);
 }
 
 /**
  * Public landlord-profile fetch for the student-facing
  * /property/[city]/landlords/[landlordId] page.
  *
- * Returns `{ landlord, listings }` for a SuperLandlord (paying AND verified),
- * or `null` when the landlord doesn't exist or isn't a SuperLandlord (public
- * profiles are a SuperLandlord perk — the page calls notFound() on null).
+ * Returns `{ landlord, listings }` for a verified landlord, or `null` when
+ * the landlord doesn't exist or isn't verified (public profiles require free
+ * ID verification — the page calls notFound() on null).
  * Reads through the anon client and selects only public-safe columns. Memoized
  * per-request like getListingForRender so a layout's metadata pass and the
  * page body share one round-trip.
@@ -106,19 +98,15 @@ export const getLandlordProfile = cache(async (landlordId) => {
     if (!isVerifiedLandlord(landlord)) return null;
 
     // --- Their listings (same shape as the public directory) ---
-    // Single landlord ⇒ verified_tier_rank is constant, so order is just
-    // featured-first then newest (listing_id's per-landlord sequence increases
-    // with recency — see the LLLLNNN format in docs/schema.md).
-    let listingsUsedFallback = false;
+    // Newest first (listing_id's per-landlord sequence increases with
+    // recency — see the LLLLNNN format in docs/schema.md).
     let { data: rows, error: listErr } = await supabase
       .from('listings')
       .select(LISTINGS_SELECT)
       .eq('landlord_id', landlordId)
-      .order('is_featured', { ascending: false })
       .order('listing_id', { ascending: false });
 
     if (listErr) {
-      listingsUsedFallback = true;
       const fb = await supabase
         .from('listings')
         .select(LISTINGS_SELECT_FALLBACK)
@@ -128,16 +116,7 @@ export const getLandlordProfile = cache(async (landlordId) => {
       listErr = fb.error;
     }
 
-    // SuperLandlord = verified (gated above) AND currently paying. is_featured
-    // mirrors paying status across all of a landlord's listings (the Stripe
-    // webhook keeps them in lockstep), so any featured listing ⇒ the landlord
-    // is paying. A lapsed landlord (or one with no listings to prove payment)
-    // 404s — the "drop immediately" rule. On the column-less fallback path we
-    // can't read is_featured, so we degrade to the verified-only gate rather
-    // than 404 every profile during a migration window.
-    const isPaying =
-      listingsUsedFallback || (rows || []).some((r) => r.is_featured === true);
-    if (!isPaying) return null;
+    if (listErr) return null;
 
     const listings = (rows || []).map(transformListing);
 
@@ -145,7 +124,6 @@ export const getLandlordProfile = cache(async (landlordId) => {
       landlord: {
         landlord_id: landlord.landlord_id,
         name: landlord.name ?? null,
-        verified_tier: landlord.verified_tier ?? 'none',
         is_verified: landlord.is_verified ?? false,
         profile_photo_url: landlord.profile_photo_url ?? null,
         created_at: landlord.created_at ?? null,

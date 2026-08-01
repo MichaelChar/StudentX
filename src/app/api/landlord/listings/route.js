@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import { extractToken, getUserFromToken, getSupabaseWithToken, getSupabaseAsService } from '@/lib/supabaseServer';
-import { canCreateListing } from '@/lib/stripe';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { normalizeTitle } from '@/lib/listingTitle';
 import { normalizeSingleLine, normalizeMultiLine } from '@/lib/textNormalize';
@@ -71,15 +70,6 @@ export async function POST(request) {
   const landlordId = await getLandlordId(user.id);
   if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
-  // Check subscription listing limits
-  const limitCheck = await canCreateListing(getSupabase(), landlordId);
-  if (!limitCheck.allowed) {
-    return NextResponse.json(
-      { error: limitCheck.reason, upgrade: true, planId: limitCheck.planId },
-      { status: 403 }
-    );
-  }
-
   const body = await request.json();
 
   // Normalize free-text inputs (control-strip + whitespace-collapse + trim).
@@ -138,24 +128,16 @@ export async function POST(request) {
     }
   }
 
-  // Enforce photo cap for free-tier landlords (server-side)
-  // Cap applies to the combined count of uploaded + external photos.
+  // Uniform photo cap for all landlords (combined uploaded + external).
+  const PHOTO_LIMIT = 20;
   const uploadedPhotos = Array.isArray(body.photos) ? body.photos : [];
   const externalPhotos = Array.isArray(body.external_photo_urls) ? body.external_photo_urls : [];
   const totalPhotos = uploadedPhotos.length + externalPhotos.length;
-  if (totalPhotos > 0) {
-    const { data: landlordTierData } = await getSupabase()
-      .from('landlords')
-      .select('verified_tier')
-      .eq('landlord_id', landlordId)
-      .single();
-    const tier = landlordTierData?.verified_tier || 'none';
-    if (tier === 'none' && totalPhotos > 6) {
-      return NextResponse.json(
-        { error: 'Free tier listings are limited to 6 photos.' },
-        { status: 400 }
-      );
-    }
+  if (totalPhotos > PHOTO_LIMIT) {
+    return NextResponse.json(
+      { error: `Listings are limited to ${PHOTO_LIMIT} photos.` },
+      { status: 400 }
+    );
   }
 
   const authedSupabase = getSupabaseWithToken(token);
@@ -225,18 +207,6 @@ export async function POST(request) {
   }
   const listingId = landlordId + String(nextSeq).padStart(3, '0');
 
-  // Auto-feature listings for landlords with a paying subscription. Must match
-  // the webhook's shouldFeature predicate (handleSubscriptionUpdated treats
-  // 'active' OR 'trialing' as paying) — otherwise a listing added mid-trial is
-  // left un-featured while the landlord's other listings carry the badge.
-  const { data: payingSub } = await supabase
-    .from('subscriptions')
-    .select('subscription_id')
-    .eq('landlord_id', landlordId)
-    .in('status', ['active', 'trialing'])
-    .limit(1);
-  const isFeatured = payingSub && payingSub.length > 0;
-
   // Insert listing row
   const { data: listing, error: listingError } = await authedSupabase
     .from('listings')
@@ -254,7 +224,6 @@ export async function POST(request) {
       floor: body.floor != null && body.floor !== '' ? parseInt(body.floor, 10) : null,
       available_from: body.available_from || null,
       min_duration_months: parseMinDuration(body.min_duration_months),
-      is_featured: isFeatured,
     })
     .select('listing_id')
     .single();

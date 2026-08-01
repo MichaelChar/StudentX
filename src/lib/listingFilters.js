@@ -135,7 +135,7 @@ export async function resolveRequiredAmenityIds(supabase, excludeAmenities) {
  * @param f       a normalized filter object from {@link parseListingFilters}
  * @param opts
  * @param opts.fallback           when true, skip the clauses the fallback
- *   SELECT can't support — verified_only (no verified_tier columns) and
+ *   SELECT can't support — verified_only (no is_verified join) and
  *   min_duration — mirroring the original /api/listings fallback path exactly.
  * @param opts.amenityListingIds  ids from {@link resolveRequiredAmenityIds}.
  */
@@ -168,15 +168,10 @@ export function applyListingFilters(query, f, { fallback = false, amenityListing
     query = query.lte("min_duration_months", f.minDurationN);
   }
 
-  // SuperLandlords only — requires the verified half (a paid verified tier AND
-  // admin-approved ID) PLUS the paying half (`is_featured` — an active/trialing
-  // subscription). Skipped on the fallback path (the verified columns are what
-  // triggered the fallback).
+  // Verified landlords only — free admin-approved ID verification.
+  // Skipped on the fallback path (the is_verified join is what triggered it).
   if (!fallback && f.verifiedOnly) {
-    query = query
-      .neq("landlords.verified_tier", "none")
-      .eq("landlords.is_verified", true)
-      .eq("is_featured", true);
+    query = query.eq("landlords.is_verified", true);
   }
 
   // Bills included

@@ -1,17 +1,12 @@
 import { NextResponse } from 'next/server';
 import { getStripe } from '@/lib/stripe';
-import { createClient } from '@supabase/supabase-js';
-import { sendSubscriptionWelcomeEmail } from '@/lib/subscriptionEmail';
 
-// Use service role for webhook handling (bypasses RLS)
-function getServiceSupabase() {
-  return createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY,
-    { auth: { persistSession: false } }
-  );
-}
-
+/**
+ * Stripe webhook endpoint. Landlord subscription handling was removed with
+ * paid verification. The endpoint stays so booking payments (later) can
+ * register handlers here; until then events are acknowledged after signature
+ * verification and otherwise ignored.
+ */
 export async function POST(request) {
   const body = await request.text();
   const signature = request.headers.get('stripe-signature');
@@ -22,197 +17,13 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Webhook not configured' }, { status: 500 });
   }
 
-  let event;
   try {
     const stripe = getStripe();
-    event = stripe.webhooks.constructEvent(body, signature, webhookSecret);
+    stripe.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     console.error('Webhook signature verification failed:', err.message);
     return NextResponse.json({ error: 'Invalid signature' }, { status: 400 });
   }
 
-  const supabase = getServiceSupabase();
-
-  switch (event.type) {
-    case 'checkout.session.completed': {
-      const session = event.data.object;
-      if (session.mode === 'subscription') {
-        await handleSubscriptionCreated(supabase, session);
-      }
-      break;
-    }
-
-    case 'customer.subscription.updated': {
-      const subscription = event.data.object;
-      await handleSubscriptionUpdated(supabase, subscription);
-      break;
-    }
-
-    case 'customer.subscription.deleted': {
-      const subscription = event.data.object;
-      await handleSubscriptionDeleted(supabase, subscription);
-      break;
-    }
-
-    case 'invoice.payment_failed': {
-      const invoice = event.data.object;
-      await handlePaymentFailed(supabase, invoice);
-      break;
-    }
-  }
-
   return NextResponse.json({ received: true });
-}
-
-async function handleSubscriptionCreated(supabase, session) {
-  const landlordId = session.metadata?.landlord_id;
-  const planId = session.metadata?.plan_id;
-  const verifiedTier = session.metadata?.verified_tier;
-  if (!landlordId || !planId) return;
-
-  const stripe = getStripe();
-  const subscription = await stripe.subscriptions.retrieve(session.subscription);
-
-  // Cancel any existing active subscriptions for this landlord
-  await supabase
-    .from('subscriptions')
-    .update({ status: 'canceled', updated_at: new Date().toISOString() })
-    .eq('landlord_id', landlordId)
-    .in('status', ['active', 'past_due', 'trialing']);
-
-  const { start, end } = getPeriodBounds(subscription);
-
-  await supabase.from('subscriptions').insert({
-    landlord_id: landlordId,
-    plan_id: planId,
-    stripe_customer_id: session.customer,
-    stripe_subscription_id: subscription.id,
-    status: subscription.status === 'active' ? 'active' : 'incomplete',
-    billing_interval: subscription.items.data[0]?.plan?.interval === 'year' ? 'annual' : 'monthly',
-    current_period_start: start ? new Date(start * 1000).toISOString() : null,
-    current_period_end: end ? new Date(end * 1000).toISOString() : null,
-    cancel_at_period_end: subscription.cancel_at_period_end,
-  });
-
-  // Set subscription tier and mark onboarding complete on landlord. Note
-  // that is_verified is intentionally NOT touched here — the public Verified
-  // badge requires both verified_tier !== 'none' AND is_verified=true (the
-  // latter set by admin on ID approval). Subscription alone is not enough.
-  if (verifiedTier && ['verified', 'verified_pro'].includes(verifiedTier)) {
-    await supabase
-      .from('landlords')
-      .update({ verified_tier: verifiedTier, onboarding_completed: true })
-      .eq('landlord_id', landlordId);
-
-    await supabase
-      .from('listings')
-      .update({ is_featured: true })
-      .eq('landlord_id', landlordId);
-
-    await sendSubscriptionWelcomeEmail({ supabase, landlordId, tier: verifiedTier });
-  }
-}
-
-// Stripe API ≥ 2024-06 moves period bounds onto the items, not the subscription
-// itself. Fall back to items[0] so older + newer payloads both work.
-function getPeriodBounds(subscription) {
-  const item = subscription.items?.data?.[0];
-  return {
-    start: subscription.current_period_start ?? item?.current_period_start,
-    end: subscription.current_period_end ?? item?.current_period_end,
-  };
-}
-
-async function handleSubscriptionUpdated(supabase, subscription) {
-  const statusMap = {
-    active: 'active',
-    past_due: 'past_due',
-    canceled: 'canceled',
-    incomplete: 'incomplete',
-    trialing: 'trialing',
-    incomplete_expired: 'canceled',
-    unpaid: 'past_due',
-  };
-
-  const { start, end } = getPeriodBounds(subscription);
-
-  await supabase
-    .from('subscriptions')
-    .update({
-      status: statusMap[subscription.status] || subscription.status,
-      current_period_start: start ? new Date(start * 1000).toISOString() : null,
-      current_period_end: end ? new Date(end * 1000).toISOString() : null,
-      cancel_at_period_end: subscription.cancel_at_period_end,
-      updated_at: new Date().toISOString(),
-    })
-    .eq('stripe_subscription_id', subscription.id);
-
-  // Sync landlord state to subscription status. `is_featured` (the gold-halo
-  // signal on listings) tracks whether the landlord is currently paying:
-  // active or trialing → featured; anything else → not featured. Idempotent,
-  // so it's safe to apply on every update.
-  const { data: sub } = await supabase
-    .from('subscriptions')
-    .select('landlord_id')
-    .eq('stripe_subscription_id', subscription.id)
-    .single();
-
-  if (!sub?.landlord_id) return;
-
-  const shouldFeature =
-    subscription.status === 'active' || subscription.status === 'trialing';
-
-  await supabase
-    .from('listings')
-    .update({ is_featured: shouldFeature })
-    .eq('landlord_id', sub.landlord_id);
-
-  if (subscription.status === 'canceled' || subscription.status === 'incomplete_expired') {
-    await supabase
-      .from('landlords')
-      .update({ verified_tier: 'none' })
-      .eq('landlord_id', sub.landlord_id);
-  }
-}
-
-async function handleSubscriptionDeleted(supabase, subscription) {
-  // Get landlord_id before updating status
-  const { data: sub } = await supabase
-    .from('subscriptions')
-    .select('landlord_id')
-    .eq('stripe_subscription_id', subscription.id)
-    .single();
-
-  await supabase
-    .from('subscriptions')
-    .update({
-      status: 'canceled',
-      updated_at: new Date().toISOString(),
-    })
-    .eq('stripe_subscription_id', subscription.id);
-
-  // Reset verified tier and featured status
-  if (sub?.landlord_id) {
-    await supabase
-      .from('landlords')
-      .update({ verified_tier: 'none' })
-      .eq('landlord_id', sub.landlord_id);
-
-    await supabase
-      .from('listings')
-      .update({ is_featured: false })
-      .eq('landlord_id', sub.landlord_id);
-  }
-}
-
-async function handlePaymentFailed(supabase, invoice) {
-  if (!invoice.subscription) return;
-
-  await supabase
-    .from('subscriptions')
-    .update({
-      status: 'past_due',
-      updated_at: new Date().toISOString(),
-    })
-    .eq('stripe_subscription_id', invoice.subscription);
 }

@@ -19,7 +19,7 @@ function getServiceSupabase() {
 async function getLandlordId(userId) {
   const { data } = await getServiceSupabase()
     .from('landlords')
-    .select('landlord_id, verified_tier, is_verified')
+    .select('landlord_id, is_verified')
     .eq('auth_user_id', userId)
     .single();
   return data ?? null;
@@ -35,9 +35,7 @@ export async function POST(request) {
   const landlord = await getLandlordId(user.id);
   if (!landlord) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
-  // Guard: ID already approved. Subscription tier alone doesn't block ID
-  // upload — landlords need both a paid tier AND an approved ID for the
-  // public badge, and the subscription often happens before ID submission.
+  // Guard: ID already approved.
   if (landlord.is_verified === true) {
     return NextResponse.json({ error: 'Account is already verified' }, { status: 400 });
   }
@@ -134,7 +132,6 @@ export async function GET(request) {
   }
 
   return NextResponse.json({
-    verifiedTier: landlord.verified_tier ?? 'none',
     isVerified: landlord.is_verified === true,
     latestRequest: data ?? null,
   });

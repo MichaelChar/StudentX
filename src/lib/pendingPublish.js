@@ -238,7 +238,6 @@ export async function publishPendingLandlord({ supabase, landlord, edits = {}, f
         photos,
         external_photo_urls: [],
         sqm: pl.sqm || null,
-        is_featured: false,
       });
       if (liErr) throw liErr;
 
