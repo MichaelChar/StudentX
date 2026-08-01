@@ -214,6 +214,15 @@ export async function createBookingRequest({
         });
       }
       if (inquiryId) {
+        // Real FK link (migration 101). Keep the audit event as the
+        // transition log, but do not use metadata as the foreign key.
+        const { error: linkErr } = await service
+          .from('inquiries')
+          .update({ booking_id: booking.booking_id })
+          .eq('inquiry_id', inquiryId);
+        if (linkErr) {
+          console.error('createBookingRequest inquiry link:', linkErr);
+        }
         await service.from('booking_events').insert({
           booking_id: booking.booking_id,
           from_state: 'requested',
@@ -358,20 +367,18 @@ export async function touchBookingActivity(bookingId, now = new Date()) {
 }
 
 /**
- * Resolve booking_id linked to an inquiry (from inquiry_linked event metadata).
+ * Resolve booking_id linked to an inquiry via inquiries.booking_id (101).
  */
 export async function bookingIdForInquiry(inquiryId) {
   if (!inquiryId) return null;
   const service = getSupabaseAsService();
   const { data, error } = await service
-    .from('booking_events')
-    .select('booking_id, metadata')
-    .eq('to_state', 'requested')
-    .contains('metadata', { kind: 'inquiry_linked', inquiry_id: inquiryId })
-    .limit(1)
+    .from('inquiries')
+    .select('booking_id')
+    .eq('inquiry_id', inquiryId)
     .maybeSingle();
   if (error || !data) return null;
-  return data.booking_id;
+  return data.booking_id ?? null;
 }
 
 export async function loadBooking(bookingId) {

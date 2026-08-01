@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { isJobDue } from '@/app/api/cron/cadence';
+import { CRON_JOBS } from '@/app/api/cron/tick/route';
 
 /** Build a Date with fixed UTC components (year/month unused for dueness). */
 function utcDate({ hours = 0, minutes = 0, seconds = 0 } = {}) {
@@ -106,6 +107,41 @@ describe('isJobDue', () => {
       expect(isJobDue('daily@09:15', utcDate({ hours: 9, minutes: 0 }))).toBe(
         false,
       );
+    });
+  });
+
+  describe('daily@03:05 cadence (refresh-response-times)', () => {
+    it('is due exactly at 03:05 UTC', () => {
+      expect(isJobDue('daily@03:05', utcDate({ hours: 3, minutes: 5 }))).toBe(
+        true,
+      );
+    });
+
+    it('is still due when the tick lands late inside the bucket (03:06)', () => {
+      expect(isJobDue('daily@03:05', utcDate({ hours: 3, minutes: 6 }))).toBe(
+        true,
+      );
+    });
+
+    it('is not due once the bucket has passed (03:10)', () => {
+      expect(isJobDue('daily@03:05', utcDate({ hours: 3, minutes: 10 }))).toBe(
+        false,
+      );
+    });
+
+    it('is not due at 03:00', () => {
+      expect(isJobDue('daily@03:05', utcDate({ hours: 3, minutes: 0 }))).toBe(
+        false,
+      );
+    });
+  });
+
+  describe('CRON_JOBS registry', () => {
+    it('registers refresh-response-times at daily@03:05', () => {
+      const job = CRON_JOBS.find((j) => j.name === 'refresh-response-times');
+      expect(job).toBeDefined();
+      expect(job.cadence).toBe('daily@03:05');
+      expect(typeof job.handler).toBe('function');
     });
   });
 

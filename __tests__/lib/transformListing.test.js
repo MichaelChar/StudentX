@@ -17,6 +17,7 @@ const fullRow = {
     contact_info: 'a@example.com',
     is_verified: true,
     profile_photo_url: 'https://cdn.example/landlord-photos/uid/alice.webp',
+    avg_response_ms: 3_600_000,
   },
   listing_amenities: [
     { amenities: { name: 'wifi' } },
@@ -50,6 +51,7 @@ describe('transformListing', () => {
     expect(transformListing(fullRow)).toEqual({
       listing_id: '0100006',
       is_verified: true,
+      avg_response_ms: 3_600_000,
       title: 'Sunny studio near Medical School',
       address: '12 Egnatias',
       neighborhood: 'Center',

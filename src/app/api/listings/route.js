@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { getSupabase } from "@/lib/supabase";
-import { getSupabaseAsService } from "@/lib/supabaseServer";
-import { transformListing, listingCompleteness } from "@/lib/transformListing";
-import { getLandlordResponseTime } from "@/lib/landlordResponseTime";
+import { transformListing } from "@/lib/transformListing";
+import { compareListingsByRank } from "@/lib/listingRank";
 import {
   parseListingFilters,
   resolveRequiredAmenityIds,
@@ -33,7 +32,7 @@ const LISTING_SELECT = `
   rent!inner ( monthly_price, currency, bills_included, deposit ),
   location!inner ( address, neighborhood, lat, lng ),
   property_types!inner ( name ),
-  landlords!inner ( name, is_verified, profile_photo_url ),
+  landlords!inner ( name, is_verified, profile_photo_url, avg_response_ms ),
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) ),
   listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) )
@@ -55,44 +54,6 @@ const LISTING_SELECT_FALLBACK = `
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
 `;
-
-/**
- * Batch average first-response time (ms) per landlord for the listings in
- * the current result set. Reuses getLandlordResponseTime; service role so
- * the public listings route can read inquiries without a landlord JWT.
- */
-async function responseTimeByLandlord(listings) {
-  const byLandlord = new Map();
-  for (const listing of listings) {
-    const lid = listing.listing_id?.slice(0, 4);
-    if (!lid) continue;
-    if (!byLandlord.has(lid)) byLandlord.set(lid, []);
-    byLandlord.get(lid).push(listing.listing_id);
-  }
-
-  const map = new Map();
-  if (byLandlord.size === 0) return map;
-
-  let service;
-  try {
-    service = getSupabaseAsService();
-  } catch {
-    // Missing service-role env in some test/dev envs — rank without response time.
-    return map;
-  }
-
-  await Promise.all(
-    [...byLandlord.entries()].map(async ([landlordId, listingIds]) => {
-      try {
-        const stats = await getLandlordResponseTime(service, listingIds);
-        map.set(landlordId, stats.avgMs);
-      } catch {
-        map.set(landlordId, null);
-      }
-    }),
-  );
-  return map;
-}
 
 export async function GET(request) {
   try {
@@ -166,6 +127,8 @@ export async function GET(request) {
     }
 
     // No DB-level ordering: ranking is computed in JS after transform.
+    // Single listings round-trip — response time comes from the join
+    // (landlords.avg_response_ms), not a per-landlord service-role scan.
     let { data, error } = await query;
 
     // If query fails (e.g. is_verified not migrated yet), retry with the
@@ -230,51 +193,9 @@ export async function GET(request) {
       );
     }
 
-    // Ranking keys (highest priority first):
-    //   1. landlords.is_verified
-    //   2. listing completeness (photos, description, amenities, sqm, floor)
-    //   3. landlord response time (faster first; null last)
-    // then the student's chosen metric, then newest as tiebreaker.
-    const responseMsByLandlord = await responseTimeByLandlord(results);
-
-    const metricValue = (listing) => {
-      if (f.sortBy === "price") return listing.monthly_price;
-      if (f.sortBy === "walk_minutes") return listing.faculty_distances[0]?.walk_minutes ?? null;
-      if (f.sortBy === "transit_minutes") return listing.faculty_distances[0]?.transit_minutes ?? null;
-      return null;
-    };
-
-    results.sort((a, b) => {
-      const aVerified = a.is_verified === true;
-      const bVerified = b.is_verified === true;
-      if (aVerified !== bVerified) return aVerified ? -1 : 1;
-
-      const aComplete = listingCompleteness(a);
-      const bComplete = listingCompleteness(b);
-      if (aComplete !== bComplete) return bComplete - aComplete;
-
-      const aLandlord = a.listing_id?.slice(0, 4);
-      const bLandlord = b.listing_id?.slice(0, 4);
-      const aRt = responseMsByLandlord.get(aLandlord) ?? null;
-      const bRt = responseMsByLandlord.get(bLandlord) ?? null;
-      if (aRt != null || bRt != null) {
-        if (aRt == null) return 1;
-        if (bRt == null) return -1;
-        if (aRt !== bRt) return aRt - bRt;
-      }
-
-      const valA = metricValue(a);
-      const valB = metricValue(b);
-      if (valA != null || valB != null) {
-        if (valA == null) return 1;
-        if (valB == null) return -1;
-        if (valA !== valB) return f.sortOrder === "desc" ? valB - valA : valA - valB;
-      }
-
-      // Deterministic tiebreaker: newest first (listing_id grows with recency).
-      if (a.listing_id === b.listing_id) return 0;
-      return a.listing_id < b.listing_id ? 1 : -1;
-    });
+    results.sort((a, b) =>
+      compareListingsByRank(a, b, { sortBy: f.sortBy, sortOrder: f.sortOrder }),
+    );
 
     const response = NextResponse.json({ listings: results });
     response.headers.set(
