@@ -58,8 +58,8 @@ migrations (004+); marketplace columns land in 100.
 | `auth_user_id` | UUID | UNIQUE, FK → auth.users | Supabase auth link (nullable until claimed) |
 | `email` | TEXT | UNIQUE | Account email |
 | `phone` | TEXT | — (nullable) | Phone / WhatsApp for video-call scheduling (100) |
-| `avg_response_ms` | BIGINT | CHECK ≥ 0 (nullable) | Rolling average host response latency (100) |
-| `response_stats_at` | TIMESTAMPTZ | — (nullable) | When `avg_response_ms` was last recomputed (100) |
+| `avg_response_ms` | BIGINT | CHECK ≥ 0 (nullable) | Rolling average host response latency (100); anon SELECT granted in 101 for public ranking |
+| `response_stats_at` | TIMESTAMPTZ | — (nullable) | When `avg_response_ms` was last recomputed (100); service-role / cron only |
 | `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Account creation time |
 | `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update time |
 
@@ -215,6 +215,34 @@ existing rows keep working (completion is enforced at request-to-book in app cod
 | `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update time |
 
 **RLS:** students may SELECT/UPDATE only their own row (`auth_user_id = auth.uid()`). INSERT via SECURITY DEFINER RPC / auth trigger.
+
+### `inquiries`
+
+Student ↔ landlord contact threads for a listing (migration 004; chat columns
+in 026). When a booking request opens a thread, `booking_id` links them
+(migration 101). Before 101 the link lived only in `booking_events.metadata`
+(`kind = 'inquiry_linked'`).
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `inquiry_id` | UUID | PK | Thread ID |
+| `listing_id` | TEXT | NOT NULL, FK → listings ON DELETE CASCADE | Listing under discussion |
+| `student_name` | TEXT | NOT NULL | Name at thread open |
+| `student_email` | TEXT | NOT NULL | Email at thread open |
+| `student_phone` | TEXT | — (nullable) | Phone at thread open |
+| `message` | TEXT | NOT NULL, length ≥ 10 | Opening message |
+| `faculty_id` | TEXT | — (nullable), FK → faculties | Optional faculty context |
+| `status` | TEXT | NOT NULL, DEFAULT `pending` | `pending` · `replied` · `closed` |
+| `replied_at` | TIMESTAMPTZ | — (nullable) | First landlord reply time |
+| `student_user_id` | UUID | — (nullable), FK → auth.users | Authenticated student (026) |
+| `booking_id` | UUID | — (nullable), FK → bookings ON DELETE SET NULL | Linked booking when request-to-book opened the thread (101) |
+| `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Thread open time |
+
+**Indexes:** `idx_inquiries_listing_id`, `idx_inquiries_status`, `idx_inquiries_created_at`, `idx_inquiries_student_user_id`, `idx_inquiries_booking_id` (partial, non-null)
+
+**RLS:** students SELECT/INSERT own rows (`student_user_id = auth.uid()`);
+landlords SELECT/UPDATE rows for their listings. Row policies are unchanged by
+`booking_id` (101) — who can read or write a thread is the same as before.
 
 ### `listing_amenities` (Join Table)
 

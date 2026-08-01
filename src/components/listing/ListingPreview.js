@@ -27,10 +27,10 @@ import { formatPropertyType } from '@/lib/propertyType';
     strip + lightbox match production exactly.
   - The UI primitives (Card, Pill, Icon) and
     formatPropertyType are reused.
-  - The detail page itself is a SERVER component and its inquiry rail
-    (ContactRail/ContactGate) fires live inquiry network calls and needs
-    request-scoped auth, so the page structure and a *static* inquiry
-    rail are replicated here rather than imported.
+  - The detail page itself is a SERVER component and its booking rail
+    (BookingWidget) fires live network calls and needs request-scoped
+    auth, so the page structure and a *static* inquiry rail are
+    replicated here rather than imported.
 
   Accessibility mirrors the app's modal convention (ConfirmDialog /
   ListingLightbox): Esc closes, backdrop click closes, body scroll is
@@ -195,7 +195,7 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
 
           </div>
 
-          {/* Static inquiry rail — replicates ContactRail's card visually.
+          {/* Static inquiry rail — replicates the sticky booking card visually.
               Render-only: the Inquire button is inert in preview. */}
           <aside>
             <div className="lg:sticky lg:top-20">

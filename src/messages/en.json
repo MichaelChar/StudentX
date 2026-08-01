@@ -282,7 +282,6 @@
       "photosSection": "Photos",
       "photosLabel": "Add photos",
       "photosHint": "JPG, PNG or WebP · max 10 MB each · up to 20 photos",
-
       "photosUploading": "Uploading…",
       "photosRemove": "Remove",
       "photosError": "Some files could not be uploaded.",
@@ -537,11 +536,6 @@
       "amenitiesEnglish": "Amenities",
       "universityDistancesEnglish": "Distance to universities",
       "universityDistancesSource": "Listed by the landlord",
-      "directTagline": "Direct with the landlord. No brokers, no fees.",
-      "sendInquiry": "Send inquiry",
-      "replyWithin24h": "Usually replies within 24 hours",
-      "inquire": "Inquire",
-      "stickyBarLabel": "Listing inquiry",
       "notFound": {
         "title": "Listing not found",
         "description": "This student housing listing could not be found."
@@ -889,22 +883,6 @@
       "wrongRoleSwitch": "Switch to a student account",
       "wrongRoleDashboard": "Back to landlord dashboard"
     },
-    "contact": {
-      "guestTitle": "Sign in to message this landlord",
-      "guestBody": "Create a free student account to start a conversation with the landlord on StudentX.",
-      "openComposer": "Contact landlord",
-      "firstMessageTitle": "Send your first message",
-      "firstMessageBody": "Introduce yourself — the landlord will reply right here on StudentX.",
-      "firstMessagePlaceholder": "Hi! I'm interested in this listing — could we arrange a viewing?",
-      "send": "Start conversation",
-      "sending": "Sending…",
-      "closeAriaLabel": "Close",
-      "minLength": "Please write at least 10 characters.",
-      "errorGeneric": "Couldn't start the conversation. Try again.",
-      "errorListingMissing": "This listing is no longer available.",
-      "errorCapExceeded": "This listing has reached its inquiry limit. Try another.",
-      "errorNotStudent": "Your account isn't set up as a student. Sign out and create a student account."
-    },
     "favorites": {
       "save": "Save",
       "saved": "Saved",
@@ -1073,10 +1051,23 @@
     "verifying": "Verifying",
     "signingIn": "Signing in",
     "loading": "Loading",
-    "uploadingCycle": ["Drafting your listing", "Verifying address", "Saving room details", "Almost ready"],
-    "verifyingCycle": ["Verifying your link", "Almost ready"],
-    "signingInCycle": ["Signing you in", "Almost ready"],
-    "loadingCycle": ["Loading"]
+    "uploadingCycle": [
+      "Drafting your listing",
+      "Verifying address",
+      "Saving room details",
+      "Almost ready"
+    ],
+    "verifyingCycle": [
+      "Verifying your link",
+      "Almost ready"
+    ],
+    "signingInCycle": [
+      "Signing you in",
+      "Almost ready"
+    ],
+    "loadingCycle": [
+      "Loading"
+    ]
   },
   "home": {
     "blog": "Blog",

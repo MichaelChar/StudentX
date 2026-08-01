@@ -8,6 +8,9 @@ export function transformListing(row) {
   return {
     listing_id: row.listing_id,
     is_verified,
+    // Denormalised host response latency (landlords.avg_response_ms; cron
+    // refresh-response-times). Used for public search ranking; NULL = unknown.
+    avg_response_ms: row.landlords?.avg_response_ms ?? null,
     title: row.title ?? null,
     address: row.location?.address ?? null,
     neighborhood: row.location?.neighborhood ?? null,

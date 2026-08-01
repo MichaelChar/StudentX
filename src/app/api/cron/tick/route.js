@@ -6,6 +6,7 @@ import { runMessageDigest } from '../jobs/messageDigest';
 import { runSyntheticEnListing } from '../synthetic-en-listing/route';
 import { runBookingExpiry } from '../jobs/bookingExpiry';
 import { runBookingReminder } from '../jobs/bookingReminder';
+import { runRefreshResponseTimes } from '../jobs/refreshResponseTimes';
 
 // Per-job wall-clock cap inside the shared ~25s master-tick budget.
 // Jobs run concurrently via Promise.allSettled, so wall time is
@@ -50,6 +51,13 @@ export const CRON_JOBS = [
     name: 'booking-reminder',
     cadence: '5m',
     handler: runBookingReminder,
+  },
+  // T4b: denormalise landlord first-response latency for /api/listings ranking.
+  // No new Cloudflare trigger — Free plan caps at 5; master tick owns this.
+  {
+    name: 'refresh-response-times',
+    cadence: 'daily@03:05',
+    handler: runRefreshResponseTimes,
   },
 ];
 
