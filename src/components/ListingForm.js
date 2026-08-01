@@ -1,58 +1,121 @@
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
-import Image from 'next/image';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import BauhausLoader from '@/components/BauhausLoader';
 import ListingPreview from '@/components/listing/ListingPreview';
-import { TITLE_MAX_LENGTH, codepointLength } from '@/lib/listingTitle';
 import { arrayMove } from '@/lib/arrayMove';
 import { resizeToVariants } from '@/lib/imageResize';
-import { variantUrl } from '@/lib/photoVariants';
-import { MAX_DISTANCE_METERS } from '@/lib/universityDistances';
+import {
+  MIN_PHOTOS,
+  PHOTO_LIMIT,
+  validateUniversityDistancesMandatory,
+  validatePhotoMinimum,
+  validateRequiredCoords,
+} from '@/lib/listingWizardRules';
+import { MIN_UNIVERSITY_DISTANCES } from '@/lib/universityDistances';
+import Button from '@/components/ui/Button';
+import Card from '@/components/ui/Card';
+import StatusLadder, {
+  deriveListingStage,
+} from '@/components/listing-wizard/StatusLadder';
+import StepAddress from '@/components/listing-wizard/StepAddress';
+import StepProperty from '@/components/listing-wizard/StepProperty';
+import StepUniversities from '@/components/listing-wizard/StepUniversities';
+import StepPrice from '@/components/listing-wizard/StepPrice';
+import StepAvailability from '@/components/listing-wizard/StepAvailability';
+import StepPhotos from '@/components/listing-wizard/StepPhotos';
+import StepReview from '@/components/listing-wizard/StepReview';
 
-const NEIGHBORHOODS_FALLBACK = [
-  'Ano Poli', 'Center', 'Faliro', 'Kalamaria', 'Kentro',
-  'Ladadika', 'Neapoli', 'Toumba', 'Vardaris',
+const STEPS = [
+  'address',
+  'property',
+  'universities',
+  'price',
+  'availability',
+  'photos',
+  'review',
 ];
 
-const PHOTO_LIMIT = 20;
-const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
+const MAX_FILE_SIZE = 10 * 1024 * 1024;
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
-export default function ListingForm({ initialValues = {}, onSubmit, submitLabel }) {
-  const t = useTranslations('landlord.listingForm');
-  const tLoaders = useTranslations('loaders');
-  const fileInputRef = useRef(null);
-  const [userId, setUserId] = useState('anon');
-  const [form, setForm] = useState({
+function emptyForm(initial = {}) {
+  return {
     title: '',
     address: '',
     neighborhood: '',
     lat: '',
     lng: '',
     property_type: '',
+    bedrooms: '',
+    bathrooms: '',
+    sqm: '',
+    floor: '',
+    description: '',
+    smoking_allowed: false,
+    pets_allowed: false,
+    additional_rules: '',
+    amenity_ids: [],
+    university_distances: [],
     monthly_price: '',
     bills_included: false,
     deposit: '',
-    description: '',
-    sqm: '',
-    floor: '',
-    available_from: '',
+    agency_fee: '',
     min_duration_months: '9',
-    amenity_ids: [],
-    // [{ university_id, distance_meters }] — landlord-typed metres, optional.
-    // Starts empty: there is no prefill or auto-compute (migration 066).
-    university_distances: [],
+    max_duration_months: '',
+    available_from: '',
+    available_to: '',
+    blackouts: [],
     photos: [],
-    ...initialValues,
-  });
+    external_photo_urls: [],
+    video_url: '',
+    ...initial,
+  };
+}
 
+/**
+ * Multi-step landlord listing wizard.
+ * Replaces the previous single-page ListingForm.
+ *
+ * Props:
+ *   - initialValues: prefilled form state (edit mode)
+ *   - listingId: existing listing id (edit / draft)
+ *   - onSaveDraft(payload) → Promise<{ listing_id? }>
+ *   - onSubmit(payload) → Promise
+ *   - isVerified: landlord ID verified?
+ *   - accessToken: bearer token for prefill API
+ */
+export default function ListingForm({
+  initialValues = {},
+  listingId: listingIdProp = null,
+  onSaveDraft,
+  onSubmit,
+  submitLabel,
+  isVerified = false,
+  accessToken = null,
+}) {
+  const t = useTranslations('landlord.listingWizard');
+  const tLoaders = useTranslations('loaders');
+  const tLegacy = useTranslations('landlord.listingForm');
+
+  const fileInputRef = useRef(null);
+  const [userId, setUserId] = useState('anon');
+  const [step, setStep] = useState(0);
+  // Edit pages pass listingIdProp; new listings stash the id returned from
+  // the first draft create. Prefer the prop when present.
+  const [createdId, setCreatedId] = useState(null);
+  const listingId = listingIdProp || createdId;
+  // Edit page only mounts this form once initialValues are loaded, so the
+  // initializer is the single source of truth (no setState-in-effect sync).
+  const [form, setForm] = useState(() => emptyForm(initialValues));
   const [propertyTypes, setPropertyTypes] = useState([]);
   const [amenities, setAmenities] = useState([]);
   const [universities, setUniversities] = useState([]);
+  const [neighborhoods, setNeighborhoods] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [error, setError] = useState('');
   const [uploading, setUploading] = useState(false);
   const [photoError, setPhotoError] = useState('');
@@ -60,11 +123,8 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [isDirty, setIsDirty] = useState(false);
   const [showPreview, setShowPreview] = useState(false);
-
-  function reorderPhoto(from, to) {
-    setForm((prev) => ({ ...prev, photos: arrayMove(prev.photos || [], from, to) }));
-    setIsDirty(true);
-  }
+  const [prefillLoading, setPrefillLoading] = useState(false);
+  const [saveHint, setSaveHint] = useState('');
 
   useEffect(() => {
     function handleBeforeUnload(e) {
@@ -79,13 +139,16 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   useEffect(() => {
     async function loadOptions() {
       const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (session?.user?.id) setUserId(session.user.id);
 
-      const [ptRes, amRes, uniRes] = await Promise.all([
+      const [ptRes, amRes, uniRes, nbRes] = await Promise.all([
         fetch('/api/property-types'),
         fetch('/api/amenities'),
         fetch('/api/universities'),
+        fetch('/api/neighborhoods'),
       ]);
 
       if (ptRes.ok) {
@@ -96,21 +159,23 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
         const { amenities: ams } = await amRes.json();
         setAmenities(ams || []);
       }
-      // Soft-fails to an empty list, which hides the whole distance section —
-      // the field is optional, so a missing /api/universities (or a pre-066
-      // database) must not block the rest of the form.
       if (uniRes.ok) {
         const { universities: unis } = await uniRes.json();
         setUniversities(unis || []);
+      }
+      if (nbRes.ok) {
+        const { neighborhoods: nbs } = await nbRes.json();
+        setNeighborhoods(nbs || []);
       }
     }
     loadOptions();
   }, []);
 
-  function set(field, value) {
+  const setField = useCallback((field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setIsDirty(true);
-  }
+    setSaveHint('');
+  }, []);
 
   function toggleAmenity(amenityId) {
     setForm((prev) => ({
@@ -122,35 +187,13 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     setIsDirty(true);
   }
 
-  // ── University distances ─────────────────────────────────────────────
-  // Landlord-typed metres, one row per university. Rows are added explicitly:
-  // nothing is prefilled or computed from the map pin, so an untouched form
-  // saves no rows at all.
-
-  function addUniversityRow() {
-    const taken = new Set(form.university_distances.map((d) => d.university_id));
-    const next = universities.find((u) => !taken.has(u.university_id));
-    if (!next) return;
-    set('university_distances', [
-      ...form.university_distances,
-      { university_id: next.university_id, distance_meters: '' },
-    ]);
-  }
-
-  function updateUniversityRow(index, field, value) {
-    set(
-      'university_distances',
-      form.university_distances.map((row, i) =>
-        i === index ? { ...row, [field]: value } : row,
-      ),
-    );
-  }
-
-  function removeUniversityRow(index) {
-    set(
-      'university_distances',
-      form.university_distances.filter((_, i) => i !== index),
-    );
+  function reorderPhoto(from, to) {
+    if (to < 0) return;
+    setForm((prev) => ({
+      ...prev,
+      photos: arrayMove(prev.photos || [], from, to),
+    }));
+    setIsDirty(true);
   }
 
   async function handlePhotoFiles(files) {
@@ -159,7 +202,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     const externalCount = (form.external_photo_urls || []).length;
     const remaining = PHOTO_LIMIT - current.length - externalCount;
     if (remaining <= 0) {
-      setPhotoError(t('photosTooMany'));
+      setPhotoError(tLegacy('photosTooMany'));
       return;
     }
 
@@ -171,14 +214,19 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       else if (file.size > MAX_FILE_SIZE) tooLarge.push(file);
     }
     if (wrongType.length > 0) {
-      setPhotoError(t('photosInvalidType'));
+      setPhotoError(tLegacy('photosInvalidType'));
       return;
     }
     if (tooLarge.length > 0) {
       const names = tooLarge
         .map((f) => `${f.name} (${(f.size / 1024 / 1024).toFixed(1)} MB)`)
         .join(', ');
-      setPhotoError(t('photosFileTooLarge', { names, max: MAX_FILE_SIZE / 1024 / 1024 }));
+      setPhotoError(
+        tLegacy('photosFileTooLarge', {
+          names,
+          max: MAX_FILE_SIZE / 1024 / 1024,
+        }),
+      );
       return;
     }
 
@@ -186,17 +234,7 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
     try {
       const supabase = getSupabaseBrowser();
 
-      // Process files with bounded concurrency. Each `processOne` does a
-      // canvas-based resize (peak ~50–100 MB heap on a 4 MP photo), then
-      // uploads thumb/card/full in parallel. CONCURRENCY=3 gives
-      // meaningful speed-up for multi-photo uploads (8 photos: ~12 s
-      // sequential → ~4 s) while staying under ~300 MB worst-case heap
-      // so low-end Android phones don't OOM. `Promise.all` over the full
-      // batch was rejected for that reason. See src/lib/imageResize.js.
       async function processOne(file) {
-        // Generate the three variants in the browser. The CARD url is
-        // what we store in `photos`; thumb/full are derived at display
-        // time via variantUrl(). See src/lib/photoVariants.js.
         const variants = await resizeToVariants(file);
         const stem = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}`;
         const contentType = variants.ext === 'webp' ? 'image/webp' : 'image/jpeg';
@@ -210,14 +248,14 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
           return path;
         }
 
-        // Three uploads per file run in parallel; only the card URL is
-        // returned (the suffix-swap convention derives the others).
         await Promise.all([
           uploadVariant('thumb', variants.thumb),
           uploadVariant('full', variants.full),
         ]);
         const cardPath = await uploadVariant('card', variants.card);
-        const { data } = supabase.storage.from('listing-photos').getPublicUrl(cardPath);
+        const { data } = supabase.storage
+          .from('listing-photos')
+          .getPublicUrl(cardPath);
         return data.publicUrl;
       }
 
@@ -231,36 +269,46 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
           const file = queue.shift();
           if (!file) return;
           try {
-            const cardUrl = await processOne(file);
-            uploaded.push(cardUrl);
+            uploaded.push(await processOne(file));
           } catch (err) {
             failed.push(file.name);
-            console.error('[ListingForm] photo processing failed:', file.name, err);
+            console.error('[ListingWizard] photo failed:', file.name, err);
           }
         }
       }
       await Promise.all(
-        Array.from({ length: Math.min(CONCURRENCY, toUpload.length) }, worker)
+        Array.from(
+          { length: Math.min(CONCURRENCY, toUpload.length) },
+          worker,
+        ),
       );
+
       if (failed.length > 0) {
-        // Name the failed files (capped so a whole-batch failure doesn't wall
-        // the toast) so the landlord knows which to re-add, not just "some".
         const MAX_NAMES = 5;
         const names =
           failed.slice(0, MAX_NAMES).join(', ') +
-          (failed.length > MAX_NAMES ? `, +${failed.length - MAX_NAMES} more` : '');
+          (failed.length > MAX_NAMES
+            ? `, +${failed.length - MAX_NAMES} more`
+            : '');
         setPhotoError(
-          t('photosPartialError', { succeeded: uploaded.length, total: toUpload.length, names })
+          tLegacy('photosPartialError', {
+            succeeded: uploaded.length,
+            total: toUpload.length,
+            names,
+          }),
         );
       }
 
       if (uploaded.length > 0) {
-        setForm((prev) => ({ ...prev, photos: [...(prev.photos || []), ...uploaded] }));
+        setForm((prev) => ({
+          ...prev,
+          photos: [...(prev.photos || []), ...uploaded],
+        }));
         setIsDirty(true);
       }
     } catch (err) {
-      console.error('[ListingForm] photo_upload failed:', err);
-      setPhotoError(t('photosError'));
+      console.error('[ListingWizard] photo_upload failed:', err);
+      setPhotoError(tLegacy('photosError'));
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -268,7 +316,10 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
   }
 
   async function removePhoto(url) {
-    setForm((prev) => ({ ...prev, photos: (prev.photos || []).filter((p) => p !== url) }));
+    setForm((prev) => ({
+      ...prev,
+      photos: (prev.photos || []).filter((p) => p !== url),
+    }));
     setIsDirty(true);
     try {
       const supabase = getSupabaseBrowser();
@@ -276,648 +327,401 @@ export default function ListingForm({ initialValues = {}, onSubmit, submitLabel 
       const idx = url.indexOf(marker);
       if (idx === -1) return;
       const path = url.slice(idx + marker.length);
-      // For variant URLs, remove all three sibling files at once (we stored
-      // only the CARD URL but uploaded thumb/card/full together). Legacy
-      // paths without the __<size> suffix fall through and get removed
-      // as a single file.
       const variantMatch = path.match(/^(.*)__(thumb|card|full)\.(webp|jpe?g)$/i);
       const paths = variantMatch
-        ? ['thumb', 'card', 'full'].map((s) => `${variantMatch[1]}__${s}.${variantMatch[3]}`)
+        ? ['thumb', 'card', 'full'].map(
+            (s) => `${variantMatch[1]}__${s}.${variantMatch[3]}`,
+          )
         : [path];
       await supabase.storage.from('listing-photos').remove(paths);
     } catch {
-      // best-effort: UI already updated, storage cleanup failure is non-blocking
+      /* best-effort */
     }
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  function buildPayload({ submit = false, draft = true } = {}) {
+    return {
+      ...form,
+      draft,
+      submit,
+      university_distances: (form.university_distances || [])
+        .filter((d) => String(d.distance_meters).trim() !== '')
+        .map((d) => ({
+          university_id: d.university_id,
+          distance_meters: Number(d.distance_meters),
+          source: d.source === 'computed' ? 'computed' : 'landlord',
+        })),
+      blackouts: (form.blackouts || []).filter((b) => b.start_date && b.end_date),
+      monthly_price:
+        form.monthly_price !== '' && form.monthly_price != null
+          ? parseFloat(form.monthly_price)
+          : null,
+      deposit:
+        form.deposit !== '' && form.deposit != null
+          ? parseFloat(form.deposit)
+          : 0,
+      agency_fee:
+        form.agency_fee !== '' && form.agency_fee != null
+          ? parseFloat(form.agency_fee)
+          : null,
+      sqm: form.sqm !== '' ? parseInt(form.sqm, 10) : null,
+      floor: form.floor !== '' ? parseInt(form.floor, 10) : null,
+      bedrooms: form.bedrooms !== '' ? parseInt(form.bedrooms, 10) : null,
+      bathrooms: form.bathrooms !== '' ? parseInt(form.bathrooms, 10) : null,
+    };
+  }
+
+  function validateStep(stepIndex) {
+    const key = STEPS[stepIndex];
+    if (key === 'address') {
+      if (!form.title?.trim()) return t('errors.titleRequired');
+      if (!form.address?.trim()) return t('errors.addressRequired');
+      if (!form.neighborhood?.trim()) return t('errors.neighborhoodRequired');
+      const coords = validateRequiredCoords(form.lat, form.lng);
+      if (!coords.ok) return t('errors.coordsRequired');
+      return null;
+    }
+    if (key === 'property') {
+      if (!form.property_type) return t('errors.propertyTypeRequired');
+      return null;
+    }
+    if (key === 'universities') {
+      const v = validateUniversityDistancesMandatory(form.university_distances);
+      if (!v.ok) return t('errors.universitiesRequired', { count: MIN_UNIVERSITY_DISTANCES });
+      return null;
+    }
+    if (key === 'price') {
+      const min = Number(form.min_duration_months);
+      const max =
+        form.max_duration_months === '' || form.max_duration_months == null
+          ? null
+          : Number(form.max_duration_months);
+      if (max != null && max < min) return t('errors.durationPair');
+      return null;
+    }
+    if (key === 'availability') {
+      if (
+        form.available_from &&
+        form.available_to &&
+        form.available_to < form.available_from
+      ) {
+        return t('errors.availableRange');
+      }
+      for (const b of form.blackouts || []) {
+        if (b.start_date && b.end_date && b.end_date < b.start_date) {
+          return t('errors.blackoutRange');
+        }
+      }
+      return null;
+    }
+    if (key === 'photos') {
+      // Soft-check on step continue; hard-check on submit
+      return null;
+    }
+    if (key === 'review') {
+      const photos = validatePhotoMinimum(
+        form.photos,
+        form.external_photo_urls,
+      );
+      if (!photos.ok) {
+        return t('errors.photosRequired', { count: MIN_PHOTOS });
+      }
+      const unis = validateUniversityDistancesMandatory(
+        form.university_distances,
+      );
+      if (!unis.ok) {
+        return t('errors.universitiesRequired', {
+          count: MIN_UNIVERSITY_DISTANCES,
+        });
+      }
+      return null;
+    }
+    return null;
+  }
+
+  async function saveDraftQuiet() {
+    if (!onSaveDraft) return listingId;
+    // Need enough for a create: after property step we have property_type
+    if (!form.address || !form.neighborhood || !form.property_type || !form.title) {
+      return listingId;
+    }
+    const coords = validateRequiredCoords(form.lat, form.lng);
+    if (!coords.ok) return listingId;
+
+    setSaving(true);
+    try {
+      const result = await onSaveDraft(buildPayload({ draft: true, submit: false }));
+      if (result?.listing_id && !listingIdProp) setCreatedId(result.listing_id);
+      setIsDirty(false);
+      setSaveHint(t('draftSaved'));
+      return result?.listing_id || listingId;
+    } catch (err) {
+      console.error('[ListingWizard] draft save failed:', err);
+      setError(err.message || t('errors.generic'));
+      return listingId;
+    } finally {
+      setSaving(false);
+    }
+  }
+
+  async function handleNext() {
     setError('');
+    const err = validateStep(step);
+    if (err) {
+      setError(err);
+      return;
+    }
+    // Draft-save once we have property_type (step >= 1 after validation)
+    if (step >= 1 || STEPS[step] === 'property') {
+      await saveDraftQuiet();
+    }
+    const next = Math.min(step + 1, STEPS.length - 1);
+    setStep(next);
+    // Prefill university distances when first entering that step with empty rows.
+    if (STEPS[next] === 'universities' && (form.university_distances || []).length === 0) {
+      // Fire-and-forget; errors surface in the step UI.
+      void prefillDistances();
+    }
+  }
+
+  function handleBack() {
+    setError('');
+    setStep((s) => Math.max(s - 1, 0));
+  }
+
+  async function handleFinalSubmit() {
+    setError('');
+    const err = validateStep(STEPS.indexOf('review'));
+    if (err) {
+      setError(err);
+      return;
+    }
     setLoading(true);
     try {
-      // Drop half-filled distance rows (a university picked but no number
-      // typed) and hand the API real integers rather than input strings.
-      // Sending the key unconditionally preserves replace-all semantics, so
-      // clearing every row on an edit actually clears them server-side.
-      await onSubmit({
-        ...form,
-        university_distances: form.university_distances
-          .filter((d) => String(d.distance_meters).trim() !== '')
-          .map((d) => ({
-            university_id: d.university_id,
-            distance_meters: Number(d.distance_meters),
-          })),
-      });
+      await onSubmit(buildPayload({ draft: false, submit: true }));
       setIsDirty(false);
-    } catch (err) {
-      setError(err.message || t('errorGeneric'));
+    } catch (e) {
+      setError(e.message || t('errors.generic'));
     } finally {
       setLoading(false);
     }
   }
 
-  const inputClass =
-    'w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-yellow/40 focus:border-yellow';
-  const labelClass = 'block text-sm font-medium text-night mb-1';
+  async function prefillDistances() {
+    const coords = validateRequiredCoords(form.lat, form.lng);
+    if (!coords.ok) {
+      setError(t('errors.coordsRequired'));
+      return;
+    }
+    setPrefillLoading(true);
+    setError('');
+    try {
+      const token =
+        accessToken ||
+        (await getSupabaseBrowser().auth.getSession()).data.session
+          ?.access_token;
+      const res = await fetch('/api/landlord/compute-university-distances', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+        body: JSON.stringify({ lat: coords.lat, lng: coords.lng }),
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error || t('errors.prefillFailed'));
+      }
+      const { distances } = await res.json();
+      // Keep landlord-adjusted rows; only fill missing / replace pure empty
+      const existing = form.university_distances || [];
+      const landlordKept = existing.filter((r) => r.source === 'landlord');
+      const landlordIds = new Set(landlordKept.map((r) => r.university_id));
+      const computed = (distances || [])
+        .filter((d) => !landlordIds.has(d.university_id))
+        .map((d) => ({
+          university_id: d.university_id,
+          distance_meters: String(d.distance_meters),
+          source: 'computed',
+        }));
+      // Prefer at least 2 nearest computed + any landlord rows
+      const merged = [...landlordKept, ...computed].slice(0, universities.length || 3);
+      // If still empty, take top 2 computed
+      const next =
+        merged.length >= MIN_UNIVERSITY_DISTANCES
+          ? merged
+          : (distances || []).slice(0, MIN_UNIVERSITY_DISTANCES).map((d) => ({
+              university_id: d.university_id,
+              distance_meters: String(d.distance_meters),
+              source: 'computed',
+            }));
+      setField('university_distances', next);
+    } catch (err) {
+      setError(err.message || t('errors.prefillFailed'));
+    } finally {
+      setPrefillLoading(false);
+    }
+  }
+
+  const stage = useMemo(
+    () =>
+      deriveListingStage({
+        flags: form.flags,
+        isVerified,
+        hasVideoVerification: false,
+        isSubmitted: false,
+      }),
+    [form.flags, isVerified],
+  );
+
+  const checklist = {
+    address: Boolean(form.address?.trim() && form.neighborhood?.trim()),
+    coords: validateRequiredCoords(form.lat, form.lng).ok,
+    property: Boolean(form.property_type),
+  };
+
+  const stepKey = STEPS[step];
 
   return (
     <>
-      {loading && (
+      {(loading || saving) && (
         <BauhausLoader
           mode="overlay"
-          eyebrow={tLoaders('uploading')}
+          eyebrow={loading ? tLoaders('uploading') : t('savingDraft')}
           statuses={tLoaders.raw('uploadingCycle')}
         />
       )}
-      <form onSubmit={handleSubmit} className="space-y-8">
-      {/* Location */}
-      <section>
-        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
-          {t('locationSection')}
-        </h2>
-        <div className="space-y-4">
-          <div>
-            <label className={labelClass}>{t('titleLabel')}</label>
-            <input
-              type="text"
-              required
-              value={form.title}
-              onChange={(e) => {
-                const next = e.target.value;
-                // Reject keystrokes that would push past TITLE_MAX_LENGTH
-                // codepoints. Note: we don't use the HTML `maxLength`
-                // attribute because it counts UTF-16 code units, which
-                // over-counts astral characters relative to the DB's
-                // char_length() CHECK.
-                if (codepointLength(next) > TITLE_MAX_LENGTH) return;
-                set('title', next);
-              }}
-              className={inputClass}
-              placeholder={t('titlePlaceholder')}
-            />
-            <div className="mt-1.5 flex justify-between items-start gap-3">
-              <p className="text-xs text-night/50 leading-relaxed">
-                {t('titleHint')}
-              </p>
-              <span className="text-xs text-night/40 tabular-nums shrink-0">
-                {codepointLength(form.title)}/{TITLE_MAX_LENGTH}
-              </span>
-            </div>
-            {/*
-              Lazy-landlord guard. After migration 038 backfilled every
-              existing row to title=address, the edit form pre-fills with
-              the address — without this hint, returning landlords might
-              save unchanged and never differentiate their listing.
-            */}
-            {form.title.trim() &&
-              form.address.trim() &&
-              form.title.trim() === form.address.trim() && (
-                <p className="mt-2 text-xs text-blue bg-blue/5 border border-blue/20 rounded-sm px-3 py-2 leading-relaxed">
-                  {t('titleSameAsAddress')}
-                </p>
-              )}
-          </div>
 
-          <div>
-            <label className={labelClass}>{t('addressLabel')}</label>
-            <input
-              type="text"
-              required
-              value={form.address}
-              onChange={(e) => set('address', e.target.value)}
-              className={inputClass}
-              placeholder={t('addressPlaceholder')}
-            />
-          </div>
+      <div className="space-y-6">
+        <StatusLadder current={stage} />
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className={labelClass}>{t('neighborhoodLabel')}</label>
-              <input
-                type="text"
-                required
-                list="neighborhoods-list"
-                value={form.neighborhood}
-                onChange={(e) => set('neighborhood', e.target.value)}
-                className={inputClass}
-                placeholder={t('neighborhoodPlaceholder')}
-              />
-              <datalist id="neighborhoods-list">
-                {NEIGHBORHOODS_FALLBACK.map((n) => (
-                  <option key={n} value={n} />
-                ))}
-              </datalist>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className={labelClass}>{t('latLabel')}</label>
-              <input
-                type="number"
-                step="any"
-                value={form.lat}
-                onChange={(e) => set('lat', e.target.value)}
-                className={inputClass}
-                placeholder={t('latPlaceholder')}
-              />
-            </div>
-            <div>
-              <label className={labelClass}>{t('lngLabel')}</label>
-              <input
-                type="number"
-                step="any"
-                value={form.lng}
-                onChange={(e) => set('lng', e.target.value)}
-                className={inputClass}
-                placeholder={t('lngPlaceholder')}
-              />
-            </div>
-          </div>
-          <p className="text-xs text-night/50">
-            {t('coordsOptional')}
-            {' '}
-            {t.rich('coordsHelp', {
-              link: (chunks) => (
-                <a
-                  href="https://www.google.com/maps"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-yellow underline"
-                >
-                  {chunks}
-                </a>
-              ),
-            })}
+        {/* Step progress */}
+        <div>
+          <p className="label-caps text-night/50 mb-2">
+            {t('stepOf', { current: step + 1, total: STEPS.length })}
           </p>
-        </div>
-      </section>
-
-      {/* Property details */}
-      <section>
-        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
-          {t('detailsSection')}
-        </h2>
-        <div className="space-y-4">
-          <div>
-            <label className={labelClass}>{t('propertyTypeLabel')}</label>
-            <select
-              required
-              value={form.property_type}
-              onChange={(e) => set('property_type', e.target.value)}
-              className={inputClass}
-            >
-              <option value="">{t('propertyTypePlaceholder')}</option>
-              {propertyTypes.map((pt) => (
-                <option key={pt.property_type_id} value={pt.name}>
-                  {pt.name}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className={labelClass}>{t('sqmLabel')}</label>
-              <input
-                type="number"
-                min="1"
-                value={form.sqm}
-                onChange={(e) => set('sqm', e.target.value)}
-                className={inputClass}
-                placeholder={t('sqmPlaceholder')}
+          <div className="flex gap-1">
+            {STEPS.map((s, i) => (
+              <div
+                key={s}
+                className={`h-1 flex-1 rounded-sm ${
+                  i <= step ? 'bg-blue' : 'bg-night/10'
+                }`}
               />
-            </div>
-            <div>
-              <label className={labelClass}>{t('floorLabel')}</label>
-              <select
-                value={form.floor}
-                onChange={(e) => set('floor', e.target.value)}
-                className={inputClass}
-              >
-                <option value="">{t('floorPlaceholder')}</option>
-                <option value="0">{t('floorGround')}</option>
-                {Array.from({ length: 20 }, (_, i) => i + 1).map((n) => (
-                  <option key={n} value={String(n)}>{n}</option>
-                ))}
-                {form.floor !== '' &&
-                  form.floor != null &&
-                  Number(form.floor) > 20 && (
-                    <option value={String(form.floor)}>{form.floor}</option>
-                  )}
-              </select>
-            </div>
-          </div>
-
-          {/* Distance to universities — optional, landlord-typed metres.
-              Hidden entirely when the universities lookup came back empty
-              (pre-066 database, or a city with no universities seeded). */}
-          {universities.length > 0 && (
-            <div>
-              <div className="flex items-center justify-between gap-3 mb-1">
-                <label className={labelClass + ' mb-0'}>
-                  {t('universityDistanceLabel')}
-                </label>
-                {form.university_distances.length < universities.length && (
-                  <button
-                    type="button"
-                    onClick={addUniversityRow}
-                    className="text-sm font-medium text-blue hover:underline"
-                  >
-                    {t('universityDistanceAdd')}
-                  </button>
-                )}
-              </div>
-              <p className="mb-3 text-xs text-night/50 leading-relaxed">
-                {t('universityDistanceTip')}
-              </p>
-
-              <div className="space-y-2">
-                {form.university_distances.map((row, i) => {
-                  // Every university except the ones other rows already claim.
-                  const taken = new Set(
-                    form.university_distances
-                      .filter((_, j) => j !== i)
-                      .map((d) => d.university_id),
-                  );
-                  return (
-                    <div key={row.university_id} className="flex items-center gap-2">
-                      <select
-                        value={row.university_id}
-                        onChange={(e) =>
-                          updateUniversityRow(i, 'university_id', e.target.value)
-                        }
-                        className={inputClass + ' flex-1'}
-                      >
-                        {universities.map((u) => (
-                          <option
-                            key={u.university_id}
-                            value={u.university_id}
-                            disabled={taken.has(u.university_id)}
-                          >
-                            {u.short_name} — {u.name}
-                          </option>
-                        ))}
-                      </select>
-                      <div className="relative w-40 shrink-0">
-                        <input
-                          type="number"
-                          min="1"
-                          max={MAX_DISTANCE_METERS}
-                          step="10"
-                          value={row.distance_meters}
-                          onChange={(e) =>
-                            updateUniversityRow(i, 'distance_meters', e.target.value)
-                          }
-                          className={inputClass + ' pr-14'}
-                          placeholder={t('universityDistancePlaceholder')}
-                          aria-label={t('universityDistanceMetresLabel')}
-                        />
-                        <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-xs text-night/40">
-                          {t('universityDistanceUnit')}
-                        </span>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removeUniversityRow(i)}
-                        className="shrink-0 p-2 text-night/40 hover:text-night rounded-lg"
-                        aria-label={t('universityDistanceRemove')}
-                      >
-                        ✕
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          )}
-
-          <div>
-            <label className={labelClass}>{t('descriptionLabel')}</label>
-            <textarea
-              rows={4}
-              value={form.description}
-              onChange={(e) => set('description', e.target.value)}
-              className={inputClass + ' resize-none'}
-              placeholder={t('descriptionPlaceholder')}
-            />
-            <p className="mt-1.5 text-xs text-night/50 leading-relaxed">
-              {t('descriptionTip')}
-            </p>
-          </div>
-        </div>
-      </section>
-
-      {/* Pricing */}
-      <section>
-        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
-          {t('pricingSection')}
-        </h2>
-        <div className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className={labelClass}>{t('monthlyRentLabel')}</label>
-              <input
-                type="number"
-                min="1"
-                value={form.monthly_price}
-                onChange={(e) => set('monthly_price', e.target.value)}
-                className={inputClass}
-                placeholder={t('monthlyRentPlaceholder')}
-              />
-            </div>
-            <div>
-              <label className={labelClass}>{t('depositLabel')}</label>
-              <input
-                type="number"
-                min="0"
-                value={form.deposit}
-                onChange={(e) => set('deposit', e.target.value)}
-                className={inputClass}
-                placeholder={t('depositPlaceholder')}
-              />
-            </div>
-          </div>
-
-          <label className="flex items-center gap-2 cursor-pointer">
-            <input
-              type="checkbox"
-              checked={form.bills_included}
-              onChange={(e) => set('bills_included', e.target.checked)}
-              className="w-4 h-4 accent-yellow"
-            />
-            <span className="text-sm text-night">{t('billsIncluded')}</span>
-          </label>
-
-        </div>
-      </section>
-
-      {/* Availability */}
-      <section>
-        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
-          {t('availabilitySection')}
-        </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div>
-            <label className={labelClass}>{t('availableFromLabel')}</label>
-            <input
-              type="date"
-              value={form.available_from}
-              onChange={(e) => set('available_from', e.target.value)}
-              className={inputClass}
-            />
-          </div>
-          <div>
-            <label className={labelClass}>{t('minDurationLabel')}</label>
-            <select
-              value={form.min_duration_months}
-              onChange={(e) => set('min_duration_months', e.target.value)}
-              className={inputClass}
-            >
-              <option value="1">
-                {t('minDurationFlexibleName')} ({t('minDurationFlexibleMonths')})
-              </option>
-              <option value="5">
-                {t('minDurationSemesterName')} ({t('minDurationSemesterMonths')})
-              </option>
-              <option value="9">
-                {t('minDurationAcademicName')} ({t('minDurationAcademicMonths')})
-              </option>
-            </select>
-            <p className="mt-1 text-xs text-night/50">{t('minDurationTip')}</p>
-          </div>
-        </div>
-      </section>
-
-      {/* Photos */}
-      <section>
-        <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
-          {t('photosSection')}
-        </h2>
-        <div className="space-y-4">
-          {/* Previews */}
-          {(form.photos || []).length > 0 && (
-            <>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {(form.photos || []).map((url, i) => {
-                  const total = (form.photos || []).length;
-                  const isDragging = dragIndex === i;
-                  const isDragOver = dragOverIndex === i && dragIndex !== null && dragIndex !== i;
-                  return (
-                    <div
-                      key={url}
-                      draggable
-                      onDragStart={(e) => {
-                        setDragIndex(i);
-                        e.dataTransfer.effectAllowed = 'move';
-                        // Required by Firefox to actually start a drag
-                        try { e.dataTransfer.setData('text/plain', String(i)); } catch {}
-                      }}
-                      onDragOver={(e) => {
-                        if (dragIndex === null || dragIndex === i) return;
-                        e.preventDefault();
-                        e.dataTransfer.dropEffect = 'move';
-                        if (dragOverIndex !== i) setDragOverIndex(i);
-                      }}
-                      onDragLeave={() => {
-                        if (dragOverIndex === i) setDragOverIndex(null);
-                      }}
-                      onDrop={(e) => {
-                        e.preventDefault();
-                        if (dragIndex !== null && dragIndex !== i) reorderPhoto(dragIndex, i);
-                        setDragIndex(null);
-                        setDragOverIndex(null);
-                      }}
-                      onDragEnd={() => {
-                        setDragIndex(null);
-                        setDragOverIndex(null);
-                      }}
-                      className={`relative group aspect-[4/3] rounded-lg overflow-hidden bg-parchment cursor-grab active:cursor-grabbing transition-all ${
-                        i === 0 ? 'col-span-2' : ''
-                      } ${isDragging ? 'opacity-40' : ''} ${
-                        isDragOver ? 'ring-2 ring-yellow ring-offset-2' : ''
-                      }`}
-                    >
-                      <Image
-                        src={variantUrl(url, i === 0 ? 'card' : 'thumb')}
-                        alt={`Photo ${i + 1}`}
-                        fill
-                        className="object-cover pointer-events-none"
-                        sizes={i === 0 ? '(max-width: 640px) 100vw, 66vw' : '(max-width: 640px) 50vw, 33vw'}
-                      />
-                      {i === 0 && (
-                        <span className="absolute top-2 left-2 bg-yellow text-white text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded shadow">
-                          {t('photosMain')}
-                        </span>
-                      )}
-                      <div className="absolute bottom-2 left-2 flex gap-1.5 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus-within:opacity-100 transition-opacity [@media(hover:none)]:opacity-100">
-                        <button
-                          type="button"
-                          onClick={() => reorderPhoto(i, i - 1)}
-                          disabled={i === 0}
-                          className="bg-white/95 hover:bg-white text-night rounded-full w-9 h-9 flex items-center justify-center shadow disabled:opacity-40 disabled:cursor-not-allowed"
-                          aria-label={t('photosMoveLeft')}
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-                          </svg>
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => reorderPhoto(i, i + 1)}
-                          disabled={i === total - 1}
-                          className="bg-white/95 hover:bg-white text-night rounded-full w-9 h-9 flex items-center justify-center shadow disabled:opacity-40 disabled:cursor-not-allowed"
-                          aria-label={t('photosMoveRight')}
-                        >
-                          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                          </svg>
-                        </button>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => removePhoto(url)}
-                        className="absolute top-2 right-2 bg-white/95 hover:bg-white text-night rounded-full w-9 h-9 flex items-center justify-center opacity-100 sm:opacity-0 sm:group-hover:opacity-100 sm:focus:opacity-100 transition-opacity shadow [@media(hover:none)]:opacity-100"
-                        aria-label={t('photosRemove')}
-                      >
-                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                      </button>
-                    </div>
-                  );
-                })}
-              </div>
-              {(form.photos || []).length > 1 && (
-                <p className="text-xs text-night/50">{t('photosReorderHint')}</p>
-              )}
-            </>
-          )}
-
-          {/* Imported external photos (read-only) */}
-          {(form.external_photo_urls || []).length > 0 && (
-            <div>
-              <p className="text-xs font-medium text-night/60 mb-2">
-                {t('importedPhotos', { count: form.external_photo_urls.length })}
-              </p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
-                {form.external_photo_urls.map((url, i) => (
-                  <div key={url} className="relative aspect-[4/3] rounded-lg overflow-hidden bg-parchment">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={url}
-                      alt={`Imported photo ${i + 1}`}
-                      className="w-full h-full object-cover"
-                      loading="lazy"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Upload button */}
-          {((form.photos || []).length + (form.external_photo_urls || []).length) < PHOTO_LIMIT && (
-            <div>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/jpeg,image/png,image/webp"
-                multiple
-                className="sr-only"
-                id="photo-upload"
-                onChange={(e) => handlePhotoFiles(e.target.files)}
-                disabled={uploading}
-              />
-              <label
-                htmlFor="photo-upload"
-                className={`inline-flex items-center gap-2 px-4 py-2.5 border-2 border-dashed border-gray-200 rounded-lg text-sm text-night/60 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors ${uploading ? 'opacity-50 pointer-events-none' : ''}`}
-              >
-                {uploading ? (
-                  <>
-                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                    </svg>
-                    {t('photosUploading')}
-                  </>
-                ) : (
-                  <>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                    </svg>
-                    {t('photosLabel')}
-                  </>
-                )}
-              </label>
-              <p className="mt-1.5 text-xs text-night/50">
-                {t('photosHint')}
-              </p>
-            </div>
-          )}
-
-          {photoError && (
-            <p className="text-sm text-red-600">{photoError}</p>
-          )}
-        </div>
-      </section>
-
-      {/* Amenities */}
-      {amenities.length > 0 && (
-        <section>
-          <h2 className="font-display font-semibold text-night mb-4 text-sm uppercase tracking-wider">
-            {t('amenitiesSection')}
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
-            {amenities.map((amenity) => (
-              <label key={amenity.amenity_id} className="flex items-center gap-2 cursor-pointer">
-                <input
-                  type="checkbox"
-                  checked={form.amenity_ids.includes(amenity.amenity_id)}
-                  onChange={() => toggleAmenity(amenity.amenity_id)}
-                  className="w-4 h-4 accent-yellow"
-                />
-                <span className="text-sm text-night">{amenity.name}</span>
-              </label>
             ))}
           </div>
-        </section>
-      )}
+          <h2 className="mt-4 font-display text-2xl text-night">
+            {t(`steps.${stepKey}.title`)}
+          </h2>
+          <p className="mt-1 text-sm text-night/60">
+            {t(`steps.${stepKey}.lede`)}
+          </p>
+        </div>
 
-      {error && (
-        <p className="text-sm text-red-600 bg-red-50 border border-red-100 rounded-lg px-4 py-3">
-          {error}
-        </p>
-      )}
+        <Card tone="white" className="p-5 md:p-8">
+          {stepKey === 'address' && (
+            <StepAddress
+              form={form}
+              setField={setField}
+              neighborhoods={neighborhoods}
+            />
+          )}
+          {stepKey === 'property' && (
+            <StepProperty
+              form={form}
+              setField={setField}
+              toggleAmenity={toggleAmenity}
+              propertyTypes={propertyTypes}
+              amenities={amenities}
+            />
+          )}
+          {stepKey === 'universities' && (
+            <StepUniversities
+              form={form}
+              setField={setField}
+              universities={universities}
+              prefillLoading={prefillLoading}
+              onPrefill={prefillDistances}
+            />
+          )}
+          {stepKey === 'price' && (
+            <StepPrice form={form} setField={setField} />
+          )}
+          {stepKey === 'availability' && (
+            <StepAvailability form={form} setField={setField} />
+          )}
+          {stepKey === 'photos' && (
+            <StepPhotos
+              form={form}
+              setField={setField}
+              fileInputRef={fileInputRef}
+              uploading={uploading}
+              photoError={photoError}
+              dragIndex={dragIndex}
+              dragOverIndex={dragOverIndex}
+              setDragIndex={setDragIndex}
+              setDragOverIndex={setDragOverIndex}
+              onFiles={handlePhotoFiles}
+              onRemove={removePhoto}
+              onReorder={reorderPhoto}
+            />
+          )}
+          {stepKey === 'review' && (
+            <StepReview
+              form={form}
+              amenities={amenities}
+              universities={universities}
+              onPreview={() => setShowPreview(true)}
+              checklist={checklist}
+            />
+          )}
+        </Card>
 
-      <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full sm:w-auto bg-yellow text-white font-display font-semibold px-8 py-3 rounded-lg hover:bg-yellow/90 transition-colors disabled:opacity-50"
-        >
-          {loading ? t('saving') : (submitLabel || t('saveListing'))}
-        </button>
-        <button
-          type="button"
-          onClick={() => setShowPreview(true)}
-          className="w-full sm:w-auto inline-flex items-center justify-center gap-2 border border-night/20 text-night font-display font-semibold px-8 py-3 rounded-lg hover:border-night hover:bg-parchment transition-colors"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <circle cx="11" cy="11" r="7" strokeWidth={2} />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="m20 20-3.5-3.5" />
-          </svg>
-          {t('previewAsStudent')}
-        </button>
+        {error && (
+          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3">
+            {error}
+          </p>
+        )}
+        {saveHint && !error && (
+          <p className="text-xs text-night/50">{saveHint}</p>
+        )}
+
+        <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
+          <div className="flex gap-2">
+            {step > 0 && (
+              <Button type="button" variant="outline" onClick={handleBack}>
+                {t('back')}
+              </Button>
+            )}
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+            {step < STEPS.length - 1 ? (
+              <Button type="button" variant="primary" onClick={handleNext}>
+                {t('continue')}
+              </Button>
+            ) : (
+              <Button
+                type="button"
+                variant="primary"
+                onClick={handleFinalSubmit}
+                disabled={loading}
+              >
+                {loading
+                  ? t('submitting')
+                  : submitLabel || t('submit')}
+              </Button>
+            )}
+          </div>
+        </div>
       </div>
-    </form>
-    {showPreview && (
-      <ListingPreview
-        form={form}
-        amenities={amenities}
-        onClose={() => setShowPreview(false)}
-      />
-    )}
+
+      {showPreview && (
+        <ListingPreview
+          form={form}
+          amenities={amenities}
+          onClose={() => setShowPreview(false)}
+        />
+      )}
     </>
   );
 }

@@ -35,7 +35,14 @@ export default function LandlordVerificationPage() {
         });
         if (res.ok) {
           const data = await res.json();
-          setIsVerified(data.isVerified === true);
+          // Treat either the landlords.is_verified flag OR an approved
+          // verification_requests row as verified — previously a lag between
+          // the two left already-verified accounts on the upload form, which
+          // then 400'd on submit.
+          const approved =
+            data.isVerified === true ||
+            data.latestRequest?.status === 'approved';
+          setIsVerified(approved);
           setLatestRequest(data.latestRequest ?? null);
         }
       } catch {

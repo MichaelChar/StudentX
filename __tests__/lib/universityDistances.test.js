@@ -17,8 +17,8 @@ describe('parseUniversityDistances', () => {
     );
     expect(out).toEqual({
       rows: [
-        { university_id: 'auth', distance_meters: 750 },
-        { university_id: 'uom', distance_meters: 1900 },
+        { university_id: 'auth', distance_meters: 750, source: 'landlord' },
+        { university_id: 'uom', distance_meters: 1900, source: 'landlord' },
       ],
     });
   });
@@ -28,7 +28,9 @@ describe('parseUniversityDistances', () => {
       [{ university_id: 'ihu', distance_meters: ' 1200 ' }],
       VALID,
     );
-    expect(out.rows).toEqual([{ university_id: 'ihu', distance_meters: 1200 }]);
+    expect(out.rows).toEqual([
+      { university_id: 'ihu', distance_meters: 1200, source: 'landlord' },
+    ]);
   });
 
   it('treats an empty array as "clear every row"', () => {

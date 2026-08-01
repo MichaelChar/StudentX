@@ -13,30 +13,44 @@ import Button from '@/components/ui/Button';
 
 export default function EditListingPage() {
   const t = useTranslations('landlord.editListing');
+  const tWiz = useTranslations('landlord.listingWizard');
   const router = useRouter();
   const accessToken = useAccessToken();
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
     (async () => {
       const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) return;
 
-      const res = await fetch(`/api/landlord/listings/${id}`, {
-        headers: { Authorization: `Bearer ${session.access_token}` },
-      });
+      const [listingRes, verRes] = await Promise.all([
+        fetch(`/api/landlord/listings/${id}`, {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        }),
+        fetch('/api/landlord/verification', {
+          headers: { Authorization: `Bearer ${session.access_token}` },
+        }),
+      ]);
 
-      if (!res.ok) {
+      if (verRes.ok) {
+        const v = await verRes.json();
+        setIsVerified(v.isVerified === true);
+      }
+
+      if (!listingRes.ok) {
         setError(t('notFoundError'));
         setLoading(false);
         return;
       }
 
-      const { listing } = await res.json();
+      const { listing, blackouts } = await listingRes.json();
 
       setInitialValues({
         title: listing.title || '',
@@ -48,53 +62,80 @@ export default function EditListingPage() {
         monthly_price: listing.rent?.monthly_price ?? '',
         bills_included: listing.rent?.bills_included || false,
         deposit: listing.rent?.deposit ?? '',
+        agency_fee: listing.agency_fee ?? '',
         description: listing.description || '',
         sqm: listing.sqm ?? '',
         floor: listing.floor ?? '',
+        bedrooms: listing.bedrooms ?? '',
+        bathrooms: listing.bathrooms ?? '',
+        smoking_allowed: listing.smoking_allowed === true,
+        pets_allowed: listing.pets_allowed === true,
+        additional_rules: listing.additional_rules || '',
         available_from: listing.available_from || '',
+        available_to: listing.available_to || '',
         min_duration_months: String(listing.min_duration_months ?? 9),
-        amenity_ids: listing.listing_amenities?.map((la) => la.amenities.amenity_id) || [],
-        // Rows are stored per university; the form edits them as strings so the
-        // number inputs stay controlled. Absent on a pre-066 fallback fetch.
+        max_duration_months:
+          listing.max_duration_months != null
+            ? String(listing.max_duration_months)
+            : '',
+        video_url: listing.video_url || '',
+        amenity_ids:
+          listing.listing_amenities?.map((la) => la.amenities.amenity_id) ||
+          [],
         university_distances:
           listing.listing_university_distances?.map((ud) => ({
             university_id: ud.university_id,
             distance_meters: String(ud.distance_meters),
+            source: 'landlord',
           })) || [],
         photos: listing.photos || [],
+        external_photo_urls: listing.external_photo_urls || [],
+        blackouts: (blackouts || []).map((b) => ({
+          start_date: b.start_date,
+          end_date: b.end_date,
+        })),
+        flags: listing.flags || {},
       });
       setLoading(false);
     })();
   }, [id, t]);
 
-  async function handleSubmit(formData) {
-    const payload = {
-      ...formData,
-      monthly_price: formData.monthly_price !== '' ? parseFloat(formData.monthly_price) : null,
-      deposit: formData.deposit !== '' ? parseFloat(formData.deposit) : 0,
-      sqm: formData.sqm !== '' ? parseInt(formData.sqm, 10) : null,
-      floor: formData.floor !== '' ? parseInt(formData.floor, 10) : null,
-    };
-
+  async function handleSaveDraft(formData) {
     const res = await fetch(`/api/landlord/listings/${id}`, {
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
       },
-      body: JSON.stringify(payload),
+      body: JSON.stringify({ ...formData, draft: true }),
+    });
+    if (!res.ok) {
+      const { error: e } = await res.json().catch(() => ({}));
+      throw new Error(e || t('failedToUpdate'));
+    }
+    return { listing_id: id };
+  }
+
+  async function handleSubmit(formData) {
+    const res = await fetch(`/api/landlord/listings/${id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${accessToken}`,
+      },
+      body: JSON.stringify({ ...formData, submit: true, draft: false }),
     });
 
     if (!res.ok) {
-      const { error: e } = await res.json();
+      const { error: e } = await res.json().catch(() => ({}));
       throw new Error(e || t('failedToUpdate'));
     }
 
-    router.push('/property/thessaloniki/landlord/dashboard');
+    router.push('/property/thessaloniki/landlord/listings');
   }
 
   return (
-    <LandlordShell eyebrow={`Listing #${id}`} title={t('title')}>
+    <LandlordShell eyebrow={tWiz('eyebrow')} title={t('title')}>
       <div className="max-w-3xl">
         {loading ? (
           <div className="space-y-4 animate-pulse">
@@ -103,8 +144,8 @@ export default function EditListingPage() {
           </div>
         ) : error ? (
           <div className="text-center py-12">
-            <p className="text-red-600 mb-4">{error}</p>
-            <Button href="/property/thessaloniki/landlord/dashboard" variant="ghost">
+            <p className="text-red-700 mb-4">{error}</p>
+            <Button href="/property/thessaloniki/landlord/listings" variant="ghost">
               ← {t('backToDashboard')}
             </Button>
           </div>
@@ -112,6 +153,10 @@ export default function EditListingPage() {
           initialValues && (
             <ListingForm
               initialValues={initialValues}
+              listingId={id}
+              isVerified={isVerified}
+              accessToken={accessToken}
+              onSaveDraft={handleSaveDraft}
               onSubmit={handleSubmit}
             />
           )

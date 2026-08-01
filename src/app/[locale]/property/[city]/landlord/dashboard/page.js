@@ -160,13 +160,18 @@ export default async function LandlordDashboardPage({ params }) {
   }
 
   const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
+  const landlordName = (auth.landlord.name || '').trim();
 
   return (
     <LandlordShell
       gated={false}
-      landlordName={auth.landlord.name}
+      landlordName={landlordName}
       eyebrow={t('welcomeEyebrow')}
-      title={t('welcomeTitle')}
+      title={
+        landlordName
+          ? t('welcomeTitleNamed', { name: landlordName })
+          : t('welcomeTitle')
+      }
       actions={
         <Button href="/property/thessaloniki/landlord/listings/new" variant="gold" size="sm">
           {t('quickNewListing')}

@@ -12,51 +12,70 @@ import { variantUrl } from '@/lib/photoVariants';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
+import Pill from '@/components/ui/Pill';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
+import StatusLadder, {
+  deriveListingStage,
+} from '@/components/listing-wizard/StatusLadder';
 
 /*
-  Propylaea landlord listings index. Shows full list of the landlord's
-  listings in a compact table-style layout with edit/delete actions.
+  Propylaea landlord listings index — View · Edit · Duplicate · Disable · Delete.
 */
 export default function LandlordListingsPage() {
   const t = useTranslations('landlord.dashboard');
+  const tWiz = useTranslations('landlord.listingWizard');
   const router = useRouter();
   const accessToken = useAccessToken();
   const [listings, setListings] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
-  const [deleting, setDeleting] = useState(null);
-  // The listing pending delete-confirmation, or null when the dialog is closed.
+  const [busyId, setBusyId] = useState(null);
   const [confirmTarget, setConfirmTarget] = useState(null);
+  const [isVerified, setIsVerified] = useState(false);
+
+  async function loadListings(token) {
+    const res = await fetch('/api/landlord/listings', {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    if (res.ok) {
+      const { listings: data } = await res.json();
+      setListings(data || []);
+    } else {
+      setError(t('loadError'));
+    }
+  }
+
   useEffect(() => {
     (async () => {
       const supabase = getSupabaseBrowser();
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
       if (!session) return;
       try {
-        const res = await fetch('/api/landlord/listings', {
+        await loadListings(session.access_token);
+        const verRes = await fetch('/api/landlord/verification', {
           headers: { Authorization: `Bearer ${session.access_token}` },
         });
-        if (res.ok) {
-          const { listings: data } = await res.json();
-          setListings(data || []);
-        } else {
-          setError('Failed to load listings');
+        if (verRes.ok) {
+          const v = await verRes.json();
+          setIsVerified(v.isVerified === true);
         }
       } catch {
-        setError('Failed to load listings');
+        setError(t('loadError'));
       } finally {
         setLoading(false);
       }
     })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   async function performDelete(listingId) {
     setError('');
-    setDeleting(listingId);
+    setBusyId(listingId);
     try {
       if (!accessToken) {
-        setDeleting(null);
+        setBusyId(null);
         setConfirmTarget(null);
         router.replace('/property/thessaloniki/landlord/login');
         return;
@@ -74,16 +93,76 @@ export default function LandlordListingsPage() {
       console.error('[LandlordListings] delete failed:', err);
       setError(t('deleteError'));
     } finally {
-      // Close the dialog regardless of outcome — on failure the page-level
-      // error banner surfaces the reason.
       setConfirmTarget(null);
-      setDeleting(null);
+      setBusyId(null);
+    }
+  }
+
+  async function performDuplicate(listingId) {
+    setError('');
+    setBusyId(listingId);
+    try {
+      const res = await fetch(`/api/landlord/listings/${listingId}/duplicate`, {
+        method: 'POST',
+        headers: { Authorization: `Bearer ${accessToken}` },
+      });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        setError(body.error || t('duplicateError'));
+        return;
+      }
+      const { listing_id: newId } = await res.json();
+      router.push(`/property/thessaloniki/landlord/listings/${newId}/edit`);
+    } catch (err) {
+      console.error('[LandlordListings] duplicate failed:', err);
+      setError(t('duplicateError'));
+    } finally {
+      setBusyId(null);
+    }
+  }
+
+  async function performToggleDisable(listing) {
+    setError('');
+    setBusyId(listing.listing_id);
+    const disabled = !(listing.flags?.disabled || listing.flags?.listing_status === 'disabled');
+    try {
+      const res = await fetch(`/api/landlord/listings/${listing.listing_id}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+        body: JSON.stringify({ disabled }),
+      });
+      if (!res.ok) {
+        setError(t('disableError'));
+        return;
+      }
+      setListings((prev) =>
+        prev.map((l) =>
+          l.listing_id === listing.listing_id
+            ? {
+                ...l,
+                flags: {
+                  ...(l.flags || {}),
+                  disabled,
+                  listing_status: disabled ? 'disabled' : 'live',
+                },
+              }
+            : l,
+        ),
+      );
+    } catch (err) {
+      console.error('[LandlordListings] disable failed:', err);
+      setError(t('disableError'));
+    } finally {
+      setBusyId(null);
     }
   }
 
   return (
     <LandlordShell
-      eyebrow="Portfolio"
+      eyebrow={tWiz('eyebrow')}
       title={t('title')}
       actions={
         <Button href="/property/thessaloniki/landlord/listings/new" variant="gold" size="sm">
@@ -106,9 +185,7 @@ export default function LandlordListingsPage() {
       ) : listings.length === 0 ? (
         <Card tone="parchment" className="p-12 text-center">
           <Icon name="book" className="w-12 h-12 mx-auto text-night/30 mb-3" />
-          <p className="font-display text-xl text-night/70 mb-5">
-            {t('noListings')}
-          </p>
+          <p className="font-display text-xl text-night/70 mb-5">{t('noListings')}</p>
           <Button href="/property/thessaloniki/landlord/listings/new" variant="primary">
             {t('addFirst')}
           </Button>
@@ -120,8 +197,11 @@ export default function LandlordListingsPage() {
               <li key={listing.listing_id}>
                 <ListingRow
                   listing={listing}
-                  deleting={deleting === listing.listing_id}
+                  busy={busyId === listing.listing_id}
+                  isVerified={isVerified}
                   onDelete={() => setConfirmTarget(listing)}
+                  onDuplicate={() => performDuplicate(listing.listing_id)}
+                  onToggleDisable={() => performToggleDisable(listing)}
                   t={t}
                 />
               </li>
@@ -137,10 +217,10 @@ export default function LandlordListingsPage() {
             address: confirmTarget.location?.address || t('noAddress'),
           })}
           confirmLabel={
-            deleting === confirmTarget.listing_id ? t('deleting') : t('delete')
+            busyId === confirmTarget.listing_id ? t('deleting') : t('delete')
           }
           cancelLabel={t('cancel')}
-          busy={deleting === confirmTarget.listing_id}
+          busy={busyId === confirmTarget.listing_id}
           destructive
           onConfirm={() => performDelete(confirmTarget.listing_id)}
           onCancel={() => setConfirmTarget(null)}
@@ -150,53 +230,71 @@ export default function LandlordListingsPage() {
   );
 }
 
-function ListingRow({ listing, deleting, onDelete, t }) {
-  const photo = listing.photos?.find((url) => typeof url === 'string' && url.startsWith('http'));
+function ListingRow({
+  listing,
+  busy,
+  isVerified,
+  onDelete,
+  onDuplicate,
+  onToggleDisable,
+  t,
+}) {
+  const photo = listing.photos?.find(
+    (url) => typeof url === 'string' && url.startsWith('http'),
+  );
   const address = listing.location?.address || t('noAddress');
   const heading = listing.title || address;
   const neighborhood = listing.location?.neighborhood;
   const price = listing.rent?.monthly_price;
+  const disabled =
+    listing.flags?.disabled === true ||
+    listing.flags?.listing_status === 'disabled';
+  const stage = deriveListingStage({
+    flags: listing.flags,
+    isVerified,
+    hasVideoVerification: false,
+    isSubmitted: listing.flags?.listing_status === 'live',
+  });
 
   return (
-    <div className="flex flex-col md:flex-row md:items-center gap-4 p-5">
-      <div className="relative w-full md:w-20 aspect-[4/3] md:aspect-square rounded-sm bg-parchment overflow-hidden shrink-0">
-        {photo ? (
-          <Image
-            src={variantUrl(photo, 'thumb')}
-            alt={address}
-            fill
-            className="object-cover"
-            sizes="80px"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full text-night/20">
-            <Icon name="photo" className="w-6 h-6" />
-          </div>
-        )}
-      </div>
+    <div className="flex flex-col gap-4 p-5">
+      <div className="flex flex-col md:flex-row md:items-center gap-4">
+        <div className="relative w-full md:w-20 aspect-[4/3] md:aspect-square rounded-sm bg-parchment overflow-hidden shrink-0">
+          {photo ? (
+            <Image
+              src={variantUrl(photo, 'thumb')}
+              alt={address}
+              fill
+              className="object-cover"
+              sizes="80px"
+            />
+          ) : (
+            <div className="flex items-center justify-center h-full text-night/20">
+              <Icon name="photo" className="w-6 h-6" />
+            </div>
+          )}
+        </div>
 
-      <div className="flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-2 mb-1">
-          <p className="font-display text-xl text-night truncate">
-            {heading}
+        <div className="flex-1 min-w-0">
+          <div className="flex flex-wrap items-center gap-2 mb-1">
+            <p className="font-display text-xl text-night truncate">{heading}</p>
+            {disabled && <Pill variant="pending">{t('statusDisabled')}</Pill>}
+            {!disabled && listing.flags?.listing_status === 'draft' && (
+              <Pill variant="amenity">{t('statusDraft')}</Pill>
+            )}
+          </div>
+          <p className="text-xs text-night/50 mb-1 truncate">{address}</p>
+          <p className="label-caps text-night/50">
+            {neighborhood}
+            {listing.property_types?.name && <> · {listing.property_types.name}</>}
+            {price != null && <> · €{price}/mo</>}
           </p>
         </div>
-        {/* Address always rendered on this internal surface — landlords
-            identify their own listings by street most reliably. For
-            backfilled rows where heading IS the address, this duplicates
-            briefly until the landlord edits the name; small UX cost for
-            a consistent layout. */}
-        <p className="text-xs text-night/50 mb-1 truncate">{address}</p>
-        <p className="label-caps text-night/50">
-          {neighborhood}
-          {listing.property_types?.name && (
-            <> · {listing.property_types.name}</>
-          )}
-          {price != null && <> · €{price}/mo</>}
-        </p>
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 shrink-0">
+      <StatusLadder current={stage} />
+
+      <div className="flex flex-wrap items-center gap-2">
         <Link
           href={`/property/thessaloniki/listing/${listing.listing_id}`}
           target="_blank"
@@ -211,11 +309,28 @@ function ListingRow({ listing, deleting, onDelete, t }) {
           {t('edit')}
         </Link>
         <button
+          type="button"
+          onClick={onDuplicate}
+          disabled={busy}
+          className="label-caps px-3 py-1.5 rounded-sm border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors disabled:opacity-50"
+        >
+          {t('duplicate')}
+        </button>
+        <button
+          type="button"
+          onClick={onToggleDisable}
+          disabled={busy}
+          className="label-caps px-3 py-1.5 rounded-sm border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors disabled:opacity-50"
+        >
+          {disabled ? t('enable') : t('disable')}
+        </button>
+        <button
+          type="button"
           onClick={onDelete}
-          disabled={deleting}
+          disabled={busy}
           className="label-caps px-3 py-1.5 rounded-sm border border-red-300 text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
         >
-          {deleting ? t('deleting') : t('delete')}
+          {busy ? t('deleting') : t('delete')}
         </button>
       </div>
     </div>

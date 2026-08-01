@@ -3,14 +3,10 @@ import { DEFAULT_CITY } from '@/lib/cityRoutes';
 /**
  * Landlord-authored "metres from this listing to each university" (migration 066).
  *
- * The number is entirely self-reported: there is no prefill, no auto-compute
- * from the map pin, and no cross-check against one. Validation here is sanity
- * bounds only — a wrong-but-plausible number is the landlord's to own. The
- * public UI labels it as landlord-listed rather than platform-measured.
- *
- * Not to be confused with `faculty_distances`, which is OSRM-computed walk /
- * transit MINUTES per faculty and is service-role-write-only (migrations 050,
- * 055). Different granularity, unit, and provenance — see the migration header.
+ * The wizard prefills from the map pin (source = 'computed') and lets the
+ * landlord adjust (source flips to 'landlord'). Distance values are still
+ * stored as self-reported metres — faculty_distances remains the OSRM
+ * walk/transit-minute table and is service-role-write-only.
  */
 
 // Ceiling is a typo guard (metres/kilometres mix-up, stray zero), not a claim
@@ -18,17 +14,15 @@ import { DEFAULT_CITY } from '@/lib/cityRoutes';
 // returns a 400 instead of letting Postgres raise a 500.
 export const MAX_DISTANCE_METERS = 50000;
 
+/** Marketplace rule: at least two universities on a submitted listing. */
+export const MIN_UNIVERSITY_DISTANCES = 2;
+
+const ALLOWED_SOURCES = new Set(['computed', 'landlord']);
+
 /**
  * Look up the university ids valid for a city.
  *
- * Listings carry no city column — the directory is single-city today (see
- * SUPPORTED_CITIES / DEFAULT_CITY in cityRoutes.js), so every listing is
- * Thessaloniki. Taking the city as a parameter means the multi-city switch is
- * a caller change, not a rewrite of this module.
- *
  * @returns {Promise<Set<string>|null>} valid ids, or null if the lookup failed
- *   (e.g. migration 066 not yet applied — callers treat that as "skip", not
- *   "reject", so distances degrade to absent rather than blocking a save).
  */
 export async function getCityUniversityIds(supabase, citySlug = DEFAULT_CITY) {
   const { data, error } = await supabase
@@ -43,11 +37,12 @@ export async function getCityUniversityIds(supabase, citySlug = DEFAULT_CITY) {
 /**
  * Parse + validate the `university_distances` payload from a landlord write.
  *
- * @param {unknown} input - expected `[{ university_id, distance_meters }]`
+ * @param {unknown} input - expected `[{ university_id, distance_meters, source? }]`
  * @param {Set<string>} validIds - ids from getCityUniversityIds
- * @returns {{ rows: Array<{university_id: string, distance_meters: number}> } | { error: string }}
+ * @param {{ requireMin?: number }} [opts]
+ * @returns {{ rows: Array<{university_id: string, distance_meters: number, source: string}> } | { error: string }}
  */
-export function parseUniversityDistances(input, validIds) {
+export function parseUniversityDistances(input, validIds, opts = {}) {
   if (!Array.isArray(input)) {
     return { error: 'university_distances must be an array' };
   }
@@ -83,24 +78,40 @@ export function parseUniversityDistances(input, validIds) {
       };
     }
 
+    let source = entry.source;
+    if (source == null || source === '') {
+      source = 'landlord';
+    } else if (typeof source !== 'string' || !ALLOWED_SOURCES.has(source)) {
+      return {
+        error: `source for ${universityId} must be 'computed' or 'landlord'`,
+      };
+    }
+
     seen.add(universityId);
-    rows.push({ university_id: universityId, distance_meters: meters });
+    rows.push({
+      university_id: universityId,
+      distance_meters: meters,
+      source,
+    });
+  }
+
+  const requireMin = opts.requireMin;
+  if (typeof requireMin === 'number' && rows.length < requireMin) {
+    return {
+      error: `university_distances requires at least ${requireMin} entries`,
+    };
   }
 
   return { rows };
 }
 
 /**
- * Replace a listing's distance rows wholesale (delete-then-insert), matching
- * how `listing_amenities` is written by the same routes.
+ * Replace a listing's distance rows wholesale (delete-then-insert).
  *
- * `supabase` MUST be token-scoped — the RLS policy from migration 066 is what
- * enforces that the caller owns this listing.
- *
- * Non-fatal by contract: returns an error string rather than throwing, and
- * callers log-and-continue. An optional field must never fail a listing
- * create/edit, which is the same rule the inline faculty-distance recompute
- * already follows in these routes.
+ * Only columns that exist on listing_university_distances are written
+ * (listing_id, university_id, distance_meters). `source` is tracked in
+ * application state / payload validation; the 066 table has no source
+ * column and migrations are frozen for this task.
  *
  * @returns {Promise<{ error: string|null }>}
  */
@@ -115,7 +126,13 @@ export async function writeUniversityDistances(supabase, listingId, rows) {
 
   const { error: insertError } = await supabase
     .from('listing_university_distances')
-    .insert(rows.map((r) => ({ ...r, listing_id: listingId })));
+    .insert(
+      rows.map((r) => ({
+        listing_id: listingId,
+        university_id: r.university_id,
+        distance_meters: r.distance_meters,
+      })),
+    );
 
   return { error: insertError ? insertError.message : null };
 }
