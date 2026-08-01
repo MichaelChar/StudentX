@@ -48,6 +48,7 @@ export default function BookingWidget({ listing, nextPath }) {
     return costSummary({
       monthlyRent: listing.monthly_price,
       months: range.months,
+      monthsExact: range.monthsExact,
       deposit: listing.deposit,
       agencyFee: listing.agency_fee,
     });

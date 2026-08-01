@@ -28,13 +28,29 @@ export function daySpan(moveIn, moveOut) {
 }
 
 /**
- * Stay length in months for fee / min-duration checks.
- * Uses days / 30, rounded to one decimal (e.g. 150 days → 5.0).
+ * Stay length in months, DISPLAY precision (days / 30, one decimal).
+ * Use for labels and min/max-duration fit checks — never for money.
  */
 export function stayDurationMonths(moveIn, moveOut) {
   const days = daySpan(moveIn, moveOut);
   if (days == null || days <= 0) return null;
   return Math.round((days / 30) * 10) / 10;
+}
+
+/**
+ * Stay length in months, EXACT (days / 30, unrounded).
+ *
+ * Billing is per-day with the monthly price covering 30 days, so a 45-day
+ * stay is 1.5 months' rent and a 31-day month costs more than a 28-day one.
+ * Rounding to one decimal before multiplying drifts up to 1.5 days of rent
+ * (±€22.50 on a €450 listing) away from that rule — and the result is
+ * persisted as bookings.total_stay_value, which later becomes the commission
+ * base. Money must be derived from this, not from stayDurationMonths().
+ */
+export function stayDurationMonthsExact(moveIn, moveOut) {
+  const days = daySpan(moveIn, moveOut);
+  if (days == null || days <= 0) return null;
+  return days / 30;
 }
 
 /**
@@ -56,7 +72,8 @@ export function parseStayRange(moveInRaw, moveOutRaw) {
   if (months == null || months <= 0) {
     return { error: 'move_out must be after move_in' };
   }
-  return { moveIn, moveOut, months };
+  // `months` is display-rounded; `monthsExact` is what money must be based on.
+  return { moveIn, moveOut, months, monthsExact: stayDurationMonthsExact(moveIn, moveOut) };
 }
 
 /**
@@ -94,10 +111,19 @@ export function durationFitsListing(listing, months) {
 /**
  * Cost summary for the booking widget (offline settlement — no platform charge).
  */
-export function costSummary({ monthlyRent, months, deposit = 0, agencyFee = 0 }) {
+export function costSummary({
+  monthlyRent,
+  months,
+  monthsExact,
+  deposit = 0,
+  agencyFee = 0,
+}) {
   const rent = Number(monthlyRent) || 0;
   const m = Number(months) || 0;
-  const totalRent = Math.round(rent * m * 100) / 100;
+  // Price off the exact day count when available; `months` is display-rounded
+  // and using it here drifts the total away from the per-day billing rule.
+  const billable = Number(monthsExact ?? months) || 0;
+  const totalRent = Math.round(rent * billable * 100) / 100;
   const dep = Number(deposit) || 0;
   const agency = Number(agencyFee) || 0;
   const dueAtMoveIn = Math.round((dep + agency) * 100) / 100;

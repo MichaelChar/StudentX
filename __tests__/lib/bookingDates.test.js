@@ -47,6 +47,35 @@ describe('bookingDates', () => {
     expect(c.due_at_move_in).toBe(550);
   });
 
+  // Billing is per-day with the monthly price covering 30 days: a 45-day stay
+  // is 1.5 months' rent, and a 31-day month costs more than a 28-day one.
+  // The display duration is rounded to one decimal; the price must NOT be.
+  it('prices from exact days, not the rounded display duration', () => {
+    // 145 days = 4.8333… months. Rounded display would undercharge by €15.
+    const range = parseStayRange('2026-09-01', '2027-01-24');
+    expect(range.months).toBe(4.8);
+    expect(range.monthsExact).toBeCloseTo(145 / 30, 10);
+
+    const c = costSummary({
+      monthlyRent: 450,
+      months: range.months,
+      monthsExact: range.monthsExact,
+    });
+    expect(c.total_rent).toBe(2175); // 450 * 145/30, not 450 * 4.8 = 2160
+    expect(c.duration_months).toBe(4.8); // display stays rounded
+  });
+
+  it('charges more for a 31-day month than a 28-day one', () => {
+    const long = parseStayRange('2026-01-01', '2026-02-01'); // 31 days
+    const short = parseStayRange('2026-02-01', '2026-03-01'); // 28 days
+    const priceOf = (r) =>
+      costSummary({ monthlyRent: 300, months: r.months, monthsExact: r.monthsExact })
+        .total_rent;
+    expect(priceOf(long)).toBeGreaterThan(priceOf(short));
+    expect(priceOf(long)).toBe(310); // 300 * 31/30
+    expect(priceOf(short)).toBe(280); // 300 * 28/30
+  });
+
   it('detects inclusive date overlap', () => {
     expect(datesOverlap('2026-01-01', '2026-01-31', '2026-01-15', '2026-02-15')).toBe(
       true,

@@ -11,7 +11,11 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
-import { stayDurationMonths, costSummary } from '@/lib/bookingDates';
+import {
+  stayDurationMonths,
+  stayDurationMonthsExact,
+  costSummary,
+} from '@/lib/bookingDates';
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -139,6 +143,7 @@ export default function LandlordReservationDetailPage() {
   const cost = costSummary({
     monthlyRent: booking.monthly_rent,
     months: months || 0,
+    monthsExact: stayDurationMonthsExact(booking.move_in, booking.move_out),
     deposit: listing?.rent?.deposit,
     agencyFee: listing?.agency_fee,
   });

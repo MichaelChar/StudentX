@@ -9,6 +9,7 @@ import {
   listingCoversStay,
   durationFitsListing,
   costSummary,
+  stayDurationMonthsExact,
 } from '@/lib/bookingDates';
 import {
   planTransition,
@@ -143,6 +144,7 @@ export async function createBookingRequest({
   const summary = costSummary({
     monthlyRent,
     months,
+    monthsExact: stayDurationMonthsExact(moveIn, moveOut),
     deposit: listing.deposit,
     agencyFee: listing.agency_fee,
   });
