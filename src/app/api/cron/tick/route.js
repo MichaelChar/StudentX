@@ -4,6 +4,8 @@ import { isJobDue } from '../cadence';
 import { runRecomputeDistances } from '../jobs/recomputeDistances';
 import { runMessageDigest } from '../jobs/messageDigest';
 import { runSyntheticEnListing } from '../synthetic-en-listing/route';
+import { runBookingExpiry } from '../jobs/bookingExpiry';
+import { runBookingReminder } from '../jobs/bookingReminder';
 
 // Per-job wall-clock cap inside the shared ~25s master-tick budget.
 // Jobs run concurrently via Promise.allSettled, so wall time is
@@ -36,6 +38,18 @@ export const CRON_JOBS = [
     name: 'synthetic-en-listing',
     cadence: '15m',
     handler: runSyntheticEnListing,
+  },
+  // Booking MVP: rolling inactivity (2d expiry + one 24h landlord reminder).
+  // No new Cloudflare triggers — Free plan caps at 5; master tick owns these.
+  {
+    name: 'booking-expiry',
+    cadence: '5m',
+    handler: runBookingExpiry,
+  },
+  {
+    name: 'booking-reminder',
+    cadence: '5m',
+    handler: runBookingReminder,
   },
 ];
 

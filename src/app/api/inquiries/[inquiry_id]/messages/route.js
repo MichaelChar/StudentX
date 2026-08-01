@@ -119,5 +119,17 @@ export async function POST(request, { params }) {
     return NextResponse.json({ error: 'Failed to send message' }, { status: 500 });
   }
 
+  // Rolling booking inactivity timer: any message on a linked inquiry
+  // resets last_activity_at so the 2-day expiry clock starts over.
+  try {
+    const { bookingIdForInquiry, touchBookingActivity } = await import(
+      '@/lib/bookingService'
+    );
+    const bookingId = await bookingIdForInquiry(inquiryId);
+    if (bookingId) await touchBookingActivity(bookingId);
+  } catch (err) {
+    console.warn('touchBookingActivity after message failed:', err?.message || err);
+  }
+
   return NextResponse.json({ message: data }, { status: 201 });
 }

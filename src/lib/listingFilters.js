@@ -16,6 +16,22 @@
  */
 
 const ALLOWED_MIN_DURATIONS = [1, 5, 9];
+const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+
+/**
+ * Validate a real YYYY-MM-DD calendar date (rejects 2026-02-31 rollovers).
+ */
+function parseValidDate(value) {
+  if (!value) return { date: null };
+  const isShape = DATE_RE.test(value);
+  const parsed = isShape ? new Date(`${value}T00:00:00Z`) : new Date("invalid");
+  const roundTrips =
+    !Number.isNaN(parsed.getTime()) && parsed.toISOString().slice(0, 10) === value;
+  if (!isShape || !roundTrips) {
+    return { error: true };
+  }
+  return { date: value };
+}
 
 /**
  * Parse + validate every shared (non-budget) filter param from a
@@ -24,6 +40,10 @@ const ALLOWED_MIN_DURATIONS = [1, 5, 9];
  *
  * Budget is intentionally NOT handled here — /api/listings reads and validates
  * min_budget/max_budget itself, and the distribution route ignores them.
+ *
+ * move_in + move_out (optional pair): stay range for availability search.
+ * When both are set, the listings route also excludes blocked calendars and
+ * enforces min/max duration fit (see /api/listings).
  */
 export function parseListingFilters(searchParams) {
   const faculty = searchParams.get("faculty");
@@ -37,6 +57,8 @@ export function parseListingFilters(searchParams) {
   const excludeGroundFloor = searchParams.get("exclude_ground_floor") === "true";
   const requireBillsIncluded = searchParams.get("require_bills_included") === "true";
   const availableFrom = searchParams.get("available_from");
+  const moveIn = searchParams.get("move_in");
+  const moveOut = searchParams.get("move_out");
 
   // Validate min_duration: must be 1, 5, or 9 (or absent)
   let minDurationN = null;
@@ -53,14 +75,33 @@ export function parseListingFilters(searchParams) {
   // otherwise roll over to March).
   let availableFromDate = null;
   if (availableFrom) {
-    const isShape = /^\d{4}-\d{2}-\d{2}$/.test(availableFrom);
-    const parsed = isShape ? new Date(`${availableFrom}T00:00:00Z`) : new Date("invalid");
-    const roundTrips = !Number.isNaN(parsed.getTime()) &&
-      parsed.toISOString().slice(0, 10) === availableFrom;
-    if (!isShape || !roundTrips) {
+    const r = parseValidDate(availableFrom);
+    if (r.error) {
       return { error: "available_from must be a valid date in YYYY-MM-DD format" };
     }
-    availableFromDate = availableFrom;
+    availableFromDate = r.date;
+  }
+
+  // move_in / move_out stay range (both or neither for a complete pair).
+  let moveInDate = null;
+  let moveOutDate = null;
+  if (moveIn || moveOut) {
+    if (!moveIn || !moveOut) {
+      return { error: "move_in and move_out must both be provided" };
+    }
+    const inR = parseValidDate(moveIn);
+    if (inR.error) {
+      return { error: "move_in must be a valid date in YYYY-MM-DD format" };
+    }
+    const outR = parseValidDate(moveOut);
+    if (outR.error) {
+      return { error: "move_out must be a valid date in YYYY-MM-DD format" };
+    }
+    if (outR.date <= inR.date) {
+      return { error: "move_out must be after move_in" };
+    }
+    moveInDate = inR.date;
+    moveOutDate = outR.date;
   }
 
   // Validate sort params
@@ -96,6 +137,8 @@ export function parseListingFilters(searchParams) {
     excludeGroundFloor,
     requireBillsIncluded,
     availableFromDate,
+    moveInDate,
+    moveOutDate,
   };
 }
 
@@ -187,8 +230,16 @@ export function applyListingFilters(query, f, { fallback = false, amenityListing
   }
 
   // Available on or before the chosen move-in date (NULL = always available).
-  if (f.availableFromDate) {
-    query = query.or(`available_from.is.null,available_from.lte.${f.availableFromDate}`);
+  // When move_in is set (stay search), it supersedes available_from for the
+  // lower bound so we don't double-filter on conflicting dates.
+  const coverFrom = f.moveInDate || f.availableFromDate;
+  if (coverFrom) {
+    query = query.or(`available_from.is.null,available_from.lte.${coverFrom}`);
+  }
+
+  // Stay search: listing must remain available through move_out (NULL = open).
+  if (f.moveOutDate) {
+    query = query.or(`available_to.is.null,available_to.gte.${f.moveOutDate}`);
   }
 
   return query;
