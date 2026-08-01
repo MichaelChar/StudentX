@@ -67,24 +67,20 @@
     "SYNTHETIC_ALERT_EMAIL": "michaeltubehd007@gmail.com"
   },
   // Cron triggers. Dispatched via cf/worker-entry.mjs's `scheduled` handler,
-  // which maps each cron expression to a route + payload and POSTs using
-  // NEXT_PUBLIC_APP_URL + CRON_SECRET. Keep cf/worker-entry.mjs's CRON_ROUTES
-  // in sync with these patterns.
+  // which maps each cron expression to a route and invokes OpenNext fetch
+  // with CRON_SECRET. Keep cf/worker-entry.mjs's CRON_ROUTES in sync.
   //
-  // NB: Cloudflare's Free plan caps a Worker at 5 cron triggers — Cloudflare
-  // silently rejects the 6th at registration time (error 10072), so keep
-  // this list at ≤5. Currently 4 are used (the saved-searches digest was
-  // retired when the saved-searches/alerts feature was removed), leaving
-  // one free slot.
+  // W9 master tick: ONE trigger every 5 minutes → /api/cron/tick, which
+  // holds a job registry (cadence per job, wall-clock dueness). Adding a
+  // marketplace timer is a registry line — no new CF trigger, no Free-plan
+  // slot. Free plan still caps at 5 triggers (6th → silent API error 10072).
   //
-  //   15 9 * * *     → /api/cron/recompute-distances (heals missing
-  //                    faculty_distances pairs for new/edited listings;
-  //                    no-op when fully populated)
-  //   */5 * * * *    → /api/cron/landlord-message-digest (per-message digest;
-  //                    debounced server-side via claim_landlord_message_notification)
-  //   2-58/5 * * * * → /api/cron/student-message-digest (mirror of the landlord
-  //                    digest, offset 2 min so the two never share a tick)
-  //   */15 * * * *   → /api/cron/synthetic-en-listing (i18n regression guard, #49)
+  // Job cadences (see src/app/api/cron/tick/route.js CRON_JOBS):
+  //   recompute-distances   daily@09:15  faculty_distances heal
+  //   message-digest        5m           landlord + student digests (merged)
+  //   synthetic-en-listing  15m          i18n / uptime canaries (#49)
+  //
+  // Old per-job routes remain as manual-trigger wrappers.
   // Custom-domain routes. Wrangler creates the apex A record and www CNAME
   // automatically (both proxied). Requires the CF zone to be Active first
   // (see docs/runbooks/domain-setup.md step 6).
@@ -94,10 +90,7 @@
   ],
   "triggers": {
     "crons": [
-      "15 9 * * *",     // nightly faculty_distances backfill
-      "*/5 * * * *",    // landlord message digest (every 5 min)
-      "2-58/5 * * * *", // student message digest (every 5 min, offset 2 min from landlord)
-      "*/15 * * * *"    // synthetic /en/listing locale check (#49)
+      "*/5 * * * *"    // master tick → /api/cron/tick (job registry)
     ]
   }
 }

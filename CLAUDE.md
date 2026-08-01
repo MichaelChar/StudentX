@@ -202,26 +202,32 @@ Conventions still in force:
 
 ## Cron architecture
 
-Three pieces must stay in sync:
+Four pieces must stay in sync:
 
 | Piece | File | What it holds |
 |---|---|---|
-| Cron triggers | `wrangler.jsonc` `triggers.crons` | Cron expressions Cloudflare fires |
+| Cron triggers | `wrangler.jsonc` `triggers.crons` | Cron expressions Cloudflare fires (single master tick) |
 | Cron dispatch | `cf/worker-entry.mjs` `CRON_ROUTES` | Cron expression → `{ name, path, query }` |
+| Job registry | `src/app/api/cron/tick/route.js` `CRON_JOBS` | Per-job name, cadence, handler |
 | Live schedules | Cloudflare API `/workers/scripts/studentx/schedules` | What CF actually fires (deploy pipeline doesn't sync this — see PR #150) |
+
+**W9 master tick.** One Cloudflare trigger (`*/5 * * * *`) POSTs
+`/api/cron/tick`. The route holds a job registry; each job declares its
+own cadence (`5m` | `15m` | `daily@HH:MM`). Dueness is pure wall-clock
+(`getUTCMinutes` / `getUTCHours`) — no persistent scheduler state. Due
+jobs run via `Promise.allSettled` with a per-job timeout inside a 25s
+outer `AbortSignal.timeout`. One failing job never blocks siblings.
+Each job logs `job=… outcome=… durationMs=…` for `wrangler tail`.
 
 The `scheduled` handler looks up `event.cron` in `CRON_ROUTES`, then invokes
 OpenNext's `fetch` directly (no network self-call — see PR #133's findings).
-25-second `AbortSignal.timeout` (under CF's ~30 s scheduled-handler limit).
 `ctx.waitUntil()` keeps the Worker alive past the synchronous return.
 
 **Cloudflare Free plan caps a Worker at 5 cron triggers** — the 6th is
 silently rejected at registration time with API error 10072 (confirmed in
 PR #150 after the student-message-digest trigger had been silently dropped
-for 3 days). Keep `triggers.crons` at ≤5; if you need more, either upgrade
-to Workers Paid ($5/mo, 250-trigger cap) or consolidate cadences into a
-single trigger with day-of-week branching inside the route (read the wall
-clock with `getUTCDay()` and run the matching cadence).
+for 3 days). The master tick uses 1 of 5; add new timers as registry
+entries, not new CF triggers.
 
 **The deploy pipeline does NOT sync trigger changes.**
 `opennextjs-cloudflare deploy` pushes the script bundle but leaves
@@ -234,21 +240,28 @@ drift — the procedure (including the drift-check `curl`) is in
 `x-cron-secret` header OR `?secret=` query param. `CRON_SECRET` is a Worker
 secret, set with `wrangler secret put CRON_SECRET --name studentx`.
 
-Current crons (`wrangler.jsonc` `triggers.crons` is authoritative; keep
-`cf/worker-entry.mjs` `CRON_ROUTES` and the live schedules in lockstep):
+Cloudflare trigger (`wrangler.jsonc` / `CRON_ROUTES` / live schedules):
 
 | Cron expression | Route | Purpose |
 |---|---|---|
-| `15 9 * * *`    | `/api/cron/recompute-distances`                    | Heal missing `faculty_distances` rows (PR #60). |
-| `*/5 * * * *`   | `/api/cron/landlord-message-digest`                | Per-message landlord digest. |
-| `2-58/5 * * * *` | `/api/cron/student-message-digest`                | Per-message student digest (mirror of landlord, offset 2 min). |
-| `*/15 * * * *`  | `/api/cron/synthetic-en-listing`                   | Synthetic uptime/regression canaries (issue #49). |
+| `*/5 * * * *` | `/api/cron/tick` | Master tick — runs due registry jobs |
 
-Adding a new cron is a one-line entry in each of `wrangler.jsonc.triggers.crons`
-and `cf/worker-entry.mjs`'s `CRON_ROUTES`, **plus** a manual schedule sync
-(the deploy pipeline doesn't sync triggers — see the runbook). If this would
-push the count above 5, consolidate two cadences into one trigger
-(day-of-week branching inside the route) or upgrade to Workers Paid.
+Registry jobs (`CRON_JOBS` in `/api/cron/tick`):
+
+| Job name | Cadence | Purpose |
+|---|---|---|
+| `recompute-distances` | `daily@09:15` | Heal missing `faculty_distances` rows (PR #60). |
+| `message-digest` | `5m` | Landlord + student per-message digests (merged). |
+| `synthetic-en-listing` | `15m` | Synthetic uptime/regression canaries (issue #49). |
+
+Old per-job paths (`/api/cron/recompute-distances`,
+`landlord-message-digest`, `student-message-digest`,
+`synthetic-en-listing`) remain as thin wrappers over the same handlers
+for manual curls.
+
+Adding a new cron is a one-line entry in `CRON_JOBS` (name, cadence,
+handler). No `wrangler.jsonc` edit and no schedule sync unless you are
+changing the master-tick expression itself.
 
 ## Synthetic monitoring
 
