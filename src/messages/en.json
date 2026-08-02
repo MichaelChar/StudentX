@@ -410,6 +410,10 @@
         "live": "Live"
       },
       "steps": {
+        "import": {
+          "title": "Start from a description",
+          "lede": "Paste a listing you already have — from a portal, Facebook, email, or PDF — and we'll suggest fields. Or skip and fill everything in yourself."
+        },
         "address": {
           "title": "Address",
           "lede": "Search for the building, then drag the pin if needed. Coordinates are required."
@@ -549,6 +553,38 @@
         "checkUniversities": "At least {count} university distances",
         "checkPhotos": "At least {count} photos (you have {current})",
         "preview": "Preview as student"
+      },
+      "paste": {
+        "textareaLabel": "Paste your listing text",
+        "textareaPlaceholder": "e.g. Δυάρι 55 τ.μ. στην Εγνατία 23, 2ος όροφος. Ενοίκιο 450€, εγγύηση 450€. Διαθέσιμο από 01/09/2026. Επιπλωμένο, με κλιματισμό και ασανσέρ…",
+        "textareaTip": "Greek or English. We only use this to suggest fields — nothing is submitted until you review.",
+        "tooLong": "Keep the paste under {max} characters.",
+        "startFromScratch": "Start from scratch",
+        "useText": "Use this text",
+        "continueEmpty": "Continue without pasting",
+        "fromText": "From your text",
+        "dismissSuggestion": "Clear suggestion",
+        "recognisedLabel": "We recognised",
+        "missingLabel": "Not found — fill these in later",
+        "suggestionNote": "Every value is a suggestion. You can edit or clear any field on the next steps.",
+        "nothingFound": "We couldn't pull out structured fields from that text. You can still continue — the description will be pre-filled if the paste is long enough.",
+        "bannerTitle": "Filled from your paste",
+        "bannerTip": "Fields marked “from your text” are editable. Clear a mark to drop that suggestion.",
+        "dismissBanner": "Dismiss",
+        "fields": {
+          "monthlyPrice": "Monthly rent",
+          "deposit": "Deposit",
+          "agencyFee": "Agency fee",
+          "sqm": "Size",
+          "floor": "Floor",
+          "bedrooms": "Bedrooms",
+          "bathrooms": "Bathrooms",
+          "availableFrom": "Available from",
+          "billsIncluded": "Bills included",
+          "address": "Address",
+          "description": "Description",
+          "amenities": "Amenities"
+        }
       },
       "errors": {
         "generic": "Something went wrong",
