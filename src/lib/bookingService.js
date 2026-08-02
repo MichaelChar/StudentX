@@ -36,6 +36,7 @@ export async function loadListingForBooking(listingId) {
     .from('listings')
     .select(`
       listing_id,
+      listing_status,
       available_from,
       available_to,
       min_duration_months,
@@ -50,6 +51,7 @@ export async function loadListingForBooking(listingId) {
   const rent = Array.isArray(data.rent) ? data.rent[0] : data.rent;
   return {
     listing_id: data.listing_id,
+    listing_status: data.listing_status ?? 'active',
     available_from: data.available_from,
     available_to: data.available_to,
     min_duration_months: data.min_duration_months,
@@ -106,6 +108,13 @@ export async function createBookingRequest({
   const listing = await loadListingForBooking(listingId);
   if (!listing) {
     return { error: 'LISTING_NOT_FOUND', message: 'Listing not found', status: 404 };
+  }
+  if (listing.listing_status === 'disabled') {
+    return {
+      error: 'LISTING_DISABLED',
+      message: 'This listing is not available for booking',
+      status: 404,
+    };
   }
   if (listing.monthly_price == null || Number(listing.monthly_price) <= 0) {
     return {

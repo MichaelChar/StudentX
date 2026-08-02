@@ -9,10 +9,7 @@ import {
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { writeUniversityDistances } from '@/lib/universityDistances';
 import { selectLandlordListings } from '@/lib/landlordListingSelect';
-import {
-  parseListingWriteBody,
-  ensureExtraPropertyTypes,
-} from '@/lib/landlordListingBody';
+import { parseListingWriteBody } from '@/lib/landlordListingBody';
 
 // Service-role: migration 065 drops auth_user_id from the anon column
 // allowlist on landlords, so this self-lookup can't run on the anon client.
@@ -95,8 +92,6 @@ export async function POST(request) {
   if (d.lat == null || d.lng == null) {
     return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
   }
-
-  await ensureExtraPropertyTypes();
 
   const authedSupabase = getSupabaseWithToken(token);
   const supabase = getSupabaseAsService();
@@ -182,6 +177,7 @@ export async function POST(request) {
     smoking_allowed: d.smoking_allowed ?? null,
     pets_allowed: d.pets_allowed ?? null,
     additional_rules: d.additional_rules ?? null,
+    listing_status: d.listing_status || 'active',
     flags: d.flags || {
       listing_status: isSubmit ? 'live' : 'draft',
     },

@@ -103,8 +103,9 @@ export async function GET(request) {
     }
 
     // Build query — identical filters to /api/listings, MINUS the two budget
-    // clauses (the only divergence).
+    // clauses (the only divergence). Active listings only.
     let query = supabase.from("listings").select(PRICE_SELECT);
+    query = query.eq("listing_status", "active");
     query = applyListingFilters(query, f, { amenityListingIds });
 
     let { data, error } = await query;
@@ -114,6 +115,7 @@ export async function GET(request) {
     if (error) {
       console.warn("price-distribution query failed, retrying without is_verified:", error.message);
       let fallbackQuery = supabase.from("listings").select(PRICE_SELECT_FALLBACK);
+      fallbackQuery = fallbackQuery.eq("listing_status", "active");
       fallbackQuery = applyListingFilters(fallbackQuery, f, { fallback: true, amenityListingIds });
       const fallbackResult = await fallbackQuery;
       if (fallbackResult.error) {

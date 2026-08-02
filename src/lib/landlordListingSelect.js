@@ -20,6 +20,7 @@ export const LANDLORD_LISTING_SELECT = `
   max_duration_months,
   bedrooms,
   bathrooms,
+  listing_status,
   flags,
   created_at,
   updated_at,

@@ -108,10 +108,8 @@ export function parseUniversityDistances(input, validIds, opts = {}) {
 /**
  * Replace a listing's distance rows wholesale (delete-then-insert).
  *
- * Only columns that exist on listing_university_distances are written
- * (listing_id, university_id, distance_meters). `source` is tracked in
- * application state / payload validation; the 066 table has no source
- * column and migrations are frozen for this task.
+ * Writes listing_id, university_id, distance_meters, and source
+ * ('computed' from map-pin prefill, 'landlord' when typed/edited).
  *
  * @returns {Promise<{ error: string|null }>}
  */
@@ -131,6 +129,7 @@ export async function writeUniversityDistances(supabase, listingId, rows) {
         listing_id: listingId,
         university_id: r.university_id,
         distance_meters: r.distance_meters,
+        source: r.source === 'computed' ? 'computed' : 'landlord',
       })),
     );
 

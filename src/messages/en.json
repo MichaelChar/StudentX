@@ -235,6 +235,7 @@
       "disableError": "Failed to update listing status. Please try again.",
       "loadError": "Failed to load listings",
       "statusDraft": "Draft",
+      "statusActive": "Active",
       "statusDisabled": "Disabled"
     },
     "listingForm": {
