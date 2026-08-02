@@ -6,6 +6,7 @@ import { runMessageDigest } from '../jobs/messageDigest';
 import { runSyntheticEnListing } from '../synthetic-en-listing/route';
 import { runBookingExpiry } from '../jobs/bookingExpiry';
 import { runBookingReminder } from '../jobs/bookingReminder';
+import { runMoveInPrompt } from '../jobs/moveInPrompt';
 import { runRefreshResponseTimes } from '../jobs/refreshResponseTimes';
 
 // Per-job wall-clock cap inside the shared ~25s master-tick budget.
@@ -51,6 +52,13 @@ export const CRON_JOBS = [
     name: 'booking-reminder',
     cadence: '5m',
     handler: runBookingReminder,
+  },
+  // Move-in confirmation prompt (W6 offline): email students whose move-in
+  // has arrived and who have not responded. No new CF trigger.
+  {
+    name: 'move-in-prompt',
+    cadence: 'daily@10:00',
+    handler: runMoveInPrompt,
   },
   // T4b: denormalise landlord first-response latency for /api/listings ranking.
   // No new Cloudflare trigger — Free plan caps at 5; master tick owns this.

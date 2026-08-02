@@ -159,6 +159,7 @@ export async function sendBookingAcceptedEmail({
     const { listing, location } = await loadListingContext(listingId);
     const label = listingLabel(location, listing);
     const appUrl = appBase();
+    const detailUrl = `${appUrl}/student/account/bookings/${bookingId}`;
 
     await getResend().emails.send({
       from: FROM_ADDRESS,
@@ -170,7 +171,7 @@ export async function sendBookingAcceptedEmail({
         <p><strong>Listing:</strong> ${safe(label)}</p>
         <p><strong>Move-in:</strong> ${safe(moveIn)} &nbsp;·&nbsp; <strong>Move-out:</strong> ${safe(moveOut)}</p>
         <p>You won't be charged on StudentX. Arrange payment and move-in details directly with the landlord via your inquiry thread.</p>
-        <p><a href="${appUrl}/student/inquiries">Open messages</a></p>
+        <p><a href="${detailUrl}">View your booking</a></p>
         <p style="color:#666;font-size:12px;">Booking ref: ${safe(bookingId)}</p>
       `,
     });
@@ -212,5 +213,96 @@ export async function sendBookingDeclinedEmail({
     });
   } catch (err) {
     console.error('Failed to send booking declined email:', err);
+  }
+}
+
+/**
+ * Daily move-in prompt — student whose move-in day has arrived and who has
+ * not yet confirmed or reported a problem.
+ */
+export async function sendMoveInPromptEmail({
+  bookingId,
+  listingId,
+  studentEmail,
+  studentName,
+  moveIn,
+  moveOut,
+}) {
+  try {
+    if (!studentEmail) return;
+    if (await isEmailSuppressed(studentEmail)) return;
+
+    const { listing, location } = await loadListingContext(listingId);
+    const label = listingLabel(location, listing);
+    const appUrl = appBase();
+    const detailUrl = `${appUrl}/student/account/bookings/${bookingId}`;
+
+    await getResend().emails.send({
+      from: FROM_ADDRESS,
+      to: studentEmail,
+      subject: `How was move-in? — ${label}`,
+      html: `
+        <p>Hi ${safe(studentName || 'there')},</p>
+        <p>Your move-in day for <strong>${safe(label)}</strong> has arrived (${safe(moveIn)} → ${safe(moveOut)}).</p>
+        <p><strong>Is everything as promised?</strong></p>
+        <p>Please confirm the stay is as described, or report a problem so we can help.</p>
+        <p><a href="${detailUrl}">Respond to your booking</a></p>
+        <p style="color:#666;font-size:12px;">Booking ref: ${safe(bookingId)}. Silence is not treated as confirmation — please respond.</p>
+      `,
+    });
+  } catch (err) {
+    console.error('Failed to send move-in prompt email:', err);
+  }
+}
+
+/**
+ * Ops alert when a student reports a move-in problem (no payments / escrow).
+ */
+export async function sendMoveInProblemOpsEmail({
+  bookingId,
+  listingId,
+  studentEmail,
+  studentName,
+  moveIn,
+  moveOut,
+  description,
+}) {
+  try {
+    const recipient =
+      process.env.SYNTHETIC_ALERT_EMAIL || process.env.GIG_ALERT_EMAIL;
+    if (!recipient) {
+      console.warn(
+        `Booking ${bookingId}: no SYNTHETIC_ALERT_EMAIL for move-in problem report`,
+      );
+      return;
+    }
+    if (await isEmailSuppressed(recipient)) {
+      console.warn(`Booking ${bookingId}: ops email ${recipient} suppressed`);
+      return;
+    }
+
+    const { listing, location } = await loadListingContext(listingId);
+    const label = listingLabel(location, listing);
+    const appUrl = appBase();
+    const detailUrl = `${appUrl}/student/account/bookings/${bookingId}`;
+
+    await getResend().emails.send({
+      from: FROM_ADDRESS,
+      to: recipient,
+      replyTo: studentEmail || undefined,
+      subject: `Move-in problem reported — ${label}`,
+      html: `
+        <p>A student reported a problem after move-in (offline booking — no escrow freeze).</p>
+        <p><strong>Booking:</strong> ${safe(bookingId)}</p>
+        <p><strong>Listing:</strong> ${safe(label)} (${safe(listingId)})</p>
+        <p><strong>Student:</strong> ${safe(studentName || '—')} &lt;${safe(studentEmail || '—')}&gt;</p>
+        <p><strong>Stay:</strong> ${safe(moveIn)} → ${safe(moveOut)}</p>
+        <p><strong>Description:</strong></p>
+        <blockquote>${safe(description || '').replace(/\n/g, '<br>')}</blockquote>
+        <p><a href="${detailUrl}">Student booking detail</a> (student account view)</p>
+      `,
+    });
+  } catch (err) {
+    console.error('Failed to send move-in problem ops email:', err);
   }
 }

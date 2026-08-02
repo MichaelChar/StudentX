@@ -2,15 +2,22 @@
  * Booking state machine (offline MVP — no payment).
  *
  *   requested → accepted → confirmed
- *        ↓          ↓
- *     declined   expired / cancelled
- *   confirmed → cancelled
+ *        ↓          ↓           ↓
+ *     declined   expired /   cancelled
+ *                cancelled   disputed  (report a problem at/after move-in)
+ *
+ * Move-in "everything as promised" does not change `bookings.state` (the DB
+ * enum in migration 100 has no moved_in/completed value). It is recorded as
+ * a same-state booking_events row with metadata.kind = move_in_ok. Silence
+ * is NOT confirmation — the student must act; the daily move-in-prompt job
+ * emails until they respond (or the booking leaves confirmed).
  *
  * Availability blocks:
  *   - create request → insert `pending` block for [move_in, move_out]
  *   - accept         → convert that block to `booked`
  *   - decline / expire / cancel (while pending) → delete the pending block
  *   - cancel (while accepted/confirmed) → delete the booked block
+ *   - disputed keeps the booked block (ops holds the calendar)
  *
  * These helpers are pure where possible so tests can exercise every
  * terminal path that must release a block without hitting Supabase.
@@ -38,10 +45,16 @@ export const TERMINAL_STATES = Object.freeze([
 /** States that still hold a calendar block (pending or booked). */
 export const HOLDING_STATES = Object.freeze(['requested', 'accepted', 'confirmed']);
 
+/** booking_events.metadata.kind for student move-in responses / prompts. */
+export const MOVE_IN_OK_KIND = 'move_in_ok';
+export const MOVE_IN_PROBLEM_KIND = 'move_in_problem';
+export const MOVE_IN_PROMPT_KIND = 'move_in_prompt';
+
 /**
  * Legal transitions: from → Set(to).
  * Offline MVP: accept goes requested → accepted; confirm accepted → confirmed
  * (landlord Accept may apply both in one API call).
+ * confirmed → disputed is the "report a problem" move-in path.
  */
 const TRANSITIONS = {
   requested: new Set(['accepted', 'declined', 'expired', 'cancelled']),
@@ -220,6 +233,119 @@ export function isDueReminder(booking, now = new Date()) {
   if (!last) return false;
   const idle = now.getTime() - last;
   return idle >= REMINDER_MS && idle < EXPIRY_MS;
+}
+
+/**
+ * Calendar date (YYYY-MM-DD) of `now` in UTC — matches move_in / move_out storage.
+ */
+export function utcDateString(now = new Date()) {
+  return now.toISOString().slice(0, 10);
+}
+
+/**
+ * Whether the booking's move-in calendar day has arrived (UTC).
+ */
+export function isMoveInDateReached(booking, now = new Date()) {
+  if (!booking?.move_in || typeof booking.move_in !== 'string') return false;
+  return booking.move_in <= utcDateString(now);
+}
+
+/**
+ * Student may cancel while the stay still holds a calendar block.
+ */
+export function canStudentCancel(booking) {
+  return Boolean(booking && HOLDING_STATES.includes(booking.state));
+}
+
+/**
+ * In-app / email move-in prompt eligibility (pure booking fields only).
+ * Confirmed + move-in reached. Caller must also ensure the student has not
+ * already responded (move_in_ok event or disputed state).
+ */
+export function isEligibleForMoveInPrompt(booking, now = new Date()) {
+  if (!booking || booking.state !== 'confirmed') return false;
+  return isMoveInDateReached(booking, now);
+}
+
+/**
+ * Student may answer "everything as promised?" once move-in has arrived.
+ */
+export function canRespondToMoveIn(booking, now = new Date()) {
+  return isEligibleForMoveInPrompt(booking, now);
+}
+
+/**
+ * Plan "move-in ok" — no state change (DB enum has no moved_in). Writes a
+ * confirmed → confirmed audit event with metadata.kind = move_in_ok.
+ * Pure — does not touch the DB.
+ */
+export function planMoveInOk({
+  booking,
+  actor = 'student',
+  now = new Date(),
+  metadata = {},
+}) {
+  if (!booking) return { error: 'BOOKING_NOT_FOUND' };
+  if (!['student', 'admin', 'system'].includes(actor)) {
+    return { error: 'INVALID_ACTOR' };
+  }
+  if (booking.state !== 'confirmed') return { error: 'ILLEGAL_TRANSITION' };
+  if (!isMoveInDateReached(booking, now)) return { error: 'MOVE_IN_NOT_REACHED' };
+
+  const iso = now.toISOString();
+  return {
+    patch: {
+      last_activity_at: iso,
+    },
+    event: {
+      booking_id: booking.booking_id,
+      from_state: 'confirmed',
+      to_state: 'confirmed',
+      actor,
+      metadata: { kind: MOVE_IN_OK_KIND, ...(metadata || {}) },
+    },
+    blockAction: { action: 'none' },
+  };
+}
+
+/**
+ * Plan "report a problem" — confirmed → disputed with free-text description.
+ * Pure — does not touch the DB.
+ */
+export function planMoveInProblem({
+  booking,
+  actor = 'student',
+  now = new Date(),
+  description,
+  metadata = {},
+}) {
+  if (!booking) return { error: 'BOOKING_NOT_FOUND' };
+  if (!['student', 'admin', 'system'].includes(actor)) {
+    return { error: 'INVALID_ACTOR' };
+  }
+  if (booking.state !== 'confirmed') return { error: 'ILLEGAL_TRANSITION' };
+  if (!isMoveInDateReached(booking, now)) return { error: 'MOVE_IN_NOT_REACHED' };
+
+  const text =
+    typeof description === 'string' ? description.trim() : '';
+  if (text.length < 10) {
+    return { error: 'INVALID_INPUT', message: 'description must be at least 10 characters' };
+  }
+  if (text.length > 4000) {
+    return { error: 'INVALID_INPUT', message: 'description must be at most 4000 characters' };
+  }
+
+  return planTransition({
+    booking,
+    toState: 'disputed',
+    actor,
+    now,
+    metadata: {
+      kind: MOVE_IN_PROBLEM_KIND,
+      description: text,
+      ...(metadata || {}),
+    },
+  });
 }
 
 /**

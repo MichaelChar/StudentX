@@ -14,14 +14,18 @@ import {
 import {
   planTransition,
   planOfflineAccept,
+  planMoveInOk,
+  planMoveInProblem,
   hasBlockingOverlap,
   blockActionForTransition,
+  MOVE_IN_OK_KIND,
 } from '@/lib/bookingState';
 import { executeBlockAction } from '@/lib/bookingBlocks';
 import {
   sendBookingRequestEmail,
   sendBookingAcceptedEmail,
   sendBookingDeclinedEmail,
+  sendMoveInProblemOpsEmail,
 } from '@/lib/bookingEmail';
 import { normalizeMultiLine } from '@/lib/textNormalize';
 
@@ -453,4 +457,133 @@ export async function acceptBooking({ booking, actor = 'landlord' }) {
   });
 
   return result;
+}
+
+/**
+ * Whether the student has already answered the move-in prompt
+ * (move_in_ok event or booking left confirmed via dispute).
+ */
+export async function hasMoveInResponse(bookingId) {
+  if (!bookingId) return false;
+  const service = getSupabaseAsService();
+  const { data: booking } = await service
+    .from('bookings')
+    .select('state')
+    .eq('booking_id', bookingId)
+    .maybeSingle();
+  if (!booking) return false;
+  if (booking.state === 'disputed') return true;
+
+  const { data: prior } = await service
+    .from('booking_events')
+    .select('event_id')
+    .eq('booking_id', bookingId)
+    .contains('metadata', { kind: MOVE_IN_OK_KIND })
+    .limit(1)
+    .maybeSingle();
+  return Boolean(prior);
+}
+
+/**
+ * Student confirms move-in is as promised (audit event only — stays confirmed).
+ */
+export async function confirmMoveIn({ booking, actor = 'student', now = new Date() }) {
+  if (await hasMoveInResponse(booking.booking_id)) {
+    return { error: 'ALREADY_RESPONDED', message: 'Move-in already answered', status: 409 };
+  }
+
+  const plan = planMoveInOk({ booking, actor, now });
+  if (plan.error) {
+    const status =
+      plan.error === 'ILLEGAL_TRANSITION' || plan.error === 'MOVE_IN_NOT_REACHED'
+        ? 409
+        : 400;
+    return { error: plan.error, message: plan.message || plan.error, status };
+  }
+
+  const service = getSupabaseAsService();
+  const { data: updated, error: updErr } = await service
+    .from('bookings')
+    .update(plan.patch)
+    .eq('booking_id', booking.booking_id)
+    .eq('state', 'confirmed')
+    .select('*')
+    .maybeSingle();
+
+  if (updErr) {
+    console.error('confirmMoveIn update:', updErr);
+    return { error: 'INTERNAL', message: 'Failed to update booking', status: 500 };
+  }
+  if (!updated) {
+    return { error: 'CONFLICT', message: 'Booking state changed', status: 409 };
+  }
+
+  await service.from('booking_events').insert(plan.event);
+  return { booking: updated, event: plan.event };
+}
+
+/**
+ * Student reports a move-in problem → disputed + ops email.
+ */
+export async function reportMoveInProblem({
+  booking,
+  actor = 'student',
+  description,
+  now = new Date(),
+}) {
+  if (await hasMoveInResponse(booking.booking_id)) {
+    return { error: 'ALREADY_RESPONDED', message: 'Move-in already answered', status: 409 };
+  }
+
+  const plan = planMoveInProblem({ booking, actor, now, description });
+  if (plan.error) {
+    const status =
+      plan.error === 'ILLEGAL_TRANSITION' || plan.error === 'MOVE_IN_NOT_REACHED'
+        ? 409
+        : 400;
+    return { error: plan.error, message: plan.message || plan.error, status };
+  }
+
+  const result = await applyTransition({
+    booking,
+    toState: 'disputed',
+    actor,
+    now,
+    metadata: plan.event.metadata,
+  });
+  if (result.error) return result;
+
+  const service = getSupabaseAsService();
+  const { data: student } = await service
+    .from('students')
+    .select('email, display_name')
+    .eq('student_id', booking.student_id)
+    .maybeSingle();
+
+  await sendMoveInProblemOpsEmail({
+    bookingId: booking.booking_id,
+    listingId: booking.listing_id,
+    studentEmail: student?.email,
+    studentName: student?.display_name,
+    moveIn: booking.move_in,
+    moveOut: booking.move_out,
+    description: plan.event.metadata?.description,
+  });
+
+  return result;
+}
+
+/**
+ * Resolve inquiry_id linked to a booking (migration 101).
+ */
+export async function inquiryIdForBooking(bookingId) {
+  if (!bookingId) return null;
+  const service = getSupabaseAsService();
+  const { data, error } = await service
+    .from('inquiries')
+    .select('inquiry_id')
+    .eq('booking_id', bookingId)
+    .maybeSingle();
+  if (error || !data) return null;
+  return data.inquiry_id ?? null;
 }

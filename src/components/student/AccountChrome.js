@@ -11,6 +11,7 @@ export default async function AccountChrome({ locale, student, active, children 
 
   const tabs = [
     { id: 'accommodation', label: t('tabAccommodation'), href: '/student/account/accommodation' },
+    { id: 'bookings', label: t('tabBookings'), href: '/student/account/bookings' },
     { id: 'gigs', label: t('tabHolidayGigs'), href: '/student/account/gigs' },
   ];
 
