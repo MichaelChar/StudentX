@@ -26,7 +26,8 @@ const LISTING_SELECT = `
   landlords ( name, is_verified, profile_photo_url, avg_response_ms ),
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) ),
-  listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) )
+  listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) ),
+  property_verifications ( verification_id, method, verified_at )
 `;
 
 // Slimmer select for the similar-listings rail — same public shape via
@@ -53,7 +54,8 @@ const SIMILAR_LISTING_SELECT = `
   property_types ( name ),
   landlords ( name, is_verified, profile_photo_url, avg_response_ms ),
   listing_amenities ( amenities ( amenity_id, name ) ),
-  listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) )
+  listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) ),
+  property_verifications ( verification_id, method, verified_at )
 `;
 
 const SIMILAR_CANDIDATE_LIMIT = 40;

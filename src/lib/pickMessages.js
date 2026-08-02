@@ -33,6 +33,7 @@ export const CLIENT_NAMESPACES = [
   'listingCard',
   'loaders',
   'nav',
+  'propertyVerification',
   'propylaea',
   'student',
 ];

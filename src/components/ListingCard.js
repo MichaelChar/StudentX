@@ -5,6 +5,7 @@ import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import FavoriteButton from '@/components/FavoriteButton';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
+import PropertyVerifiedBadge from '@/components/listing/PropertyVerifiedBadge';
 import { variantUrl } from '@/lib/photoVariants';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatDistance } from '@/lib/formatDistance';
@@ -145,6 +146,13 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         </div>
 
         <div className="mt-4 flex flex-wrap gap-1.5">
+          {listing.property_verified && listing.property_verification && (
+            <PropertyVerifiedBadge
+              verification={listing.property_verification}
+              size="sm"
+              className="relative z-10"
+            />
+          )}
           {floorUnspecified && (
             <Pill variant="info">{t('floorNotSpecified')}</Pill>
           )}

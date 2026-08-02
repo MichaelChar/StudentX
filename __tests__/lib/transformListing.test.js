@@ -51,6 +51,8 @@ describe('transformListing', () => {
     expect(transformListing(fullRow)).toEqual({
       listing_id: '0100006',
       is_verified: true,
+      property_verified: false,
+      property_verification: null,
       avg_response_ms: 3_600_000,
       response_stats_at: null,
       title: 'Sunny studio near Medical School',
@@ -157,6 +159,55 @@ describe('transformListing', () => {
   it('defaults is_verified to false when landlord row lacks it', () => {
     const row = { ...fullRow, landlords: { name: 'Bob', contact_info: null } };
     expect(transformListing(row).is_verified).toBe(false);
+  });
+
+  it('is property-verified only when a property_verifications row has verified_at set', () => {
+    const pendingOnly = {
+      ...fullRow,
+      property_verifications: [
+        {
+          verification_id: 'v1',
+          method: 'video_call',
+          verified_at: null,
+          checklist_json: {},
+        },
+      ],
+    };
+    expect(transformListing(pendingOnly).property_verified).toBe(false);
+    expect(transformListing(pendingOnly).property_verification).toBeNull();
+
+    const rejectedOnly = {
+      ...fullRow,
+      property_verifications: [
+        {
+          verification_id: 'v2',
+          method: 'video_call',
+          verified_at: null,
+          checklist_json: { outcome: 'rejected' },
+        },
+      ],
+    };
+    expect(transformListing(rejectedOnly).property_verified).toBe(false);
+
+    const completed = {
+      ...fullRow,
+      property_verifications: [
+        {
+          verification_id: 'v3',
+          method: 'video_call',
+          verified_at: '2026-08-12T10:00:00.000Z',
+        },
+      ],
+    };
+    const out = transformListing(completed);
+    expect(out.property_verified).toBe(true);
+    expect(out.property_verification).toEqual({
+      verification_id: 'v3',
+      method: 'video_call',
+      verified_at: '2026-08-12T10:00:00.000Z',
+    });
+    // Landlord ID check remains independent of property verification.
+    expect(out.is_verified).toBe(true);
   });
 
   it('returns empty arrays when amenities and faculty_distances are missing', () => {

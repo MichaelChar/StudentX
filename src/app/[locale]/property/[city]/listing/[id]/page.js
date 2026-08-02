@@ -10,6 +10,7 @@ import BookingWidget from '@/components/listing/BookingWidget';
 import AvailabilityCalendar from '@/components/listing/AvailabilityCalendar';
 import ViewTracker from '@/components/listing/ViewTracker';
 import ReportListingModal from '@/components/listing/ReportListingModal';
+import PropertyVerifiedBadge from '@/components/listing/PropertyVerifiedBadge';
 import FavoriteButton from '@/components/FavoriteButton';
 import ListingCard from '@/components/ListingCard';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
@@ -127,6 +128,13 @@ export default async function ListingPage({ params, searchParams }) {
                 >
                   {listing.address}
                 </p>
+              )}
+              {listing.property_verified && listing.property_verification && (
+                <div className="mt-3">
+                  <PropertyVerifiedBadge
+                    verification={listing.property_verification}
+                  />
+                </div>
               )}
               {responseLabelKey && (
                 <p className="mt-3 text-sm text-night/55 font-sans">
