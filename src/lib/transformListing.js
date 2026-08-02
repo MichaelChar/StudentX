@@ -1,13 +1,23 @@
+import { pickCompletedPropertyVerification } from '@/lib/propertyVerification';
+
 /**
  * Transforms a raw Supabase listing row (with joined dimension tables)
  * into the flat API response shape defined in docs/api-contracts.md.
  */
 export function transformListing(row) {
   const is_verified = row.landlords?.is_verified ?? false;
+  // Property-level verification (W4 video call) — separate from landlord
+  // ID check above. Only rows with verified_at set count; pending/rejected
+  // requests stay off the public badge.
+  const property_verification = pickCompletedPropertyVerification(
+    row.property_verifications,
+  );
 
   return {
     listing_id: row.listing_id,
     is_verified,
+    property_verified: property_verification != null,
+    property_verification,
     // Denormalised host response latency (landlords.avg_response_ms; cron
     // refresh-response-times). Used for public search ranking + display
     // buckets; NULL = unknown. response_stats_at is service-role-only on

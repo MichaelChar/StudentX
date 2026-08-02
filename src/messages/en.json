@@ -135,6 +135,17 @@
     "responseWithinDay": "Usually replies within a day",
     "responseWithin2Days": "Usually replies within 2 days"
   },
+  "propertyVerification": {
+    "badge": "Verified",
+    "tooltipVideoCall": "Video-verified by StudentX on {date} — room, address and access confirmed on camera",
+    "requestCta": "Request video verification",
+    "requesting": "Requesting…",
+    "requestError": "Could not request verification. Please try again.",
+    "statusPending": "Video call pending",
+    "pendingHint": "Video verification requested — we'll schedule a call using the phone number on your profile.",
+    "rejectedHint": "Previous video verification was not approved: {notes}",
+    "alreadyVerified": "This listing is already property-verified."
+  },
   "about": {
     "metaTitle": "About StudentX",
     "metaDescription": "StudentX helps students find housing near their university in Thessaloniki, Greece. Free for students, free for landlords.",
@@ -1373,6 +1384,40 @@
       },
       "saving": "Saving…",
       "saveError": "Couldn't save the change. Please try again."
+    },
+    "propertyVerifications": {
+      "eyebrow": "Admin",
+      "title": "Property verifications",
+      "loading": "Loading…",
+      "loadError": "Failed to load property verification requests",
+      "actionError": "Action failed",
+      "notAuthenticated": "Not authenticated.",
+      "empty": "No {status} property verification requests.",
+      "status": {
+        "pending": "Pending",
+        "approved": "Approved",
+        "rejected": "Rejected"
+      },
+      "landlordLine": "Landlord: {name}",
+      "phoneLine": "Phone: {phone}",
+      "unknownLandlord": "Unknown",
+      "submitted": "Requested {date}",
+      "reviewed": "Verified {date}",
+      "openCall": "Open call checklist",
+      "collapse": "Collapse",
+      "listingPhotos": "Listing photos",
+      "checklistTitle": "Video-call checklist",
+      "checklistRooms": "Rooms match the photos",
+      "checklistAddress": "Address confirmed on camera",
+      "checklistAccess": "Landlord demonstrates access to the property",
+      "checklistHeating": "Heating / bills as described",
+      "notesLabel": "Notes",
+      "notesPlaceholder": "Call notes (shown to landlord on rejection)",
+      "scheduleHint": "Schedule the call: {phone}",
+      "approve": "Approve",
+      "approving": "Approving…",
+      "reject": "Reject",
+      "rejecting": "Rejecting…"
     }
   },
   "loaders": {

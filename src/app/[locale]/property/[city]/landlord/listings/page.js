@@ -17,6 +17,11 @@ import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import StatusLadder, {
   deriveListingStage,
 } from '@/components/listing-wizard/StatusLadder';
+import {
+  hasPendingPropertyVerification,
+  isPropertyVerified,
+  pickLatestRejectedPropertyVerification,
+} from '@/lib/propertyVerification';
 
 /*
   Propylaea landlord listings index — View · Edit · Duplicate · Disable · Delete.
@@ -24,6 +29,7 @@ import StatusLadder, {
 export default function LandlordListingsPage() {
   const t = useTranslations('landlord.dashboard');
   const tWiz = useTranslations('landlord.listingWizard');
+  const tPv = useTranslations('propertyVerification');
   const router = useRouter();
   const accessToken = useAccessToken();
   const [listings, setListings] = useState([]);
@@ -162,6 +168,47 @@ export default function LandlordListingsPage() {
     }
   }
 
+  async function requestPropertyVerification(listingId) {
+    setError('');
+    setBusyId(listingId);
+    try {
+      if (!accessToken) {
+        router.replace('/property/thessaloniki/landlord/login');
+        return;
+      }
+      const res = await fetch(
+        `/api/landlord/listings/${listingId}/property-verification`,
+        {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${accessToken}` },
+        },
+      );
+      const body = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        setError(body.error || tPv('requestError'));
+        return;
+      }
+      setListings((prev) =>
+        prev.map((l) =>
+          l.listing_id === listingId
+            ? {
+                ...l,
+                property_verifications: [
+                  ...(l.property_verifications || []),
+                  body.verification,
+                ],
+              }
+            : l,
+        ),
+      );
+    } catch (err) {
+      console.error('[LandlordListings] property verification request failed:', err);
+      setError(tPv('requestError'));
+    } finally {
+      setBusyId(null);
+    }
+  }
+
   return (
     <LandlordShell
       eyebrow={tWiz('eyebrow')}
@@ -204,7 +251,11 @@ export default function LandlordListingsPage() {
                   onDelete={() => setConfirmTarget(listing)}
                   onDuplicate={() => performDuplicate(listing.listing_id)}
                   onToggleDisable={() => performToggleDisable(listing)}
+                  onRequestVerification={() =>
+                    requestPropertyVerification(listing.listing_id)
+                  }
                   t={t}
+                  tPv={tPv}
                 />
               </li>
             ))}
@@ -247,7 +298,9 @@ function ListingRow({
   onDelete,
   onDuplicate,
   onToggleDisable,
+  onRequestVerification,
   t,
+  tPv,
 }) {
   const photo = listing.photos?.find(
     (url) => typeof url === 'string' && url.startsWith('http'),
@@ -257,12 +310,23 @@ function ListingRow({
   const neighborhood = listing.location?.neighborhood;
   const price = listing.rent?.monthly_price;
   const disabled = isListingDisabled(listing);
+  const pvRows = listing.property_verifications || [];
+  const propertyVerified = isPropertyVerified(pvRows);
+  const pendingPv = hasPendingPropertyVerification(pvRows);
+  const rejectedPv = pickLatestRejectedPropertyVerification(pvRows);
   const stage = deriveListingStage({
     flags: listing.flags,
     isVerified,
-    hasVideoVerification: false,
+    hasVideoVerification: propertyVerified,
     isSubmitted: listing.flags?.listing_status === 'live',
   });
+
+  // Offer request when not already verified/pending, and listing is not a draft.
+  const canRequestPv =
+    !propertyVerified &&
+    !pendingPv &&
+    !disabled &&
+    listing.flags?.listing_status !== 'draft';
 
   return (
     <div className="flex flex-col gap-4 p-5">
@@ -295,6 +359,12 @@ function ListingRow({
             {!disabled && listing.flags?.listing_status === 'draft' && (
               <Pill variant="amenity">{t('statusDraft')}</Pill>
             )}
+            {propertyVerified && (
+              <Pill variant="verified">{tPv('badge')}</Pill>
+            )}
+            {pendingPv && (
+              <Pill variant="pending">{tPv('statusPending')}</Pill>
+            )}
           </div>
           <p className="text-xs text-night/50 mb-1 truncate">{address}</p>
           <p className="label-caps text-night/50">
@@ -302,6 +372,14 @@ function ListingRow({
             {listing.property_types?.name && <> · {listing.property_types.name}</>}
             {price != null && <> · €{price}/mo</>}
           </p>
+          {pendingPv && (
+            <p className="mt-2 text-sm text-night/60">{tPv('pendingHint')}</p>
+          )}
+          {!propertyVerified && !pendingPv && rejectedPv?.notes && (
+            <p className="mt-2 text-sm text-red-700">
+              {tPv('rejectedHint', { notes: rejectedPv.notes })}
+            </p>
+          )}
         </div>
       </div>
 
@@ -337,6 +415,16 @@ function ListingRow({
         >
           {disabled ? t('enable') : t('disable')}
         </button>
+        {canRequestPv && (
+          <button
+            type="button"
+            onClick={onRequestVerification}
+            disabled={busy}
+            className="label-caps px-3 py-1.5 rounded-sm border border-blue/40 bg-blue/5 text-blue hover:border-blue hover:bg-blue/10 transition-colors disabled:opacity-50"
+          >
+            {busy ? tPv('requesting') : tPv('requestCta')}
+          </button>
+        )}
         <button
           type="button"
           onClick={onDelete}

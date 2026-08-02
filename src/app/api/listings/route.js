@@ -35,7 +35,8 @@ const LISTING_SELECT = `
   landlords!inner ( name, is_verified, profile_photo_url, avg_response_ms ),
   listing_amenities ( amenities ( amenity_id, name ) ),
   faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) ),
-  listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) )
+  listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) ),
+  property_verifications ( verification_id, method, verified_at )
 `;
 
 // Fallback SELECT for pre-migration compatibility (e.g. missing
