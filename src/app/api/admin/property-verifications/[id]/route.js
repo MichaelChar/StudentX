@@ -14,8 +14,9 @@ import {
  * PATCH /api/admin/property-verifications/[id]
  * Body: { action: 'approve' | 'reject', notes?, checklist? }
  *
- * Approve: sets verified_at = now(), verified_by = admin email, stores checklist.
- * Reject: leaves verified_at NULL, sets checklist_json.outcome = 'rejected', notes.
+ * Approve: status='approved', verified_at = now(), verified_by, checklist.
+ * Reject: status='rejected', verified_at stays NULL, notes.
+ * Public badge still requires verified_at — status alone is not enough.
  */
 export async function PATCH(request, { params }) {
   const gate = await requireAdminApi(request);
@@ -48,7 +49,7 @@ export async function PATCH(request, { params }) {
   const { data: row, error: fetchError } = await supabase
     .from('property_verifications')
     .select(
-      'verification_id, listing_id, method, verified_at, checklist_json, notes',
+      'verification_id, listing_id, method, status, verified_at, checklist_json, notes',
     )
     .eq('verification_id', id)
     .maybeSingle();
@@ -84,6 +85,7 @@ export async function PATCH(request, { params }) {
     const { error: updateError } = await supabase
       .from('property_verifications')
       .update({
+        status: 'approved',
         verified_at: verifiedAt,
         verified_by: verifiedBy,
         checklist_json: checklistJson,
@@ -113,9 +115,9 @@ export async function PATCH(request, { params }) {
   const { error: rejectError } = await supabase
     .from('property_verifications')
     .update({
+      status: 'rejected',
       verified_at: null,
       verified_by: gate.user?.email || 'admin',
-      checklist_json: { outcome: 'rejected' },
       notes: rejectNotes,
     })
     .eq('verification_id', id);

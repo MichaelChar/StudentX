@@ -1,22 +1,21 @@
 /**
  * Booking state machine (offline MVP — no payment).
  *
- *   requested → accepted → confirmed
+ *   requested → accepted → confirmed → moved_in
  *        ↓          ↓           ↓
  *     declined   expired /   cancelled
  *                cancelled   disputed  (report a problem at/after move-in)
  *
- * Move-in "everything as promised" does not change `bookings.state` (the DB
- * enum in migration 100 has no moved_in/completed value). It is recorded as
- * a same-state booking_events row with metadata.kind = move_in_ok. Silence
- * is NOT confirmation — the student must act; the daily move-in-prompt job
- * emails until they respond (or the booking leaves confirmed).
+ * Move-in "everything as promised" is a real transition: confirmed → moved_in
+ * (migration 103). Silence is NOT confirmation — the student must act; the
+ * daily move-in-prompt job emails while state stays `confirmed`.
  *
  * Availability blocks:
  *   - create request → insert `pending` block for [move_in, move_out]
  *   - accept         → convert that block to `booked`
  *   - decline / expire / cancel (while pending) → delete the pending block
  *   - cancel (while accepted/confirmed) → delete the booked block
+ *   - moved_in does NOT release or alter the booked block
  *   - disputed keeps the booked block (ops holds the calendar)
  *
  * These helpers are pure where possible so tests can exercise every
@@ -29,6 +28,7 @@ export const BOOKING_STATES = Object.freeze([
   'requested',
   'accepted',
   'confirmed',
+  'moved_in',
   'declined',
   'expired',
   'cancelled',
@@ -36,13 +36,18 @@ export const BOOKING_STATES = Object.freeze([
 ]);
 
 export const TERMINAL_STATES = Object.freeze([
+  'moved_in',
   'declined',
   'expired',
   'cancelled',
   'disputed',
 ]);
 
-/** States that still hold a calendar block (pending or booked). */
+/**
+ * States where the student/landlord may still cancel via the normal path.
+ * `moved_in` also keeps the booked availability block but is terminal for
+ * the offline MVP (no cancel transition).
+ */
 export const HOLDING_STATES = Object.freeze(['requested', 'accepted', 'confirmed']);
 
 /** booking_events.metadata.kind for student move-in responses / prompts. */
@@ -54,12 +59,14 @@ export const MOVE_IN_PROMPT_KIND = 'move_in_prompt';
  * Legal transitions: from → Set(to).
  * Offline MVP: accept goes requested → accepted; confirm accepted → confirmed
  * (landlord Accept may apply both in one API call).
- * confirmed → disputed is the "report a problem" move-in path.
+ * confirmed → moved_in is "everything as promised"; confirmed → disputed is
+ * "report a problem".
  */
 const TRANSITIONS = {
   requested: new Set(['accepted', 'declined', 'expired', 'cancelled']),
   accepted: new Set(['confirmed', 'expired', 'cancelled']),
-  confirmed: new Set(['cancelled', 'disputed']),
+  confirmed: new Set(['moved_in', 'cancelled', 'disputed']),
+  moved_in: new Set(),
   declined: new Set(),
   expired: new Set(),
   cancelled: new Set(),
@@ -100,6 +107,7 @@ export function blockActionForTransition(fromState, toState) {
   ) {
     return { action: 'release_booked' };
   }
+  // confirmed → moved_in keeps the booked block (stay is underway).
   return { action: 'none' };
 }
 
@@ -259,8 +267,8 @@ export function canStudentCancel(booking) {
 
 /**
  * In-app / email move-in prompt eligibility (pure booking fields only).
- * Confirmed + move-in reached. Caller must also ensure the student has not
- * already responded (move_in_ok event or disputed state).
+ * Confirmed + move-in reached. Bookings already in moved_in / disputed are
+ * excluded by the state check (no event-log scan).
  */
 export function isEligibleForMoveInPrompt(booking, now = new Date()) {
   if (!booking || booking.state !== 'confirmed') return false;
@@ -275,8 +283,18 @@ export function canRespondToMoveIn(booking, now = new Date()) {
 }
 
 /**
- * Plan "move-in ok" — no state change (DB enum has no moved_in). Writes a
- * confirmed → confirmed audit event with metadata.kind = move_in_ok.
+ * Whether the student has already answered the move-in prompt.
+ * Prefer this over scanning booking_events — state is authoritative after 103.
+ */
+export function hasAnsweredMoveIn(booking) {
+  return Boolean(
+    booking && (booking.state === 'moved_in' || booking.state === 'disputed'),
+  );
+}
+
+/**
+ * Plan "move-in ok" — confirmed → moved_in with metadata.kind = move_in_ok.
+ * Does not release or alter the availability block.
  * Pure — does not touch the DB.
  */
 export function planMoveInOk({
@@ -289,23 +307,15 @@ export function planMoveInOk({
   if (!['student', 'admin', 'system'].includes(actor)) {
     return { error: 'INVALID_ACTOR' };
   }
-  if (booking.state !== 'confirmed') return { error: 'ILLEGAL_TRANSITION' };
   if (!isMoveInDateReached(booking, now)) return { error: 'MOVE_IN_NOT_REACHED' };
 
-  const iso = now.toISOString();
-  return {
-    patch: {
-      last_activity_at: iso,
-    },
-    event: {
-      booking_id: booking.booking_id,
-      from_state: 'confirmed',
-      to_state: 'confirmed',
-      actor,
-      metadata: { kind: MOVE_IN_OK_KIND, ...(metadata || {}) },
-    },
-    blockAction: { action: 'none' },
-  };
+  return planTransition({
+    booking,
+    toState: 'moved_in',
+    actor,
+    now,
+    metadata: { kind: MOVE_IN_OK_KIND, ...(metadata || {}) },
+  });
 }
 
 /**

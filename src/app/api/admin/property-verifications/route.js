@@ -1,15 +1,12 @@
 import { NextResponse } from 'next/server';
 import { requireAdminApi } from '@/lib/requireAdmin';
 import { getSupabaseAsService } from '@/lib/supabaseServer';
-import {
-  isPendingPropertyVerificationRow,
-  isRejectedPropertyVerificationRow,
-} from '@/lib/propertyVerification';
 
 /**
  * GET /api/admin/property-verifications?status=pending|approved|rejected
  * Admin queue for W4 property video-call verification (separate from
  * landlord ID verification_requests under /api/admin/verifications).
+ * Filters on the real status column (migration 103).
  */
 export async function GET(request) {
   const gate = await requireAdminApi(request);
@@ -28,15 +25,13 @@ export async function GET(request) {
 
   const supabase = getSupabaseAsService();
 
-  // Fetch a broad set then filter by derived status — verified_at / outcome
-  // live in columns that don't map cleanly to a single eq filter for all
-  // three states. Volume is ops-scale (dozens), not marketplace-scale.
-  let query = supabase
+  const { data, error } = await supabase
     .from('property_verifications')
     .select(`
       verification_id,
       listing_id,
       method,
+      status,
       verified_by,
       verified_at,
       checklist_json,
@@ -64,16 +59,8 @@ export async function GET(request) {
         )
       )
     `)
+    .eq('status', status)
     .order('created_at', { ascending: true });
-
-  if (status === 'approved') {
-    query = query.not('verified_at', 'is', null);
-  } else {
-    // pending + rejected both have verified_at null
-    query = query.is('verified_at', null);
-  }
-
-  const { data, error } = await query;
 
   if (error) {
     console.error('Failed to fetch property verifications:', error);
@@ -83,14 +70,7 @@ export async function GET(request) {
     );
   }
 
-  const rows = (data || []).filter((row) => {
-    if (status === 'approved') return Boolean(row.verified_at);
-    if (status === 'pending') return isPendingPropertyVerificationRow(row);
-    if (status === 'rejected') return isRejectedPropertyVerificationRow(row);
-    return false;
-  });
-
-  const requests = rows.map((row) => {
+  const requests = (data || []).map((row) => {
     const listing = Array.isArray(row.listings) ? row.listings[0] : row.listings;
     const landlord = Array.isArray(listing?.landlords)
       ? listing.landlords[0]
@@ -109,7 +89,7 @@ export async function GET(request) {
       checklist_json: row.checklist_json || {},
       notes: row.notes,
       created_at: row.created_at,
-      status,
+      status: row.status || status,
       listing_title: listing?.title ?? null,
       listing_photos: Array.isArray(listing?.photos) ? listing.photos : [],
       listing_description: listing?.description ?? null,

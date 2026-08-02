@@ -183,7 +183,8 @@ describe('transformListing', () => {
           verification_id: 'v2',
           method: 'video_call',
           verified_at: null,
-          checklist_json: { outcome: 'rejected' },
+          status: 'rejected',
+          checklist_json: {},
         },
       ],
     };

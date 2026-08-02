@@ -26,7 +26,9 @@ function formatDate(iso) {
 
 function statusVariant(state) {
   if (state === 'requested') return 'pending';
-  if (state === 'accepted' || state === 'confirmed') return 'info';
+  if (state === 'accepted' || state === 'confirmed' || state === 'moved_in') {
+    return 'info';
+  }
   if (state === 'declined' || state === 'cancelled' || state === 'expired') {
     return 'amenity';
   }
@@ -73,9 +75,13 @@ export default function LandlordReservationsPage() {
 
   const filtered = useMemo(() => {
     // Offline accept lands on confirmed; "accepted" tab still shows accepted rows.
+    // Confirmed tab includes moved_in (student confirmed stay).
     // For cancelled tab include expired as well (terminal failures).
     if (tab === 'cancelled') {
       return bookings.filter((b) => b.state === 'cancelled' || b.state === 'expired');
+    }
+    if (tab === 'confirmed') {
+      return bookings.filter((b) => b.state === 'confirmed' || b.state === 'moved_in');
     }
     return bookings.filter((b) => b.state === tab);
   }, [bookings, tab]);
@@ -94,7 +100,9 @@ export default function LandlordReservationsPage() {
           const count =
             key === 'cancelled'
               ? (counts.cancelled || 0) + (counts.expired || 0)
-              : counts[key] || 0;
+              : key === 'confirmed'
+                ? (counts.confirmed || 0) + (counts.moved_in || 0)
+                : counts[key] || 0;
           const active = tab === key;
           return (
             <button

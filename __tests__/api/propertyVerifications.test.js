@@ -58,6 +58,7 @@ function chain(terminal, { onInsert } = {}) {
                 verification_id: 'new-v',
                 listing_id: '0100001',
                 method: 'video_call',
+                status: 'pending',
                 verified_at: null,
                 checklist_json: {},
                 notes: null,
@@ -154,6 +155,7 @@ describe('landlord property-verification request', () => {
                   data: [
                     {
                       verification_id: 'existing',
+                      status: 'pending',
                       verified_at: null,
                       checklist_json: {},
                       created_at: '2026-08-01T00:00:00Z',
@@ -237,6 +239,7 @@ describe('landlord property-verification request', () => {
     expect(inserted).toMatchObject({
       listing_id: '0100001',
       method: 'video_call',
+      status: 'pending',
       verified_at: null,
     });
   });

@@ -15,13 +15,20 @@ describe('propertyVerification helpers', () => {
     expect(isPropertyVerified([])).toBe(false);
     expect(
       isPropertyVerified([
-        { method: 'video_call', verified_at: null, checklist_json: {} },
+        { method: 'video_call', status: 'pending', verified_at: null },
+      ]),
+    ).toBe(false);
+    // status=approved without verified_at must not badge
+    expect(
+      isPropertyVerified([
+        { method: 'video_call', status: 'approved', verified_at: null },
       ]),
     ).toBe(false);
     expect(
       isPropertyVerified([
         {
           method: 'video_call',
+          status: 'approved',
           verified_at: '2026-08-12T10:00:00.000Z',
         },
       ]),
@@ -33,16 +40,19 @@ describe('propertyVerification helpers', () => {
       {
         verification_id: 'old',
         method: 'video_call',
+        status: 'approved',
         verified_at: '2026-01-01T00:00:00.000Z',
       },
       {
         verification_id: 'new',
         method: 'video_call',
+        status: 'approved',
         verified_at: '2026-08-12T10:00:00.000Z',
       },
       {
         verification_id: 'pending',
         method: 'video_call',
+        status: 'pending',
         verified_at: null,
       },
     ]);
@@ -50,14 +60,16 @@ describe('propertyVerification helpers', () => {
     expect(picked.method).toBe('video_call');
   });
 
-  it('detects pending vs rejected rows', () => {
+  it('detects pending vs rejected rows via status column', () => {
     const pending = {
+      status: 'pending',
       verified_at: null,
       checklist_json: {},
     };
     const rejected = {
+      status: 'rejected',
       verified_at: null,
-      checklist_json: { outcome: 'rejected' },
+      checklist_json: {},
     };
     expect(isPendingPropertyVerificationRow(pending)).toBe(true);
     expect(isRejectedPropertyVerificationRow(pending)).toBe(false);

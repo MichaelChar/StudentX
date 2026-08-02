@@ -19,14 +19,12 @@ vi.mock('@/lib/supabaseServer', () => ({
 }));
 
 const inquiryIdForBooking = vi.fn();
-const hasMoveInResponse = vi.fn();
 
 vi.mock('@/lib/bookingService', () => ({
   applyTransition: vi.fn(),
   confirmMoveIn: vi.fn(),
   reportMoveInProblem: vi.fn(),
   inquiryIdForBooking: (...args) => inquiryIdForBooking(...args),
-  hasMoveInResponse: (...args) => hasMoveInResponse(...args),
   acceptBooking: vi.fn(),
   declineBooking: vi.fn(),
 }));
@@ -107,9 +105,7 @@ beforeEach(() => {
   getSupabaseWithToken.mockReset();
   getSupabaseAsService.mockReset();
   inquiryIdForBooking.mockReset();
-  hasMoveInResponse.mockReset();
   inquiryIdForBooking.mockResolvedValue(null);
-  hasMoveInResponse.mockResolvedValue(false);
 });
 
 function authAsLandlord() {

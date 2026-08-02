@@ -5,12 +5,17 @@
  * property_verifications row with verified_at set. Landlord ID
  * verification (landlords.is_verified) is a separate signal.
  *
- * Pending vs rejected (both have verified_at NULL):
- *   - pending  — no outcome, or outcome not 'rejected'
- *   - rejected — checklist_json.outcome === 'rejected'
+ * Lifecycle status (migration 103) is a real column:
+ *   - pending  — request open
+ *   - approved — verified (also sets verified_at)
+ *   - rejected — admin rejected
+ *
+ * Public badge still requires verified_at — do not badge on status alone.
  */
 
 export const VERIFICATION_METHODS = ['video_call', 'in_person', 'document', 'other'];
+
+export const VERIFICATION_STATUSES = ['pending', 'approved', 'rejected'];
 
 /** Fixed checklist keys ticked during the admin video call. */
 export const PROPERTY_VERIFICATION_CHECKLIST = [
@@ -22,6 +27,7 @@ export const PROPERTY_VERIFICATION_CHECKLIST = [
 
 /**
  * Latest completed verification from a joined property_verifications array.
+ * Completed = verified_at set (not status alone).
  * @returns {{ verification_id?: string, method: string, verified_at: string } | null}
  */
 export function pickCompletedPropertyVerification(rows) {
@@ -43,21 +49,25 @@ export function isPropertyVerified(rows) {
   return pickCompletedPropertyVerification(rows) != null;
 }
 
-/** True when a non-rejected, incomplete row exists (one pending max). */
+/** True when a pending request exists (one pending max per listing). */
 export function hasPendingPropertyVerification(rows) {
   if (!Array.isArray(rows)) return false;
   return rows.some(isPendingPropertyVerificationRow);
 }
 
 export function isPendingPropertyVerificationRow(row) {
-  if (!row || row.verified_at) return false;
-  const outcome = row.checklist_json?.outcome;
-  return outcome !== 'rejected';
+  if (!row) return false;
+  return row.status === 'pending';
 }
 
 export function isRejectedPropertyVerificationRow(row) {
-  if (!row || row.verified_at) return false;
-  return row.checklist_json?.outcome === 'rejected';
+  if (!row) return false;
+  return row.status === 'rejected';
+}
+
+export function isApprovedPropertyVerificationRow(row) {
+  if (!row) return false;
+  return row.status === 'approved';
 }
 
 /** Latest rejected row, if any (for landlord notes). */

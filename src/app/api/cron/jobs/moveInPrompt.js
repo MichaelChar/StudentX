@@ -2,9 +2,10 @@
  * Email students on confirmed bookings whose move-in day has arrived and who
  * have not yet answered the move-in prompt (confirm or report a problem).
  *
+ * Candidates are state = 'confirmed' only — moved_in / disputed are excluded
+ * by the state filter (no booking_events metadata scan for move_in_ok).
  * Idempotent via booking_events metadata.kind = move_in_prompt (one email
- * per booking). Silence is NOT confirmation — we only stop after a student
- * response (move_in_ok event or disputed state).
+ * per booking). Silence is NOT confirmation.
  *
  * Cadence: daily (registered on the master tick — no new CF trigger).
  */
@@ -13,7 +14,6 @@ import { getSupabaseAsService } from '@/lib/supabaseServer';
 import {
   isEligibleForMoveInPrompt,
   MOVE_IN_PROMPT_KIND,
-  MOVE_IN_OK_KIND,
   utcDateString,
 } from '@/lib/bookingState';
 import { sendMoveInPromptEmail } from '@/lib/bookingEmail';
@@ -47,16 +47,6 @@ export async function runMoveInPrompt(now = new Date()) {
 
   for (const booking of candidates || []) {
     if (!isEligibleForMoveInPrompt(booking, now)) continue;
-
-    // Already confirmed move-in as good?
-    const { data: okEvent } = await service
-      .from('booking_events')
-      .select('event_id')
-      .eq('booking_id', booking.booking_id)
-      .contains('metadata', { kind: MOVE_IN_OK_KIND })
-      .limit(1)
-      .maybeSingle();
-    if (okEvent) continue;
 
     // Already emailed?
     const { data: prior } = await service

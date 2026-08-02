@@ -24,7 +24,9 @@ function formatDate(iso) {
 
 function statusVariant(state) {
   if (state === 'requested') return 'pending';
-  if (state === 'accepted' || state === 'confirmed') return 'info';
+  if (state === 'accepted' || state === 'confirmed' || state === 'moved_in') {
+    return 'info';
+  }
   if (state === 'disputed') return 'pending';
   return 'amenity';
 }

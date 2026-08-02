@@ -28,7 +28,7 @@ export const LANDLORD_LISTING_SELECT = `
   location ( location_id, address, neighborhood, lat, lng ),
   property_types ( property_type_id, name ),
   listing_amenities ( amenities ( amenity_id, name ) ),
-  property_verifications ( verification_id, method, verified_at, checklist_json, notes, created_at )
+  property_verifications ( verification_id, method, status, verified_at, checklist_json, notes, created_at )
 `;
 
 // Pre-migration fallback: identical to LANDLORD_LISTING_SELECT minus columns

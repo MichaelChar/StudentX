@@ -21,7 +21,6 @@ const applyTransition = vi.fn();
 const confirmMoveIn = vi.fn();
 const reportMoveInProblem = vi.fn();
 const inquiryIdForBooking = vi.fn();
-const hasMoveInResponse = vi.fn();
 const acceptBooking = vi.fn();
 const declineBooking = vi.fn();
 
@@ -30,7 +29,6 @@ vi.mock('@/lib/bookingService', () => ({
   confirmMoveIn: (...args) => confirmMoveIn(...args),
   reportMoveInProblem: (...args) => reportMoveInProblem(...args),
   inquiryIdForBooking: (...args) => inquiryIdForBooking(...args),
-  hasMoveInResponse: (...args) => hasMoveInResponse(...args),
   acceptBooking: (...args) => acceptBooking(...args),
   declineBooking: (...args) => declineBooking(...args),
 }));
@@ -105,7 +103,6 @@ beforeEach(() => {
   confirmMoveIn.mockReset();
   reportMoveInProblem.mockReset();
   inquiryIdForBooking.mockReset();
-  hasMoveInResponse.mockReset();
 });
 
 function authAsStudent() {
@@ -126,7 +123,6 @@ describe('student cannot act on another student\'s booking', () => {
   it('GET returns 404 for a foreign booking', async () => {
     authAsStudent();
     inquiryIdForBooking.mockResolvedValue(null);
-    hasMoveInResponse.mockResolvedValue(false);
 
     const res = await GET(req(), { params: Promise.resolve({ id: 'b-foreign' }) });
     expect(res.status).toBe(404);

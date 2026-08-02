@@ -12,8 +12,9 @@
  *   null         — avg null/invalid, > 48h, or stats older than ~7 days
  *
  * Freshness: when `response_stats_at` is provided, omit if older than
- * STALE_AFTER_MS. When it is null/undefined (column not on the public
- * payload — anon has no SELECT grant), only avg_response_ms is considered.
+ * STALE_AFTER_MS (~7 days). Public joins select the column after migration
+ * 103 (anon GRANT). When it is null/undefined (never stamped, or pre-103
+ * payload), only avg_response_ms is considered.
  */
 
 const HOUR_MS = 60 * 60 * 1000;
