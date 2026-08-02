@@ -16,12 +16,13 @@ const withNextIntl = createNextIntlPlugin('./src/i18n/request.js');
 //     (uploaded photos), *.tile.openstreetmap.org (map tiles), unpkg.com
 //     (Leaflet marker PNGs), assets.bergeinsatz.ch (Holiday Gigs seed
 //     photos); all listed below.
-//   - connect-src: Supabase REST/Auth (https) + Realtime (wss). The wss
-//     scheme is required separately — Safari (and CSP3 spec) treat
-//     `https://x` as scheme-pinned and block `wss://x` without an explicit
-//     entry. Symptom was Safari users hitting `SecurityError: The
-//     operation is insecure.` and Safari's fallback "This page couldn't
-//     load" UI when ChatThread tried to subscribe.
+//   - connect-src: Supabase REST/Auth (https) + Realtime (wss) +
+//     nominatim.openstreetmap.org (landlord wizard address geocoding).
+//     The wss scheme is required separately — Safari (and CSP3 spec)
+//     treat `https://x` as scheme-pinned and block `wss://x` without an
+//     explicit entry. Symptom was Safari users hitting `SecurityError:
+//     The operation is insecure.` and Safari's fallback "This page
+//     couldn't load" UI when ChatThread tried to subscribe.
 //   - font-src: next/font/google self-hosts at build time; fonts.gstatic.com
 //     kept defensively in case any subset still pulls there.
 //   - object-src: 'none' — no <object>/<embed>/<applet> anywhere in the app.
@@ -59,7 +60,7 @@ const SECURITY_HEADERS = [
       "style-src 'self' 'unsafe-inline'",
       "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org https://unpkg.com https://assets.bergeinsatz.ch",
       "font-src 'self' data: https://fonts.gstatic.com",
-      "connect-src 'self' https://ecluqurlfbvkxrnoyhaq.supabase.co wss://ecluqurlfbvkxrnoyhaq.supabase.co",
+      "connect-src 'self' https://ecluqurlfbvkxrnoyhaq.supabase.co wss://ecluqurlfbvkxrnoyhaq.supabase.co https://nominatim.openstreetmap.org",
       "object-src 'none'",
       "frame-ancestors 'none'",
       "base-uri 'self'",

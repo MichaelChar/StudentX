@@ -1,35 +1,21 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken, getSupabaseWithToken, getSupabaseAsService } from '@/lib/supabaseServer';
+import {
+  extractToken,
+  getUserFromToken,
+  getSupabaseWithToken,
+  getSupabaseAsService,
+} from '@/lib/supabaseServer';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
-import { normalizeTitle } from '@/lib/listingTitle';
-import { normalizeSingleLine, normalizeMultiLine } from '@/lib/textNormalize';
+import { writeUniversityDistances } from '@/lib/universityDistances';
 import { selectLandlordListings } from '@/lib/landlordListingSelect';
 import {
-  getCityUniversityIds,
-  parseUniversityDistances,
-  writeUniversityDistances,
-} from '@/lib/universityDistances';
-
-const ALLOWED_MIN_DURATIONS = [1, 5, 9];
-
-// Coerces the form value (string "" / "1" / "5" / "9" or number / null / undefined)
-// into the SMALLINT enum stored in DB. Throws on invalid values so the caller
-// can return 400.
-function parseMinDuration(value) {
-  if (value === null || value === undefined || value === '') return null;
-  const n = Number(value);
-  if (!ALLOWED_MIN_DURATIONS.includes(n)) {
-    const err = new Error('min_duration_months must be 1, 5, or 9');
-    err.code = 'INVALID_MIN_DURATION';
-    throw err;
-  }
-  return n;
-}
+  parseListingWriteBody,
+  ensureExtraPropertyTypes,
+} from '@/lib/landlordListingBody';
 
 // Service-role: migration 065 drops auth_user_id from the anon column
 // allowlist on landlords, so this self-lookup can't run on the anon client.
-// userId is JWT-derived, so the read stays scoped to the authenticated caller.
 async function getLandlordId(userId) {
   const { data } = await getSupabaseAsService()
     .from('landlords')
@@ -47,7 +33,9 @@ export async function GET(request) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const landlordId = await getLandlordId(user.id);
-  if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  if (!landlordId) {
+    return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  }
 
   const authedSupabase = getSupabaseWithToken(token);
   const { data, error } = await selectLandlordListings(authedSupabase, landlordId);
@@ -68,91 +56,58 @@ export async function POST(request) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const landlordId = await getLandlordId(user.id);
-  if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  if (!landlordId) {
+    return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  }
 
   const body = await request.json();
+  const isDraft = body.draft === true;
+  const isSubmit = body.submit === true;
 
-  // Normalize free-text inputs (control-strip + whitespace-collapse + trim).
-  // Required fields are checked AFTER normalization so a string of pure
-  // whitespace surfaces as "missing" rather than passing the truthy check
-  // and then failing later in odd ways.
-  const normalizedAddress = normalizeSingleLine(body.address);
-  const normalizedNeighborhood = normalizeSingleLine(body.neighborhood);
-  const normalizedDescription = normalizeMultiLine(body.description);
+  const parsed = await parseListingWriteBody(body, {
+    partial: isDraft && !isSubmit,
+    requireUniversities: isSubmit,
+    requireCoords: true,
+    requirePhotos: isSubmit,
+  });
+  if (!parsed.ok) {
+    return NextResponse.json({ error: parsed.error }, { status: parsed.status });
+  }
+  const d = parsed.data;
 
-  // Validate required fields
-  if (!normalizedAddress || !normalizedNeighborhood || !body.property_type) {
+  // Draft creates still need a property_type (NOT NULL FK). Callers should
+  // send one; if missing on a pure draft, reject clearly.
+  if (!d.property_type) {
     return NextResponse.json(
-      { error: 'address, neighborhood, and property_type are required' },
-      { status: 400 }
+      { error: 'property_type is required' },
+      { status: 400 },
     );
   }
-
-  // Validate + normalize the public title. Required, max 80 chars, trimmed.
-  let normalizedTitle;
-  try {
-    normalizedTitle = normalizeTitle(body.title);
-  } catch (err) {
-    if (err.code === 'TITLE_TOO_LONG') {
-      return NextResponse.json({ error: err.message }, { status: 400 });
-    }
-    throw err;
+  if (!d.normalizedAddress || !d.normalizedNeighborhood) {
+    return NextResponse.json(
+      { error: 'address and neighborhood are required' },
+      { status: 400 },
+    );
   }
-  if (!normalizedTitle) {
+  if (!d.normalizedTitle) {
     return NextResponse.json({ error: 'title is required' }, { status: 400 });
   }
-
-  // Validate min_duration_months early so it surfaces as 400 rather than 500
-  try {
-    parseMinDuration(body.min_duration_months);
-  } catch (err) {
-    if (err.code === 'INVALID_MIN_DURATION') {
-      return NextResponse.json({ error: err.message }, { status: 400 });
-    }
-    throw err;
+  if (d.lat == null || d.lng == null) {
+    return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
   }
 
-  // Validate the optional university-distance rows BEFORE anything is written,
-  // so a bad number is a 400 the form can show rather than a half-created
-  // listing. A failed universities lookup (migration 066 not applied yet) is
-  // treated as "skip the field", not "reject the listing".
-  let universityDistanceRows = null;
-  if (body.university_distances !== undefined) {
-    const validIds = await getCityUniversityIds(getSupabase());
-    if (validIds) {
-      const parsed = parseUniversityDistances(body.university_distances, validIds);
-      if (parsed.error) {
-        return NextResponse.json({ error: parsed.error }, { status: 400 });
-      }
-      universityDistanceRows = parsed.rows;
-    }
-  }
-
-  // Uniform photo cap for all landlords (combined uploaded + external).
-  const PHOTO_LIMIT = 20;
-  const uploadedPhotos = Array.isArray(body.photos) ? body.photos : [];
-  const externalPhotos = Array.isArray(body.external_photo_urls) ? body.external_photo_urls : [];
-  const totalPhotos = uploadedPhotos.length + externalPhotos.length;
-  if (totalPhotos > PHOTO_LIMIT) {
-    return NextResponse.json(
-      { error: `Listings are limited to ${PHOTO_LIMIT} photos.` },
-      { status: 400 }
-    );
-  }
+  await ensureExtraPropertyTypes();
 
   const authedSupabase = getSupabaseWithToken(token);
   const supabase = getSupabaseAsService();
 
-  // Insert rent row (use service-role client because the RLS ALL policy on
-  // rent requires the rent_id to already appear in listings, which blocks the
-  // read-back on a freshly inserted row before the listing is created)
   const { data: rentData, error: rentError } = await supabase
     .from('rent')
     .insert({
-      monthly_price: body.monthly_price || null,
+      monthly_price: d.monthly_price ?? null,
       currency: 'EUR',
-      bills_included: body.bills_included || false,
-      deposit: body.deposit || 0,
+      bills_included: d.bills_included ?? false,
+      deposit: d.deposit ?? 0,
     })
     .select('rent_id')
     .single();
@@ -162,14 +117,13 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Failed to create listing' }, { status: 500 });
   }
 
-  // Insert location row (same RLS issue as rent — use service-role client)
   const { data: locationData, error: locationError } = await supabase
     .from('location')
     .insert({
-      address: normalizedAddress,
-      neighborhood: normalizedNeighborhood,
-      lat: body.lat != null && body.lat !== '' ? parseFloat(body.lat) : null,
-      lng: body.lng != null && body.lng !== '' ? parseFloat(body.lng) : null,
+      address: d.normalizedAddress,
+      neighborhood: d.normalizedNeighborhood,
+      lat: d.lat,
+      lng: d.lng,
     })
     .select('location_id')
     .single();
@@ -179,18 +133,16 @@ export async function POST(request) {
     return NextResponse.json({ error: 'Failed to create listing' }, { status: 500 });
   }
 
-  // Look up property_type_id
   const { data: propType, error: propTypeError } = await getSupabase()
     .from('property_types')
     .select('property_type_id')
-    .eq('name', body.property_type)
+    .eq('name', d.property_type)
     .single();
 
   if (propTypeError || !propType) {
     return NextResponse.json({ error: 'Invalid property type' }, { status: 400 });
   }
 
-  // Generate listing_id: landlordId (4 digits) + sequence (3 digits)
   const { data: maxRow } = await getSupabase()
     .from('listings')
     .select('listing_id')
@@ -207,64 +159,107 @@ export async function POST(request) {
   }
   const listingId = landlordId + String(nextSeq).padStart(3, '0');
 
-  // Insert listing row
+  const listingInsert = {
+    listing_id: listingId,
+    landlord_id: landlordId,
+    title: d.normalizedTitle,
+    rent_id: rentData.rent_id,
+    location_id: locationData.location_id,
+    property_type_id: propType.property_type_id,
+    description: d.normalizedDescription ?? null,
+    photos: d.photos || [],
+    external_photo_urls: d.external_photo_urls || [],
+    sqm: d.sqm ?? null,
+    floor: d.floor ?? null,
+    available_from: d.available_from ?? null,
+    available_to: d.available_to ?? null,
+    min_duration_months: d.minDuration ?? null,
+    max_duration_months: d.maxDuration ?? null,
+    bedrooms: d.bedrooms ?? null,
+    bathrooms: d.bathrooms ?? null,
+    agency_fee: d.agency_fee ?? null,
+    video_url: d.video_url ?? null,
+    smoking_allowed: d.smoking_allowed ?? null,
+    pets_allowed: d.pets_allowed ?? null,
+    additional_rules: d.additional_rules ?? null,
+    flags: d.flags || {
+      listing_status: isSubmit ? 'live' : 'draft',
+    },
+  };
+
   const { data: listing, error: listingError } = await authedSupabase
     .from('listings')
-    .insert({
-      listing_id: listingId,
-      landlord_id: landlordId,
-      title: normalizedTitle,
-      rent_id: rentData.rent_id,
-      location_id: locationData.location_id,
-      property_type_id: propType.property_type_id,
-      description: normalizedDescription,
-      photos: body.photos || [],
-      external_photo_urls: Array.isArray(body.external_photo_urls) ? body.external_photo_urls : [],
-      sqm: body.sqm || null,
-      floor: body.floor != null && body.floor !== '' ? parseInt(body.floor, 10) : null,
-      available_from: body.available_from || null,
-      min_duration_months: parseMinDuration(body.min_duration_months),
-    })
+    .insert(listingInsert)
     .select('listing_id')
     .single();
 
   if (listingError) {
-    console.error('Failed to insert listing:', listingError);
-    return NextResponse.json({ error: 'Failed to create listing' }, { status: 500 });
+    // Retry without marketplace columns if prod is pre-100.
+    console.warn('Listing insert failed, retrying lean insert:', listingError.message);
+    const lean = {
+      listing_id: listingId,
+      landlord_id: landlordId,
+      title: d.normalizedTitle,
+      rent_id: rentData.rent_id,
+      location_id: locationData.location_id,
+      property_type_id: propType.property_type_id,
+      description: d.normalizedDescription ?? null,
+      photos: d.photos || [],
+      sqm: d.sqm ?? null,
+      floor: d.floor ?? null,
+      available_from: d.available_from ?? null,
+      min_duration_months: d.minDuration ?? null,
+    };
+    const retry = await authedSupabase
+      .from('listings')
+      .insert(lean)
+      .select('listing_id')
+      .single();
+    if (retry.error) {
+      console.error('Failed to insert listing:', retry.error);
+      return NextResponse.json({ error: 'Failed to create listing' }, { status: 500 });
+    }
+    void listing;
   }
 
-  // Insert amenities
-  if (body.amenity_ids?.length > 0) {
-    const rows = body.amenity_ids.map((amenity_id) => ({ listing_id: listingId, amenity_id }));
-    const { error: amenityError } = await authedSupabase.from('listing_amenities').insert(rows);
+  if (d.amenity_ids?.length > 0) {
+    const rows = d.amenity_ids.map((amenity_id) => ({
+      listing_id: listingId,
+      amenity_id,
+    }));
+    const { error: amenityError } = await authedSupabase
+      .from('listing_amenities')
+      .insert(rows);
     if (amenityError) {
       console.error('Failed to insert amenities:', amenityError);
     }
   }
 
-  // Insert the landlord's university distances. Token-scoped client: the RLS
-  // policy from migration 066 is what proves ownership. Non-fatal — an optional
-  // field must never turn a successful create into a failure.
-  if (universityDistanceRows?.length > 0) {
+  if (d.universityDistanceRows?.length > 0) {
     const { error: distanceError } = await writeUniversityDistances(
       authedSupabase,
       listingId,
-      universityDistanceRows,
+      d.universityDistanceRows,
     );
     if (distanceError) {
       console.error('Failed to insert university distances:', distanceError);
     }
   }
 
-  // Populate faculty_distances inline so the new listing's detail page renders
-  // walk/transit minutes immediately, instead of waiting for the next 09:15
-  // UTC cron tick. Non-fatal: swallowed so a flaky OSRM never fails create —
-  // the daily cron remains the safety net.
+  if (d.blackouts?.length > 0) {
+    const { error: blockError } = await authedSupabase
+      .from('listing_availability_blocks')
+      .insert(d.blackouts.map((b) => ({ ...b, listing_id: listingId })));
+    if (blockError) {
+      console.error('Failed to insert blackouts:', blockError);
+    }
+  }
+
   try {
-    // Service-role client: faculty_distances writes are locked to the service
-    // role (migration 055) so signed-in users can't tamper with commute data.
-    // This landlord is already authorized for the listing they just created.
-    await recomputeMissingDistances({ listingIds: [listingId], supabase: getSupabaseAsService() });
+    await recomputeMissingDistances({
+      listingIds: [listingId],
+      supabase: getSupabaseAsService(),
+    });
   } catch (err) {
     console.error('[landlord/listings POST] inline distance recompute failed:', err);
   }

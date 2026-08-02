@@ -1,31 +1,18 @@
 import { NextResponse } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
-import { extractToken, getUserFromToken, getSupabaseWithToken, getSupabaseAsService } from '@/lib/supabaseServer';
-import { recomputeMissingDistances } from '@/lib/recomputeDistances';
-import { normalizeTitle } from '@/lib/listingTitle';
-import { normalizeSingleLine, normalizeMultiLine } from '@/lib/textNormalize';
 import {
-  getCityUniversityIds,
-  parseUniversityDistances,
-  writeUniversityDistances,
-} from '@/lib/universityDistances';
+  extractToken,
+  getUserFromToken,
+  getSupabaseWithToken,
+  getSupabaseAsService,
+} from '@/lib/supabaseServer';
+import { recomputeMissingDistances } from '@/lib/recomputeDistances';
+import { writeUniversityDistances } from '@/lib/universityDistances';
+import {
+  parseListingWriteBody,
+  ensureExtraPropertyTypes,
+} from '@/lib/landlordListingBody';
 
-const ALLOWED_MIN_DURATIONS = [1, 5, 9];
-
-function parseMinDuration(value) {
-  if (value === null || value === undefined || value === '') return null;
-  const n = Number(value);
-  if (!ALLOWED_MIN_DURATIONS.includes(n)) {
-    const err = new Error('min_duration_months must be 1, 5, or 9');
-    err.code = 'INVALID_MIN_DURATION';
-    throw err;
-  }
-  return n;
-}
-
-// Service-role: migration 065 drops auth_user_id from the anon column
-// allowlist on landlords, so this self-lookup can't run on the anon client.
-// userId is JWT-derived, so the read stays scoped to the authenticated caller.
 async function getLandlordId(userId) {
   const { data } = await getSupabaseAsService()
     .from('landlords')
@@ -35,6 +22,28 @@ async function getLandlordId(userId) {
   return data?.landlord_id ?? null;
 }
 
+const SINGLE_LISTING_SELECT = `
+  listing_id, landlord_id, title, rent_id, location_id, property_type_id,
+  description, photos, external_photo_urls, sqm, floor, available_from,
+  available_to, min_duration_months, max_duration_months,
+  bedrooms, bathrooms, agency_fee, video_url,
+  smoking_allowed, pets_allowed, additional_rules, flags,
+  rent ( rent_id, monthly_price, bills_included, deposit ),
+  location ( location_id, address, neighborhood, lat, lng ),
+  property_types ( property_type_id, name ),
+  listing_amenities ( amenities ( amenity_id, name ) ),
+  listing_university_distances ( university_id, distance_meters )
+`;
+
+const SINGLE_LISTING_SELECT_FALLBACK = `
+  listing_id, landlord_id, title, rent_id, location_id, property_type_id,
+  description, photos, sqm, floor, available_from, min_duration_months,
+  rent ( rent_id, monthly_price, bills_included, deposit ),
+  location ( location_id, address, neighborhood, lat, lng ),
+  property_types ( property_type_id, name ),
+  listing_amenities ( amenities ( amenity_id, name ) )
+`;
+
 export async function GET(request, { params }) {
   const token = extractToken(request);
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -43,31 +52,12 @@ export async function GET(request, { params }) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const landlordId = await getLandlordId(user.id);
-  if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  if (!landlordId) {
+    return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  }
 
   const { id } = await params;
   const authedSupabase = getSupabaseWithToken(token);
-
-  const SINGLE_LISTING_SELECT = `
-    listing_id, landlord_id, title, rent_id, location_id, property_type_id,
-    description, photos, sqm, floor, available_from, min_duration_months,
-    rent ( rent_id, monthly_price, bills_included, deposit ),
-    location ( location_id, address, neighborhood, lat, lng ),
-    property_types ( property_type_id, name ),
-    listing_amenities ( amenities ( amenity_id, name ) ),
-    listing_university_distances ( university_id, distance_meters )
-  `;
-  // Pre-migration fallback: keep in sync with SINGLE_LISTING_SELECT minus
-  // any column that may not yet exist in prod (see route.js sibling for
-  // the same guard on the list-GET path).
-  const SINGLE_LISTING_SELECT_FALLBACK = `
-    listing_id, landlord_id, title, rent_id, location_id, property_type_id,
-    description, photos, sqm, floor, available_from,
-    rent ( rent_id, monthly_price, bills_included, deposit ),
-    location ( location_id, address, neighborhood, lat, lng ),
-    property_types ( property_type_id, name ),
-    listing_amenities ( amenities ( amenity_id, name ) )
-  `;
 
   let { data, error } = await authedSupabase
     .from('listings')
@@ -94,7 +84,21 @@ export async function GET(request, { params }) {
     return NextResponse.json({ error: 'Listing not found' }, { status: 404 });
   }
 
-  return NextResponse.json({ listing: data });
+  // Blackout ranges for the availability step
+  let blackouts = [];
+  try {
+    const { data: blocks } = await authedSupabase
+      .from('listing_availability_blocks')
+      .select('block_id, start_date, end_date, kind')
+      .eq('listing_id', id)
+      .eq('kind', 'blackout')
+      .order('start_date');
+    blackouts = blocks || [];
+  } catch {
+    blackouts = [];
+  }
+
+  return NextResponse.json({ listing: data, blackouts });
 }
 
 export async function PATCH(request, { params }) {
@@ -105,16 +109,17 @@ export async function PATCH(request, { params }) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const landlordId = await getLandlordId(user.id);
-  if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  if (!landlordId) {
+    return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  }
 
   const { id } = await params;
   const body = await request.json();
   const authedSupabase = getSupabaseWithToken(token);
 
-  // Verify ownership and get rent_id / location_id
   const { data: existing, error: fetchError } = await authedSupabase
     .from('listings')
-    .select('listing_id, rent_id, location_id')
+    .select('listing_id, rent_id, location_id, flags')
     .eq('listing_id', id)
     .eq('landlord_id', landlordId)
     .single();
@@ -123,12 +128,34 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: 'Listing not found' }, { status: 404 });
   }
 
-  // Update rent
-  if (body.monthly_price !== undefined || body.bills_included !== undefined || body.deposit !== undefined) {
+  const isSubmit = body.submit === true;
+  const isDraft = body.draft === true && !isSubmit;
+
+  const parsed = await parseListingWriteBody(body, {
+    partial: true,
+    requireUniversities: isSubmit,
+    requireCoords: body.lat !== undefined || body.lng !== undefined || isSubmit,
+    requirePhotos: isSubmit,
+  });
+  if (!parsed.ok) {
+    return NextResponse.json({ error: parsed.error }, { status: parsed.status });
+  }
+  const d = parsed.data;
+
+  if (d.property_type) {
+    await ensureExtraPropertyTypes();
+  }
+
+  // Rent
+  if (
+    d.monthly_price !== undefined ||
+    d.bills_included !== undefined ||
+    d.deposit !== undefined
+  ) {
     const rentUpdate = {};
-    if (body.monthly_price !== undefined) rentUpdate.monthly_price = body.monthly_price || null;
-    if (body.bills_included !== undefined) rentUpdate.bills_included = body.bills_included;
-    if (body.deposit !== undefined) rentUpdate.deposit = body.deposit || 0;
+    if (d.monthly_price !== undefined) rentUpdate.monthly_price = d.monthly_price;
+    if (d.bills_included !== undefined) rentUpdate.bills_included = d.bills_included;
+    if (d.deposit !== undefined) rentUpdate.deposit = d.deposit;
 
     const { error: rentError } = await authedSupabase
       .from('rent')
@@ -141,33 +168,20 @@ export async function PATCH(request, { params }) {
     }
   }
 
-  // Update location. Address + neighborhood are required-when-supplied:
-  // if a caller explicitly sends "address: ''", that's an attempt to clear
-  // a required field — same shape as the title PATCH semantics.
-  if (body.address !== undefined || body.neighborhood !== undefined || body.lat !== undefined || body.lng !== undefined) {
+  // Location
+  if (
+    d.normalizedAddress !== undefined ||
+    d.normalizedNeighborhood !== undefined ||
+    d.lat !== undefined ||
+    d.lng !== undefined
+  ) {
     const locationUpdate = {};
-    if (body.address !== undefined) {
-      const normalized = normalizeSingleLine(body.address);
-      if (!normalized) {
-        return NextResponse.json(
-          { error: 'address cannot be empty' },
-          { status: 400 }
-        );
-      }
-      locationUpdate.address = normalized;
+    if (d.normalizedAddress !== undefined) locationUpdate.address = d.normalizedAddress;
+    if (d.normalizedNeighborhood !== undefined) {
+      locationUpdate.neighborhood = d.normalizedNeighborhood;
     }
-    if (body.neighborhood !== undefined) {
-      const normalized = normalizeSingleLine(body.neighborhood);
-      if (!normalized) {
-        return NextResponse.json(
-          { error: 'neighborhood cannot be empty' },
-          { status: 400 }
-        );
-      }
-      locationUpdate.neighborhood = normalized;
-    }
-    if (body.lat !== undefined) locationUpdate.lat = parseFloat(body.lat);
-    if (body.lng !== undefined) locationUpdate.lng = parseFloat(body.lng);
+    if (d.lat !== undefined) locationUpdate.lat = d.lat;
+    if (d.lng !== undefined) locationUpdate.lng = d.lng;
 
     const { error: locationError } = await authedSupabase
       .from('location')
@@ -180,77 +194,58 @@ export async function PATCH(request, { params }) {
     }
   }
 
-  // Update property_type_id if changed
   let propertyTypeId;
-  if (body.property_type !== undefined) {
+  if (d.property_type !== undefined) {
     const { data: propType } = await getSupabase()
       .from('property_types')
       .select('property_type_id')
-      .eq('name', body.property_type)
+      .eq('name', d.property_type)
       .single();
-    if (!propType) return NextResponse.json({ error: 'Invalid property type' }, { status: 400 });
+    if (!propType) {
+      return NextResponse.json({ error: 'Invalid property type' }, { status: 400 });
+    }
     propertyTypeId = propType.property_type_id;
   }
 
-  // Update listing row
   const listingUpdate = {};
-  // Title semantics:
-  //   undefined → leave alone (don't include in update)
-  //   null OR empty-after-normalization → 400 (cannot clear a required field)
-  //   too long → 400
-  //   otherwise → set normalized value
-  if (body.title !== undefined) {
-    let normalizedTitle;
-    try {
-      normalizedTitle = normalizeTitle(body.title);
-    } catch (err) {
-      if (err.code === 'TITLE_TOO_LONG') {
-        return NextResponse.json({ error: err.message }, { status: 400 });
-      }
-      throw err;
-    }
-    if (!normalizedTitle) {
-      return NextResponse.json(
-        { error: 'title cannot be empty' },
-        { status: 400 }
-      );
-    }
-    listingUpdate.title = normalizedTitle;
+  if (d.normalizedTitle !== undefined) listingUpdate.title = d.normalizedTitle;
+  if (d.normalizedDescription !== undefined) {
+    listingUpdate.description = d.normalizedDescription;
   }
-  // Description: undefined → leave alone, null/empty/whitespace-only → clear.
-  // Description is optional, so a deliberate clear is allowed (unlike title).
-  if (body.description !== undefined) {
-    listingUpdate.description = normalizeMultiLine(body.description);
+  if (d.photos !== undefined) listingUpdate.photos = d.photos;
+  if (d.external_photo_urls !== undefined) {
+    listingUpdate.external_photo_urls = d.external_photo_urls;
   }
-  if (body.photos !== undefined) {
-    const photos = Array.isArray(body.photos) ? body.photos : [];
-    const external = Array.isArray(body.external_photo_urls) ? body.external_photo_urls : [];
-    // When external_photo_urls isn't in the payload, only count uploaded photos.
-    const total = body.external_photo_urls !== undefined
-      ? photos.length + external.length
-      : photos.length;
-    if (total > 20) {
-      return NextResponse.json(
-        { error: 'Listings are limited to 20 photos.' },
-        { status: 400 }
-      );
-    }
-    listingUpdate.photos = body.photos;
-  }
-  if (body.sqm !== undefined) listingUpdate.sqm = body.sqm || null;
-  if (body.floor !== undefined) listingUpdate.floor = body.floor != null && body.floor !== '' ? parseInt(body.floor, 10) : null;
-  if (body.available_from !== undefined) listingUpdate.available_from = body.available_from || null;
-  if (body.min_duration_months !== undefined) {
-    try {
-      listingUpdate.min_duration_months = parseMinDuration(body.min_duration_months);
-    } catch (err) {
-      if (err.code === 'INVALID_MIN_DURATION') {
-        return NextResponse.json({ error: err.message }, { status: 400 });
-      }
-      throw err;
-    }
+  if (d.sqm !== undefined) listingUpdate.sqm = d.sqm;
+  if (d.floor !== undefined) listingUpdate.floor = d.floor;
+  if (d.available_from !== undefined) listingUpdate.available_from = d.available_from;
+  if (d.available_to !== undefined) listingUpdate.available_to = d.available_to;
+  if (d.minDuration !== undefined) listingUpdate.min_duration_months = d.minDuration;
+  if (d.maxDuration !== undefined) listingUpdate.max_duration_months = d.maxDuration;
+  if (d.bedrooms !== undefined) listingUpdate.bedrooms = d.bedrooms;
+  if (d.bathrooms !== undefined) listingUpdate.bathrooms = d.bathrooms;
+  if (d.agency_fee !== undefined) listingUpdate.agency_fee = d.agency_fee;
+  if (d.video_url !== undefined) listingUpdate.video_url = d.video_url;
+  if (d.smoking_allowed !== undefined) listingUpdate.smoking_allowed = d.smoking_allowed;
+  if (d.pets_allowed !== undefined) listingUpdate.pets_allowed = d.pets_allowed;
+  if (d.additional_rules !== undefined) {
+    listingUpdate.additional_rules = d.additional_rules;
   }
   if (propertyTypeId !== undefined) listingUpdate.property_type_id = propertyTypeId;
+
+  if (d.flags !== undefined || isSubmit || isDraft || body.disabled !== undefined) {
+    const prev = existing.flags && typeof existing.flags === 'object' ? existing.flags : {};
+    listingUpdate.flags = {
+      ...prev,
+      ...(d.flags || {}),
+    };
+    if (isSubmit) {
+      listingUpdate.flags.listing_status = 'live';
+      listingUpdate.flags.disabled = false;
+    } else if (isDraft && listingUpdate.flags.listing_status == null) {
+      listingUpdate.flags.listing_status = 'draft';
+    }
+  }
 
   if (Object.keys(listingUpdate).length > 0) {
     const { error: listingError } = await authedSupabase
@@ -259,49 +254,72 @@ export async function PATCH(request, { params }) {
       .eq('listing_id', id);
 
     if (listingError) {
-      console.error('Failed to update listing:', listingError);
-      return NextResponse.json({ error: 'Failed to update listing' }, { status: 500 });
+      // Retry without marketplace columns if needed
+      console.warn('Listing update failed, retrying lean:', listingError.message);
+      const lean = { ...listingUpdate };
+      delete lean.available_to;
+      delete lean.max_duration_months;
+      delete lean.bedrooms;
+      delete lean.bathrooms;
+      delete lean.agency_fee;
+      delete lean.video_url;
+      delete lean.smoking_allowed;
+      delete lean.pets_allowed;
+      delete lean.additional_rules;
+      delete lean.flags;
+      delete lean.external_photo_urls;
+      const retry = await authedSupabase
+        .from('listings')
+        .update(lean)
+        .eq('listing_id', id);
+      if (retry.error) {
+        console.error('Failed to update listing:', retry.error);
+        return NextResponse.json({ error: 'Failed to update listing' }, { status: 500 });
+      }
     }
   }
 
-  // Replace university distances if provided. Same replace-all semantics as
-  // amenities below: an empty array clears the field, an absent key leaves it
-  // alone. Validation errors 400; a write failure is logged and swallowed.
-  if (body.university_distances !== undefined) {
-    const validIds = await getCityUniversityIds(getSupabase());
-    if (validIds) {
-      const parsed = parseUniversityDistances(body.university_distances, validIds);
-      if (parsed.error) {
-        return NextResponse.json({ error: parsed.error }, { status: 400 });
-      }
-      const { error: distanceError } = await writeUniversityDistances(
-        authedSupabase,
-        id,
-        parsed.rows,
-      );
-      if (distanceError) {
-        console.error('Failed to update university distances:', distanceError);
-      }
+  if (d.universityDistanceRows !== undefined) {
+    const { error: distanceError } = await writeUniversityDistances(
+      authedSupabase,
+      id,
+      d.universityDistanceRows,
+    );
+    if (distanceError) {
+      console.error('Failed to update university distances:', distanceError);
     }
   }
 
-  // Replace amenities if provided
-  if (body.amenity_ids !== undefined) {
+  if (d.amenity_ids !== undefined) {
     await authedSupabase.from('listing_amenities').delete().eq('listing_id', id);
-    if (body.amenity_ids.length > 0) {
-      const rows = body.amenity_ids.map((amenity_id) => ({ listing_id: id, amenity_id }));
+    if (d.amenity_ids.length > 0) {
+      const rows = d.amenity_ids.map((amenity_id) => ({
+        listing_id: id,
+        amenity_id,
+      }));
       await authedSupabase.from('listing_amenities').insert(rows);
     }
   }
 
-  // Heal any missing faculty_distances rows after the edit. Idempotent — when
-  // coords didn't change and rows already exist, this is a cheap DB read with
-  // no OSRM call. Non-fatal: swallowed so a flaky OSRM never fails edit.
+  if (d.blackouts !== undefined) {
+    // Replace blackout rows only (leave booked/pending untouched).
+    await authedSupabase
+      .from('listing_availability_blocks')
+      .delete()
+      .eq('listing_id', id)
+      .eq('kind', 'blackout');
+    if (d.blackouts.length > 0) {
+      await authedSupabase.from('listing_availability_blocks').insert(
+        d.blackouts.map((b) => ({ ...b, listing_id: id })),
+      );
+    }
+  }
+
   try {
-    // Service-role client: faculty_distances writes are locked to the service
-    // role (migration 055) so signed-in users can't tamper with commute data.
-    // Ownership of this listing was already enforced by the PATCH above.
-    await recomputeMissingDistances({ listingIds: [id], supabase: getSupabaseAsService() });
+    await recomputeMissingDistances({
+      listingIds: [id],
+      supabase: getSupabaseAsService(),
+    });
   } catch (err) {
     console.error('[landlord/listings PATCH] inline distance recompute failed:', err);
   }
@@ -317,12 +335,13 @@ export async function DELETE(request, { params }) {
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const landlordId = await getLandlordId(user.id);
-  if (!landlordId) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  if (!landlordId) {
+    return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  }
 
   const { id } = await params;
   const authedSupabase = getSupabaseWithToken(token);
 
-  // Delete listing — trigger cleanup_listing_orphans handles rent + location
   const { error } = await authedSupabase
     .from('listings')
     .delete()

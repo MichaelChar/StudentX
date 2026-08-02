@@ -227,7 +227,15 @@
       "noAddress": "No address",
       "priceOnRequest": "Price on request",
       "getVerified": "Get Verified",
-      "getVerifiedDesc": "Upload your ID for a free Verified badge — shown on all your listings."
+      "getVerifiedDesc": "Upload your ID for a free Verified badge — shown on all your listings.",
+      "duplicate": "Duplicate",
+      "disable": "Disable",
+      "enable": "Enable",
+      "duplicateError": "Failed to duplicate listing. Please try again.",
+      "disableError": "Failed to update listing status. Please try again.",
+      "loadError": "Failed to load listings",
+      "statusDraft": "Draft",
+      "statusDisabled": "Disabled"
     },
     "listingForm": {
       "locationSection": "Location",
@@ -368,6 +376,179 @@
       "reopen": "Reopen",
       "openChat": "Open chat",
       "profileError": "Landlord profile not found"
+    },
+    "listingWizard": {
+      "eyebrow": "Listings",
+      "stepOf": "Step {current} of {total}",
+      "back": "Back",
+      "continue": "Continue",
+      "submit": "Submit listing",
+      "submitting": "Submitting…",
+      "savingDraft": "Saving draft…",
+      "draftSaved": "Draft saved",
+      "statusLadder": {
+        "ariaLabel": "Listing status",
+        "draft": "Draft",
+        "idCheck": "ID check",
+        "videoCall": "Video call",
+        "curation": "Curation",
+        "live": "Live"
+      },
+      "steps": {
+        "address": {
+          "title": "Address",
+          "lede": "Search for the building, then drag the pin if needed. Coordinates are required."
+        },
+        "property": {
+          "title": "Property",
+          "lede": "Type, size, floor, house rules, and amenities."
+        },
+        "universities": {
+          "title": "Universities & commute",
+          "lede": "At least two universities. Prefill from the pin, then adjust if needed."
+        },
+        "price": {
+          "title": "Price & terms",
+          "lede": "Rent, deposit, agency fee, and stay duration."
+        },
+        "availability": {
+          "title": "Availability",
+          "lede": "When the place is free, and any blackout dates."
+        },
+        "photos": {
+          "title": "Photos & video",
+          "lede": "At least five photos. Drag to reorder. Video is optional."
+        },
+        "review": {
+          "title": "Review & submit",
+          "lede": "Check the preview, then submit for verification."
+        }
+      },
+      "address": {
+        "titleLabel": "Name your listing *",
+        "titlePlaceholder": "e.g. Sunny 2BR near Medical School",
+        "titleHint": "Students see this name everywhere. Up to 80 characters.",
+        "searchLabel": "Search address",
+        "searchPlaceholder": "Start typing a street in Thessaloniki…",
+        "searching": "Searching…",
+        "searchError": "Address search failed. Try again or place the pin manually.",
+        "addressLabel": "Street address *",
+        "addressPlaceholder": "e.g. Egnatia 23",
+        "neighborhoodLabel": "Neighborhood *",
+        "neighborhoodPlaceholder": "Select neighborhood…",
+        "mapLabel": "Map pin *",
+        "mapHint": "Drag the pin or click the map to set the exact location.",
+        "coordsSet": "Pin set · {lat}, {lng}",
+        "coordsRequired": "Place the pin on the map — coordinates are required."
+      },
+      "property": {
+        "typeLabel": "Property type *",
+        "typePlaceholder": "Select type…",
+        "bedroomsLabel": "Bedrooms",
+        "bathroomsLabel": "Bathrooms",
+        "sqmLabel": "Size (m²)",
+        "sqmPlaceholder": "e.g. 45",
+        "floorLabel": "Floor",
+        "floorPlaceholder": "Select floor",
+        "floorGround": "Ground floor",
+        "descriptionLabel": "Description",
+        "descriptionPlaceholder": "Describe the property…",
+        "descriptionTip": "Mention proximity to campus, transport, and what makes the place stand out.",
+        "houseRulesLabel": "House rules",
+        "smokingAllowed": "Smoking allowed",
+        "petsAllowed": "Pets allowed",
+        "additionalRulesLabel": "Additional rules",
+        "additionalRulesPlaceholder": "e.g. No parties after 11pm",
+        "amenitiesLabel": "Amenities"
+      },
+      "universities": {
+        "lede": "Distances are prefilled from your map pin. Adjust any number you disagree with.",
+        "minRequired": "At least {count} universities are required.",
+        "prefill": "Prefill from pin",
+        "prefilling": "Computing…",
+        "add": "+ Add university",
+        "metresPlaceholder": "e.g. 1200",
+        "metresLabel": "Distance in metres",
+        "unit": "metres",
+        "sourceComputed": "Computed",
+        "sourceLandlord": "Yours",
+        "remove": "Remove this university",
+        "empty": "No universities yet — use Prefill or add rows."
+      },
+      "price": {
+        "rentLabel": "Monthly rent (€)",
+        "rentPlaceholder": "Leave blank if on request",
+        "depositLabel": "Deposit (€)",
+        "depositPlaceholder": "0",
+        "agencyFeeLabel": "Agency fee (€)",
+        "agencyFeePlaceholder": "0",
+        "agencyFeeTip": "One-time fee students pay (if any). Shown on the listing.",
+        "billsIncluded": "Bills included in rent",
+        "minDurationLabel": "Minimum stay",
+        "minDurationTip": "Shortest stay you'll accept",
+        "maxDurationLabel": "Maximum stay",
+        "maxDurationNone": "No maximum",
+        "maxDurationTip": "Optional cap on how long a student can stay",
+        "monthsOption": "{n} months"
+      },
+      "availability": {
+        "availableFromLabel": "Available from",
+        "availableToLabel": "Available until",
+        "availableToTip": "Leave blank for open-ended availability",
+        "blackoutsLabel": "Blackout dates",
+        "blackoutsTip": "Ranges when the unit is unavailable (maintenance, personal use).",
+        "blackoutsEmpty": "No blackouts added.",
+        "addBlackout": "Add blackout",
+        "blackoutStart": "Blackout start",
+        "blackoutEnd": "Blackout end",
+        "removeBlackout": "Remove blackout"
+      },
+      "photos": {
+        "lede": "Add at least {min} photos (up to {max}). The first photo is the main image.",
+        "count": "{current} of {max} photos · minimum {min}",
+        "photoAlt": "Photo {n}",
+        "main": "Main",
+        "moveLeft": "Move photo left",
+        "moveRight": "Move photo right",
+        "remove": "Remove photo",
+        "reorderHint": "Drag to reorder, or use the arrows. First photo is the cover.",
+        "imported": "{count, plural, one {# imported photo} other {# imported photos}}",
+        "importedAlt": "Imported photo {n}",
+        "addPhotos": "Add photos",
+        "uploading": "Uploading…",
+        "hint": "JPG, PNG or WebP · max 10 MB each",
+        "videoLabel": "Video URL (optional)",
+        "videoPlaceholder": "https://…",
+        "videoTip": "A walkthrough link helps the verification call."
+      },
+      "review": {
+        "lede": "This is how the listing will look once live. Fix anything that looks off, then submit.",
+        "summaryLabel": "Summary",
+        "untitled": "Untitled listing",
+        "billsIncluded": "Bills included",
+        "computed": "computed",
+        "checklistLabel": "Before you submit",
+        "checkAddress": "Address and neighbourhood set",
+        "checkCoords": "Map pin placed",
+        "checkProperty": "Property type chosen",
+        "checkUniversities": "At least {count} university distances",
+        "checkPhotos": "At least {count} photos (you have {current})",
+        "preview": "Preview as student"
+      },
+      "errors": {
+        "generic": "Something went wrong",
+        "titleRequired": "Give your listing a name",
+        "addressRequired": "Street address is required",
+        "neighborhoodRequired": "Choose a neighbourhood",
+        "coordsRequired": "Place the map pin — coordinates are required",
+        "propertyTypeRequired": "Choose a property type",
+        "universitiesRequired": "Add distances for at least {count} universities",
+        "durationPair": "Maximum stay must be greater than or equal to minimum stay",
+        "availableRange": "Available-until must be on or after available-from",
+        "blackoutRange": "Each blackout end date must be on or after its start",
+        "photosRequired": "Add at least {count} photos before submitting",
+        "prefillFailed": "Could not prefill university distances. Try again or enter them manually."
+      }
     }
   },
   "propylaea": {
@@ -673,7 +854,8 @@
         "pendingTitle": "Verification pending",
         "pendingBody": "We're reviewing your documents.",
         "unverifiedTitle": "Get verified",
-        "unverifiedBody": "Show students you're a real landlord — free ID verification."
+        "unverifiedBody": "Show students you're a real landlord — free ID verification.",
+        "welcomeTitleNamed": "Good to see you, {name}"
       },
       "reservations": {
         "eyebrow": "Reservations",
