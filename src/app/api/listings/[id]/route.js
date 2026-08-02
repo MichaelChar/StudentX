@@ -44,6 +44,7 @@ export async function GET(request, { params }) {
       `
       )
       .eq("listing_id", id)
+      .eq("listing_status", "active")
       .single();
 
     if (error) {

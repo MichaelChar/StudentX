@@ -13,26 +13,6 @@ import {
 import { parseAndValidateDurations } from '@/lib/listingWizardRules';
 import { PHOTO_LIMIT } from '@/lib/listingWizardRules';
 import { getSupabase } from '@/lib/supabase';
-import { EXTRA_PROPERTY_TYPES } from '@/lib/listingWizardRules';
-import { getSupabaseAsService } from '@/lib/supabaseServer';
-
-/**
- * Ensure marketplace property types exist (service-role upsert by unique name).
- * Safe to call on every write — ignoreDuplicates.
- */
-export async function ensureExtraPropertyTypes() {
-  try {
-    const supabase = getSupabaseAsService();
-    await supabase
-      .from('property_types')
-      .upsert(
-        EXTRA_PROPERTY_TYPES.map((name) => ({ name })),
-        { onConflict: 'name', ignoreDuplicates: true },
-      );
-  } catch (err) {
-    console.error('[ensureExtraPropertyTypes]', err);
-  }
-}
 
 /**
  * @param {object} body
@@ -259,17 +239,26 @@ export async function parseListingWriteBody(body, opts = {}) {
     }
   }
 
-  // flags merge
+  // flags (wizard stage: draft/live) + listings.listing_status (public visibility)
   let flags = undefined;
+  let listingStatus = undefined;
   if (body.flags !== undefined && body.flags && typeof body.flags === 'object') {
     flags = body.flags;
   }
   if (body.disabled === true) {
+    listingStatus = 'disabled';
     flags = { ...(flags || {}), disabled: true, listing_status: 'disabled' };
   } else if (body.disabled === false) {
-    flags = { ...(flags || {}), disabled: false, listing_status: flags?.listing_status === 'disabled' ? 'live' : flags?.listing_status };
+    listingStatus = 'active';
+    flags = {
+      ...(flags || {}),
+      disabled: false,
+      listing_status:
+        flags?.listing_status === 'disabled' ? 'live' : flags?.listing_status,
+    };
   }
   if (body.submit === true) {
+    listingStatus = listingStatus ?? 'active';
     flags = { ...(flags || {}), listing_status: 'live', disabled: false };
   } else if (body.draft === true && flags === undefined) {
     flags = { listing_status: 'draft' };
@@ -318,6 +307,7 @@ export async function parseListingWriteBody(body, opts = {}) {
       amenity_ids: Array.isArray(body.amenity_ids) ? body.amenity_ids : undefined,
       blackouts,
       flags,
+      listing_status: listingStatus,
       draft: body.draft === true,
       submit: body.submit === true,
     },

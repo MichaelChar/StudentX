@@ -23,6 +23,28 @@ describe('parseUniversityDistances', () => {
     });
   });
 
+  it('preserves computed vs landlord source', () => {
+    const out = parseUniversityDistances(
+      [
+        { university_id: 'auth', distance_meters: 750, source: 'computed' },
+        { university_id: 'uom', distance_meters: 1900, source: 'landlord' },
+      ],
+      VALID,
+    );
+    expect(out.rows).toEqual([
+      { university_id: 'auth', distance_meters: 750, source: 'computed' },
+      { university_id: 'uom', distance_meters: 1900, source: 'landlord' },
+    ]);
+  });
+
+  it('rejects an invalid source', () => {
+    const out = parseUniversityDistances(
+      [{ university_id: 'auth', distance_meters: 500, source: 'osrm' }],
+      VALID,
+    );
+    expect(out.error).toMatch(/source/);
+  });
+
   it('accepts the numeric strings a form sends', () => {
     const out = parseUniversityDistances(
       [{ university_id: 'ihu', distance_meters: ' 1200 ' }],

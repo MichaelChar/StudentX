@@ -98,8 +98,9 @@ export async function GET(request) {
       }
     }
 
-    // Build query
+    // Build query — only public-visible listings (listing_status = active)
     let query = supabase.from("listings").select(LISTING_SELECT);
+    query = query.eq("listing_status", "active");
     query = applyListingFilters(query, f, { amenityListingIds });
 
     // Filter: min budget
@@ -136,6 +137,7 @@ export async function GET(request) {
     if (error) {
       console.warn("Listings query failed, retrying without verified columns:", error.message);
       let fallbackQuery = supabase.from("listings").select(LISTING_SELECT_FALLBACK);
+      fallbackQuery = fallbackQuery.eq("listing_status", "active");
       fallbackQuery = applyListingFilters(fallbackQuery, f, { fallback: true, amenityListingIds });
       if (minBudget) fallbackQuery = fallbackQuery.gte("rent.monthly_price", Number(minBudget));
       if (maxBudget) fallbackQuery = fallbackQuery.lte("rent.monthly_price", Number(maxBudget));

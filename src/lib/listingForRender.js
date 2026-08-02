@@ -42,6 +42,7 @@ export const getListingForRender = cache(async (id) => {
       .from('listings')
       .select(LISTING_SELECT)
       .eq('listing_id', id)
+      .eq('listing_status', 'active')
       .single();
 
     if (error || !data) return null;

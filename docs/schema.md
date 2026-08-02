@@ -115,7 +115,7 @@ Enumeration of property categories.
 | `property_type_id` | SERIAL | PK | Auto-increment ID |
 | `name` | TEXT | NOT NULL, UNIQUE | Type name |
 
-**Values:** Studio, 1-Bedroom, 2-Bedroom, 2-Bedroom (x2), Room in shared apartment
+**Values:** Studio, 1-Bedroom, 2-Bedroom, 2-Bedroom (x2), Room in shared apartment, Entire place (102), Bed in shared room (102)
 
 ### `amenities`
 
@@ -179,11 +179,12 @@ Central table connecting all dimensions.
 | `smoking_allowed` | BOOLEAN | — (nullable) | House rule (100) |
 | `pets_allowed` | BOOLEAN | — (nullable) | House rule (100) |
 | `additional_rules` | TEXT | — (nullable) | Free-text house rules (100) |
+| `listing_status` | TEXT | NOT NULL, DEFAULT `active`, CHECK IN (`active`, `disabled`) | Public visibility; disabled listings are landlord-only (102) |
 | `flags` | JSONB | DEFAULT '{}' | Data quality flags (PRICE_MISSING, COORDS_APPROXIMATE, etc.) |
 | `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Record creation time |
 | `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update time (auto-trigger) |
 
-**Indexes:** `idx_listings_property_type_id`, `idx_listings_landlord_id`, `idx_listings_rent_id`, `idx_listings_location_id`, `idx_listings_min_duration_months`, `idx_listings_available_to`
+**Indexes:** `idx_listings_property_type_id`, `idx_listings_landlord_id`, `idx_listings_rent_id`, `idx_listings_location_id`, `idx_listings_min_duration_months`, `idx_listings_available_to`, `idx_listings_listing_status`
 
 **Trigger:** `trigger_listings_updated_at` — auto-updates `updated_at` on row modification.
 
@@ -267,6 +268,37 @@ Walk and transit times from each listing to each faculty.
 | `transit_minutes` | INTEGER | NOT NULL, CHECK >= 0 | Transit time in minutes (OSRM driving × 1.5) |
 
 **Index:** `idx_faculty_distances_faculty_id` on `faculty_id`
+
+### `universities` (migration 066)
+
+City-scoped university reference points for landlord-authored distances.
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `university_id` | TEXT | PK | Slug (e.g. `auth`, `uom`, `ihu`) |
+| `city_slug` | TEXT | NOT NULL | Matches `SUPPORTED_CITIES` |
+| `name` | TEXT | NOT NULL | Full display name |
+| `short_name` | TEXT | NOT NULL | Card label (AUTH, UoM, IHU) |
+| `sort_order` | INTEGER | NOT NULL, DEFAULT 0 | Dropdown order |
+
+**RLS:** public SELECT; writes via migration/seed only.
+
+### `listing_university_distances` (migration 066; `source` in 102)
+
+Landlord-reported metres from a listing to each university (not OSRM;
+`faculty_distances` remains the walk/transit-minute table).
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `listing_id` | TEXT | PK (composite), FK → listings ON DELETE CASCADE | Listing |
+| `university_id` | TEXT | PK (composite), FK → universities ON DELETE CASCADE | University |
+| `distance_meters` | INTEGER | NOT NULL, CHECK 1..50000 | Self-reported metres |
+| `source` | TEXT | NOT NULL, DEFAULT `landlord`, CHECK IN (`landlord`, `computed`) | Typed vs map-pin prefill (102) |
+| `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update |
+
+**Index:** `idx_lud_university_id` on `university_id`
+
+**RLS:** public SELECT; landlords ALL on rows for their own listings.
 
 ---
 

@@ -8,10 +8,7 @@ import {
 } from '@/lib/supabaseServer';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { writeUniversityDistances } from '@/lib/universityDistances';
-import {
-  parseListingWriteBody,
-  ensureExtraPropertyTypes,
-} from '@/lib/landlordListingBody';
+import { parseListingWriteBody } from '@/lib/landlordListingBody';
 
 async function getLandlordId(userId) {
   const { data } = await getSupabaseAsService()
@@ -27,12 +24,12 @@ const SINGLE_LISTING_SELECT = `
   description, photos, external_photo_urls, sqm, floor, available_from,
   available_to, min_duration_months, max_duration_months,
   bedrooms, bathrooms, agency_fee, video_url,
-  smoking_allowed, pets_allowed, additional_rules, flags,
+  smoking_allowed, pets_allowed, additional_rules, listing_status, flags,
   rent ( rent_id, monthly_price, bills_included, deposit ),
   location ( location_id, address, neighborhood, lat, lng ),
   property_types ( property_type_id, name ),
   listing_amenities ( amenities ( amenity_id, name ) ),
-  listing_university_distances ( university_id, distance_meters )
+  listing_university_distances ( university_id, distance_meters, source )
 `;
 
 const SINGLE_LISTING_SELECT_FALLBACK = `
@@ -142,10 +139,6 @@ export async function PATCH(request, { params }) {
   }
   const d = parsed.data;
 
-  if (d.property_type) {
-    await ensureExtraPropertyTypes();
-  }
-
   // Rent
   if (
     d.monthly_price !== undefined ||
@@ -232,6 +225,7 @@ export async function PATCH(request, { params }) {
     listingUpdate.additional_rules = d.additional_rules;
   }
   if (propertyTypeId !== undefined) listingUpdate.property_type_id = propertyTypeId;
+  if (d.listing_status !== undefined) listingUpdate.listing_status = d.listing_status;
 
   if (d.flags !== undefined || isSubmit || isDraft || body.disabled !== undefined) {
     const prev = existing.flags && typeof existing.flags === 'object' ? existing.flags : {};
@@ -242,6 +236,7 @@ export async function PATCH(request, { params }) {
     if (isSubmit) {
       listingUpdate.flags.listing_status = 'live';
       listingUpdate.flags.disabled = false;
+      listingUpdate.listing_status = d.listing_status || 'active';
     } else if (isDraft && listingUpdate.flags.listing_status == null) {
       listingUpdate.flags.listing_status = 'draft';
     }
@@ -267,6 +262,7 @@ export async function PATCH(request, { params }) {
       delete lean.pets_allowed;
       delete lean.additional_rules;
       delete lean.flags;
+      delete lean.listing_status;
       delete lean.external_photo_urls;
       const retry = await authedSupabase
         .from('listings')

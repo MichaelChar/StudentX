@@ -86,7 +86,7 @@ export default function EditListingPage() {
           listing.listing_university_distances?.map((ud) => ({
             university_id: ud.university_id,
             distance_meters: String(ud.distance_meters),
-            source: 'landlord',
+            source: ud.source === 'computed' ? 'computed' : 'landlord',
           })) || [],
         photos: listing.photos || [],
         external_photo_urls: listing.external_photo_urls || [],

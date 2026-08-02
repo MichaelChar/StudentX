@@ -19,9 +19,6 @@ export const EXCLUDED_PROPERTY_TYPES = new Set(['2-Bedroom (x2)']);
 /** Amenity names that duplicate a Floor value — hide from the amenity grid. */
 export const EXCLUDED_AMENITY_NAMES = new Set(['Ground floor']);
 
-/** Extra property types the marketplace needs; ensured via service-role upsert. */
-export const EXTRA_PROPERTY_TYPES = ['Entire place', 'Bed in shared room'];
-
 /**
  * @param {Array<{ university_id?: string, distance_meters?: unknown }>} rows
  * @returns {{ ok: true } | { ok: false, error: string }}

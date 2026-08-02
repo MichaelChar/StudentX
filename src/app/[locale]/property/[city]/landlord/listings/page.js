@@ -124,7 +124,8 @@ export default function LandlordListingsPage() {
   async function performToggleDisable(listing) {
     setError('');
     setBusyId(listing.listing_id);
-    const disabled = !(listing.flags?.disabled || listing.flags?.listing_status === 'disabled');
+    const currentlyDisabled = isListingDisabled(listing);
+    const disabled = !currentlyDisabled;
     try {
       const res = await fetch(`/api/landlord/listings/${listing.listing_id}`, {
         method: 'PATCH',
@@ -143,6 +144,7 @@ export default function LandlordListingsPage() {
           l.listing_id === listing.listing_id
             ? {
                 ...l,
+                listing_status: disabled ? 'disabled' : 'active',
                 flags: {
                   ...(l.flags || {}),
                   disabled,
@@ -230,6 +232,14 @@ export default function LandlordListingsPage() {
   );
 }
 
+function isListingDisabled(listing) {
+  return (
+    listing.listing_status === 'disabled' ||
+    listing.flags?.disabled === true ||
+    listing.flags?.listing_status === 'disabled'
+  );
+}
+
 function ListingRow({
   listing,
   busy,
@@ -246,9 +256,7 @@ function ListingRow({
   const heading = listing.title || address;
   const neighborhood = listing.location?.neighborhood;
   const price = listing.rent?.monthly_price;
-  const disabled =
-    listing.flags?.disabled === true ||
-    listing.flags?.listing_status === 'disabled';
+  const disabled = isListingDisabled(listing);
   const stage = deriveListingStage({
     flags: listing.flags,
     isVerified,
@@ -279,6 +287,11 @@ function ListingRow({
           <div className="flex flex-wrap items-center gap-2 mb-1">
             <p className="font-display text-xl text-night truncate">{heading}</p>
             {disabled && <Pill variant="pending">{t('statusDisabled')}</Pill>}
+            {!disabled &&
+              (listing.listing_status === 'active' || !listing.listing_status) &&
+              listing.flags?.listing_status !== 'draft' && (
+              <Pill variant="info">{t('statusActive')}</Pill>
+            )}
             {!disabled && listing.flags?.listing_status === 'draft' && (
               <Pill variant="amenity">{t('statusDraft')}</Pill>
             )}

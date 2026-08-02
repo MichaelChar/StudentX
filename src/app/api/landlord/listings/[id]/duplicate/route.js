@@ -49,7 +49,7 @@ export async function POST(request, { params }) {
       rent ( monthly_price, currency, bills_included, deposit ),
       location ( address, neighborhood, lat, lng ),
       listing_amenities ( amenity_id ),
-      listing_university_distances ( university_id, distance_meters )
+      listing_university_distances ( university_id, distance_meters, source )
     `)
     .eq('listing_id', id)
     .eq('landlord_id', landlordId)
@@ -195,6 +195,7 @@ async function duplicateFrom(src, { landlordId, authedSupabase, supabase }) {
   const uniRows = (src.listing_university_distances || []).map((r) => ({
     university_id: r.university_id,
     distance_meters: r.distance_meters,
+    source: r.source === 'computed' ? 'computed' : 'landlord',
   }));
   if (uniRows.length > 0) {
     await writeUniversityDistances(authedSupabase, listingId, uniRows);
