@@ -5,7 +5,14 @@ import {
   getSupabaseWithToken,
   getSupabaseAsService,
 } from '@/lib/supabaseServer';
-import { applyTransition } from '@/lib/bookingService';
+import {
+  applyTransition,
+  confirmMoveIn,
+  reportMoveInProblem,
+  inquiryIdForBooking,
+  hasMoveInResponse,
+} from '@/lib/bookingService';
+import { canRespondToMoveIn, canStudentCancel } from '@/lib/bookingState';
 
 async function resolveAuth(request) {
   const token = extractToken(request);
@@ -41,6 +48,7 @@ async function loadBookingForViewer(bookingId, auth) {
       listings (
         listing_id,
         title,
+        photos,
         landlord_id,
         location ( address, neighborhood ),
         rent ( monthly_price, deposit ),
@@ -66,6 +74,20 @@ async function loadBookingForViewer(bookingId, auth) {
   return { status: 403 };
 }
 
+function plainBookingRow(booking) {
+  return {
+    booking_id: booking.booking_id,
+    student_id: booking.student_id,
+    listing_id: booking.listing_id,
+    move_in: booking.move_in,
+    move_out: booking.move_out,
+    monthly_rent: booking.monthly_rent,
+    total_stay_value: booking.total_stay_value,
+    state: booking.state,
+    last_activity_at: booking.last_activity_at,
+  };
+}
+
 /**
  * GET /api/bookings/[id]
  */
@@ -88,16 +110,31 @@ export async function GET(request, { params }) {
     .eq('booking_id', id)
     .order('created_at', { ascending: true });
 
+  const inquiryId = await inquiryIdForBooking(id);
+  const moveInAnswered = await hasMoveInResponse(id);
+  const row = plainBookingRow(loaded.booking);
+
   return NextResponse.json({
     booking: loaded.booking,
     events: events || [],
     role: auth.role,
+    inquiry_id: inquiryId,
+    move_in: {
+      can_respond: canRespondToMoveIn(row) && !moveInAnswered,
+      answered: moveInAnswered,
+    },
+    can_cancel:
+      (auth.role === 'student' && canStudentCancel(row)) ||
+      (auth.role === 'landlord' &&
+        (row.state === 'requested' ||
+          row.state === 'accepted' ||
+          row.state === 'confirmed')),
   });
 }
 
 /**
  * PATCH /api/bookings/[id]
- * body: { action: 'accept' | 'decline' | 'cancel' }
+ * body: { action: 'accept' | 'decline' | 'cancel' | 'confirm-move-in' | 'report-problem', description? }
  */
 export async function PATCH(request, { params }) {
   const auth = await resolveAuth(request);
@@ -114,9 +151,16 @@ export async function PATCH(request, { params }) {
   }
 
   const action = body?.action;
-  if (!['accept', 'decline', 'cancel'].includes(action)) {
+  if (
+    !['accept', 'decline', 'cancel', 'confirm-move-in', 'report-problem'].includes(
+      action,
+    )
+  ) {
     return NextResponse.json(
-      { error: 'action must be accept, decline, or cancel' },
+      {
+        error:
+          'action must be accept, decline, cancel, confirm-move-in, or report-problem',
+      },
       { status: 400 },
     );
   }
@@ -126,19 +170,7 @@ export async function PATCH(request, { params }) {
     return NextResponse.json({ error: 'Not found' }, { status: loaded.status });
   }
   const booking = loaded.booking;
-
-  // Strip nested joins for state machine (plain booking shape).
-  const row = {
-    booking_id: booking.booking_id,
-    student_id: booking.student_id,
-    listing_id: booking.listing_id,
-    move_in: booking.move_in,
-    move_out: booking.move_out,
-    monthly_rent: booking.monthly_rent,
-    total_stay_value: booking.total_stay_value,
-    state: booking.state,
-    last_activity_at: booking.last_activity_at,
-  };
+  const row = plainBookingRow(booking);
 
   if (action === 'accept') {
     if (auth.role !== 'landlord') {
@@ -161,6 +193,44 @@ export async function PATCH(request, { params }) {
     }
     const { declineBooking } = await import('@/lib/bookingService');
     const result = await declineBooking({ booking: row, actor: 'landlord' });
+    if (result.error) {
+      return NextResponse.json(
+        { error_code: result.error, error: result.message || result.error },
+        { status: result.status || 400 },
+      );
+    }
+    return NextResponse.json({ booking: result.booking });
+  }
+
+  if (action === 'confirm-move-in') {
+    if (auth.role !== 'student') {
+      return NextResponse.json(
+        { error: 'Only the student can confirm move-in' },
+        { status: 403 },
+      );
+    }
+    const result = await confirmMoveIn({ booking: row, actor: 'student' });
+    if (result.error) {
+      return NextResponse.json(
+        { error_code: result.error, error: result.message || result.error },
+        { status: result.status || 400 },
+      );
+    }
+    return NextResponse.json({ booking: result.booking });
+  }
+
+  if (action === 'report-problem') {
+    if (auth.role !== 'student') {
+      return NextResponse.json(
+        { error: 'Only the student can report a problem' },
+        { status: 403 },
+      );
+    }
+    const result = await reportMoveInProblem({
+      booking: row,
+      actor: 'student',
+      description: body?.description,
+    });
     if (result.error) {
       return NextResponse.json(
         { error_code: result.error, error: result.message || result.error },

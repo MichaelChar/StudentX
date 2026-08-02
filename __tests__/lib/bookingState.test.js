@@ -4,10 +4,17 @@ import {
   blockActionForTransition,
   planTransition,
   planOfflineAccept,
+  planMoveInOk,
+  planMoveInProblem,
   applyBlockAction,
   hasBlockingOverlap,
   isExpiredByInactivity,
   isDueReminder,
+  isEligibleForMoveInPrompt,
+  isMoveInDateReached,
+  canStudentCancel,
+  MOVE_IN_OK_KIND,
+  MOVE_IN_PROBLEM_KIND,
   EXPIRY_MS,
   REMINDER_MS,
 } from '@/lib/bookingState';
@@ -111,6 +118,30 @@ describe('availability block actions — every terminal path releases pending', 
     );
   });
 
+  it('student cancelling a confirmed booking releases the booked availability block', () => {
+    let blocks = applyBlockAction([], { action: 'insert_pending' }, stay);
+    blocks = applyBlockAction(blocks, { action: 'pending_to_booked' }, stay);
+    expect(blocks.some((b) => b.kind === 'booked')).toBe(true);
+    expect(hasBlockingOverlap(blocks, stay.listing_id, stay.move_in, stay.move_out)).toBe(
+      true,
+    );
+
+    expect(canStudentCancel(booking({ state: 'confirmed' }))).toBe(true);
+
+    const plan = planTransition({
+      booking: booking({ state: 'confirmed' }),
+      toState: 'cancelled',
+      actor: 'student',
+    });
+    expect(plan.error).toBeUndefined();
+    expect(plan.blockAction).toEqual({ action: 'release_booked' });
+    blocks = applyBlockAction(blocks, plan.blockAction, stay);
+    expect(hasBlockingOverlap(blocks, stay.listing_id, stay.move_in, stay.move_out)).toBe(
+      false,
+    );
+    expect(blocks.filter((b) => b.kind === 'booked')).toHaveLength(0);
+  });
+
   it('releases booked on cancel after accept/confirm', () => {
     let blocks = applyBlockAction([], { action: 'insert_pending' }, stay);
     blocks = applyBlockAction(blocks, { action: 'pending_to_booked' }, stay);
@@ -205,5 +236,91 @@ describe('overlap detection', () => {
     expect(hasBlockingOverlap(blocks, '0100002', '2026-09-01', '2026-12-01')).toBe(
       false,
     );
+  });
+});
+
+describe('move-in prompt eligibility', () => {
+  it('only fires for confirmed bookings whose move-in has passed', () => {
+    const now = new Date('2026-09-01T12:00:00Z');
+
+    expect(
+      isEligibleForMoveInPrompt(
+        booking({ state: 'confirmed', move_in: '2026-09-01' }),
+        now,
+      ),
+    ).toBe(true);
+    expect(
+      isEligibleForMoveInPrompt(
+        booking({ state: 'confirmed', move_in: '2026-08-15' }),
+        now,
+      ),
+    ).toBe(true);
+
+    // Move-in still in the future.
+    expect(
+      isEligibleForMoveInPrompt(
+        booking({ state: 'confirmed', move_in: '2026-09-02' }),
+        now,
+      ),
+    ).toBe(false);
+
+    // Wrong states — requested / accepted / terminal never prompt.
+    for (const state of ['requested', 'accepted', 'declined', 'cancelled', 'expired', 'disputed']) {
+      expect(
+        isEligibleForMoveInPrompt(
+          booking({ state, move_in: '2026-08-01' }),
+          now,
+        ),
+      ).toBe(false);
+    }
+  });
+
+  it('isMoveInDateReached uses UTC calendar dates', () => {
+    const now = new Date('2026-09-01T00:00:00Z');
+    expect(isMoveInDateReached(booking({ move_in: '2026-09-01' }), now)).toBe(true);
+    expect(isMoveInDateReached(booking({ move_in: '2026-09-02' }), now)).toBe(false);
+  });
+
+  it('planMoveInOk records same-state audit without releasing the block', () => {
+    const now = new Date('2026-09-01T12:00:00Z');
+    const plan = planMoveInOk({
+      booking: booking({ state: 'confirmed', move_in: '2026-09-01' }),
+      actor: 'student',
+      now,
+    });
+    expect(plan.error).toBeUndefined();
+    expect(plan.event.to_state).toBe('confirmed');
+    expect(plan.event.metadata.kind).toBe(MOVE_IN_OK_KIND);
+    expect(plan.blockAction).toEqual({ action: 'none' });
+    expect(plan.patch.state).toBeUndefined();
+  });
+
+  it('planMoveInProblem transitions confirmed → disputed with description', () => {
+    const now = new Date('2026-09-01T12:00:00Z');
+    const plan = planMoveInProblem({
+      booking: booking({ state: 'confirmed', move_in: '2026-09-01' }),
+      actor: 'student',
+      now,
+      description: 'Keys did not work and the flat was dirty.',
+    });
+    expect(plan.error).toBeUndefined();
+    expect(plan.patch.state).toBe('disputed');
+    expect(plan.event.metadata.kind).toBe(MOVE_IN_PROBLEM_KIND);
+    expect(plan.blockAction).toEqual({ action: 'none' });
+  });
+
+  it('rejects move-in response before move-in date', () => {
+    const now = new Date('2026-08-15T12:00:00Z');
+    const ok = planMoveInOk({
+      booking: booking({ state: 'confirmed', move_in: '2026-09-01' }),
+      now,
+    });
+    expect(ok.error).toBe('MOVE_IN_NOT_REACHED');
+    const problem = planMoveInProblem({
+      booking: booking({ state: 'confirmed', move_in: '2026-09-01' }),
+      now,
+      description: 'Something is wrong enough to report.',
+    });
+    expect(problem.error).toBe('MOVE_IN_NOT_REACHED');
   });
 });

@@ -113,7 +113,17 @@ export async function GET(request) {
   if (auth.role === 'student') {
     let query = auth.supabase
       .from('bookings')
-      .select('*')
+      .select(`
+        *,
+        listings (
+          listing_id,
+          title,
+          photos,
+          location ( address, neighborhood ),
+          rent ( monthly_price, deposit ),
+          agency_fee
+        )
+      `)
       .eq('student_id', auth.student.student_id)
       .order('created_at', { ascending: false });
     if (state) {

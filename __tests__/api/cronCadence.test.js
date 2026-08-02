@@ -143,6 +143,13 @@ describe('isJobDue', () => {
       expect(job.cadence).toBe('daily@03:05');
       expect(typeof job.handler).toBe('function');
     });
+
+    it('registers move-in-prompt at daily@10:00', () => {
+      const job = CRON_JOBS.find((j) => j.name === 'move-in-prompt');
+      expect(job).toBeDefined();
+      expect(job.cadence).toBe('daily@10:00');
+      expect(typeof job.handler).toBe('function');
+    });
   });
 
   describe('unknown / invalid cadences', () => {
