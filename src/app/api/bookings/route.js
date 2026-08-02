@@ -7,6 +7,13 @@ import {
 } from '@/lib/supabaseServer';
 import { createBookingRequest } from '@/lib/bookingService';
 import { normalizeSingleLine } from '@/lib/textNormalize';
+import {
+  STUDENT_PROFILE_SELECT,
+  GUEST_PROFILE_SELECT,
+  missingProfileFields,
+  isProfileComplete,
+  toGuestProfile,
+} from '@/lib/studentProfileFields';
 
 /**
  * POST /api/bookings — student creates a booking request.
@@ -22,7 +29,7 @@ async function resolveActor(request) {
 
   const { data: student } = await supabase
     .from('students')
-    .select('student_id, email, display_name')
+    .select(STUDENT_PROFILE_SELECT)
     .eq('auth_user_id', user.id)
     .maybeSingle();
   if (student) {
@@ -39,6 +46,18 @@ async function resolveActor(request) {
   }
 
   return { status: 403, error: 'NO_PROFILE' };
+}
+
+function mapLandlordBookings(rows) {
+  return (rows || []).map((row) => {
+    const studentsRaw = row.students;
+    const student = Array.isArray(studentsRaw) ? studentsRaw[0] : studentsRaw;
+    const { students: _drop, ...rest } = row;
+    return {
+      ...rest,
+      students: toGuestProfile(student),
+    };
+  });
 }
 
 export async function POST(request) {
@@ -62,6 +81,20 @@ export async function POST(request) {
   } catch {
     return NextResponse.json(
       { error_code: 'INVALID_INPUT', error: 'Invalid JSON body' },
+      { status: 400 },
+    );
+  }
+
+  // Profile must be complete before a booking request is accepted.
+  // Optional fields on the account page; hard gate only at request-to-book.
+  if (!isProfileComplete(auth.student)) {
+    const missing = missingProfileFields(auth.student);
+    return NextResponse.json(
+      {
+        error_code: 'PROFILE_INCOMPLETE',
+        error: 'Complete your guest profile before requesting a booking',
+        missing_fields: missing,
+      },
       { status: 400 },
     );
   }
@@ -139,7 +172,7 @@ export async function GET(request) {
     return NextResponse.json({ bookings: data || [], role: 'student' });
   }
 
-  // Landlord: bookings on own listings (RLS + join for student/listing labels).
+  // Landlord: bookings on own listings only. Guest profile has no email.
   const service = getSupabaseAsService();
   const { data: listingRows } = await service
     .from('listings')
@@ -154,7 +187,7 @@ export async function GET(request) {
     .from('bookings')
     .select(`
       *,
-      students ( student_id, display_name, email ),
+      students ( ${GUEST_PROFILE_SELECT} ),
       listings ( listing_id, title, location ( address, neighborhood ) )
     `)
     .in('listing_id', listingIds)
@@ -172,7 +205,7 @@ export async function GET(request) {
     return NextResponse.json({ error: 'Failed to fetch bookings' }, { status: 500 });
   }
 
-  const bookings = data || [];
+  const bookings = mapLandlordBookings(data);
   // Counts across all states for filter tabs (always full, not filtered).
   const { data: allForCounts } = await service
     .from('bookings')

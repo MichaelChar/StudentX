@@ -11,6 +11,7 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
+import GuestProfileCard from '@/components/booking/GuestProfileCard';
 import {
   stayDurationMonths,
   stayDurationMonthsExact,
@@ -175,9 +176,6 @@ export default function LandlordReservationDetailPage() {
             <h2 className="font-display text-2xl md:text-3xl text-night mt-1">
               {student?.display_name || t('unknownStudent')}
             </h2>
-            {student?.email && (
-              <p className="text-sm text-night/60 mt-1">{student.email}</p>
-            )}
           </div>
           <Pill variant={booking.state === 'requested' ? 'pending' : 'info'}>
             {t(`state_${booking.state}`)}
@@ -235,6 +233,10 @@ export default function LandlordReservationDetailPage() {
           </div>
         )}
       </Card>
+
+      <div className="mb-6">
+        <GuestProfileCard student={student} />
+      </div>
 
       {events.length > 0 && (
         <Card tone="parchment" className="p-6">

@@ -1,13 +1,15 @@
 'use client';
 
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useAccessToken } from '@/lib/useAccessToken';
 import { parseStayRange, costSummary } from '@/lib/bookingDates';
+import { isProfileComplete } from '@/lib/studentProfileFields';
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import StudentProfileForm from '@/components/student/StudentProfileForm';
 import {
   responseTimeBucket,
   RESPONSE_BUCKET_WITHIN_HOUR,
@@ -30,12 +32,16 @@ const ERROR_TO_KEY = {
   LISTING_NOT_BOOKABLE: 'errorNotBookable',
   LISTING_NOT_FOUND: 'errorListingMissing',
   INVALID_INPUT: 'errorInvalid',
+  PROFILE_INCOMPLETE: 'errorProfileIncomplete',
 };
 
 /**
  * Sticky booking rail — replaces ContactRail for the marketplace MVP.
  * Signed-out visitors see the full form and are sent to login (with ?next=)
  * only when they submit. No payment: cost summary + "You won't be charged".
+ *
+ * Guest profile must be complete at request-to-book (not at signup). When
+ * fields are missing we block submit and show the profile form inline.
  */
 export default function BookingWidget({ listing, nextPath }) {
   const t = useTranslations('propylaea.listing.booking');
@@ -50,6 +56,49 @@ export default function BookingWidget({ listing, nextPath }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState(null);
+
+  const [profile, setProfile] = useState(null);
+  const [profileLoaded, setProfileLoaded] = useState(false);
+  const [needProfile, setNeedProfile] = useState(false);
+
+  useEffect(() => {
+    // null = still resolving session; '' = signed out.
+    if (accessToken == null) return;
+    if (!accessToken) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- reset when signed out
+      setProfile(null);
+      setProfileLoaded(true);
+      setNeedProfile(false);
+      return;
+    }
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/student/profile', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (cancelled) return;
+        if (res.ok && data.student) {
+          setProfile(data.student);
+          setNeedProfile(!isProfileComplete(data.student));
+        } else {
+          setProfile(null);
+          setNeedProfile(false);
+        }
+      } catch {
+        if (!cancelled) {
+          setProfile(null);
+          setNeedProfile(false);
+        }
+      } finally {
+        if (!cancelled) setProfileLoaded(true);
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, [accessToken]);
 
   const responseBucket = responseTimeBucket(
     listing.avg_response_ms,
@@ -82,6 +131,59 @@ export default function BookingWidget({ listing, nextPath }) {
     });
   }, [range, listing.monthly_price, listing.deposit, listing.agency_fee]);
 
+  async function submitBooking(token) {
+    const parsed = parseStayRange(moveIn, moveOut);
+    if (parsed.error) {
+      setError(t('errorInvalid'));
+      return;
+    }
+    const trimmed = message.trim();
+    if (trimmed.length < 10) {
+      setError(t('errorMinMessage'));
+      return;
+    }
+
+    setSending(true);
+    try {
+      const res = await fetch('/api/bookings', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          listing_id: listing.listing_id,
+          move_in: parsed.moveIn,
+          move_out: parsed.moveOut,
+          message: trimmed,
+        }),
+      });
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok) {
+        if (data.error_code === 'PROFILE_INCOMPLETE') {
+          setNeedProfile(true);
+          setError(t('errorProfileIncomplete'));
+          return;
+        }
+        const key = ERROR_TO_KEY[data.error_code] || 'errorGeneric';
+        setError(t(key));
+        return;
+      }
+      setDone({
+        bookingId: data.booking?.booking_id,
+        inquiryId: data.inquiry_id,
+      });
+      if (data.inquiry_id) {
+        router.push(`/student/inquiries/${data.inquiry_id}`);
+      }
+    } catch (err) {
+      console.error('[BookingWidget] request failed:', err);
+      setError(t('errorGeneric'));
+    } finally {
+      setSending(false);
+    }
+  }
+
   async function handleSubmit(e) {
     e.preventDefault();
     setError('');
@@ -104,39 +206,22 @@ export default function BookingWidget({ listing, nextPath }) {
       return;
     }
 
-    setSending(true);
-    try {
-      const res = await fetch('/api/bookings', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-        body: JSON.stringify({
-          listing_id: listing.listing_id,
-          move_in: parsed.moveIn,
-          move_out: parsed.moveOut,
-          message: trimmed,
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok) {
-        const key = ERROR_TO_KEY[data.error_code] || 'errorGeneric';
-        setError(t(key));
-        return;
-      }
-      setDone({
-        bookingId: data.booking?.booking_id,
-        inquiryId: data.inquiry_id,
-      });
-      if (data.inquiry_id) {
-        router.push(`/student/inquiries/${data.inquiry_id}`);
-      }
-    } catch (err) {
-      console.error('[BookingWidget] request failed:', err);
-      setError(t('errorGeneric'));
-    } finally {
-      setSending(false);
+    if (profileLoaded && profile && !isProfileComplete(profile)) {
+      setNeedProfile(true);
+      setError(t('errorProfileIncomplete'));
+      return;
+    }
+
+    await submitBooking(accessToken);
+  }
+
+  function handleProfileSaved(student) {
+    setProfile(student);
+    if (isProfileComplete(student)) {
+      setNeedProfile(false);
+      setError('');
+    } else {
+      setNeedProfile(true);
     }
   }
 
@@ -167,109 +252,135 @@ export default function BookingWidget({ listing, nextPath }) {
                 <p className="text-sm text-night/60">{t('successBody')}</p>
               </div>
             ) : (
-              <form onSubmit={handleSubmit} className="mt-5 space-y-4">
-                <div className="grid grid-cols-2 gap-3">
+              <div className="mt-5 space-y-4">
+                <form onSubmit={handleSubmit} className="space-y-4">
+                  <div className="grid grid-cols-2 gap-3">
+                    <label className="block">
+                      <span className="label-caps text-night/60">{t('moveIn')}</span>
+                      <input
+                        type="date"
+                        required
+                        value={moveIn}
+                        onChange={(e) => setMoveIn(e.target.value)}
+                        className="mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
+                      />
+                    </label>
+                    <label className="block">
+                      <span className="label-caps text-night/60">{t('moveOut')}</span>
+                      <input
+                        type="date"
+                        required
+                        value={moveOut}
+                        onChange={(e) => setMoveOut(e.target.value)}
+                        className="mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
+                      />
+                    </label>
+                  </div>
+
                   <label className="block">
-                    <span className="label-caps text-night/60">{t('moveIn')}</span>
-                    <input
-                      type="date"
+                    <span className="label-caps text-night/60">{t('message')}</span>
+                    <textarea
+                      rows={4}
                       required
-                      value={moveIn}
-                      onChange={(e) => setMoveIn(e.target.value)}
-                      className="mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
+                      minLength={10}
+                      maxLength={4000}
+                      value={message}
+                      onChange={(e) => setMessage(e.target.value)}
+                      placeholder={t('messagePlaceholder')}
+                      className="mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3.5 py-3 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue resize-none"
                     />
                   </label>
-                  <label className="block">
-                    <span className="label-caps text-night/60">{t('moveOut')}</span>
-                    <input
-                      type="date"
-                      required
-                      value={moveOut}
-                      onChange={(e) => setMoveOut(e.target.value)}
-                      className="mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
-                    />
-                  </label>
-                </div>
 
-                <label className="block">
-                  <span className="label-caps text-night/60">{t('message')}</span>
-                  <textarea
-                    rows={4}
-                    required
-                    minLength={10}
-                    maxLength={4000}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                    placeholder={t('messagePlaceholder')}
-                    className="mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3.5 py-3 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue resize-none"
-                  />
-                </label>
-
-                {cost && (
-                  <div className="rounded-sm border border-night/10 bg-parchment p-4 space-y-2 text-sm">
-                    <p className="label-caps text-night/60">{t('costTitle')}</p>
-                    <div className="flex justify-between text-night">
-                      <span>
-                        {t('costRentLine', {
-                          rent: cost.monthly_rent,
-                          months: cost.duration_months,
-                        })}
-                      </span>
-                      <span className="font-medium">€{cost.total_rent}</span>
-                    </div>
-                    {(cost.deposit > 0 || cost.agency_fee > 0) && (
-                      <div className="flex justify-between text-night/70">
-                        <span>{t('costDueMoveIn')}</span>
+                  {cost && (
+                    <div className="rounded-sm border border-night/10 bg-parchment p-4 space-y-2 text-sm">
+                      <p className="label-caps text-night/60">{t('costTitle')}</p>
+                      <div className="flex justify-between text-night">
                         <span>
-                          €{cost.due_at_move_in}
-                          {cost.deposit > 0 && cost.agency_fee > 0
-                            ? ` (${t('costDeposit')} €${cost.deposit} + ${t('costAgency')} €${cost.agency_fee})`
-                            : cost.deposit > 0
-                              ? ` (${t('costDeposit')})`
-                              : ` (${t('costAgency')})`}
+                          {t('costRentLine', {
+                            rent: cost.monthly_rent,
+                            months: cost.duration_months,
+                          })}
                         </span>
+                        <span className="font-medium">€{cost.total_rent}</span>
                       </div>
-                    )}
-                    <p className="pt-1 text-night/50 text-xs leading-relaxed">
-                      {t('noCharge')}
+                      {(cost.deposit > 0 || cost.agency_fee > 0) && (
+                        <div className="flex justify-between text-night/70">
+                          <span>{t('costDueMoveIn')}</span>
+                          <span>
+                            €{cost.due_at_move_in}
+                            {cost.deposit > 0 && cost.agency_fee > 0
+                              ? ` (${t('costDeposit')} €${cost.deposit} + ${t('costAgency')} €${cost.agency_fee})`
+                              : cost.deposit > 0
+                                ? ` (${t('costDeposit')})`
+                                : ` (${t('costAgency')})`}
+                          </span>
+                        </div>
+                      )}
+                      <p className="pt-1 text-night/50 text-xs leading-relaxed">
+                        {t('noCharge')}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Display-only cancellation tiers — no payment / refund wiring. */}
+                  <div className="rounded-sm border border-night/10 bg-parchment p-4 space-y-2">
+                    <p className="label-caps text-night/60">{t('cancellationEnglish')}</p>
+                    <ul className="space-y-1.5 text-sm text-night/70 font-sans leading-snug">
+                      {CANCELLATION_TIERS.map((tier) => (
+                        <li key={tier.id}>{t(CANCELLATION_COPY_KEY[tier.id])}</li>
+                      ))}
+                    </ul>
+                    <p className="text-xs text-night/50 leading-relaxed">
+                      {t('cancellationNote')}
                     </p>
                   </div>
-                )}
 
-                {/* Display-only cancellation tiers — no payment / refund wiring. */}
-                <div className="rounded-sm border border-night/10 bg-parchment p-4 space-y-2">
-                  <p className="label-caps text-night/60">{t('cancellationEnglish')}</p>
-                  <ul className="space-y-1.5 text-sm text-night/70 font-sans leading-snug">
-                    {CANCELLATION_TIERS.map((tier) => (
-                      <li key={tier.id}>{t(CANCELLATION_COPY_KEY[tier.id])}</li>
-                    ))}
-                  </ul>
-                  <p className="text-xs text-night/50 leading-relaxed">
-                    {t('cancellationNote')}
-                  </p>
-                </div>
+                  {error && (
+                    <p
+                      role="alert"
+                      className="text-sm text-magenta bg-parchment border border-night/10 rounded-sm px-3 py-2"
+                    >
+                      {error}
+                    </p>
+                  )}
 
-                {error && (
-                  <p
-                    role="alert"
-                    className="text-sm text-magenta bg-parchment border border-night/10 rounded-sm px-3 py-2"
+                  <Button
+                    type="submit"
+                    variant="gold"
+                    disabled={
+                      sending ||
+                      accessToken === null ||
+                      (needProfile && (!profile || !isProfileComplete(profile)))
+                    }
+                    className="w-full justify-center"
                   >
-                    {error}
+                    {sending ? t('submitting') : t('requestCta')}
+                  </Button>
+                  <p className="label-caps text-night/50 text-center">
+                    {responseHint}
                   </p>
-                )}
+                </form>
 
-                <Button
-                  type="submit"
-                  variant="gold"
-                  disabled={sending || accessToken === null}
-                  className="w-full justify-center"
-                >
-                  {sending ? t('submitting') : t('requestCta')}
-                </Button>
-                <p className="label-caps text-night/50 text-center">
-                  {responseHint}
-                </p>
-              </form>
+                {needProfile && accessToken ? (
+                  <div className="space-y-3">
+                    <div className="rounded-sm border border-night/10 bg-parchment p-4">
+                      <p className="font-display text-lg text-night">{t('profileGateTitle')}</p>
+                      <p className="mt-1 text-sm text-night/60 leading-relaxed">
+                        {t('profileGateBody')}
+                      </p>
+                    </div>
+                    <StudentProfileForm
+                      initialStudent={profile}
+                      accessToken={accessToken}
+                      onSaved={handleProfileSaved}
+                      requireComplete
+                      showDisplayName={false}
+                      compact
+                      submitLabel={t('profileGateSave')}
+                    />
+                  </div>
+                ) : null}
+              </div>
             )}
           </Card>
         </div>

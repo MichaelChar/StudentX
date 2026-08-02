@@ -13,6 +13,10 @@ import {
   hasMoveInResponse,
 } from '@/lib/bookingService';
 import { canRespondToMoveIn, canStudentCancel } from '@/lib/bookingState';
+import {
+  GUEST_PROFILE_SELECT,
+  toGuestProfile,
+} from '@/lib/studentProfileFields';
 
 async function resolveAuth(request) {
   const token = extractToken(request);
@@ -38,37 +42,69 @@ async function resolveAuth(request) {
   return { status: 403 };
 }
 
+/**
+ * Load a booking the viewer is allowed to see.
+ * Student: own booking only.
+ * Landlord: booking whose listing belongs to them only.
+ * Anything else → 404 (not 403) so we don't leak existence.
+ */
 async function loadBookingForViewer(bookingId, auth) {
   const service = getSupabaseAsService();
-  const { data: booking, error } = await service
-    .from('bookings')
-    .select(`
-      *,
-      students ( student_id, display_name, email ),
-      listings (
-        listing_id,
-        title,
-        photos,
-        landlord_id,
-        location ( address, neighborhood ),
-        rent ( monthly_price, deposit ),
-        agency_fee
-      )
-    `)
-    .eq('booking_id', bookingId)
-    .maybeSingle();
-  if (error || !booking) return { status: 404 };
 
   if (auth.role === 'student') {
+    const { data: booking, error } = await service
+      .from('bookings')
+      .select(`
+        *,
+        students ( student_id, display_name, email ),
+        listings (
+          listing_id,
+          title,
+          photos,
+          landlord_id,
+          location ( address, neighborhood ),
+          rent ( monthly_price, deposit ),
+          agency_fee
+        )
+      `)
+      .eq('booking_id', bookingId)
+      .maybeSingle();
+    if (error || !booking) return { status: 404 };
     if (booking.student_id !== auth.student.student_id) return { status: 404 };
     return { booking };
   }
 
   if (auth.role === 'landlord') {
+    // Guest profile only — never select students.email for landlords.
+    const { data: booking, error } = await service
+      .from('bookings')
+      .select(`
+        *,
+        students ( ${GUEST_PROFILE_SELECT} ),
+        listings (
+          listing_id,
+          title,
+          photos,
+          landlord_id,
+          location ( address, neighborhood ),
+          rent ( monthly_price, deposit ),
+          agency_fee
+        )
+      `)
+      .eq('booking_id', bookingId)
+      .maybeSingle();
+    if (error || !booking) return { status: 404 };
     if (booking.listings?.landlord_id !== auth.landlord.landlord_id) {
       return { status: 404 };
     }
-    return { booking };
+    const studentsRaw = booking.students;
+    const student = Array.isArray(studentsRaw) ? studentsRaw[0] : studentsRaw;
+    return {
+      booking: {
+        ...booking,
+        students: toGuestProfile(student),
+      },
+    };
   }
 
   return { status: 403 };
