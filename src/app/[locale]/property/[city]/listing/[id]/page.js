@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
-import { getListingForRender } from '@/lib/listingForRender';
+import { getListingForRender, getSimilarListings } from '@/lib/listingForRender';
 import { requireStudent } from '@/lib/requireStudent';
 
 import ListingGallery from '@/components/listing/ListingGallery';
@@ -11,12 +11,26 @@ import AvailabilityCalendar from '@/components/listing/AvailabilityCalendar';
 import ViewTracker from '@/components/listing/ViewTracker';
 import ReportListingModal from '@/components/listing/ReportListingModal';
 import FavoriteButton from '@/components/FavoriteButton';
+import ListingCard from '@/components/ListingCard';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatDistance } from '@/lib/formatDistance';
+import {
+  responseTimeBucket,
+  RESPONSE_BUCKET_WITHIN_HOUR,
+  RESPONSE_BUCKET_WITHIN_DAY,
+  RESPONSE_BUCKET_WITHIN_2_DAYS,
+} from '@/lib/responseTimeBucket';
+import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
+
+const CANCELLATION_COPY_KEY = {
+  free: 'cancellationFree',
+  half: 'cancellationHalf',
+  none: 'cancellationNone',
+};
 
 // Cap on the untrusted ?from= URL param. Real /results querystrings are
 // well under this; anything bigger is almost certainly an attempt to
@@ -39,6 +53,8 @@ export default async function ListingPage({ params, searchParams }) {
   const listing = await getListingForRender(id);
   if (!listing) notFound();
 
+  const similarListings = await getSimilarListings(listing);
+
   const t = await getTranslations({ locale, namespace: 'propylaea.listing' });
   const tListing = await getTranslations({ locale, namespace: 'listing' });
 
@@ -48,6 +64,19 @@ export default async function ListingPage({ params, searchParams }) {
   // Free admin-approved verification. Gates the "listed by" profile link
   // (public landlord profiles require is_verified).
   const isVerified = listing.is_verified === true;
+
+  const responseBucket = responseTimeBucket(
+    listing.avg_response_ms,
+    listing.response_stats_at,
+  );
+  const responseLabelKey =
+    responseBucket === RESPONSE_BUCKET_WITHIN_HOUR
+      ? 'responseWithinHour'
+      : responseBucket === RESPONSE_BUCKET_WITHIN_DAY
+        ? 'responseWithinDay'
+        : responseBucket === RESPONSE_BUCKET_WITHIN_2_DAYS
+          ? 'responseWithin2Days'
+          : null;
 
   return (
     <div className="mx-auto max-w-6xl px-5 pt-8 pb-28 sm:pb-12 md:py-12">
@@ -97,6 +126,11 @@ export default async function ListingPage({ params, searchParams }) {
                   aria-label={t('streetAddressA11y')}
                 >
                   {listing.address}
+                </p>
+              )}
+              {responseLabelKey && (
+                <p className="mt-3 text-sm text-night/55 font-sans">
+                  {t(responseLabelKey)}
                 </p>
               )}
             </div>
@@ -289,6 +323,23 @@ export default async function ListingPage({ params, searchParams }) {
             </section>
           )}
 
+          {/* Cancellation policy — display only; no payment taken today. */}
+          <section className="mb-10">
+            <p className="label-caps text-night/80 mb-4">
+              {t('cancellationEnglish')}
+            </p>
+            <Card tone="parchment" border={false} className="p-6 md:p-8">
+              <ul className="space-y-2 text-night/80 text-lg font-sans">
+                {CANCELLATION_TIERS.map((tier) => (
+                  <li key={tier.id}>{t(CANCELLATION_COPY_KEY[tier.id])}</li>
+                ))}
+              </ul>
+              <p className="mt-4 text-sm text-night/50 font-sans leading-relaxed">
+                {t('cancellationNote')}
+              </p>
+            </Card>
+          </section>
+
           {/* Subtle "report this listing" trigger — opens a client modal that
               emails the ops inbox (email-only v1, no DB). Rendered here on the
               page, not inside a shared detail component. */}
@@ -303,6 +354,20 @@ export default async function ListingPage({ params, searchParams }) {
           nextPath={`/property/thessaloniki/listing/${listing.listing_id}${fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : ''}`}
         />
       </div>
+
+      {/* Similar listings — same neighbourhood first, then nearest price. */}
+      {similarListings.length > 0 && (
+        <section className="mt-16 md:mt-20">
+          <p className="label-caps text-night/80 mb-6">
+            {t('similarEnglish')}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+            {similarListings.map((similar) => (
+              <ListingCard key={similar.listing_id} listing={similar} />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   );
 }

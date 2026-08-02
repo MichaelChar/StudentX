@@ -52,6 +52,7 @@ describe('transformListing', () => {
       listing_id: '0100006',
       is_verified: true,
       avg_response_ms: 3_600_000,
+      response_stats_at: null,
       title: 'Sunny studio near Medical School',
       address: '12 Egnatias',
       neighborhood: 'Center',
