@@ -59,7 +59,7 @@ migrations (004+); marketplace columns land in 100.
 | `email` | TEXT | UNIQUE | Account email |
 | `phone` | TEXT | — (nullable) | Phone / WhatsApp for video-call scheduling (100) |
 | `avg_response_ms` | BIGINT | CHECK ≥ 0 (nullable) | Rolling average host response latency (100); anon SELECT granted in 101 for public ranking |
-| `response_stats_at` | TIMESTAMPTZ | — (nullable) | When `avg_response_ms` was last recomputed (100); service-role / cron only |
+| `response_stats_at` | TIMESTAMPTZ | — (nullable) | When `avg_response_ms` was last recomputed (100); anon SELECT granted in 103 so public buckets can drop stale stats |
 | `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Account creation time |
 | `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update time |
 
@@ -323,7 +323,8 @@ Per-listing calendar holds for the booking marketplace (W1).
 ### `bookings`
 
 Reservation request / stay record (W2). No payment states in this phase —
-`confirmed` means the landlord accepted and parties settle offline.
+`confirmed` means the landlord accepted and parties settle offline;
+`moved_in` means the student confirmed move-in looked good (103).
 
 | Column | Type | Constraints | Description |
 |--------|------|-------------|-------------|
@@ -345,7 +346,7 @@ Reservation request / stay record (W2). No payment states in this phase —
 | `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Request time (`requested`) |
 | `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last row update |
 
-**States:** `requested` · `accepted` · `confirmed` · `declined` · `expired` · `cancelled` · `disputed`
+**States:** `requested` · `accepted` · `confirmed` · `moved_in` · `declined` · `expired` · `cancelled` · `disputed`
 
 **RLS:**
 - Student: SELECT / INSERT (own rows, insert only as `requested`) / UPDATE own rows
@@ -399,9 +400,10 @@ Video-call (or other) property verification record (W4 table early).
 | `verification_id` | UUID | PK | Verification ID |
 | `listing_id` | TEXT | NOT NULL, FK → listings ON DELETE CASCADE | Listing verified |
 | `method` | TEXT | NOT NULL, IN (`video_call`, `in_person`, `document`, `other`) | How it was verified |
+| `status` | TEXT | NOT NULL, DEFAULT `pending`, IN (`pending`, `approved`, `rejected`) | Request lifecycle (103) |
 | `verified_by` | TEXT | — (nullable) | Admin / operator identifier |
-| `verified_at` | TIMESTAMPTZ | — (nullable) | Completion time; NULL = in progress |
-| `checklist_json` | JSONB | NOT NULL, DEFAULT `{}` | Checklist answers |
+| `verified_at` | TIMESTAMPTZ | — (nullable) | Completion time; NULL until approved — public badge requires this set, not status alone |
+| `checklist_json` | JSONB | NOT NULL, DEFAULT `{}` | Checklist answers (tick-box keys; not used for pending/rejected) |
 | `notes` | TEXT | — (nullable) | Free-text notes |
 | `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Created |
 
@@ -441,7 +443,8 @@ Listings from real scraped data may have incomplete information. The `flags` JSO
 | Min stay 2–12 months when set | listings | `CHECK (min_duration_months IS NULL OR BETWEEN 2 AND 12)` |
 | Max stay 2–12 and ≥ min when set | listings | `listings_max_duration_months_check` |
 | Booking move-out after move-in | bookings | `CHECK (move_out > move_in)` |
-| Booking state enum | bookings | `requested`…`disputed` (see above) |
+| Booking state enum | bookings | `requested`…`moved_in`…`disputed` (see above) |
+| Property verification status | property_verifications | `pending` \| `approved` \| `rejected` |
 | Availability block kind | listing_availability_blocks | `booked` \| `pending` \| `blackout` |
 | No bank details on payouts | payouts | schema has no IBAN/account columns by design |
 
@@ -455,6 +458,7 @@ Listings from real scraped data may have incomplete information. The `flags` JSO
 | `supabase/migrations/002_seed_faculties.sql` | Faculty reference data (6 points) |
 | `supabase/migrations/003_schema_evolution.sql` | Schema evolution for real-world data (nullable prices, new columns, new amenities) |
 | `supabase/migrations/100_marketplace_schema.sql` | Marketplace pivot: bookings, availability blocks, payouts, property verifications, neighborhoods, listing/student/landlord columns |
+| `supabase/migrations/103_promote_state_columns.sql` | `bookings.state` + `moved_in`; `property_verifications.status`; anon GRANT on `landlords.response_stats_at` |
 | `supabase/seed.sql` | 10 seed listings with all dimensions (7-digit IDs) + neighborhoods |
 
 ---

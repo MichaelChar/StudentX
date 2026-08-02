@@ -18,6 +18,7 @@ const GROUP_ORDER = [
   'requested',
   'accepted',
   'confirmed',
+  'moved_in',
   'disputed',
   'declined',
   'expired',

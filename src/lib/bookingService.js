@@ -18,7 +18,7 @@ import {
   planMoveInProblem,
   hasBlockingOverlap,
   blockActionForTransition,
-  MOVE_IN_OK_KIND,
+  hasAnsweredMoveIn,
 } from '@/lib/bookingState';
 import { executeBlockAction } from '@/lib/bookingBlocks';
 import {
@@ -460,8 +460,9 @@ export async function acceptBooking({ booking, actor = 'landlord' }) {
 }
 
 /**
- * Whether the student has already answered the move-in prompt
- * (move_in_ok event or booking left confirmed via dispute).
+ * Whether the student has already answered the move-in prompt.
+ * Authoritative via bookings.state (moved_in | disputed) — no event-log scan.
+ * @deprecated Prefer hasAnsweredMoveIn from bookingState with the loaded row.
  */
 export async function hasMoveInResponse(bookingId) {
   if (!bookingId) return false;
@@ -471,24 +472,15 @@ export async function hasMoveInResponse(bookingId) {
     .select('state')
     .eq('booking_id', bookingId)
     .maybeSingle();
-  if (!booking) return false;
-  if (booking.state === 'disputed') return true;
-
-  const { data: prior } = await service
-    .from('booking_events')
-    .select('event_id')
-    .eq('booking_id', bookingId)
-    .contains('metadata', { kind: MOVE_IN_OK_KIND })
-    .limit(1)
-    .maybeSingle();
-  return Boolean(prior);
+  return hasAnsweredMoveIn(booking);
 }
 
 /**
- * Student confirms move-in is as promised (audit event only — stays confirmed).
+ * Student confirms move-in is as promised: confirmed → moved_in.
+ * Does not release or alter the availability block.
  */
 export async function confirmMoveIn({ booking, actor = 'student', now = new Date() }) {
-  if (await hasMoveInResponse(booking.booking_id)) {
+  if (hasAnsweredMoveIn(booking)) {
     return { error: 'ALREADY_RESPONDED', message: 'Move-in already answered', status: 409 };
   }
 
@@ -531,7 +523,7 @@ export async function reportMoveInProblem({
   description,
   now = new Date(),
 }) {
-  if (await hasMoveInResponse(booking.booking_id)) {
+  if (hasAnsweredMoveIn(booking)) {
     return { error: 'ALREADY_RESPONDED', message: 'Move-in already answered', status: 409 };
   }
 

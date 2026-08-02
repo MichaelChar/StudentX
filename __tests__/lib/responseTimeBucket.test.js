@@ -46,9 +46,9 @@ describe('responseTimeBucket', () => {
     expect(responseTimeBucket(5 * DAY, null, NOW)).toBeNull();
   });
 
-  it('shows when response_stats_at is missing (public payload has no grant)', () => {
-    // Anon cannot SELECT response_stats_at — transform leaves it null.
-    // Still show a bucket from avg_response_ms alone.
+  it('shows when response_stats_at is missing (never stamped)', () => {
+    // After migration 103 the column is selectable; when null (cron never
+    // wrote a stamp) still show a bucket from avg_response_ms alone.
     expect(responseTimeBucket(HOUR, null, NOW)).toBe(RESPONSE_BUCKET_WITHIN_HOUR);
     expect(responseTimeBucket(HOUR, undefined, NOW)).toBe(
       RESPONSE_BUCKET_WITHIN_HOUR,

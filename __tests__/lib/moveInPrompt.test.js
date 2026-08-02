@@ -49,6 +49,7 @@ describe('move-in-prompt eligibility (cron rule)', () => {
     for (const state of [
       'requested',
       'accepted',
+      'moved_in',
       'declined',
       'cancelled',
       'expired',
@@ -63,3 +64,4 @@ describe('move-in-prompt eligibility (cron rule)', () => {
     }
   });
 });
+

@@ -13,6 +13,7 @@ import {
   isEligibleForMoveInPrompt,
   isMoveInDateReached,
   canStudentCancel,
+  hasAnsweredMoveIn,
   MOVE_IN_OK_KIND,
   MOVE_IN_PROBLEM_KIND,
   EXPIRY_MS,
@@ -264,8 +265,16 @@ describe('move-in prompt eligibility', () => {
       ),
     ).toBe(false);
 
-    // Wrong states — requested / accepted / terminal never prompt.
-    for (const state of ['requested', 'accepted', 'declined', 'cancelled', 'expired', 'disputed']) {
+    // Wrong states — requested / accepted / moved_in / terminal never prompt.
+    for (const state of [
+      'requested',
+      'accepted',
+      'moved_in',
+      'declined',
+      'cancelled',
+      'expired',
+      'disputed',
+    ]) {
       expect(
         isEligibleForMoveInPrompt(
           booking({ state, move_in: '2026-08-01' }),
@@ -275,13 +284,21 @@ describe('move-in prompt eligibility', () => {
     }
   });
 
+  it('hasAnsweredMoveIn is true for moved_in and disputed only', () => {
+    expect(hasAnsweredMoveIn(booking({ state: 'moved_in' }))).toBe(true);
+    expect(hasAnsweredMoveIn(booking({ state: 'disputed' }))).toBe(true);
+    expect(hasAnsweredMoveIn(booking({ state: 'confirmed' }))).toBe(false);
+    expect(hasAnsweredMoveIn(null)).toBe(false);
+  });
+
+
   it('isMoveInDateReached uses UTC calendar dates', () => {
     const now = new Date('2026-09-01T00:00:00Z');
     expect(isMoveInDateReached(booking({ move_in: '2026-09-01' }), now)).toBe(true);
     expect(isMoveInDateReached(booking({ move_in: '2026-09-02' }), now)).toBe(false);
   });
 
-  it('planMoveInOk records same-state audit without releasing the block', () => {
+  it('planMoveInOk transitions confirmed → moved_in without releasing the block', () => {
     const now = new Date('2026-09-01T12:00:00Z');
     const plan = planMoveInOk({
       booking: booking({ state: 'confirmed', move_in: '2026-09-01' }),
@@ -289,10 +306,11 @@ describe('move-in prompt eligibility', () => {
       now,
     });
     expect(plan.error).toBeUndefined();
-    expect(plan.event.to_state).toBe('confirmed');
+    expect(plan.patch.state).toBe('moved_in');
+    expect(plan.event.from_state).toBe('confirmed');
+    expect(plan.event.to_state).toBe('moved_in');
     expect(plan.event.metadata.kind).toBe(MOVE_IN_OK_KIND);
     expect(plan.blockAction).toEqual({ action: 'none' });
-    expect(plan.patch.state).toBeUndefined();
   });
 
   it('planMoveInProblem transitions confirmed → disputed with description', () => {

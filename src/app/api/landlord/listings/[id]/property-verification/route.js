@@ -60,7 +60,7 @@ export async function POST(request, { params }) {
 
   const { data: existing, error: existingError } = await supabase
     .from('property_verifications')
-    .select('verification_id, verified_at, checklist_json, created_at')
+    .select('verification_id, status, verified_at, checklist_json, created_at')
     .eq('listing_id', listingId);
 
   if (existingError) {
@@ -87,13 +87,14 @@ export async function POST(request, { params }) {
     .insert({
       listing_id: listingId,
       method: 'video_call',
+      status: 'pending',
       verified_at: null,
       verified_by: null,
       checklist_json: {},
       notes: null,
     })
     .select(
-      'verification_id, listing_id, method, verified_at, checklist_json, notes, created_at',
+      'verification_id, listing_id, method, status, verified_at, checklist_json, notes, created_at',
     )
     .single();
 

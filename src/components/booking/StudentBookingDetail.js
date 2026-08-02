@@ -36,7 +36,9 @@ function formatDate(iso) {
 
 function statusVariant(state) {
   if (state === 'requested') return 'pending';
-  if (state === 'accepted' || state === 'confirmed') return 'info';
+  if (state === 'accepted' || state === 'confirmed' || state === 'moved_in') {
+    return 'info';
+  }
   if (state === 'disputed') return 'pending';
   return 'amenity';
 }
@@ -272,7 +274,7 @@ export default function StudentBookingDetail({ bookingId }) {
           </div>
         )}
 
-        {moveInMeta.answered && booking.state === 'confirmed' && (
+        {booking.state === 'moved_in' && (
           <p className="mt-6 text-sm text-night/60 font-sans">{t('moveInConfirmedNote')}</p>
         )}
 

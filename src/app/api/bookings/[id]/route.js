@@ -10,9 +10,12 @@ import {
   confirmMoveIn,
   reportMoveInProblem,
   inquiryIdForBooking,
-  hasMoveInResponse,
 } from '@/lib/bookingService';
-import { canRespondToMoveIn, canStudentCancel } from '@/lib/bookingState';
+import {
+  canRespondToMoveIn,
+  canStudentCancel,
+  hasAnsweredMoveIn,
+} from '@/lib/bookingState';
 import {
   GUEST_PROFILE_SELECT,
   toGuestProfile,
@@ -147,8 +150,8 @@ export async function GET(request, { params }) {
     .order('created_at', { ascending: true });
 
   const inquiryId = await inquiryIdForBooking(id);
-  const moveInAnswered = await hasMoveInResponse(id);
   const row = plainBookingRow(loaded.booking);
+  const moveInAnswered = hasAnsweredMoveIn(row);
 
   return NextResponse.json({
     booking: loaded.booking,
