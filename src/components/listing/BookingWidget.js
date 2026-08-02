@@ -8,6 +8,19 @@ import { parseStayRange, costSummary } from '@/lib/bookingDates';
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import {
+  responseTimeBucket,
+  RESPONSE_BUCKET_WITHIN_HOUR,
+  RESPONSE_BUCKET_WITHIN_DAY,
+  RESPONSE_BUCKET_WITHIN_2_DAYS,
+} from '@/lib/responseTimeBucket';
+import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
+
+const CANCELLATION_COPY_KEY = {
+  free: 'cancellationFree',
+  half: 'cancellationHalf',
+  none: 'cancellationNone',
+};
 
 const ERROR_TO_KEY = {
   NOT_AUTHENTICATED: 'errorSignIn',
@@ -27,6 +40,7 @@ const ERROR_TO_KEY = {
 export default function BookingWidget({ listing, nextPath }) {
   const t = useTranslations('propylaea.listing.booking');
   const tListing = useTranslations('listing');
+  const tListingPage = useTranslations('propylaea.listing');
   const router = useRouter();
   const accessToken = useAccessToken();
 
@@ -36,6 +50,20 @@ export default function BookingWidget({ listing, nextPath }) {
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
   const [done, setDone] = useState(null);
+
+  const responseBucket = responseTimeBucket(
+    listing.avg_response_ms,
+    listing.response_stats_at,
+  );
+  const responseHint =
+    responseBucket === RESPONSE_BUCKET_WITHIN_HOUR
+      ? tListingPage('responseWithinHour')
+      : responseBucket === RESPONSE_BUCKET_WITHIN_DAY
+        ? tListingPage('responseWithinDay')
+        : responseBucket === RESPONSE_BUCKET_WITHIN_2_DAYS
+          ? tListingPage('responseWithin2Days')
+          : t('replyHint');
+
 
   const range = useMemo(() => {
     if (!moveIn || !moveOut) return null;
@@ -208,6 +236,19 @@ export default function BookingWidget({ listing, nextPath }) {
                   </div>
                 )}
 
+                {/* Display-only cancellation tiers — no payment / refund wiring. */}
+                <div className="rounded-sm border border-night/10 bg-parchment p-4 space-y-2">
+                  <p className="label-caps text-night/60">{t('cancellationEnglish')}</p>
+                  <ul className="space-y-1.5 text-sm text-night/70 font-sans leading-snug">
+                    {CANCELLATION_TIERS.map((tier) => (
+                      <li key={tier.id}>{t(CANCELLATION_COPY_KEY[tier.id])}</li>
+                    ))}
+                  </ul>
+                  <p className="text-xs text-night/50 leading-relaxed">
+                    {t('cancellationNote')}
+                  </p>
+                </div>
+
                 {error && (
                   <p
                     role="alert"
@@ -226,7 +267,7 @@ export default function BookingWidget({ listing, nextPath }) {
                   {sending ? t('submitting') : t('requestCta')}
                 </Button>
                 <p className="label-caps text-night/50 text-center">
-                  {t('replyHint')}
+                  {responseHint}
                 </p>
               </form>
             )}

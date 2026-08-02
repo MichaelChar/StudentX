@@ -27,7 +27,9 @@ import {
 const PROPERTY_TYPE_GROUPS = [
   { labelKey: 'typeStudio1Bed', values: ['Studio', '1-Bedroom'] },
   { labelKey: 'type2Bed', values: ['2-Bedroom'] },
+  { labelKey: 'typeEntirePlace', values: ['Entire place'] },
   { labelKey: 'typePrivateRoom', values: ['Room in shared apartment'] },
+  { labelKey: 'typeBedInSharedRoom', values: ['Bed in shared room'] },
 ];
 // Floor matches the quiz slider (src/app/.../quiz/page.js) so the two
 // surfaces agree on the minimum selectable budget.

@@ -37,7 +37,7 @@ export async function GET(request, { params }) {
         rent ( monthly_price, currency, bills_included, deposit ),
         location ( address, neighborhood, lat, lng ),
         property_types ( name ),
-        landlords ( name, is_verified, profile_photo_url ),
+        landlords ( name, is_verified, profile_photo_url, avg_response_ms ),
         listing_amenities ( amenities ( amenity_id, name ) ),
         faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) ),
         listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) )

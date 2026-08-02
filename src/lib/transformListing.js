@@ -9,8 +9,12 @@ export function transformListing(row) {
     listing_id: row.listing_id,
     is_verified,
     // Denormalised host response latency (landlords.avg_response_ms; cron
-    // refresh-response-times). Used for public search ranking; NULL = unknown.
+    // refresh-response-times). Used for public search ranking + display
+    // buckets; NULL = unknown. response_stats_at is service-role-only on
+    // the public join (no anon SELECT grant) — included when present so
+    // the pure bucketer can drop stale stats without a second query.
     avg_response_ms: row.landlords?.avg_response_ms ?? null,
+    response_stats_at: row.landlords?.response_stats_at ?? null,
     title: row.title ?? null,
     address: row.location?.address ?? null,
     neighborhood: row.location?.neighborhood ?? null,

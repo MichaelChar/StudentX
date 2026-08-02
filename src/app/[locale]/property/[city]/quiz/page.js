@@ -25,7 +25,9 @@ const BUDGET_DEFAULT = 550;
 const TYPE_OPTIONS = [
   { value: ['Studio', '1-Bedroom'], labelKey: 'typeStudio1Bed' },
   { value: ['2-Bedroom'], labelKey: 'type2Bed' },
+  { value: ['Entire place'], labelKey: 'typeEntirePlace' },
   { value: ['Room in shared apartment'], labelKey: 'typePrivateRoom' },
+  { value: ['Bed in shared room'], labelKey: 'typeBedInSharedRoom' },
 ];
 
 // Dealbreaker keys must align with what /results/page.js filters on.

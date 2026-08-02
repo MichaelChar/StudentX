@@ -8,6 +8,12 @@ import LandlordAvatar from '@/components/landlord/LandlordAvatar';
 import { variantUrl } from '@/lib/photoVariants';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatDistance } from '@/lib/formatDistance';
+import {
+  responseTimeBucket,
+  RESPONSE_BUCKET_WITHIN_HOUR,
+  RESPONSE_BUCKET_WITHIN_DAY,
+  RESPONSE_BUCKET_WITHIN_2_DAYS,
+} from '@/lib/responseTimeBucket';
 
 /*
   Propylaea listing card — matches page 06 of the reference design.
@@ -52,6 +58,19 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
   const landlordId = listing.listing_id?.slice(0, 4);
   const landlordName = listing.landlord?.name;
   const showLandlord = listing.is_verified && landlordId && landlordName;
+
+  const responseBucket = responseTimeBucket(
+    listing.avg_response_ms,
+    listing.response_stats_at,
+  );
+  const responseLabelKey =
+    responseBucket === RESPONSE_BUCKET_WITHIN_HOUR
+      ? 'responseWithinHour'
+      : responseBucket === RESPONSE_BUCKET_WITHIN_DAY
+        ? 'responseWithinDay'
+        : responseBucket === RESPONSE_BUCKET_WITHIN_2_DAYS
+          ? 'responseWithin2Days'
+          : null;
 
   return (
     <div
@@ -133,6 +152,14 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
             <Pill variant="amenity">{t('billsIncluded')}</Pill>
           )}
         </div>
+
+        {/* Factual host response band — no badge, no superlative. Omitted
+            when avg is null, stale, or slower than two days. */}
+        {responseLabelKey && (
+          <p className="mt-3 text-sm text-night/55 font-sans leading-snug">
+            {tCard(responseLabelKey)}
+          </p>
+        )}
 
         {/* Verified landlord chip — its own link (z-10) above the stretched
             card link, so a tap here opens the landlord profile, not the listing. */}
