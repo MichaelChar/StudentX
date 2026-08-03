@@ -28,7 +28,8 @@ export default function StepUniversities({
       void onAddUniversity();
       return;
     }
-    // Fallback (tests / stories without the parent handler): empty shell.
+    // Fallback when rendered without the parent handler: empty shell the
+    // landlord types into.
     const taken = new Set(rows.map((d) => d.university_id));
     const next = (universities || []).find((u) => !taken.has(u.university_id));
     if (!next) return;

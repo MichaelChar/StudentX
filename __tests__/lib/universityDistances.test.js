@@ -83,6 +83,34 @@ describe('mergePrefillUniversityDistances', () => {
     expect(out.map((r) => r.university_id)).toEqual(['auth', 'uom', 'ihu']);
   });
 
+  it('adds exactly one uni when capped at the post-add row count', () => {
+    // "+ Add university" appends one empty shell and caps maxRows at the new
+    // length, so the merge fills that row without appending the rest.
+    const afterAdd = [
+      { university_id: 'auth', distance_meters: '800', source: 'computed' },
+      { university_id: 'uom', distance_meters: '', source: 'landlord' },
+    ];
+    const out = mergePrefillUniversityDistances(
+      afterAdd,
+      COMPUTED,
+      afterAdd.length,
+    );
+    expect(out).toEqual([
+      { university_id: 'auth', distance_meters: '800', source: 'computed' },
+      { university_id: 'uom', distance_meters: '1500', source: 'computed' },
+    ]);
+  });
+
+  it('keeps every existing row even when maxRows is smaller', () => {
+    const existing = [
+      { university_id: 'auth', distance_meters: '999', source: 'landlord' },
+      { university_id: 'uom', distance_meters: '888', source: 'landlord' },
+      { university_id: 'ihu', distance_meters: '', source: 'landlord' },
+    ];
+    const out = mergePrefillUniversityDistances(existing, COMPUTED, 1);
+    expect(out.map((r) => r.university_id)).toEqual(['auth', 'uom', 'ihu']);
+  });
+
   it('keeps an empty shell when the pin has no value for that uni', () => {
     const existing = [
       { university_id: 'oxford', distance_meters: '', source: 'landlord' },

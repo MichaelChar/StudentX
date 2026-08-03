@@ -600,8 +600,11 @@ export default function ListingForm({
    * Prefill distances from the map pin.
    * @param {Array|undefined} existingOverride - when adding a row, pass the
    *   post-add rows so we don't merge against a stale React state snapshot.
+   * @param {number|undefined} maxRowsOverride - row cap for the merge. Defaults
+   *   to every university in the city (Prefill fills the whole list); "+ Add
+   *   university" passes its own row count so one click adds exactly one uni.
    */
-  async function prefillDistances(existingOverride) {
+  async function prefillDistances(existingOverride, maxRowsOverride) {
     const coords = validateRequiredCoords(form.lat, form.lng);
     if (!coords.ok) {
       setError(t('errors.coordsRequired'));
@@ -633,7 +636,10 @@ export default function ListingForm({
         existingOverride !== undefined
           ? existingOverride
           : form.university_distances || [];
-      const maxRows = universities.length || 3;
+      const maxRows =
+        typeof maxRowsOverride === 'number'
+          ? maxRowsOverride
+          : universities.length || 3;
       const next = mergePrefillUniversityDistances(
         existing,
         distances || [],
@@ -667,9 +673,10 @@ export default function ListingForm({
     ];
     // Show the row immediately; prefill fills metres (and flips source) when
     // the pin API succeeds. Pass newRows so merge sees the empty shell even
-    // though setState has not flushed yet.
+    // though setState has not flushed yet, and cap the merge at newRows.length
+    // so "+ Add university" adds one uni rather than every remaining one.
     setField('university_distances', newRows);
-    await prefillDistances(newRows);
+    await prefillDistances(newRows, newRows.length);
   }
 
   const stage = useMemo(
