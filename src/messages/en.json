@@ -249,7 +249,8 @@
       "disableError": "Failed to update listing status. Please try again.",
       "loadError": "Failed to load listings",
       "statusDraft": "Draft",
-      "statusActive": "Active",
+      "statusSubmitted": "Submitted",
+      "statusActive": "Live",
       "statusDisabled": "Disabled"
     },
     "listingForm": {
@@ -406,7 +407,6 @@
         "draft": "Draft",
         "idCheck": "ID check",
         "videoCall": "Video call",
-        "curation": "Curation",
         "live": "Live"
       },
       "steps": {
@@ -440,7 +440,7 @@
         },
         "review": {
           "title": "Review & submit",
-          "lede": "Check the preview, then submit for verification."
+          "lede": "Check the preview, then submit for StudentX review. Listings go live only after ID check, video call, and our approval."
         }
       },
       "address": {
@@ -541,7 +541,7 @@
         "videoTip": "A walkthrough link helps the verification call."
       },
       "review": {
-        "lede": "This is how the listing will look once live. Fix anything that looks off, then submit.",
+        "lede": "This is how the listing will look once live. Fix anything that looks off, then submit for review — StudentX must approve before students can see it.",
         "summaryLabel": "Summary",
         "untitled": "Untitled listing",
         "billsIncluded": "Bills included",
@@ -1458,6 +1458,33 @@
       "approving": "Approving…",
       "reject": "Reject",
       "rejecting": "Rejecting…"
+    },
+    "listingGoLive": {
+      "eyebrow": "Admin",
+      "title": "Listing go-live",
+      "lede": "Manually approve listings for public search after draft submit, landlord ID check, and video-call verification.",
+      "loading": "Loading…",
+      "loadError": "Failed to load listings",
+      "actionError": "Action failed",
+      "notAuthenticated": "Not authenticated.",
+      "empty": "No listings in “{filter}”.",
+      "filter": {
+        "candidates": "Candidates",
+        "live": "Live",
+        "all": "All"
+      },
+      "landlordLine": "Landlord: {name}",
+      "unknownLandlord": "Unknown",
+      "gateSubmitted": "Submitted",
+      "gateId": "ID check",
+      "gateVideo": "Video call",
+      "missingPrefix": "Missing:",
+      "approve": "Go live",
+      "approving": "Going live…",
+      "revoke": "Take offline",
+      "revoking": "Taking offline…",
+      "statusLive": "Live",
+      "statusOffline": "Offline"
     }
   },
   "loaders": {

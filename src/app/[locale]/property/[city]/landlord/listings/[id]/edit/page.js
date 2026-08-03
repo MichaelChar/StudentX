@@ -21,6 +21,8 @@ export default function EditListingPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [isVerified, setIsVerified] = useState(false);
+  const [listingStatus, setListingStatus] = useState(null);
+  const [propertyVerifications, setPropertyVerifications] = useState([]);
 
   useEffect(() => {
     (async () => {
@@ -51,6 +53,9 @@ export default function EditListingPage() {
       }
 
       const { listing, blackouts } = await listingRes.json();
+
+      setListingStatus(listing.listing_status ?? null);
+      setPropertyVerifications(listing.property_verifications || []);
 
       setInitialValues({
         title: listing.title || '',
@@ -155,6 +160,8 @@ export default function EditListingPage() {
               initialValues={initialValues}
               listingId={id}
               isVerified={isVerified}
+              listingStatus={listingStatus}
+              propertyVerifications={propertyVerifications}
               accessToken={accessToken}
               onSaveDraft={handleSaveDraft}
               onSubmit={handleSubmit}

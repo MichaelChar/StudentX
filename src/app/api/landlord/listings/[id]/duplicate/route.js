@@ -152,6 +152,7 @@ async function duplicateFrom(src, { landlordId, authedSupabase, supabase }) {
     smoking_allowed: src.smoking_allowed ?? null,
     pets_allowed: src.pets_allowed ?? null,
     additional_rules: src.additional_rules ?? null,
+    listing_status: 'disabled',
     flags: { listing_status: 'draft', disabled: false, duplicated_from: src.listing_id },
   };
 

@@ -14,9 +14,8 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import Pill from '@/components/ui/Pill';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import StatusLadder, {
-  deriveListingStage,
-} from '@/components/listing-wizard/StatusLadder';
+import StatusLadder from '@/components/listing-wizard/StatusLadder';
+import { deriveListingLadder, flagsForDisableToggle } from '@/lib/listingGoLive';
 import {
   hasPendingPropertyVerification,
   isPropertyVerified,
@@ -145,17 +144,18 @@ export default function LandlordListingsPage() {
         setError(t('disableError'));
         return;
       }
+      const toggled = flagsForDisableToggle(
+        disabled,
+        listing.flags || {},
+        listing.listing_status,
+      );
       setListings((prev) =>
         prev.map((l) =>
           l.listing_id === listing.listing_id
             ? {
                 ...l,
-                listing_status: disabled ? 'disabled' : 'active',
-                flags: {
-                  ...(l.flags || {}),
-                  disabled,
-                  listing_status: disabled ? 'disabled' : 'live',
-                },
+                listing_status: toggled.listing_status,
+                flags: toggled.flags,
               }
             : l,
         ),
@@ -283,9 +283,9 @@ export default function LandlordListingsPage() {
   );
 }
 
+/** Landlord intentionally took the listing offline (not merely "not yet public"). */
 function isListingDisabled(listing) {
   return (
-    listing.listing_status === 'disabled' ||
     listing.flags?.disabled === true ||
     listing.flags?.listing_status === 'disabled'
   );
@@ -314,19 +314,29 @@ function ListingRow({
   const propertyVerified = isPropertyVerified(pvRows);
   const pendingPv = hasPendingPropertyVerification(pvRows);
   const rejectedPv = pickLatestRejectedPropertyVerification(pvRows);
-  const stage = deriveListingStage({
+  const ladder = deriveListingLadder({
     flags: listing.flags,
+    listingStatus: listing.listing_status,
     isVerified,
     hasVideoVerification: propertyVerified,
-    isSubmitted: listing.flags?.listing_status === 'live',
+    isSubmitted:
+      listing.flags?.listing_status === 'submitted' ||
+      listing.flags?.listing_status === 'live' ||
+      listing.flags?.admin_live_approved === true,
   });
 
-  // Offer request when not already verified/pending, and listing is not a draft.
+  const isPublicLive = listing.listing_status === 'active';
+  const isSubmitted =
+    listing.flags?.listing_status === 'submitted' ||
+    listing.flags?.listing_status === 'live' ||
+    listing.flags?.admin_live_approved === true;
+
+  // Video call after submit (draft complete), not while still drafting.
   const canRequestPv =
     !propertyVerified &&
     !pendingPv &&
     !disabled &&
-    listing.flags?.listing_status !== 'draft';
+    isSubmitted;
 
   return (
     <div className="flex flex-col gap-4 p-5">
@@ -351,12 +361,13 @@ function ListingRow({
           <div className="flex flex-wrap items-center gap-2 mb-1">
             <p className="font-display text-xl text-night truncate">{heading}</p>
             {disabled && <Pill variant="pending">{t('statusDisabled')}</Pill>}
-            {!disabled &&
-              (listing.listing_status === 'active' || !listing.listing_status) &&
-              listing.flags?.listing_status !== 'draft' && (
+            {!disabled && isPublicLive && (
               <Pill variant="info">{t('statusActive')}</Pill>
             )}
-            {!disabled && listing.flags?.listing_status === 'draft' && (
+            {!disabled && !isPublicLive && isSubmitted && (
+              <Pill variant="pending">{t('statusSubmitted')}</Pill>
+            )}
+            {!disabled && !isPublicLive && !isSubmitted && (
               <Pill variant="amenity">{t('statusDraft')}</Pill>
             )}
             {propertyVerified && (
@@ -383,7 +394,7 @@ function ListingRow({
         </div>
       </div>
 
-      <StatusLadder current={stage} />
+      <StatusLadder current={ladder.current} completed={ladder.completed} />
 
       <div className="flex flex-wrap items-center gap-2">
         <Link

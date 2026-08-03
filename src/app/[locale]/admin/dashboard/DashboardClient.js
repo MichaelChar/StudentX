@@ -224,6 +224,12 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
       <div className="flex items-center justify-between mb-6">
         <h1 className="font-display text-2xl font-bold text-night">Pending listings</h1>
         <div className="flex items-center gap-3">
+          <Link href="/admin/listing-go-live" className="text-sm text-blue underline">
+            Listing go-live →
+          </Link>
+          <Link href="/admin/property-verifications" className="text-sm text-blue underline">
+            Property verifications →
+          </Link>
           <Link href="/admin/migrate-fake-listings" className="text-sm text-blue underline">
             Migrate fake listings →
           </Link>

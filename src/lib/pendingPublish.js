@@ -227,6 +227,8 @@ export async function publishPendingLandlord({ supabase, landlord, edits = {}, f
         fetchImpl,
       });
 
+      // Claim publish creates inventory rows but does not go public until
+      // admin go-live (same gate as landlord-created listings).
       const { error: liErr } = await supabase.from('listings').insert({
         listing_id: listingId,
         landlord_id: landlordId,
@@ -238,6 +240,8 @@ export async function publishPendingLandlord({ supabase, landlord, edits = {}, f
         photos,
         external_photo_urls: [],
         sqm: pl.sqm || null,
+        listing_status: 'disabled',
+        flags: { listing_status: 'submitted', disabled: false, source: 'claim_publish' },
       });
       if (liErr) throw liErr;
 
