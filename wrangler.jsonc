@@ -21,6 +21,17 @@
   // #262). Decision rule: keep if authed/API TTFB improves and login TTFB
   // doesn't regress > ~50 ms; otherwise remove this key and redeploy.
   "placement": { "mode": "smart" },
+  // Persist Worker logs to Cloudflare's dashboard (Workers Logs) instead of
+  // relying solely on `wrangler tail`, which is ephemeral and only shows what
+  // happens while someone is actively watching. Two incidents made the case:
+  // a cron trigger silently stopped firing for 3 days (PR #150), and a deploy
+  // failure could only be diagnosed by downloading the build log by hand.
+  //
+  // `enabled` defaults to true for Workers created after this feature shipped;
+  // this Worker predates it, so it must be set explicitly. Billed per log event
+  // above a daily free allowance — negligible at current traffic. If volume
+  // grows, add `head_sampling_rate` (0–1) rather than turning this off.
+  "observability": { "enabled": true },
   // Workers AI binding — powers site-agnostic listing extraction
   // (@cf/meta/llama-3.1-8b-instruct) in the pending-listings ingest pipeline.
   // No external API keys. Only bound on the Worker (preview/deploy), NOT in
