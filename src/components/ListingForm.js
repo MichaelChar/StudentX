@@ -14,7 +14,10 @@ import {
   validatePhotoMinimum,
   validateRequiredCoords,
 } from '@/lib/listingWizardRules';
-import { MIN_UNIVERSITY_DISTANCES } from '@/lib/universityDistances';
+import {
+  MIN_UNIVERSITY_DISTANCES,
+  mergePrefillUniversityDistances,
+} from '@/lib/universityDistances';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import StatusLadder, {
@@ -593,7 +596,12 @@ export default function ListingForm({
     }
   }
 
-  async function prefillDistances() {
+  /**
+   * Prefill distances from the map pin.
+   * @param {Array|undefined} existingOverride - when adding a row, pass the
+   *   post-add rows so we don't merge against a stale React state snapshot.
+   */
+  async function prefillDistances(existingOverride) {
     const coords = validateRequiredCoords(form.lat, form.lng);
     if (!coords.ok) {
       setError(t('errors.coordsRequired'));
@@ -619,34 +627,49 @@ export default function ListingForm({
         throw new Error(body.error || t('errors.prefillFailed'));
       }
       const { distances } = await res.json();
-      // Keep landlord-adjusted rows; only fill missing / replace pure empty
-      const existing = form.university_distances || [];
-      const landlordKept = existing.filter((r) => r.source === 'landlord');
-      const landlordIds = new Set(landlordKept.map((r) => r.university_id));
-      const computed = (distances || [])
-        .filter((d) => !landlordIds.has(d.university_id))
-        .map((d) => ({
-          university_id: d.university_id,
-          distance_meters: String(d.distance_meters),
-          source: 'computed',
-        }));
-      // Prefer at least 2 nearest computed + any landlord rows
-      const merged = [...landlordKept, ...computed].slice(0, universities.length || 3);
-      // If still empty, take top 2 computed
-      const next =
-        merged.length >= MIN_UNIVERSITY_DISTANCES
-          ? merged
-          : (distances || []).slice(0, MIN_UNIVERSITY_DISTANCES).map((d) => ({
-              university_id: d.university_id,
-              distance_meters: String(d.distance_meters),
-              source: 'computed',
-            }));
+      // Keep landlord-adjusted rows with real values; fill empty (incl. newly
+      // added unis) and refresh source=computed from the pin.
+      const existing =
+        existingOverride !== undefined
+          ? existingOverride
+          : form.university_distances || [];
+      const maxRows = universities.length || 3;
+      const next = mergePrefillUniversityDistances(
+        existing,
+        distances || [],
+        maxRows,
+      );
       setField('university_distances', next);
     } catch (err) {
       setError(err.message || t('errors.prefillFailed'));
     } finally {
       setPrefillLoading(false);
     }
+  }
+
+  /**
+   * "+ Add university": pick the next free uni and immediately compute its
+   * distance from the pin (same merge path as Prefill from pin).
+   */
+  async function addUniversityRow() {
+    const rows = form.university_distances || [];
+    const taken = new Set(rows.map((d) => d.university_id));
+    const nextUni = (universities || []).find((u) => !taken.has(u.university_id));
+    if (!nextUni) return;
+
+    const newRows = [
+      ...rows,
+      {
+        university_id: nextUni.university_id,
+        distance_meters: '',
+        source: 'landlord',
+      },
+    ];
+    // Show the row immediately; prefill fills metres (and flips source) when
+    // the pin API succeeds. Pass newRows so merge sees the empty shell even
+    // though setState has not flushed yet.
+    setField('university_distances', newRows);
+    await prefillDistances(newRows);
   }
 
   const stage = useMemo(
@@ -778,7 +801,8 @@ export default function ListingForm({
               setField={setField}
               universities={universities}
               prefillLoading={prefillLoading}
-              onPrefill={prefillDistances}
+              onPrefill={() => prefillDistances()}
+              onAddUniversity={addUniversityRow}
             />
           )}
           {stepKey === 'price' && (
