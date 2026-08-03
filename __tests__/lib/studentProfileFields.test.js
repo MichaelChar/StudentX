@@ -90,20 +90,19 @@ describe('parseProfileUpdates + completeness', () => {
   const complete = {
     date_of_birth: '2000-01-01',
     gender: 'woman',
-    nationality: 'GR',
-    languages: ['en', 'el'],
     bio: 'Erasmus student looking for a quiet flat near campus.',
-    home_university: 'other',
-    receiving_university: 'auth',
-    receiving_faculty: 'auth-main',
-    funding_source: 'erasmus_grant',
+    home_university: 'University of Amsterdam',
+    receiving_university: 'Aristotle University of Thessaloniki',
   };
 
-  it('parses a full valid payload', () => {
+  it('parses a full valid payload with free-text universities', () => {
     const r = parseProfileUpdates(complete);
     expect(r.ok).toBe(true);
     expect(r.updates.gender).toBe('woman');
-    expect(r.updates.languages).toEqual(['en', 'el']);
+    expect(r.updates.home_university).toBe('University of Amsterdam');
+    expect(r.updates.receiving_university).toBe(
+      'Aristotle University of Thessaloniki',
+    );
   });
 
   it('rejects invalid gender', () => {

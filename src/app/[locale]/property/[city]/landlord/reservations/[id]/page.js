@@ -17,6 +17,7 @@ import {
   stayDurationMonthsExact,
   costSummary,
 } from '@/lib/bookingDates';
+import { landlordDepositReceive } from '@/lib/bookingFees';
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -29,6 +30,11 @@ function formatDate(iso) {
   });
 }
 
+function rentDeposit(listing) {
+  const rent = Array.isArray(listing?.rent) ? listing.rent[0] : listing?.rent;
+  return Number(rent?.deposit) || 0;
+}
+
 export default function LandlordReservationDetailPage() {
   const t = useTranslations('propylaea.landlord.reservations');
   const params = useParams();
@@ -36,7 +42,7 @@ export default function LandlordReservationDetailPage() {
   const router = useRouter();
 
   const [booking, setBooking] = useState(null);
-  const [events, setEvents] = useState([]);
+  const [firstContactAt, setFirstContactAt] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [acting, setActing] = useState(false);
@@ -59,7 +65,7 @@ export default function LandlordReservationDetailPage() {
       }
       const data = await res.json();
       setBooking(data.booking);
-      setEvents(data.events || []);
+      setFirstContactAt(data.first_contact_at ?? null);
     } catch {
       setError(t('loadError'));
     } finally {
@@ -141,14 +147,38 @@ export default function LandlordReservationDetailPage() {
     : listing?.location;
   const label = listing?.title || loc?.address || booking.listing_id;
   const months = stayDurationMonths(booking.move_in, booking.move_out);
+  const deposit = rentDeposit(listing);
   const cost = costSummary({
     monthlyRent: booking.monthly_rent,
     months: months || 0,
     monthsExact: stayDurationMonthsExact(booking.move_in, booking.move_out),
-    deposit: listing?.rent?.deposit,
+    deposit,
     agencyFee: listing?.agency_fee,
   });
+  const receive = landlordDepositReceive({
+    deposit,
+    totalStayValue: booking.total_stay_value ?? cost.total_rent,
+  });
   const canRespond = booking.state === 'requested';
+  const acceptanceAt = booking.accepted_at || booking.confirmed_at || null;
+
+  const timelineRows = [
+    {
+      key: 'requested',
+      label: t('timelineRequested'),
+      value: formatDate(booking.created_at),
+    },
+    {
+      key: 'first_contact',
+      label: t('timelineFirstContact'),
+      value: firstContactAt ? formatDate(firstContactAt) : t('timelineNA'),
+    },
+    {
+      key: 'acceptance',
+      label: t('timelineLandlordAcceptance'),
+      value: acceptanceAt ? formatDate(acceptanceAt) : t('timelineNA'),
+    },
+  ];
 
   return (
     <LandlordShell
@@ -185,7 +215,7 @@ export default function LandlordReservationDetailPage() {
         <dl className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <DetailField label={t('colMoveIn')} value={formatDate(booking.move_in)} />
           <DetailField label={t('colMoveOut')} value={formatDate(booking.move_out)} />
-          <DetailField label={t('colRent')} value={`€${booking.monthly_rent}/mo`} />
+          <DetailField label={t('colMonthlyRent')} value={`€${booking.monthly_rent}/mo`} />
           <DetailField
             label={t('colDuration')}
             value={months != null ? t('durationMonths', { n: months }) : '—'}
@@ -198,9 +228,25 @@ export default function LandlordReservationDetailPage() {
               value={`€${cost.due_at_move_in}`}
             />
           )}
+          <DetailField
+            label={t('youReceive')}
+            value={`€${receive.you_receive}`}
+            info={
+              <span className="block space-y-1">
+                <span className="block">
+                  {t('youReceiveBreakdown', {
+                    deposit: receive.deposit,
+                    commission: receive.commission_gross,
+                    totalStay: receive.total_stay_value,
+                    youReceive: receive.you_receive,
+                  })}
+                </span>
+                <span className="block">{t('youReceivePayoutNote')}</span>
+              </span>
+            }
+            infoAria={t('youReceiveInfoAria')}
+          />
         </dl>
-
-        <p className="mt-6 text-sm text-night/50">{t('offlineNote')}</p>
 
         {canRespond && (
           <div className="mt-8 flex flex-wrap gap-3">
@@ -238,40 +284,50 @@ export default function LandlordReservationDetailPage() {
         <GuestProfileCard student={student} />
       </div>
 
-      {events.length > 0 && (
-        <Card tone="parchment" className="p-6">
-          <p className="label-caps text-night/60 mb-4">{t('timeline')}</p>
-          <ul className="space-y-3">
-            {events.map((ev) => (
-              <li
-                key={ev.event_id}
-                className="flex items-start gap-3 text-sm text-night/80"
-              >
-                <Icon name="check" className="w-4 h-4 text-blue mt-0.5 shrink-0" />
-                <span>
-                  <span className="font-medium text-night">
-                    {ev.from_state
-                      ? `${ev.from_state} → ${ev.to_state}`
-                      : ev.to_state}
-                  </span>
-                  <span className="text-night/50">
-                    {' '}
-                    · {ev.actor} · {formatDate(ev.created_at)}
-                  </span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </Card>
-      )}
+      <Card tone="parchment" className="p-6">
+        <p className="label-caps text-night/60 mb-4">{t('timeline')}</p>
+        <ul className="space-y-3">
+          {timelineRows.map((row) => (
+            <li
+              key={row.key}
+              className="flex items-start gap-3 text-sm text-night/80"
+            >
+              <Icon name="check" className="w-4 h-4 text-blue mt-0.5 shrink-0" />
+              <span>
+                <span className="font-medium text-night">{row.label}</span>
+                <span className="text-night/50"> · {row.value}</span>
+              </span>
+            </li>
+          ))}
+        </ul>
+      </Card>
     </LandlordShell>
   );
 }
 
-function DetailField({ label, value }) {
+function DetailField({ label, value, info, infoAria }) {
   return (
     <div>
-      <dt className="label-caps text-night/50">{label}</dt>
+      <dt className="label-caps text-night/50 flex items-center gap-1.5">
+        <span>{label}</span>
+        {info ? (
+          <span className="relative group inline-flex">
+            <button
+              type="button"
+              className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-night/25 text-[10px] font-sans font-bold text-night/50 hover:border-blue hover:text-blue focus:outline-none focus-visible:ring-2 focus-visible:ring-blue/30"
+              aria-label={infoAria || label}
+            >
+              i
+            </button>
+            <span
+              role="tooltip"
+              className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-64 -translate-x-1/2 rounded-sm border border-night/10 bg-night px-3 py-2 text-left text-xs font-sans font-normal normal-case tracking-normal text-stone opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+            >
+              {info}
+            </span>
+          </span>
+        ) : null}
+      </dt>
       <dd className="mt-1 font-display text-xl text-night">{value}</dd>
     </div>
   );

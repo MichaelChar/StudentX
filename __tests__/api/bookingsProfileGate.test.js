@@ -57,13 +57,9 @@ const completeStudent = {
   ...incompleteStudent,
   date_of_birth: '2000-05-01',
   gender: 'woman',
-  nationality: 'GR',
-  languages: ['en', 'el'],
   bio: 'Med student on Erasmus for the year.',
-  home_university: 'other',
-  receiving_university: 'auth',
-  receiving_faculty: 'auth-medical',
-  funding_source: 'erasmus_grant',
+  home_university: 'University of Amsterdam',
+  receiving_university: 'Aristotle University of Thessaloniki',
 };
 
 function studentClient(student) {

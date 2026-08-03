@@ -20,7 +20,6 @@ import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 const CANCELLATION_COPY_KEY = {
   free: 'cancellationFree',
   half: 'cancellationHalf',
-  none: 'cancellationNone',
 };
 
 function formatDate(iso) {
