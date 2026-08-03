@@ -20,6 +20,7 @@ import Card from '@/components/ui/Card';
 import StatusLadder, {
   deriveListingStage,
 } from '@/components/listing-wizard/StatusLadder';
+import StepImport from '@/components/listing-wizard/StepImport';
 import StepAddress from '@/components/listing-wizard/StepAddress';
 import StepProperty from '@/components/listing-wizard/StepProperty';
 import StepUniversities from '@/components/listing-wizard/StepUniversities';
@@ -27,8 +28,16 @@ import StepPrice from '@/components/listing-wizard/StepPrice';
 import StepAvailability from '@/components/listing-wizard/StepAvailability';
 import StepPhotos from '@/components/listing-wizard/StepPhotos';
 import StepReview from '@/components/listing-wizard/StepReview';
+import {
+  applyPasteSuggestions,
+  parseListingPaste,
+  PASTE_FIELD_LABEL_KEYS,
+} from '@/lib/pasteImport';
+import Pill from '@/components/ui/Pill';
+import Icon from '@/components/ui/Icon';
 
-const STEPS = [
+/** Core wizard steps (import is optional step 0 for new listings only). */
+const MAIN_STEPS = [
   'address',
   'property',
   'universities',
@@ -102,6 +111,12 @@ export default function ListingForm({
 
   const fileInputRef = useRef(null);
   const [userId, setUserId] = useState('anon');
+  // Paste-import step 0 only on brand-new listings (no edit payload).
+  const includeImport = !listingIdProp;
+  const STEPS = useMemo(
+    () => (includeImport ? ['import', ...MAIN_STEPS] : MAIN_STEPS),
+    [includeImport],
+  );
   const [step, setStep] = useState(0);
   // Edit pages pass listingIdProp; new listings stash the id returned from
   // the first draft create. Prefer the prop when present.
@@ -125,6 +140,12 @@ export default function ListingForm({
   const [showPreview, setShowPreview] = useState(false);
   const [prefillLoading, setPrefillLoading] = useState(false);
   const [saveHint, setSaveHint] = useState('');
+  // Paste-import state (step 0)
+  const [pasteText, setPasteText] = useState('');
+  const [pasteResult, setPasteResult] = useState(null);
+  /** @type {[Record<string, true>, Function]} fields still marked "from your text" */
+  const [suggested, setSuggested] = useState({});
+  const [showImportBanner, setShowImportBanner] = useState(false);
 
   useEffect(() => {
     function handleBeforeUnload(e) {
@@ -171,11 +192,35 @@ export default function ListingForm({
     loadOptions();
   }, []);
 
-  const setField = useCallback((field, value) => {
-    setForm((prev) => ({ ...prev, [field]: value }));
-    setIsDirty(true);
-    setSaveHint('');
+  const clearSuggestion = useCallback((field) => {
+    setSuggested((prev) => {
+      if (!prev[field]) return prev;
+      const next = { ...prev };
+      delete next[field];
+      return next;
+    });
   }, []);
+
+  const setField = useCallback(
+    (field, value) => {
+      setForm((prev) => ({ ...prev, [field]: value }));
+      // Landlord typed — drop the "from your text" mark for this field.
+      clearSuggestion(field);
+      setIsDirty(true);
+      setSaveHint('');
+    },
+    [clearSuggestion],
+  );
+
+  const dismissSuggestion = useCallback(
+    (field, empty = '') => {
+      setForm((prev) => ({ ...prev, [field]: empty }));
+      clearSuggestion(field);
+      setIsDirty(true);
+      setSaveHint('');
+    },
+    [clearSuggestion],
+  );
 
   function toggleAmenity(amenityId) {
     setForm((prev) => ({
@@ -184,7 +229,33 @@ export default function ListingForm({
         ? prev.amenity_ids.filter((id) => id !== amenityId)
         : [...prev.amenity_ids, amenityId],
     }));
+    clearSuggestion('amenity_ids');
     setIsDirty(true);
+  }
+
+  function skipImport() {
+    setError('');
+    setPasteResult(null);
+    setSuggested({});
+    setShowImportBanner(false);
+    setStep((s) => Math.min(s + 1, STEPS.length - 1));
+  }
+
+  function applyImport(result) {
+    setError('');
+    setPasteResult(result);
+    setForm((prev) => {
+      const { nextForm, applied } = applyPasteSuggestions(prev, result.fields);
+      const marks = {};
+      for (const key of applied) marks[key] = true;
+      setSuggested(marks);
+      setShowImportBanner(applied.length > 0);
+      setIsDirty(applied.length > 0);
+      return nextForm;
+    });
+    // Advance to address (step 1 when import is step 0)
+    const addressIdx = STEPS.indexOf('address');
+    setStep(addressIdx >= 0 ? addressIdx : Math.min(step + 1, STEPS.length - 1));
   }
 
   function reorderPhoto(from, to) {
@@ -373,6 +444,10 @@ export default function ListingForm({
 
   function validateStep(stepIndex) {
     const key = STEPS[stepIndex];
+    if (key === 'import') {
+      // Optional — never blocks.
+      return null;
+    }
     if (key === 'address') {
       if (!form.title?.trim()) return t('errors.titleRequired');
       if (!form.address?.trim()) return t('errors.addressRequired');
@@ -466,13 +541,24 @@ export default function ListingForm({
 
   async function handleNext() {
     setError('');
+    // Import step has its own CTAs; footer Continue acts as skip-or-apply.
+    if (STEPS[step] === 'import') {
+      const trimmed = (pasteText || '').trim();
+      if (!trimmed) {
+        skipImport();
+        return;
+      }
+      // Re-parse with current amenities catalog and apply.
+      applyImport(parseListingPaste(trimmed, { amenities }));
+      return;
+    }
     const err = validateStep(step);
     if (err) {
       setError(err);
       return;
     }
-    // Draft-save once we have property_type (step >= 1 after validation)
-    if (step >= 1 || STEPS[step] === 'property') {
+    // Draft-save once we have property_type
+    if (STEPS[step] === 'property' || MAIN_STEPS.indexOf(STEPS[step]) >= 1) {
       await saveDraftQuiet();
     }
     const next = Math.min(step + 1, STEPS.length - 1);
@@ -581,6 +667,7 @@ export default function ListingForm({
   };
 
   const stepKey = STEPS[step];
+  const isImportStep = stepKey === 'import';
 
   return (
     <>
@@ -618,12 +705,60 @@ export default function ListingForm({
           </p>
         </div>
 
+        {showImportBanner && pasteResult && !isImportStep && (
+          <Card tone="parchment" className="p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="space-y-2 min-w-0">
+                <p className="label-caps text-night/70">
+                  {t('paste.bannerTitle')}
+                </p>
+                {pasteResult.found.length > 0 && (
+                  <ul className="flex flex-wrap gap-1.5">
+                    {pasteResult.found.map((key) => (
+                      <li key={key}>
+                        <Pill variant={suggested[key] ? 'info' : 'amenity'}>
+                          {t(
+                            `paste.fields.${PASTE_FIELD_LABEL_KEYS[key] || key}`,
+                          )}
+                        </Pill>
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <p className="text-xs text-night/50">
+                  {t('paste.bannerTip')}
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowImportBanner(false)}
+                className="p-1 text-night/40 hover:text-night rounded-sm shrink-0"
+                aria-label={t('paste.dismissBanner')}
+              >
+                <Icon name="x" className="w-4 h-4" />
+              </button>
+            </div>
+          </Card>
+        )}
+
         <Card tone="white" className="p-5 md:p-8">
+          {isImportStep && (
+            <StepImport
+              pasteText={pasteText}
+              setPasteText={setPasteText}
+              amenities={amenities}
+              lastResult={pasteResult}
+              onSkip={skipImport}
+              onApply={applyImport}
+            />
+          )}
           {stepKey === 'address' && (
             <StepAddress
               form={form}
               setField={setField}
               neighborhoods={neighborhoods}
+              suggested={suggested}
+              onDismissSuggestion={dismissSuggestion}
             />
           )}
           {stepKey === 'property' && (
@@ -633,6 +768,8 @@ export default function ListingForm({
               toggleAmenity={toggleAmenity}
               propertyTypes={propertyTypes}
               amenities={amenities}
+              suggested={suggested}
+              onDismissSuggestion={dismissSuggestion}
             />
           )}
           {stepKey === 'universities' && (
@@ -645,10 +782,20 @@ export default function ListingForm({
             />
           )}
           {stepKey === 'price' && (
-            <StepPrice form={form} setField={setField} />
+            <StepPrice
+              form={form}
+              setField={setField}
+              suggested={suggested}
+              onDismissSuggestion={dismissSuggestion}
+            />
           )}
           {stepKey === 'availability' && (
-            <StepAvailability form={form} setField={setField} />
+            <StepAvailability
+              form={form}
+              setField={setField}
+              suggested={suggested}
+              onDismissSuggestion={dismissSuggestion}
+            />
           )}
           {stepKey === 'photos' && (
             <StepPhotos
@@ -686,33 +833,36 @@ export default function ListingForm({
           <p className="text-xs text-night/50">{saveHint}</p>
         )}
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
-          <div className="flex gap-2">
-            {step > 0 && (
-              <Button type="button" variant="outline" onClick={handleBack}>
-                {t('back')}
-              </Button>
-            )}
+        {/* Import step owns its own primary/secondary CTAs */}
+        {!isImportStep && (
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 justify-between">
+            <div className="flex gap-2">
+              {step > 0 && (
+                <Button type="button" variant="outline" onClick={handleBack}>
+                  {t('back')}
+                </Button>
+              )}
+            </div>
+            <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
+              {step < STEPS.length - 1 ? (
+                <Button type="button" variant="primary" onClick={handleNext}>
+                  {t('continue')}
+                </Button>
+              ) : (
+                <Button
+                  type="button"
+                  variant="primary"
+                  onClick={handleFinalSubmit}
+                  disabled={loading}
+                >
+                  {loading
+                    ? t('submitting')
+                    : submitLabel || t('submit')}
+                </Button>
+              )}
+            </div>
           </div>
-          <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
-            {step < STEPS.length - 1 ? (
-              <Button type="button" variant="primary" onClick={handleNext}>
-                {t('continue')}
-              </Button>
-            ) : (
-              <Button
-                type="button"
-                variant="primary"
-                onClick={handleFinalSubmit}
-                disabled={loading}
-              >
-                {loading
-                  ? t('submitting')
-                  : submitLabel || t('submit')}
-              </Button>
-            )}
-          </div>
-        </div>
+        )}
       </div>
 
       {showPreview && (

@@ -3,12 +3,18 @@
 import { useTranslations } from 'next-intl';
 import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
+import SuggestedMark from '@/components/listing-wizard/SuggestedMark';
 
 const inputClass =
   'w-full border border-night/15 bg-white rounded-sm px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 const labelClass = 'label-caps text-night/70 mb-1.5 block';
 
-export default function StepAvailability({ form, setField }) {
+export default function StepAvailability({
+  form,
+  setField,
+  suggested = {},
+  onDismissSuggestion,
+}) {
   const t = useTranslations('landlord.listingWizard.availability');
   const blackouts = form.blackouts || [];
 
@@ -39,6 +45,12 @@ export default function StepAvailability({ form, setField }) {
         <div>
           <label className={labelClass} htmlFor="wiz-from">
             {t('availableFromLabel')}
+            <SuggestedMark
+              show={!!suggested.available_from}
+              onDismiss={() =>
+                onDismissSuggestion && onDismissSuggestion('available_from', '')
+              }
+            />
           </label>
           <input
             id="wiz-from"

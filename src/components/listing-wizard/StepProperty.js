@@ -5,6 +5,7 @@ import {
   EXCLUDED_PROPERTY_TYPES,
   EXCLUDED_AMENITY_NAMES,
 } from '@/lib/listingWizardRules';
+import SuggestedMark from '@/components/listing-wizard/SuggestedMark';
 
 const inputClass =
   'w-full border border-night/15 bg-white rounded-sm px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
@@ -16,6 +17,8 @@ export default function StepProperty({
   toggleAmenity,
   propertyTypes,
   amenities,
+  suggested = {},
+  onDismissSuggestion,
 }) {
   const t = useTranslations('landlord.listingWizard.property');
 
@@ -25,6 +28,10 @@ export default function StepProperty({
   const amenityList = (amenities || []).filter(
     (a) => !EXCLUDED_AMENITY_NAMES.has(a.name),
   );
+
+  function dismiss(field, empty = '') {
+    if (onDismissSuggestion) onDismissSuggestion(field, empty);
+  }
 
   return (
     <div className="space-y-5">
@@ -52,6 +59,10 @@ export default function StepProperty({
         <div>
           <label className={labelClass} htmlFor="wiz-bedrooms">
             {t('bedroomsLabel')}
+            <SuggestedMark
+              show={!!suggested.bedrooms}
+              onDismiss={() => dismiss('bedrooms')}
+            />
           </label>
           <input
             id="wiz-bedrooms"
@@ -66,6 +77,10 @@ export default function StepProperty({
         <div>
           <label className={labelClass} htmlFor="wiz-bathrooms">
             {t('bathroomsLabel')}
+            <SuggestedMark
+              show={!!suggested.bathrooms}
+              onDismiss={() => dismiss('bathrooms')}
+            />
           </label>
           <input
             id="wiz-bathrooms"
@@ -83,6 +98,10 @@ export default function StepProperty({
         <div>
           <label className={labelClass} htmlFor="wiz-sqm">
             {t('sqmLabel')}
+            <SuggestedMark
+              show={!!suggested.sqm}
+              onDismiss={() => dismiss('sqm')}
+            />
           </label>
           <input
             id="wiz-sqm"
@@ -97,6 +116,10 @@ export default function StepProperty({
         <div>
           <label className={labelClass} htmlFor="wiz-floor">
             {t('floorLabel')}
+            <SuggestedMark
+              show={!!suggested.floor}
+              onDismiss={() => dismiss('floor')}
+            />
           </label>
           <select
             id="wiz-floor"
@@ -118,6 +141,10 @@ export default function StepProperty({
       <div>
         <label className={labelClass} htmlFor="wiz-description">
           {t('descriptionLabel')}
+          <SuggestedMark
+            show={!!suggested.description}
+            onDismiss={() => dismiss('description')}
+          />
         </label>
         <textarea
           id="wiz-description"
@@ -169,7 +196,13 @@ export default function StepProperty({
 
       {amenityList.length > 0 && (
         <fieldset>
-          <legend className={`${labelClass} mb-3`}>{t('amenitiesLabel')}</legend>
+          <legend className={`${labelClass} mb-3`}>
+            {t('amenitiesLabel')}
+            <SuggestedMark
+              show={!!suggested.amenity_ids}
+              onDismiss={() => dismiss('amenity_ids', [])}
+            />
+          </legend>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
             {amenityList.map((amenity) => (
               <label

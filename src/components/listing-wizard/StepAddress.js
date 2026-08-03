@@ -11,6 +11,7 @@ import {
 } from '@/lib/geocodeNominatim';
 import Icon from '@/components/ui/Icon';
 import Card from '@/components/ui/Card';
+import SuggestedMark from '@/components/listing-wizard/SuggestedMark';
 
 const AddressMap = dynamic(() => import('./AddressMap'), {
   ssr: false,
@@ -23,7 +24,13 @@ const inputClass =
   'w-full border border-night/15 bg-white rounded-sm px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 const labelClass = 'label-caps text-night/70 mb-1.5 block';
 
-export default function StepAddress({ form, setField, neighborhoods }) {
+export default function StepAddress({
+  form,
+  setField,
+  neighborhoods,
+  suggested = {},
+  onDismissSuggestion,
+}) {
   const t = useTranslations('landlord.listingWizard.address');
   const [query, setQuery] = useState(form.address || '');
   const [suggestions, setSuggestions] = useState([]);
@@ -195,6 +202,13 @@ export default function StepAddress({ form, setField, neighborhoods }) {
       <div>
         <label className={labelClass} htmlFor="wiz-address">
           {t('addressLabel')}
+          <SuggestedMark
+            show={!!suggested.address}
+            onDismiss={() => {
+              if (onDismissSuggestion) onDismissSuggestion('address', '');
+              setQuery('');
+            }}
+          />
         </label>
         <input
           id="wiz-address"
