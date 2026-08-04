@@ -5,9 +5,6 @@ import Card from '@/components/ui/Card';
 import {
   ageFromDateOfBirth,
   universityLabel,
-  facultyLabel,
-  languageLabel,
-  nationalityLabel,
 } from '@/lib/studentProfileFields';
 
 function monogram(name) {
@@ -47,14 +44,13 @@ export default function GuestProfileCard({ student }) {
     student.age != null
       ? student.age
       : ageFromDateOfBirth(student.date_of_birth);
-  const languages = Array.isArray(student.languages)
-    ? student.languages.map((id) => languageLabel(id) || id)
-    : [];
   const memberSince = formatMemberSince(student.created_at);
   const genderKey = student.gender ? `gender_${student.gender}` : null;
-  const fundingKey = student.funding_source
-    ? `funding_${student.funding_source}`
-    : null;
+  const homeUni =
+    universityLabel(student.home_university) || student.home_university;
+  const receivingUni =
+    universityLabel(student.receiving_university) ||
+    student.receiving_university;
 
   return (
     <Card tone="parchment" className="p-6 md:p-8">
@@ -86,46 +82,13 @@ export default function GuestProfileCard({ student }) {
         {genderKey && (
           <ProfileField label={t('gender')} value={t(genderKey)} />
         )}
-        {student.nationality && (
-          <ProfileField
-            label={t('nationality')}
-            value={nationalityLabel(student.nationality) || student.nationality}
-          />
+        {homeUni && (
+          <ProfileField label={t('homeUniversity')} value={homeUni} />
         )}
-        {student.home_university && (
-          <ProfileField
-            label={t('homeUniversity')}
-            value={universityLabel(student.home_university) || student.home_university}
-          />
-        )}
-        {student.receiving_university && (
-          <ProfileField
-            label={t('receivingUniversity')}
-            value={
-              universityLabel(student.receiving_university) ||
-              student.receiving_university
-            }
-          />
-        )}
-        {student.receiving_faculty && (
-          <ProfileField
-            label={t('receivingFaculty')}
-            value={
-              facultyLabel(student.receiving_faculty) || student.receiving_faculty
-            }
-          />
-        )}
-        {fundingKey && (
-          <ProfileField label={t('funding')} value={t(fundingKey)} />
+        {receivingUni && (
+          <ProfileField label={t('receivingUniversity')} value={receivingUni} />
         )}
       </dl>
-
-      {languages.length > 0 && (
-        <div className="mb-5">
-          <p className="label-caps text-night/50 mb-2">{t('languages')}</p>
-          <p className="font-sans text-sm text-night">{languages.join(', ')}</p>
-        </div>
-      )}
 
       {student.bio && (
         <div>

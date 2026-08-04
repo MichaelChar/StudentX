@@ -21,7 +21,6 @@ import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 const CANCELLATION_COPY_KEY = {
   free: 'cancellationFree',
   half: 'cancellationHalf',
-  none: 'cancellationNone',
 };
 
 const ERROR_TO_KEY = {
@@ -322,7 +321,7 @@ export default function BookingWidget({ listing, nextPath }) {
                     </div>
                   )}
 
-                  {/* Display-only cancellation tiers — no payment / refund wiring. */}
+                  {/* Display-only cancellation tiers. */}
                   <div className="rounded-sm border border-night/10 bg-parchment p-4 space-y-2">
                     <p className="label-caps text-night/60">{t('cancellationEnglish')}</p>
                     <ul className="space-y-1.5 text-sm text-night/70 font-sans leading-snug">
@@ -330,9 +329,6 @@ export default function BookingWidget({ listing, nextPath }) {
                         <li key={tier.id}>{t(CANCELLATION_COPY_KEY[tier.id])}</li>
                       ))}
                     </ul>
-                    <p className="text-xs text-night/50 leading-relaxed">
-                      {t('cancellationNote')}
-                    </p>
                   </div>
 
                   {error && (

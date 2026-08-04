@@ -181,7 +181,9 @@ export default function LandlordReservationsPage() {
                     <td className="px-4 py-3 text-night max-w-[12rem] truncate">{label}</td>
                     <td className="px-4 py-3 text-night/70">{formatDate(b.move_in)}</td>
                     <td className="px-4 py-3 text-night/70">{formatDate(b.move_out)}</td>
-                    <td className="px-4 py-3 text-night">€{b.monthly_rent}</td>
+                    <td className="px-4 py-3 text-night">
+                      €{b.total_stay_value ?? b.monthly_rent}
+                    </td>
                     <td className="px-4 py-3 text-night/70">
                       {months != null ? t('durationMonths', { n: months }) : '—'}
                     </td>

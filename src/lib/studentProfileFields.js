@@ -133,13 +133,9 @@ export const NATIONALITY_IDS = Object.freeze(NATIONALITIES.map((n) => n.id));
 export const PROFILE_REQUIRED_FIELDS = Object.freeze([
   'date_of_birth',
   'gender',
-  'nationality',
-  'languages',
   'bio',
   'home_university',
   'receiving_university',
-  'receiving_faculty',
-  'funding_source',
 ]);
 
 const GENDER_SET = new Set(GENDERS);
@@ -148,6 +144,22 @@ const UNIVERSITY_SET = new Set(UNIVERSITY_IDS);
 const FACULTY_SET = new Set(RECEIVING_FACULTY_IDS);
 const LANGUAGE_SET = new Set(LANGUAGE_IDS);
 const NATIONALITY_SET = new Set(NATIONALITY_IDS);
+
+/**
+ * Free-text university name (home or receiving). Columns stay TEXT; legacy
+ * controlled ids remain readable via universityLabel() when present.
+ * @returns {{ ok: true, value: string|null } | { ok: false, error: string }}
+ */
+export function validateUniversityText(raw) {
+  if (raw == null || raw === '') {
+    return { ok: true, value: null };
+  }
+  const value = normalizeSingleLine(raw);
+  if (value == null) {
+    return { ok: true, value: null };
+  }
+  return { ok: true, value };
+}
 
 /**
  * Parse YYYY-MM-DD (or full ISO) into a UTC calendar date, or null.
@@ -331,11 +343,11 @@ export function parseProfileUpdates(body, opts = {}) {
     }
   }
 
-  if (body.nationality !== undefined || requireAll) {
-    if (requireAll && (body.nationality == null || body.nationality === '')) {
-      return { ok: false, error: 'nationality is required', field: 'nationality' };
-    }
-    if (body.nationality !== undefined) {
+  // Optional legacy fields — still accepted if sent, never required for booking.
+  if (body.nationality !== undefined) {
+    if (body.nationality == null || body.nationality === '') {
+      updates.nationality = null;
+    } else {
       const raw = typeof body.nationality === 'string'
         ? body.nationality.trim().toUpperCase()
         : body.nationality;
@@ -345,19 +357,10 @@ export function parseProfileUpdates(body, opts = {}) {
     }
   }
 
-  if (body.languages !== undefined || requireAll) {
-    if (requireAll) {
-      const r = validateLanguages(body.languages);
-      if (!r.ok) return { ok: false, error: r.error, field: 'languages' };
-      if (r.value.length === 0) {
-        return { ok: false, error: 'languages is required', field: 'languages' };
-      }
-      updates.languages = r.value;
-    } else if (body.languages !== undefined) {
-      const r = validateLanguages(body.languages);
-      if (!r.ok) return { ok: false, error: r.error, field: 'languages' };
-      updates.languages = r.value;
-    }
+  if (body.languages !== undefined) {
+    const r = validateLanguages(body.languages);
+    if (!r.ok) return { ok: false, error: r.error, field: 'languages' };
+    updates.languages = r.value;
   }
 
   if (body.bio !== undefined || requireAll) {
@@ -376,8 +379,11 @@ export function parseProfileUpdates(body, opts = {}) {
       return { ok: false, error: 'home_university is required', field: 'home_university' };
     }
     if (body.home_university !== undefined) {
-      const r = validateControlled(body.home_university, UNIVERSITY_SET, 'home_university');
+      const r = validateUniversityText(body.home_university);
       if (!r.ok) return { ok: false, error: r.error, field: 'home_university' };
+      if (requireAll && r.value == null) {
+        return { ok: false, error: 'home_university is required', field: 'home_university' };
+      }
       updates.home_university = r.value;
     }
   }
@@ -394,28 +400,24 @@ export function parseProfileUpdates(body, opts = {}) {
       };
     }
     if (body.receiving_university !== undefined) {
-      const r = validateControlled(
-        body.receiving_university,
-        UNIVERSITY_SET,
-        'receiving_university',
-      );
+      const r = validateUniversityText(body.receiving_university);
       if (!r.ok) return { ok: false, error: r.error, field: 'receiving_university' };
+      if (requireAll && r.value == null) {
+        return {
+          ok: false,
+          error: 'receiving_university is required',
+          field: 'receiving_university',
+        };
+      }
       updates.receiving_university = r.value;
     }
   }
 
-  if (body.receiving_faculty !== undefined || requireAll) {
-    if (
-      requireAll &&
-      (body.receiving_faculty == null || body.receiving_faculty === '')
-    ) {
-      return {
-        ok: false,
-        error: 'receiving_faculty is required',
-        field: 'receiving_faculty',
-      };
-    }
-    if (body.receiving_faculty !== undefined) {
+  // Optional legacy fields — still accepted if sent, never required for booking.
+  if (body.receiving_faculty !== undefined) {
+    if (body.receiving_faculty == null || body.receiving_faculty === '') {
+      updates.receiving_faculty = null;
+    } else {
       const r = validateControlled(
         body.receiving_faculty,
         FACULTY_SET,
@@ -426,11 +428,10 @@ export function parseProfileUpdates(body, opts = {}) {
     }
   }
 
-  if (body.funding_source !== undefined || requireAll) {
-    if (requireAll && (body.funding_source == null || body.funding_source === '')) {
-      return { ok: false, error: 'funding_source is required', field: 'funding_source' };
-    }
-    if (body.funding_source !== undefined) {
+  if (body.funding_source !== undefined) {
+    if (body.funding_source == null || body.funding_source === '') {
+      updates.funding_source = null;
+    } else {
       const r = validateControlled(
         body.funding_source,
         FUNDING_SET,

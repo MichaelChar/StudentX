@@ -46,13 +46,15 @@ export async function loadListingForBooking(listingId) {
       min_duration_months,
       max_duration_months,
       agency_fee,
-      rent ( monthly_price, currency, deposit, bills_included )
+      rent ( monthly_price, currency, deposit, bills_included ),
+      landlords ( name )
     `)
     .eq('listing_id', listingId)
     .maybeSingle();
   if (error) throw error;
   if (!data) return null;
   const rent = Array.isArray(data.rent) ? data.rent[0] : data.rent;
+  const landlord = Array.isArray(data.landlords) ? data.landlords[0] : data.landlords;
   return {
     listing_id: data.listing_id,
     listing_status: data.listing_status ?? 'active',
@@ -64,7 +66,28 @@ export async function loadListingForBooking(listingId) {
     monthly_price: rent?.monthly_price ?? null,
     deposit: rent?.deposit ?? 0,
     currency: rent?.currency ?? 'EUR',
+    landlord_name: landlord?.name ?? null,
   };
+}
+
+/**
+ * Intro line prepended to the student's free-text message when a booking
+ * request opens (or reuses) an inquiry thread.
+ */
+export function bookingInquiryIntro({ landlordName, studentName }) {
+  const landlord = (landlordName && String(landlordName).trim()) || 'there';
+  const student = (studentName && String(studentName).trim()) || 'a student';
+  return `Hi ${landlord}, I am ${student}. I'm interested in your property, I just made an inquiry. Looking forward to hearing back from you!`;
+}
+
+export function composeBookingInquiryMessage({
+  landlordName,
+  studentName,
+  studentMessage,
+}) {
+  const intro = bookingInquiryIntro({ landlordName, studentName });
+  const body = typeof studentMessage === 'string' ? studentMessage.trim() : '';
+  return body ? `${intro}\n\n${body}` : intro;
 }
 
 async function loadBlocksForListing(listingId) {
@@ -206,25 +229,34 @@ export async function createBookingRequest({
   });
 
   // Inquiry thread via existing RPC; link inquiry_id in a follow-up event.
+  // Intro template is prepended; the student's own message remains required.
+  const threadMessage = composeBookingInquiryMessage({
+    landlordName: listing.landlord_name,
+    studentName: student.display_name,
+    studentMessage: message,
+  });
   let inquiryId = null;
   try {
     const { data: rpcData, error: rpcErr } = await supabase.rpc(
       'start_inquiry_authenticated',
-      { p_listing_id: listingId, p_message: message },
+      { p_listing_id: listingId, p_message: threadMessage },
     );
     if (rpcErr) {
       console.error('createBookingRequest inquiry RPC:', rpcErr);
     } else {
       const row = Array.isArray(rpcData) ? rpcData[0] : rpcData;
       inquiryId = row?.inquiry_id ?? null;
-      const isNew = Boolean(row?.is_new);
-      if (inquiryId && isNew) {
-        await supabase.from('inquiry_messages').insert({
+      if (inquiryId) {
+        // Always post the booking intro + student message (new or existing thread).
+        const { error: msgErr } = await supabase.from('inquiry_messages').insert({
           inquiry_id: inquiryId,
           sender_user_id: user.id,
           sender_role: 'student',
-          body: message,
+          body: threadMessage,
         });
+        if (msgErr) {
+          console.error('createBookingRequest inquiry message:', msgErr);
+        }
       }
       if (inquiryId) {
         // Real FK link (migration 101). Keep the audit event as the

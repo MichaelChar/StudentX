@@ -1,12 +1,11 @@
 /**
  * Display-only cancellation policy tiers for student housing bookings.
  *
- * No refund logic is wired to bookings or payments — platform payments are
- * not live. These constants power static copy on the listing detail page
- * and the booking widget so students know what to expect later.
+ * No refund logic is wired to bookings or payments yet. These constants
+ * power static copy on the listing detail page and the booking widget.
  *
  * Tiers are evaluated against days remaining before move-in (not calendar
- * months). Ordered free → partial → none for rendering top-to-bottom.
+ * months). Display lists free → half only.
  */
 
 /** Full refund when cancelling more than this many days before move-in. */
@@ -31,12 +30,14 @@ export const CANCELLATION_TIERS = Object.freeze([
     minDaysBeforeMoveIn: HALF_REFUND_DAYS,
     refundPercent: 50,
   },
-  {
-    id: 'none',
-    minDaysBeforeMoveIn: 0,
-    refundPercent: 0,
-  },
 ]);
+
+/** Zero-refund outcome for stays inside HALF_REFUND_DAYS (not shown in UI). */
+const NONE_TIER = Object.freeze({
+  id: 'none',
+  minDaysBeforeMoveIn: 0,
+  refundPercent: 0,
+});
 
 /**
  * Resolve which tier applies for a stay starting `daysUntilMoveIn` days out.
@@ -54,5 +55,5 @@ export function tierForDaysUntilMoveIn(daysUntilMoveIn) {
   // "Free more than 60 days" means days > 60, not >= 60.
   if (days > FREE_CANCEL_DAYS) return CANCELLATION_TIERS[0];
   if (days >= HALF_REFUND_DAYS) return CANCELLATION_TIERS[1];
-  return CANCELLATION_TIERS[2];
+  return NONE_TIER;
 }
