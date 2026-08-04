@@ -2,6 +2,11 @@
 """
 Ingestion script for the Student Housing Directory.
 
+*** DISABLED *** — see scripts/_ingestion_disabled.py and docs/ingestion-guide.md.
+Migration 104 made public visibility admin-only, and the go-live gate requires
+landlord ID verification plus a completed video call, which ingested listings
+can never satisfy. Running this would write rows nobody can publish.
+
 Takes a CSV or JSON batch file, validates it, and upserts records into Supabase.
 
 Usage:
@@ -22,6 +27,9 @@ import shutil
 import sys
 from datetime import datetime
 from pathlib import Path
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _ingestion_disabled import require_ingestion_enabled  # noqa: E402
 
 try:
     from supabase import create_client, Client
@@ -494,6 +502,8 @@ def upsert_listing(supabase: Client, row: dict, listing_id: str,
 # ---------------------------------------------------------------------------
 
 def main():
+    require_ingestion_enabled("scripts/ingest.py")
+
     parser = argparse.ArgumentParser(
         description="Ingest a batch file into the Student Housing Directory.",
         epilog="See docs/ingestion-guide.md for full instructions.",

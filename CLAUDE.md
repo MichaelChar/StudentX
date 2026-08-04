@@ -324,8 +324,14 @@ surface in `wrangler tail`.
   (`draft` → `submitted` → `live`), with the approval stamped as
   `flags.admin_live_approved`. All of it derives from `src/lib/listingGoLive.js`
   — don't reimplement the gate inline. **Any INSERT that wants a visible row
-  must set `listing_status` explicitly**; `supabase/seed.sql` does, the Python
-  ingest scripts do not (see `docs/ingestion-guide.md` §5).
+  must set `listing_status` explicitly**; `supabase/seed.sql` does.
+- **The Python batch-ingestion pipeline is disabled.** `scripts/ingest.py` and
+  `scripts/apply_and_load.py` exit via `scripts/_ingestion_disabled.py`,
+  because ingested listings can satisfy neither go-live gate (no landlord ID
+  check, no video call) and would land invisible and unpublishable. Re-enabling
+  needs a curated-source exemption in `canAdminGoLive()` or an explicit
+  `listing_status='active'` stamp — see the banner in `docs/ingestion-guide.md`.
+  `INGESTION_ENABLED=1` overrides the guard for a one-off run.
 - **Star schema** (see `docs/schema.md`). `listings` is the fact table;
   `listings.location_id → location`, `listings.rent_id → rent`,
   `listings.landlord_id → landlords`. `transformListing.js`
