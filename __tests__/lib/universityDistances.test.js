@@ -2,9 +2,132 @@ import { describe, it, expect } from 'vitest';
 import {
   parseUniversityDistances,
   MAX_DISTANCE_METERS,
+  hasFilledDistance,
+  mergePrefillUniversityDistances,
 } from '@/lib/universityDistances';
 
 const VALID = new Set(['auth', 'uom', 'ihu']);
+
+const COMPUTED = [
+  { university_id: 'auth', distance_meters: 800, source: 'computed' },
+  { university_id: 'uom', distance_meters: 1500, source: 'computed' },
+  { university_id: 'ihu', distance_meters: 4200, source: 'computed' },
+];
+
+describe('hasFilledDistance', () => {
+  it.each([
+    [1200, true],
+    ['1200', true],
+    [' 900 ', true],
+    [1, true],
+    ['', false],
+    ['   ', false],
+    [0, false],
+    ['0', false],
+    [null, false],
+    [undefined, false],
+    ['abc', false],
+    [NaN, false],
+  ])('hasFilledDistance(%j) → %s', (value, expected) => {
+    expect(hasFilledDistance(value)).toBe(expected);
+  });
+});
+
+describe('mergePrefillUniversityDistances', () => {
+  it('fills an empty form with nearest computed unis up to maxRows', () => {
+    expect(mergePrefillUniversityDistances([], COMPUTED, 2)).toEqual([
+      { university_id: 'auth', distance_meters: '800', source: 'computed' },
+      { university_id: 'uom', distance_meters: '1500', source: 'computed' },
+    ]);
+  });
+
+  it('fills empty landlord rows created by +Add (the reported bug)', () => {
+    const existing = [
+      { university_id: 'auth', distance_meters: '800', source: 'computed' },
+      { university_id: 'uom', distance_meters: '1500', source: 'computed' },
+      // addRow() used to insert source=landlord + empty metres
+      { university_id: 'ihu', distance_meters: '', source: 'landlord' },
+    ];
+    const out = mergePrefillUniversityDistances(existing, COMPUTED, 3);
+    expect(out).toEqual([
+      { university_id: 'auth', distance_meters: '800', source: 'computed' },
+      { university_id: 'uom', distance_meters: '1500', source: 'computed' },
+      { university_id: 'ihu', distance_meters: '4200', source: 'computed' },
+    ]);
+  });
+
+  it('preserves landlord-edited distances and still fills other unis', () => {
+    const existing = [
+      { university_id: 'auth', distance_meters: '999', source: 'landlord' },
+      { university_id: 'ihu', distance_meters: '', source: 'landlord' },
+    ];
+    const out = mergePrefillUniversityDistances(existing, COMPUTED, 3);
+    expect(out).toEqual([
+      { university_id: 'auth', distance_meters: '999', source: 'landlord' },
+      { university_id: 'ihu', distance_meters: '4200', source: 'computed' },
+      // remaining nearest not yet listed
+      { university_id: 'uom', distance_meters: '1500', source: 'computed' },
+    ]);
+  });
+
+  it('refreshes previously computed rows from a new pin result', () => {
+    const existing = [
+      { university_id: 'auth', distance_meters: '100', source: 'computed' },
+    ];
+    const out = mergePrefillUniversityDistances(existing, COMPUTED, 3);
+    expect(out[0]).toEqual({
+      university_id: 'auth',
+      distance_meters: '800',
+      source: 'computed',
+    });
+    expect(out.map((r) => r.university_id)).toEqual(['auth', 'uom', 'ihu']);
+  });
+
+  it('adds exactly one uni when capped at the post-add row count', () => {
+    // "+ Add university" appends one empty shell and caps maxRows at the new
+    // length, so the merge fills that row without appending the rest.
+    const afterAdd = [
+      { university_id: 'auth', distance_meters: '800', source: 'computed' },
+      { university_id: 'uom', distance_meters: '', source: 'landlord' },
+    ];
+    const out = mergePrefillUniversityDistances(
+      afterAdd,
+      COMPUTED,
+      afterAdd.length,
+    );
+    expect(out).toEqual([
+      { university_id: 'auth', distance_meters: '800', source: 'computed' },
+      { university_id: 'uom', distance_meters: '1500', source: 'computed' },
+    ]);
+  });
+
+  it('keeps every existing row even when maxRows is smaller', () => {
+    const existing = [
+      { university_id: 'auth', distance_meters: '999', source: 'landlord' },
+      { university_id: 'uom', distance_meters: '888', source: 'landlord' },
+      { university_id: 'ihu', distance_meters: '', source: 'landlord' },
+    ];
+    const out = mergePrefillUniversityDistances(existing, COMPUTED, 1);
+    expect(out.map((r) => r.university_id)).toEqual(['auth', 'uom', 'ihu']);
+  });
+
+  it('keeps an empty shell when the pin has no value for that uni', () => {
+    const existing = [
+      { university_id: 'oxford', distance_meters: '', source: 'landlord' },
+    ];
+    const out = mergePrefillUniversityDistances(existing, COMPUTED, 3);
+    expect(out[0]).toEqual({
+      university_id: 'oxford',
+      distance_meters: '',
+      source: 'landlord',
+    });
+    // still appends known computed unis
+    expect(out.slice(1).map((r) => r.university_id)).toEqual([
+      'auth',
+      'uom',
+    ]);
+  });
+});
 
 describe('parseUniversityDistances', () => {
   it('accepts a well-formed payload', () => {

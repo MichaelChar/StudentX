@@ -17,11 +17,19 @@ export default function StepUniversities({
   universities,
   prefillLoading,
   onPrefill,
+  onAddUniversity,
 }) {
   const t = useTranslations('landlord.listingWizard.universities');
   const rows = form.university_distances || [];
 
   function addRow() {
+    // Parent computes distance from the map pin for the new uni.
+    if (onAddUniversity) {
+      void onAddUniversity();
+      return;
+    }
+    // Fallback when rendered without the parent handler: empty shell the
+    // landlord types into.
     const taken = new Set(rows.map((d) => d.university_id));
     const next = (universities || []).find((u) => !taken.has(u.university_id));
     if (!next) return;
@@ -80,7 +88,8 @@ export default function StepUniversities({
           <button
             type="button"
             onClick={addRow}
-            className="label-caps text-blue hover:underline"
+            disabled={prefillLoading}
+            className="label-caps text-blue hover:underline disabled:opacity-50 disabled:no-underline"
           >
             {t('add')}
           </button>

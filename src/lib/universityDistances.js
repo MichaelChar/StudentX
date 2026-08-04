@@ -20,6 +20,133 @@ export const MIN_UNIVERSITY_DISTANCES = 2;
 const ALLOWED_SOURCES = new Set(['computed', 'landlord']);
 
 /**
+ * True when a wizard row already has a positive numeric distance the landlord
+ * (or a prior prefill) filled in. Empty string / whitespace / 0 / NaN do not count.
+ *
+ * @param {unknown} distanceMeters
+ * @returns {boolean}
+ */
+export function hasFilledDistance(distanceMeters) {
+  if (distanceMeters == null || distanceMeters === '') return false;
+  const raw =
+    typeof distanceMeters === 'string' ? distanceMeters.trim() : distanceMeters;
+  if (raw === '') return false;
+  const n = Number(raw);
+  return Number.isFinite(n) && n > 0;
+}
+
+/**
+ * Merge pin-computed distances into existing wizard rows.
+ *
+ * Rules (matches the wizard comment "keep landlord-adjusted; fill missing /
+ * replace pure empty"):
+ * - Landlord rows with a real distance are preserved as-is.
+ * - Empty rows (including ones "+ Add university" creates with source=landlord
+ *   and distance '') are filled from the pin when a value exists.
+ * - source=computed rows are refreshed from the pin.
+ * - Empty form → nearest computed universities up to maxRows.
+ * - Non-empty form → existing row order is kept; remaining computed unis not
+ *   yet listed are appended up to maxRows.
+ *
+ * @param {Array<{ university_id?: string, distance_meters?: unknown, source?: string }>} existing
+ * @param {Array<{ university_id: string, distance_meters: number }>} computedDistances
+ * @param {number} [maxRows=3]
+ * @returns {Array<{ university_id: string, distance_meters: string, source: string }>}
+ */
+export function mergePrefillUniversityDistances(
+  existing,
+  computedDistances,
+  maxRows = 3,
+) {
+  const cap =
+    typeof maxRows === 'number' && maxRows > 0 ? Math.floor(maxRows) : 3;
+  const computed = Array.isArray(computedDistances) ? computedDistances : [];
+  const computedById = new Map();
+  for (const d of computed) {
+    if (!d?.university_id) continue;
+    const meters = Number(d.distance_meters);
+    if (!Number.isFinite(meters) || meters <= 0) continue;
+    computedById.set(d.university_id, Math.round(meters));
+  }
+
+  const asComputedRow = (universityId) => {
+    const meters = computedById.get(universityId);
+    if (meters == null) return null;
+    return {
+      university_id: universityId,
+      distance_meters: String(meters),
+      source: 'computed',
+    };
+  };
+
+  const rows = Array.isArray(existing) ? existing : [];
+
+  // First entry / cleared form: nearest campuses from the pin.
+  if (rows.length === 0) {
+    const out = [];
+    for (const d of computed) {
+      if (out.length >= cap) break;
+      const row = asComputedRow(d.university_id);
+      if (row) out.push(row);
+    }
+    return out;
+  }
+
+  const usedIds = new Set();
+  const next = [];
+
+  for (const row of rows) {
+    const id = row?.university_id;
+    if (typeof id !== 'string' || !id || usedIds.has(id)) continue;
+    usedIds.add(id);
+
+    // Real landlord edit — do not overwrite with the pin.
+    if (row.source === 'landlord' && hasFilledDistance(row.distance_meters)) {
+      next.push({
+        university_id: id,
+        distance_meters: String(row.distance_meters).trim(),
+        source: 'landlord',
+      });
+      continue;
+    }
+
+    const filled = asComputedRow(id);
+    if (filled) {
+      next.push(filled);
+      continue;
+    }
+
+    // No pin value for this id: keep a filled distance if we have one, else an
+    // empty shell the landlord can type into.
+    if (hasFilledDistance(row.distance_meters)) {
+      next.push({
+        university_id: id,
+        distance_meters: String(row.distance_meters).trim(),
+        source: row.source === 'computed' ? 'computed' : 'landlord',
+      });
+    } else {
+      next.push({
+        university_id: id,
+        distance_meters: '',
+        source: 'landlord',
+      });
+    }
+  }
+
+  // Append any remaining nearest unis not already listed (up to cap).
+  for (const d of computed) {
+    if (next.length >= cap) break;
+    if (usedIds.has(d.university_id)) continue;
+    const row = asComputedRow(d.university_id);
+    if (!row) continue;
+    usedIds.add(d.university_id);
+    next.push(row);
+  }
+
+  return next;
+}
+
+/**
  * Look up the university ids valid for a city.
  *
  * @returns {Promise<Set<string>|null>} valid ids, or null if the lookup failed
