@@ -42,16 +42,15 @@ export default function StatusLadder({
     >
       <ol className="flex flex-wrap items-center gap-1 sm:gap-0">
         {STAGES.map((stage, i) => {
-          const done =
-            completed && typeof completed[stage] === 'boolean'
-              ? completed[stage] && stage !== current
-              : i < idx;
-          // If independently completed and not current, still show done style.
-          // If completed AND current (e.g. all done → current live), active wins.
-          const independentlyDone =
-            completed && completed[stage] === true && stage !== current;
-          const showDone = independentlyDone || done;
-          const active = i === idx || stage === current;
+          const active = stage === current;
+          // With a `completed` map, a stage can be done out of order — a
+          // verified landlord ticks ID check even on a pure draft. Without
+          // one, fall back to linear "everything before current is done".
+          // The current stage never renders as done: when every stage is
+          // complete, current is 'live' and it shows as active, not ticked.
+          const showDone = completed
+            ? completed[stage] === true && !active
+            : i < idx;
           return (
             <li key={stage} className="flex items-center min-w-0">
               {i > 0 && (
@@ -64,15 +63,13 @@ export default function StatusLadder({
               )}
               <span
                 className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-sm text-[0.65rem] font-sans font-semibold uppercase tracking-[0.12em] ${
-                  active && !showDone
+                  active
                     ? 'bg-blue text-white'
                     : showDone
                       ? 'bg-blue/10 text-blue'
-                      : active
-                        ? 'bg-blue text-white'
-                        : 'bg-parchment text-night/40'
+                      : 'bg-parchment text-night/40'
                 }`}
-                aria-current={active && !showDone ? 'step' : undefined}
+                aria-current={active ? 'step' : undefined}
               >
                 {showDone && (
                   <Icon name="check" className="w-3 h-3" />

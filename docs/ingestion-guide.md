@@ -209,6 +209,36 @@ python3 scripts/validate_data.py
 
 This checks the live database for: null dimensions, missing distances, ID format, orphaned records, and price sanity. See `scripts/validate_data.py` for details.
 
+## 5. Ingested listings are NOT public — read this before wondering where they went
+
+Neither `scripts/ingest.py` nor `scripts/apply_and_load.py` sets
+`listings.listing_status`, so both rely on the column default. Migration 104
+flipped that default from `active` to `disabled`: **everything you ingest now
+lands invisible to students, with no error and nothing in the validate
+output.**
+
+That is a deliberate policy — public visibility is admin go-live only — but it
+leaves ingested listings in a dead end. `/admin/listing-go-live` refuses to
+publish anything missing `landlords.is_verified` **or** a completed video-call
+`property_verifications` row, and a scraped landlord has neither. So an
+ingested listing cannot be published through the UI at all.
+
+Pick one before running a batch:
+
+- **Ingest is retired** for the marketplace arm — nothing to do; the dead end
+  is the point.
+- **Ingest still feeds curated inventory** — the scripts need to either stamp
+  `listing_status='active'` explicitly (bypassing the gate, so decide that
+  consciously) or the go-live gate needs a curated-source exemption keyed on
+  `flags.source`.
+
+Until that's decided, treat ingested rows as drafts and check
+`listing_status` directly after any batch:
+
+```sql
+SELECT listing_status, count(*) FROM listings GROUP BY listing_status;
+```
+
 ---
 
 ## Common Data Cleaning Tips

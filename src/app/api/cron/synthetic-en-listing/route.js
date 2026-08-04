@@ -188,6 +188,57 @@ export function evaluateAuthedCacheHeader({ status, cacheControl }) {
   return { ok: true };
 }
 
+// Resolve which listing the four listing-dependent checks should probe.
+//
+// `SYNTHETIC_LISTING_ID` (wrangler.jsonc var) used to be taken on faith, on
+// the assumption that its target is "permanently published". The go-live
+// gates (PR #382) broke that assumption: a listing stays public only while
+// its landlord ID check AND video-call verification hold, and an admin can
+// take it offline at any time. A pinned ID that quietly goes offline turns
+// every 15-min run into 4 failing checks and an alert email — with no dedupe
+// (see the runbook's "Known limitations"), that's ~96 emails/day reporting a
+// deliberate ops action, not an outage.
+//
+// So: trust the pin only while it's actually public, else fall back to
+// whatever IS public, else report the directory as empty and let the callers
+// skip. An empty public directory is a valid state — every listing awaiting
+// video verification — and must not page anyone.
+//
+// @returns {Promise<{ listingId: string|null, reason: string|null }>}
+export async function resolveSyntheticListingId(appUrl, { fetchImpl = fetchUrl } = {}) {
+  const pinned = process.env.SYNTHETIC_LISTING_ID || DEFAULT_LISTING_ID;
+  try {
+    const res = await fetchImpl(`${appUrl}/api/listings/${pinned}`);
+    if (res.status === 200) return { listingId: pinned, reason: null };
+    // Cloudflare-class 5xx is inconclusive, not "gone" — keep the pin and let
+    // the individual checks apply their own skip rules.
+    if (INCONCLUSIVE_CF_5XX.has(res.status)) return { listingId: pinned, reason: null };
+  } catch (err) {
+    // A timeout here is inconclusive too — same reasoning.
+    if (err?.name === 'TimeoutError' || err?.name === 'AbortError') {
+      return { listingId: pinned, reason: null };
+    }
+  }
+
+  try {
+    const res = await fetchImpl(`${appUrl}/api/listings?limit=1`);
+    if (res.status !== 200) {
+      return { listingId: null, reason: `listing lookup returned ${res.status}` };
+    }
+    const json = await res.json();
+    const first = json?.listings?.[0]?.listing_id;
+    if (!first) {
+      return { listingId: null, reason: 'no publicly active listings' };
+    }
+    return { listingId: first, reason: null };
+  } catch (err) {
+    return {
+      listingId: null,
+      reason: `listing lookup threw: ${err?.name || 'Error'}`,
+    };
+  }
+}
+
 // --- Additional smoke assertions (all soft-fail: append to `failures`) -----
 
 // Listing API returns ≥2 distinct walk_minutes values across faculty_distances.
@@ -498,9 +549,9 @@ async function sendAlert({ to, subject, lines }) {
  * @returns {Promise<{ ok: boolean, checks?: unknown[], failures?: unknown[] }>}
  */
 export async function runSyntheticEnListing() {
-  const listingId = process.env.SYNTHETIC_LISTING_ID || DEFAULT_LISTING_ID;
   const alertEmail = process.env.SYNTHETIC_ALERT_EMAIL;
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000';
+  const { listingId, reason: noListingReason } = await resolveSyntheticListingId(appUrl);
   // Step B (issue #158) collapsed the site to English-only and 301'd
   // every /en/* path to its unprefixed form. The "en-" check names are
   // kept for log/alert continuity but they now hit the canonical URL.
@@ -519,47 +570,64 @@ export async function runSyntheticEnListing() {
   // (post-PR #105: anon must now receive public, s-maxage=... so Cloudflare
   // can cache the AuthGate body across visitors.)
   let enListingExcerpt = '';
-  try {
-    const fetched = await fetchListingHtml(enListingUrl);
-    record('en-listing-locale', evaluateBody(fetched));
-    record(
-      'en-listing-anon-cache',
-      evaluateAnonCacheHeader({ status: fetched.status, cacheControl: fetched.cacheControl }),
-    );
-    if (fetched.status !== 200 || !checks.find((c) => c.name === 'en-listing-locale')?.ok) {
-      enListingExcerpt = (fetched.body || '').slice(0, 500);
-    }
-  } catch (err) {
-    const reason = `fetch threw: ${err.name || 'Error'} ${err.message || ''}`.trim();
-    record('en-listing-locale', { ok: false, reason });
-    record('en-listing-anon-cache', { ok: false, reason });
-  }
+  const skipListingChecks = listingId == null;
+  const listingSkip = { ok: true, skipped: true, reason: `skipped: ${noListingReason}` };
 
-  // --- Same URL, with synthetic auth cookie: authed cache header ----------
-  // (session-leak guard. Middleware checks cookie presence only, not
-  // validity — any non-empty sb-access-token value trips the authed
-  // branch, so we can verify the per-request split without a real JWT.)
-  try {
-    const fetched = await fetchListingHtml(enListingUrl, { cookie: SYNTHETIC_AUTH_COOKIE });
-    record(
-      'en-listing-authed-cache',
-      evaluateAuthedCacheHeader({ status: fetched.status, cacheControl: fetched.cacheControl }),
-    );
-  } catch (err) {
-    const reason = `fetch threw: ${err.name || 'Error'} ${err.message || ''}`.trim();
-    record('en-listing-authed-cache', { ok: false, reason });
+  if (skipListingChecks) {
+    record('en-listing-locale', listingSkip);
+    record('en-listing-anon-cache', listingSkip);
+    record('en-listing-authed-cache', listingSkip);
+  } else {
+    try {
+      const fetched = await fetchListingHtml(enListingUrl);
+      record('en-listing-locale', evaluateBody(fetched));
+      record(
+        'en-listing-anon-cache',
+        evaluateAnonCacheHeader({ status: fetched.status, cacheControl: fetched.cacheControl }),
+      );
+      if (fetched.status !== 200 || !checks.find((c) => c.name === 'en-listing-locale')?.ok) {
+        enListingExcerpt = (fetched.body || '').slice(0, 500);
+      }
+    } catch (err) {
+      const reason = `fetch threw: ${err.name || 'Error'} ${err.message || ''}`.trim();
+      record('en-listing-locale', { ok: false, reason });
+      record('en-listing-anon-cache', { ok: false, reason });
+    }
+
+    // --- Same URL, with synthetic auth cookie: authed cache header ----------
+    // (session-leak guard. Middleware checks cookie presence only, not
+    // validity — any non-empty sb-access-token value trips the authed
+    // branch, so we can verify the per-request split without a real JWT.)
+    try {
+      const fetched = await fetchListingHtml(enListingUrl, { cookie: SYNTHETIC_AUTH_COOKIE });
+      record(
+        'en-listing-authed-cache',
+        evaluateAuthedCacheHeader({ status: fetched.status, cacheControl: fetched.cacheControl }),
+      );
+    } catch (err) {
+      const reason = `fetch threw: ${err.name || 'Error'} ${err.message || ''}`.trim();
+      record('en-listing-authed-cache', { ok: false, reason });
+    }
   }
 
   // --- Additional assertions, run independently ----------------------------
   // Lightweight checks (API routes, static assets, redirects) run concurrently
   // via service binding — fast and no resource pressure.
+  //
+  // The two listing-scoped checks skip when nothing is public — the rest
+  // (soft-404, og image, landlord-API auth, missing-message) don't need a
+  // listing and keep guarding their own regression classes regardless.
   const additional = await Promise.all([
-    checkListingApiDistanceVariety(appUrl, listingId),
+    skipListingChecks
+      ? Promise.resolve({ name: 'listing-api-distances', ...listingSkip })
+      : checkListingApiDistanceVariety(appUrl, listingId),
     checkSoft404(appUrl),
     checkOgDefault(appUrl),
     checkLandlordListingsApi(appUrl),
     checkNoMissingMessage(appUrl),
-    checkCfCacheStatusHit(appUrl, listingId),
+    skipListingChecks
+      ? Promise.resolve({ name: 'cf-cache-status-hit', ...listingSkip })
+      : checkCfCacheStatusHit(appUrl, listingId),
   ]);
 
   // Heavy property-page locale checks run sequentially via service binding.

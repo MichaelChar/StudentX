@@ -105,21 +105,20 @@ export function deriveListingLadder({
     adminApproved ||
     publicActive;
 
+  // Live counts as done once the listing is publicly active OR an admin has
+  // approved it — an approved listing the landlord then took offline keeps its
+  // tick, because the gate it represents (admin sign-off) is still satisfied.
+  // The "Disabled" pill communicates the current visibility separately.
+  const liveDone = publicActive || adminApproved;
+
   const completed = {
     // Draft complete once submitted (or live).
-    draft: submitted,
+    draft: submitted || liveDone,
     // Account-level — ticked on all properties when landlord is verified.
     idCheck: Boolean(isVerified),
     videoCall: Boolean(hasVideoVerification),
-    live: publicActive || (adminApproved && listingStatus !== 'disabled' && flagStatus === FLAGS_LIVE),
+    live: liveDone,
   };
-
-  // Live stage counts as completed when publicly active OR when admin approved
-  // and landlord has not disabled (if disabled after approval, still show live done).
-  if (publicActive || adminApproved) {
-    completed.live = true;
-    completed.draft = true;
-  }
 
   // Current = first incomplete stage in order; if all complete, live.
   let current = 'live';

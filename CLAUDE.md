@@ -314,6 +314,18 @@ surface in `wrangler tail`.
   into the PR, then merge. Affected routes should still be defensive —
   see the fallback-SELECT pattern in `src/app/api/listings/route.js` and
   `src/app/api/landlord/listings/route.js` (PR #85, post-incident).
+- **`listings.listing_status = 'active'` is admin-only, and its default is
+  `disabled` (104).** Public visibility is granted solely by
+  `/api/admin/listing-go-live`, which requires the listing to be submitted,
+  the landlord to be ID-verified (`landlords.is_verified`), and a completed
+  video-call `property_verifications` row. No landlord-reachable write path
+  may set `active` — the PATCH route deliberately ignores a client-supplied
+  `listing_status`. The wizard stage lives separately in `flags.listing_status`
+  (`draft` → `submitted` → `live`), with the approval stamped as
+  `flags.admin_live_approved`. All of it derives from `src/lib/listingGoLive.js`
+  — don't reimplement the gate inline. **Any INSERT that wants a visible row
+  must set `listing_status` explicitly**; `supabase/seed.sql` does, the Python
+  ingest scripts do not (see `docs/ingestion-guide.md` §5).
 - **Star schema** (see `docs/schema.md`). `listings` is the fact table;
   `listings.location_id → location`, `listings.rent_id → rent`,
   `listings.landlord_id → landlords`. `transformListing.js`
