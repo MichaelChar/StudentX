@@ -6,11 +6,6 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import {
   GENDERS,
-  FUNDING_SOURCES,
-  UNIVERSITIES,
-  RECEIVING_FACULTIES,
-  LANGUAGES,
-  NATIONALITIES,
   BIO_MAX_CHARS,
   PROFILE_REQUIRED_FIELDS,
   missingProfileFields,
@@ -25,13 +20,9 @@ function emptyForm() {
     display_name: '',
     date_of_birth: '',
     gender: '',
-    nationality: '',
-    languages: [],
     bio: '',
     home_university: '',
     receiving_university: '',
-    receiving_faculty: '',
-    funding_source: '',
   };
 }
 
@@ -43,13 +34,9 @@ function studentToForm(student) {
       ? String(student.date_of_birth).slice(0, 10)
       : '',
     gender: student.gender || '',
-    nationality: student.nationality || '',
-    languages: Array.isArray(student.languages) ? [...student.languages] : [],
     bio: student.bio || '',
     home_university: student.home_university || '',
     receiving_university: student.receiving_university || '',
-    receiving_faculty: student.receiving_faculty || '',
-    funding_source: student.funding_source || '',
   };
 }
 
@@ -84,7 +71,6 @@ export default function StudentProfileForm({
   const previewStudent = useMemo(
     () => ({
       ...form,
-      languages: form.languages,
     }),
     [form],
   );
@@ -98,25 +84,6 @@ export default function StudentProfileForm({
     setStatus('');
     setError('');
   }
-
-  function toggleLanguage(id) {
-    setForm((prev) => {
-      const has = prev.languages.includes(id);
-      const languages = has
-        ? prev.languages.filter((x) => x !== id)
-        : [...prev.languages, id];
-      return { ...prev, languages };
-    });
-    setStatus('');
-    setError('');
-  }
-
-  const facultiesForReceiving = useMemo(() => {
-    if (!form.receiving_university) return RECEIVING_FACULTIES;
-    return RECEIVING_FACULTIES.filter(
-      (f) => f.university === form.receiving_university || f.id === 'other',
-    );
-  }, [form.receiving_university]);
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -138,13 +105,9 @@ export default function StudentProfileForm({
       const body = {
         date_of_birth: form.date_of_birth || null,
         gender: form.gender || null,
-        nationality: form.nationality || null,
-        languages: form.languages,
         bio: form.bio || null,
         home_university: form.home_university || null,
         receiving_university: form.receiving_university || null,
-        receiving_faculty: form.receiving_faculty || null,
-        funding_source: form.funding_source || null,
       };
       if (showDisplayName && form.display_name.trim()) {
         body.display_name = form.display_name.trim();
@@ -243,46 +206,6 @@ export default function StudentProfileForm({
         </label>
 
         <label className="block">
-          <span className="label-caps text-night/60">{t('nationality')}</span>
-          <select
-            value={form.nationality}
-            onChange={(e) => setField('nationality', e.target.value)}
-            className={INPUT_CLS}
-          >
-            <option value="">{t('selectPlaceholder')}</option>
-            {NATIONALITIES.map((n) => (
-              <option key={n.id} value={n.id}>
-                {n.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <fieldset>
-          <legend className="label-caps text-night/60">{t('languages')}</legend>
-          <div className="mt-2 flex flex-wrap gap-2">
-            {LANGUAGES.map((lang) => {
-              const on = form.languages.includes(lang.id);
-              return (
-                <button
-                  key={lang.id}
-                  type="button"
-                  onClick={() => toggleLanguage(lang.id)}
-                  aria-pressed={on}
-                  className={`rounded-sm border px-2.5 py-1.5 text-xs font-sans font-medium transition-colors ${
-                    on
-                      ? 'border-blue bg-blue text-white'
-                      : 'border-night/15 bg-parchment text-night hover:border-blue'
-                  }`}
-                >
-                  {lang.label}
-                </button>
-              );
-            })}
-          </div>
-        </fieldset>
-
-        <label className="block">
           <span className="label-caps text-night/60">{t('bio')}</span>
           <textarea
             rows={compact ? 3 : 4}
@@ -302,69 +225,24 @@ export default function StudentProfileForm({
 
         <label className="block">
           <span className="label-caps text-night/60">{t('homeUniversity')}</span>
-          <select
+          <input
+            type="text"
             value={form.home_university}
             onChange={(e) => setField('home_university', e.target.value)}
+            placeholder={t('homeUniversityPlaceholder')}
             className={INPUT_CLS}
-          >
-            <option value="">{t('selectPlaceholder')}</option>
-            {UNIVERSITIES.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.label}
-              </option>
-            ))}
-          </select>
+          />
         </label>
 
         <label className="block">
           <span className="label-caps text-night/60">{t('receivingUniversity')}</span>
-          <select
+          <input
+            type="text"
             value={form.receiving_university}
-            onChange={(e) => {
-              setField('receiving_university', e.target.value);
-              setField('receiving_faculty', '');
-            }}
+            onChange={(e) => setField('receiving_university', e.target.value)}
+            placeholder={t('receivingUniversityPlaceholder')}
             className={INPUT_CLS}
-          >
-            <option value="">{t('selectPlaceholder')}</option>
-            {UNIVERSITIES.map((u) => (
-              <option key={u.id} value={u.id}>
-                {u.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="block">
-          <span className="label-caps text-night/60">{t('receivingFaculty')}</span>
-          <select
-            value={form.receiving_faculty}
-            onChange={(e) => setField('receiving_faculty', e.target.value)}
-            className={INPUT_CLS}
-          >
-            <option value="">{t('selectPlaceholder')}</option>
-            {facultiesForReceiving.map((f) => (
-              <option key={f.id} value={f.id}>
-                {f.label}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="block">
-          <span className="label-caps text-night/60">{t('fundingSource')}</span>
-          <select
-            value={form.funding_source}
-            onChange={(e) => setField('funding_source', e.target.value)}
-            className={INPUT_CLS}
-          >
-            <option value="">{t('selectPlaceholder')}</option>
-            {FUNDING_SOURCES.map((f) => (
-              <option key={f} value={f}>
-                {t(`funding_${f}`)}
-              </option>
-            ))}
-          </select>
+          />
         </label>
 
         {error && (
@@ -376,7 +254,7 @@ export default function StudentProfileForm({
           </p>
         )}
         {status && !error && (
-          <p className="text-sm text-night bg-parchment border border-night/10 rounded-sm px-3 py-2">
+          <p className="text-sm text-night/60 font-sans" role="status">
             {status}
           </p>
         )}
@@ -384,7 +262,7 @@ export default function StudentProfileForm({
         <Button
           type="submit"
           variant="gold"
-          disabled={saving || !accessToken}
+          disabled={saving}
           className="w-full justify-center sm:w-auto"
         >
           {saving ? t('saving') : submitLabel || t('save')}

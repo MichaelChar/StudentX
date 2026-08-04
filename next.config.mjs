@@ -1,6 +1,14 @@
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 import createNextIntlPlugin from 'next-intl/plugin';
 
 const withNextIntl = createNextIntlPlugin('./src/i18n/request.js');
+
+// Pin Turbopack's project root to this package. Git worktrees under
+// `.claude/worktrees/` otherwise inherit the parent checkout's lockfile as
+// the filesystem root ("Symlink [project]/node_modules is invalid" / wrong
+// source tree when multiple package-lock.json files exist).
+const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 
 // Baseline security headers applied to every route. CSP was rolled out in
 // Report-Only mode (PR #28); audit before flipping found the only
@@ -102,6 +110,10 @@ const PRIVATE_CACHE_HEADERS = [
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   poweredByHeader: false,
+  // See projectRoot comment above — required for parallel agent worktrees.
+  turbopack: {
+    root: projectRoot,
+  },
   async headers() {
     return [
       {

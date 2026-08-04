@@ -30,7 +30,6 @@ import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 const CANCELLATION_COPY_KEY = {
   free: 'cancellationFree',
   half: 'cancellationHalf',
-  none: 'cancellationNone',
 };
 
 // Cap on the untrusted ?from= URL param. Real /results querystrings are
@@ -331,7 +330,7 @@ export default async function ListingPage({ params, searchParams }) {
             </section>
           )}
 
-          {/* Cancellation policy — display only; no payment taken today. */}
+          {/* Cancellation policy — display only. */}
           <section className="mb-10">
             <p className="label-caps text-night/80 mb-4">
               {t('cancellationEnglish')}
@@ -342,9 +341,6 @@ export default async function ListingPage({ params, searchParams }) {
                   <li key={tier.id}>{t(CANCELLATION_COPY_KEY[tier.id])}</li>
                 ))}
               </ul>
-              <p className="mt-4 text-sm text-night/50 font-sans leading-relaxed">
-                {t('cancellationNote')}
-              </p>
             </Card>
           </section>
 

@@ -150,6 +150,18 @@ export async function GET(request, { params }) {
     .order('created_at', { ascending: true });
 
   const inquiryId = await inquiryIdForBooking(id);
+  let firstContactAt = null;
+  if (inquiryId) {
+    const { data: firstMsg } = await service
+      .from('inquiry_messages')
+      .select('created_at')
+      .eq('inquiry_id', inquiryId)
+      .order('created_at', { ascending: true })
+      .limit(1)
+      .maybeSingle();
+    firstContactAt = firstMsg?.created_at ?? null;
+  }
+
   const row = plainBookingRow(loaded.booking);
   const moveInAnswered = hasAnsweredMoveIn(row);
 
@@ -158,6 +170,7 @@ export async function GET(request, { params }) {
     events: events || [],
     role: auth.role,
     inquiry_id: inquiryId,
+    first_contact_at: firstContactAt,
     move_in: {
       can_respond: canRespondToMoveIn(row) && !moveInAnswered,
       answered: moveInAnswered,
