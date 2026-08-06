@@ -1,6 +1,32 @@
 # Data Ingestion Guide
 
-Step-by-step instructions for adding new listings to the Student Housing Directory.
+> ## ⛔ Ingestion is DISABLED
+>
+> `scripts/ingest.py` and `scripts/apply_and_load.py` exit immediately. The
+> rest of this guide is kept for when it is re-enabled — **it does not
+> describe a working pipeline today.**
+>
+> **Why.** Migration 104 made public visibility admin-only:
+> `listings.listing_status` defaults to `disabled`, and
+> `/admin/listing-go-live` publishes a listing only when it is submitted, its
+> landlord is ID-verified (`landlords.is_verified`), and it has a completed
+> video-call row in `property_verifications`. A scraped listing has none of
+> those, so ingestion would write rows that are invisible to students **and**
+> impossible to publish through the admin UI — with no error at ingest time
+> and nothing in the validate output to reveal it.
+>
+> **To re-enable,** make one of these true first, then drop the guard in
+> `scripts/_ingestion_disabled.py`:
+>
+> 1. The scripts stamp `listing_status='active'` explicitly — a conscious
+>    bypass of the go-live gate for curated inventory; or
+> 2. `canAdminGoLive()` in `src/lib/listingGoLive.js` grows a curated-source
+>    exemption (e.g. keyed on `flags.source`), so ingested rows can be
+>    approved through the normal admin queue.
+>
+> For a single deliberate run without re-enabling, set `INGESTION_ENABLED=1`.
+> Ingested rows will still be invisible — the override skips the guard, not
+> the gate.
 
 ---
 
@@ -208,6 +234,23 @@ python3 scripts/validate_data.py
 ```
 
 This checks the live database for: null dimensions, missing distances, ID format, orphaned records, and price sanity. See `scripts/validate_data.py` for details.
+
+## 5. Ingested listings are NOT public
+
+See the disabled banner at the top of this guide — this is the reason the
+pipeline is switched off. If you override the guard with
+`INGESTION_ENABLED=1`, check where the rows actually landed:
+
+```sql
+SELECT listing_status, count(*) FROM listings GROUP BY listing_status;
+```
+
+## 6. Credentials
+
+`scripts/apply_and_load.py` used to carry a hardcoded production connection
+string, password included, in this **public** repo. It now requires
+`DATABASE_URL` from the environment, as `scripts/validate_data.py` already
+did. Never hardcode a connection string in this repo.
 
 ---
 

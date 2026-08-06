@@ -20,9 +20,9 @@ import {
 } from '@/lib/universityDistances';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import StatusLadder, {
-  deriveListingStage,
-} from '@/components/listing-wizard/StatusLadder';
+import StatusLadder from '@/components/listing-wizard/StatusLadder';
+import { deriveListingLadder } from '@/lib/listingGoLive';
+import { isPropertyVerified } from '@/lib/propertyVerification';
 import StepImport from '@/components/listing-wizard/StepImport';
 import StepAddress from '@/components/listing-wizard/StepAddress';
 import StepProperty from '@/components/listing-wizard/StepProperty';
@@ -97,6 +97,8 @@ function emptyForm(initial = {}) {
  *   - onSaveDraft(payload) → Promise<{ listing_id? }>
  *   - onSubmit(payload) → Promise
  *   - isVerified: landlord ID verified?
+ *   - listingStatus: public listings.listing_status
+ *   - propertyVerifications: rows for video-call stage
  *   - accessToken: bearer token for prefill API
  */
 export default function ListingForm({
@@ -106,6 +108,8 @@ export default function ListingForm({
   onSubmit,
   submitLabel,
   isVerified = false,
+  listingStatus = null,
+  propertyVerifications = null,
   accessToken = null,
 }) {
   const t = useTranslations('landlord.listingWizard');
@@ -679,16 +683,23 @@ export default function ListingForm({
     await prefillDistances(newRows, newRows.length);
   }
 
-  const stage = useMemo(
-    () =>
-      deriveListingStage({
-        flags: form.flags,
-        isVerified,
-        hasVideoVerification: false,
-        isSubmitted: false,
-      }),
-    [form.flags, isVerified],
-  );
+  const ladder = useMemo(() => {
+    const flag = form.flags?.listing_status;
+    const hasVideo =
+      propertyVerifications != null
+        ? isPropertyVerified(propertyVerifications)
+        : false;
+    return deriveListingLadder({
+      flags: form.flags,
+      listingStatus,
+      isVerified,
+      hasVideoVerification: hasVideo,
+      isSubmitted:
+        flag === 'submitted' ||
+        flag === 'live' ||
+        form.flags?.admin_live_approved === true,
+    });
+  }, [form.flags, isVerified, listingStatus, propertyVerifications]);
 
   const checklist = {
     address: Boolean(form.address?.trim() && form.neighborhood?.trim()),
@@ -710,7 +721,7 @@ export default function ListingForm({
       )}
 
       <div className="space-y-6">
-        <StatusLadder current={stage} />
+        <StatusLadder current={ladder.current} completed={ladder.completed} />
 
         {/* Step progress */}
         <div>

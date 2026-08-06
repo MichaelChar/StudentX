@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 """
 Apply migrations, seed data, load batches, compute distances, validate — all against live Supabase.
+
+*** DISABLED *** — see scripts/_ingestion_disabled.py and docs/ingestion-guide.md.
+Migration 104 made public visibility admin-only, and the go-live gate requires
+landlord ID verification plus a completed video call, which ingested listings
+can never satisfy.
+
+This script previously carried a hardcoded production connection string,
+password included, in a PUBLIC repo. It now reads DATABASE_URL from the
+environment like scripts/validate_data.py does. The exposed credential must be
+rotated regardless — removing it here does not remove it from git history.
 """
 
 import json
@@ -16,11 +26,13 @@ import psycopg2
 import psycopg2.extras
 import requests
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _ingestion_disabled import require_ingestion_enabled  # noqa: E402
+
 # ---------------------------------------------------------------------------
 # Config
 # ---------------------------------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
-DB_URL = "postgresql://postgres.ecluqurlfbvkxrnoyhaq:tezjib-8jarpa-tEvpug@aws-1-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require"
 OSRM_BASE = "http://router.project-osrm.org"
 OSRM_DELAY = 1.1
 
@@ -54,7 +66,15 @@ PROPERTY_TYPE_MAP = {
 
 
 def get_conn():
-    return psycopg2.connect(DB_URL, connect_timeout=15)
+    db_url = os.environ.get("DATABASE_URL")
+    if not db_url:
+        print("Error: DATABASE_URL is not set.", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("  export DATABASE_URL='postgresql://USER:PASSWORD@HOST:5432/postgres?sslmode=require'", file=sys.stderr)
+        print("", file=sys.stderr)
+        print("Never hardcode it here — this repo is public.", file=sys.stderr)
+        sys.exit(1)
+    return psycopg2.connect(db_url, connect_timeout=15)
 
 
 # ===================================================================
@@ -625,6 +645,8 @@ def export_snapshot(conn):
 # MAIN
 # ===================================================================
 def main():
+    require_ingestion_enabled("scripts/apply_and_load.py")
+
     print("=" * 60)
     print("Student Housing Directory — Live Database Pipeline")
     print("=" * 60)

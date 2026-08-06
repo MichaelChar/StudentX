@@ -2,18 +2,36 @@
 
 import { useTranslations } from 'next-intl';
 import Icon from '@/components/ui/Icon';
+import {
+  LISTING_LADDER_STAGES,
+  deriveListingStage,
+  deriveListingLadder,
+} from '@/lib/listingGoLive';
 
 /*
   Listing lifecycle ladder — always visible during the wizard and on
-  My Listings. Stages: Draft → ID check → Video call → Curation → Live.
+  My Listings. Stages: Draft → ID check → Video call → Live.
+
+  Completion is non-linear for ID check: a verified landlord shows ID check
+  ticked on every listing, even pure drafts (account-level signal).
 */
-const STAGES = ['draft', 'idCheck', 'videoCall', 'curation', 'live'];
+const STAGES = LISTING_LADDER_STAGES;
 
 /**
- * @param {{ current?: string, className?: string }} props
- *   current: one of STAGES keys (default 'draft')
+ * @param {{
+ *   current?: string,
+ *   completed?: Record<string, boolean>,
+ *   className?: string,
+ * }} props
+ *   current: highlighted stage (first incomplete, or live)
+ *   completed: optional per-stage done map; when omitted, falls back to
+ *     linear "everything before current is done"
  */
-export default function StatusLadder({ current = 'draft', className = '' }) {
+export default function StatusLadder({
+  current = 'draft',
+  completed,
+  className = '',
+}) {
   const t = useTranslations('landlord.listingWizard.statusLadder');
   const idx = Math.max(0, STAGES.indexOf(current));
 
@@ -24,15 +42,22 @@ export default function StatusLadder({ current = 'draft', className = '' }) {
     >
       <ol className="flex flex-wrap items-center gap-1 sm:gap-0">
         {STAGES.map((stage, i) => {
-          const done = i < idx;
-          const active = i === idx;
+          const active = stage === current;
+          // With a `completed` map, a stage can be done out of order — a
+          // verified landlord ticks ID check even on a pure draft. Without
+          // one, fall back to linear "everything before current is done".
+          // The current stage never renders as done: when every stage is
+          // complete, current is 'live' and it shows as active, not ticked.
+          const showDone = completed
+            ? completed[stage] === true && !active
+            : i < idx;
           return (
             <li key={stage} className="flex items-center min-w-0">
               {i > 0 && (
                 <span
                   aria-hidden="true"
                   className={`hidden sm:block w-4 md:w-8 h-px mx-1 ${
-                    done || active ? 'bg-blue' : 'bg-night/15'
+                    showDone || active ? 'bg-blue' : 'bg-night/15'
                   }`}
                 />
               )}
@@ -40,13 +65,13 @@ export default function StatusLadder({ current = 'draft', className = '' }) {
                 className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-sm text-[0.65rem] font-sans font-semibold uppercase tracking-[0.12em] ${
                   active
                     ? 'bg-blue text-white'
-                    : done
+                    : showDone
                       ? 'bg-blue/10 text-blue'
                       : 'bg-parchment text-night/40'
                 }`}
                 aria-current={active ? 'step' : undefined}
               >
-                {done && !active && (
+                {showDone && (
                   <Icon name="check" className="w-3 h-3" />
                 )}
                 {t(stage)}
@@ -59,19 +84,4 @@ export default function StatusLadder({ current = 'draft', className = '' }) {
   );
 }
 
-/**
- * Derive ladder stage from listing flags + landlord verification state.
- */
-export function deriveListingStage({ flags, isVerified, hasVideoVerification, isSubmitted }) {
-  if (flags?.disabled || flags?.listing_status === 'disabled') return 'draft';
-  if (flags?.listing_status === 'live' || isSubmitted) {
-    if (!isVerified) return 'idCheck';
-    if (!hasVideoVerification) return 'videoCall';
-    // Curation is ops-side; once live + verified we show Live.
-    return 'live';
-  }
-  if (flags?.listing_status === 'draft' || !flags?.listing_status) return 'draft';
-  if (!isVerified) return 'idCheck';
-  if (!hasVideoVerification) return 'videoCall';
-  return 'curation';
-}
+export { deriveListingStage, deriveListingLadder, LISTING_LADDER_STAGES as STAGES };

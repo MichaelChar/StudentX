@@ -29,7 +29,6 @@
       "Bash(curl -sv 'http://localhost:3000/api/faculties')",
       "Bash(curl -s 'http://localhost:3000/api/faculties')",
       "Bash(python3 -m json.tool)",
-      "Bash(DATABASE_URL=\"postgresql://postgres.ecluqurlfbvkxrnoyhaq:tezjib-8jarpa-tEvpug@aws-1-eu-west-1.pooler.supabase.com:5432/postgres?sslmode=require\" python3 scripts/validate_data.py)",
       "Bash(curl -s 'http://localhost:3000/api/listings')",
       "Bash(python3 -c \"import sys,json; data=json.load\\(sys.stdin\\); [print\\(l[''''listing_id''''], l[''''monthly_price''''], l[''''property_type'''']\\) for l in data[''''listings'''']]\")",
       "Bash(curl -s 'http://localhost:3000/api/listings/0001001')",

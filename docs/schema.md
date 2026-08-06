@@ -179,8 +179,8 @@ Central table connecting all dimensions.
 | `smoking_allowed` | BOOLEAN | — (nullable) | House rule (100) |
 | `pets_allowed` | BOOLEAN | — (nullable) | House rule (100) |
 | `additional_rules` | TEXT | — (nullable) | Free-text house rules (100) |
-| `listing_status` | TEXT | NOT NULL, DEFAULT `active`, CHECK IN (`active`, `disabled`) | Public visibility; disabled listings are landlord-only (102) |
-| `flags` | JSONB | DEFAULT '{}' | Data quality flags (PRICE_MISSING, COORDS_APPROXIMATE, etc.) |
+| `listing_status` | TEXT | NOT NULL, DEFAULT `disabled`, CHECK IN (`active`, `disabled`) | Public visibility; disabled listings are landlord-only (102). Default flipped to `disabled` in 104 — `active` is set **only** by admin go-live (`/api/admin/listing-go-live`), never by a landlord write. Any INSERT that wants a publicly visible row must say so explicitly. |
+| `flags` | JSONB | DEFAULT '{}' | Data quality flags (PRICE_MISSING, COORDS_APPROXIMATE, etc.) plus the listing pipeline stage: `listing_status` (`draft` → `submitted` → `live`/`disabled`) and the admin go-live stamp (`admin_live_approved`, `admin_live_at`, `admin_live_by`) — see `src/lib/listingGoLive.js` (104) |
 | `created_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Record creation time |
 | `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update time (auto-trigger) |
 

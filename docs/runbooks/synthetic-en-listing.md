@@ -55,8 +55,35 @@ Vars in [`wrangler.jsonc`](../../wrangler.jsonc):
 
 | Var | Default | Purpose |
 |---|---|---|
-| `SYNTHETIC_LISTING_ID` | `0106002` | Listing ID to probe. Must be permanently published. |
+| `SYNTHETIC_LISTING_ID` | `0106002` | Preferred listing to probe. A *preference*, not a guarantee — see below. |
 | `SYNTHETIC_ALERT_EMAIL` | `michaeltubehd007@gmail.com` | Where alerts go. |
+
+### Which listing gets probed
+
+`resolveSyntheticListingId()` runs before the checks and picks the target:
+
+1. `SYNTHETIC_LISTING_ID` — used if `/api/listings/<id>` returns 200 (or an
+   inconclusive Cloudflare 5xx / timeout, which is not evidence it's gone).
+2. Otherwise the first listing from `/api/listings?limit=1`.
+3. Otherwise **null** — the four listing-scoped checks (`en-listing-locale`,
+   `en-listing-anon-cache`, `en-listing-authed-cache`, `listing-api-distances`,
+   `cf-cache-status-hit`) record `{ ok: true, skipped: true }` and the run
+   passes on the remaining checks.
+
+The pin used to be taken on faith, on the assumption its target was
+"permanently published". The go-live gates (PR #382) ended that: a listing is
+public only while its landlord ID check **and** video-call verification hold,
+and an admin can take any listing offline from `/admin/listing-go-live`. An
+offline pin turned every tick into four failures plus an alert email — and
+with no dedupe (see [Known limitations](#known-limitations)) that's ~96
+emails/day describing a deliberate ops action rather than an outage.
+
+**An empty public directory is a valid state, not an outage.** If every
+listing is awaiting video verification, the canary goes quiet on the
+listing-scoped checks and keeps guarding the rest (soft-404, og image,
+landlord-API auth, missing-message, the three property-page renders, cron
+drift). Step 2 also means a stale pin self-heals instead of silently
+degrading — the `0100006` failure mode described under Maintenance.
 
 Secrets (set via `wrangler secret put`, not in `wrangler.jsonc`):
 
@@ -83,7 +110,7 @@ Body includes the failing check name, reason, and the first 500 chars of the ano
 - `EN_MARKERS_REQUIRED` — must be a unique string from the EN gate copy
 - `EL_MARKERS_FORBIDDEN` — must be a unique string from the EL gate copy that has no English equivalent
 
-**Stable listing ID.** `0106002` is the default. It must point at a permanently-published listing; the old `0100006` seed ID was retired when prod was reseeded to the `01060xx` scheme, which silently 404'd the API probe (and skipped the four listing-page checks as inconclusive 522s). If it ever gets unpublished or removed, swap `SYNTHETIC_LISTING_ID` in `wrangler.jsonc` to another permanently-published listing ID — confirm it returns 200 from `/api/listings/<id>` with ≥2 distinct `walk_minutes` first.
+**Stable listing ID.** `0106002` is the default. It no longer *has* to stay published — the resolver falls back to any live listing and then to skipping (see [Which listing gets probed](#which-listing-gets-probed)) — but keeping it pointed at a stable, published listing gives the most consistent signal. The old `0100006` seed ID was retired when prod was reseeded to the `01060xx` scheme, which silently 404'd the API probe (and skipped the four listing-page checks as inconclusive 522s); that class of silent degradation is what step 2 of the resolver now heals. When repinning, confirm the new ID returns 200 from `/api/listings/<id>` with ≥2 distinct `walk_minutes` first.
 
 **Silence temporarily.** Comment out `"*/15 * * * *"` in `wrangler.jsonc` and the matching entry in `cf/worker-entry.mjs` `CRON_ROUTES`, then `npm run cf:build && wrangler deploy`. Re-enable when ready.
 

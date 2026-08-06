@@ -9,6 +9,11 @@ import {
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { writeUniversityDistances } from '@/lib/universityDistances';
 import { parseListingWriteBody } from '@/lib/landlordListingBody';
+import {
+  flagsForSubmit,
+  flagsForDisableToggle,
+  FLAGS_LIVE,
+} from '@/lib/listingGoLive';
 
 async function getLandlordId(userId) {
   const { data } = await getSupabaseAsService()
@@ -29,7 +34,8 @@ const SINGLE_LISTING_SELECT = `
   location ( location_id, address, neighborhood, lat, lng ),
   property_types ( property_type_id, name ),
   listing_amenities ( amenities ( amenity_id, name ) ),
-  listing_university_distances ( university_id, distance_meters, source )
+  listing_university_distances ( university_id, distance_meters, source ),
+  property_verifications ( verification_id, method, status, verified_at, checklist_json, notes, created_at )
 `;
 
 const SINGLE_LISTING_SELECT_FALLBACK = `
@@ -225,20 +231,48 @@ export async function PATCH(request, { params }) {
     listingUpdate.additional_rules = d.additional_rules;
   }
   if (propertyTypeId !== undefined) listingUpdate.property_type_id = propertyTypeId;
-  if (d.listing_status !== undefined) listingUpdate.listing_status = d.listing_status;
+  // Landlords cannot set listing_status to active themselves — ignore client value.
+  // Public active is admin go-live only (see /api/admin/listing-go-live).
 
   if (d.flags !== undefined || isSubmit || isDraft || body.disabled !== undefined) {
     const prev = existing.flags && typeof existing.flags === 'object' ? existing.flags : {};
-    listingUpdate.flags = {
-      ...prev,
-      ...(d.flags || {}),
-    };
-    if (isSubmit) {
-      listingUpdate.flags.listing_status = 'live';
-      listingUpdate.flags.disabled = false;
-      listingUpdate.listing_status = d.listing_status || 'active';
-    } else if (isDraft && listingUpdate.flags.listing_status == null) {
-      listingUpdate.flags.listing_status = 'draft';
+
+    if (body.disabled !== undefined) {
+      const toggled = flagsForDisableToggle(body.disabled === true, prev, existing.listing_status);
+      listingUpdate.flags = toggled.flags;
+      listingUpdate.listing_status = toggled.listing_status;
+    } else if (isSubmit) {
+      // Keep public live if already admin-approved and active; otherwise submit for review.
+      const alreadyLive =
+        existing.listing_status === 'active' && prev.admin_live_approved === true;
+      if (alreadyLive) {
+        listingUpdate.flags = {
+          ...prev,
+          ...(d.flags || {}),
+          disabled: false,
+          listing_status: FLAGS_LIVE,
+          admin_live_approved: true,
+        };
+        listingUpdate.listing_status = 'active';
+      } else {
+        const submitted = flagsForSubmit({ ...prev, ...(d.flags || {}) });
+        listingUpdate.flags = submitted.flags;
+        listingUpdate.listing_status = submitted.listing_status;
+      }
+    } else {
+      listingUpdate.flags = {
+        ...prev,
+        ...(d.flags || {}),
+      };
+      if (isDraft && listingUpdate.flags.listing_status == null) {
+        listingUpdate.flags.listing_status = 'draft';
+      }
+      // Never let a partial draft write flip public status on.
+      if (d.listing_status === 'active') {
+        // ignore
+      } else if (d.listing_status !== undefined) {
+        listingUpdate.listing_status = d.listing_status;
+      }
     }
   }
 

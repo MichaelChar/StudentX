@@ -239,7 +239,10 @@ export async function parseListingWriteBody(body, opts = {}) {
     }
   }
 
-  // flags (wizard stage: draft/live) + listings.listing_status (public visibility)
+  // flags (wizard stage) + listings.listing_status (public visibility).
+  // Landlord submit NEVER publishes: only admin go-live sets listing_status=active.
+  // Disable/re-enable merge with existing flags happens in the PATCH route
+  // (needs admin_live_approved from the prior row).
   let flags = undefined;
   let listingStatus = undefined;
   if (body.flags !== undefined && body.flags && typeof body.flags === 'object') {
@@ -249,17 +252,21 @@ export async function parseListingWriteBody(body, opts = {}) {
     listingStatus = 'disabled';
     flags = { ...(flags || {}), disabled: true, listing_status: 'disabled' };
   } else if (body.disabled === false) {
-    listingStatus = 'active';
+    // Placeholder; route replaces with flagsForDisableToggle(prev).
+    listingStatus = 'disabled';
     flags = {
       ...(flags || {}),
       disabled: false,
-      listing_status:
-        flags?.listing_status === 'disabled' ? 'live' : flags?.listing_status,
     };
   }
   if (body.submit === true) {
-    listingStatus = listingStatus ?? 'active';
-    flags = { ...(flags || {}), listing_status: 'live', disabled: false };
+    // Submitted for review — not public until admin go-live.
+    listingStatus = 'disabled';
+    flags = {
+      ...(flags || {}),
+      listing_status: 'submitted',
+      disabled: false,
+    };
   } else if (body.draft === true && flags === undefined) {
     flags = { listing_status: 'draft' };
   }

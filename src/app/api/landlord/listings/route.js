@@ -177,9 +177,10 @@ export async function POST(request) {
     smoking_allowed: d.smoking_allowed ?? null,
     pets_allowed: d.pets_allowed ?? null,
     additional_rules: d.additional_rules ?? null,
-    listing_status: d.listing_status || 'active',
+    // Never public on create — admin go-live is the only path to active.
+    listing_status: d.listing_status || 'disabled',
     flags: d.flags || {
-      listing_status: isSubmit ? 'live' : 'draft',
+      listing_status: isSubmit ? 'submitted' : 'draft',
     },
   };
 

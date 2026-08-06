@@ -1,9 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, afterEach } from 'vitest';
 import {
   evaluateBody,
   evaluateAnonCacheHeader,
   evaluateAuthedCacheHeader,
   skipIfInconclusiveError,
+  resolveSyntheticListingId,
 } from '@/app/api/cron/synthetic-en-listing/route';
 
 // Cache-header regression guards. Pre-PR #105 the canary asserted
@@ -159,5 +160,83 @@ describe('evaluateAuthedCacheHeader', () => {
 
   it('passes silently on non-200 responses (defers to evaluateBody)', () => {
     expect(evaluateAuthedCacheHeader({ status: 522, cacheControl: PUBLIC_CC })).toEqual({ ok: true });
+  });
+});
+
+// The pinned SYNTHETIC_LISTING_ID is no longer trustworthy on its own: since
+// the go-live gates (PR #382) a listing is public only while its landlord ID
+// check and video-call verification hold, and an admin can take it offline
+// deliberately. An offline pin used to turn every 15-min tick into four
+// failing checks + an alert email (no dedupe → ~96 emails/day) for what is a
+// planned ops action. resolveSyntheticListingId falls back to any live
+// listing, then reports an empty directory so the callers skip instead.
+describe('resolveSyntheticListingId', () => {
+  const ORIGINAL = process.env.SYNTHETIC_LISTING_ID;
+  afterEach(() => {
+    if (ORIGINAL === undefined) delete process.env.SYNTHETIC_LISTING_ID;
+    else process.env.SYNTHETIC_LISTING_ID = ORIGINAL;
+  });
+
+  function stub(routes) {
+    return async (url) => {
+      for (const [fragment, response] of Object.entries(routes)) {
+        if (url.includes(fragment)) return response;
+      }
+      throw new Error(`unstubbed url: ${url}`);
+    };
+  }
+
+  it('keeps the pinned id while it is still publicly served', async () => {
+    process.env.SYNTHETIC_LISTING_ID = '0106002';
+    const result = await resolveSyntheticListingId('https://x', {
+      fetchImpl: stub({ '/api/listings/0106002': { status: 200 } }),
+    });
+    expect(result).toEqual({ listingId: '0106002', reason: null });
+  });
+
+  it('falls back to a live listing when the pinned one went offline', async () => {
+    process.env.SYNTHETIC_LISTING_ID = '0106002';
+    const result = await resolveSyntheticListingId('https://x', {
+      fetchImpl: stub({
+        '/api/listings/0106002': { status: 404 },
+        '/api/listings?limit=1': {
+          status: 200,
+          json: async () => ({ listings: [{ listing_id: '0106009' }] }),
+        },
+      }),
+    });
+    expect(result).toEqual({ listingId: '0106009', reason: null });
+  });
+
+  it('reports an empty directory rather than failing, when nothing is public', async () => {
+    process.env.SYNTHETIC_LISTING_ID = '0106002';
+    const result = await resolveSyntheticListingId('https://x', {
+      fetchImpl: stub({
+        '/api/listings/0106002': { status: 404 },
+        '/api/listings?limit=1': { status: 200, json: async () => ({ listings: [] }) },
+      }),
+    });
+    expect(result.listingId).toBeNull();
+    expect(result.reason).toBe('no publicly active listings');
+  });
+
+  it('keeps the pin on an inconclusive Cloudflare 5xx (not "gone")', async () => {
+    process.env.SYNTHETIC_LISTING_ID = '0106002';
+    const result = await resolveSyntheticListingId('https://x', {
+      fetchImpl: stub({ '/api/listings/0106002': { status: 523 } }),
+    });
+    expect(result).toEqual({ listingId: '0106002', reason: null });
+  });
+
+  it('keeps the pin on a timeout (inconclusive, same as a CF 5xx)', async () => {
+    process.env.SYNTHETIC_LISTING_ID = '0106002';
+    const result = await resolveSyntheticListingId('https://x', {
+      fetchImpl: async () => {
+        const err = new Error('aborted');
+        err.name = 'TimeoutError';
+        throw err;
+      },
+    });
+    expect(result).toEqual({ listingId: '0106002', reason: null });
   });
 });
