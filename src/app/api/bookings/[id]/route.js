@@ -66,8 +66,7 @@ async function loadBookingForViewer(bookingId, auth) {
           photos,
           landlord_id,
           location ( address, neighborhood ),
-          rent ( monthly_price, deposit ),
-          agency_fee
+          rent ( monthly_price, deposit )
         )
       `)
       .eq('booking_id', bookingId)
@@ -90,8 +89,7 @@ async function loadBookingForViewer(bookingId, auth) {
           photos,
           landlord_id,
           location ( address, neighborhood ),
-          rent ( monthly_price, deposit ),
-          agency_fee
+          rent ( monthly_price, deposit )
         )
       `)
       .eq('booking_id', bookingId)

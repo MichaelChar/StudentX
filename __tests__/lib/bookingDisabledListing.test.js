@@ -45,7 +45,6 @@ describe('createBookingRequest + disabled listing', () => {
         available_to: null,
         min_duration_months: 3,
         max_duration_months: 12,
-        agency_fee: null,
         rent: {
           monthly_price: 450,
           currency: 'EUR',
@@ -89,7 +88,6 @@ describe('createBookingRequest + disabled listing', () => {
           available_to: null,
           min_duration_months: 3,
           max_duration_months: 12,
-          agency_fee: null,
           rent: {
             monthly_price: 450,
             currency: 'EUR',

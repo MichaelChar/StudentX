@@ -28,7 +28,7 @@ const SINGLE_LISTING_SELECT = `
   listing_id, landlord_id, title, rent_id, location_id, property_type_id,
   description, photos, external_photo_urls, sqm, floor, available_from,
   available_to, min_duration_months, max_duration_months,
-  bedrooms, bathrooms, agency_fee, video_url,
+  bedrooms, bathrooms, video_url,
   smoking_allowed, pets_allowed, additional_rules, listing_status, flags,
   rent ( rent_id, monthly_price, bills_included, deposit ),
   location ( location_id, address, neighborhood, lat, lng ),
@@ -223,7 +223,6 @@ export async function PATCH(request, { params }) {
   if (d.maxDuration !== undefined) listingUpdate.max_duration_months = d.maxDuration;
   if (d.bedrooms !== undefined) listingUpdate.bedrooms = d.bedrooms;
   if (d.bathrooms !== undefined) listingUpdate.bathrooms = d.bathrooms;
-  if (d.agency_fee !== undefined) listingUpdate.agency_fee = d.agency_fee;
   if (d.video_url !== undefined) listingUpdate.video_url = d.video_url;
   if (d.smoking_allowed !== undefined) listingUpdate.smoking_allowed = d.smoking_allowed;
   if (d.pets_allowed !== undefined) listingUpdate.pets_allowed = d.pets_allowed;
@@ -290,7 +289,6 @@ export async function PATCH(request, { params }) {
       delete lean.max_duration_months;
       delete lean.bedrooms;
       delete lean.bathrooms;
-      delete lean.agency_fee;
       delete lean.video_url;
       delete lean.smoking_allowed;
       delete lean.pets_allowed;

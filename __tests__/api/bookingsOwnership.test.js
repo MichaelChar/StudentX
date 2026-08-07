@@ -90,7 +90,6 @@ const foreignBooking = {
     landlord_id: 'll-1',
     location: { address: '1 Main', neighborhood: 'Center' },
     rent: { monthly_price: 450, deposit: 450 },
-    agency_fee: 0,
   },
 };
 

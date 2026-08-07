@@ -67,7 +67,6 @@ export default function EditListingPage() {
         monthly_price: listing.rent?.monthly_price ?? '',
         bills_included: listing.rent?.bills_included || false,
         deposit: listing.rent?.deposit ?? '',
-        agency_fee: listing.agency_fee ?? '',
         description: listing.description || '',
         sqm: listing.sqm ?? '',
         floor: listing.floor ?? '',

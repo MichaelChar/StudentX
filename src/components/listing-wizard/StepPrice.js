@@ -68,26 +68,6 @@ export default function StepPrice({
         </div>
       </div>
 
-      <div>
-        <label className={labelClass} htmlFor="wiz-agency">
-          {t('agencyFeeLabel')}
-          <SuggestedMark
-            show={!!suggested.agency_fee}
-            onDismiss={() => dismiss('agency_fee')}
-          />
-        </label>
-        <input
-          id="wiz-agency"
-          type="number"
-          min="0"
-          value={form.agency_fee}
-          onChange={(e) => setField('agency_fee', e.target.value)}
-          className={inputClass}
-          placeholder={t('agencyFeePlaceholder')}
-        />
-        <p className="mt-1 text-xs text-night/50">{t('agencyFeeTip')}</p>
-      </div>
-
       <label className="flex items-center gap-2 cursor-pointer">
         <input
           type="checkbox"

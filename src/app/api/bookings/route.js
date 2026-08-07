@@ -153,8 +153,7 @@ export async function GET(request) {
           title,
           photos,
           location ( address, neighborhood ),
-          rent ( monthly_price, deposit ),
-          agency_fee
+          rent ( monthly_price, deposit )
         )
       `)
       .eq('student_id', auth.student.student_id)

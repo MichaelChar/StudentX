@@ -61,7 +61,6 @@ describe('parseListingPaste — Greek samples', () => {
 1 υπνοδωμάτιο, 1 μπάνιο.
 Ενοίκιο: 450€ / μήνα
 Εγγύηση: 450 ευρώ
-Αμοιβή μεσίτη: 200€
 Διαθέσιμο από 01/09/2026.
 Κοινόχρηστα συμπεριλαμβάνονται.
 Πλήρως επιπλωμένο, με κλιματισμό (A/C), ασανσέρ και πλυντήριο.
@@ -71,7 +70,6 @@ describe('parseListingPaste — Greek samples', () => {
     const r = parse(text);
     expect(r.fields.monthly_price).toBe('450');
     expect(r.fields.deposit).toBe('450');
-    expect(r.fields.agency_fee).toBe('200');
     expect(r.fields.sqm).toBe('55');
     expect(r.fields.floor).toBe('2');
     expect(r.fields.bedrooms).toBe('1'); // δυάρι → 1 bed
@@ -87,7 +85,6 @@ describe('parseListingPaste — Greek samples', () => {
       expect.arrayContaining([
         'monthly_price',
         'deposit',
-        'agency_fee',
         'sqm',
         'floor',
         'bedrooms',
@@ -156,7 +153,6 @@ describe('parseListingPaste — English samples', () => {
     const text = `
 2-bedroom apartment for rent near Aristotle University.
 55 m², 2nd floor. Monthly rent €520. Deposit 520 EUR.
-Agency fee: 100€.
 Available from 1 September 2026.
 Bills included. Furnished, AC, elevator, washing machine.
 Address: Egnatia 45
@@ -166,7 +162,6 @@ Address: Egnatia 45
     const r = parse(text);
     expect(r.fields.monthly_price).toBe('520');
     expect(r.fields.deposit).toBe('520');
-    expect(r.fields.agency_fee).toBe('100');
     expect(r.fields.sqm).toBe('55');
     expect(r.fields.floor).toBe('2');
     expect(r.fields.bedrooms).toBe('2');

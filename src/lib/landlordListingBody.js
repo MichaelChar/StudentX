@@ -294,7 +294,6 @@ export async function parseListingWriteBody(body, opts = {}) {
       floor: intOrNull(body.floor),
       bedrooms: intOrNull(body.bedrooms),
       bathrooms: intOrNull(body.bathrooms),
-      agency_fee: numOrNull(body.agency_fee),
       video_url:
         body.video_url !== undefined
           ? normalizeSingleLine(body.video_url) || null

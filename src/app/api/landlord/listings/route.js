@@ -172,7 +172,6 @@ export async function POST(request) {
     max_duration_months: d.maxDuration ?? null,
     bedrooms: d.bedrooms ?? null,
     bathrooms: d.bathrooms ?? null,
-    agency_fee: d.agency_fee ?? null,
     video_url: d.video_url ?? null,
     smoking_allowed: d.smoking_allowed ?? null,
     pets_allowed: d.pets_allowed ?? null,

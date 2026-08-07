@@ -77,8 +77,7 @@ async function BookingsSection({ locale }) {
         title,
         photos,
         location ( address, neighborhood ),
-        rent ( monthly_price, deposit ),
-        agency_fee
+        rent ( monthly_price, deposit )
       )
     `)
     .eq('student_id', student.student_id)

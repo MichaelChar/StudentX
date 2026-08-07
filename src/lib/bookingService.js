@@ -45,7 +45,6 @@ export async function loadListingForBooking(listingId) {
       available_to,
       min_duration_months,
       max_duration_months,
-      agency_fee,
       rent ( monthly_price, currency, deposit, bills_included ),
       landlords ( name )
     `)
@@ -62,7 +61,6 @@ export async function loadListingForBooking(listingId) {
     available_to: data.available_to,
     min_duration_months: data.min_duration_months,
     max_duration_months: data.max_duration_months,
-    agency_fee: data.agency_fee,
     monthly_price: rent?.monthly_price ?? null,
     deposit: rent?.deposit ?? 0,
     currency: rent?.currency ?? 'EUR',

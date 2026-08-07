@@ -26,7 +26,6 @@ export async function GET(request, { params }) {
         sqm,
         bedrooms,
         bathrooms,
-        agency_fee,
         available_from,
         available_to,
         min_duration_months,
