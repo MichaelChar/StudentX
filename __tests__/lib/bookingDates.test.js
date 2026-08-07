@@ -36,15 +36,17 @@ describe('bookingDates', () => {
     expect(durationFitsListing(listing, 10)).toBe(false);
   });
 
-  it('builds offline cost summary', () => {
+  it('builds cost summary (rent only — deposit/agency settle offline)', () => {
     const c = costSummary({
       monthlyRent: 450,
       months: 5,
-      deposit: 450,
-      agencyFee: 100,
     });
+    expect(c.monthly_rent).toBe(450);
+    expect(c.duration_months).toBe(5);
     expect(c.total_rent).toBe(2250);
-    expect(c.due_at_move_in).toBe(550);
+    expect(c).not.toHaveProperty('deposit');
+    expect(c).not.toHaveProperty('agency_fee');
+    expect(c).not.toHaveProperty('due_at_move_in');
   });
 
   // Billing is per-day with the monthly price covering 30 days: a 45-day stay

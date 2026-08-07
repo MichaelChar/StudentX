@@ -10,11 +10,7 @@ import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
-import {
-  stayDurationMonths,
-  stayDurationMonthsExact,
-  costSummary,
-} from '@/lib/bookingDates';
+import { stayDurationMonths } from '@/lib/bookingDates';
 import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 
 const CANCELLATION_COPY_KEY = {
@@ -150,16 +146,8 @@ export default function StudentBookingDetail({ bookingId }) {
   const loc = Array.isArray(listing?.location)
     ? listing.location[0]
     : listing?.location;
-  const rent = Array.isArray(listing?.rent) ? listing.rent[0] : listing?.rent;
   const label = listing?.title || loc?.address || booking.listing_id;
   const months = stayDurationMonths(booking.move_in, booking.move_out);
-  const cost = costSummary({
-    monthlyRent: booking.monthly_rent,
-    months: months || 0,
-    monthsExact: stayDurationMonthsExact(booking.move_in, booking.move_out),
-    deposit: rent?.deposit,
-    agencyFee: listing?.agency_fee,
-  });
   const listingHref = listing?.listing_id
     ? `/property/thessaloniki/listing/${listing.listing_id}`
     : null;
@@ -207,34 +195,7 @@ export default function StudentBookingDetail({ bookingId }) {
           />
           <DetailField label={t('colRequested')} value={formatDate(booking.created_at)} />
           <DetailField label={t('totalStay')} value={`€${booking.total_stay_value}`} />
-          {cost.due_at_move_in > 0 && (
-            <DetailField
-              label={t('dueAtMoveIn')}
-              value={`€${cost.due_at_move_in}`}
-            />
-          )}
         </dl>
-
-        {(cost.deposit > 0 || cost.agency_fee > 0) && (
-          <div className="mt-6 rounded-sm border border-night/10 bg-parchment px-5 py-4">
-            <p className="label-caps text-night/50 mb-2">{t('costSummary')}</p>
-            <ul className="space-y-1 text-sm text-night/80 font-sans">
-              <li>
-                {t('totalRent')}: €{cost.total_rent}
-              </li>
-              {cost.deposit > 0 && (
-                <li>
-                  {t('depositDueMoveIn')}: €{cost.deposit}
-                </li>
-              )}
-              {cost.agency_fee > 0 && (
-                <li>
-                  {t('agencyFeeDueMoveIn')}: €{cost.agency_fee}
-                </li>
-              )}
-            </ul>
-          </div>
-        )}
 
         <div className="mt-6">
           <p className="label-caps text-night/50 mb-2">{t('cancellationPolicy')}</p>
