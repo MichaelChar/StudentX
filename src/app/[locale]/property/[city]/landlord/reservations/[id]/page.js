@@ -30,11 +30,6 @@ function formatDate(iso) {
   });
 }
 
-function rentDeposit(listing) {
-  const rent = Array.isArray(listing?.rent) ? listing.rent[0] : listing?.rent;
-  return Number(rent?.deposit) || 0;
-}
-
 export default function LandlordReservationDetailPage() {
   const t = useTranslations('propylaea.landlord.reservations');
   const params = useParams();
@@ -147,13 +142,10 @@ export default function LandlordReservationDetailPage() {
     : listing?.location;
   const label = listing?.title || loc?.address || booking.listing_id;
   const months = stayDurationMonths(booking.move_in, booking.move_out);
-  const deposit = rentDeposit(listing);
   const cost = costSummary({
     monthlyRent: booking.monthly_rent,
     months: months || 0,
     monthsExact: stayDurationMonthsExact(booking.move_in, booking.move_out),
-    deposit,
-    agencyFee: listing?.agency_fee,
   });
   // Commission comes out of the held first month's rent, never the deposit —
   // the deposit is the tenant's money and is settled landlord-to-tenant.
@@ -224,12 +216,6 @@ export default function LandlordReservationDetailPage() {
           />
           <DetailField label={t('colRequested')} value={formatDate(booking.created_at)} />
           <DetailField label={t('totalStay')} value={`€${booking.total_stay_value}`} />
-          {cost.due_at_move_in > 0 && (
-            <DetailField
-              label={t('dueAtMoveIn')}
-              value={`€${cost.due_at_move_in}`}
-            />
-          )}
           <DetailField
             label={t('youReceive')}
             value={`€${receive.you_receive}`}

@@ -125,10 +125,8 @@ export default function BookingWidget({ listing, nextPath }) {
       monthlyRent: listing.monthly_price,
       months: range.months,
       monthsExact: range.monthsExact,
-      deposit: listing.deposit,
-      agencyFee: listing.agency_fee,
     });
-  }, [range, listing.monthly_price, listing.deposit, listing.agency_fee]);
+  }, [range, listing.monthly_price]);
 
   async function submitBooking(token) {
     const parsed = parseStayRange(moveIn, moveOut);
@@ -302,19 +300,6 @@ export default function BookingWidget({ listing, nextPath }) {
                         </span>
                         <span className="font-medium">€{cost.total_rent}</span>
                       </div>
-                      {(cost.deposit > 0 || cost.agency_fee > 0) && (
-                        <div className="flex justify-between text-night/70">
-                          <span>{t('costDueMoveIn')}</span>
-                          <span>
-                            €{cost.due_at_move_in}
-                            {cost.deposit > 0 && cost.agency_fee > 0
-                              ? ` (${t('costDeposit')} €${cost.deposit} + ${t('costAgency')} €${cost.agency_fee})`
-                              : cost.deposit > 0
-                                ? ` (${t('costDeposit')})`
-                                : ` (${t('costAgency')})`}
-                          </span>
-                        </div>
-                      )}
                       <p className="pt-1 text-night/50 text-xs leading-relaxed">
                         {t('noCharge')}
                       </p>

@@ -181,8 +181,6 @@ export async function createBookingRequest({
     monthlyRent,
     months,
     monthsExact: stayDurationMonthsExact(moveIn, moveOut),
-    deposit: listing.deposit,
-    agencyFee: listing.agency_fee,
   });
   const totalStayValue = summary.total_rent;
 

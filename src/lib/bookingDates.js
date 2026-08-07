@@ -109,14 +109,16 @@ export function durationFitsListing(listing, months) {
 }
 
 /**
- * Cost summary for the booking widget (offline settlement — no platform charge).
+ * Cost summary for the booking widget.
+ *
+ * Escrow model: the student pays only the first month's rent through the
+ * platform. Security deposit and agency fee settle landlord–tenant and are
+ * not itemised here (they remain facts on the listing page).
  */
 export function costSummary({
   monthlyRent,
   months,
   monthsExact,
-  deposit = 0,
-  agencyFee = 0,
 }) {
   const rent = Number(monthlyRent) || 0;
   const m = Number(months) || 0;
@@ -124,15 +126,9 @@ export function costSummary({
   // and using it here drifts the total away from the per-day billing rule.
   const billable = Number(monthsExact ?? months) || 0;
   const totalRent = Math.round(rent * billable * 100) / 100;
-  const dep = Number(deposit) || 0;
-  const agency = Number(agencyFee) || 0;
-  const dueAtMoveIn = Math.round((dep + agency) * 100) / 100;
   return {
     monthly_rent: rent,
     duration_months: m,
     total_rent: totalRent,
-    deposit: dep,
-    agency_fee: agency,
-    due_at_move_in: dueAtMoveIn,
   };
 }
