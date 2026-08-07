@@ -1597,8 +1597,8 @@ host-section-only placement.
 >
 > We hold your first month's rent until you've moved in and confirmed the
 > place matches its listing. Your landlord is paid one business day after
-> move-in — not before. If the property isn't as described, tell us within
-> 24 hours of arriving and we'll refund you.
+> move-in — not before. If the property isn't as described, tell
+> us before then and we'll refund you.
 >
 > Payments made outside StudentX aren't held, can't be refunded by us, and
 > are how rental scams work. If a landlord asks you to pay another way,
@@ -1610,8 +1610,8 @@ host-section-only placement.
 >
 > We hold your first month's rent until you've moved in and confirmed the
 > place matches its listing. Your landlord is paid one business day after
-> move-in — not before. If the property isn't as described, tell us within
-> 24 hours of arriving and we'll refund you.
+> move-in — not before. If the property isn't as described, tell
+> us before then and we'll refund you.
 
 > ⚠️ **Open — same-page duplication.** Paragraph 1 is identical in both
 > placements, so the PDP would render those three sentences twice. §W5's
@@ -1873,17 +1873,37 @@ them directly." Trimmed, it does not tell a student a deposit is coming —
 reintroducing the €450-becomes-€900 surprise Feature 45 was designed around.
 **Recommend restoring that clause.**
 
-**2. Step 2 conflicts with the 24h complaint window.** Step 2 promises the
-student has **until the landlord is paid** (1 business day). Feature 38's copy
-and §W6 both say **24 hours**. A Friday-evening arrival gives Saturday evening
-under the 24h rule but **Monday** under "one business day" — and weekend
-arrivals are the norm for a September move-in. Promising the later while
-enforcing the earlier breaks a written promise in the most common case.
+**2. ✅ RESOLVED — confirmation window is "until the landlord is paid".**
 
-> **Recommendation: adopt "until the landlord is paid" as the single rule.**
-> Always ≥24h, more generous, one fewer number in the system. Requires
-> updating §W6's implicit-confirmation rule from 24h → T+1 business day and
-> Feature 38's copy to match. **Not yet decided.**
+Step 2 promised the student has until the landlord is paid (T+1 business
+day) while Feature 38's copy and §W6 said **24 hours**. A Friday-evening
+arrival closes a 24h window on Saturday evening but is not released until
+**Monday** — the copy would have promised two days more than the system
+enforced, in the scenario most common for a September move-in.
+
+**Decided 2026-08-07: one rule — the confirmation window runs until the
+landlord is paid (T+1 business day after arrival).** Always ≥24h, more
+generous, one fewer number in the system.
+
+Applied:
+- `accommodation-marketplace-spec.md` §W6 — implicit-confirmation rule
+  changed from 24h to T+1 business day, with the reasoning recorded.
+- Feature 38 copy — "tell us within 24 hours of arriving" → "tell us before
+  then", which now inherits Step 2's deadline rather than stating a second
+  number.
+
+### ❌ Feature 48 — Free-cancellation window (resolved date) — **SKIP**
+
+Airbnb resolves its cancellation tiers against the actual move-in date into
+a single sentence (*free cancellation until 2 July*). StudentX keeps showing
+the tiers themselves.
+
+`CANCELLATION_TIERS` (`lib/cancellationPolicy.js`) continues to render as-is
+in `BookingWidget` and `StudentBookingDetail` — free ≥60 days before move-in,
+50% ≥30 days, 0% inside 30 days.
+
+Still unresolved beneath this, and unaffected by the skip: the
+**admissions-contingency gap** recorded under Feature 25.
 
 **Owed deliverable:** a mapping showing how each decided feature renders in
 StudentX's colours — produced after the feature pass completes.
