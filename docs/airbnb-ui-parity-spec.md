@@ -1784,6 +1784,40 @@ student staring at nothing books elsewhere.
 the *only* booking path, so its conversion characteristics carry the whole
 funnel.
 
+### ◐ Feature 45 — Student-facing cost display — **BUILD, single figure**
+
+Airbnb itemises rate × nights + fees. Under the revised escrow model
+(PR #384) **only the first month's rent flows through StudentX**, so there
+is nothing to itemise. The student sees **one number**.
+
+#### Decided
+
+| Item | Decision |
+|---|---|
+| First month's rent | ✅ The only figure in the cost summary |
+| Deposit — as a **cost line** | ❌ Removed. StudentX must not itemise money it does not touch |
+| Deposit — as a **listing fact** | ✅ **Stays visible on the listing.** `rent.deposit` is real data the landlord entered and `ListingPreview` already shows it |
+| Agency fee | ❌ **Deleted outright** — a directory-era concept. In a marketplace taking 5% from the landlord, a separate student-facing agency fee belongs to nothing |
+| Guest service fee | Still D2/D5-blocked; leave a slot, do not invent a number |
+
+**Why the deposit stays on the listing:** there is a difference between *not
+itemising* a cost in checkout and *removing* a known cost from the listing.
+Fully hiding it means a student budgets €450, arrives, and is asked for
+another €450 — the exact surprise escrow exists to prevent, merely relocated.
+
+#### Work
+
+- `costSummary` (`bookingDates.js`) — drop `deposit`, `agencyFee`,
+  `due_at_move_in` from params and return shape
+- `BookingWidget.js:305–312` — remove the deposit + agency lines
+- `StudentBookingDetail.js:156` and `landlord/reservations/[id]:151` — update
+  call sites
+- `bookingService.js:180` — update
+- Remove `listing.agency_fee` end to end, including the wizard's price step
+- Orphaned `en.json` keys: `costDeposit`, `costAgency`, `costDueMoveIn`
+
+**Depends on:** PR #384 (merged escrow-model change).
+
 **Owed deliverable:** a mapping showing how each decided feature renders in
 StudentX's colours — produced after the feature pass completes.
 
