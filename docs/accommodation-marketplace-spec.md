@@ -300,6 +300,28 @@ the whole conversation, not just the initial request.
   average landlord response time of **1 day 10 hours**. Under a 2-day inactivity
   rule that converts almost nothing.
 
+**Second cancel reason, observed 2026-08-07** (founder's own Nostus landlord
+notification, on one of his properties):
+
+> *"Reservation canceled; guest booked another accommodation"*
+
+So the 87% is **not** a single failure mode. At least some of it is students
+**shotgunning parallel requests** across several listings, with the losers
+auto-cancelled when one is accepted. This sharpens the finding rather than
+softening it:
+
+- Part of that 87% **did** convert — just to a different listing. It is not
+  all lost demand at the platform level, though it is 100% lost demand for
+  the landlord who was slow.
+- Landlords are therefore **racing each other**, not just racing a timer. A
+  slow landlord loses to a faster landlord on the same platform, which is a
+  much stronger incentive than losing to an inactivity rule.
+- It means request→booking conversion **understates** platform health and
+  **overstates** per-listing health. Measure both.
+- Design consequence: a student holding several live requests is normal, not
+  an abuse pattern. Do not build the flow assuming one open request per
+  student.
+
 **Therefore, added to the plan:** response-time is not a vanity stat, it is the
 conversion mechanism. W2 must ship (a) **one host reminder at 24h** rather than
 a silent expiry, (b) response time surfaced to the landlord as a *performance*
