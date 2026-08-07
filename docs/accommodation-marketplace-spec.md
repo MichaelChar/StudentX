@@ -18,7 +18,7 @@ subscription.
 | **D1** | Browse gate | ✅ **Full browse, gate at Request-to-Book** | Matches Nostus. Signup is demanded when the student wants a specific room on specific dates, not while they are still deciding whether you are worth an account. `ContactGate` stops being a wall and becomes a booking widget. |
 | **D2** | Fee split | ✅ Guest service fee + host commission | Nostus charges **both**: guest pays first month + service fee; host pays **5% of total stay value + taxes**. On a 9-month €450 let that host fee is ~€202 out of a €450 transfer. |
 | **D3** | Host commission | ✅ **5%** | Implement as a single constant `HOST_COMMISSION_RATE = 0.05`. Base and VAT treatment: see §D3-notes. |
-| **D4** | Escrow release delay | ✅ **T+5 business days after move-in**, 24h complaint window | Nostus: rent held, transferred "within 5 business days of your guest's arrival". Their advertised "24h" is the *complaint* window, not the release delay. Needs a business-day calculator with Greek public holidays. |
+| **D4** | Escrow release delay | ✅ **1 business day after move-in** (revised 2026-08-07; was T+5) | Nostus: rent held, transferred "within 5 business days of your guest's arrival". Their advertised "24h" is the *complaint* window, not the release delay. Needs a business-day calculator with Greek public holidays. |
 | **D5** | Legal entity / VAT | ❌ **Unresolved — blocking for Phase 3** | Holding third-party funds is regulated. See §7. |
 | **D6** | Verification badge copy | ✅ Bare **"Verified"** (founder's call) | Registered dissent in §W4. Mitigation: an inline tooltip stating what was checked and when. |
 | **D7** | Billing removal timing | ✅ **Early — no paying customers** | Removes the sequencing constraint; deletion moves from Phase 4 to Phase 1. |
@@ -32,7 +32,7 @@ the first month's rent held in escrow.**
 totalStayValue   = monthlyRent × durationMonths      (pro-rated for part months)
 commissionNet    = totalStayValue × 0.05
 commissionGross  = commissionNet × 1.24              (24% Greek VAT)
-landlordPayout   = firstMonthRent − commissionGross  (released T+5 business days)
+landlordPayout   = firstMonthRent − commissionGross  (released 1 business day after move-in)
 ```
 
 Implement as **one pure function**, `src/lib/bookingFees.js`, with
@@ -85,7 +85,7 @@ ride along with D5 and the accountant.
 | Per-listing availability calendar | ✅ Available / Pending / Booked | ❌ | ✅ same three states |
 | Reservation request | ✅ 48h host accept | ❌ (open-ended chat inquiry) | ✅ 48h host accept |
 | Payment by student | ✅ Stripe, first month + fee | ❌ | ✅ Stripe, first month + fee |
-| Escrow / renter protection | ✅ held, released T+5 business days | ❌ | ✅ held, released T+5 business days |
+| Escrow / renter protection | ✅ held, released T+5 business days | ❌ | ✅ held, released **1 business day** |
 | Move-in confirmation step | ✅ 24h to report a problem | ❌ | ✅ explicit confirm / report |
 | Cancellation policy | ✅ tiered, published | ❌ | ✅ tiered, **encoded as data** |
 | Model tenancy contract (EN) | ✅ | ❌ | ✅ generated per booking |
@@ -412,7 +412,7 @@ requested → accepted → paid → moved_in → released
   append-only audit trail (needed the first time someone disputes a refund).
 
 Timer jobs required: accept-expiry (48h), pay-expiry (48h), move-in prompt,
-escrow-release sweep (T+5 business days). All four land in W9's dispatcher
+escrow-release sweep (1 business day after move-in). All four land in W9's dispatcher
 rather than taking new cron triggers.
 
 ### W3 — Payments & escrow (Stripe Connect)
@@ -427,7 +427,7 @@ Founder's call — revisit once there is cashflow. Concretely that means:
   `src/lib/stripe.js` + `/api/webhooks/stripe`). Reuse the existing
   checkout-session + webhook plumbing rather than standing up Connect.
 - Funds sit in the platform balance; **landlord payout is manual/off-platform**
-  at T+5 business days after move-in. This is exactly what Nostus does (§1.5) —
+  at 1 business day after move-in. Faster than Nostus, which pays at T+5 (§1.5) —
   it is survivable at low volume.
 - Checkout line items: first month's rent + guest service fee (+ VAT on the
   fee). Deposit and agency fee are **not** collected — paid to the landlord on
@@ -499,7 +499,7 @@ marketing claim with no code behind it.
 **Build.** On the move-in date the student gets an email + in-app prompt:
 *"Everything as promised?"* → **Confirm** (release immediately) or **Report a
 problem** (freeze the transfer, open an ops ticket, start the remedy clock).
-Silence for 24h after arrival = implicit confirmation, release proceeds at T+5.
+Silence for 24h after arrival = implicit confirmation, release proceeds at T+1 business day.
 
 ### W7 — Listing quality & the Tier-2 fixes
 

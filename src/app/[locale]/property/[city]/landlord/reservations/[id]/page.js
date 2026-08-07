@@ -17,7 +17,7 @@ import {
   stayDurationMonthsExact,
   costSummary,
 } from '@/lib/bookingDates';
-import { landlordDepositReceive } from '@/lib/bookingFees';
+import { landlordFirstMonthReceive } from '@/lib/bookingFees';
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -155,8 +155,10 @@ export default function LandlordReservationDetailPage() {
     deposit,
     agencyFee: listing?.agency_fee,
   });
-  const receive = landlordDepositReceive({
-    deposit,
+  // Commission comes out of the held first month's rent, never the deposit —
+  // the deposit is the tenant's money and is settled landlord-to-tenant.
+  const receive = landlordFirstMonthReceive({
+    firstMonthRent: booking.monthly_rent,
     totalStayValue: booking.total_stay_value ?? cost.total_rent,
   });
   const canRespond = booking.state === 'requested';
