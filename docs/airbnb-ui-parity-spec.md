@@ -1978,6 +1978,63 @@ Consistent with Feature 32 (no PDP availability calendar): a mid-term let has
 one move-in and one move-out, so a nightly availability grid earns far less
 than it does on Airbnb.
 
+#### ✅ Feature 49 addendum — the six metric tiles, re-homed (2026-08-07)
+
+The tile grid is **removed** from the host dashboard. Every metric moves to
+where it does work rather than reports a score:
+
+| Tile | New home |
+|---|---|
+| `ACTIVE LISTINGS` | **Landlord public profile** ("About me") |
+| `AVG. RESPONSE TIME` | **Landlord public profile**, as *average reply rate* |
+| `PENDING REQUESTS` | **Dot on the `Messages` nav tab** — no number, just presence |
+| `PENDING INQUIRIES` | **Dot on the `Messages` nav tab** |
+| `VIEWS THIS MONTH` | **Top-right of the host nav**, where Airbnb puts `Switch to traveling` |
+| `CONVERSION RATE` | ⚠️ **Unassigned — not yet decided.** Dropped by omission unless placed |
+
+### ✅ Landlord public profile — "About me" — **BUILD**
+
+Students can view a landlord's profile. Modelled on Airbnb's `About me` card:
+circular avatar with a verified badge overlapping its lower-right, name,
+location beneath, and a right-hand stat column with hairline dividers, plus a
+shield + `Identity verified` line under the card.
+
+**StudentX stats column** (Airbnb's are Trips / Reviews / Years):
+
+| Stat | Source |
+|---|---|
+| Active listings | count of `listing_status = 'active'` for the landlord |
+| Average reply rate | `landlords.avg_response_ms` via `responseTimeBucket` |
+
+No review count — Feature 34 is skipped.
+
+Extends the existing `landlords/[landlordId]` page; Feature 37's inline PDP
+card summarises and links to it.
+
+### ✅ Feature 50 — Listings grid — **BUILD, with rent**
+
+Three-up grid of photo cards replacing the current row list.
+
+- **Status chip overlaid top-left**: `● Listed` (green) / `● Action required`
+  (red). **Binary, exactly as Airbnb** — the granular states are not chips.
+- **Title** beneath the photo, then **rent** (`€500/mo`) as the grey subtitle
+  — *not* Airbnb's `Home in <city>, <country>`. A landlord knows where their
+  own properties are; they are comparing prices.
+- **List/grid toggle** and **`+`** button, top-right.
+- Photo carries the same 12px radius / borderless treatment as the guest card.
+
+#### Action-required banner
+
+Floating card above the page content — as Airbnb's, and it **follows the host
+across tabs** (it appears on both Listings and Messages in the captures) until
+resolved.
+
+**The granular go-live states live in the banner, not on the card:** `draft`,
+`submitted`, awaiting ID verification, awaiting video call, awaiting admin
+approval. The card says only that action is required; the banner says which
+step, and links to it. All derive from `listingGoLive.js` — do not
+reimplement the gate inline.
+
 ### ◐ Feature 51 — Listing editor — **BUILD section-list for EDIT, keep the wizard for CREATE**
 
 | Path | Editor |
