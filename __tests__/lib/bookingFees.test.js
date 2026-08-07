@@ -3,7 +3,7 @@ import {
   HOST_COMMISSION_RATE,
   COMMISSION_VAT_RATE,
   hostCommission,
-  landlordDepositReceive,
+  landlordFirstMonthReceive,
 } from '@/lib/bookingFees';
 import {
   bookingInquiryIntro,
@@ -24,14 +24,26 @@ describe('bookingFees', () => {
     expect(r.commission_gross).toBe(279);
   });
 
-  it('you receive = deposit − commission gross', () => {
-    const r = landlordDepositReceive({
-      deposit: 450,
+  it('you receive = first month rent − commission gross', () => {
+    const r = landlordFirstMonthReceive({
+      firstMonthRent: 450,
       totalStayValue: 4500,
     });
-    expect(r.deposit).toBe(450);
+    expect(r.first_month_rent).toBe(450);
     expect(r.commission_gross).toBe(279);
     expect(r.you_receive).toBe(171);
+  });
+
+  it('stays solvent at the 12-month duration cap', () => {
+    // Commission is months × 5% × 1.24 = 6.2%/month of the first month.
+    // At the schema cap (12 months) that is 74.4% — payout stays positive.
+    const r = landlordFirstMonthReceive({
+      firstMonthRent: 450,
+      totalStayValue: 450 * 12,
+    });
+    expect(r.commission_gross).toBe(334.8);
+    expect(r.you_receive).toBe(115.2);
+    expect(r.you_receive).toBeGreaterThan(0);
   });
 
   it('rounds money to cents', () => {

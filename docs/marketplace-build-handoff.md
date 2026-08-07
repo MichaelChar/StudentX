@@ -409,7 +409,7 @@ lose money and double-book rooms.
 > function from `src/lib/bookingFees.js` — never recompute inline:
 > ```
 > To collect on check-in      450.00€   (security deposit, paid direct to you)
-> Payout                      326.75€   ← released up to 5 business days after check-in
+> Payout                      326.75€   ← released 1 business day after move-in
 >   First month's rent        450.00€
 >   Host commission (5%)      -99.40€
 >   VAT (24%)                 -23.85€
@@ -458,7 +458,7 @@ resolved with an accountant — do not start before then.
 
 > Reuse the EXISTING Stripe account and `src/lib/stripe.js` — not Connect.
 > Student pays first month + service fee; funds sit in the platform balance;
-> release flips `payouts.state` to due at T+5 business days after move-in and
+> release flips `payouts.state` to due at 1 business day after move-in and
 > notifies ops for a manual transfer. Needs a business-day calculator with
 > Greek public holidays. ID verification gates PAYOUT, not publish.
 > Do NOT store IBANs in Supabase.
