@@ -1927,6 +1927,57 @@ account:
 Either paste them here, or connect the Claude-in-Chrome extension and the
 walkthrough can be finished live against the real dashboard.
 
+---
+
+## Host features
+
+> Source screenshots supplied by founder 2026-08-07: current StudentX landlord
+> dashboard; Airbnb **Today**; Airbnb **Listings**; Airbnb **Messages** (three-pane);
+> Airbnb message-row zoom. **Calendar was deliberately not captured — see Feature 52.**
+
+### ✅ Feature 49 — Today dashboard — **BUILD**
+
+Replaces `landlord/dashboard/page.js` (514 ln), currently a six-tile metrics
+dashboard with listings and inquiries panels below.
+
+**Airbnb's Today, as captured:** segmented `Today` / `Upcoming` pills, a
+`Filter` control top-right, a large centred count heading
+(*"You have 1 reservation"*), one card per item — `All day` label, composite
+avatar (guest photo + property photo), a bold human sentence
+(*"André's group of 2 stays for 5 more days"*), listing name as grey
+subtitle — and a `See all reservations` link at the foot. **No metrics
+anywhere.**
+
+**Navigation change:** the left sidebar (`DASHBOARD / LISTINGS / RESERVATIONS /
+INQUIRIES / VERIFICATION / SETTINGS`) becomes a **top nav: `Today · Listings ·
+Messages`** — no Calendar (Feature 52). Verification and Settings move into the
+account menu.
+
+**Why this matters more than its position suggests:** the audit
+(`accommodation-marketplace-spec.md`) shows landlord response latency *is* the
+conversion mechanism — average response time is **1d 10h**, and landlords race
+each other, not just a timer. A metrics dashboard reports how a landlord did; an
+action list tells them what to do next. Today should lead with
+*"2 requests waiting, oldest 14 hours"*, not `CONVERSION RATE 0%`.
+
+**Action-required cards** map exactly onto the go-live gate (`listingGoLive.js`):
+ID verification, completed video call, admin approval. Three blockers a landlord
+currently has to piece together from separate pages.
+
+> **Open — the six metric tiles.** Airbnb's Today has none; StudentX has
+> `ACTIVE LISTINGS / PENDING REQUESTS / PENDING INQUIRIES / VIEWS THIS MONTH /
+> CONVERSION RATE / AVG. RESPONSE TIME`. Not yet decided whether they are
+> dropped, demoted below the action list, or reduced to response time reframed
+> as a prompt rather than a stat.
+
+### ❌ Feature 52 — Host calendar — **SKIP (founder call)**
+
+Deliberately excluded. Host nav is `Today · Listings · Messages` only.
+
+Consistent with Feature 32 (no PDP availability calendar): a mid-term let has
+one move-in and one move-out, so a nightly availability grid earns far less
+than it does on Airbnb.
+
 ### ◐ Feature 51 — Listing editor — **BUILD section-list for EDIT, keep the wizard for CREATE**
 
 | Path | Editor |
