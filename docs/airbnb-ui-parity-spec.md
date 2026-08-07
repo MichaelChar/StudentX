@@ -1818,6 +1818,73 @@ another €450 — the exact surprise escrow exists to prevent, merely relocated
 
 **Depends on:** PR #384 (merged escrow-model change).
 
+### ❌ Feature 46 — Pay later — **SKIP**
+
+Incompatible with the model. Protection depends on holding the first month's
+rent from booking until 1 business day after move-in; paying later means
+holding nothing, so there is nothing to release and nothing to refund.
+
+Nothing to split either — Airbnb splits a *total* across instalments; the
+StudentX student pays one month, once.
+
+The genuine "pay later" already exists: request-to-book charges nothing until
+the landlord accepts, which is what Feature 44's `noCharge` line states.
+
+### ✅ Feature 47 — "How paying works" section — **BUILD**
+
+Replaces Airbnb's `Pay by month` highlight. Answers the five questions the
+booking card leaves open: what do I pay now, when does the landlord get it,
+what about the deposit, what about months 2+, and what if something is wrong.
+
+**Placement:** PDP (after the host section) **and** checkout. No separate page
+— `/property/[city]/about` exists, but sending a student off the listing
+mid-decision is worse than three blocks in place.
+
+#### Approved copy (founder-written; typos corrected)
+
+> ### How paying works
+>
+> **Step 1 ·** Chat with the landlord and confirm the property meets your
+> expectations. After, transfer the first month's rent to us.
+>
+> **Step 2 ·** We hold it until you've moved in. The landlord is transferred
+> the rent one business day after your arrival, so you have until then to
+> confirm the property is as you expected.
+>
+> **Step 3 ·** After that, it's between you and your landlord.
+
+#### Resolves the Feature 38 duplication
+
+The CTA-side payment-safety notice is **cut to the off-platform warning
+alone** — this section now carries the held-money explanation, so the
+guarantee paragraph is no longer printed twice on one page.
+
+CTA-side notice becomes:
+
+> Payments made outside StudentX aren't held, can't be refunded by us, and
+> are how rental scams work. If a landlord asks you to pay another way,
+> report it.
+
+#### ⚠️ Two open issues
+
+**1. Step 3 no longer answers the deposit question.** The earlier draft read
+"The deposit and every month's rent from the second month onward are paid to
+them directly." Trimmed, it does not tell a student a deposit is coming —
+reintroducing the €450-becomes-€900 surprise Feature 45 was designed around.
+**Recommend restoring that clause.**
+
+**2. Step 2 conflicts with the 24h complaint window.** Step 2 promises the
+student has **until the landlord is paid** (1 business day). Feature 38's copy
+and §W6 both say **24 hours**. A Friday-evening arrival gives Saturday evening
+under the 24h rule but **Monday** under "one business day" — and weekend
+arrivals are the norm for a September move-in. Promising the later while
+enforcing the earlier breaks a written promise in the most common case.
+
+> **Recommendation: adopt "until the landlord is paid" as the single rule.**
+> Always ≥24h, more generous, one fewer number in the system. Requires
+> updating §W6's implicit-confirmation rule from 24h → T+1 business day and
+> Feature 38's copy to match. **Not yet decided.**
+
 **Owed deliverable:** a mapping showing how each decided feature renders in
 StudentX's colours — produced after the feature pass completes.
 
