@@ -1990,7 +1990,7 @@ where it does work rather than reports a score:
 | `PENDING REQUESTS` | **Dot on the `Messages` nav tab** — no number, just presence |
 | `PENDING INQUIRIES` | **Dot on the `Messages` nav tab** |
 | `VIEWS THIS MONTH` | **Top-right of the host nav**, where Airbnb puts `Switch to traveling` |
-| `CONVERSION RATE` | ⚠️ **Unassigned — not yet decided.** Dropped by omission unless placed |
+| `CONVERSION RATE` | ❌ **Dropped** (2026-08-08) — not needed as a metric at all |
 
 ### ✅ Landlord public profile — "About me" — **BUILD**
 
@@ -2330,3 +2330,24 @@ with hairline borders. The transferable observation from §1.2 — Airbnb uses i
 brand colour on ~7 elements per page, StudentX uses `text-blue` across 60 files
 — stands as a **restraint** recommendation independent of palette. Applying it
 is optional and not part of any decided feature.
+
+### ✅ §14.3 resolved — status chips are asymmetric (2026-08-08)
+
+Founder approved the recommendation. **No new palette token.**
+
+| State | Treatment |
+|---|---|
+| `Listed` | **Neutral chip** — `parchment` fill, `night` text, **no dot** |
+| `Action required` | **`magenta`** with its dot — the existing `pending` variant |
+
+Rationale: "everything is fine" does not need colour; "something is wrong"
+does. Preserves the palette exactly, avoids the `yellow`-means-verified
+collision, and avoids `blue` reading as branding rather than status.
+
+### ❌ `CONVERSION RATE` — **DROPPED** (2026-08-08)
+
+Not re-homed anywhere and not deferred. Removed as a metric entirely.
+
+Supersedes the Feature 49 addendum's open row and removes it from Feature 54's
+scope — the September reminder's C2 item no longer needs to resolve where it
+lives.
