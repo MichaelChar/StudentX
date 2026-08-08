@@ -2400,10 +2400,13 @@ real costs:
 
 Plus the known sparse-inventory case: small pans return empty grids.
 
-**Recommendation: ship the `Search this area` button.** One deliberate request
-at a settled position — cacheable, no churn, no empty-grid surprise. It is what
-Airbnb ran for years before inventory justified automatic. Revisit when
-Thessaloniki is dense. **Not yet decided.**
+**✅ DECIDED 2026-08-08 — ship the `Search this area` button.** One deliberate
+request at a settled position: cacheable, no churn, no empty-grid surprise. No
+bbox quantisation needed while the user opts in at a settled position. Automatic
+refetch is not built. Revisit when Thessaloniki is dense.
+
+**This closes the final open sub-decision. All 59 features and every sub-decision
+are now resolved.**
 
 ### Stale notes cleared
 
