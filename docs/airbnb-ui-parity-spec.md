@@ -1972,3 +1972,27 @@ Reasons:
 
 The map itself is unchanged — Positron tiles, price-bubble pins and hover sync
 (Features 11–13) all still apply when the toggle is set to map.
+
+### ✅ Feature 58 — Chromeless mobile PDP — **BUILD**
+
+No header below the mobile breakpoint. Structure, as captured at 375×812:
+
+1. **Full-bleed photo carousel**, edge to edge, with a `1 / 28` **counter pill**
+   bottom-right.
+2. **Floating controls over the image** — back arrow (top-left), share + heart
+   (top-right). No bar, no background; the buttons sit directly on the photo.
+3. **Content sheet with rounded top corners**, overlapping the photo's lower
+   edge. Title, meta and rating are centred within it.
+
+Works because Feature 56's bottom tab bar holds navigation, freeing the top of
+the screen. This is most of what makes a listing read as an app rather than a
+website on a phone.
+
+**Reuses decisions already made** — carousel (16), heart (17), share (42),
+gallery + single-hero fallback below 5 photos (26). Genuinely new: the floating
+control treatment and the overlapping sheet.
+
+**Consequence, recorded:** `back` becomes a floating arrow, not site navigation.
+A student arriving from results is fine, but one landing directly from a shared
+WhatsApp link (Feature 42) reaches the rest of the site only via the bottom bar.
+Airbnb behaves identically — a property, not a defect.
