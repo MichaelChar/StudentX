@@ -1878,3 +1878,23 @@ and payouts existing at all, not listing count.
 
 **⏰ Added to** `studentx-revisit-results-count` (fires 2026-09-06) as its
 second data-gated item, alongside Feature 43.
+
+### ❌ Feature 55 — "Switch to traveling" role toggle — **SKIP**
+
+No host/guest mode switch. Landlord and student remain **separate accounts**
+with separate sign-in — `requireLandlord()` and `requireStudent()` stay as
+they are.
+
+Reasons, in order of weight:
+
+1. **It is an auth-model change, not a nav change.** Airbnb treats host and
+   guest as two modes of one identity; StudentX has two account types with
+   separate auth trees and login pages. Unifying them is substantial work.
+2. **The overlap is near nil.** A landlord letting property in Thessaloniki
+   and a student looking for a room are not usually the same person.
+3. **The slot is taken.** Feature 49's addendum puts `views this month` at the
+   top-right of the host nav — exactly where Airbnb renders this toggle.
+
+If a person is genuinely both, they sign in separately.
+
+**Closes the host group.** Features 49–55 all decided.
