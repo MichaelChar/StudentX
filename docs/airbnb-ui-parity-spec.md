@@ -1805,3 +1805,28 @@ account:
 
 Either paste them here, or connect the Claude-in-Chrome extension and the
 walkthrough can be finished live against the real dashboard.
+
+### ◐ Feature 51 — Listing editor — **BUILD section-list for EDIT, keep the wizard for CREATE**
+
+| Path | Editor |
+|---|---|
+| **Create** (first listing) | ✅ **Keep `src/components/listing-wizard/`** — a guided order genuinely helps a first-time landlord, and PRs #378/#381 recently landed the paste-text importer and distance prefill on it |
+| **Edit** (existing listing) | ✅ **New section list** — Photos · Title & description · Price & terms · Address · Amenities · Availability, each opening in place, any order |
+
+**The section list is what makes Feature 50's banner work.** Airbnb's
+"Confirm a few key details / Required to publish" card deep-links straight to
+the one incomplete section. A linear wizard has no such landing point — it can
+only restart the flow.
+
+**The banner routes to two different destinations**, because two of the five
+go-live blockers are not listing fields at all:
+
+| Blocker | Banner links to |
+|---|---|
+| `draft` / `submitted` — missing listing fields | The specific **editor section** |
+| Awaiting **ID verification** | `landlord/verification` |
+| Awaiting **video call** | Video-call scheduling |
+| Awaiting **admin approval** | Read-only status — nothing for the landlord to do |
+
+All blocker states derive from `src/lib/listingGoLive.js`. Do not reimplement
+the gate inline.

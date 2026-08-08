@@ -309,9 +309,18 @@ surface in `wrangler tail`.
   in the PR is already applied to prod — but it is **advisory**: only the
   build job and Cloudflare Workers Build are required to merge, so a red
   gate won't block you (and drop-after-deploy migrations go red by
-  design). Convention: apply to prod (`mcp__supabase__apply_migration` or
-  `supabase db push --linked`) during PR review, paste the confirmation
-  into the PR, then merge. Affected routes should still be defensive —
+  design). Convention: apply to prod with **`mcp__supabase__apply_migration`
+  — one named migration at a time** — during PR review, paste the
+  confirmation into the PR, then merge.
+- **Do NOT use `supabase db push --linked` on this project.** It applies
+  *every* local migration missing from prod's `schema_migrations` history.
+  Prod has drift (applied migrations with no repo file), so that set is not
+  the set you intend — it is a bulk write against a history the repo cannot
+  reproduce, which is the "painful to undo" case flagged in
+  `docs/marketplace-build-handoff.md`. Apply targeted migrations only, or run
+  the statements directly via `execute_sql`. Every runbook that applies a
+  migration uses `apply_migration` (see `docs/runbooks/035-faculty-backfill.md`).
+  Affected routes should still be defensive —
   see the fallback-SELECT pattern in `src/app/api/listings/route.js` and
   `src/app/api/landlord/listings/route.js` (PR #85, post-incident).
 - **`listings.listing_status = 'active'` is admin-only, and its default is
