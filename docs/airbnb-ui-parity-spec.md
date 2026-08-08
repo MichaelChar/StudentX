@@ -1947,3 +1947,28 @@ Feature 3 skipped product tabs, so the account menu is already their sole route
 on desktop. On mobile three whole product areas sit behind a Profile icon — and
 mobile is where students are. This is Feature 3's discoverability cost arriving
 here rather than there.
+
+### ◐ Feature 57 — Mobile results — **LIST-FIRST with a map toggle** (not map-first)
+
+Airbnb inverts the results page on mobile: full-viewport map with listings in a
+**draggable bottom sheet**. StudentX does **not** adopt this.
+
+**List-first stays**, with the existing `view=list|map` toggle as the mobile
+control — the param Feature 7 deliberately kept alive when the desktop split
+retired it.
+
+Reasons:
+
+1. **Different search problem.** Airbnb goes map-first because a traveller is
+   choosing an unfamiliar neighbourhood. A student is choosing a **commute** —
+   which is why `faculty_distances` exists, why commute is the first PDP
+   highlight (Feature 29), and why distance sits on the card. A map does not
+   answer "how far from my faculty"; the card meta line does.
+2. **Inventory.** A full-screen map with three pins is a great deal of screen
+   for very little, the same objection that deferred Features 10 and 40.
+3. **Avoids a primitive.** No draggable sheet is needed for results, so `vaul`
+   (or a hand-rolled `motion@12` sheet) is required only by Feature 59 and the
+   modal-to-sheet conversion, not here.
+
+The map itself is unchanged — Positron tiles, price-bubble pins and hover sync
+(Features 11–13) all still apply when the toggle is set to map.
