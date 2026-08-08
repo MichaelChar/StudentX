@@ -1996,3 +1996,32 @@ control treatment and the overlapping sheet.
 A student arriving from results is fine, but one landing directly from a shared
 WhatsApp link (Feature 42) reaches the rest of the site only via the bottom bar.
 Airbnb behaves identically — a property, not a defect.
+
+### ✅ Feature 59 — Sticky mobile booking bar — **BUILD**
+
+Pinned to the foot of the mobile PDP: price on the left, full-width CTA on the
+right. Mobile counterpart of Feature 33's sticky card, which cannot work at
+375px with no sidebar to pin to.
+
+Without it the only route to booking is scrolling back to the inline widget, on
+a page that now has no header to anchor against (Feature 58). **This is what
+makes the chromeless PDP viable rather than frustrating.**
+
+Inherits three earlier decisions:
+
+| Element | Value | From |
+|---|---|---|
+| CTA label | `Request to book` + the no-charge line — **not** Airbnb's `Check availability` | Feature 44 (request-only; Instant Book deferred) |
+| Price | First month's rent, single figure | Feature 45 |
+| Profile gate | Opens as a **bottom sheet**, not a modal | Feature 33 |
+
+> **This is now the only surface that requires the sheet primitive.** Feature 57
+> dropped the map sheet, so `vaul` (or a hand-rolled `motion@12` sheet) is
+> needed here and for the modal→sheet conversion, nowhere else.
+
+**Stacking:** the bar coexists with Feature 56's tab bar. **Hide the tab bar on
+the PDP** — Airbnb's approach, and consistent with the page being chromeless.
+
+---
+
+**Feature pass complete — 59 of 59 decided.**
