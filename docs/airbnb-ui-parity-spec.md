@@ -2351,3 +2351,65 @@ Not re-homed anywhere and not deferred. Removed as a metric entirely.
 Supersedes the Feature 49 addendum's open row and removes it from Feature 54's
 scope — the September reminder's C2 item no longer needs to resolve where it
 lives.
+
+---
+
+## 15. Open sub-decisions — resolved 2026-08-08
+
+**Feature 1 — `± N days` flexes BOTH ends.** Move-in *and* move-out. Supersedes
+the earlier recommendation to flex move-in only.
+
+**Feature 47 — Step 3 stays as written; it does NOT mention the deposit.**
+Founder's call: a deposit is standard in Greek lets and naming it is more
+confusing than omitting it. Supersedes the recommendation to restore the
+clause. The deposit remains visible on the listing itself (Feature 45).
+
+**Feature 31 — amenity placeholder tiles: opaque pastel squares.**
+
+Reuses the `CITY_ACCENTS` construction (pale opaque `bg` + saturated `ink`).
+**Define as a separate `AMENITY_ACCENTS` constant** — same values initially,
+but importing `CITY_ACCENTS` would mean a city palette tweak silently
+restyling every amenity tile.
+
+| Group | Amenities | bg / ink |
+|---|---|---|
+| Kitchen & cooking | Kitchen · Oven · Microwave · Dishwasher | `#FFF4D6` / `#A87015` |
+| Climate & comfort | AC · Heating · Gas heating · Double-glazed windows | `#E8EEFF` / `#3148A8` |
+| Laundry & cleaning | Washing machine · Weekly cleaning | `#E6F2E6` / `#2F6B3A` |
+| Connectivity & media | Wi-Fi · Internet included · TV | `#EAE3F2` / `#5B3A8A` |
+| Building & outdoor | Elevator · Parking · Balcony · Private yard · Ground floor · Furnished | `#FFE8DC` / `#C24A1F` |
+
+Tiles are the interim treatment until real icons land; the icon then sits in
+`ink` on the same `bg`.
+
+**Feature 14 — automatic refetch: cost analysed, still the founder's call.**
+
+Money is not the constraint. Worker invocations are ~$0.30/million and an
+indexed `(lat, lng)` bbox query is sub-10ms at any realistic inventory. Two
+real costs:
+
+1. **It defeats edge caching.** `/api/listings/price-distribution` is
+   edge-cached per filter combination because combos repeat. A bounding box has
+   effectively unlimited distinct values — every few pixels of pan is a new key
+   — so every refetch becomes a cache miss to origin. **Mitigation: quantise
+   the bbox** (round to ~3 dp, or snap to a tile grid) so keys repeat. That is
+   a design step, not a config flag.
+2. **List churn.** The grid re-renders on every map settle, so cards reorder
+   under the cursor mid-pan. More irritating than latency, and the usual
+   complaint about map search.
+
+Plus the known sparse-inventory case: small pans return empty grids.
+
+**Recommendation: ship the `Search this area` button.** One deliberate request
+at a settled position — cacheable, no churn, no empty-grid surprise. It is what
+Airbnb ran for years before inventory justified automatic. Revisit when
+Thessaloniki is dense. **Not yet decided.**
+
+### Stale notes cleared
+
+Two items previously marked open are resolved and should not be re-litigated:
+
+- **Feature 38 same-page duplication** — resolved by Feature 47, which cut the
+  CTA-side notice to the off-platform warning alone.
+- **Feature 49 metric tiles** — resolved by the re-homing table plus the
+  2026-08-08 decision to drop `CONVERSION RATE` entirely.
