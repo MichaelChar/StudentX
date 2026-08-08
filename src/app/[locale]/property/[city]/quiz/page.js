@@ -5,6 +5,7 @@ import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import { formatMoney } from '@/lib/formatMoney';
 
 /*
   Propylaea matching quiz — three steps:
@@ -155,7 +156,7 @@ function BudgetStep({ t, budget, setBudget }) {
 
       <div className="mt-10 text-center">
         <p className="font-display text-5xl md:text-6xl text-blue leading-none">
-          €{budget}
+          {formatMoney(budget)}
         </p>
         <p className="mt-3 label-caps text-night/50">{t('budgetPerMonth')}</p>
       </div>
@@ -172,8 +173,8 @@ function BudgetStep({ t, budget, setBudget }) {
           aria-label={t('budgetQuestion')}
         />
         <div className="flex justify-between mt-2 text-xs text-night/40">
-          <span>€{BUDGET_MIN}</span>
-          <span>€{BUDGET_MAX}</span>
+          <span>{formatMoney(BUDGET_MIN)}</span>
+          <span>{formatMoney(BUDGET_MAX)}</span>
         </div>
       </div>
     </div>

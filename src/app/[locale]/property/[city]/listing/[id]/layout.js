@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { getListingForRender } from "@/lib/listingForRender";
+import { formatMoney } from "@/lib/formatMoney";
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
@@ -20,7 +21,10 @@ export async function generateMetadata({ params }) {
   const neighborhood = listing.neighborhood ?? "Thessaloniki";
   const propertyType = listing.property_type ?? "Property";
   const price = listing.monthly_price;
-  const priceStr = price != null ? `€${price}/month` : "price on request";
+  const priceStr =
+    price != null
+      ? `${formatMoney(price, listing.currency)}/month`
+      : "price on request";
   const photo = (listing.photos ?? []).find(
     (url) => typeof url === "string" && url.startsWith("http")
   );

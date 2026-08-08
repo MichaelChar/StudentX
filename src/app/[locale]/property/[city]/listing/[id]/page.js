@@ -19,6 +19,7 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatDistance } from '@/lib/formatDistance';
+import { formatMoney } from '@/lib/formatMoney';
 import {
   responseTimeBucket,
   RESPONSE_BUCKET_WITHIN_HOUR,
@@ -182,7 +183,7 @@ export default async function ListingPage({ params, searchParams }) {
                 value={
                   listing.monthly_price != null ? (
                     <>
-                      €{listing.monthly_price}
+                      {formatMoney(listing.monthly_price, listing.currency)}
                       <span className="text-base text-night/50">/mo</span>
                     </>
                   ) : (
@@ -196,7 +197,7 @@ export default async function ListingPage({ params, searchParams }) {
                 english={t('depositEnglish')}
                 value={
                   listing.deposit != null && listing.deposit > 0
-                    ? `€${listing.deposit}`
+                    ? formatMoney(listing.deposit, listing.currency)
                     : '—'
                 }
               />

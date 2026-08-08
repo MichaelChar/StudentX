@@ -6,9 +6,11 @@
  * @param {string} params.landlordName - Name shown in greeting (falls back to "there")
  * @param {object} params.student - { name, email, phone?, faculty? }
  * @param {string} params.message - Raw student message
- * @param {object} params.listing - { listing_id, address?, neighborhood?, monthly_price? }
+ * @param {object} params.listing - { listing_id, address?, neighborhood?, monthly_price?, currency? }
  * @param {string} params.appUrl - Base URL of the app (no trailing slash)
  */
+
+import { formatMoney } from '@/lib/formatMoney';
 
 export function inquiryEmailHtml({ landlordName, student, message, listing, appUrl }) {
   const safeName = escapeHtml(student.name);
@@ -18,7 +20,10 @@ export function inquiryEmailHtml({ landlordName, student, message, listing, appU
   const safeMessage = escapeHtml(message).replace(/\n/g, '<br/>');
   const safeAddress = listing.address ? escapeHtml(listing.address) : '';
   const safeNeighborhood = listing.neighborhood ? escapeHtml(listing.neighborhood) : '';
-  const safePrice = listing.monthly_price ? `€${Number(listing.monthly_price)}/mo` : '';
+  const formatted = listing.monthly_price
+    ? formatMoney(Number(listing.monthly_price), listing.currency)
+    : '';
+  const safePrice = formatted ? `${formatted}/mo` : '';
   const safeGreeting = landlordName ? escapeHtml(landlordName) : 'there';
 
   const listingUrl = `${appUrl}/property/thessaloniki/listing/${listing.listing_id}`;

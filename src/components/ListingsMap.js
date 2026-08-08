@@ -7,6 +7,7 @@ import { useLocale } from 'next-intl';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { formatPropertyType } from '@/lib/propertyType';
+import { formatMoney } from '@/lib/formatMoney';
 
 // Fix missing marker icons in webpack/Next.js builds
 function useLeafletIcons() {
@@ -63,7 +64,7 @@ export default function ListingsMap({ listings }) {
                 )}
                 <p className="text-gray-500 text-xs mb-2">
                   {listing.monthly_price != null
-                    ? `€${listing.monthly_price}/mo`
+                    ? `${formatMoney(listing.monthly_price, listing.currency)}/mo`
                     : 'Price on request'}
                 </p>
                 <Link

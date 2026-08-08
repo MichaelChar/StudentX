@@ -6,6 +6,7 @@
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
+import { formatMoney } from '@/lib/formatMoney';
 
 const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
@@ -29,7 +30,7 @@ async function loadListingContext(listingId) {
       listing_id,
       title,
       location ( address, neighborhood ),
-      rent ( monthly_price ),
+      rent ( monthly_price, currency ),
       landlords ( name, email )
     `)
     .eq('listing_id', listingId)
@@ -82,6 +83,7 @@ export async function sendBookingRequestEmail({
     const label = listingLabel(location, listing);
     const appUrl = appBase();
     const price = monthlyRent ?? rent?.monthly_price;
+    const priceStr = formatMoney(price, rent?.currency);
     const detailUrl = `${appUrl}/property/thessaloniki/landlord/reservations/${bookingId}`;
 
     await getResend().emails.send({
@@ -94,7 +96,7 @@ export async function sendBookingRequestEmail({
         <p><strong>${safe(studentName || 'A student')}</strong> requested to book your listing.</p>
         <p><strong>Listing:</strong> ${safe(label)}</p>
         <p><strong>Move-in:</strong> ${safe(moveIn)} &nbsp;·&nbsp; <strong>Move-out:</strong> ${safe(moveOut)}</p>
-        <p><strong>Monthly rent:</strong> €${safe(price)}</p>
+        <p><strong>Monthly rent:</strong> ${safe(priceStr)}</p>
         ${message ? `<p><strong>Message:</strong></p><blockquote>${safe(message).replace(/\n/g, '<br>')}</blockquote>` : ''}
         <p><a href="${detailUrl}">Review request</a> — accept or decline in your reservations inbox.</p>
         <p style="color:#666;font-size:12px;">You won't be charged by StudentX. Parties settle rent offline for this booking.</p>

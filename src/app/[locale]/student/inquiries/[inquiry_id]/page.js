@@ -4,6 +4,7 @@ import { Link } from '@/i18n/navigation';
 import { requireStudent } from '@/lib/requireStudent';
 import ChatThread from '@/components/chat/ChatThread';
 import Icon from '@/components/ui/Icon';
+import { formatMoney } from '@/lib/formatMoney';
 
 export default async function StudentInquiryThreadPage({ params }) {
   const { locale, inquiry_id: inquiryId } = await params;
@@ -34,7 +35,7 @@ export default async function StudentInquiryThreadPage({ params }) {
           listings (
             listing_id,
             location ( address, neighborhood ),
-            rent ( monthly_price )
+            rent ( monthly_price, currency )
           )
         `)
         .eq('inquiry_id', inquiryId)
@@ -71,7 +72,12 @@ export default async function StudentInquiryThreadPage({ params }) {
           {location?.address || `#${inquiry.listing_id}`}
         </h1>
         <p className="text-night/60">
-          {[location?.neighborhood, rent?.monthly_price != null ? `€${rent.monthly_price}/mo` : null]
+          {[
+            location?.neighborhood,
+            rent?.monthly_price != null
+              ? `${formatMoney(rent.monthly_price, rent.currency)}/mo`
+              : null,
+          ]
             .filter(Boolean)
             .join(' · ')}
         </p>

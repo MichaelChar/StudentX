@@ -10,6 +10,7 @@ import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import { stayDurationMonths } from '@/lib/bookingDates';
+import { formatMoney } from '@/lib/formatMoney';
 
 const TABS = ['requested', 'accepted', 'confirmed', 'declined', 'cancelled'];
 
@@ -182,7 +183,7 @@ export default function LandlordReservationsPage() {
                     <td className="px-4 py-3 text-night/70">{formatDate(b.move_in)}</td>
                     <td className="px-4 py-3 text-night/70">{formatDate(b.move_out)}</td>
                     <td className="px-4 py-3 text-night">
-                      €{b.total_stay_value ?? b.monthly_rent}
+                      {formatMoney(b.total_stay_value ?? b.monthly_rent)}
                     </td>
                     <td className="px-4 py-3 text-night/70">
                       {months != null ? t('durationMonths', { n: months }) : '—'}

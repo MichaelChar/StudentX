@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import { formatMoney } from '@/lib/formatMoney';
 
 const FILTERS = ['candidates', 'live', 'all'];
 
@@ -156,7 +157,9 @@ export default function AdminListingGoLivePage() {
                       {row.listing_id}
                       {row.address ? ` · ${row.address}` : ''}
                       {row.neighborhood ? ` · ${row.neighborhood}` : ''}
-                      {row.monthly_price != null ? ` · €${row.monthly_price}/mo` : ''}
+                      {row.monthly_price != null
+                        ? ` · ${formatMoney(row.monthly_price, row.currency)}/mo`
+                        : ''}
                     </p>
                     <p className="text-sm text-night/70">
                       {t('landlordLine', {

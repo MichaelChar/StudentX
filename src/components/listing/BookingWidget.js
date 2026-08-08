@@ -5,6 +5,7 @@ import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useAccessToken } from '@/lib/useAccessToken';
 import { parseStayRange, costSummary } from '@/lib/bookingDates';
+import { formatMoney } from '@/lib/formatMoney';
 import { isProfileComplete } from '@/lib/studentProfileFields';
 
 import Button from '@/components/ui/Button';
@@ -230,7 +231,7 @@ export default function BookingWidget({ listing, nextPath }) {
             <p className="font-display text-3xl text-blue">
               {listing.monthly_price != null ? (
                 <>
-                  €{listing.monthly_price}
+                  {formatMoney(listing.monthly_price, listing.currency)}
                   <span className="text-base text-night/50">/mo</span>
                 </>
               ) : (
@@ -294,11 +295,13 @@ export default function BookingWidget({ listing, nextPath }) {
                       <div className="flex justify-between text-night">
                         <span>
                           {t('costRentLine', {
-                            rent: cost.monthly_rent,
+                            rent: formatMoney(cost.monthly_rent, listing.currency),
                             months: cost.duration_months,
                           })}
                         </span>
-                        <span className="font-medium">€{cost.total_rent}</span>
+                        <span className="font-medium">
+                          {formatMoney(cost.total_rent, listing.currency)}
+                        </span>
                       </div>
                       <p className="pt-1 text-night/50 text-xs leading-relaxed">
                         {t('noCharge')}
@@ -377,7 +380,7 @@ export default function BookingWidget({ listing, nextPath }) {
         <p className="font-display text-2xl text-blue leading-none">
           {listing.monthly_price != null ? (
             <>
-              €{listing.monthly_price}
+              {formatMoney(listing.monthly_price, listing.currency)}
               <span className="text-sm text-night/50">/mo</span>
             </>
           ) : (

@@ -5,6 +5,7 @@ import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Button from '@/components/ui/Button';
 import { formatPropertyType } from '@/lib/propertyType';
+import { formatMoney } from '@/lib/formatMoney';
 import { MIN_PHOTOS } from '@/lib/listingWizardRules';
 import { MIN_UNIVERSITY_DISTANCES } from '@/lib/universityDistances';
 
@@ -46,7 +47,7 @@ export default function StepReview({
             </Pill>
           )}
           {form.monthly_price !== '' && form.monthly_price != null && (
-            <Pill variant="info">€{form.monthly_price}/mo</Pill>
+            <Pill variant="info">{formatMoney(form.monthly_price)}/mo</Pill>
           )}
           {form.bills_included && (
             <Pill variant="amenity">{t('billsIncluded')}</Pill>

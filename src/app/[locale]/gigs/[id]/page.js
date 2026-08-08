@@ -5,8 +5,7 @@ import { transformGig } from '@/lib/transformGig';
 import GigInquiryForm from '@/components/GigInquiryForm';
 import GigFavoriteButton from '@/components/GigFavoriteButton';
 import ListingGallery from '@/components/listing/ListingGallery';
-
-const CURRENCY_SYMBOL = { EUR: '€', GBP: '£', USD: '$' };
+import { formatMoney } from '@/lib/formatMoney';
 
 const GIG_SELECT = `
   gig_id, title, employer_name, description, is_paid, pay_amount, pay_period,
@@ -16,9 +15,8 @@ const GIG_SELECT = `
 
 function formatPay(gig, periodLabels) {
   if (!gig.is_paid || gig.pay_amount == null) return null;
-  const symbol = CURRENCY_SYMBOL[gig.currency] || `${gig.currency} `;
   const period = periodLabels[gig.pay_period] ?? periodLabels.month;
-  return `${symbol}${gig.pay_amount}${period}`;
+  return `${formatMoney(gig.pay_amount, gig.currency)}${period}`;
 }
 
 export default async function GigDetailPage({ params }) {

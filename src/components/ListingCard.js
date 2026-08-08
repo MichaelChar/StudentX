@@ -9,6 +9,7 @@ import PropertyVerifiedBadge from '@/components/listing/PropertyVerifiedBadge';
 import { variantUrl } from '@/lib/photoVariants';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatDistance } from '@/lib/formatDistance';
+import { formatMoney } from '@/lib/formatMoney';
 import {
   responseTimeBucket,
   RESPONSE_BUCKET_WITHIN_HOUR,
@@ -132,7 +133,7 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
           <span className="font-display text-xl text-blue">
             {listing.monthly_price != null ? (
               <>
-                €{listing.monthly_price}
+                {formatMoney(listing.monthly_price, listing.currency)}
                 <span className="text-sm text-night/50">
                   {tCard('perMonth')}
                 </span>

@@ -2,8 +2,12 @@
 
 import { useState } from 'react';
 import { PROPERTY_TYPE_ENUM } from '@/lib/pendingMappers';
+import { formatMoney, currencySymbol } from '@/lib/formatMoney';
 
-const money = (v) => (v == null ? '' : `€${v}/mo`);
+const money = (v) => {
+  const formatted = formatMoney(v);
+  return formatted ? `${formatted}/mo` : '';
+};
 
 function PhotoStrip({ photos }) {
   const urls = (Array.isArray(photos) ? photos : []).map((p) => p?.url).filter(Boolean);
@@ -128,7 +132,7 @@ export default function ClaimClient({ token, landlord, listings }) {
               <input
                 type="number"
                 className="text-sm border border-gray-200 rounded px-2 py-1.5"
-                placeholder="price € / month"
+                placeholder={`price ${currencySymbol()} / month`}
                 value={edits[l.id].price_eur_month}
                 onChange={(e) => setListingField(l.id, 'price_eur_month', e.target.value)}
               />
