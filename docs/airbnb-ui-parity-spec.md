@@ -1830,3 +1830,34 @@ go-live blockers are not listing fields at all:
 
 All blocker states derive from `src/lib/listingGoLive.js`. Do not reimplement
 the gate inline.
+
+### ✅ Feature 53 — Messages, three panes — **BUILD**
+
+Messaging already works (`ChatThread.js`, `landlord/inquiries`). This is the
+shell and the row treatment.
+
+**Three panes**, as captured:
+
+| Pane | Contents |
+|---|---|
+| **Left — thread list** | `Messages` heading + search + settings icons; `All ▾` / `Unread` filter pills; one row per thread |
+| **Centre — conversation** | Participant header with avatar + chevron; centred system lines (`Inquiry sent · Aug 6 – 20`); guest bubbles light/left, host bubbles dark/right; sender label + time above each; composer with `+` and saved-replies affordances |
+| **Right — Reservation panel** | Booking tied to the thread. **Collapsible via `×`** |
+
+#### Thread row — the composite avatar (founder-flagged)
+
+**Every row's icon is the listing's main photo**: a rounded-square property
+photo with the **guest's circular avatar overlapping its lower-left**. Not the
+guest avatar alone — with several listings a landlord identifies the thread by
+*which property* first.
+
+Row contents: composite avatar · participant names · timestamp (right) ·
+preview line · `<dates> · <listing name>`.
+
+#### Why the right-hand panel matters more here than on Airbnb
+
+Airbnb's exists because a host juggles many concurrent short stays. StudentX's
+justification is the audit: landlords are **racing each other** to respond
+(students shotgun parallel requests, losers auto-cancel), and average response
+time is 1d 10h. Putting dates, guest profile and accept/decline in the same
+view as the message removes the round-trip that costs the booking.
