@@ -2025,3 +2025,79 @@ the PDP** — Airbnb's approach, and consistent with the page being chromeless.
 ---
 
 **Feature pass complete — 59 of 59 decided.**
+
+---
+
+## 14. Rendering map — Airbnb structure in StudentX colours
+
+The deliverable owed since the 2026-08-07 decision to keep StudentX's identity
+(§0). **Nothing here changes a colour or a typeface.** It states which existing
+token renders each Airbnb element.
+
+### 14.1 Direct token substitutions
+
+| Airbnb | Their value | StudentX token | Value |
+|---|---|---|---|
+| Ink | `#222222` | `night` | `#0a2540` |
+| Secondary text | `#6C6C6C` | `night/60` | — |
+| Hairline / border | `#DDDDDD` | `night/10` | — |
+| Surface fill | `#F2F2F2` | `parchment` | `#f6f4ff` |
+| Canvas | `#FFFFFF` | `stone` | `#ffffff` |
+| Brand / CTA | Rausch `#FF385C` | `blue` (iris) | `#635BFF` |
+| Gradient CTA | Rausch→magenta | **`.bg-brand`** — already exists | `--gradient-brand` |
+| Body + display type | Cereal 400/500 | **Inter**, unchanged | `--font-sans` / `--font-display` |
+
+`.bg-brand` (iris → magenta → yellow) is the existing utility and already
+carries the wordmark gradient — it is the natural fill for Feature 59's
+full-width mobile CTA, where Airbnb uses its own gradient.
+
+### 14.2 What genuinely changes (decided 2026-08-07)
+
+Geometry and motion only — see the decision block earlier in this document.
+
+| | Before | After |
+|---|---|---|
+| Radii | `rounded-sm` 2px (64 files) | 20 card · 12 photo · 24 pill · 8 control · 32 modal |
+| Card frame | bordered + `parchment` fill, photo inset | **borderless, photo-as-card** |
+| Motion | `transition-all` 150ms | named properties, 200ms / 250ms |
+
+### 14.3 Semantic states — and the one gap
+
+Existing vocabulary, from `src/components/ui/Pill.js`:
+
+| Meaning | Token |
+|---|---|
+| Verified | `yellow` `#ffcb57` |
+| Pending / unactioned | `magenta` `#ff5fa2` |
+| Neutral / amenity | `parchment` |
+| Info / actioned | `blue` |
+
+Maps cleanly onto most parity features:
+
+- **Feature 19** — `Verified` badge in the card's photo-overlay slot → `yellow`,
+  the existing `verified` variant.
+- **Feature 50** — `● Action required` → `magenta`. `pending` already means
+  "unactioned state", so the fit is exact.
+- **Feature 53** — Messages tab dot → `magenta`, consistent with unactioned.
+
+> ⚠️ **Gap: StudentX has no success/positive colour.** Airbnb's green
+> `● Listed` has no equivalent — `yellow` already means *verified* (a
+> collision), and `blue` is the brand colour used across 117 files, so a blue
+> chip reads as branding rather than status.
+>
+> **Recommendation — asymmetric treatment, no new token:** render `Listed` as a
+> **neutral chip** (`parchment` fill, `night` text, no dot) and `Action
+> required` in `magenta` with its dot. "Everything is fine" does not need
+> colour; "something is wrong" does. This preserves the palette exactly and is
+> arguably better UX than two competing coloured chips.
+>
+> Alternative, if a true green is wanted, is adding one semantic token — a
+> palette *addition*, not a change. **Not decided.**
+
+### 14.4 Elements needing no mapping
+
+Airbnb's monochrome discipline is already StudentX's: near-black ink on white
+with hairline borders. The transferable observation from §1.2 — Airbnb uses its
+brand colour on ~7 elements per page, StudentX uses `text-blue` across 60 files
+— stands as a **restraint** recommendation independent of palette. Applying it
+is optional and not part of any decided feature.
