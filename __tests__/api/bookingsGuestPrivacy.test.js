@@ -85,7 +85,6 @@ const ownListingBooking = {
     landlord_id: '0001',
     location: { address: '1 Main', neighborhood: 'Center' },
     rent: { monthly_price: 450, deposit: 450 },
-    agency_fee: 0,
   },
 };
 

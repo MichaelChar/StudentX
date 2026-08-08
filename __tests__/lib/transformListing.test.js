@@ -71,7 +71,6 @@ describe('transformListing', () => {
       sqm: 45,
       bedrooms: null,
       bathrooms: null,
-      agency_fee: null,
       available_from: null,
       available_to: null,
       max_duration_months: null,

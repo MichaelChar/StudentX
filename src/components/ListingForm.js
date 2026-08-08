@@ -74,7 +74,6 @@ function emptyForm(initial = {}) {
     monthly_price: '',
     bills_included: false,
     deposit: '',
-    agency_fee: '',
     min_duration_months: '9',
     max_duration_months: '',
     available_from: '',
@@ -438,10 +437,6 @@ export default function ListingForm({
         form.deposit !== '' && form.deposit != null
           ? parseFloat(form.deposit)
           : 0,
-      agency_fee:
-        form.agency_fee !== '' && form.agency_fee != null
-          ? parseFloat(form.agency_fee)
-          : null,
       sqm: form.sqm !== '' ? parseInt(form.sqm, 10) : null,
       floor: form.floor !== '' ? parseInt(form.floor, 10) : null,
       bedrooms: form.bedrooms !== '' ? parseInt(form.bedrooms, 10) : null,

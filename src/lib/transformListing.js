@@ -41,7 +41,6 @@ export function transformListing(row) {
     sqm: row.sqm ?? null,
     bedrooms: row.bedrooms ?? null,
     bathrooms: row.bathrooms ?? null,
-    agency_fee: row.agency_fee ?? null,
     available_from: row.available_from ?? null,
     available_to: row.available_to ?? null,
     max_duration_months: row.max_duration_months ?? null,

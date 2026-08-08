@@ -174,7 +174,6 @@ Central table connecting all dimensions.
 | `max_duration_months` | SMALLINT | CHECK 2..12, ≥ min when both set (nullable) | Maximum stay in months (100) |
 | `bedrooms` | SMALLINT | CHECK ≥ 0 (nullable) | Bedroom count (100) |
 | `bathrooms` | SMALLINT | CHECK ≥ 0 (nullable) | Bathroom count (100) |
-| `agency_fee` | NUMERIC | CHECK ≥ 0 (nullable) | One-time agency fee disclosed on listing (100) |
 | `video_url` | TEXT | — (nullable) | Optional listing video URL (100) |
 | `smoking_allowed` | BOOLEAN | — (nullable) | House rule (100) |
 | `pets_allowed` | BOOLEAN | — (nullable) | House rule (100) |

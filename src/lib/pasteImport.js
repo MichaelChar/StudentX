@@ -16,7 +16,6 @@ export const PASTE_MAX_LENGTH = 8000;
 export const PASTE_FIELD_KEYS = [
   'monthly_price',
   'deposit',
-  'agency_fee',
   'sqm',
   'floor',
   'bedrooms',
@@ -32,7 +31,6 @@ export const PASTE_FIELD_KEYS = [
 export const PASTE_FIELD_LABEL_KEYS = {
   monthly_price: 'monthlyPrice',
   deposit: 'deposit',
-  agency_fee: 'agencyFee',
   sqm: 'sqm',
   floor: 'floor',
   bedrooms: 'bedrooms',
@@ -171,19 +169,6 @@ function extractDeposit(text) {
     ),
     new RegExp(
       `${MONEY_TOKEN}\\s*(?:εγγύηση|deposit)`,
-      'i',
-    ),
-  ], { min: 0, max: 20000 });
-}
-
-function extractAgencyFee(text) {
-  return firstMoney(text, [
-    new RegExp(
-      `(?:αμοιβ[ήη]\\s*μεσ[ίι]τη|προμ[ήη]θεια\\s*μεσιτε[ίι]ας|προμ[ήη]θεια|agency\\s*fee|broker(?:age)?\\s*fee|commission)\\s*[:\\-]?\\s*${MONEY_TOKEN}`,
-      'i',
-    ),
-    new RegExp(
-      `${MONEY_TOKEN}\\s*(?:αμοιβ[ήη]\\s*μεσ[ίι]τη|agency\\s*fee|commission)`,
       'i',
     ),
   ], { min: 0, max: 20000 });
@@ -659,12 +644,6 @@ export function parseListingPaste(rawText, options = {}) {
   if (deposit != null) {
     fields.deposit = numToForm(deposit);
     found.push('deposit');
-  }
-
-  const agency = extractAgencyFee(trimmed);
-  if (agency != null) {
-    fields.agency_fee = numToForm(agency);
-    found.push('agency_fee');
   }
 
   const sqm = extractSqm(trimmed);

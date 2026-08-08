@@ -236,12 +236,6 @@ export default async function ListingPage({ params, searchParams }) {
                 english={t('bathroomsEnglish')}
                 value={listing.bathrooms != null ? String(listing.bathrooms) : '—'}
               />
-              {listing.agency_fee != null && Number(listing.agency_fee) > 0 && (
-                <BilingualField
-                  english={t('agencyFeeEnglish')}
-                  value={`€${listing.agency_fee}`}
-                />
-              )}
             </dl>
           </Card>
 
