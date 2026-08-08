@@ -2379,8 +2379,16 @@ restyling every amenity tile.
 | Connectivity & media | Wi-Fi · Internet included · TV | `#EAE3F2` / `#5B3A8A` |
 | Building & outdoor | Elevator · Parking · Balcony · Private yard · Ground floor · Furnished | `#FFE8DC` / `#C24A1F` |
 
-Tiles are the interim treatment until real icons land; the icon then sits in
-`ink` on the same `bg`.
+**Colour only — no glyph, no initial** (founder's call, 2026-08-08). The tile
+is a plain opaque pastel square until real icons land, at which point the icon
+sits in `ink` on the same `bg` and nothing about the tile changes but its
+contents.
+
+⚠️ **Check before shipping:** with colour alone carrying the tile, Plain green
+(`#E6F2E6`) and Marble blue (`#E8EEFF`) are the two palest and are doing the
+most work. If either reads as an empty square rather than a tinted one on a
+white card, deepen its background a few percent — **do not shift the hue**,
+which would break the family.
 
 **Feature 14 — automatic refetch: cost analysed, still the founder's call.**
 
