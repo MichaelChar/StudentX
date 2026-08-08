@@ -11,6 +11,7 @@ import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { stayDurationMonths } from '@/lib/bookingDates';
+import { formatMoney } from '@/lib/formatMoney';
 import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 
 const CANCELLATION_COPY_KEY = {
@@ -188,13 +189,19 @@ export default function StudentBookingDetail({ bookingId }) {
         <dl className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <DetailField label={t('colMoveIn')} value={formatDate(booking.move_in)} />
           <DetailField label={t('colMoveOut')} value={formatDate(booking.move_out)} />
-          <DetailField label={t('colRent')} value={`€${booking.monthly_rent}/mo`} />
+          <DetailField
+            label={t('colRent')}
+            value={`${formatMoney(booking.monthly_rent)}/mo`}
+          />
           <DetailField
             label={t('colDuration')}
             value={months != null ? t('durationMonths', { n: months }) : '—'}
           />
           <DetailField label={t('colRequested')} value={formatDate(booking.created_at)} />
-          <DetailField label={t('totalStay')} value={`€${booking.total_stay_value}`} />
+          <DetailField
+            label={t('totalStay')}
+            value={formatMoney(booking.total_stay_value)}
+          />
         </dl>
 
         <div className="mt-6">

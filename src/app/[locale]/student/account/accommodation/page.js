@@ -8,6 +8,7 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import AccountChrome from '@/components/student/AccountChrome';
 import SavedListings from '@/components/student/SavedListings';
+import { formatMoney } from '@/lib/formatMoney';
 
 /*
   Accommodation section of the student account: the saved-listings shortlist
@@ -148,7 +149,7 @@ async function InquiriesSection({ locale }) {
       listings (
         listing_id,
         location ( address, neighborhood ),
-        rent ( monthly_price )
+        rent ( monthly_price, currency )
       )
     `)
     .eq('student_user_id', auth.user.id)
@@ -211,7 +212,7 @@ async function InquiriesSection({ locale }) {
                 <div className="text-right shrink-0">
                   {price != null && (
                     <p className="font-display text-xl text-blue">
-                      €{price}
+                      {formatMoney(price, rent?.currency)}
                       <span className="text-xs text-night/50">/mo</span>
                     </p>
                   )}

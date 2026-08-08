@@ -5,6 +5,7 @@ import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import { stayDurationMonths } from '@/lib/bookingDates';
+import { formatMoney } from '@/lib/formatMoney';
 import { variantUrl } from '@/lib/photoVariants';
 
 function isValidPhotoUrl(url) {
@@ -100,7 +101,7 @@ export default async function StudentBookingCard({ booking, locale }) {
               <div>
                 <dt className="label-caps text-night/50">{t('colRent')}</dt>
                 <dd className="mt-0.5 font-display text-lg text-blue">
-                  €{booking.monthly_rent}
+                  {formatMoney(booking.monthly_rent)}
                   <span className="text-xs text-night/50 font-sans">/mo</span>
                 </dd>
               </div>

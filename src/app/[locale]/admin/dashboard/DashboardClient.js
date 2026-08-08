@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { formatMoney } from '@/lib/formatMoney';
 
 // All admin mutations re-check the ADMIN_EMAILS allowlist server-side; here we
 // just attach the Supabase session token, exactly like the existing admin pages.
@@ -16,7 +17,10 @@ async function authedFetch(path, options = {}) {
   return fetch(path, { ...options, headers });
 }
 
-const money = (v) => (v == null ? '—' : `€${v}/mo`);
+const money = (v) => {
+  const formatted = formatMoney(v);
+  return formatted ? `${formatted}/mo` : '—';
+};
 
 const STATUS_STYLES = {
   pending: 'bg-gray-100 text-night/60',

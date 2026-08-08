@@ -7,6 +7,7 @@ import Card from '@/components/ui/Card';
 import OrnamentRule from '@/components/ui/OrnamentRule';
 import StripeGradientMesh from '@/components/property/StripeGradientMesh';
 import DirectoryCarousel from '@/components/property/DirectoryCarousel';
+import { formatMoney } from '@/lib/formatMoney';
 
 /*
   Propylaea landing — the Thessaloniki city home at /property/thessaloniki.
@@ -83,7 +84,7 @@ export default function ThessalonikiLanding() {
             label={t('statListings')}
           />
           <StatTile value={t('statReplyValue')} label={t('statReply')} />
-          <StatTile value={t('statBrokerageValue')} label={t('statBrokerage')} />
+          <StatTile value={formatMoney(0)} label={t('statBrokerage')} />
         </div>
       </section>
 

@@ -6,6 +6,7 @@ import { useEffect } from 'react';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { GIGS_MAP_DEFAULT_CENTER, GIGS_MAP_DEFAULT_ZOOM, getGigCountry } from '@/lib/gigCountries';
+import { formatMoney } from '@/lib/formatMoney';
 
 // Fix missing marker icons in webpack/Next.js builds (same shim as ListingsMap).
 function useLeafletIcons() {
@@ -19,14 +20,11 @@ function useLeafletIcons() {
   }, []);
 }
 
-const CURRENCY_SYMBOL = { EUR: '€', GBP: '£', USD: '$' };
-
 function payLabel(gig) {
   if (!gig.is_paid) return 'Unpaid';
   if (gig.pay_amount == null) return 'Pay on application';
-  const symbol = CURRENCY_SYMBOL[gig.currency] || `${gig.currency} `;
   const per = gig.pay_period === 'total' ? '' : `/${gig.pay_period === 'hour' ? 'hr' : gig.pay_period === 'week' ? 'wk' : 'mo'}`;
-  return `${symbol}${gig.pay_amount}${per}`;
+  return `${formatMoney(gig.pay_amount, gig.currency)}${per}`;
 }
 
 /**

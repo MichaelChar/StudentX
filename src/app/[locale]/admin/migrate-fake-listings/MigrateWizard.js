@@ -3,6 +3,7 @@
 import { useCallback, useState } from 'react';
 import Link from 'next/link';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { formatMoney } from '@/lib/formatMoney';
 
 async function authedFetch(path, options = {}) {
   const supabase = getSupabaseBrowser();
@@ -14,7 +15,10 @@ async function authedFetch(path, options = {}) {
   return fetch(path, { ...options, headers });
 }
 
-const money = (v) => (v == null ? '—' : `€${v}/mo`);
+const money = (v) => {
+  const formatted = formatMoney(v);
+  return formatted ? `${formatted}/mo` : '—';
+};
 
 // Data is loaded server-side (page.js) and passed in, so there is no
 // fetch-on-mount effect. load() is a manual refresh used only after mutations.

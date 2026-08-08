@@ -6,6 +6,7 @@ import { Link } from '@/i18n/navigation';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import GigFavoriteButton from '@/components/GigFavoriteButton';
+import { formatMoney } from '@/lib/formatMoney';
 
 /*
   Holiday Gigs card — sibling of ListingCard, trimmed for jobs. Shows role,
@@ -17,14 +18,11 @@ function isValidPhotoUrl(url) {
   return typeof url === 'string' && url.startsWith('http');
 }
 
-const CURRENCY_SYMBOL = { EUR: '€', GBP: '£', USD: '$' };
-
 function formatPay(gig, periodLabels) {
   if (!gig.is_paid) return null;
   if (gig.pay_amount == null) return null;
-  const symbol = CURRENCY_SYMBOL[gig.currency] || `${gig.currency} `;
   const period = periodLabels[gig.pay_period] ?? periodLabels.month;
-  return `${symbol}${gig.pay_amount}${period}`;
+  return `${formatMoney(gig.pay_amount, gig.currency)}${period}`;
 }
 
 export default function GigCard({ gig, fromQuery = '' }) {

@@ -9,6 +9,7 @@ import { getSupabase } from '@/lib/supabase';
 import { selectLandlordListings } from '@/lib/landlordListingSelect';
 import { getLandlordResponseTime } from '@/lib/landlordResponseTime';
 import { variantUrl } from '@/lib/photoVariants';
+import { formatMoney } from '@/lib/formatMoney';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
 import Button from '@/components/ui/Button';
@@ -382,7 +383,9 @@ function ListingRow({ listing }) {
         <p className="font-display text-lg text-night truncate">{address}</p>
         <p className="label-caps text-night/50 mt-0.5 truncate">
           {neighborhood}
-          {price != null && <> · €{price}/mo</>}
+          {price != null && (
+            <> · {formatMoney(price, listing.rent?.currency)}/mo</>
+          )}
         </p>
       </div>
 

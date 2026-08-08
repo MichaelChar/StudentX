@@ -6,6 +6,7 @@ import {
   MAX_DURATION_MONTHS,
 } from '@/lib/listingDuration';
 import SuggestedMark from '@/components/listing-wizard/SuggestedMark';
+import { currencySymbol } from '@/lib/formatMoney';
 
 const inputClass =
   'w-full border border-night/15 bg-white rounded-sm px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
@@ -32,7 +33,7 @@ export default function StepPrice({
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div>
           <label className={labelClass} htmlFor="wiz-rent">
-            {t('rentLabel')}
+            {t('rentLabel', { symbol: currencySymbol() })}
             <SuggestedMark
               show={!!suggested.monthly_price}
               onDismiss={() => dismiss('monthly_price')}
@@ -50,7 +51,7 @@ export default function StepPrice({
         </div>
         <div>
           <label className={labelClass} htmlFor="wiz-deposit">
-            {t('depositLabel')}
+            {t('depositLabel', { symbol: currencySymbol() })}
             <SuggestedMark
               show={!!suggested.deposit}
               onDismiss={() => dismiss('deposit')}

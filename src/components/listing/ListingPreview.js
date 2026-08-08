@@ -10,6 +10,7 @@ import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import { formatPropertyType } from '@/lib/propertyType';
+import { formatMoney, currencySymbol } from '@/lib/formatMoney';
 
 /*
   Preview-as-student overlay for the landlord listing form.
@@ -142,11 +143,11 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
             <Card tone="parchment" border={false} className="p-6 md:p-8 mb-10">
               <dl className="grid grid-cols-1 sm:grid-cols-3 gap-6">
                 <PreviewField
-                  label={t('monthlyRentLabel')}
+                  label={t('monthlyRentLabel', { symbol: currencySymbol() })}
                   value={
                     hasPrice ? (
                       <>
-                        €{monthlyPrice}
+                        {formatMoney(monthlyPrice)}
                         <span className="text-base text-night/50">/mo</span>
                       </>
                     ) : (
@@ -155,8 +156,8 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
                   }
                 />
                 <PreviewField
-                  label={t('depositLabel')}
-                  value={hasDeposit ? `€${deposit}` : '—'}
+                  label={t('depositLabel', { symbol: currencySymbol() })}
+                  value={hasDeposit ? formatMoney(deposit) : '—'}
                 />
                 <PreviewField
                   label={t('propertyTypeLabel')}
@@ -203,7 +204,7 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
                 <p className="font-display text-3xl text-blue">
                   {hasPrice ? (
                     <>
-                      €{monthlyPrice}
+                      {formatMoney(monthlyPrice)}
                       <span className="text-base text-night/50">/mo</span>
                     </>
                   ) : (

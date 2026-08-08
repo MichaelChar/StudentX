@@ -10,12 +10,14 @@
  * @param {object} params
  * @param {string} params.studentName
  * @param {string} params.landlordName
- * @param {object} params.listing - { listing_id, address?, neighborhood?, monthly_price? }
+ * @param {object} params.listing - { listing_id, address?, neighborhood?, monthly_price?, currency? }
  * @param {number} params.unreadCount
  * @param {string} params.snippet - Most recent unread message body
  * @param {string} params.appUrl
  * @param {string} params.inquiryId
  */
+
+import { formatMoney } from '@/lib/formatMoney';
 
 function escapeHtml(value) {
   return String(value)
@@ -46,7 +48,10 @@ export function studentMessageDigestHtml({
   const safeGreeting = studentName ? escapeHtml(studentName) : 'there';
   const safeAddress = listing?.address ? escapeHtml(listing.address) : '';
   const safeNeighborhood = listing?.neighborhood ? escapeHtml(listing.neighborhood) : '';
-  const safePrice = listing?.monthly_price ? `€${Number(listing.monthly_price)}/mo` : '';
+  const formatted = listing?.monthly_price
+    ? formatMoney(Number(listing.monthly_price), listing.currency)
+    : '';
+  const safePrice = formatted ? `${formatted}/mo` : '';
   const listingSummary = [safeAddress, safeNeighborhood, safePrice].filter(Boolean).join(' · ');
   const safeSnippet = snippet ? escapeHtml(snippet).replace(/\n/g, '<br/>') : '';
 

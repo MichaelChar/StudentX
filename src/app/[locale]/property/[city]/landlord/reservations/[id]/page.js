@@ -18,6 +18,7 @@ import {
   costSummary,
 } from '@/lib/bookingDates';
 import { landlordFirstMonthReceive } from '@/lib/bookingFees';
+import { formatMoney } from '@/lib/formatMoney';
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -209,24 +210,30 @@ export default function LandlordReservationDetailPage() {
         <dl className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <DetailField label={t('colMoveIn')} value={formatDate(booking.move_in)} />
           <DetailField label={t('colMoveOut')} value={formatDate(booking.move_out)} />
-          <DetailField label={t('colMonthlyRent')} value={`€${booking.monthly_rent}/mo`} />
+          <DetailField
+            label={t('colMonthlyRent')}
+            value={`${formatMoney(booking.monthly_rent)}/mo`}
+          />
           <DetailField
             label={t('colDuration')}
             value={months != null ? t('durationMonths', { n: months }) : '—'}
           />
           <DetailField label={t('colRequested')} value={formatDate(booking.created_at)} />
-          <DetailField label={t('totalStay')} value={`€${booking.total_stay_value}`} />
+          <DetailField
+            label={t('totalStay')}
+            value={formatMoney(booking.total_stay_value)}
+          />
           <DetailField
             label={t('youReceive')}
-            value={`€${receive.you_receive}`}
+            value={formatMoney(receive.you_receive)}
             info={
               <span className="block space-y-1">
                 <span className="block">
                   {t('youReceiveBreakdown', {
-                    deposit: receive.deposit,
-                    commission: receive.commission_gross,
-                    totalStay: receive.total_stay_value,
-                    youReceive: receive.you_receive,
+                    deposit: formatMoney(receive.deposit),
+                    commission: formatMoney(receive.commission_gross),
+                    totalStay: formatMoney(receive.total_stay_value),
+                    youReceive: formatMoney(receive.you_receive),
                   })}
                 </span>
                 <span className="block">{t('youReceivePayoutNote')}</span>

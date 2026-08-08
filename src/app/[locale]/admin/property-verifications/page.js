@@ -9,6 +9,7 @@ import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import { PROPERTY_VERIFICATION_CHECKLIST } from '@/lib/propertyVerification';
 import { variantUrl } from '@/lib/photoVariants';
+import { formatMoney } from '@/lib/formatMoney';
 
 const STATUS_FILTERS = ['pending', 'approved', 'rejected'];
 
@@ -193,7 +194,9 @@ export default function AdminPropertyVerificationsPage() {
                     <p className="text-xs text-night/50 mb-1">
                       {req.address}
                       {req.neighborhood ? ` · ${req.neighborhood}` : ''}
-                      {req.monthly_price != null ? ` · €${req.monthly_price}/mo` : ''}
+                      {req.monthly_price != null
+                        ? ` · ${formatMoney(req.monthly_price, req.currency)}/mo`
+                        : ''}
                     </p>
                     <p className="text-sm text-night/70">
                       {t('landlordLine', {

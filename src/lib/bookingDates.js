@@ -43,7 +43,7 @@ export function stayDurationMonths(moveIn, moveOut) {
  * Billing is per-day with the monthly price covering 30 days, so a 45-day
  * stay is 1.5 months' rent and a 31-day month costs more than a 28-day one.
  * Rounding to one decimal before multiplying drifts up to 1.5 days of rent
- * (±€22.50 on a €450 listing) away from that rule — and the result is
+ * (about 5% of a 450/mo listing) away from that rule — and the result is
  * persisted as bookings.total_stay_value, which later becomes the commission
  * base. Money must be derived from this, not from stayDurationMonths().
  */

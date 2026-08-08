@@ -17,6 +17,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import GigCard from '@/components/GigCard';
 import { buildPriceHistogram, maxBucketCount } from '@/lib/priceHistogram';
+import { formatMoney } from '@/lib/formatMoney';
 
 const GigsMap = dynamic(() => import('@/components/GigsMap'), {
   ssr: false,
@@ -191,7 +192,7 @@ function GigsResultsInner() {
                       key={i}
                       className="flex-1 rounded-t-sm bg-blue/30"
                       style={{ height: `${Math.max(4, (b.count / histPeak) * 100)}%` }}
-                      title={`€${Math.round(b.from)}–${Math.round(b.to)}: ${b.count}`}
+                      title={`${formatMoney(Math.round(b.from))}–${formatMoney(Math.round(b.to))}: ${b.count}`}
                     />
                   ))}
                 </div>

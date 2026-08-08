@@ -16,6 +16,7 @@ import {
   maxBucketCount,
   isBucketInBudget,
 } from '@/lib/priceHistogram';
+import { formatMoney } from '@/lib/formatMoney';
 
 /*
   Propylaea results page — matches page 06 of the reference design.
@@ -636,8 +637,8 @@ function PriceHistogram({ t, histogram, budget, aboveCount }) {
               key={i}
               title={t('priceHistogramBarLabel', {
                 count: b.count,
-                from: Math.round(b.from),
-                to: Math.round(b.to),
+                from: formatMoney(Math.round(b.from)),
+                to: formatMoney(Math.round(b.to)),
               })}
               className={`flex-1 rounded-t-[2px] transition-colors ${
                 inBudget ? 'bg-blue' : 'bg-night/15'
@@ -694,7 +695,7 @@ function FilterPanel({
       <section className="mb-8">
         <p className="label-caps text-night/60 mb-3">{t('maxPrice')}</p>
         <p className="font-display text-2xl text-blue">
-          {t('upTo')} €{filters.maxBudget}
+          {t('upTo')} {formatMoney(filters.maxBudget)}
           <span className="text-sm text-night/50">/mo</span>
         </p>
         <PriceHistogram

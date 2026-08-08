@@ -21,6 +21,7 @@ import {
   isPropertyVerified,
   pickLatestRejectedPropertyVerification,
 } from '@/lib/propertyVerification';
+import { formatMoney } from '@/lib/formatMoney';
 
 /*
   Propylaea landlord listings index — View · Edit · Duplicate · Disable · Delete.
@@ -381,7 +382,9 @@ function ListingRow({
           <p className="label-caps text-night/50">
             {neighborhood}
             {listing.property_types?.name && <> · {listing.property_types.name}</>}
-            {price != null && <> · €{price}/mo</>}
+            {price != null && (
+              <> · {formatMoney(price, listing.rent?.currency)}/mo</>
+            )}
           </p>
           {pendingPv && (
             <p className="mt-2 text-sm text-night/60">{tPv('pendingHint')}</p>
