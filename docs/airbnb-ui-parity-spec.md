@@ -2059,3 +2059,274 @@ go-live blockers are not listing fields at all:
 
 All blocker states derive from `src/lib/listingGoLive.js`. Do not reimplement
 the gate inline.
+
+### ✅ Feature 53 — Messages, three panes — **BUILD**
+
+Messaging already works (`ChatThread.js`, `landlord/inquiries`). This is the
+shell and the row treatment.
+
+**Three panes**, as captured:
+
+| Pane | Contents |
+|---|---|
+| **Left — thread list** | `Messages` heading + search + settings icons; `All ▾` / `Unread` filter pills; one row per thread |
+| **Centre — conversation** | Participant header with avatar + chevron; centred system lines (`Inquiry sent · Aug 6 – 20`); guest bubbles light/left, host bubbles dark/right; sender label + time above each; composer with `+` and saved-replies affordances |
+| **Right — Reservation panel** | Booking tied to the thread. **Collapsible via `×`** |
+
+#### Thread row — the composite avatar (founder-flagged)
+
+**Every row's icon is the listing's main photo**: a rounded-square property
+photo with the **guest's circular avatar overlapping its lower-left**. Not the
+guest avatar alone — with several listings a landlord identifies the thread by
+*which property* first.
+
+Row contents: composite avatar · participant names · timestamp (right) ·
+preview line · `<dates> · <listing name>`.
+
+#### Why the right-hand panel matters more here than on Airbnb
+
+Airbnb's exists because a host juggles many concurrent short stays. StudentX's
+justification is the audit: landlords are **racing each other** to respond
+(students shotgun parallel requests, losers auto-cancel), and average response
+time is 1d 10h. Putting dates, guest profile and accept/decline in the same
+view as the message removes the round-trip that costs the booking.
+
+### ⏳ Feature 54 — Host Insights / Earnings — **DEFER to 2026-09-06**
+
+No host-facing analytics or earnings page. `admin/metrics` stays admin-only.
+
+Deferred because there is nothing to chart: 3 listings, no completed
+bookings, no payouts.
+
+**This is the natural home for `CONVERSION RATE`** — the one metric tile left
+unassigned when the dashboard grid was re-homed (Feature 49 addendum). Also
+the home for earnings: paid out, held in escrow, due.
+
+⚠️ **Data-gated, not inventory-gated.** The threshold is completed bookings
+and payouts existing at all, not listing count.
+
+**⏰ Added to** `studentx-revisit-results-count` (fires 2026-09-06) as its
+second data-gated item, alongside Feature 43.
+
+### ❌ Feature 55 — "Switch to traveling" role toggle — **SKIP**
+
+No host/guest mode switch. Landlord and student remain **separate accounts**
+with separate sign-in — `requireLandlord()` and `requireStudent()` stay as
+they are.
+
+Reasons, in order of weight:
+
+1. **It is an auth-model change, not a nav change.** Airbnb treats host and
+   guest as two modes of one identity; StudentX has two account types with
+   separate auth trees and login pages. Unifying them is substantial work.
+2. **The overlap is near nil.** A landlord letting property in Thessaloniki
+   and a student looking for a room are not usually the same person.
+3. **The slot is taken.** Feature 49's addendum puts `views this month` at the
+   top-right of the host nav — exactly where Airbnb renders this toggle.
+
+If a person is genuinely both, they sign in separately.
+
+**Closes the host group.** Features 49–55 all decided.
+
+---
+
+## Mobile features
+
+> **Top bar vs bottom bar — both, at different breakpoints.** Airbnb's *desktop*
+> host nav is a top bar (`Today · Calendar · Listings · Messages`). Below the
+> mobile breakpoint the header is replaced by a **bottom tab bar** — verified in
+> session at 375×812, where the Thessaloniki results header collapsed to a back
+> arrow + two-line search pill and navigation moved to `Explore · Wishlists ·
+> Log in` at the foot. Features 1–55 describe the desktop top nav; Feature 56 is
+> what replaces it on mobile. Both ship.
+
+### ✅ Feature 56 — Mobile bottom tab bar — **BUILD, both sides**
+
+Net-new — StudentX has no bottom tab bar today. It is also the piece that makes
+Features 57–59 coherent: the map-first sheet, chromeless PDP and sticky booking
+bar all assume navigation is held at the foot, which is why the PDP can drop its
+header entirely.
+
+**Founder-specified contents:**
+
+| Role | Tabs |
+|---|---|
+| **Guest, signed out** | `Explore` · `Log in` |
+| **Guest, signed in** | `Explore` · `Wishlists` · `Messages` · `Profile` |
+| **Landlord** | `Today` · `Listings` · `Messages` · `Profile` |
+
+- The landlord bar mirrors the desktop host nav minus Calendar (Feature 52).
+- `Messages` carries the **dot indicator** specified in the Feature 49 addendum
+  — pending requests and inquiries were re-homed onto it.
+- **The two bars never coexist.** Feature 55 skipped the role toggle, so a
+  session is either landlord or student; the bar is chosen by role at render
+  with no switching affordance. Simpler than Airbnb, which must handle the
+  transition.
+
+#### ⚠️ Two consequences, recorded
+
+**1. Bookings are not a tab.** Airbnb gives signed-in guests a `Trips` tab; the
+StudentX bar does not. A student's active booking therefore lives under
+`Profile`, two taps deep. Post-booking, *"where is my booking, and when am I
+paying"* is that student's top task — and Feature 44 puts the request's pending
+state and expiry there too. Flagged, not overridden.
+
+**2. `/gigs`, `/resources` and `/ausom` are reachable only via `Profile`.**
+Feature 3 skipped product tabs, so the account menu is already their sole route
+on desktop. On mobile three whole product areas sit behind a Profile icon — and
+mobile is where students are. This is Feature 3's discoverability cost arriving
+here rather than there.
+
+### ◐ Feature 57 — Mobile results — **LIST-FIRST with a map toggle** (not map-first)
+
+Airbnb inverts the results page on mobile: full-viewport map with listings in a
+**draggable bottom sheet**. StudentX does **not** adopt this.
+
+**List-first stays**, with the existing `view=list|map` toggle as the mobile
+control — the param Feature 7 deliberately kept alive when the desktop split
+retired it.
+
+Reasons:
+
+1. **Different search problem.** Airbnb goes map-first because a traveller is
+   choosing an unfamiliar neighbourhood. A student is choosing a **commute** —
+   which is why `faculty_distances` exists, why commute is the first PDP
+   highlight (Feature 29), and why distance sits on the card. A map does not
+   answer "how far from my faculty"; the card meta line does.
+2. **Inventory.** A full-screen map with three pins is a great deal of screen
+   for very little, the same objection that deferred Features 10 and 40.
+3. **Avoids a primitive.** No draggable sheet is needed for results, so `vaul`
+   (or a hand-rolled `motion@12` sheet) is required only by Feature 59 and the
+   modal-to-sheet conversion, not here.
+
+The map itself is unchanged — Positron tiles, price-bubble pins and hover sync
+(Features 11–13) all still apply when the toggle is set to map.
+
+### ✅ Feature 58 — Chromeless mobile PDP — **BUILD**
+
+No header below the mobile breakpoint. Structure, as captured at 375×812:
+
+1. **Full-bleed photo carousel**, edge to edge, with a `1 / 28` **counter pill**
+   bottom-right.
+2. **Floating controls over the image** — back arrow (top-left), share + heart
+   (top-right). No bar, no background; the buttons sit directly on the photo.
+3. **Content sheet with rounded top corners**, overlapping the photo's lower
+   edge. Title, meta and rating are centred within it.
+
+Works because Feature 56's bottom tab bar holds navigation, freeing the top of
+the screen. This is most of what makes a listing read as an app rather than a
+website on a phone.
+
+**Reuses decisions already made** — carousel (16), heart (17), share (42),
+gallery + single-hero fallback below 5 photos (26). Genuinely new: the floating
+control treatment and the overlapping sheet.
+
+**Consequence, recorded:** `back` becomes a floating arrow, not site navigation.
+A student arriving from results is fine, but one landing directly from a shared
+WhatsApp link (Feature 42) reaches the rest of the site only via the bottom bar.
+Airbnb behaves identically — a property, not a defect.
+
+### ✅ Feature 59 — Sticky mobile booking bar — **BUILD**
+
+Pinned to the foot of the mobile PDP: price on the left, full-width CTA on the
+right. Mobile counterpart of Feature 33's sticky card, which cannot work at
+375px with no sidebar to pin to.
+
+Without it the only route to booking is scrolling back to the inline widget, on
+a page that now has no header to anchor against (Feature 58). **This is what
+makes the chromeless PDP viable rather than frustrating.**
+
+Inherits three earlier decisions:
+
+| Element | Value | From |
+|---|---|---|
+| CTA label | `Request to book` + the no-charge line — **not** Airbnb's `Check availability` | Feature 44 (request-only; Instant Book deferred) |
+| Price | First month's rent, single figure | Feature 45 |
+| Profile gate | Opens as a **bottom sheet**, not a modal | Feature 33 |
+
+> **This is now the only surface that requires the sheet primitive.** Feature 57
+> dropped the map sheet, so `vaul` (or a hand-rolled `motion@12` sheet) is
+> needed here and for the modal→sheet conversion, nowhere else.
+
+**Stacking:** the bar coexists with Feature 56's tab bar. **Hide the tab bar on
+the PDP** — Airbnb's approach, and consistent with the page being chromeless.
+
+---
+
+**Feature pass complete — 59 of 59 decided.**
+
+---
+
+## 14. Rendering map — Airbnb structure in StudentX colours
+
+The deliverable owed since the 2026-08-07 decision to keep StudentX's identity
+(§0). **Nothing here changes a colour or a typeface.** It states which existing
+token renders each Airbnb element.
+
+### 14.1 Direct token substitutions
+
+| Airbnb | Their value | StudentX token | Value |
+|---|---|---|---|
+| Ink | `#222222` | `night` | `#0a2540` |
+| Secondary text | `#6C6C6C` | `night/60` | — |
+| Hairline / border | `#DDDDDD` | `night/10` | — |
+| Surface fill | `#F2F2F2` | `parchment` | `#f6f4ff` |
+| Canvas | `#FFFFFF` | `stone` | `#ffffff` |
+| Brand / CTA | Rausch `#FF385C` | `blue` (iris) | `#635BFF` |
+| Gradient CTA | Rausch→magenta | **`.bg-brand`** — already exists | `--gradient-brand` |
+| Body + display type | Cereal 400/500 | **Inter**, unchanged | `--font-sans` / `--font-display` |
+
+`.bg-brand` (iris → magenta → yellow) is the existing utility and already
+carries the wordmark gradient — it is the natural fill for Feature 59's
+full-width mobile CTA, where Airbnb uses its own gradient.
+
+### 14.2 What genuinely changes (decided 2026-08-07)
+
+Geometry and motion only — see the decision block earlier in this document.
+
+| | Before | After |
+|---|---|---|
+| Radii | `rounded-sm` 2px (64 files) | 20 card · 12 photo · 24 pill · 8 control · 32 modal |
+| Card frame | bordered + `parchment` fill, photo inset | **borderless, photo-as-card** |
+| Motion | `transition-all` 150ms | named properties, 200ms / 250ms |
+
+### 14.3 Semantic states — and the one gap
+
+Existing vocabulary, from `src/components/ui/Pill.js`:
+
+| Meaning | Token |
+|---|---|
+| Verified | `yellow` `#ffcb57` |
+| Pending / unactioned | `magenta` `#ff5fa2` |
+| Neutral / amenity | `parchment` |
+| Info / actioned | `blue` |
+
+Maps cleanly onto most parity features:
+
+- **Feature 19** — `Verified` badge in the card's photo-overlay slot → `yellow`,
+  the existing `verified` variant.
+- **Feature 50** — `● Action required` → `magenta`. `pending` already means
+  "unactioned state", so the fit is exact.
+- **Feature 53** — Messages tab dot → `magenta`, consistent with unactioned.
+
+> ⚠️ **Gap: StudentX has no success/positive colour.** Airbnb's green
+> `● Listed` has no equivalent — `yellow` already means *verified* (a
+> collision), and `blue` is the brand colour used across 117 files, so a blue
+> chip reads as branding rather than status.
+>
+> **Recommendation — asymmetric treatment, no new token:** render `Listed` as a
+> **neutral chip** (`parchment` fill, `night` text, no dot) and `Action
+> required` in `magenta` with its dot. "Everything is fine" does not need
+> colour; "something is wrong" does. This preserves the palette exactly and is
+> arguably better UX than two competing coloured chips.
+>
+> Alternative, if a true green is wanted, is adding one semantic token — a
+> palette *addition*, not a change. **Not decided.**
+
+### 14.4 Elements needing no mapping
+
+Airbnb's monochrome discipline is already StudentX's: near-black ink on white
+with hairline borders. The transferable observation from §1.2 — Airbnb uses its
+brand colour on ~7 elements per page, StudentX uses `text-blue` across 60 files
+— stands as a **restraint** recommendation independent of palette. Applying it
+is optional and not part of any decided feature.
