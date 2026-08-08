@@ -1597,8 +1597,8 @@ host-section-only placement.
 >
 > We hold your first month's rent until you've moved in and confirmed the
 > place matches its listing. Your landlord is paid one business day after
-> move-in — not before. If the property isn't as described, tell us within
-> 24 hours of arriving and we'll refund you.
+> move-in — not before. If the property isn't as described, tell
+> us before then and we'll refund you.
 >
 > Payments made outside StudentX aren't held, can't be refunded by us, and
 > are how rental scams work. If a landlord asks you to pay another way,
@@ -1610,8 +1610,8 @@ host-section-only placement.
 >
 > We hold your first month's rent until you've moved in and confirmed the
 > place matches its listing. Your landlord is paid one business day after
-> move-in — not before. If the property isn't as described, tell us within
-> 24 hours of arriving and we'll refund you.
+> move-in — not before. If the property isn't as described, tell
+> us before then and we'll refund you.
 
 > ⚠️ **Open — same-page duplication.** Paragraph 1 is identical in both
 > placements, so the PDP would render those three sentences twice. §W5's
@@ -1784,6 +1784,127 @@ student staring at nothing books elsewhere.
 the *only* booking path, so its conversion characteristics carry the whole
 funnel.
 
+### ◐ Feature 45 — Student-facing cost display — **BUILD, single figure**
+
+Airbnb itemises rate × nights + fees. Under the revised escrow model
+(PR #384) **only the first month's rent flows through StudentX**, so there
+is nothing to itemise. The student sees **one number**.
+
+#### Decided
+
+| Item | Decision |
+|---|---|
+| First month's rent | ✅ The only figure in the cost summary |
+| Deposit — as a **cost line** | ❌ Removed. StudentX must not itemise money it does not touch |
+| Deposit — as a **listing fact** | ✅ **Stays visible on the listing.** `rent.deposit` is real data the landlord entered and `ListingPreview` already shows it |
+| Agency fee | ❌ **Deleted outright** — a directory-era concept. In a marketplace taking 5% from the landlord, a separate student-facing agency fee belongs to nothing |
+| Guest service fee | Still D2/D5-blocked; leave a slot, do not invent a number |
+
+**Why the deposit stays on the listing:** there is a difference between *not
+itemising* a cost in checkout and *removing* a known cost from the listing.
+Fully hiding it means a student budgets €450, arrives, and is asked for
+another €450 — the exact surprise escrow exists to prevent, merely relocated.
+
+#### Work
+
+- `costSummary` (`bookingDates.js`) — drop `deposit`, `agencyFee`,
+  `due_at_move_in` from params and return shape
+- `BookingWidget.js:305–312` — remove the deposit + agency lines
+- `StudentBookingDetail.js:156` and `landlord/reservations/[id]:151` — update
+  call sites
+- `bookingService.js:180` — update
+- Remove `listing.agency_fee` end to end, including the wizard's price step
+- Orphaned `en.json` keys: `costDeposit`, `costAgency`, `costDueMoveIn`
+
+**Depends on:** PR #384 (merged escrow-model change).
+
+### ❌ Feature 46 — Pay later — **SKIP**
+
+Incompatible with the model. Protection depends on holding the first month's
+rent from booking until 1 business day after move-in; paying later means
+holding nothing, so there is nothing to release and nothing to refund.
+
+Nothing to split either — Airbnb splits a *total* across instalments; the
+StudentX student pays one month, once.
+
+The genuine "pay later" already exists: request-to-book charges nothing until
+the landlord accepts, which is what Feature 44's `noCharge` line states.
+
+### ✅ Feature 47 — "How paying works" section — **BUILD**
+
+Replaces Airbnb's `Pay by month` highlight. Answers the five questions the
+booking card leaves open: what do I pay now, when does the landlord get it,
+what about the deposit, what about months 2+, and what if something is wrong.
+
+**Placement:** PDP (after the host section) **and** checkout. No separate page
+— `/property/[city]/about` exists, but sending a student off the listing
+mid-decision is worse than three blocks in place.
+
+#### Approved copy (founder-written; typos corrected)
+
+> ### How paying works
+>
+> **Step 1 ·** Chat with the landlord and confirm the property meets your
+> expectations. After, transfer the first month's rent to us.
+>
+> **Step 2 ·** We hold it until you've moved in. The landlord is transferred
+> the rent one business day after your arrival, so you have until then to
+> confirm the property is as you expected.
+>
+> **Step 3 ·** After that, it's between you and your landlord.
+
+#### Resolves the Feature 38 duplication
+
+The CTA-side payment-safety notice is **cut to the off-platform warning
+alone** — this section now carries the held-money explanation, so the
+guarantee paragraph is no longer printed twice on one page.
+
+CTA-side notice becomes:
+
+> Payments made outside StudentX aren't held, can't be refunded by us, and
+> are how rental scams work. If a landlord asks you to pay another way,
+> report it.
+
+#### ⚠️ Two open issues
+
+**1. Step 3 no longer answers the deposit question.** The earlier draft read
+"The deposit and every month's rent from the second month onward are paid to
+them directly." Trimmed, it does not tell a student a deposit is coming —
+reintroducing the €450-becomes-€900 surprise Feature 45 was designed around.
+**Recommend restoring that clause.**
+
+**2. ✅ RESOLVED — confirmation window is "until the landlord is paid".**
+
+Step 2 promised the student has until the landlord is paid (T+1 business
+day) while Feature 38's copy and §W6 said **24 hours**. A Friday-evening
+arrival closes a 24h window on Saturday evening but is not released until
+**Monday** — the copy would have promised two days more than the system
+enforced, in the scenario most common for a September move-in.
+
+**Decided 2026-08-07: one rule — the confirmation window runs until the
+landlord is paid (T+1 business day after arrival).** Always ≥24h, more
+generous, one fewer number in the system.
+
+Applied:
+- `accommodation-marketplace-spec.md` §W6 — implicit-confirmation rule
+  changed from 24h to T+1 business day, with the reasoning recorded.
+- Feature 38 copy — "tell us within 24 hours of arriving" → "tell us before
+  then", which now inherits Step 2's deadline rather than stating a second
+  number.
+
+### ❌ Feature 48 — Free-cancellation window (resolved date) — **SKIP**
+
+Airbnb resolves its cancellation tiers against the actual move-in date into
+a single sentence (*free cancellation until 2 July*). StudentX keeps showing
+the tiers themselves.
+
+`CANCELLATION_TIERS` (`lib/cancellationPolicy.js`) continues to render as-is
+in `BookingWidget` and `StudentBookingDetail` — free ≥60 days before move-in,
+50% ≥30 days, 0% inside 30 days.
+
+Still unresolved beneath this, and unaffected by the skip: the
+**admissions-contingency gap** recorded under Feature 25.
+
 **Owed deliverable:** a mapping showing how each decided feature renders in
 StudentX's colours — produced after the feature pass completes.
 
@@ -1805,6 +1926,114 @@ account:
 
 Either paste them here, or connect the Claude-in-Chrome extension and the
 walkthrough can be finished live against the real dashboard.
+
+---
+
+## Host features
+
+> Source screenshots supplied by founder 2026-08-07: current StudentX landlord
+> dashboard; Airbnb **Today**; Airbnb **Listings**; Airbnb **Messages** (three-pane);
+> Airbnb message-row zoom. **Calendar was deliberately not captured — see Feature 52.**
+
+### ✅ Feature 49 — Today dashboard — **BUILD**
+
+Replaces `landlord/dashboard/page.js` (514 ln), currently a six-tile metrics
+dashboard with listings and inquiries panels below.
+
+**Airbnb's Today, as captured:** segmented `Today` / `Upcoming` pills, a
+`Filter` control top-right, a large centred count heading
+(*"You have 1 reservation"*), one card per item — `All day` label, composite
+avatar (guest photo + property photo), a bold human sentence
+(*"André's group of 2 stays for 5 more days"*), listing name as grey
+subtitle — and a `See all reservations` link at the foot. **No metrics
+anywhere.**
+
+**Navigation change:** the left sidebar (`DASHBOARD / LISTINGS / RESERVATIONS /
+INQUIRIES / VERIFICATION / SETTINGS`) becomes a **top nav: `Today · Listings ·
+Messages`** — no Calendar (Feature 52). Verification and Settings move into the
+account menu.
+
+**Why this matters more than its position suggests:** the audit
+(`accommodation-marketplace-spec.md`) shows landlord response latency *is* the
+conversion mechanism — average response time is **1d 10h**, and landlords race
+each other, not just a timer. A metrics dashboard reports how a landlord did; an
+action list tells them what to do next. Today should lead with
+*"2 requests waiting, oldest 14 hours"*, not `CONVERSION RATE 0%`.
+
+**Action-required cards** map exactly onto the go-live gate (`listingGoLive.js`):
+ID verification, completed video call, admin approval. Three blockers a landlord
+currently has to piece together from separate pages.
+
+> **Open — the six metric tiles.** Airbnb's Today has none; StudentX has
+> `ACTIVE LISTINGS / PENDING REQUESTS / PENDING INQUIRIES / VIEWS THIS MONTH /
+> CONVERSION RATE / AVG. RESPONSE TIME`. Not yet decided whether they are
+> dropped, demoted below the action list, or reduced to response time reframed
+> as a prompt rather than a stat.
+
+### ❌ Feature 52 — Host calendar — **SKIP (founder call)**
+
+Deliberately excluded. Host nav is `Today · Listings · Messages` only.
+
+Consistent with Feature 32 (no PDP availability calendar): a mid-term let has
+one move-in and one move-out, so a nightly availability grid earns far less
+than it does on Airbnb.
+
+#### ✅ Feature 49 addendum — the six metric tiles, re-homed (2026-08-07)
+
+The tile grid is **removed** from the host dashboard. Every metric moves to
+where it does work rather than reports a score:
+
+| Tile | New home |
+|---|---|
+| `ACTIVE LISTINGS` | **Landlord public profile** ("About me") |
+| `AVG. RESPONSE TIME` | **Landlord public profile**, as *average reply rate* |
+| `PENDING REQUESTS` | **Dot on the `Messages` nav tab** — no number, just presence |
+| `PENDING INQUIRIES` | **Dot on the `Messages` nav tab** |
+| `VIEWS THIS MONTH` | **Top-right of the host nav**, where Airbnb puts `Switch to traveling` |
+| `CONVERSION RATE` | ⚠️ **Unassigned — not yet decided.** Dropped by omission unless placed |
+
+### ✅ Landlord public profile — "About me" — **BUILD**
+
+Students can view a landlord's profile. Modelled on Airbnb's `About me` card:
+circular avatar with a verified badge overlapping its lower-right, name,
+location beneath, and a right-hand stat column with hairline dividers, plus a
+shield + `Identity verified` line under the card.
+
+**StudentX stats column** (Airbnb's are Trips / Reviews / Years):
+
+| Stat | Source |
+|---|---|
+| Active listings | count of `listing_status = 'active'` for the landlord |
+| Average reply rate | `landlords.avg_response_ms` via `responseTimeBucket` |
+
+No review count — Feature 34 is skipped.
+
+Extends the existing `landlords/[landlordId]` page; Feature 37's inline PDP
+card summarises and links to it.
+
+### ✅ Feature 50 — Listings grid — **BUILD, with rent**
+
+Three-up grid of photo cards replacing the current row list.
+
+- **Status chip overlaid top-left**: `● Listed` (green) / `● Action required`
+  (red). **Binary, exactly as Airbnb** — the granular states are not chips.
+- **Title** beneath the photo, then **rent** (`€500/mo`) as the grey subtitle
+  — *not* Airbnb's `Home in <city>, <country>`. A landlord knows where their
+  own properties are; they are comparing prices.
+- **List/grid toggle** and **`+`** button, top-right.
+- Photo carries the same 12px radius / borderless treatment as the guest card.
+
+#### Action-required banner
+
+Floating card above the page content — as Airbnb's, and it **follows the host
+across tabs** (it appears on both Listings and Messages in the captures) until
+resolved.
+
+**The granular go-live states live in the banner, not on the card:** `draft`,
+`submitted`, awaiting ID verification, awaiting video call, awaiting admin
+approval. The card says only that action is required; the banner says which
+step, and links to it. All derive from `listingGoLive.js` — do not
+reimplement the gate inline.
 
 ### ◐ Feature 51 — Listing editor — **BUILD section-list for EDIT, keep the wizard for CREATE**
 

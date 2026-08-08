@@ -521,7 +521,16 @@ marketing claim with no code behind it.
 **Build.** On the move-in date the student gets an email + in-app prompt:
 *"Everything as promised?"* → **Confirm** (release immediately) or **Report a
 problem** (freeze the transfer, open an ops ticket, start the remedy clock).
-Silence for 24h after arrival = implicit confirmation, release proceeds at T+1 business day.
+**Confirmation window = until the landlord is paid** (decided 2026-08-07,
+replacing the previous 24h rule). Silence up to **T+1 business day after
+arrival** = implicit confirmation, and release proceeds at that point.
+
+Why the change: a 24h window and a T+1-business-day release are different
+deadlines. A Friday-evening arrival closes the 24h window on Saturday
+evening but is not released until **Monday** — so the student-facing copy
+("you have until then to confirm") would have promised two days more than
+the system enforced, in the scenario that is *most* common for a September
+move-in. One rule, always ≥24h, one fewer number in the system.
 
 ### W7 — Listing quality & the Tier-2 fixes
 
