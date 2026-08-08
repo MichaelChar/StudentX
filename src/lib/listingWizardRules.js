@@ -69,12 +69,20 @@ export function validatePhotoMinimum(photos, external = []) {
 
 /**
  * Coordinates are required on every wizard save that touches location.
+ * Mirrors the DB sanity CHECK (location_coords_sane / migration 106):
+ * finite, in-range, and not Null Island (0, 0).
  */
 export function validateRequiredCoords(lat, lng) {
   const la = lat === '' || lat == null ? NaN : Number(lat);
   const ln = lng === '' || lng == null ? NaN : Number(lng);
   if (!Number.isFinite(la) || !Number.isFinite(ln)) {
     return { ok: false, error: 'lat and lng are required' };
+  }
+  if (la < -90 || la > 90 || ln < -180 || ln > 180) {
+    return { ok: false, error: 'lat and lng must be valid coordinates' };
+  }
+  if (la === 0 && ln === 0) {
+    return { ok: false, error: 'lat and lng must be valid coordinates' };
   }
   return { ok: true, lat: la, lng: ln };
 }

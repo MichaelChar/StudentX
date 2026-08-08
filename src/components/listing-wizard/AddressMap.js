@@ -56,6 +56,12 @@ function DraggableMarker({ lat, lng, onMove }) {
 
 /**
  * Draggable pin map for the address step. Click or drag sets lat/lng.
+ *
+ * The pin is only rendered once form coords are set (geocode pick or map
+ * click). A default city-center marker would look "placed" while form.lat /
+ * form.lng stayed empty, letting a draft save race past the coords gate.
+ * Map clicks still work with no pin — DraggableMarker registers useMapEvents
+ * before the finite-coords guard.
  */
 export default function AddressMap({ lat, lng, onMove }) {
   useLeafletIcons();
@@ -76,11 +82,7 @@ export default function AddressMap({ lat, lng, onMove }) {
           url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         />
         {hasPin && <MapRecenter lat={lat} lng={lng} />}
-        <DraggableMarker
-          lat={hasPin ? lat : THESSALONIKI_CENTER[0]}
-          lng={hasPin ? lng : THESSALONIKI_CENTER[1]}
-          onMove={onMove}
-        />
+        <DraggableMarker lat={lat} lng={lng} onMove={onMove} />
       </MapContainer>
     </div>
   );

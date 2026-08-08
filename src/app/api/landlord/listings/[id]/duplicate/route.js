@@ -94,13 +94,29 @@ async function duplicateFrom(src, { landlordId, authedSupabase, supabase }) {
     return NextResponse.json({ error: 'Failed to duplicate listing' }, { status: 500 });
   }
 
+  // location.lat/lng are NOT NULL (migration 106). Refuse to duplicate a
+  // source that somehow lacks coordinates rather than inserting nulls.
+  const srcLat = src.location?.lat;
+  const srcLng = src.location?.lng;
+  if (
+    srcLat == null ||
+    srcLng == null ||
+    !Number.isFinite(Number(srcLat)) ||
+    !Number.isFinite(Number(srcLng))
+  ) {
+    return NextResponse.json(
+      { error: 'Source listing is missing coordinates' },
+      { status: 400 },
+    );
+  }
+
   const { data: locationData, error: locationError } = await supabase
     .from('location')
     .insert({
       address: src.location?.address || 'Thessaloniki',
       neighborhood: src.location?.neighborhood || 'Center',
-      lat: src.location?.lat ?? null,
-      lng: src.location?.lng ?? null,
+      lat: Number(srcLat),
+      lng: Number(srcLng),
     })
     .select('location_id')
     .single();

@@ -85,6 +85,14 @@ describe('required coordinates', () => {
     expect(validateRequiredCoords(40.63, 22.94).ok).toBe(true);
     expect(validateRequiredCoords('40.63', '22.94').lat).toBeCloseTo(40.63);
   });
+
+  it('rejects Null Island and out-of-range values', () => {
+    expect(validateRequiredCoords(0, 0).ok).toBe(false);
+    expect(validateRequiredCoords(91, 22.94).ok).toBe(false);
+    expect(validateRequiredCoords(40.63, 181).ok).toBe(false);
+    // Athens is valid — city lock is gone
+    expect(validateRequiredCoords(37.9838, 23.7275).ok).toBe(true);
+  });
 });
 
 describe('form filters', () => {

@@ -496,6 +496,8 @@ export default function ListingForm({
       return null;
     }
     if (key === 'review') {
+      const coords = validateRequiredCoords(form.lat, form.lng);
+      if (!coords.ok) return t('errors.coordsRequired');
       const photos = validatePhotoMinimum(
         form.photos,
         form.external_photo_urls,

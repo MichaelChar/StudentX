@@ -15,6 +15,8 @@ import {
   photoExtFromUrl,
   PUBLISH_FALLBACK_TYPE,
 } from '@/lib/pendingMappers';
+import { searchAddress } from '@/lib/geocodeNominatim';
+import { validateRequiredCoords } from '@/lib/listingWizardRules';
 
 const LISTING_BUCKET = 'listing-photos';
 const FETCH_TIMEOUT_MS = 15000;
@@ -204,6 +206,40 @@ export async function publishPendingLandlord({ supabase, landlord, edits = {}, f
       const propertyTypeId = await resolvePropertyTypeId(supabase, propertyType);
       if (!propertyTypeId) throw new Error('no property_type_id');
 
+      // location.lat/lng are NOT NULL (migration 106). Prefer client-supplied
+      // coords from claim edits; otherwise geocode the address. Never insert
+      // null — that would fail the constraint and leave a half-published row.
+      let lat =
+        ed.lat !== undefined && ed.lat !== null && ed.lat !== ''
+          ? Number(ed.lat)
+          : NaN;
+      let lng =
+        ed.lng !== undefined && ed.lng !== null && ed.lng !== ''
+          ? Number(ed.lng)
+          : NaN;
+      if (!validateRequiredCoords(lat, lng).ok) {
+        const query = [address, neighborhood, 'Thessaloniki']
+          .filter(Boolean)
+          .join(', ');
+        if (query.trim().length >= 3) {
+          try {
+            const results = await searchAddress(query);
+            if (results[0]) {
+              lat = results[0].lat;
+              lng = results[0].lng;
+            }
+          } catch {
+            // fall through to skip below
+          }
+        }
+      }
+      const coords = validateRequiredCoords(lat, lng);
+      if (!coords.ok) {
+        errors.push(`${pl.id}: coordinates required (geocode failed)`);
+        skipped.push(pl.id);
+        continue;
+      }
+
       const { data: rentRow, error: rentErr } = await supabase
         .from('rent')
         .insert({ monthly_price: price || null, currency: 'EUR', bills_included: false, deposit: 0 })
@@ -213,7 +249,12 @@ export async function publishPendingLandlord({ supabase, landlord, edits = {}, f
 
       const { data: locRow, error: locErr } = await supabase
         .from('location')
-        .insert({ address: address || neighborhood || 'Thessaloniki', neighborhood: neighborhood || 'Unknown', lat: null, lng: null })
+        .insert({
+          address: address || neighborhood || 'Thessaloniki',
+          neighborhood: neighborhood || 'Unknown',
+          lat: coords.lat,
+          lng: coords.lng,
+        })
         .select('location_id')
         .single();
       if (locErr) throw locErr;
