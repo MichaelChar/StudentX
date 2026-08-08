@@ -10,8 +10,11 @@ import {
   parseUniversityDistances,
   MIN_UNIVERSITY_DISTANCES,
 } from '@/lib/universityDistances';
-import { parseAndValidateDurations } from '@/lib/listingWizardRules';
-import { PHOTO_LIMIT } from '@/lib/listingWizardRules';
+import {
+  parseAndValidateDurations,
+  validateRequiredCoords,
+  PHOTO_LIMIT,
+} from '@/lib/listingWizardRules';
 import { getSupabase } from '@/lib/supabase';
 
 /**
@@ -73,37 +76,33 @@ export async function parseListingWriteBody(body, opts = {}) {
     return { ok: false, status: 400, error: 'title is required' };
   }
 
-  // Coordinates
+  // Coordinates — NOT NULL in DB (migration 106). Refuse null / missing /
+  // out-of-range / Null Island here so the constraint is never first defence.
   let lat = undefined;
   let lng = undefined;
   if (body.lat !== undefined || body.lng !== undefined || requireCoords) {
-    const rawLat = body.lat;
-    const rawLng = body.lng;
-    const la =
-      rawLat === null || rawLat === undefined || rawLat === ''
-        ? NaN
-        : Number(rawLat);
-    const ln =
-      rawLng === null || rawLng === undefined || rawLng === ''
-        ? NaN
-        : Number(rawLng);
-    if (requireCoords || body.lat !== undefined || body.lng !== undefined) {
-      if (!Number.isFinite(la) || !Number.isFinite(ln)) {
-        if (requireCoords) {
-          return { ok: false, status: 400, error: 'lat and lng are required' };
-        }
-        // partial clear not allowed — coords are required once set path is used
-        if (body.lat !== undefined || body.lng !== undefined) {
-          return {
-            ok: false,
-            status: 400,
-            error: 'lat and lng must be valid numbers',
-          };
-        }
-      } else {
-        lat = la;
-        lng = ln;
+    const hasLat = body.lat !== undefined && body.lat !== null && body.lat !== '';
+    const hasLng = body.lng !== undefined && body.lng !== null && body.lng !== '';
+
+    if (requireCoords && (!hasLat || !hasLng)) {
+      return { ok: false, status: 400, error: 'lat and lng are required' };
+    }
+
+    if (hasLat || hasLng) {
+      // One set without the other is never valid.
+      if (!hasLat || !hasLng) {
+        return {
+          ok: false,
+          status: 400,
+          error: 'lat and lng must be valid numbers',
+        };
       }
+      const coords = validateRequiredCoords(body.lat, body.lng);
+      if (!coords.ok) {
+        return { ok: false, status: 400, error: coords.error };
+      }
+      lat = coords.lat;
+      lng = coords.lng;
     }
   }
 

@@ -81,6 +81,8 @@ ON CONFLICT (name) DO NOTHING;
 -- ----------------------------------------
 -- Location records (10, one per listing)
 -- ----------------------------------------
+-- lat/lng are NOT NULL as of migration 106 (S18). Every seed row must supply
+-- both; omitting them fails `supabase start` on every PR (same class as 038).
 INSERT INTO location (location_id, address, neighborhood, lat, lng) VALUES
   (1,  'Tsimiski 45',              'Kentro',       40.6325, 22.9430),
   (2,  'Egnatia 132',              'Kamara',       40.6355, 22.9470),
