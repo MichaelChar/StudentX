@@ -1861,3 +1861,20 @@ justification is the audit: landlords are **racing each other** to respond
 (students shotgun parallel requests, losers auto-cancel), and average response
 time is 1d 10h. Putting dates, guest profile and accept/decline in the same
 view as the message removes the round-trip that costs the booking.
+
+### ⏳ Feature 54 — Host Insights / Earnings — **DEFER to 2026-09-06**
+
+No host-facing analytics or earnings page. `admin/metrics` stays admin-only.
+
+Deferred because there is nothing to chart: 3 listings, no completed
+bookings, no payouts.
+
+**This is the natural home for `CONVERSION RATE`** — the one metric tile left
+unassigned when the dashboard grid was re-homed (Feature 49 addendum). Also
+the home for earnings: paid out, held in escrow, due.
+
+⚠️ **Data-gated, not inventory-gated.** The threshold is completed bookings
+and payouts existing at all, not listing count.
+
+**⏰ Added to** `studentx-revisit-results-count` (fires 2026-09-06) as its
+second data-gated item, alongside Feature 43.
