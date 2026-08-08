@@ -1898,3 +1898,52 @@ Reasons, in order of weight:
 If a person is genuinely both, they sign in separately.
 
 **Closes the host group.** Features 49–55 all decided.
+
+---
+
+## Mobile features
+
+> **Top bar vs bottom bar — both, at different breakpoints.** Airbnb's *desktop*
+> host nav is a top bar (`Today · Calendar · Listings · Messages`). Below the
+> mobile breakpoint the header is replaced by a **bottom tab bar** — verified in
+> session at 375×812, where the Thessaloniki results header collapsed to a back
+> arrow + two-line search pill and navigation moved to `Explore · Wishlists ·
+> Log in` at the foot. Features 1–55 describe the desktop top nav; Feature 56 is
+> what replaces it on mobile. Both ship.
+
+### ✅ Feature 56 — Mobile bottom tab bar — **BUILD, both sides**
+
+Net-new — StudentX has no bottom tab bar today. It is also the piece that makes
+Features 57–59 coherent: the map-first sheet, chromeless PDP and sticky booking
+bar all assume navigation is held at the foot, which is why the PDP can drop its
+header entirely.
+
+**Founder-specified contents:**
+
+| Role | Tabs |
+|---|---|
+| **Guest, signed out** | `Explore` · `Log in` |
+| **Guest, signed in** | `Explore` · `Wishlists` · `Messages` · `Profile` |
+| **Landlord** | `Today` · `Listings` · `Messages` · `Profile` |
+
+- The landlord bar mirrors the desktop host nav minus Calendar (Feature 52).
+- `Messages` carries the **dot indicator** specified in the Feature 49 addendum
+  — pending requests and inquiries were re-homed onto it.
+- **The two bars never coexist.** Feature 55 skipped the role toggle, so a
+  session is either landlord or student; the bar is chosen by role at render
+  with no switching affordance. Simpler than Airbnb, which must handle the
+  transition.
+
+#### ⚠️ Two consequences, recorded
+
+**1. Bookings are not a tab.** Airbnb gives signed-in guests a `Trips` tab; the
+StudentX bar does not. A student's active booking therefore lives under
+`Profile`, two taps deep. Post-booking, *"where is my booking, and when am I
+paying"* is that student's top task — and Feature 44 puts the request's pending
+state and expiry there too. Flagged, not overridden.
+
+**2. `/gigs`, `/resources` and `/ausom` are reachable only via `Profile`.**
+Feature 3 skipped product tabs, so the account menu is already their sole route
+on desktop. On mobile three whole product areas sit behind a Profile icon — and
+mobile is where students are. This is Feature 3's discoverability cost arriving
+here rather than there.
