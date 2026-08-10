@@ -193,10 +193,13 @@ export default function AdminListingGoLivePage() {
                         {busy ? t('approving') : t('approve')}
                       </Button>
                     )}
+                    {/* Destructive, not tertiary: revoking pulls a listing off
+                        the public site, and in a dense admin row an underlined
+                        label reads like something you could click by accident. */}
                     {isLive && (
                       <Button
                         type="button"
-                        variant="ghost"
+                        variant="destructive"
                         size="sm"
                         disabled={busy}
                         onClick={() => handleAction(row.listing_id, 'revoke')}
