@@ -11,6 +11,7 @@ import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import { stayDurationMonths } from '@/lib/bookingDates';
 import { formatMoney } from '@/lib/formatMoney';
+import { bookingStateVariant } from '@/lib/statusVariant';
 
 const TABS = ['requested', 'accepted', 'confirmed', 'declined', 'cancelled'];
 
@@ -23,17 +24,6 @@ function formatDate(iso) {
     year: 'numeric',
     timeZone: 'UTC',
   });
-}
-
-function statusVariant(state) {
-  if (state === 'requested') return 'pending';
-  if (state === 'accepted' || state === 'confirmed' || state === 'moved_in') {
-    return 'info';
-  }
-  if (state === 'declined' || state === 'cancelled' || state === 'expired') {
-    return 'amenity';
-  }
-  return 'amenity';
 }
 
 export default function LandlordReservationsPage() {
@@ -171,7 +161,7 @@ export default function LandlordReservationsPage() {
                     className="border-b border-night/10 last:border-0 hover:bg-parchment/60"
                   >
                     <td className="px-4 py-3">
-                      <Pill variant={statusVariant(b.state)}>
+                      <Pill variant={bookingStateVariant(b.state)}>
                         {t(`state_${b.state}`)}
                       </Pill>
                     </td>

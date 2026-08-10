@@ -17,6 +17,7 @@ import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import VerifiedSeal from '@/components/ui/VerifiedSeal';
+import { inquiryStatusVariant } from '@/lib/statusVariant';
 
 /*
   Propylaea landlord dashboard — server-rendered (#254).
@@ -403,8 +404,7 @@ function ListingRow({ listing }) {
 
 function InquiryRow({ inquiry }) {
   const status = inquiry.status || 'pending';
-  const statusVariant =
-    status === 'pending' ? 'pending' : status === 'replied' ? 'info' : 'amenity';
+  const statusVariant = inquiryStatusVariant(status);
   const statusLabel =
     status === 'pending' ? 'New' : status === 'replied' ? 'Replied' : 'Closed';
   const date = inquiry.created_at ? new Date(inquiry.created_at).toLocaleDateString() : '';
