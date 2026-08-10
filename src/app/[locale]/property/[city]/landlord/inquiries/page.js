@@ -9,6 +9,7 @@ import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import { Link } from '@/i18n/navigation';
+import { inquiryStatusVariant } from '@/lib/statusVariant';
 
 function formatDate(iso) {
   if (!iso) return '';
@@ -85,12 +86,6 @@ export default function LandlordInquiriesPage() {
   );
 }
 
-function statusVariant(status) {
-  if (status === 'pending') return 'pending';
-  if (status === 'replied') return 'info';
-  return 'amenity';
-}
-
 function InquiryCard({ inquiry, t }) {
   const address = inquiry.listings?.location?.address || `#${inquiry.listing_id}`;
 
@@ -102,7 +97,7 @@ function InquiryCard({ inquiry, t }) {
             <p className="font-display text-xl text-night">
               {inquiry.student_name}
             </p>
-            <Pill variant={statusVariant(inquiry.status)}>
+            <Pill variant={inquiryStatusVariant(inquiry.status)}>
               {t(`status_${inquiry.status}`)}
             </Pill>
           </div>

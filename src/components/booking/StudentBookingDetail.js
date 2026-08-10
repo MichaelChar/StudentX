@@ -13,6 +13,7 @@ import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import { stayDurationMonths } from '@/lib/bookingDates';
 import { formatMoney } from '@/lib/formatMoney';
 import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
+import { bookingStateVariant } from '@/lib/statusVariant';
 
 const CANCELLATION_COPY_KEY = {
   free: 'cancellationFree',
@@ -28,15 +29,6 @@ function formatDate(iso) {
     year: 'numeric',
     timeZone: 'UTC',
   });
-}
-
-function statusVariant(state) {
-  if (state === 'requested') return 'pending';
-  if (state === 'accepted' || state === 'confirmed' || state === 'moved_in') {
-    return 'info';
-  }
-  if (state === 'disputed') return 'pending';
-  return 'amenity';
 }
 
 /**
@@ -181,7 +173,7 @@ export default function StudentBookingDetail({ bookingId }) {
               <p className="text-sm text-night/60 mt-1">{loc.neighborhood}</p>
             )}
           </div>
-          <Pill variant={statusVariant(booking.state)}>
+          <Pill variant={bookingStateVariant(booking.state)}>
             {t(`state_${booking.state}`)}
           </Pill>
         </div>

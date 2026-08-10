@@ -7,6 +7,7 @@ import Icon from '@/components/ui/Icon';
 import { stayDurationMonths } from '@/lib/bookingDates';
 import { formatMoney } from '@/lib/formatMoney';
 import { variantUrl } from '@/lib/photoVariants';
+import { bookingStateVariant } from '@/lib/statusVariant';
 
 function isValidPhotoUrl(url) {
   return typeof url === 'string' && url.startsWith('http');
@@ -21,15 +22,6 @@ function formatDate(iso) {
     year: 'numeric',
     timeZone: 'UTC',
   });
-}
-
-function statusVariant(state) {
-  if (state === 'requested') return 'pending';
-  if (state === 'accepted' || state === 'confirmed' || state === 'moved_in') {
-    return 'info';
-  }
-  if (state === 'disputed') return 'pending';
-  return 'amenity';
 }
 
 /**
@@ -78,7 +70,7 @@ export default async function StudentBookingCard({ booking, locale }) {
                   <p className="label-caps text-night/50 mt-0.5">{neighborhood}</p>
                 )}
               </div>
-              <Pill variant={statusVariant(booking.state)}>
+              <Pill variant={bookingStateVariant(booking.state)}>
                 {t(`state_${booking.state}`)}
               </Pill>
             </div>
