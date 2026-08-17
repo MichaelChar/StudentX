@@ -29,6 +29,28 @@
   --color-white: #FFFFFF;
   --color-text: #0a2540;
   --color-gray-light: #f6f4ff;
+
+  /* Geometry scale — backlog F4 (docs/airbnb-ui-parity-spec.md §"Geometry,
+     card frame & motion — DECIDED"). Named by ROLE, not by size, because the
+     migration off `rounded-sm` (186 sites) is a per-element judgement: a card
+     and a button both read `rounded-sm` today and must not land on the same
+     value. Using `rounded-card` / `rounded-control` makes each site state
+     what it is, so the next reader can tell a deliberate choice from a
+     sweep artefact.
+
+     Additive on purpose: nothing consumes these yet, so this file changes no
+     pixels. The sweep is a separate PR. */
+  --radius-card: 20px;      /* listing/search card containers */
+  --radius-photo: 12px;     /* images inside a card, gallery tiles */
+  --radius-pill: 24px;      /* filter chips, status pills — fully round at 34px tall */
+  --radius-control: 8px;    /* buttons, inputs, selects */
+  --radius-modal: 32px;     /* modals, sheets */
+
+  /* Motion — backlog F5. Airbnb's measured timing, replacing Tailwind's
+     150ms / cubic-bezier(.4, 0, .2, 1). 250ms is for larger surfaces
+     (modals, sheets) and is applied per-site as `duration-250`; Tailwind v4
+     has no `--duration-*` namespace, so only the default is a token. */
+  --ease-parity: cubic-bezier(.455, .03, .515, .955);
 }
 
 @theme inline {
@@ -56,6 +78,26 @@
   --font-display: var(--font-inter), system-ui, sans-serif;
   /* Legacy alias kept for any component still using font-heading */
   --font-heading: var(--font-inter), system-ui, sans-serif;
+
+  /* Geometry — generates rounded-card / rounded-photo / rounded-pill /
+     rounded-control / rounded-modal. Tailwind's own radius scale
+     (rounded-sm/lg/full) is left intact so existing markup is untouched. */
+  --radius-card: var(--radius-card);
+  --radius-photo: var(--radius-photo);
+  --radius-pill: var(--radius-pill);
+  --radius-control: var(--radius-control);
+  --radius-modal: var(--radius-modal);
+
+  /* Motion — `ease-parity` for explicit use, plus the global defaults every
+     bare `transition-*` utility inherits.
+
+     NOTE: overriding the defaults is the ONE behavioural change in this file.
+     Every existing transition slows 150ms → 200ms and swaps easing curve. No
+     layout or colour moves; this is deliberate per F5, which calls for
+     replacing Tailwind's defaults rather than annotating call sites. */
+  --ease-parity: var(--ease-parity);
+  --default-transition-duration: 200ms;
+  --default-transition-timing-function: var(--ease-parity);
 }
 
 body {
