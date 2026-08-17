@@ -355,7 +355,7 @@ function metaLine(resource) {
 }
 
 const CARD_CLASS =
-  'block rounded-[18px] border border-night/10 bg-white p-5 shadow-[0_1px_3px_rgba(10,37,64,0.06),0_10px_28px_-12px_rgba(10,37,64,0.16)] transition-all duration-[220ms] ease-[cubic-bezier(.2,.7,.2,1)] hover:-translate-y-0.5 hover:border-blue hover:shadow-[0_22px_48px_-18px_rgba(99,91,255,0.30),0_6px_18px_-10px_rgba(10,37,64,0.10)]';
+  'block rounded-[18px] border border-night/10 bg-white p-5 shadow-[0_1px_3px_rgba(10,37,64,0.06),0_10px_28px_-12px_rgba(10,37,64,0.16)] transition-[transform,border-color] hover:-translate-y-0.5 hover:border-blue hover:shadow-[0_22px_48px_-18px_rgba(99,91,255,0.30),0_6px_18px_-10px_rgba(10,37,64,0.10)]';
 const CARD_STYLE = { textDecoration: 'none', color: '#0a2540' };
 
 function ResourceCardBody({ resource, meta }) {

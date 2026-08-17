@@ -79,7 +79,7 @@ export default function StepPhotos({
                     setDragIndex(null);
                     setDragOverIndex(null);
                   }}
-                  className={`relative group aspect-[4/3] rounded-sm overflow-hidden bg-parchment cursor-grab active:cursor-grabbing transition-all ${
+                  className={`relative group aspect-[4/3] rounded-sm overflow-hidden bg-parchment cursor-grab active:cursor-grabbing transition-opacity ${
                     i === 0 ? 'col-span-2' : ''
                   } ${isDragging ? 'opacity-40' : ''} ${
                     isDragOver ? 'ring-2 ring-yellow ring-offset-2' : ''

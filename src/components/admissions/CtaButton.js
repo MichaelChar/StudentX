@@ -34,7 +34,7 @@ export default function CtaButton({ children, look = 'solid', size = 'lg', class
       {...external}
       className={
         'inline-flex items-center justify-center rounded-full font-display font-semibold ' +
-        'transition-all duration-150 focus-visible:outline-2 focus-visible:outline-offset-2 ' +
+        'transition-transform focus-visible:outline-2 focus-visible:outline-offset-2 ' +
         `focus-visible:outline-blue ${LOOKS[look]} ${SIZES[size]} ${className}`
       }
     >

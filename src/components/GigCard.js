@@ -46,7 +46,7 @@ export default function GigCard({ gig, fromQuery = '' }) {
     : null;
 
   return (
-    <div className="group relative bg-white rounded-sm overflow-hidden transition-all border border-night/10 hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)]">
+    <div className="group relative bg-white rounded-sm overflow-hidden transition-colors border border-night/10 hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)]">
       {/* Photo */}
       <div className="relative aspect-[4/3] bg-parchment">
         <span className="absolute top-3 right-3 z-10">

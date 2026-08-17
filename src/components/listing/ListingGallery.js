@@ -83,7 +83,7 @@ export default function ListingGallery({ photos, title }) {
                 onClick={() => setActive(i)}
                 aria-label={t('thumbnailAlt', { title, number: i + 1 })}
                 aria-current={i === active ? 'true' : undefined}
-                className={`relative aspect-square rounded-sm overflow-hidden bg-parchment transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${
+                className={`relative aspect-square rounded-sm overflow-hidden bg-parchment transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${
                   i === active
                     ? 'ring-2 ring-blue ring-offset-2 ring-offset-stone'
                     : 'opacity-80 hover:opacity-100'

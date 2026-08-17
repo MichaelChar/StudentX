@@ -155,9 +155,12 @@ export default function StudentProfileForm({
           aria-valuemax={100}
           aria-label={t('completenessLabel')}
         >
+          {/* Scale, not width: animating `width` is a layout property and
+              re-lays-out the row every frame. transform is composited, so the
+              same visual fill costs nothing on a mid-range phone. */}
           <div
-            className="h-full bg-blue transition-all"
-            style={{ width: `${Math.round(completeness * 100)}%` }}
+            className="h-full w-full origin-left bg-blue transition-transform"
+            style={{ transform: `scaleX(${completeness})` }}
           />
         </div>
         {missing.length > 0 && (
