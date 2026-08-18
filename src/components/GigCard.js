@@ -46,9 +46,11 @@ export default function GigCard({ gig, fromQuery = '' }) {
     : null;
 
   return (
-    <div className="group relative bg-white rounded-sm overflow-hidden transition-colors border border-night/10 hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)]">
-      {/* Photo */}
-      <div className="relative aspect-[4/3] bg-parchment">
+    /* Same borderless photo-as-card frame as ListingCard — the two grids sit
+       in the same design system and would read as two systems otherwise. */
+    <div className="group relative transition-transform hover:-translate-y-0.5">
+      {/* Photo — this IS the card frame now */}
+      <div className="relative aspect-[4/3] rounded-photo overflow-hidden bg-parchment">
         <span className="absolute top-3 right-3 z-10">
           <Pill variant={gig.is_paid ? 'verified' : 'info'}>
             {gig.is_paid ? t('paid') : t('unpaid')}
@@ -70,7 +72,7 @@ export default function GigCard({ gig, fromQuery = '' }) {
       </div>
 
       {/* Body */}
-      <div className="p-5">
+      <div className="pt-3">
         <p className="label-caps text-night/50">
           {gig.country_flag ? `${gig.country_flag} ` : ''}
           {[gig.city, gig.country_name].filter(Boolean).join(' · ')}
@@ -108,7 +110,7 @@ export default function GigCard({ gig, fromQuery = '' }) {
       <Link
         href={href}
         aria-label={gig.title}
-        className="absolute inset-0 z-0 rounded-sm focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
+        className="absolute inset-0 z-0 rounded-photo focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
       />
 
       {/* Save toggle — over the photo's top-left, above the stretched link.
