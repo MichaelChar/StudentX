@@ -6,7 +6,7 @@ import Icon from '@/components/ui/Icon';
 import SuggestedMark from '@/components/listing-wizard/SuggestedMark';
 
 const inputClass =
-  'w-full border border-night/15 bg-white rounded-sm px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+  'w-full border border-night/15 bg-white rounded-control px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 const labelClass = 'label-caps text-night/70 mb-1.5 block';
 
 export default function StepAvailability({
@@ -111,7 +111,7 @@ export default function StepAvailability({
                 <button
                   type="button"
                   onClick={() => removeBlackout(i)}
-                  className="p-2 text-night/40 hover:text-night rounded-sm"
+                  className="p-2 text-night/40 hover:text-night rounded-control"
                   aria-label={t('removeBlackout')}
                 >
                   <Icon name="x" className="w-4 h-4" />

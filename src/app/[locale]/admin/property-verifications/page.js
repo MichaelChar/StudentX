@@ -131,7 +131,7 @@ export default function AdminPropertyVerificationsPage() {
   if (error && requests.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
-        <p className="text-red-700 bg-red-50 border border-red-200 rounded-sm px-6 py-4">
+        <p className="text-red-700 bg-red-50 border border-red-200 rounded-card px-6 py-4">
           {error}
         </p>
       </div>
@@ -151,7 +151,7 @@ export default function AdminPropertyVerificationsPage() {
               key={s}
               type="button"
               onClick={() => handleFilterChange(s)}
-              className={`text-sm px-3 py-1.5 rounded-sm border transition-colors capitalize ${
+              className={`text-sm px-3 py-1.5 rounded-control border transition-colors capitalize ${
                 statusFilter === s
                   ? 'bg-night text-white border-night'
                   : 'border-night/15 text-night/60 hover:border-night/40'
@@ -164,13 +164,13 @@ export default function AdminPropertyVerificationsPage() {
       </div>
 
       {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3 mb-6">
+        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
 
       {requests.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-night/15 rounded-sm">
+        <div className="text-center py-16 border-2 border-dashed border-night/15 rounded-card">
           <p className="text-night/50">{t('empty', { status: t(`status.${statusFilter}`) })}</p>
         </div>
       ) : (
@@ -239,7 +239,7 @@ export default function AdminPropertyVerificationsPage() {
                       onClick={() =>
                         setExpandedId(expanded ? null : req.verification_id)
                       }
-                      className="shrink-0 text-sm px-3 py-1.5 rounded-sm border border-night/15 text-night/70 hover:border-night hover:text-night transition-colors"
+                      className="shrink-0 text-sm px-3 py-1.5 rounded-control border border-night/15 text-night/70 hover:border-night hover:text-night transition-colors"
                     >
                       {expanded ? t('collapse') : t('openCall')}
                     </button>
@@ -251,7 +251,7 @@ export default function AdminPropertyVerificationsPage() {
                     <div>
                       <p className="label-caps text-night/50 mb-3">{t('listingPhotos')}</p>
                       {photos.length === 0 ? (
-                        <div className="aspect-[4/3] rounded-sm bg-parchment flex items-center justify-center">
+                        <div className="aspect-[4/3] rounded-photo bg-parchment flex items-center justify-center">
                           <Icon name="photo" className="w-10 h-10 text-night/20" />
                         </div>
                       ) : (
@@ -259,7 +259,7 @@ export default function AdminPropertyVerificationsPage() {
                           {photos.slice(0, 6).map((url) => (
                             <div
                               key={url}
-                              className="relative aspect-[4/3] rounded-sm overflow-hidden bg-parchment"
+                              className="relative aspect-[4/3] rounded-photo overflow-hidden bg-parchment"
                             >
                               <Image
                                 src={variantUrl(url, 'card')}
@@ -296,7 +296,7 @@ export default function AdminPropertyVerificationsPage() {
                                 onChange={() =>
                                   toggleChecklist(req.verification_id, key)
                                 }
-                                className="mt-0.5 h-4 w-4 rounded-sm border-night/30 text-blue focus:ring-blue/40"
+                                className="mt-0.5 h-4 w-4 rounded-control border-night/30 text-blue focus:ring-blue/40"
                               />
                               <span>{t(CHECKLIST_I18N[key])}</span>
                             </label>
@@ -318,7 +318,7 @@ export default function AdminPropertyVerificationsPage() {
                             }))
                           }
                           rows={3}
-                          className="w-full rounded-sm border border-night/15 bg-parchment px-3 py-2 text-sm text-night focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow resize-none"
+                          className="w-full rounded-control border border-night/15 bg-parchment px-3 py-2 text-sm text-night focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow resize-none"
                         />
                       </div>
 
@@ -370,7 +370,7 @@ function StatusBadge({ status, t }) {
   };
   return (
     <span
-      className={`text-[11px] font-semibold px-2 py-0.5 rounded-sm border capitalize ${styles[status] || ''}`}
+      className={`text-[11px] font-semibold px-2 py-0.5 rounded-pill border capitalize ${styles[status] || ''}`}
     >
       {t(`status.${status}`)}
     </span>

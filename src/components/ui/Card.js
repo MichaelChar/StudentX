@@ -30,7 +30,7 @@ export default function Card({
     : '';
   return (
     <div
-      className={`${TONES[tone] || TONES.parchment} ${borderCls} ${hoverCls} rounded-sm ${className}`}
+      className={`${TONES[tone] || TONES.parchment} ${borderCls} ${hoverCls} rounded-card ${className}`}
       {...rest}
     >
       {children}

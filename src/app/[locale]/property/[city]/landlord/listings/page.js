@@ -221,7 +221,7 @@ export default function LandlordListingsPage() {
       }
     >
       {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3 mb-6">
+        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -229,7 +229,7 @@ export default function LandlordListingsPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 bg-parchment rounded-sm animate-pulse" />
+            <div key={i} className="h-24 bg-parchment rounded-card animate-pulse" />
           ))}
         </div>
       ) : listings.length === 0 ? (
@@ -342,7 +342,7 @@ function ListingRow({
   return (
     <div className="flex flex-col gap-4 p-5">
       <div className="flex flex-col md:flex-row md:items-center gap-4">
-        <div className="relative w-full md:w-20 aspect-[4/3] md:aspect-square rounded-sm bg-parchment overflow-hidden shrink-0">
+        <div className="relative w-full md:w-20 aspect-[4/3] md:aspect-square rounded-photo bg-parchment overflow-hidden shrink-0">
           {photo ? (
             <Image
               src={variantUrl(photo, 'thumb')}
@@ -403,13 +403,13 @@ function ListingRow({
         <Link
           href={`/property/thessaloniki/listing/${listing.listing_id}`}
           target="_blank"
-          className="label-caps px-3 py-1.5 rounded-sm border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors"
         >
           {t('view')}
         </Link>
         <Link
           href={`/property/thessaloniki/landlord/listings/${listing.listing_id}/edit`}
-          className="label-caps px-3 py-1.5 rounded-sm border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors"
         >
           {t('edit')}
         </Link>
@@ -417,7 +417,7 @@ function ListingRow({
           type="button"
           onClick={onDuplicate}
           disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-sm border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors disabled:opacity-50"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors disabled:opacity-50"
         >
           {t('duplicate')}
         </button>
@@ -425,7 +425,7 @@ function ListingRow({
           type="button"
           onClick={onToggleDisable}
           disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-sm border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors disabled:opacity-50"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors disabled:opacity-50"
         >
           {disabled ? t('enable') : t('disable')}
         </button>
@@ -434,7 +434,7 @@ function ListingRow({
             type="button"
             onClick={onRequestVerification}
             disabled={busy}
-            className="label-caps px-3 py-1.5 rounded-sm border border-blue/40 bg-blue/5 text-blue hover:border-blue hover:bg-blue/10 transition-colors disabled:opacity-50"
+            className="label-caps px-3 py-1.5 rounded-control border border-blue/40 bg-blue/5 text-blue hover:border-blue hover:bg-blue/10 transition-colors disabled:opacity-50"
           >
             {busy ? tPv('requesting') : tPv('requestCta')}
           </button>
@@ -443,7 +443,7 @@ function ListingRow({
           type="button"
           onClick={onDelete}
           disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-sm border border-red-300 text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+          className="label-caps px-3 py-1.5 rounded-control border border-red-300 text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
         >
           {busy ? t('deleting') : t('delete')}
         </button>

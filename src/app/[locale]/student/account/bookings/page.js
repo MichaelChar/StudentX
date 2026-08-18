@@ -85,7 +85,7 @@ async function BookingsSection({ locale }) {
 
   if (error) {
     return (
-      <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3">
+      <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3">
         {t('loadError')}
       </p>
     );
@@ -150,7 +150,7 @@ function BookingsSkeleton() {
         <li key={i}>
           <Card tone="white" className="p-5 md:p-6">
             <div className="flex gap-4">
-              <div className="w-24 h-24 bg-parchment rounded-sm animate-pulse shrink-0" />
+              <div className="w-24 h-24 bg-parchment rounded-card animate-pulse shrink-0" />
               <div className="flex-1 space-y-2">
                 <div className="h-6 w-2/3 bg-parchment rounded animate-pulse" />
                 <div className="h-3 w-1/3 bg-parchment rounded animate-pulse" />

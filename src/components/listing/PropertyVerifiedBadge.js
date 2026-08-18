@@ -46,7 +46,7 @@ export default function PropertyVerifiedBadge({
       {/* Inline disclosure on hover/focus — required mitigation for D6. */}
       <span
         role="tooltip"
-        className="pointer-events-none absolute left-0 top-full z-20 mt-1.5 w-64 max-w-[min(16rem,calc(100vw-2rem))] rounded-sm border border-night/10 bg-night px-3 py-2 text-[0.7rem] font-sans font-normal normal-case tracking-normal leading-snug text-white opacity-0 shadow-lg transition-opacity group-hover/pv:opacity-100 group-focus-within/pv:opacity-100"
+        className="pointer-events-none absolute left-0 top-full z-20 mt-1.5 w-64 max-w-[min(16rem,calc(100vw-2rem))] rounded-control border border-night/10 bg-night px-3 py-2 text-[0.7rem] font-sans font-normal normal-case tracking-normal leading-snug text-white opacity-0 shadow-lg transition-opacity group-hover/pv:opacity-100 group-focus-within/pv:opacity-100"
       >
         {disclosure}
       </span>

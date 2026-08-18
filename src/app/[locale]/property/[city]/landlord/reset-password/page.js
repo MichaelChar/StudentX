@@ -148,7 +148,7 @@ export default function ResetPasswordPage() {
         />
 
         {error && (
-          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-3 py-2">
+          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-3 py-2">
             {error}
           </p>
         )}

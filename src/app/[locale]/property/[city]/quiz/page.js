@@ -94,7 +94,7 @@ export default function QuizPage() {
         ))}
       </ol>
 
-      <Card tone="white" className="mt-10 px-6 py-10 md:px-12 md:py-14 rounded-sm border border-night/10">
+      <Card tone="white" className="mt-10 px-6 py-10 md:px-12 md:py-14 rounded-card border border-night/10">
         {step === 1 && (
           <BudgetStep t={t} budget={budget} setBudget={setBudget} />
         )}
@@ -199,7 +199,7 @@ function TypeStep({ t, types, onToggleType }) {
               type="button"
               onClick={() => onToggleType(vals)}
               aria-pressed={active}
-              className={`px-4 py-2 rounded-sm border text-sm font-sans transition-colors ${
+              className={`px-4 py-2 rounded-control border text-sm font-sans transition-colors ${
                 active
                   ? 'border-blue bg-blue text-white'
                   : 'border-night/20 text-night hover:border-blue'
@@ -234,7 +234,7 @@ function DealbreakersStep({ t, dealbreakers, onToggle }) {
               type="button"
               onClick={() => onToggle(opt.value)}
               aria-pressed={active}
-              className={`flex items-center gap-3 px-4 py-3 rounded-sm border text-left transition-colors ${
+              className={`flex items-center gap-3 px-4 py-3 rounded-control border text-left transition-colors ${
                 active
                   ? 'border-blue bg-blue/5 text-night'
                   : 'border-night/20 text-night/80 hover:border-blue'
@@ -242,7 +242,7 @@ function DealbreakersStep({ t, dealbreakers, onToggle }) {
             >
               <span
                 aria-hidden="true"
-                className={`w-4 h-4 rounded-sm border flex items-center justify-center shrink-0 ${
+                className={`w-4 h-4 rounded border flex items-center justify-center shrink-0 ${
                   active ? 'border-blue bg-blue' : 'border-night/30 bg-white'
                 }`}
               >

@@ -62,7 +62,7 @@ export default function StatusLadder({
                 />
               )}
               <span
-                className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-sm text-[0.65rem] font-sans font-semibold uppercase tracking-[0.12em] ${
+                className={`inline-flex items-center gap-1.5 px-2 py-1 rounded-pill text-[0.65rem] font-sans font-semibold uppercase tracking-[0.12em] ${
                   active
                     ? 'bg-blue text-white'
                     : showDone

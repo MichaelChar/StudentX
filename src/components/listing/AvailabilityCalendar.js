@@ -104,7 +104,7 @@ export default function AvailabilityCalendar({ listingId }) {
         <button
           type="button"
           onClick={prevMonth}
-          className="p-2 text-night/60 hover:text-blue rounded-sm"
+          className="p-2 text-night/60 hover:text-blue rounded-control"
           aria-label={t('prevMonth')}
         >
           <Icon name="chevronRight" className="w-4 h-4 rotate-180" />
@@ -113,7 +113,7 @@ export default function AvailabilityCalendar({ listingId }) {
         <button
           type="button"
           onClick={nextMonth}
-          className="p-2 text-night/60 hover:text-blue rounded-sm"
+          className="p-2 text-night/60 hover:text-blue rounded-control"
           aria-label={t('nextMonth')}
         >
           <Icon name="chevronRight" className="w-4 h-4" />
@@ -146,7 +146,7 @@ export default function AvailabilityCalendar({ listingId }) {
           return (
             <div
               key={cell.dateStr}
-              className={`aspect-square rounded-sm flex items-center justify-center text-sm font-sans ${cls}`}
+              className={`aspect-square rounded-photo flex items-center justify-center text-sm font-sans ${cls}`}
               title={t(`state_${cell.state}`)}
             >
               {cell.day}
@@ -167,7 +167,7 @@ export default function AvailabilityCalendar({ listingId }) {
 function Legend({ swatch, label }) {
   return (
     <li className="inline-flex items-center gap-2">
-      <span className={`inline-block w-3 h-3 rounded-sm ${swatch}`} aria-hidden="true" />
+      <span className={`inline-block w-3 h-3 rounded ${swatch}`} aria-hidden="true" />
       {label}
     </li>
   );

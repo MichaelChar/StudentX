@@ -163,7 +163,7 @@ export default function DirectoryCarousel() {
 
       {/* Viewport. tabIndex + onKeyDown give the track arrow-key control. */}
       <div
-        className="relative overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded-sm"
+        className="relative overflow-hidden focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded-card"
         tabIndex={0}
         onKeyDown={onKeyDown}
         onMouseEnter={() => setPaused(true)}
@@ -259,7 +259,7 @@ function PagerArrow({ dir, label, disabled, onClick }) {
 
 function SkeletonCard() {
   return (
-    <div className="rounded-sm border border-night/10 bg-white overflow-hidden animate-pulse">
+    <div className="rounded-control border border-night/10 bg-white overflow-hidden animate-pulse">
       <div className="aspect-[4/3] bg-parchment" />
       <div className="p-5 space-y-3">
         <div className="h-3 w-28 bg-parchment rounded" />

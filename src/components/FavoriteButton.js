@@ -38,7 +38,7 @@ export default function FavoriteButton({ listingId, withLabel = false, className
         onClick={handleClick}
         aria-pressed={saved}
         aria-label={ariaLabel}
-        className={`inline-flex items-center gap-2 rounded-sm border px-4 py-2.5 font-sans font-semibold uppercase tracking-[0.08em] text-xs transition-colors ${
+        className={`inline-flex items-center gap-2 rounded-control border px-4 py-2.5 font-sans font-semibold uppercase tracking-[0.08em] text-xs transition-colors ${
           saved
             ? 'border-magenta bg-magenta/5 text-magenta'
             : 'border-night/20 text-night/70 hover:border-magenta hover:text-magenta'

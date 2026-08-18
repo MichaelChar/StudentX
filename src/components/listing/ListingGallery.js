@@ -37,7 +37,7 @@ export default function ListingGallery({ photos, title }) {
         type="button"
         onClick={() => open(active)}
         aria-label={t('openLightbox')}
-        className="group relative block w-full aspect-[16/10] rounded-sm overflow-hidden bg-parchment cursor-zoom-in focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+        className="group relative block w-full aspect-[16/10] rounded-control overflow-hidden bg-parchment cursor-zoom-in focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
       >
         <Image
           src={variantUrl(photos[active], 'full')}
@@ -61,7 +61,7 @@ export default function ListingGallery({ photos, title }) {
                   type="button"
                   onClick={() => open(i)}
                   aria-label={t('moreLabel', { count: hiddenCount + 1 })}
-                  className="relative aspect-square rounded-sm overflow-hidden bg-night focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+                  className="relative aspect-square rounded-control overflow-hidden bg-night focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
                 >
                   <Image
                     src={variantUrl(src, 'thumb')}
@@ -83,7 +83,7 @@ export default function ListingGallery({ photos, title }) {
                 onClick={() => setActive(i)}
                 aria-label={t('thumbnailAlt', { title, number: i + 1 })}
                 aria-current={i === active ? 'true' : undefined}
-                className={`relative aspect-square rounded-sm overflow-hidden bg-parchment transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${
+                className={`relative aspect-square rounded-control overflow-hidden bg-parchment transition-opacity focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${
                   i === active
                     ? 'ring-2 ring-blue ring-offset-2 ring-offset-stone'
                     : 'opacity-80 hover:opacity-100'

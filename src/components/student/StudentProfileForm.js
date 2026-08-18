@@ -13,7 +13,7 @@ import {
 } from '@/lib/studentProfileFields';
 
 const INPUT_CLS =
-  'mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue';
+  'mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue';
 
 function emptyForm() {
   return {
@@ -148,7 +148,7 @@ export default function StudentProfileForm({
           </p>
         </div>
         <div
-          className="h-2 w-full rounded-sm bg-night/10 overflow-hidden"
+          className="h-2 w-full rounded-full bg-night/10 overflow-hidden"
           role="progressbar"
           aria-valuenow={Math.round(completeness * 100)}
           aria-valuemin={0}
@@ -251,7 +251,7 @@ export default function StudentProfileForm({
         {error && (
           <p
             role="alert"
-            className="text-sm text-magenta bg-parchment border border-night/10 rounded-sm px-3 py-2"
+            className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2"
           >
             {error}
           </p>

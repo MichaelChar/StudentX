@@ -8,7 +8,7 @@ import Icon from '@/components/ui/Icon';
 import Pill from '@/components/ui/Pill';
 
 const inputClass =
-  'w-full border border-night/15 bg-white rounded-sm px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+  'w-full border border-night/15 bg-white rounded-control px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 const labelClass = 'label-caps text-night/70 mb-1.5 block';
 
 export default function StepUniversities({
@@ -148,7 +148,7 @@ export default function StepUniversities({
               <button
                 type="button"
                 onClick={() => removeRow(i)}
-                className="shrink-0 p-2 text-night/40 hover:text-night rounded-sm"
+                className="shrink-0 p-2 text-night/40 hover:text-night rounded-control"
                 aria-label={t('remove')}
               >
                 <Icon name="x" className="w-4 h-4" />

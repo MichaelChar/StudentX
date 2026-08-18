@@ -9,7 +9,7 @@ import SuggestedMark from '@/components/listing-wizard/SuggestedMark';
 import { currencySymbol } from '@/lib/formatMoney';
 
 const inputClass =
-  'w-full border border-night/15 bg-white rounded-sm px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+  'w-full border border-night/15 bg-white rounded-control px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 const labelClass = 'label-caps text-night/70 mb-1.5 block';
 
 export default function StepPrice({

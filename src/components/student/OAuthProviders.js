@@ -16,7 +16,7 @@ export default function OAuthProviders({ context = 'login' }) {
   const comingSoon = t('comingSoon');
 
   const buttonClass =
-    'w-full inline-flex items-center justify-center gap-3 border border-night/15 rounded-sm px-4 py-2.5 text-sm text-night bg-white opacity-50 grayscale cursor-not-allowed select-none';
+    'w-full inline-flex items-center justify-center gap-3 border border-night/15 rounded-card px-4 py-2.5 text-sm text-night bg-white opacity-50 grayscale cursor-not-allowed select-none';
 
   return (
     <div className="space-y-3" aria-label={t('portal')}>

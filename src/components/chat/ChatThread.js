@@ -188,7 +188,7 @@ export default function ChatThread({
   }
 
   return (
-    <div className={`flex flex-col bg-white border border-night/10 rounded-sm ${className}`}>
+    <div className={`flex flex-col bg-white border border-night/10 rounded-card ${className}`}>
       {!connected && (
         <div className="bg-yellow/10 border-b border-yellow/30 px-4 py-2 text-xs text-night/70 text-center flex items-center justify-center gap-3">
           <span>{retryCount >= 3 ? t('disconnectedStuck') : t('disconnected')}</span>
@@ -238,7 +238,7 @@ export default function ChatThread({
           placeholder={t('messagePlaceholder')}
           rows={2}
           maxLength={4000}
-          className="flex-1 resize-none rounded-sm border border-night/15 bg-stone/40 px-3 py-2 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
+          className="flex-1 resize-none rounded-control border border-night/15 bg-stone/40 px-3 py-2 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
         />
         <button
           type="submit"
@@ -272,7 +272,7 @@ function MessageBubble({ message, isSelf, youLabel, otherLabel }) {
   return (
     <div className={`flex flex-col ${align}`}>
       <span className="label-caps text-night/40 mb-1">{senderLabel} · {formatTime(message.created_at)}</span>
-      <div className={`max-w-[80%] rounded-sm px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${bubble}`}>
+      <div className={`max-w-[80%] rounded-control px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${bubble}`}>
         {message.body}
       </div>
     </div>

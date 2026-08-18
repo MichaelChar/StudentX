@@ -205,7 +205,7 @@ function SidebarContent({ t, pathname, onSignOut, onNavigate }) {
               href={item.href}
               onClick={onNavigate}
               aria-current={active ? 'page' : undefined}
-              className={`group flex items-center gap-3 px-3 py-2.5 rounded-sm label-caps transition-colors relative ${
+              className={`group flex items-center gap-3 px-3 py-2.5 rounded-control label-caps transition-colors relative ${
                 active
                   ? 'bg-white/5 text-stone'
                   : 'text-stone/60 hover:bg-white/5 hover:text-stone'

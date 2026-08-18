@@ -7,7 +7,7 @@ import { MIN_PHOTOS, PHOTO_LIMIT } from '@/lib/listingWizardRules';
 import Icon from '@/components/ui/Icon';
 
 const inputClass =
-  'w-full border border-night/15 bg-white rounded-sm px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+  'w-full border border-night/15 bg-white rounded-control px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 const labelClass = 'label-caps text-night/70 mb-1.5 block';
 
 export default function StepPhotos({
@@ -79,7 +79,7 @@ export default function StepPhotos({
                     setDragIndex(null);
                     setDragOverIndex(null);
                   }}
-                  className={`relative group aspect-[4/3] rounded-sm overflow-hidden bg-parchment cursor-grab active:cursor-grabbing transition-opacity ${
+                  className={`relative group aspect-[4/3] rounded-photo overflow-hidden bg-parchment cursor-grab active:cursor-grabbing transition-opacity ${
                     i === 0 ? 'col-span-2' : ''
                   } ${isDragging ? 'opacity-40' : ''} ${
                     isDragOver ? 'ring-2 ring-yellow ring-offset-2' : ''
@@ -97,7 +97,7 @@ export default function StepPhotos({
                     }
                   />
                   {i === 0 && (
-                    <span className="absolute top-2 left-2 bg-yellow text-white text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded-sm">
+                    <span className="absolute top-2 left-2 bg-yellow text-white text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded-control">
                       {t('main')}
                     </span>
                   )}
@@ -106,7 +106,7 @@ export default function StepPhotos({
                       type="button"
                       onClick={() => onReorder(i, i - 1)}
                       disabled={i === 0}
-                      className="bg-white/95 hover:bg-white text-night rounded-sm w-9 h-9 flex items-center justify-center disabled:opacity-40"
+                      className="bg-white/95 hover:bg-white text-night rounded-control w-9 h-9 flex items-center justify-center disabled:opacity-40"
                       aria-label={t('moveLeft')}
                     >
                       <Icon name="chevronRight" className="w-4 h-4 rotate-180" />
@@ -115,7 +115,7 @@ export default function StepPhotos({
                       type="button"
                       onClick={() => onReorder(i, i + 1)}
                       disabled={i === photos.length - 1}
-                      className="bg-white/95 hover:bg-white text-night rounded-sm w-9 h-9 flex items-center justify-center disabled:opacity-40"
+                      className="bg-white/95 hover:bg-white text-night rounded-control w-9 h-9 flex items-center justify-center disabled:opacity-40"
                       aria-label={t('moveRight')}
                     >
                       <Icon name="chevronRight" className="w-4 h-4" />
@@ -124,7 +124,7 @@ export default function StepPhotos({
                   <button
                     type="button"
                     onClick={() => onRemove(url)}
-                    className="absolute top-2 right-2 bg-white/95 hover:bg-white text-night rounded-sm w-9 h-9 flex items-center justify-center"
+                    className="absolute top-2 right-2 bg-white/95 hover:bg-white text-night rounded-control w-9 h-9 flex items-center justify-center"
                     aria-label={t('remove')}
                   >
                     <Icon name="x" className="w-4 h-4" />
@@ -148,7 +148,7 @@ export default function StepPhotos({
             {external.map((url, i) => (
               <div
                 key={url}
-                className="relative aspect-[4/3] rounded-sm overflow-hidden bg-parchment"
+                className="relative aspect-[4/3] rounded-photo overflow-hidden bg-parchment"
               >
                 {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
@@ -177,7 +177,7 @@ export default function StepPhotos({
           />
           <label
             htmlFor="wizard-photo-upload"
-            className={`inline-flex items-center gap-2 px-4 py-2.5 border border-dashed border-night/20 rounded-sm text-sm text-night/60 hover:border-blue hover:text-night cursor-pointer transition-colors ${
+            className={`inline-flex items-center gap-2 px-4 py-2.5 border border-dashed border-night/20 rounded-control text-sm text-night/60 hover:border-blue hover:text-night cursor-pointer transition-colors ${
               uploading ? 'opacity-50 pointer-events-none' : ''
             }`}
           >

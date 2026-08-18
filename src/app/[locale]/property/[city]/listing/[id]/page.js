@@ -102,7 +102,7 @@ export default async function ListingPage({ params, searchParams }) {
             title={listing.title || listing.address || 'Listing'}
           />
         ) : (
-          <div className="aspect-[16/9] rounded-sm bg-parchment flex items-center justify-center">
+          <div className="aspect-[16/9] rounded-photo bg-parchment flex items-center justify-center">
             <Icon name="photo" className="w-16 h-16 text-night/20" />
           </div>
         )}
@@ -157,7 +157,7 @@ export default async function ListingPage({ params, searchParams }) {
           {isVerified && listing.landlord?.name && (
             <Link
               href={`/property/thessaloniki/landlords/${listing.listing_id.slice(0, 4)}`}
-              className="group inline-flex items-center gap-3 mb-10 rounded-sm focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
+              className="group inline-flex items-center gap-3 mb-10 rounded-control focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
             >
               <LandlordAvatar
                 name={listing.landlord.name}

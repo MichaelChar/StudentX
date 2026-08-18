@@ -131,7 +131,7 @@ export default function AdminMetricsPage() {
       {/* Tier Breakdown */}
       <section>
         <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Tier Breakdown</h2>
-        <div className="border border-gray-200 rounded-sm overflow-hidden">
+        <div className="border border-gray-200 rounded-card overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-gray-50">
               <tr>
@@ -181,7 +181,7 @@ export default function AdminMetricsPage() {
 
 function KpiCard({ label, value, trend, note }) {
   return (
-    <div className="bg-gray-50 border border-gray-100 rounded-sm p-4">
+    <div className="bg-gray-50 border border-gray-100 rounded-card p-4">
       <p className="text-xs text-night/50 mb-1">{label}</p>
       <div className="flex items-end gap-2">
         <p className="font-display text-xl font-bold text-night">{value}</p>

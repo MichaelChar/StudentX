@@ -19,17 +19,17 @@ export default function GigInquiryForm({ gigId }) {
 
   // token === null → still resolving the session.
   if (token === null) {
-    return <div className="h-24 animate-pulse rounded-sm bg-parchment" />;
+    return <div className="h-24 animate-pulse rounded-card bg-parchment" />;
   }
 
   // Signed out.
   if (token === '') {
     return (
-      <div className="rounded-sm border border-night/10 bg-parchment p-5">
+      <div className="rounded-card border border-night/10 bg-parchment p-5">
         <p className="text-sm text-night/70">{t('signInPrompt')}</p>
         <Link
           href={`/student/login?next=/gigs/${gigId}`}
-          className="mt-3 inline-block rounded-sm bg-blue px-4 py-2 text-sm font-medium text-white hover:bg-blue/90"
+          className="mt-3 inline-block rounded-control bg-blue px-4 py-2 text-sm font-medium text-white hover:bg-blue/90"
         >
           {t('signIn')}
         </Link>
@@ -39,7 +39,7 @@ export default function GigInquiryForm({ gigId }) {
 
   if (status === 'success') {
     return (
-      <div className="rounded-sm border border-blue/30 bg-blue/5 p-5">
+      <div className="rounded-card border border-blue/30 bg-blue/5 p-5">
         <p className="text-sm font-medium text-blue">{t('success')}</p>
       </div>
     );
@@ -75,7 +75,7 @@ export default function GigInquiryForm({ gigId }) {
   };
 
   return (
-    <form onSubmit={onSubmit} className="rounded-sm border border-night/10 bg-white p-5">
+    <form onSubmit={onSubmit} className="rounded-card border border-night/10 bg-white p-5">
       <h3 className="font-display text-xl text-night">{t('heading')}</h3>
       <p className="mt-1 text-sm text-night/55">{t('subheading')}</p>
       <textarea
@@ -84,13 +84,13 @@ export default function GigInquiryForm({ gigId }) {
         placeholder={t('placeholder')}
         rows={4}
         maxLength={4000}
-        className="mt-3 w-full rounded-sm border border-night/15 px-3 py-2 text-sm text-night focus:border-blue focus:outline-none"
+        className="mt-3 w-full rounded-control border border-night/15 px-3 py-2 text-sm text-night focus:border-blue focus:outline-none"
       />
       {error && <p className="mt-2 text-sm text-magenta">{error}</p>}
       <button
         type="submit"
         disabled={status === 'submitting'}
-        className="mt-3 rounded-sm bg-blue px-4 py-2 text-sm font-medium text-white hover:bg-blue/90 disabled:opacity-60"
+        className="mt-3 rounded-control bg-blue px-4 py-2 text-sm font-medium text-white hover:bg-blue/90 disabled:opacity-60"
       >
         {status === 'submitting' ? t('submitting') : t('submit')}
       </button>

@@ -53,7 +53,7 @@ export default function LandlordInquiriesPage() {
   return (
     <LandlordShell eyebrow="Inbox" title={t('title')}>
       {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3 mb-6">
+        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -61,7 +61,7 @@ export default function LandlordInquiriesPage() {
       {loading ? (
         <div className="space-y-4">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-32 bg-parchment rounded-sm animate-pulse" />
+            <div key={i} className="h-32 bg-parchment rounded-card animate-pulse" />
           ))}
         </div>
       ) : inquiries.length === 0 ? (
@@ -113,7 +113,7 @@ function InquiryCard({ inquiry, t }) {
         </div>
       </div>
 
-      <blockquote className="bg-parchment rounded-sm px-5 py-4 text-night/80 leading-relaxed mb-4 font-sans text-sm md:text-base">
+      <blockquote className="bg-parchment rounded-card px-5 py-4 text-night/80 leading-relaxed mb-4 font-sans text-sm md:text-base">
         {inquiry.message}
       </blockquote>
 

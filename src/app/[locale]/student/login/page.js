@@ -203,7 +203,7 @@ function StudentLoginInner() {
       brandBlurb={t('brandBlurb')}
     >
       {showLandlordConflict && (
-        <div className="mb-6 rounded-sm border border-yellow/40 bg-yellow/10 px-4 py-3 text-sm text-night">
+        <div className="mb-6 rounded-card border border-yellow/40 bg-yellow/10 px-4 py-3 text-sm text-night">
           <p className="font-medium">{t('roleConflictLandlordTitle')}</p>
           <p className="mt-1 text-night/70">{t('roleConflictLandlordBody')}</p>
           <Link
@@ -248,7 +248,7 @@ function StudentLoginInner() {
         />
 
         {error && (
-          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-3 py-2">
+          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-3 py-2">
             {error}
           </p>
         )}

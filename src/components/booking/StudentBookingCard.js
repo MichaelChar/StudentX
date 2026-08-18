@@ -46,7 +46,7 @@ export default async function StudentBookingCard({ booking, locale }) {
     <li>
       <Card tone="white" className="p-5 md:p-6">
         <div className="flex gap-4 md:gap-5">
-          <div className="relative w-24 h-24 md:w-28 md:h-28 shrink-0 rounded-sm overflow-hidden bg-parchment border border-night/10">
+          <div className="relative w-24 h-24 md:w-28 md:h-28 shrink-0 rounded-photo overflow-hidden bg-parchment border border-night/10">
             {photo ? (
               <Image
                 src={variantUrl(photo, 'card')}

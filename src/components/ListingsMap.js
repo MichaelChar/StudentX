@@ -34,7 +34,7 @@ export default function ListingsMap({ listings }) {
   );
 
   return (
-    <div className="h-full w-full rounded-sm overflow-hidden border border-gray-200">
+    <div className="h-full w-full rounded-card overflow-hidden border border-gray-200">
       <MapContainer
         center={THESSALONIKI_CENTER}
         zoom={DEFAULT_ZOOM}
