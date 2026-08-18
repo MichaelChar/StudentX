@@ -45,6 +45,24 @@ test.describe('Landlord listing wizard', () => {
     ctx.landlordToken = session.accessToken;
     await establishBrowserSession(page, landlord, { role: 'landlord' });
 
+    // Stub the pin->distance API so Step 3's prefill assertions are
+    // deterministic and don't depend on the live OSRM call.
+    const STUB_UNIVERSITY_DISTANCES = [
+      { university_id: 'auth', distance_meters: 800 },
+      { university_id: 'uom', distance_meters: 1500 },
+      { university_id: 'ihu', distance_meters: 4200 },
+    ];
+    await page.route(
+      '**/api/landlord/compute-university-distances',
+      async (route) => {
+        await route.fulfill({
+          status: 200,
+          contentType: 'application/json',
+          body: JSON.stringify({ distances: STUB_UNIVERSITY_DISTANCES }),
+        });
+      },
+    );
+
     // Capture draft listing ids created during the wizard for cleanup.
     page.on('response', async (res) => {
       try {
@@ -101,15 +119,58 @@ test.describe('Landlord listing wizard', () => {
 
     // --- Step 3: Universities — empty rows must block ---
     await expect(page.getByText(/Step 3 of 7/i)).toBeVisible({ timeout: 20_000 });
-    // Wait for auto-prefill attempt, then strip rows.
+    // Wait for auto-prefill attempt, then strip rows down to exactly one so
+    // the "+ Add university" regression assertions below start from a known
+    // state.
     await page.waitForTimeout(2000);
     for (let i = 0; i < 6; i += 1) {
       const remove = page.getByRole('button', { name: /Remove/i });
-      if ((await remove.count()) === 0) break;
+      if ((await remove.count()) <= 1) break;
       await remove.first().click();
       await page.waitForTimeout(150);
     }
-    // Ensure no filled distances remain.
+    const uniRows = page.locator('#university-distance-rows > div');
+    await expect(uniRows).toHaveCount(1);
+
+    // --- Regression (PR #381): "+ Add university" must add exactly ONE
+    // row, the new row must get its distance from the map pin (it used to
+    // stay an empty landlord shell), and typing over an existing row must
+    // survive a later "Prefill from pin" click.
+    const uniRowSelects = page.locator('#university-distance-rows select');
+    const prefillButton = page.getByRole('button', { name: 'Prefill from pin' });
+
+    // 1. "+ Add university" adds exactly one row (bug: it used to add every
+    // remaining university in one click).
+    const rowCountBeforeAdd = await uniRowSelects.count();
+    await page.getByRole('button', { name: '+ Add university' }).click();
+    // Add computes the new row's distance via the same prefill call as the
+    // button above, so wait for prefillLoading to clear before counting.
+    await expect(prefillButton).toBeEnabled({ timeout: 15_000 });
+    await expect(uniRowSelects).toHaveCount(rowCountBeforeAdd + 1);
+
+    // 2. The new row already has a non-empty distance from the pin and is
+    // marked "Computed" (bug: it stayed an empty "Yours" shell).
+    const addedRow = uniRows.last();
+    const addedRowDistance = addedRow.locator(
+      'input[type="number"][aria-label]',
+    );
+    await expect(addedRowDistance).not.toHaveValue('');
+    await expect(addedRow.getByText('Computed', { exact: true })).toBeVisible();
+
+    // 3. Typing into the first row flips its pill to "Yours"; a later
+    // Prefill from pin must not clobber that landlord-entered value.
+    const firstRow = uniRows.first();
+    const firstRowDistance = firstRow.locator(
+      'input[type="number"][aria-label]',
+    );
+    await firstRowDistance.fill('1234');
+    await expect(firstRow.getByText('Yours', { exact: true })).toBeVisible();
+    await prefillButton.click();
+    await expect(prefillButton).toBeEnabled({ timeout: 15_000 });
+    await expect(firstRowDistance).toHaveValue('1234');
+    await expect(firstRow.getByText('Yours', { exact: true })).toBeVisible();
+
+    // Ensure no filled distances remain, to test the <2-universities gate.
     const distInputs = page.locator('input[type="number"][aria-label]');
     const n = await distInputs.count();
     for (let i = 0; i < n; i += 1) {

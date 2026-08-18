@@ -96,7 +96,7 @@ export default function StepUniversities({
         )}
       </div>
 
-      <div className="space-y-2">
+      <div id="university-distance-rows" className="space-y-2">
         {rows.map((row, i) => {
           const taken = new Set(
             rows.filter((_, j) => j !== i).map((d) => d.university_id),
