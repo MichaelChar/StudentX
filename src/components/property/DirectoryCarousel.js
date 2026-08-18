@@ -225,7 +225,11 @@ export default function DirectoryCarousel() {
               onClick={() => go(i)}
               aria-label={t('goToSlide', { number: i + 1 })}
               aria-current={i === index ? 'true' : undefined}
-              className={`h-2.5 rounded-full transition-all focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${
+              /* Colour animates; the 2.5→6 width change snaps. Width is a
+                 layout property and is not animatable under the motion rule.
+                 A morphing dot would need a transform-based rebuild, which
+                 would distort the pill's radius — not worth it for a dot. */
+              className={`h-2.5 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${
                 i === index ? 'w-6 bg-blue' : 'w-2.5 bg-night/20 hover:bg-night/40'
               }`}
             />

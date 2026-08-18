@@ -38,10 +38,13 @@ import { Link } from '@/i18n/navigation';
 // Only transition what actually changes. `transition-all` is banned system-wide:
 // it animates any changed property including layout, which is what makes hover
 // smooth on a dev machine and stuttery on a mid-range Android.
+//
+// Duration and easing are inherited — 200ms / ease-parity are the global
+// defaults as of the geometry+motion token PR, so spelling them out here would
+// just be a second copy to keep in sync.
 const BASE =
   'inline-flex items-center justify-center gap-2 font-sans font-semibold cursor-pointer ' +
-  'transition-[background-color,border-color,color,transform,opacity] duration-200 ' +
-  'ease-[cubic-bezier(.455,.03,.515,.955)] ' +
+  'transition-[background-color,border-color,color,transform,opacity] ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ' +
   'disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none';
 

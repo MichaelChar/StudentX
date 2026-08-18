@@ -48,7 +48,7 @@ export default function GigFavoriteButton({ gigId, withLabel = false, className 
       onClick={handleClick}
       aria-pressed={saved}
       aria-label={ariaLabel}
-      className={`inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/85 backdrop-blur-sm shadow-[0_1px_6px_-1px_rgba(10,20,54,0.3)] transition-all hover:bg-white hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta ${className}`}
+      className={`inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/85 backdrop-blur-sm shadow-[0_1px_6px_-1px_rgba(10,20,54,0.3)] transition-[transform,background-color] hover:bg-white hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta ${className}`}
     >
       <Icon
         name="heart"
