@@ -75,11 +75,15 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
           : null;
 
   return (
-    <div
-      className="group relative bg-white rounded-sm overflow-hidden transition-colors border border-night/10 hover:border-blue/40 hover:shadow-[0_2px_18px_-8px_rgba(10,20,54,0.25)]"
-    >
-      {/* Photo */}
-      <div className="relative aspect-[4/3] bg-parchment">
+    /* Borderless, photo-as-card. No container border or fill: at eighteen
+       cards per page a bordered, filled box reads heavy, and taking the
+       radius while keeping the chrome gets the least useful half of the
+       change. Cards now separate by grid gap, so gap is load-bearing.
+       Hover is a transform lift only — the old border-colour + shadow pair
+       is gone. */
+    <div className="group relative transition-transform hover:-translate-y-0.5">
+      {/* Photo — this IS the card frame now */}
+      <div className="relative aspect-[4/3] rounded-photo overflow-hidden bg-parchment">
         {photo ? (
           <Image
             src={variantUrl(photo, 'card')}
@@ -95,8 +99,8 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         )}
       </div>
 
-      {/* Body */}
-      <div className="p-5">
+      {/* Body — sits directly on the page, ~12px under the photo */}
+      <div className="pt-3">
         <p className="label-caps text-night/50">
           {listing.neighborhood} &middot; Thessaloniki
         </p>
@@ -175,7 +179,7 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         {showLandlord && (
           <Link
             href={`/property/thessaloniki/landlords/${landlordId}`}
-            className="relative z-10 mt-4 inline-flex max-w-full items-center gap-2 group/landlord focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-sm"
+            className="relative z-10 mt-4 inline-flex max-w-full items-center gap-2 group/landlord focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-control"
           >
             <LandlordAvatar
               name={landlordName}
@@ -194,7 +198,7 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
       <Link
         href={href}
         aria-label={listing.title || listing.address}
-        className="absolute inset-0 z-0 rounded-sm focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
+        className="absolute inset-0 z-0 rounded-photo focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
       />
 
       {/* Save toggle — over the photo's top-left, above the stretched link. */}
