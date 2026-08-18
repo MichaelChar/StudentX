@@ -729,7 +729,7 @@ export default function ListingForm({
             {STEPS.map((s, i) => (
               <div
                 key={s}
-                className={`h-1 flex-1 rounded-sm ${
+                className={`h-1 flex-1 rounded-full ${
                   i <= step ? 'bg-blue' : 'bg-night/10'
                 }`}
               />
@@ -770,7 +770,7 @@ export default function ListingForm({
               <button
                 type="button"
                 onClick={() => setShowImportBanner(false)}
-                className="p-1 text-night/40 hover:text-night rounded-sm shrink-0"
+                className="p-1 text-night/40 hover:text-night rounded-control shrink-0"
                 aria-label={t('paste.dismissBanner')}
               >
                 <Icon name="x" className="w-4 h-4" />
@@ -864,7 +864,7 @@ export default function ListingForm({
         </Card>
 
         {error && (
-          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3">
+          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3">
             {error}
           </p>
         )}

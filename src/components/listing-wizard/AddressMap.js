@@ -70,7 +70,7 @@ export default function AddressMap({ lat, lng, onMove }) {
   const center = hasPin ? [lat, lng] : THESSALONIKI_CENTER;
 
   return (
-    <div className="h-64 sm:h-80 w-full rounded-sm overflow-hidden border border-night/10">
+    <div className="h-64 sm:h-80 w-full rounded-card overflow-hidden border border-night/10">
       <MapContainer
         center={center}
         zoom={hasPin ? 16 : DEFAULT_ZOOM}

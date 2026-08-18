@@ -113,13 +113,13 @@ export default function AdminVerificationsPage() {
       </div>
 
       {requests.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-sm">
+        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-card">
           <p className="text-night/50">No {statusFilter} verification requests.</p>
         </div>
       ) : (
         <div className="space-y-5">
           {requests.map((req) => (
-            <div key={req.id} className="border border-gray-200 rounded-sm p-5 bg-white">
+            <div key={req.id} className="border border-gray-200 rounded-card p-5 bg-white">
               <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">

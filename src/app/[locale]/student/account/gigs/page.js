@@ -90,7 +90,7 @@ async function SavedGigsSection({ locale }) {
 
   if (error) {
     return (
-      <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3">
+      <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3">
         {tFav('loadError')}
       </p>
     );
@@ -128,7 +128,7 @@ async function InterestsSection({ locale }) {
 
   if (error) {
     return (
-      <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3">
+      <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3">
         {t('loadError')}
       </p>
     );
@@ -175,7 +175,7 @@ async function InterestsSection({ locale }) {
               </div>
 
               {row.message && (
-                <blockquote className="bg-parchment rounded-sm px-5 py-4 text-night/80 leading-relaxed mb-4 font-sans text-sm md:text-base">
+                <blockquote className="bg-parchment rounded-card px-5 py-4 text-night/80 leading-relaxed mb-4 font-sans text-sm md:text-base">
                   {row.message}
                 </blockquote>
               )}
@@ -203,7 +203,7 @@ function GridSkeleton() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" aria-busy="true">
       {[0, 1].map((i) => (
-        <div key={i} className="rounded-sm border border-night/10 bg-white overflow-hidden">
+        <div key={i} className="rounded-card border border-night/10 bg-white overflow-hidden">
           <div className="aspect-[4/3] bg-parchment animate-pulse" />
           <div className="p-5 space-y-3">
             <div className="h-3 w-28 bg-parchment rounded animate-pulse" />

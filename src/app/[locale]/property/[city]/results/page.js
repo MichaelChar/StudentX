@@ -51,7 +51,7 @@ function isValidDateString(value) {
 
 function MapLoadingFallback() {
   return (
-    <div className="h-full w-full rounded-sm bg-parchment animate-pulse flex items-center justify-center">
+    <div className="h-full w-full rounded-control bg-parchment animate-pulse flex items-center justify-center">
       <span className="text-night/40 text-sm">Loading map…</span>
     </div>
   );
@@ -64,7 +64,7 @@ const ListingsMap = dynamic(() => import('@/components/ListingsMap'), {
 
 function SkeletonCard() {
   return (
-    <div className="rounded-sm border border-night/10 bg-white overflow-hidden animate-pulse">
+    <div className="rounded-control border border-night/10 bg-white overflow-hidden animate-pulse">
       <div className="aspect-[4/3] bg-parchment" />
       <div className="p-5 space-y-3">
         <div className="h-3 w-28 bg-parchment rounded" />
@@ -363,7 +363,7 @@ function ResultsContent() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none label-caps bg-transparent border border-night/20 text-night pl-4 pr-9 py-2 rounded-sm cursor-pointer focus:outline-none focus:border-blue"
+              className="appearance-none label-caps bg-transparent border border-night/20 text-night pl-4 pr-9 py-2 rounded-control cursor-pointer focus:outline-none focus:border-blue"
             >
               <option value="match">{t('sortBestMatch')}</option>
               <option value="price">{t('sortPriceAsc')}</option>
@@ -377,7 +377,7 @@ function ResultsContent() {
 
           {/* List / Map toggle */}
           <div
-            className="flex items-stretch border border-night/20 rounded-sm overflow-hidden"
+            className="flex items-stretch border border-night/20 rounded-control overflow-hidden"
             role="group"
             aria-label="View mode"
           >
@@ -460,7 +460,7 @@ function ResultsContent() {
         <div>
           {/* Map view */}
           {viewMode === 'map' && !loading && !error && (
-            <div style={{ height: '70vh', minHeight: 420 }} className="mb-6 rounded-sm overflow-hidden border border-night/10">
+            <div style={{ height: '70vh', minHeight: 420 }} className="mb-6 rounded-card overflow-hidden border border-night/10">
               <ListingsMap listings={listings} />
             </div>
           )}
@@ -727,7 +727,7 @@ function FilterPanel({
                 type="date"
                 value={filters.moveIn || ''}
                 onChange={(e) => onMoveIn(e.target.value)}
-                className="flex-1 rounded-sm border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
+                className="flex-1 rounded-control border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
                 aria-label={t('moveIn')}
               />
               {filters.moveIn && (
@@ -749,7 +749,7 @@ function FilterPanel({
                 type="date"
                 value={filters.moveOut || ''}
                 onChange={(e) => onMoveOut(e.target.value)}
-                className="flex-1 rounded-sm border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
+                className="flex-1 rounded-control border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
                 aria-label={t('moveOut')}
               />
               {filters.moveOut && (
@@ -782,7 +782,7 @@ function FilterPanel({
                 type="button"
                 onClick={() => onToggleNeighborhood(n)}
                 aria-pressed={active}
-                className={`px-3 py-1.5 rounded-sm border text-xs font-sans transition-colors ${
+                className={`px-3 py-1.5 rounded-control border text-xs font-sans transition-colors ${
                   active
                     ? 'border-blue bg-blue text-white'
                     : 'border-night/20 text-night/70 hover:border-blue'
@@ -807,7 +807,7 @@ function FilterPanel({
                 type="button"
                 onClick={() => onToggleType(group.values)}
                 aria-pressed={active}
-                className={`px-3 py-1.5 rounded-sm border text-xs font-sans transition-colors ${
+                className={`px-3 py-1.5 rounded-control border text-xs font-sans transition-colors ${
                   active
                     ? 'border-blue bg-blue text-white'
                     : 'border-night/20 text-night/70 hover:border-blue'
@@ -828,7 +828,7 @@ function FilterPanel({
             type="button"
             onClick={() => onSetMinDuration(null)}
             aria-pressed={filters.minDuration === null}
-            className={`px-2.5 py-1 rounded-sm border text-xs font-sans transition-colors ${
+            className={`px-2.5 py-1 rounded-control border text-xs font-sans transition-colors ${
               filters.minDuration === null
                 ? 'border-blue bg-blue text-white'
                 : 'border-night/20 text-night/70 hover:border-blue'
@@ -844,7 +844,7 @@ function FilterPanel({
                 type="button"
                 onClick={() => onSetMinDuration(active ? null : opt.value)}
                 aria-pressed={active}
-                className={`px-2.5 py-1 rounded-sm border font-sans transition-colors text-left leading-tight ${
+                className={`px-2.5 py-1 rounded-control border font-sans transition-colors text-left leading-tight ${
                   active
                     ? 'border-blue bg-blue text-white'
                     : 'border-night/20 text-night/70 hover:border-blue'
@@ -873,7 +873,7 @@ function FilterPanel({
                   type="button"
                   onClick={() => onRemoveDealbreaker(db)}
                   aria-label={t('removeDealbreaker', { label })}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-sm border border-night/20 text-xs font-sans text-night/80 hover:border-night hover:text-night transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-control border border-night/20 text-xs font-sans text-night/80 hover:border-night hover:text-night transition-colors"
                 >
                   <span>{label}</span>
                   <Icon name="x" className="w-3 h-3 opacity-60" aria-hidden="true" />
@@ -890,7 +890,7 @@ function FilterPanel({
           type="button"
           onClick={onToggleVerified}
           aria-pressed={filters.verifiedOnly}
-          className={`w-full flex items-center gap-2 px-3 py-2 rounded-sm border text-xs font-sans transition-colors ${
+          className={`w-full flex items-center gap-2 px-3 py-2 rounded-control border text-xs font-sans transition-colors ${
             filters.verifiedOnly
               ? 'border-yellow bg-yellow text-white'
               : 'border-night/20 text-night/70 hover:border-yellow'

@@ -16,12 +16,12 @@ import SuggestedMark from '@/components/listing-wizard/SuggestedMark';
 const AddressMap = dynamic(() => import('./AddressMap'), {
   ssr: false,
   loading: () => (
-    <div className="h-64 sm:h-80 w-full rounded-sm bg-parchment border border-night/10 animate-pulse" />
+    <div className="h-64 sm:h-80 w-full rounded-card bg-parchment border border-night/10 animate-pulse" />
   ),
 });
 
 const inputClass =
-  'w-full border border-night/15 bg-white rounded-sm px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+  'w-full border border-night/15 bg-white rounded-control px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
 const labelClass = 'label-caps text-night/70 mb-1.5 block';
 
 export default function StepAddress({
@@ -183,7 +183,7 @@ export default function StepAddress({
           <p className="mt-1.5 text-xs text-red-700">{searchError}</p>
         )}
         {suggestions.length > 0 && (
-          <ul className="absolute z-20 mt-1 w-full bg-white border border-night/10 rounded-sm shadow-sm max-h-56 overflow-auto">
+          <ul className="absolute z-20 mt-1 w-full bg-white border border-night/10 rounded-card shadow-sm max-h-56 overflow-auto">
             {suggestions.map((s) => (
               <li key={`${s.lat},${s.lng},${s.display_name}`}>
                 <button

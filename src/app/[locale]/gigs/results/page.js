@@ -22,7 +22,7 @@ import { formatMoney } from '@/lib/formatMoney';
 const GigsMap = dynamic(() => import('@/components/GigsMap'), {
   ssr: false,
   loading: () => (
-    <div className="h-full w-full rounded-sm border border-night/10 bg-parchment animate-pulse" />
+    <div className="h-full w-full rounded-control border border-night/10 bg-parchment animate-pulse" />
   ),
 });
 
@@ -169,7 +169,7 @@ function GigsResultsInner() {
                     key={opt}
                     type="button"
                     onClick={() => setPay(opt)}
-                    className={`rounded-sm border px-3 py-2 text-sm font-medium transition-colors ${
+                    className={`rounded-control border px-3 py-2 text-sm font-medium transition-colors ${
                       pay === opt
                         ? 'border-blue bg-blue text-white'
                         : 'border-night/15 bg-white text-night/70 hover:border-blue/40'
@@ -228,7 +228,7 @@ function GigsResultsInner() {
                 type="date"
                 value={availableFrom}
                 onChange={(e) => setAvailableFrom(e.target.value)}
-                className="w-full rounded-sm border border-night/15 bg-white px-3 py-2 text-sm text-night"
+                className="w-full rounded-control border border-night/15 bg-white px-3 py-2 text-sm text-night"
               />
             </div>
 
@@ -240,7 +240,7 @@ function GigsResultsInner() {
                 id="min_duration"
                 value={minDuration}
                 onChange={(e) => setMinDuration(Number(e.target.value))}
-                className="w-full rounded-sm border border-night/15 bg-white px-3 py-2 text-sm text-night"
+                className="w-full rounded-control border border-night/15 bg-white px-3 py-2 text-sm text-night"
               >
                 <option value={0}>{t('anyDuration')}</option>
                 {DURATION_OPTIONS.map((w) => (
@@ -268,13 +268,13 @@ function GigsResultsInner() {
               <p className="text-sm text-night/60">
                 {loading ? t('loading') : t('resultCount', { count: gigs.length })}
               </p>
-              <div className="inline-flex rounded-sm border border-night/15 bg-white p-0.5">
+              <div className="inline-flex rounded-card border border-night/15 bg-white p-0.5">
                 {['list', 'map'].map((mode) => (
                   <button
                     key={mode}
                     type="button"
                     onClick={() => setViewMode(mode)}
-                    className={`rounded-sm px-3 py-1.5 text-sm font-medium transition-colors ${
+                    className={`rounded-control px-3 py-1.5 text-sm font-medium transition-colors ${
                       viewMode === mode ? 'bg-blue text-white' : 'text-night/60 hover:text-night'
                     }`}
                   >
@@ -293,12 +293,12 @@ function GigsResultsInner() {
                 {Array.from({ length: 6 }).map((_, i) => (
                   <div
                     key={i}
-                    className="aspect-[4/5] animate-pulse rounded-sm border border-night/10 bg-parchment"
+                    className="aspect-[4/5] animate-pulse rounded-photo border border-night/10 bg-parchment"
                   />
                 ))}
               </div>
             ) : gigs.length === 0 ? (
-              <div className="rounded-sm border border-night/10 bg-white p-10 text-center">
+              <div className="rounded-card border border-night/10 bg-white p-10 text-center">
                 <p className="font-display text-xl text-night">{t('noResults')}</p>
                 <p className="mt-1 text-sm text-night/50">{t('noResultsHint')}</p>
               </div>

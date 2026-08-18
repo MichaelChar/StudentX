@@ -111,7 +111,7 @@ export default function LandlordReservationDetailPage() {
   if (loading) {
     return (
       <LandlordShell eyebrow={t('eyebrow')} title={t('detailTitle')}>
-        <div className="h-40 bg-parchment rounded-sm animate-pulse" />
+        <div className="h-40 bg-parchment rounded-card animate-pulse" />
       </LandlordShell>
     );
   }
@@ -189,7 +189,7 @@ export default function LandlordReservationDetailPage() {
       }
     >
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-sm px-4 py-3 mb-6">
+        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -316,7 +316,7 @@ function DetailField({ label, value, info, infoAria }) {
             </button>
             <span
               role="tooltip"
-              className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-64 -translate-x-1/2 rounded-sm border border-night/10 bg-night px-3 py-2 text-left text-xs font-sans font-normal normal-case tracking-normal text-stone opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
+              className="pointer-events-none absolute left-1/2 top-full z-20 mt-2 w-64 -translate-x-1/2 rounded-control border border-night/10 bg-night px-3 py-2 text-left text-xs font-sans font-normal normal-case tracking-normal text-stone opacity-0 shadow-lg transition-opacity group-hover:opacity-100 group-focus-within:opacity-100"
             >
               {info}
             </span>

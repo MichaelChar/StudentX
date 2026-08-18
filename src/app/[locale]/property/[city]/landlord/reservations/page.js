@@ -80,7 +80,7 @@ export default function LandlordReservationsPage() {
   return (
     <LandlordShell eyebrow={t('eyebrow')} title={t('title')}>
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-sm px-4 py-3 mb-6">
+        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -101,7 +101,7 @@ export default function LandlordReservationsPage() {
               type="button"
               onClick={() => setTab(key)}
               aria-pressed={active}
-              className={`label-caps px-3 py-2 rounded-sm border transition-colors ${
+              className={`label-caps px-3 py-2 rounded-control border transition-colors ${
                 active
                   ? 'bg-night text-stone border-night'
                   : 'bg-white text-night/70 border-night/10 hover:border-night/30'
@@ -119,7 +119,7 @@ export default function LandlordReservationsPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-parchment rounded-sm animate-pulse" />
+            <div key={i} className="h-16 bg-parchment rounded-control animate-pulse" />
           ))}
         </div>
       ) : filtered.length === 0 ? (
@@ -128,7 +128,7 @@ export default function LandlordReservationsPage() {
           <p className="font-display text-xl text-night/60">{t('empty')}</p>
         </Card>
       ) : (
-        <div className="overflow-x-auto rounded-sm border border-night/10 bg-white">
+        <div className="overflow-x-auto rounded-card border border-night/10 bg-white">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-night/10 bg-parchment">

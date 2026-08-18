@@ -143,8 +143,8 @@ export default function EditListingPage() {
       <div className="max-w-3xl">
         {loading ? (
           <div className="space-y-4 animate-pulse">
-            <div className="h-40 bg-parchment rounded-sm" />
-            <div className="h-40 bg-parchment rounded-sm" />
+            <div className="h-40 bg-parchment rounded-card" />
+            <div className="h-40 bg-parchment rounded-card" />
           </div>
         ) : error ? (
           <div className="text-center py-12">

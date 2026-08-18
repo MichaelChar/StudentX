@@ -274,7 +274,7 @@ async function ListingsWidget({ locale }) {
       </div>
 
       {listings.length === 0 ? (
-        <div className="text-center py-12 border border-dashed border-night/15 rounded-sm">
+        <div className="text-center py-12 border border-dashed border-night/15 rounded-card">
           <p className="text-night/60 mb-4">{tLegacy('noListings')}</p>
           <Button href="/property/thessaloniki/landlord/listings/new" variant="primary" size="sm">
             {tLegacy('addFirst')}
@@ -354,7 +354,7 @@ function StatTile({ label, value, accent, caption, href }) {
   );
   if (href) {
     return (
-      <Link href={href} className="block focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-sm">
+      <Link href={href} className="block focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-card">
         {inner}
       </Link>
     );
@@ -370,7 +370,7 @@ function ListingRow({ listing }) {
 
   return (
     <div className="flex items-center gap-4">
-      <div className="relative w-16 h-16 rounded-sm bg-parchment overflow-hidden shrink-0">
+      <div className="relative w-16 h-16 rounded-photo bg-parchment overflow-hidden shrink-0">
         {photo ? (
           <Image src={variantUrl(photo, 'thumb')} alt={address} fill className="object-cover" sizes="64px" />
         ) : (
@@ -413,7 +413,7 @@ function InquiryRow({ inquiry }) {
   return (
     <Link
       href={`/property/thessaloniki/landlord/inquiries/${inquiryId}/chat`}
-      className="block rounded-sm border border-night/10 p-3 hover:border-blue transition-colors"
+      className="block rounded-card border border-night/10 p-3 hover:border-blue transition-colors"
     >
       <div className="flex items-start justify-between gap-3 mb-1">
         <p className="font-display text-base text-night truncate">
@@ -488,7 +488,7 @@ function ListingsCardSkeleton({ title, viewAll }) {
       <ul className="divide-y divide-night/10">
         {[1, 2, 3].map((i) => (
           <li key={i} className="py-4 flex items-center gap-4 first:pt-0 last:pb-0">
-            <div className="w-16 h-16 rounded-sm bg-parchment animate-pulse" />
+            <div className="w-16 h-16 rounded-control bg-parchment animate-pulse" />
             <div className="flex-1 space-y-2">
               <div className="h-4 w-2/3 bg-parchment rounded animate-pulse" />
               <div className="h-3 w-1/3 bg-parchment rounded animate-pulse" />

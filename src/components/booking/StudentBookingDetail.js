@@ -116,7 +116,7 @@ export default function StudentBookingDetail({ bookingId }) {
   }
 
   if (loading) {
-    return <div className="h-40 bg-parchment rounded-sm animate-pulse" />;
+    return <div className="h-40 bg-parchment rounded-card animate-pulse" />;
   }
 
   if (!booking) {
@@ -148,7 +148,7 @@ export default function StudentBookingDetail({ bookingId }) {
   return (
     <>
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-sm px-4 py-3 mb-6">
+        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -208,7 +208,7 @@ export default function StudentBookingDetail({ bookingId }) {
         <p className="mt-6 text-sm text-night/50">{t('offlineNote')}</p>
 
         {moveInMeta.can_respond && (
-          <div className="mt-8 rounded-sm border border-night/10 bg-parchment p-5 md:p-6">
+          <div className="mt-8 rounded-card border border-night/10 bg-parchment p-5 md:p-6">
             <p className="label-caps text-yellow mb-2">{t('moveInPromptEyebrow')}</p>
             <h3 className="font-display text-2xl text-night mb-2">
               {t('moveInPromptTitle')}
@@ -318,7 +318,7 @@ export default function StudentBookingDetail({ bookingId }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="report-problem-title"
-            className="relative z-10 w-full max-w-md rounded-sm border border-night/10 bg-parchment text-night p-6 md:p-7"
+            className="relative z-10 w-full max-w-md rounded-card border border-night/10 bg-parchment text-night p-6 md:p-7"
           >
             <h2
               id="report-problem-title"
@@ -336,7 +336,7 @@ export default function StudentBookingDetail({ bookingId }) {
                 onChange={(e) => setProblemText(e.target.value)}
                 rows={4}
                 disabled={acting}
-                className="mt-2 w-full rounded-sm border border-night/10 bg-white px-3 py-2 text-sm text-night font-sans focus:outline-none focus:border-blue"
+                className="mt-2 w-full rounded-control border border-night/10 bg-white px-3 py-2 text-sm text-night font-sans focus:outline-none focus:border-blue"
               />
             </label>
             <div className="mt-7 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">
@@ -344,7 +344,7 @@ export default function StudentBookingDetail({ bookingId }) {
                 type="button"
                 onClick={() => setReportOpen(false)}
                 disabled={acting}
-                className="label-caps px-4 py-2.5 rounded-sm border border-night/20 text-night/70 hover:border-night hover:text-night transition-colors disabled:opacity-50"
+                className="label-caps px-4 py-2.5 rounded-control border border-night/20 text-night/70 hover:border-night hover:text-night transition-colors disabled:opacity-50"
               >
                 {t('cancelConfirmDismiss')}
               </button>
@@ -360,7 +360,7 @@ export default function StudentBookingDetail({ bookingId }) {
                     setProblemText('');
                   }
                 }}
-                className="label-caps px-4 py-2.5 rounded-sm text-white bg-blue hover:bg-night transition-colors disabled:opacity-50"
+                className="label-caps px-4 py-2.5 rounded-control text-white bg-blue hover:bg-night transition-colors disabled:opacity-50"
               >
                 {acting ? t('working') : t('reportProblemSubmit')}
               </button>

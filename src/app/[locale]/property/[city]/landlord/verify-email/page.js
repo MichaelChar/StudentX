@@ -52,13 +52,13 @@ export default function VerifyEmailPage() {
     <AuthShell eyebrow="Verify email" title={t('title')} subtitle={t('message')}>
       <div className="space-y-5">
         {error && (
-          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-3 py-2">
+          <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-3 py-2">
             {error}
           </p>
         )}
 
         {resent ? (
-          <p className="text-sm text-blue bg-blue/10 border border-blue/20 rounded-sm px-3 py-2">
+          <p className="text-sm text-blue bg-blue/10 border border-blue/20 rounded-control px-3 py-2">
             {t('resentConfirm')}
           </p>
         ) : (

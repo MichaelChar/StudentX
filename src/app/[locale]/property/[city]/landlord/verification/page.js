@@ -94,8 +94,8 @@ export default function LandlordVerificationPage() {
       <div className="max-w-lg">
         {loading ? (
           <div className="animate-pulse space-y-4">
-            <div className="h-8 w-48 bg-parchment rounded-sm" />
-            <div className="h-32 bg-parchment rounded-sm" />
+            <div className="h-8 w-48 bg-parchment rounded-control" />
+            <div className="h-32 bg-parchment rounded-card" />
           </div>
         ) : isVerified ? (
           <Card tone="parchment" className="px-6 py-5 flex items-start gap-4">
@@ -129,7 +129,7 @@ export default function LandlordVerificationPage() {
         ) : latestRequest?.status === 'rejected' ? (
           /* Rejected — allow re-upload */
           <div className="space-y-6">
-            <div className="rounded-sm border border-red-200 bg-red-50 px-6 py-4">
+            <div className="rounded-card border border-red-200 bg-red-50 px-6 py-4">
               <p className="label-caps text-red-700 mb-1">Rejected</p>
               <p className="font-display text-base text-red-800 mb-1">
                 Previous submission rejected
@@ -193,7 +193,7 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
         </p>
         <div
           onClick={() => fileInputRef.current?.click()}
-          className={`cursor-pointer rounded-sm border-2 border-dashed px-6 py-8 text-center transition-colors ${
+          className={`cursor-pointer rounded-card border-2 border-dashed px-6 py-8 text-center transition-colors ${
             file
               ? 'border-blue/40 bg-blue/5 text-blue'
               : 'border-night/15 hover:border-yellow/60 bg-parchment text-night/60'
@@ -224,7 +224,7 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
       </div>
 
       {submitError && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-3 py-2">
+        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-3 py-2">
           {submitError}
         </p>
       )}

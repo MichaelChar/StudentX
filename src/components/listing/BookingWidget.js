@@ -260,7 +260,7 @@ export default function BookingWidget({ listing, nextPath }) {
                         required
                         value={moveIn}
                         onChange={(e) => setMoveIn(e.target.value)}
-                        className="mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
+                        className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
                       />
                     </label>
                     <label className="block">
@@ -270,7 +270,7 @@ export default function BookingWidget({ listing, nextPath }) {
                         required
                         value={moveOut}
                         onChange={(e) => setMoveOut(e.target.value)}
-                        className="mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
+                        className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
                       />
                     </label>
                   </div>
@@ -285,12 +285,12 @@ export default function BookingWidget({ listing, nextPath }) {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder={t('messagePlaceholder')}
-                      className="mt-1.5 w-full rounded-sm border border-night/15 bg-parchment px-3.5 py-3 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue resize-none"
+                      className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3.5 py-3 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue resize-none"
                     />
                   </label>
 
                   {cost && (
-                    <div className="rounded-sm border border-night/10 bg-parchment p-4 space-y-2 text-sm">
+                    <div className="rounded-card border border-night/10 bg-parchment p-4 space-y-2 text-sm">
                       <p className="label-caps text-night/60">{t('costTitle')}</p>
                       <div className="flex justify-between text-night">
                         <span>
@@ -310,7 +310,7 @@ export default function BookingWidget({ listing, nextPath }) {
                   )}
 
                   {/* Display-only cancellation tiers. */}
-                  <div className="rounded-sm border border-night/10 bg-parchment p-4 space-y-2">
+                  <div className="rounded-card border border-night/10 bg-parchment p-4 space-y-2">
                     <p className="label-caps text-night/60">{t('cancellationEnglish')}</p>
                     <ul className="space-y-1.5 text-sm text-night/70 font-sans leading-snug">
                       {CANCELLATION_TIERS.map((tier) => (
@@ -322,7 +322,7 @@ export default function BookingWidget({ listing, nextPath }) {
                   {error && (
                     <p
                       role="alert"
-                      className="text-sm text-magenta bg-parchment border border-night/10 rounded-sm px-3 py-2"
+                      className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2"
                     >
                       {error}
                     </p>
@@ -347,7 +347,7 @@ export default function BookingWidget({ listing, nextPath }) {
 
                 {needProfile && accessToken ? (
                   <div className="space-y-3">
-                    <div className="rounded-sm border border-night/10 bg-parchment p-4">
+                    <div className="rounded-card border border-night/10 bg-parchment p-4">
                       <p className="font-display text-lg text-night">{t('profileGateTitle')}</p>
                       <p className="mt-1 text-sm text-night/60 leading-relaxed">
                         {t('profileGateBody')}

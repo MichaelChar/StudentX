@@ -58,7 +58,7 @@ export default function ConfirmDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby={titleId}
-        className="relative z-10 w-full max-w-md rounded-sm border border-night/10 bg-parchment text-night p-6 md:p-7"
+        className="relative z-10 w-full max-w-md rounded-card border border-night/10 bg-parchment text-night p-6 md:p-7"
       >
         <h2
           id={titleId}
@@ -74,7 +74,7 @@ export default function ConfirmDialog({
             type="button"
             onClick={() => onCancel?.()}
             disabled={busy}
-            className="label-caps px-4 py-2.5 rounded-sm border border-night/20 text-night/70 hover:border-night hover:text-night transition-colors disabled:opacity-50"
+            className="label-caps px-4 py-2.5 rounded-control border border-night/20 text-night/70 hover:border-night hover:text-night transition-colors disabled:opacity-50"
           >
             {cancelLabel}
           </button>
@@ -82,7 +82,7 @@ export default function ConfirmDialog({
             type="button"
             onClick={() => onConfirm?.()}
             disabled={busy}
-            className={`label-caps px-4 py-2.5 rounded-sm text-white transition-colors disabled:opacity-50 ${
+            className={`label-caps px-4 py-2.5 rounded-control text-white transition-colors disabled:opacity-50 ${
               destructive
                 ? 'bg-red-600 hover:bg-red-700'
                 : 'bg-blue hover:bg-night'

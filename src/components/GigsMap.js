@@ -48,7 +48,7 @@ export default function GigsMap({ gigs, selectedCountries = [] }) {
   }
 
   return (
-    <div className="h-full w-full rounded-sm overflow-hidden border border-gray-200">
+    <div className="h-full w-full rounded-card overflow-hidden border border-gray-200">
       <MapContainer
         center={center}
         zoom={zoom}

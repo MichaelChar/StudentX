@@ -25,7 +25,7 @@ export default function SuggestedMark({ show, onDismiss, className = '' }) {
             e.preventDefault();
             onDismiss();
           }}
-          className="p-0.5 text-night/40 hover:text-night rounded-sm"
+          className="p-0.5 text-night/40 hover:text-night rounded-control"
           aria-label={t('dismissSuggestion')}
         >
           <Icon name="x" className="w-3 h-3" />

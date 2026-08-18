@@ -127,7 +127,7 @@ export default function AdminListingGoLivePage() {
       </div>
 
       {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-sm px-4 py-3 mb-6">
+        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -135,7 +135,7 @@ export default function AdminListingGoLivePage() {
       {loading ? (
         <p className="text-night/50">{t('loading')}</p>
       ) : listings.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-sm">
+        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-card">
           <p className="text-night/50">{t('empty', { filter })}</p>
         </div>
       ) : (
@@ -235,7 +235,7 @@ function StatusPill({ live, t }) {
 function GateChip({ ok, label }) {
   return (
     <li
-      className={`px-2 py-1 rounded-sm border ${
+      className={`px-2 py-1 rounded-card border ${
         ok
           ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
           : 'bg-parchment text-night/50 border-night/10'

@@ -33,7 +33,7 @@ export default function LandlordOnboardingPage() {
     <div className="min-h-screen flex items-center justify-center">
       <div className="animate-pulse space-y-4 w-full max-w-md px-4">
         <div className="h-8 w-48 bg-parchment rounded mx-auto" />
-        <div className="h-32 bg-parchment rounded-sm" />
+        <div className="h-32 bg-parchment rounded-card" />
       </div>
     </div>
   );
