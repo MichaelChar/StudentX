@@ -154,7 +154,7 @@ export default function AdminPropertyVerificationsPage() {
               className={`text-sm px-3 py-1.5 rounded-control border transition-colors capitalize ${
                 statusFilter === s
                   ? 'bg-night text-white border-night'
-                  : 'border-night/15 text-night/60 hover:border-night/40'
+                  : 'border-night/15 text-night/60 hover:border-night/40 active:bg-night/10'
               }`}
             >
               {t(`status.${s}`)}
@@ -239,7 +239,7 @@ export default function AdminPropertyVerificationsPage() {
                       onClick={() =>
                         setExpandedId(expanded ? null : req.verification_id)
                       }
-                      className="shrink-0 text-sm px-3 py-1.5 rounded-control border border-night/15 text-night/70 hover:border-night hover:text-night transition-colors"
+                      className="shrink-0 text-sm px-3 py-1.5 rounded-control border border-night/15 text-night/70 hover:border-night hover:text-night active:bg-night/10 transition-colors"
                     >
                       {expanded ? t('collapse') : t('openCall')}
                     </button>

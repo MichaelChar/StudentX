@@ -113,7 +113,7 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
                 value={names[slot]}
                 onChange={(e) => setNames((s) => ({ ...s, [slot]: e.target.value }))}
               />
-              <button onClick={() => createLandlord(slot)} className="text-sm bg-night text-white rounded px-3 py-2">
+              <button onClick={() => createLandlord(slot)} className="text-sm bg-night text-white rounded px-3 py-2 hover:bg-night/90 active:bg-night/80 transition-colors">
                 Create
               </button>
             </div>
@@ -185,7 +185,7 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
       <button
         onClick={runMigration}
         disabled={running || candidates.length === 0}
-        className="text-sm bg-blue text-white rounded px-5 py-2.5 disabled:opacity-40"
+        className="text-sm bg-blue text-white rounded px-5 py-2.5 hover:bg-blue/90 active:bg-blue/80 transition-colors disabled:opacity-40"
       >
         {running ? 'Migrating…' : 'Migrate'}
       </button>

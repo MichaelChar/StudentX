@@ -123,10 +123,10 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
         ))}
       </div>
       <div className="flex flex-wrap gap-2 mb-2">
-        <button onClick={save} className="text-xs bg-night text-white rounded px-3 py-1.5">
+        <button onClick={save} className="text-xs bg-night text-white rounded px-3 py-1.5 hover:bg-night/90 active:bg-night/80 transition-colors">
           Save
         </button>
-        <button onClick={generate} className="text-xs bg-blue text-white rounded px-3 py-1.5">
+        <button onClick={generate} className="text-xs bg-blue text-white rounded px-3 py-1.5 hover:bg-blue/90 active:bg-blue/80 transition-colors">
           Generate claim link
         </button>
         {landlord.published_landlord_id && (
@@ -138,7 +138,7 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
           <input readOnly value={claimUrl} className="flex-1 text-xs border border-gray-200 rounded px-2 py-1 bg-gray-50" />
           <button
             onClick={() => navigator.clipboard?.writeText(claimUrl)}
-            className="text-xs border border-gray-200 rounded px-2 py-1"
+            className="text-xs border border-gray-200 rounded px-2 py-1 hover:bg-night/5 active:bg-night/10 transition-colors"
           >
             Copy
           </button>
@@ -237,7 +237,7 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
           <Link href="/admin/migrate-fake-listings" className="text-sm text-blue underline">
             Migrate fake listings →
           </Link>
-          <button onClick={refresh} className="text-sm border border-gray-200 rounded px-3 py-1.5">
+          <button onClick={refresh} className="text-sm border border-gray-200 rounded px-3 py-1.5 hover:bg-night/5 active:bg-night/10 transition-colors">
             Refresh
           </button>
         </div>
@@ -253,7 +253,7 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
             value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
-          <button onClick={ingestSingle} className="text-sm bg-blue text-white rounded px-4 py-2">
+          <button onClick={ingestSingle} className="text-sm bg-blue text-white rounded px-4 py-2 hover:bg-blue/90 active:bg-blue/80 transition-colors">
             Ingest
           </button>
         </div>
@@ -264,7 +264,7 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
           value={batch}
           onChange={(e) => setBatch(e.target.value)}
         />
-        <button onClick={ingestBatch} className="text-sm border border-gray-200 rounded px-4 py-2">
+        <button onClick={ingestBatch} className="text-sm border border-gray-200 rounded px-4 py-2 hover:bg-night/5 active:bg-night/10 transition-colors">
           Queue batch
         </button>
       </section>
@@ -282,7 +282,7 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
             />
           ))}
         </div>
-        <button onClick={createLandlord} className="text-sm bg-night text-white rounded px-4 py-2">
+        <button onClick={createLandlord} className="text-sm bg-night text-white rounded px-4 py-2 hover:bg-night/90 active:bg-night/80 transition-colors">
           Create landlord
         </button>
       </section>
