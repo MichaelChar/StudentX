@@ -211,7 +211,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('accepted')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-colors disabled:opacity-50"
                 >
                   {isPending ? t('saving') : t('actions.accept')}
                 </button>
@@ -219,7 +219,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('rejected')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 active:bg-red-100 transition-colors disabled:opacity-50"
                 >
                   {t('actions.reject')}
                 </button>
@@ -227,7 +227,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('resolved')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-lg border border-night/20 text-night/70 text-sm font-semibold hover:bg-night/5 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg border border-night/20 text-night/70 text-sm font-semibold hover:bg-night/5 active:bg-night/10 transition-colors disabled:opacity-50"
                 >
                   {t('actions.resolve')}
                 </button>

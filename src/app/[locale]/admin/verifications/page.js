@@ -103,7 +103,7 @@ export default function AdminVerificationsPage() {
               key={s}
               onClick={() => handleFilterChange(s)}
               className={`text-sm px-3 py-1.5 rounded-lg border transition-colors capitalize ${
-                statusFilter === s ? 'bg-night text-white border-night' : 'border-gray-200 text-night/60 hover:border-night/40'
+                statusFilter === s ? 'bg-night text-white border-night' : 'border-gray-200 text-night/60 hover:border-night/40 active:bg-night/10'
               }`}
             >
               {s}
@@ -164,14 +164,14 @@ export default function AdminVerificationsPage() {
                     <button
                       onClick={() => handleAction(req.id, 'approve')}
                       disabled={!!actionStates[req.id]}
-                      className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 transition-colors disabled:opacity-50"
+                      className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-colors disabled:opacity-50"
                     >
                       {actionStates[req.id] === 'approving' ? 'Approving…' : 'Approve'}
                     </button>
                     <button
                       onClick={() => handleAction(req.id, 'reject')}
                       disabled={!!actionStates[req.id]}
-                      className="px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 transition-colors disabled:opacity-50"
+                      className="px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 active:bg-red-100 transition-colors disabled:opacity-50"
                     >
                       {actionStates[req.id] === 'rejecting' ? 'Rejecting…' : 'Reject'}
                     </button>
