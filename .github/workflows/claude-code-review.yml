@@ -51,15 +51,14 @@ jobs:
       # reason. That is the state this workflow sat in from 2026-08-18 onward: red
       # on every PR, zero signal, nothing in the log to act on. This step runs only
       # when the review step failed and prints the failure reason alone — the result
-      # envelope's error fields, then the API's response status for the token, which
-      # is what separates a rejected token (401) from an exhausted subscription
-      # quota (429). It never prints the review body, and the token is masked by
-      # Actions in any case.
+      # envelope's error fields, including the error string itself, which is what
+      # separates a rejected token from an exhausted subscription quota
+      # (anthropics/claude-code-action#1613). It never prints the review body —
+      # that is what the sanitiser exists to protect.
       - name: Explain review failure
         if: always() && steps.claude-review.outcome == 'failure'
         env:
           EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
-          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
         run: |
           set -uo pipefail
           FILE="${EXECUTION_FILE:-}"
@@ -77,17 +76,20 @@ jobs:
           fi
           echo "::endgroup::"
 
-          echo "::group::Token status (response headers only)"
-          cat > "${RUNNER_TEMP}/probe.json" <<'JSON'
-          {"model":"claude-sonnet-5","max_tokens":1,
-           "system":"You are Claude Code, Anthropic's official CLI for Claude.",
-           "messages":[{"role":"user","content":"ok"}]}
-          JSON
-          curl -sS -o /dev/null -D - -X POST https://api.anthropic.com/v1/messages \
-            -H "authorization: Bearer ${CLAUDE_CODE_OAUTH_TOKEN}" \
-            -H "anthropic-beta: oauth-2025-04-20" \
-            -H "anthropic-version: 2023-06-01" \
-            -H "content-type: application/json" \
-            -d @"${RUNNER_TEMP}/probe.json" \
-            | grep -iE '^HTTP/|^anthropic-ratelimit|^retry-after' || true
-          echo "::endgroup::"
+      # A green check on this job does not by itself mean a review happened. When a
+      # PR edits this file the action refuses to run — "the workflow file must exist
+      # and have identical content to the version on the repository's default
+      # branch" — and exits *success* without invoking Claude. Same class of silent
+      # no-op as the read-only scopes fixed in #55: the review is skipped, and the
+      # check is green. Annotate it rather than leave it invisible.
+      - name: Flag a review that never ran
+        if: always() && steps.claude-review.outcome == 'success'
+        env:
+          EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
+        run: |
+          set -uo pipefail
+          FILE="${EXECUTION_FILE:-}"
+          [ -n "$FILE" ] || FILE="${RUNNER_TEMP}/claude-execution-output.json"
+          if [ ! -f "$FILE" ]; then
+            echo "::warning title=No review ran::The action exited without invoking Claude — most often because this PR edits .github/workflows/claude-code-review.yml, which the action requires to match main. This job is green but nothing was reviewed."
+          fi
