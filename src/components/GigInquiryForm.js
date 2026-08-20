@@ -84,7 +84,7 @@ export default function GigInquiryForm({ gigId }) {
         placeholder={t('placeholder')}
         rows={4}
         maxLength={4000}
-        className="mt-3 w-full rounded-control border border-night/15 px-3 py-2 text-sm text-night focus:border-blue focus:outline-none"
+        className="mt-3 w-full rounded-control border border-night/15 px-3 py-2 text-sm text-night focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
       />
       {error && <p className="mt-2 text-sm text-magenta">{error}</p>}
       <button

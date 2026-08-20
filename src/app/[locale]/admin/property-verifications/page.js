@@ -296,7 +296,7 @@ export default function AdminPropertyVerificationsPage() {
                                 onChange={() =>
                                   toggleChecklist(req.verification_id, key)
                                 }
-                                className="mt-0.5 h-4 w-4 rounded-control border-night/30 text-blue focus:ring-blue/40"
+                                className="mt-0.5 h-4 w-4 rounded-control border-night/30 text-blue focus-visible:ring-blue/40"
                               />
                               <span>{t(CHECKLIST_I18N[key])}</span>
                             </label>
@@ -318,7 +318,7 @@ export default function AdminPropertyVerificationsPage() {
                             }))
                           }
                           rows={3}
-                          className="w-full rounded-control border border-night/15 bg-parchment px-3 py-2 text-sm text-night focus:outline-none focus:ring-2 focus:ring-yellow/50 focus:border-yellow resize-none"
+                          className="w-full rounded-control border border-night/15 bg-parchment px-3 py-2 text-sm text-night focus-visible:ring-2 focus-visible:ring-yellow/50 focus-visible:border-yellow resize-none"
                         />
                       </div>
 

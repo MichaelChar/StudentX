@@ -200,7 +200,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   onChange={(e) => setNote(e.target.value)}
                   rows={2}
                   placeholder={t('adminNotePlaceholder')}
-                  className="w-full rounded-lg border border-night/15 bg-white px-3 py-2 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/40 focus:border-blue resize-none"
+                  className="w-full rounded-lg border border-night/15 bg-white px-3 py-2 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/40 focus-visible:border-blue resize-none"
                 />
               </Field>
 

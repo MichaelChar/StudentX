@@ -260,7 +260,7 @@ export default function BookingWidget({ listing, nextPath }) {
                         required
                         value={moveIn}
                         onChange={(e) => setMoveIn(e.target.value)}
-                        className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
+                        className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/20 focus-visible:border-blue"
                       />
                     </label>
                     <label className="block">
@@ -270,7 +270,7 @@ export default function BookingWidget({ listing, nextPath }) {
                         required
                         value={moveOut}
                         onChange={(e) => setMoveOut(e.target.value)}
-                        className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
+                        className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/20 focus-visible:border-blue"
                       />
                     </label>
                   </div>
@@ -285,7 +285,7 @@ export default function BookingWidget({ listing, nextPath }) {
                       value={message}
                       onChange={(e) => setMessage(e.target.value)}
                       placeholder={t('messagePlaceholder')}
-                      className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3.5 py-3 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue resize-none"
+                      className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3.5 py-3 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/20 focus-visible:border-blue resize-none"
                     />
                   </label>
 

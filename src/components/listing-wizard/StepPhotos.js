@@ -7,7 +7,7 @@ import { MIN_PHOTOS, PHOTO_LIMIT } from '@/lib/listingWizardRules';
 import Icon from '@/components/ui/Icon';
 
 const inputClass =
-  'w-full border border-night/15 bg-white rounded-control px-3 py-2.5 text-sm text-night focus:outline-none focus:border-blue focus:ring-2 focus:ring-blue/10';
+  'w-full border border-night/15 bg-white rounded-control px-3 py-2.5 text-sm text-night focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/10';
 const labelClass = 'label-caps text-night/70 mb-1.5 block';
 
 export default function StepPhotos({

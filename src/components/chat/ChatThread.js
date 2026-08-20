@@ -238,7 +238,7 @@ export default function ChatThread({
           placeholder={t('messagePlaceholder')}
           rows={2}
           maxLength={4000}
-          className="flex-1 resize-none rounded-control border border-night/15 bg-stone/40 px-3 py-2 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue"
+          className="flex-1 resize-none rounded-control border border-night/15 bg-stone/40 px-3 py-2 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/20 focus-visible:border-blue"
         />
         <button
           type="submit"

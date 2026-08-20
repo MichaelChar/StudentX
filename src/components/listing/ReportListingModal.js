@@ -188,7 +188,7 @@ export default function ReportListingModal({ listingId }) {
                     onChange={(e) => setNote(e.target.value)}
                     placeholder={t('notePlaceholder')}
                     maxLength={MAX_NOTE_LEN}
-                    className="w-full rounded-control border border-night/15 bg-stone/40 px-3.5 py-3 text-sm text-night focus:outline-none focus:ring-2 focus:ring-blue/20 focus:border-blue resize-none"
+                    className="w-full rounded-control border border-night/15 bg-stone/40 px-3.5 py-3 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/20 focus-visible:border-blue resize-none"
                   />
                 </div>
 
