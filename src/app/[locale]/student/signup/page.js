@@ -9,7 +9,7 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
-import EncryptButton from '@/components/ui/EncryptButton';
+import Button from '@/components/ui/Button';
 import OAuthProviders from '@/components/student/OAuthProviders';
 
 export default function StudentSignupPage() {
@@ -163,12 +163,7 @@ export default function StudentSignupPage() {
           </div>
         )}
 
-        <EncryptButton
-          type="submit"
-          disabled={loading}
-          className="w-full"
-          text={loading ? t('submitting') : t('submit')}
-        />
+        <Button variant="cta" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
       </form>
 
       <div className="my-6 flex items-center gap-3">

@@ -16,10 +16,6 @@
   - `decorative` turns that off. Use it when the rule is pure ornament sitting
     next to a heading that already announces the boundary — a second separator
     there is just noise in the accessibility tree.
-
-  This is NOT `OrnamentRule` (the diamond-centred rule in globals.css). That one
-  is a decorative flourish from the pre-parity design and is slated for retirement
-  in F10; this is the structural hairline.
 */
 export default function Divider({
   orientation = 'horizontal',

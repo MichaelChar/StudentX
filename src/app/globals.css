@@ -187,28 +187,6 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
 }
 
-/*
-  Ornament rule — thin centered line with a small diamond, used between sections.
-  Pure CSS so it inherits currentColor.
-*/
-.rule-ornament {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  color: var(--color-yellow);
-}
-.rule-ornament::before,
-.rule-ornament::after {
-  content: "";
-  flex: 1;
-  height: 1px;
-  background: currentColor;
-  opacity: 0.4;
-}
-.rule-ornament::before {
-  transform: none;
-}
-
 /* Small-caps label, used for bilingual Greek/English headers */
 .label-caps {
   font-family: var(--font-sans);
@@ -249,25 +227,10 @@ input[type="range"]::-moz-range-thumb {
   50%      { transform: translate(-50%, -50%) rotate(45deg) scale(1.6); }
 }
 
-/*
-  EncryptButton gradient sweep (#260) — replaces the motion/react motion.span
-  so the auth pages don't ship an animation library. The scale(1.25) keeps the
-  element's `scale-125` while the keyframe drives translateY; the wrapper's
-  group-hover opacity still gates it to hover only.
-*/
-@keyframes encrypt-sweep {
-  from { transform: translateY(100%) scale(1.25); }
-  to   { transform: translateY(-100%) scale(1.25); }
-}
-.encrypt-sweep {
-  animation: encrypt-sweep 1s linear infinite alternate;
-}
-
 @media (prefers-reduced-motion: reduce) {
   .bauhaus-rotate,
   .bauhaus-orbit,
-  .bauhaus-pulse,
-  .encrypt-sweep {
+  .bauhaus-pulse {
     animation: none !important;
   }
 }

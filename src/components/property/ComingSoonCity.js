@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import Button from '@/components/ui/Button';
-import OrnamentRule from '@/components/ui/OrnamentRule';
+import Divider from '@/components/ui/Divider';
 import { CITY_ACCENTS } from '@/lib/cityRoutes';
 
 // Per-city placeholder for cities listed on the hub but without a real
@@ -73,7 +73,7 @@ export default async function ComingSoonCity({ locale, city }) {
       </section>
 
       <div className="mx-auto max-w-6xl px-5 pb-12">
-        <OrnamentRule />
+        <Divider />
       </div>
     </>
   );

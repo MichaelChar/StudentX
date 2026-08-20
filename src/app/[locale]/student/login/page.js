@@ -12,7 +12,7 @@ import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
-import EncryptButton from '@/components/ui/EncryptButton';
+import Button from '@/components/ui/Button';
 import OAuthProviders from '@/components/student/OAuthProviders';
 
 // The first submit since page load pays Worker cold-start latency the most;
@@ -253,18 +253,13 @@ function StudentLoginInner() {
           </p>
         )}
 
-        <EncryptButton
-          type="submit"
-          disabled={loading}
-          className="w-full"
-          text={
-            stage === 'redirect'
+        <Button variant="cta" type="submit" disabled={loading} className="w-full">
+          {stage === 'redirect'
               ? t('submittingRedirect')
               : stage === 'auth'
                 ? t('submittingAuth')
-                : t('submit')
-          }
-        />
+                : t('submit')}
+        </Button>
       </form>
 
       <div className="my-6 flex items-center gap-3">

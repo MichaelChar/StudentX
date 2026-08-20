@@ -1,6 +1,6 @@
 import { useTranslations } from 'next-intl';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import OrnamentRule from '@/components/ui/OrnamentRule';
+import Divider from '@/components/ui/Divider';
 import Button from '@/components/ui/Button';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
@@ -59,7 +59,7 @@ function AboutContent() {
       </section>
 
       <div className="mx-auto max-w-4xl px-5">
-        <OrnamentRule />
+        <Divider />
       </div>
 
       {/* How it works */}

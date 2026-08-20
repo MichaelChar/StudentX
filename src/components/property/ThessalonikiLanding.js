@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import OrnamentRule from '@/components/ui/OrnamentRule';
+import Divider from '@/components/ui/Divider';
 import StripeGradientMesh from '@/components/property/StripeGradientMesh';
 import DirectoryCarousel from '@/components/property/DirectoryCarousel';
 import { formatMoney } from '@/lib/formatMoney';
@@ -92,7 +92,7 @@ export default function ThessalonikiLanding() {
       <DirectoryCarousel />
 
       <div className="mx-auto max-w-6xl px-5">
-        <OrnamentRule />
+        <Divider />
       </div>
 
       {/* How it works */}

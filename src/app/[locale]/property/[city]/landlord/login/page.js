@@ -11,7 +11,7 @@ import { useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
-import EncryptButton from '@/components/ui/EncryptButton';
+import Button from '@/components/ui/Button';
 
 // The first submit since page load pays Worker cold-start latency the most;
 // tag the timing beacon (#265) with that so warm vs cold samples separate.
@@ -230,18 +230,13 @@ function LandlordLoginInner() {
           </p>
         )}
 
-        <EncryptButton
-          type="submit"
-          disabled={loading}
-          className="w-full"
-          text={
-            stage === 'redirect'
+        <Button variant="cta" type="submit" disabled={loading} className="w-full">
+          {stage === 'redirect'
               ? t('submittingRedirect')
               : stage === 'auth'
                 ? t('submittingAuth')
-                : t('submit')
-          }
-        />
+                : t('submit')}
+        </Button>
       </form>
 
       <p className="mt-8 text-sm text-night/60">

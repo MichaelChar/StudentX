@@ -14,8 +14,7 @@
   `background-position` shimmer is a paint on every frame and is exactly
   the motion class F5 forbids. `motion-reduce:animate-none` kills it when
   the user prefers reduced motion; globals.css's reduced-motion block does
-  not cover `animate-pulse` (only Bauhaus / EncryptButton), so this has
-  to be per-component.
+  not cover `animate-pulse` (only Bauhaus), so this has to be per-component.
 
   `aria-hidden` always. A skeleton announcing itself is noise — the caller
   owns the live-region / aria-busy messaging around the thing that's loading.
