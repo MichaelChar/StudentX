@@ -506,6 +506,60 @@ Ordered. Each item is roughly one PR. `→` lists the files it lands in.
 
 ### F — Foundation (blocks everything; land alone, first)
 
+> ## ✅ FOUNDATION COMPLETE — 2026-08-20
+>
+> Every F item is now either shipped or formally cancelled. The list below is
+> kept verbatim as the original brief; this block is the current state.
+>
+> | Item | State | Where |
+> |---|---|---|
+> | F1 font swap · F2 colour layer · F3 type scale · F6 `label-caps` | ❌ **Cancelled** | 2026-08-07 tokens decision (§"🔒 Tokens — UNCHANGED") |
+> | F4 geometry | ✅ Shipped | #396, #400, #401 |
+> | F5 motion | ✅ Shipped | #396, #397 |
+> | F7 primitives (Button · Pill/Chip · Card · Field · Divider) | ✅ Shipped | #393, #395, #408 |
+> | F8 new primitives | ✅ Shipped | #411 (Modal/Sheet/Popover/Tooltip + `ui/overlay/`), #410 (IconButton/Avatar/Skeleton/SegmentedControl/Counter) |
+> | F9 Carousel + BottomSheet | ✅ Shipped | #412 |
+> | F10 Lucide icon swap, retire decorative components | ⬜ **Outstanding** — the only F item left |
+> | F11 four-state pass | ✅ Shipped | #402, #403, #404, #405, #406, #409 |
+> | F12 money formatter | ✅ Shipped | #389 |
+>
+> **`RatingStars` was never built.** F8's original line lists it, but Feature 34
+> (reviews) is SKIP and Feature 21 (card rating slot) is dropped, so it would
+> have been dead code on arrival. Do not add it back from the F8 line below.
+>
+> **F9 took the hand-rolled option: no `embla-carousel-react`, no `vaul`.**
+> `motion@12` is already a dependency and `DirectoryCarousel` already ran the
+> drag + spring-snap mechanic in production, so adopting embla meant a second
+> carousel engine in the Worker bundle or rewriting working code. Zero new
+> dependencies were added across the whole Foundation phase.
+>
+> **`src/components/practice/**` is out of parity scope.** It is a separate
+> inline-`style` system with JS hover tracking and hardcoded hex, not Tailwind.
+> F4, F5 and F11 all skipped it. Bringing it in means porting it to Tailwind
+> first — a decision, not an oversight.
+>
+> **Four defects were found by the sweeps, all invisible in component source:**
+> a `border-radius: 4px` on the focus rule that squared off every control after
+> F4; an unlayered focus rule that silently overrode eleven components'
+> deliberate ring colours; Tailwind v4's `transition-colors` reaching
+> `outline-color`, which animated the focus ring in from the text colour; and a
+> `box-shadow` transition in `Card` hidden behind a zero-call-site prop. Three
+> of the four were Tailwind v4 cascade behaviour. **When something looks wrong
+> with focus or motion, check `globals.css` and Tailwind's defaults before the
+> component.**
+>
+> **None of the F8/F9 primitives have call sites yet**, so none has been
+> exercised in a browser. They get their first real test during adoption
+> (§S/§P/§H/§M). Open questions recorded there: `IconButton`'s `label` is
+> documented-required but not enforceable in JS; `Counter`'s decrement/increment
+> labels default to English literals against the next-intl convention; the
+> overlays are not portalled (matching `ConfirmDialog`), so a Modal inside a
+> `transform`ed ancestor will clip; `gigs/results` fills its selected segment
+> with `blue` where `SegmentedControl`, `Chip` and property results use `night`;
+> and `ui/Field` still has zero call sites — delete it if P5 lands without
+> adopting it.
+
+
 - **F1** Swap `next/font` to Plus Jakarta Sans 400/500; delete EB Garamond
   and the `font-display` token → `src/app/[locale]/layout.js`, `globals.css`
 - **F2** Replace the colour layer: ink `#222222`, secondary `#6C6C6C`,
