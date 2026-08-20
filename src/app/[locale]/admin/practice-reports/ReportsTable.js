@@ -219,7 +219,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('rejected')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 active:bg-night/10 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 active:bg-red-100 transition-colors disabled:opacity-50"
                 >
                   {t('actions.reject')}
                 </button>
