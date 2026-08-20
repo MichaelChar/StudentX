@@ -46,3 +46,48 @@ jobs:
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
+      # The action pipes the SDK stream through a sanitiser ("full output hidden
+      # for security"), so a failed review surfaces only `is_error:true` with no
+      # reason. That is the state this workflow sat in from 2026-08-18 onward: red
+      # on every PR, zero signal, nothing in the log to act on. This step runs only
+      # when the review step failed and prints the failure reason alone — the result
+      # envelope's error fields, then the API's response status for the token, which
+      # is what separates a rejected token (401) from an exhausted subscription
+      # quota (429). It never prints the review body, and the token is masked by
+      # Actions in any case.
+      - name: Explain review failure
+        if: always() && steps.claude-review.outcome == 'failure'
+        env:
+          EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
+          CLAUDE_CODE_OAUTH_TOKEN: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+        run: |
+          set -uo pipefail
+          FILE="${EXECUTION_FILE:-}"
+          [ -n "$FILE" ] || FILE="${RUNNER_TEMP}/claude-execution-output.json"
+
+          echo "::group::Result envelope"
+          if [ -f "$FILE" ]; then
+            jq -s '[.. | objects | select(.type? == "result")] | last
+                   | {subtype, is_error, terminal_reason, api_error_status,
+                      num_turns, duration_ms, total_cost_usd,
+                      error: ((.result // "") | tostring | .[0:300])}' "$FILE" \
+              || echo "could not parse $FILE"
+          else
+            echo "no execution output at $FILE"
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Token status (response headers only)"
+          cat > "${RUNNER_TEMP}/probe.json" <<'JSON'
+          {"model":"claude-sonnet-5","max_tokens":1,
+           "system":"You are Claude Code, Anthropic's official CLI for Claude.",
+           "messages":[{"role":"user","content":"ok"}]}
+          JSON
+          curl -sS -o /dev/null -D - -X POST https://api.anthropic.com/v1/messages \
+            -H "authorization: Bearer ${CLAUDE_CODE_OAUTH_TOKEN}" \
+            -H "anthropic-beta: oauth-2025-04-20" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "content-type: application/json" \
+            -d @"${RUNNER_TEMP}/probe.json" \
+            | grep -iE '^HTTP/|^anthropic-ratelimit|^retry-after' || true
+          echo "::endgroup::"
