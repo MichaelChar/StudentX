@@ -113,7 +113,23 @@ h1, h2, h3, h4, h5, h6, .font-display {
   letter-spacing: -0.02em;
 }
 
-/* Focus-visible — iris outline */
+/*
+  Focus-visible — iris outline, the site-wide default.
+
+  Deliberately UNLAYERED. Tailwind v4 emits every utility inside
+  `@layer utilities`, and unlayered CSS beats any layer regardless of
+  specificity — so this rule is the floor no component can accidentally lose.
+  That is also why it must stay minimal: anything declared here is unoverridable
+  from a utility class. See backlog F11 (docs/airbnb-ui-parity-spec.md §11).
+
+  NOTE: `border-radius: 4px` was removed here (F11 PR 1). It set the radius of
+  the ELEMENT, not of the outline — harmless while everything was `rounded-sm`
+  (2px), but after the F4 radii sweep it snapped every focused control back to
+  4px: 8px inputs squared off, and `rounded-full` icon buttons (the heart on
+  every listing card) became near-squares on Tab. The spec's "focus-visible
+  keeps its 4px" refers to the ring, which `outline` already draws following the
+  element's own corner geometry.
+*/
 a:focus-visible,
 button:focus-visible,
 input:focus-visible,
@@ -121,7 +137,6 @@ select:focus-visible,
 textarea:focus-visible {
   outline: 2px solid var(--color-blue);
   outline-offset: 2px;
-  border-radius: 4px;
 }
 
 /* Range slider */
