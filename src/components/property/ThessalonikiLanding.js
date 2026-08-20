@@ -92,7 +92,7 @@ export default function ThessalonikiLanding() {
       <DirectoryCarousel />
 
       <div className="mx-auto max-w-6xl px-5">
-        <Divider />
+        <Divider decorative />
       </div>
 
       {/* How it works */}

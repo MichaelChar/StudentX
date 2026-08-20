@@ -59,7 +59,7 @@ function AboutContent() {
       </section>
 
       <div className="mx-auto max-w-4xl px-5">
-        <Divider />
+        <Divider decorative />
       </div>
 
       {/* How it works */}

@@ -75,9 +75,7 @@ export default async function LandlordProfilePage({ params }) {
         />
         <div className="min-w-0">
           <div className="flex items-center gap-2 mb-3">
-            <span role="img" aria-label="Verified">
-              <Icon name="shieldCheck" className="w-7 h-7 text-yellow shrink-0" />
-            </span>
+            <Icon name="shieldCheck" className="w-7 h-7 text-yellow shrink-0" />
             <Pill variant="verified">{t('verified')}</Pill>
           </div>
           <h1 className="font-display text-4xl md:text-5xl text-night leading-tight text-balance">
@@ -87,7 +85,7 @@ export default async function LandlordProfilePage({ params }) {
         </div>
       </header>
 
-      <Divider className="my-8" />
+      <Divider decorative className="my-8" />
 
       {/* Their listings — same card as the directory */}
       {listings.length > 0 ? (

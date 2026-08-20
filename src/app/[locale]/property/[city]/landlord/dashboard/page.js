@@ -434,9 +434,7 @@ function VerificationCard({ isVerified, t }) {
   if (isVerified) {
     return (
       <Card tone="parchment" className="p-6 flex items-center gap-5">
-        <span role="img" aria-label="Verified">
-          <Icon name="shieldCheck" className="w-12 h-12 text-yellow shrink-0" />
-        </span>
+        <Icon name="shieldCheck" className="w-12 h-12 text-yellow shrink-0" />
         <div className="flex-1">
           <p className="label-caps text-yellow">{t('widgetVerification')}</p>
           <p className="font-display text-2xl text-night mt-1">{t('verifiedTitle')}</p>

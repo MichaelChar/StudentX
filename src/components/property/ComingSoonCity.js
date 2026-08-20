@@ -73,7 +73,7 @@ export default async function ComingSoonCity({ locale, city }) {
       </section>
 
       <div className="mx-auto max-w-6xl px-5 pb-12">
-        <Divider />
+        <Divider decorative />
       </div>
     </>
   );
