@@ -114,29 +114,41 @@ h1, h2, h3, h4, h5, h6, .font-display {
 }
 
 /*
-  Focus-visible — iris outline, the site-wide default.
+  Focus-visible — iris outline, the site-wide DEFAULT.
 
-  Deliberately UNLAYERED. Tailwind v4 emits every utility inside
-  `@layer utilities`, and unlayered CSS beats any layer regardless of
-  specificity — so this rule is the floor no component can accidentally lose.
-  That is also why it must stay minimal: anything declared here is unoverridable
-  from a utility class. See backlog F11 (docs/airbnb-ui-parity-spec.md §11).
+  In `@layer base` deliberately. Tailwind v4 emits utilities into
+  `@layer utilities`, which cascades after `base`, so a component that asks for
+  a different focus colour with `focus-visible:outline-<colour>` now wins here.
+  That is the whole point: this rule is a floor, not a ceiling.
 
-  NOTE: `border-radius: 4px` was removed here (F11 PR 1). It set the radius of
-  the ELEMENT, not of the outline — harmless while everything was `rounded-sm`
-  (2px), but after the F4 radii sweep it snapped every focused control back to
-  4px: 8px inputs squared off, and `rounded-full` icon buttons (the heart on
-  every listing card) became near-squares on Tab. The spec's "focus-visible
-  keeps its 4px" refers to the ring, which `outline` already draws following the
-  element's own corner geometry.
+  It used to be unlayered, which made it a ceiling — unlayered CSS beats every
+  layer regardless of specificity, so eleven components that deliberately chose
+  a non-blue focus colour were silently rendered iris instead (F11 PR 3):
+
+    focus-visible:outline-white    ×4  — ListingLightbox ×2, AdmissionsHero,
+                                         ListingPreview. All sit on dark
+                                         surfaces; iris-on-near-black was the
+                                         worst case of the three.
+    focus-visible:outline-yellow   ×5  — card and dashboard link targets
+    focus-visible:outline-magenta  ×2  — FavoriteButton, GigFavoriteButton
+
+  Moving it here is only safe because PR 2 retired every `focus:outline-none`
+  in the codebase. Those are utilities, so against a base-layer rule they would
+  win and strip the keyboard ring site-wide. If one is ever reintroduced, this
+  rule stops protecting that control — `grep -rn "outline-none" src` should
+  stay at zero.
+
+  See backlog F11, docs/airbnb-ui-parity-spec.md §11.
 */
-a:focus-visible,
-button:focus-visible,
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible {
-  outline: 2px solid var(--color-blue);
-  outline-offset: 2px;
+@layer base {
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    outline: 2px solid var(--color-blue);
+    outline-offset: 2px;
+  }
 }
 
 /* Range slider */
