@@ -358,7 +358,7 @@ function StatTile({ label, value, accent, caption, href }) {
   );
   if (href) {
     return (
-      <Link href={href} className="block focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-card">
+      <Link href={href} className="block focus-visible:outline-2 outline-yellow focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-card">
         {inner}
       </Link>
     );

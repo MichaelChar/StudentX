@@ -141,6 +141,33 @@ h1, h2, h3, h4, h5, h6, .font-display {
   See backlog F11, docs/airbnb-ui-parity-spec.md §11.
 */
 @layer base {
+  /*
+    Resting outline colour. This looks redundant — `outline-style` is `none`
+    until focus, so nothing paints — but it is what makes the ring INSTANT.
+
+    Tailwind v4's `transition-colors` includes `outline-color` in its
+    transition-property list:
+
+      color, background-color, border-color, outline-color, …
+
+    so on any control carrying that utility (most of them, after F11 PR 4a) the
+    focus ring animates its colour over 200ms. The value it animates FROM is
+    `outline-color`'s initial value, `currentColor` — which on a `text-stone`
+    control is white, i.e. the focus indicator fades in invisibly against the
+    page for the first frames. A focus indicator must not be animated.
+
+    Declaring the resting colour equal to the focused colour leaves nothing to
+    interpolate, so the ring appears at full strength on the first frame while
+    every other colour transition on the element still animates normally.
+
+    Components that override the ring colour (`focus-visible:outline-white` on
+    dark surfaces, etc.) set their own resting colour the same way, with a
+    bare `outline-<colour>` utility next to the focus-visible one.
+  */
+  a, button, input, select, textarea {
+    outline-color: var(--color-blue);
+  }
+
   a:focus-visible,
   button:focus-visible,
   input:focus-visible,

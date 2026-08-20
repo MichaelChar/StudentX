@@ -157,7 +157,7 @@ export default async function ListingPage({ params, searchParams }) {
           {isVerified && listing.landlord?.name && (
             <Link
               href={`/property/thessaloniki/landlords/${listing.listing_id.slice(0, 4)}`}
-              className="group inline-flex items-center gap-3 mb-10 rounded-control focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
+              className="group inline-flex items-center gap-3 mb-10 rounded-control focus-visible:outline-2 outline-yellow focus-visible:outline-yellow focus-visible:outline-offset-2"
             >
               <LandlordAvatar
                 name={listing.landlord.name}

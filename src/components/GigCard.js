@@ -110,7 +110,7 @@ export default function GigCard({ gig, fromQuery = '' }) {
       <Link
         href={href}
         aria-label={gig.title}
-        className="absolute inset-0 z-0 rounded-photo focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
+        className="absolute inset-0 z-0 rounded-photo focus-visible:outline-2 outline-yellow focus-visible:outline-yellow focus-visible:outline-offset-2"
       />
 
       {/* Save toggle — over the photo's top-left, above the stretched link.
