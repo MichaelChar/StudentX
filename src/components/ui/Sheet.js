@@ -20,7 +20,23 @@ import { surfaceTransition } from '@/components/ui/overlay/motion';
 
   Reduced motion drops the slide and keeps the scrim fade, matching
   Modal. History (backlog S8) is not wired — see useOverlay.js.
+
+  `draggable` (backlog M3 / F9) adds drag-to-dismiss and a grab handle to the
+  `bottom` side. It lives here rather than in a separate component because a
+  draggable sheet differs from this one by a handle and a gesture — everything
+  else (trap, lock, Escape, scrim, slide) is identical, and a near-duplicate
+  would be two things to keep in sync. `BottomSheet.js` is the named wrapper.
+
+  The gesture is `transform: y` only, and dismissal is decided on RELEASE from
+  distance OR velocity — a fast short flick reads as intentional, a slow long
+  drag that stops short does not, and judging on distance alone gets both
+  wrong. Under reduced motion the handle stays (it is an affordance, not
+  motion) but the sheet does not rubber-band.
 */
+
+// Past this many px, or this release velocity, letting go dismisses.
+const DISMISS_DISTANCE = 110;
+const DISMISS_VELOCITY = 500;
 
 const SIDES = {
   bottom:
@@ -55,6 +71,7 @@ function sheetTransform(side, reduced) {
 function SheetPanel({
   onClose,
   side,
+  draggable,
   title,
   children,
   footer,
@@ -80,6 +97,9 @@ function SheetPanel({
 
   const labelledBy = title != null && title !== '' ? titleId : undefined;
   const sideClass = SIDES[side] || SIDES.bottom;
+  // Drag is a bottom-sheet gesture. A right-side panel dragged vertically
+  // would be nonsense, so the prop is ignored there rather than half-working.
+  const canDrag = Boolean(draggable) && (side || 'bottom') === 'bottom';
   const transform = sheetTransform(side, reduced);
 
   return (
@@ -106,8 +126,34 @@ function SheetPanel({
         animate={transform.animate}
         exit={transform.exit}
         transition={surfaceTransition}
+        {...(canDrag
+          ? {
+              drag: 'y',
+              // Up is pinned: a bottom sheet does not grow past its own top
+              // edge. Down is elastic so the gesture feels attached.
+              dragConstraints: { top: 0, bottom: 0 },
+              dragElastic: { top: 0, bottom: 0.4 },
+              onDragEnd: (_e, info) => {
+                if (
+                  info.offset.y > DISMISS_DISTANCE ||
+                  info.velocity.y > DISMISS_VELOCITY
+                ) {
+                  onClose?.();
+                }
+              },
+            }
+          : {})}
         {...rest}
       >
+        {canDrag && (
+          // Decorative: the sheet is already dismissable by Escape, backdrop
+          // and whatever close control the caller renders, so announcing a
+          // drag affordance a keyboard user cannot operate would be noise.
+          <div
+            aria-hidden="true"
+            className="mx-auto -mt-2 mb-4 h-1 w-10 shrink-0 rounded-full bg-night/20"
+          />
+        )}
         {title != null && title !== '' && (
           <h2
             id={titleId}
@@ -129,6 +175,7 @@ export default function Sheet({
   open = false,
   onClose,
   side = 'bottom',
+  draggable = false,
   title,
   children,
   footer,
@@ -147,6 +194,7 @@ export default function Sheet({
           key={`sheet-${resolvedSide}`}
           onClose={onClose}
           side={resolvedSide}
+          draggable={draggable}
           title={title}
           footer={footer}
           initialFocusRef={initialFocusRef}
