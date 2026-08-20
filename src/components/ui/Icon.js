@@ -120,6 +120,7 @@ const PATHS = {
       <path d="M5 12h14" />
     </>
   ),
+  minus: <path d="M5 12h14" />,
   x: (
     <>
       <path d="m6 6 12 12" />
