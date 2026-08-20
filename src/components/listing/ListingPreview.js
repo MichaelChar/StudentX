@@ -96,7 +96,7 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
           type="button"
           onClick={onClose}
           aria-label={t('previewClose')}
-          className="inline-flex items-center gap-1.5 shrink-0 rounded-control bg-white/15 px-3 py-1.5 text-xs font-sans font-semibold uppercase tracking-[0.08em] hover:bg-white/25 active:bg-white/35 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="inline-flex items-center gap-1.5 shrink-0 rounded-control bg-white/15 px-3 py-1.5 text-xs font-sans font-semibold uppercase tracking-[0.08em] hover:bg-white/25 active:bg-white/35 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 outline-white focus-visible:outline-white"
         >
           <Icon name="x" className="w-4 h-4" />
           {t('previewClose')}

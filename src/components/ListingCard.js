@@ -179,7 +179,7 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         {showLandlord && (
           <Link
             href={`/property/thessaloniki/landlords/${landlordId}`}
-            className="relative z-10 mt-4 inline-flex max-w-full items-center gap-2 group/landlord focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-control"
+            className="relative z-10 mt-4 inline-flex max-w-full items-center gap-2 group/landlord focus-visible:outline-2 outline-yellow focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-control"
           >
             <LandlordAvatar
               name={landlordName}
@@ -198,7 +198,7 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
       <Link
         href={href}
         aria-label={listing.title || listing.address}
-        className="absolute inset-0 z-0 rounded-photo focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
+        className="absolute inset-0 z-0 rounded-photo focus-visible:outline-2 outline-yellow focus-visible:outline-yellow focus-visible:outline-offset-2"
       />
 
       {/* Save toggle — over the photo's top-left, above the stretched link. */}

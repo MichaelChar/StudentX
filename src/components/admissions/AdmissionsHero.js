@@ -67,7 +67,7 @@ export default function AdmissionsHero({
           <CtaButton>{ctaPrimary}</CtaButton>
           <a
             href="#how-it-works"
-            className="inline-flex items-center justify-center rounded-full px-8 py-4 text-lg font-display font-semibold text-white border-2 border-white/35 hover:border-white/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+            className="inline-flex items-center justify-center rounded-full px-8 py-4 text-lg font-display font-semibold text-white border-2 border-white/35 hover:border-white/70 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 outline-white focus-visible:outline-white"
           >
             {ctaSecondary}
           </a>
