@@ -193,7 +193,7 @@ function FavoriteAuthGate({ open, onClose }) {
           type="button"
           onClick={onClose}
           aria-label={tFav('close')}
-          className="absolute top-4 right-4 p-1 text-night/50 hover:text-night transition-colors"
+          className="absolute top-4 right-4 p-1 text-night/50 hover:text-night active:text-night/80 transition-colors"
         >
           <Icon name="x" className="w-5 h-5" />
         </button>

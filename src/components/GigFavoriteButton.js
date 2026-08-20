@@ -33,7 +33,7 @@ export default function GigFavoriteButton({ gigId, withLabel = false, className 
         className={`inline-flex items-center gap-2 rounded-control border px-4 py-2.5 font-sans font-semibold uppercase tracking-[0.08em] text-xs transition-colors ${
           saved
             ? 'border-magenta bg-magenta/5 text-magenta'
-            : 'border-night/20 text-night/70 hover:border-magenta hover:text-magenta'
+            : 'border-night/20 text-night/70 hover:border-magenta hover:text-magenta active:bg-magenta/10'
         } ${className}`}
       >
         <Icon name="heart" className="w-4 h-4" fill={saved ? 'currentColor' : 'none'} />
@@ -48,7 +48,7 @@ export default function GigFavoriteButton({ gigId, withLabel = false, className 
       onClick={handleClick}
       aria-pressed={saved}
       aria-label={ariaLabel}
-      className={`inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/85 backdrop-blur-sm shadow-[0_1px_6px_-1px_rgba(10,20,54,0.3)] transition-[transform,background-color] hover:bg-white hover:scale-105 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta ${className}`}
+      className={`inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/85 backdrop-blur-sm shadow-[0_1px_6px_-1px_rgba(10,20,54,0.3)] transition-[transform,background-color] hover:bg-white hover:scale-105 active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-magenta ${className}`}
     >
       <Icon
         name="heart"

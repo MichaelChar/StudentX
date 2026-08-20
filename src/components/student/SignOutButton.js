@@ -21,7 +21,7 @@ export default function SignOutButton() {
     <button
       type="button"
       onClick={handleSignOut}
-      className="label-caps text-night/60 hover:text-blue transition-colors inline-flex items-center gap-1.5"
+      className="label-caps text-night/60 hover:text-blue active:text-blue/80 transition-colors inline-flex items-center gap-1.5"
     >
       <Icon name="logout" className="w-4 h-4" />
       {t('signOut')}

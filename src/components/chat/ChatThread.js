@@ -196,7 +196,7 @@ export default function ChatThread({
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="underline hover:text-blue"
+              className="underline hover:text-blue active:text-blue/80 transition-colors"
             >
               {t('refresh')}
             </button>
@@ -243,7 +243,7 @@ export default function ChatThread({
         <button
           type="submit"
           disabled={sending || !draft.trim() || accessToken === null}
-          className="bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-4 py-2.5 rounded hover:bg-night transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-4 py-2.5 rounded hover:bg-night active:bg-night/80 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {sending ? t('sending') : t('send')}
         </button>

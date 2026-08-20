@@ -153,7 +153,7 @@ function GigsResultsInner() {
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between gap-4">
           <h1 className="font-display text-3xl text-night">{t('title')}</h1>
-          <Link href="/gigs" className="text-sm text-blue hover:underline">
+          <Link href="/gigs" className="text-sm text-blue hover:underline active:text-blue/80 transition-colors">
             ← {t('backToChoice')}
           </Link>
         </div>
@@ -172,7 +172,7 @@ function GigsResultsInner() {
                     className={`rounded-control border px-3 py-2 text-sm font-medium transition-colors ${
                       pay === opt
                         ? 'border-blue bg-blue text-white'
-                        : 'border-night/15 bg-white text-night/70 hover:border-blue/40'
+                        : 'border-night/15 bg-white text-night/70 hover:border-blue/40 active:bg-blue/10'
                     }`}
                   >
                     {t(opt)}
@@ -210,7 +210,7 @@ function GigsResultsInner() {
                     className={`rounded-full border px-3 py-1.5 text-sm transition-colors ${
                       selectedCountries.includes(c.code)
                         ? 'border-blue bg-blue/10 text-blue'
-                        : 'border-night/15 bg-white text-night/70 hover:border-blue/40'
+                        : 'border-night/15 bg-white text-night/70 hover:border-blue/40 active:bg-blue/10'
                     }`}
                   >
                     {c.flag} {c.name}
@@ -255,7 +255,7 @@ function GigsResultsInner() {
               <button
                 type="button"
                 onClick={clearFilters}
-                className="text-sm text-blue hover:underline"
+                className="text-sm text-blue hover:underline active:text-blue/80 transition-colors"
               >
                 {t('clearFilters')}
               </button>
@@ -275,7 +275,7 @@ function GigsResultsInner() {
                     type="button"
                     onClick={() => setViewMode(mode)}
                     className={`rounded-control px-3 py-1.5 text-sm font-medium transition-colors ${
-                      viewMode === mode ? 'bg-blue text-white' : 'text-night/60 hover:text-night'
+                      viewMode === mode ? 'bg-blue text-white' : 'text-night/60 hover:text-night active:text-night/80'
                     }`}
                   >
                     {t(mode)}

@@ -89,7 +89,7 @@ export default function StepUniversities({
             type="button"
             onClick={addRow}
             disabled={prefillLoading}
-            className="label-caps text-blue hover:underline disabled:opacity-50 disabled:no-underline"
+            className="label-caps text-blue hover:underline active:text-blue/80 transition-colors disabled:opacity-50 disabled:no-underline"
           >
             {t('add')}
           </button>
@@ -148,7 +148,7 @@ export default function StepUniversities({
               <button
                 type="button"
                 onClick={() => removeRow(i)}
-                className="shrink-0 p-2 text-night/40 hover:text-night rounded-control"
+                className="shrink-0 p-2 text-night/40 hover:text-night active:text-night/80 transition-colors rounded-control"
                 aria-label={t('remove')}
               >
                 <Icon name="x" className="w-4 h-4" />

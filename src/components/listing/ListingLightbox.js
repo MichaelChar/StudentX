@@ -115,7 +115,7 @@ export default function ListingLightbox({ photos, title, startIndex = 0, onClose
           type="button"
           onClick={onClose}
           aria-label={t('close')}
-          className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+          className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 active:bg-white/30 transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
         >
           <Icon name="x" className="w-6 h-6" />
         </button>
@@ -267,7 +267,7 @@ function ArrowButton({ dir, label, disabled, onClick }) {
       aria-label={label}
       className={`absolute top-1/2 -translate-y-1/2 ${
         isPrev ? 'left-3' : 'right-3'
-      } inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:bg-white/20 transition-colors disabled:opacity-25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white`}
+      } inline-flex items-center justify-center w-11 h-11 rounded-full bg-white/10 text-white hover:bg-white/20 active:bg-white/30 transition-colors disabled:opacity-25 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white`}
     >
       <Icon name="chevronRight" className={`w-6 h-6 ${isPrev ? 'rotate-180' : ''}`} />
     </button>

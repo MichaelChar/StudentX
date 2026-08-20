@@ -163,7 +163,7 @@ export default function ClaimClient({ token, landlord, listings }) {
       <button
         onClick={publish}
         disabled={publishing || claimable.length === 0}
-        className="w-full text-base bg-blue text-white rounded-lg px-5 py-3 disabled:opacity-40"
+        className="w-full text-base bg-blue text-white rounded-lg px-5 py-3 hover:bg-blue/90 active:bg-blue/80 transition-colors disabled:opacity-40"
       >
         {publishing ? 'Publishing…' : 'Publish my listings'}
       </button>

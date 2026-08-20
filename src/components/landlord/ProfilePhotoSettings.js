@@ -169,7 +169,7 @@ export default function ProfilePhotoSettings() {
             <button
               type="button"
               onClick={handleRemove}
-              className="text-sm text-night/50 hover:text-red-700 transition-colors text-left"
+              className="text-sm text-night/50 hover:text-red-700 active:text-red-800 transition-colors text-left"
             >
               {t('photoRemove')}
             </button>

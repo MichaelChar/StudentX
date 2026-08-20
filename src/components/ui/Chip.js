@@ -36,9 +36,9 @@ const BASE =
 
 const STATES = {
   // Resting: white on the page, hairline border. Recedes until wanted.
-  off: 'bg-white text-night border-night/20 hover:border-night/45 hover:bg-parchment',
+  off: 'bg-white text-night border-night/20 hover:border-night/45 hover:bg-parchment active:bg-parchment/70',
   // Active: ink fill. Reads unmistakably as "on" without spending the brand colour.
-  on: 'bg-night text-white border-night hover:bg-night/90',
+  on: 'bg-night text-white border-night hover:bg-night/90 active:bg-night/80',
 };
 
 export default function Chip({

@@ -104,7 +104,7 @@ export default function LandlordReservationsPage() {
               className={`label-caps px-3 py-2 rounded-control border transition-colors ${
                 active
                   ? 'bg-night text-stone border-night'
-                  : 'bg-white text-night/70 border-night/10 hover:border-night/30'
+                  : 'bg-white text-night/70 border-night/10 hover:border-night/30 active:bg-night/5'
               }`}
             >
               {t(`tab_${key}`)}

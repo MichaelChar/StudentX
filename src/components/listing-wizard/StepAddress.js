@@ -189,7 +189,7 @@ export default function StepAddress({
                 <button
                   type="button"
                   onClick={() => pickSuggestion(s)}
-                  className="w-full text-left px-3 py-2.5 text-sm text-night hover:bg-parchment border-b border-night/5 last:border-0"
+                  className="w-full text-left px-3 py-2.5 text-sm text-night hover:bg-parchment active:bg-parchment/70 border-b border-night/5 last:border-0"
                 >
                   {s.display_name}
                 </button>

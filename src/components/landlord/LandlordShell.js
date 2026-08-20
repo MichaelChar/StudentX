@@ -143,7 +143,7 @@ export default function LandlordShell({
             {/* Mobile menu */}
             <button
               onClick={() => setDrawerOpen(true)}
-              className="lg:hidden p-1 text-night"
+              className="lg:hidden p-1 text-night hover:text-blue active:text-blue/80 transition-colors"
               aria-label="Open menu"
             >
               <Icon name="list" className="w-5 h-5" />
@@ -169,7 +169,7 @@ export default function LandlordShell({
                 type="button"
                 onClick={handleSignOut}
                 title={t('signOut')}
-                className="label-caps text-night/60 hover:text-blue transition-colors hidden md:inline-flex items-center gap-1.5"
+                className="label-caps text-night/60 hover:text-blue active:text-blue/80 transition-colors hidden md:inline-flex items-center gap-1.5"
               >
                 <Icon name="logout" className="w-4 h-4" />
                 {t('signOut')}
@@ -229,7 +229,7 @@ function SidebarContent({ t, pathname, onSignOut, onNavigate }) {
         <button
           type="button"
           onClick={onSignOut}
-          className="label-caps text-stone/60 hover:text-stone transition-colors inline-flex items-center gap-2"
+          className="label-caps text-stone/60 hover:text-stone active:text-stone/80 transition-colors inline-flex items-center gap-2"
         >
           <Icon name="logout" className="w-4 h-4" />
           {t('signOut')}
