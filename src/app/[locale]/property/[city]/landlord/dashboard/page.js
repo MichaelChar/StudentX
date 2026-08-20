@@ -337,7 +337,11 @@ function StatTile({ label, value, accent, caption, href }) {
     <Card
       tone={accent ? 'night' : 'parchment'}
       border={false}
-      className={`p-5 ${accent ? 'text-stone' : ''} ${href ? 'hover:shadow-[0_2px_14px_-6px_rgba(10,20,54,0.25)] transition-shadow' : ''}`}
+      // Was a hand-rolled `hover:shadow-[...] transition-shadow` here, which
+      // animates box-shadow — not permitted by the F5 motion rule. Card's
+      // `hover` prop now does the compliant transform lift.
+      hover={!!href}
+      className={`p-5 ${accent ? 'text-stone' : ''}`}
     >
       <p className={`label-caps ${accent ? 'text-yellow' : 'text-night/60'}`}>{label}</p>
       <p
