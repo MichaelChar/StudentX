@@ -387,7 +387,7 @@ function ResultsContent() {
               className={`label-caps px-3 py-2 flex items-center gap-1.5 transition-colors ${
                 viewMode === 'list'
                   ? 'bg-night text-white'
-                  : 'text-night/60 hover:text-night'
+                  : 'text-night/60 hover:text-night active:text-night/80'
               }`}
             >
               <Icon name="list" className="w-4 h-4" /> {t('viewList')}
@@ -398,7 +398,7 @@ function ResultsContent() {
               className={`label-caps px-3 py-2 flex items-center gap-1.5 transition-colors ${
                 viewMode === 'map'
                   ? 'bg-night text-white'
-                  : 'text-night/60 hover:text-night'
+                  : 'text-night/60 hover:text-night active:text-night/80'
               }`}
             >
               <Icon name="map" className="w-4 h-4" /> {t('viewMap')}
@@ -536,7 +536,7 @@ function ResultsContent() {
               <button
                 onClick={() => setFiltersMobileOpen(false)}
                 aria-label="Close filters"
-                className="p-1 text-night/60"
+                className="p-1 text-night/60 hover:text-night active:text-night/80 transition-colors"
               >
                 <Icon name="x" className="w-5 h-5" />
               </button>
@@ -735,7 +735,7 @@ function FilterPanel({
                   type="button"
                   onClick={() => onMoveIn('')}
                   aria-label={t('moveInClear')}
-                  className="p-2 text-night/50 hover:text-night transition-colors"
+                  className="p-2 text-night/50 hover:text-night active:text-night/80 transition-colors"
                 >
                   <Icon name="x" className="w-4 h-4" aria-hidden="true" />
                 </button>
@@ -757,7 +757,7 @@ function FilterPanel({
                   type="button"
                   onClick={() => onMoveOut('')}
                   aria-label={t('moveOutClear')}
-                  className="p-2 text-night/50 hover:text-night transition-colors"
+                  className="p-2 text-night/50 hover:text-night active:text-night/80 transition-colors"
                 >
                   <Icon name="x" className="w-4 h-4" aria-hidden="true" />
                 </button>
@@ -785,7 +785,7 @@ function FilterPanel({
                 className={`px-3 py-1.5 rounded-control border text-xs font-sans transition-colors ${
                   active
                     ? 'border-blue bg-blue text-white'
-                    : 'border-night/20 text-night/70 hover:border-blue'
+                    : 'border-night/20 text-night/70 hover:border-blue active:bg-blue/10'
                 }`}
               >
                 {n}
@@ -810,7 +810,7 @@ function FilterPanel({
                 className={`px-3 py-1.5 rounded-control border text-xs font-sans transition-colors ${
                   active
                     ? 'border-blue bg-blue text-white'
-                    : 'border-night/20 text-night/70 hover:border-blue'
+                    : 'border-night/20 text-night/70 hover:border-blue active:bg-blue/10'
                 }`}
               >
                 {tQuiz(group.labelKey)}
@@ -831,7 +831,7 @@ function FilterPanel({
             className={`px-2.5 py-1 rounded-control border text-xs font-sans transition-colors ${
               filters.minDuration === null
                 ? 'border-blue bg-blue text-white'
-                : 'border-night/20 text-night/70 hover:border-blue'
+                : 'border-night/20 text-night/70 hover:border-blue active:bg-blue/10'
             }`}
           >
             {t('minDurationAny')}
@@ -847,7 +847,7 @@ function FilterPanel({
                 className={`px-2.5 py-1 rounded-control border font-sans transition-colors text-left leading-tight ${
                   active
                     ? 'border-blue bg-blue text-white'
-                    : 'border-night/20 text-night/70 hover:border-blue'
+                    : 'border-night/20 text-night/70 hover:border-blue active:bg-blue/10'
                 }`}
               >
                 <span className="block text-xs">{t(opt.nameKey)}</span>
@@ -873,7 +873,7 @@ function FilterPanel({
                   type="button"
                   onClick={() => onRemoveDealbreaker(db)}
                   aria-label={t('removeDealbreaker', { label })}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-control border border-night/20 text-xs font-sans text-night/80 hover:border-night hover:text-night transition-colors"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-control border border-night/20 text-xs font-sans text-night/80 hover:border-night hover:text-night active:bg-night/5 transition-colors"
                 >
                   <span>{label}</span>
                   <Icon name="x" className="w-3 h-3 opacity-60" aria-hidden="true" />
@@ -893,7 +893,7 @@ function FilterPanel({
           className={`w-full flex items-center gap-2 px-3 py-2 rounded-control border text-xs font-sans transition-colors ${
             filters.verifiedOnly
               ? 'border-yellow bg-yellow text-white'
-              : 'border-night/20 text-night/70 hover:border-yellow'
+              : 'border-night/20 text-night/70 hover:border-yellow active:bg-yellow/10'
           }`}
         >
           <Icon name="shieldCheck" className="w-4 h-4" />

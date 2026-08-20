@@ -770,7 +770,7 @@ export default function ListingForm({
               <button
                 type="button"
                 onClick={() => setShowImportBanner(false)}
-                className="p-1 text-night/40 hover:text-night rounded-control shrink-0"
+                className="p-1 text-night/40 hover:text-night active:text-night/80 transition-colors rounded-control shrink-0"
                 aria-label={t('paste.dismissBanner')}
               >
                 <Icon name="x" className="w-4 h-4" />

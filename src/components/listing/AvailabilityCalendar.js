@@ -104,7 +104,7 @@ export default function AvailabilityCalendar({ listingId }) {
         <button
           type="button"
           onClick={prevMonth}
-          className="p-2 text-night/60 hover:text-blue rounded-control"
+          className="p-2 text-night/60 hover:text-blue active:text-blue/80 transition-colors rounded-control"
           aria-label={t('prevMonth')}
         >
           <Icon name="chevronRight" className="w-4 h-4 rotate-180" />
@@ -113,7 +113,7 @@ export default function AvailabilityCalendar({ listingId }) {
         <button
           type="button"
           onClick={nextMonth}
-          className="p-2 text-night/60 hover:text-blue rounded-control"
+          className="p-2 text-night/60 hover:text-blue active:text-blue/80 transition-colors rounded-control"
           aria-label={t('nextMonth')}
         >
           <Icon name="chevronRight" className="w-4 h-4" />

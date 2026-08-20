@@ -344,7 +344,7 @@ export default function StudentBookingDetail({ bookingId }) {
                 type="button"
                 onClick={() => setReportOpen(false)}
                 disabled={acting}
-                className="label-caps px-4 py-2.5 rounded-control border border-night/20 text-night/70 hover:border-night hover:text-night transition-colors disabled:opacity-50"
+                className="label-caps px-4 py-2.5 rounded-control border border-night/20 text-night/70 hover:border-night hover:text-night active:bg-night/5 transition-colors disabled:opacity-50"
               >
                 {t('cancelConfirmDismiss')}
               </button>
@@ -360,7 +360,7 @@ export default function StudentBookingDetail({ bookingId }) {
                     setProblemText('');
                   }
                 }}
-                className="label-caps px-4 py-2.5 rounded-control text-white bg-blue hover:bg-night transition-colors disabled:opacity-50"
+                className="label-caps px-4 py-2.5 rounded-control text-white bg-blue hover:bg-night active:bg-night/80 transition-colors disabled:opacity-50"
               >
                 {acting ? t('working') : t('reportProblemSubmit')}
               </button>

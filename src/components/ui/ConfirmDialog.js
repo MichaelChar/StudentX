@@ -74,7 +74,7 @@ export default function ConfirmDialog({
             type="button"
             onClick={() => onCancel?.()}
             disabled={busy}
-            className="label-caps px-4 py-2.5 rounded-control border border-night/20 text-night/70 hover:border-night hover:text-night transition-colors disabled:opacity-50"
+            className="label-caps px-4 py-2.5 rounded-control border border-night/20 text-night/70 hover:border-night hover:text-night active:bg-night/5 transition-colors disabled:opacity-50"
           >
             {cancelLabel}
           </button>
@@ -84,8 +84,8 @@ export default function ConfirmDialog({
             disabled={busy}
             className={`label-caps px-4 py-2.5 rounded-control text-white transition-colors disabled:opacity-50 ${
               destructive
-                ? 'bg-red-600 hover:bg-red-700'
-                : 'bg-blue hover:bg-night'
+                ? 'bg-red-600 hover:bg-red-700 active:bg-red-800'
+                : 'bg-blue hover:bg-night active:bg-night/80'
             }`}
           >
             {confirmLabel}

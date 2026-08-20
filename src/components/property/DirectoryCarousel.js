@@ -230,7 +230,7 @@ export default function DirectoryCarousel() {
                  A morphing dot would need a transform-based rebuild, which
                  would distort the pill's radius — not worth it for a dot. */
               className={`h-2.5 rounded-full transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${
-                i === index ? 'w-6 bg-blue' : 'w-2.5 bg-night/20 hover:bg-night/40'
+                i === index ? 'w-6 bg-blue' : 'w-2.5 bg-night/20 hover:bg-night/40 active:bg-night/60'
               }`}
             />
           ))}
@@ -247,7 +247,7 @@ function PagerArrow({ dir, label, disabled, onClick }) {
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
-      className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-night/15 text-night/70 transition-colors hover:border-blue hover:text-blue disabled:opacity-30 disabled:hover:border-night/15 disabled:hover:text-night/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+      className="inline-flex items-center justify-center w-10 h-10 rounded-full border border-night/15 text-night/70 transition-colors hover:border-blue hover:text-blue active:bg-blue/10 disabled:opacity-30 disabled:hover:border-night/15 disabled:hover:text-night/70 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
     >
       <Icon
         name="chevronRight"

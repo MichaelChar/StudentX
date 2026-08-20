@@ -106,7 +106,7 @@ export default function StepPhotos({
                       type="button"
                       onClick={() => onReorder(i, i - 1)}
                       disabled={i === 0}
-                      className="bg-white/95 hover:bg-white text-night rounded-control w-9 h-9 flex items-center justify-center disabled:opacity-40"
+                      className="bg-white/95 hover:bg-white active:bg-white/80 transition-colors text-night rounded-control w-9 h-9 flex items-center justify-center disabled:opacity-40"
                       aria-label={t('moveLeft')}
                     >
                       <Icon name="chevronRight" className="w-4 h-4 rotate-180" />
@@ -115,7 +115,7 @@ export default function StepPhotos({
                       type="button"
                       onClick={() => onReorder(i, i + 1)}
                       disabled={i === photos.length - 1}
-                      className="bg-white/95 hover:bg-white text-night rounded-control w-9 h-9 flex items-center justify-center disabled:opacity-40"
+                      className="bg-white/95 hover:bg-white active:bg-white/80 transition-colors text-night rounded-control w-9 h-9 flex items-center justify-center disabled:opacity-40"
                       aria-label={t('moveRight')}
                     >
                       <Icon name="chevronRight" className="w-4 h-4" />
@@ -124,7 +124,7 @@ export default function StepPhotos({
                   <button
                     type="button"
                     onClick={() => onRemove(url)}
-                    className="absolute top-2 right-2 bg-white/95 hover:bg-white text-night rounded-control w-9 h-9 flex items-center justify-center"
+                    className="absolute top-2 right-2 bg-white/95 hover:bg-white active:bg-white/80 transition-colors text-night rounded-control w-9 h-9 flex items-center justify-center"
                     aria-label={t('remove')}
                   >
                     <Icon name="x" className="w-4 h-4" />

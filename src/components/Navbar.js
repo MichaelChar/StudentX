@@ -150,7 +150,7 @@ function AuthMenu({ t, authState, accountHref, inquiriesHref, landlordLoginHref,
         <button
           type="button"
           onClick={onSignOut}
-          className="label-caps text-night/60 hover:text-blue transition-colors"
+          className="label-caps text-night/60 hover:text-blue active:text-blue/80 transition-colors"
         >
           {t('signOut')}
         </button>
@@ -244,7 +244,7 @@ function SignInDropdown({ t, landlordLoginHref }) {
         onClick={() => setOpen((o) => !o)}
         aria-haspopup="menu"
         aria-expanded={open}
-        className="label-caps flex items-center gap-2 rounded-full bg-blue text-stone px-5 py-2 shadow-sm hover:bg-night transition-colors"
+        className="label-caps flex items-center gap-2 rounded-full bg-blue text-stone px-5 py-2 shadow-sm hover:bg-night active:bg-night/80 transition-colors"
       >
         <span>{t('signIn')}</span>
         <motion.span

@@ -111,7 +111,7 @@ export default function StepAvailability({
                 <button
                   type="button"
                   onClick={() => removeBlackout(i)}
-                  className="p-2 text-night/40 hover:text-night rounded-control"
+                  className="p-2 text-night/40 hover:text-night active:text-night/80 transition-colors rounded-control"
                   aria-label={t('removeBlackout')}
                 >
                   <Icon name="x" className="w-4 h-4" />

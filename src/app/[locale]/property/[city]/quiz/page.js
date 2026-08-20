@@ -202,7 +202,7 @@ function TypeStep({ t, types, onToggleType }) {
               className={`px-4 py-2 rounded-control border text-sm font-sans transition-colors ${
                 active
                   ? 'border-blue bg-blue text-white'
-                  : 'border-night/20 text-night hover:border-blue'
+                  : 'border-night/20 text-night hover:border-blue active:bg-blue/10'
               }`}
             >
               {t(opt.labelKey)}
@@ -237,7 +237,7 @@ function DealbreakersStep({ t, dealbreakers, onToggle }) {
               className={`flex items-center gap-3 px-4 py-3 rounded-control border text-left transition-colors ${
                 active
                   ? 'border-blue bg-blue/5 text-night'
-                  : 'border-night/20 text-night/80 hover:border-blue'
+                  : 'border-night/20 text-night/80 hover:border-blue active:bg-blue/10'
               }`}
             >
               <span

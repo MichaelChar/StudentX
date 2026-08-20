@@ -403,13 +403,13 @@ function ListingRow({
         <Link
           href={`/property/thessaloniki/listing/${listing.listing_id}`}
           target="_blank"
-          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors"
         >
           {t('view')}
         </Link>
         <Link
           href={`/property/thessaloniki/landlord/listings/${listing.listing_id}/edit`}
-          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors"
         >
           {t('edit')}
         </Link>
@@ -417,7 +417,7 @@ function ListingRow({
           type="button"
           onClick={onDuplicate}
           disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors disabled:opacity-50"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors disabled:opacity-50"
         >
           {t('duplicate')}
         </button>
@@ -425,7 +425,7 @@ function ListingRow({
           type="button"
           onClick={onToggleDisable}
           disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue transition-colors disabled:opacity-50"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors disabled:opacity-50"
         >
           {disabled ? t('enable') : t('disable')}
         </button>
@@ -434,7 +434,7 @@ function ListingRow({
             type="button"
             onClick={onRequestVerification}
             disabled={busy}
-            className="label-caps px-3 py-1.5 rounded-control border border-blue/40 bg-blue/5 text-blue hover:border-blue hover:bg-blue/10 transition-colors disabled:opacity-50"
+            className="label-caps px-3 py-1.5 rounded-control border border-blue/40 bg-blue/5 text-blue hover:border-blue hover:bg-blue/10 active:bg-blue/20 transition-colors disabled:opacity-50"
           >
             {busy ? tPv('requesting') : tPv('requestCta')}
           </button>
@@ -443,7 +443,7 @@ function ListingRow({
           type="button"
           onClick={onDelete}
           disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-control border border-red-300 text-red-600 hover:bg-red-50 transition-colors disabled:opacity-50"
+          className="label-caps px-3 py-1.5 rounded-control border border-red-300 text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors disabled:opacity-50"
         >
           {busy ? t('deleting') : t('delete')}
         </button>

@@ -309,7 +309,7 @@ function DetailField({ label, value, info, infoAria }) {
           <span className="relative group inline-flex">
             <button
               type="button"
-              className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-night/25 text-[10px] font-sans font-bold text-night/50 hover:border-blue hover:text-blue focus-visible:ring-2 focus-visible:ring-blue/30"
+              className="inline-flex h-4 w-4 items-center justify-center rounded-full border border-night/25 text-[10px] font-sans font-bold text-night/50 hover:border-blue hover:text-blue active:bg-blue/10 focus-visible:ring-2 focus-visible:ring-blue/30"
               aria-label={infoAria || label}
             >
               i

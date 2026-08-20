@@ -102,7 +102,7 @@ export default function ReportListingModal({ listingId }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 label-caps text-night/40 hover:text-magenta transition-colors"
+        className="inline-flex items-center gap-1.5 label-caps text-night/40 hover:text-magenta active:text-magenta/80 transition-colors"
       >
         <Icon name="shield" className="w-3.5 h-3.5" />
         {t('trigger')}
@@ -127,7 +127,7 @@ export default function ReportListingModal({ listingId }) {
                 type="button"
                 onClick={close}
                 disabled={submitting}
-                className="p-1 text-night/60 hover:text-night disabled:opacity-50"
+                className="p-1 text-night/60 hover:text-night active:text-night/80 transition-colors disabled:opacity-50"
                 aria-label={t('closeAriaLabel')}
               >
                 <Icon name="x" className="w-5 h-5" />
