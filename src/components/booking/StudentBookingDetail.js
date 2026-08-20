@@ -336,7 +336,7 @@ export default function StudentBookingDetail({ bookingId }) {
                 onChange={(e) => setProblemText(e.target.value)}
                 rows={4}
                 disabled={acting}
-                className="mt-2 w-full rounded-control border border-night/10 bg-white px-3 py-2 text-sm text-night font-sans focus:outline-none focus:border-blue"
+                className="mt-2 w-full rounded-control border border-night/10 bg-white px-3 py-2 text-sm text-night font-sans focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
               />
             </label>
             <div className="mt-7 flex flex-col-reverse sm:flex-row sm:justify-end gap-3">

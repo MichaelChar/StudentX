@@ -363,7 +363,7 @@ function ResultsContent() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none label-caps bg-transparent border border-night/20 text-night pl-4 pr-9 py-2 rounded-control cursor-pointer focus:outline-none focus:border-blue"
+              className="appearance-none label-caps bg-transparent border border-night/20 text-night pl-4 pr-9 py-2 rounded-control cursor-pointer focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
             >
               <option value="match">{t('sortBestMatch')}</option>
               <option value="price">{t('sortPriceAsc')}</option>
@@ -727,7 +727,7 @@ function FilterPanel({
                 type="date"
                 value={filters.moveIn || ''}
                 onChange={(e) => onMoveIn(e.target.value)}
-                className="flex-1 rounded-control border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
+                className="flex-1 rounded-control border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
                 aria-label={t('moveIn')}
               />
               {filters.moveIn && (
@@ -749,7 +749,7 @@ function FilterPanel({
                 type="date"
                 value={filters.moveOut || ''}
                 onChange={(e) => onMoveOut(e.target.value)}
-                className="flex-1 rounded-control border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus:outline-none focus:border-blue"
+                className="flex-1 rounded-control border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
                 aria-label={t('moveOut')}
               />
               {filters.moveOut && (
