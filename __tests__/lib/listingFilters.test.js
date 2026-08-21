@@ -4,6 +4,9 @@ import {
   applyListingFilters,
   hasGroundFloorTag,
   hasAllRequiredAmenities,
+  amenityNamesOf,
+  listingCountNeedsRowFetch,
+  applyListingFilterResiduals,
 } from '@/lib/listingFilters';
 
 // Thin URLSearchParams wrapper so tests read like query strings.
@@ -133,5 +136,77 @@ describe('amenity residual predicates', () => {
     expect(hasAllRequiredAmenities(['Furnished', 'AC'], ['furnished', 'ac'])).toBe(true);
     expect(hasAllRequiredAmenities(['Furnished'], ['Furnished', 'AC'])).toBe(false);
     expect(hasAllRequiredAmenities(['Furnished'], [])).toBe(true);
+  });
+
+  it('amenityNamesOf handles object and array embed shapes', () => {
+    expect(
+      amenityNamesOf({
+        listing_amenities: [
+          { amenities: { name: 'WiFi' } },
+          { amenities: [{ name: 'AC' }] },
+          { amenities: null },
+        ],
+      }),
+    ).toEqual(['WiFi', 'AC']);
+    expect(amenityNamesOf(null)).toEqual([]);
+  });
+});
+
+describe('listingCountNeedsRowFetch', () => {
+  it('is false when every filter is query-side', () => {
+    const f = parseListingFilters(
+      sp('types=Studio&neighborhoods=Kentro&verified_only=true&min_duration=5'),
+    );
+    expect(listingCountNeedsRowFetch(f, false)).toBe(false);
+  });
+
+  it('is true for the three JS residuals /api/listings cannot push to SQL', () => {
+    expect(listingCountNeedsRowFetch(parseListingFilters(sp('exclude_ground_floor=true')))).toBe(
+      true,
+    );
+    expect(listingCountNeedsRowFetch(parseListingFilters(sp()), true)).toBe(true);
+    expect(
+      listingCountNeedsRowFetch(
+        parseListingFilters(sp('move_in=2026-09-01&move_out=2026-12-01')),
+      ),
+    ).toBe(true);
+  });
+});
+
+describe('applyListingFilterResiduals', () => {
+  const wifi = { listing_amenities: [{ amenities: { name: 'WiFi' } }] };
+  const ground = {
+    listing_id: 'g',
+    listing_amenities: [{ amenities: { name: 'Ground Floor' } }],
+  };
+  const furnished = {
+    listing_id: 'f',
+    listing_amenities: [{ amenities: { name: 'Furnished' } }],
+  };
+
+  it('drops ground-floor-tagged rows when exclude_ground_floor is on', () => {
+    const f = parseListingFilters(sp('exclude_ground_floor=true'));
+    const out = applyListingFilterResiduals([{ ...wifi, listing_id: 'a' }, ground], f);
+    expect(out.map((r) => r.listing_id)).toEqual(['a']);
+  });
+
+  it('applies the amenity AND-filter only when the RPC failed', () => {
+    const f = parseListingFilters(sp('exclude_amenities=Furnished'));
+    const rows = [furnished, { listing_id: 'w', ...wifi }];
+    expect(applyListingFilterResiduals(rows, f, { amenityRpcFailed: false })).toHaveLength(2);
+    expect(
+      applyListingFilterResiduals(rows, f, { amenityRpcFailed: true }).map((r) => r.listing_id),
+    ).toEqual(['f']);
+  });
+
+  it('drops blocked calendars and listings whose min/max duration cannot fit the stay', () => {
+    const f = parseListingFilters(sp('move_in=2026-09-01&move_out=2026-12-01'));
+    const rows = [
+      { listing_id: 'ok', min_duration_months: 1, max_duration_months: 12 },
+      { listing_id: 'blocked', min_duration_months: 1, max_duration_months: 12 },
+      { listing_id: 'too-long-min', min_duration_months: 9, max_duration_months: 12 },
+    ];
+    const out = applyListingFilterResiduals(rows, f, { blockedIds: ['blocked'] });
+    expect(out.map((r) => r.listing_id)).toEqual(['ok']);
   });
 });
