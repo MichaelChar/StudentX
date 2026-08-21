@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import { useTranslations, useLocale } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import Pill from '@/components/ui/Pill';
@@ -6,7 +5,7 @@ import Icon from '@/components/ui/Icon';
 import FavoriteButton from '@/components/FavoriteButton';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
 import PropertyVerifiedBadge from '@/components/listing/PropertyVerifiedBadge';
-import { variantUrl } from '@/lib/photoVariants';
+import CardPhotos from '@/components/listing/CardPhotos';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatDistance } from '@/lib/formatDistance';
 import { formatMoney } from '@/lib/formatMoney';
@@ -28,15 +27,10 @@ import {
   landlord chip (→ landlord profile) and the favorite toggle, both z-10.
 */
 
-function isValidPhotoUrl(url) {
-  return typeof url === 'string' && url.startsWith('http');
-}
-
 export default function ListingCard({ listing, fromQuery = '', groundFloorDealbreaker = false }) {
   const t = useTranslations('propylaea.results');
   const tCard = useTranslations('listingCard');
   const locale = useLocale();
-  const photo = listing.photos?.find(isValidPhotoUrl);
   // When the student set "no ground floor" but this listing has no recorded
   // floor, flag it so they ask before viewing rather than discovering on the
   // day (NULL floors are kept in results, not filtered out — see #100).
@@ -81,22 +75,22 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
        change. Cards now separate by grid gap, so gap is load-bearing.
        Hover is a transform lift only — the old border-colour + shadow pair
        is gone. */
-    <div className="group relative transition-transform hover:-translate-y-0.5">
-      {/* Photo — this IS the card frame now */}
+    <div
+      // CardPhotos arms its lazy carousel from here rather than from the photo
+      // element: the stretched link below paints over the photo, so a pointer
+      // handler on the image itself never fires.
+      data-listing-card
+      className="group relative transition-transform hover:-translate-y-0.5"
+    >
+      {/* Photo — this IS the card frame now, and it is a carousel (Feature 16).
+          `overflow-hidden` clips the slides to the 12px radius; the carousel's
+          own controls live at z-10 so they beat the stretched link below. */}
       <div className="relative aspect-[4/3] rounded-photo overflow-hidden bg-parchment">
-        {photo ? (
-          <Image
-            src={variantUrl(photo, 'card')}
-            alt={listing.address}
-            fill
-            className="object-cover"
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full text-night/20">
-            <Icon name="photo" className="w-10 h-10" />
-          </div>
-        )}
+        <CardPhotos
+          photos={listing.photos}
+          alt={listing.address}
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+        />
       </div>
 
       {/* Body — sits directly on the page, ~12px under the photo */}
@@ -201,10 +195,12 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         className="absolute inset-0 z-0 rounded-photo focus-visible:outline-2 outline-yellow focus-visible:outline-yellow focus-visible:outline-offset-2"
       />
 
-      {/* Save toggle — over the photo's top-left, above the stretched link. */}
+      {/* Save toggle — over the photo's top-RIGHT, above the stretched link.
+          Moved from top-left in Feature 17: that corner is now the badge slot
+          (Feature 19). Treatment and optimistic state are unchanged. */}
       <FavoriteButton
         listingId={listing.listing_id}
-        className="absolute top-3 left-3 z-10"
+        className="absolute top-3 right-3 z-10"
       />
     </div>
   );
