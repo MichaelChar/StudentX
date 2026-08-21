@@ -1,163 +1,115 @@
-/*
-  Propylaea icon set — 24px grid, 1.5px stroke, inline SVG, currentColor.
-  Single source of truth for the 14 icons defined in the design system.
+import {
+  ArrowRight,
+  BookOpen,
+  Calendar,
+  Check,
+  ChevronDown,
+  ChevronRight,
+  Compass,
+  Euro,
+  Footprints,
+  Heart,
+  House,
+  Image as ImageIcon,
+  List,
+  ListFilter,
+  LogOut,
+  Map as MapIcon,
+  MapPin,
+  MessageSquare,
+  Minus,
+  Plus,
+  Search,
+  Settings,
+  Shield,
+  ShieldCheck,
+  Star,
+  X,
+} from 'lucide-react';
 
-  Usage: <Icon name="home" className="w-5 h-5 text-blue" />
+/*
+  Icon — the app's single icon entry point, now backed by Lucide (backlog F10).
+
+  The public API is unchanged on purpose: `<Icon name="home" className="w-5 h-5" />`
+  still works at all 46 call sites, so this PR swaps the *source* of the glyphs
+  without touching a single consumer.
+
+  Why swap at all, when the old set was already 24px / 1.5px stroke and looked
+  fine: it was 26 hand-drawn approximations OF Lucide, and it had already begun
+  to drift — the header comment claimed 14 icons while 26 were defined, and the
+  most recent addition (`minus`) was appended ad hoc by whoever needed it. The
+  parity spec §0 names Lucide explicitly precisely so the icon set is not a
+  thing we maintain by hand.
+
+  This is the ONE new dependency taken in the whole Foundation phase, and the
+  reasoning is the mirror image of F9's: there, `DirectoryCarousel` already ran
+  a working drag engine, so embla would have been a second copy of something we
+  had. Here the hand-rolled set is strictly worse than the library it imitates,
+  and the amenity iconography still to come (Feature 31) needs far more than 26
+  glyphs. Imports are per-icon, so the bundle carries these 26 and not Lucide's
+  ~1,500.
+
+  NAME MAP, not a re-export. The keys below are StudentX's vocabulary and must
+  stay stable: `LandlordShell` looks icons up **dynamically** from its nav
+  config (`<Icon name={item.icon} />`), so a name that exists only at a literal
+  call site is not the whole set — `cog` is reachable *only* that way. Dropping
+  a key here fails silently at runtime rather than at build time.
 */
-const PATHS = {
-  home: (
-    <>
-      <path d="M3 11.5 12 4l9 7.5" />
-      <path d="M5 10v10h14V10" />
-    </>
-  ),
-  'map-pin': (
-    <>
-      <path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12Z" />
-      <circle cx="12" cy="9" r="2.5" />
-    </>
-  ),
-  search: (
-    <>
-      <circle cx="11" cy="11" r="7" />
-      <path d="m20 20-3.5-3.5" />
-    </>
-  ),
-  filter: (
-    <>
-      <path d="M3 5h18" />
-      <path d="M6 12h12" />
-      <path d="M10 19h4" />
-    </>
-  ),
-  map: (
-    <>
-      <path d="M9 4 3 6v14l6-2 6 2 6-2V4l-6 2Z" />
-      <path d="M9 4v14" />
-      <path d="M15 6v14" />
-    </>
-  ),
-  list: (
-    <>
-      <path d="M8 6h13" />
-      <path d="M8 12h13" />
-      <path d="M8 18h13" />
-      <circle cx="4" cy="6" r="0.75" />
-      <circle cx="4" cy="12" r="0.75" />
-      <circle cx="4" cy="18" r="0.75" />
-    </>
-  ),
-  check: <path d="m5 12 5 5 9-10" />,
-  calendar: (
-    <>
-      <rect x="3" y="5" width="18" height="16" rx="1.5" />
-      <path d="M8 3v4" />
-      <path d="M16 3v4" />
-      <path d="M3 10h18" />
-    </>
-  ),
-  walk: (
-    <>
-      <circle cx="13" cy="4.5" r="1.5" />
-      <path d="m9 21 3-7 3 4v3" />
-      <path d="m7 13 3-6 4 1 3 3" />
-      <path d="m6 17 3-3" />
-    </>
-  ),
-  star: <path d="m12 3 2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 17.8l-5.8 3.1 1.1-6.5L2.6 9.8l6.5-.9Z" />,
-  // Renders outline by default (fill="none" from the <svg>). Pass
-  // fill="currentColor" to fill it for the saved/active state.
-  heart: <path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.29 1.49 4.04 3 5.5l7 7Z" />,
-  book: (
-    <>
-      <path d="M6 4h11a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2V5a1 1 0 0 1 1-1Z" />
-      <path d="M5 18a2 2 0 0 1 2-2h12" />
-    </>
-  ),
-  compass: (
-    <>
-      <circle cx="12" cy="12" r="9" />
-      <path d="m15 9-4 2-2 4 4-2 2-4Z" />
-    </>
-  ),
-  shield: <path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6Z" />,
-  cog: (
-    <>
-      <circle cx="12" cy="12" r="3" />
-      <path d="M12 3v2.5M12 18.5V21M5.6 5.6l1.8 1.8M16.6 16.6l1.8 1.8M3 12h2.5M18.5 12H21M5.6 18.4l1.8-1.8M16.6 7.4l1.8-1.8" />
-    </>
-  ),
-  photo: (
-    <>
-      <rect x="3" y="5" width="18" height="14" rx="1.5" />
-      <circle cx="9" cy="11" r="1.8" />
-      <path d="m4 18 5-5 4 4 3-2 4 3" />
-    </>
-  ),
-  message: (
-    <>
-      <path d="M4 5h16v12H9l-5 4V5Z" />
-    </>
-  ),
-  chevronDown: <path d="m6 9 6 6 6-6" />,
-  chevronRight: <path d="m9 6 6 6-6 6" />,
-  arrowRight: (
-    <>
-      <path d="M5 12h14" />
-      <path d="m13 6 6 6-6 6" />
-    </>
-  ),
-  logout: (
-    <>
-      <path d="M15 4h3a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2h-3" />
-      <path d="M10 8 4 12l6 4" />
-      <path d="M4 12h11" />
-    </>
-  ),
-  plus: (
-    <>
-      <path d="M12 5v14" />
-      <path d="M5 12h14" />
-    </>
-  ),
-  minus: <path d="M5 12h14" />,
-  x: (
-    <>
-      <path d="m6 6 12 12" />
-      <path d="M18 6 6 18" />
-    </>
-  ),
-  euro: (
-    <>
-      <path d="M18 5a7 7 0 0 0-9.5 6.5c0 3.8 2.7 7 6.5 7.5a7 7 0 0 0 3-.5" />
-      <path d="M4 10h10" />
-      <path d="M4 14h10" />
-    </>
-  ),
-  shieldCheck: (
-    <>
-      <path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6Z" />
-      <path d="m9 12 2.2 2.2L15 10.5" />
-    </>
-  ),
+const ICONS = {
+  home: House,
+  'map-pin': MapPin,
+  search: Search,
+  // Lucide's `Filter` is a funnel; `ListFilter` is the three-decreasing-bars
+  // glyph the old hand-rolled icon drew and that the results page expects.
+  filter: ListFilter,
+  map: MapIcon,
+  list: List,
+  check: Check,
+  calendar: Calendar,
+  walk: Footprints,
+  star: Star,
+  heart: Heart,
+  book: BookOpen,
+  compass: Compass,
+  shield: Shield,
+  cog: Settings,
+  photo: ImageIcon,
+  message: MessageSquare,
+  chevronDown: ChevronDown,
+  chevronRight: ChevronRight,
+  arrowRight: ArrowRight,
+  logout: LogOut,
+  plus: Plus,
+  minus: Minus,
+  x: X,
+  euro: Euro,
+  shieldCheck: ShieldCheck,
 };
 
-export default function Icon({ name, className = 'w-6 h-6', strokeWidth = 1.5, ...rest }) {
-  const path = PATHS[name];
-  if (!path) return null;
+export default function Icon({
+  name,
+  className = 'w-6 h-6',
+  strokeWidth = 1.5,
+  ...rest
+}) {
+  const Glyph = ICONS[name];
+  // An unknown name renders nothing rather than throwing. The old
+  // implementation did the same, and a missing glyph should not take a page
+  // down — but it IS a bug, so make it visible in development.
+  if (!Glyph) {
+    if (process.env.NODE_ENV !== 'production') {
+      console.warn(`<Icon> unknown name: "${name}"`);
+    }
+    return null;
+  }
+
   return (
-    <svg
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth={strokeWidth}
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
+    <Glyph
       className={className}
+      strokeWidth={strokeWidth}
+      aria-hidden="true"
+      focusable="false"
       {...rest}
-    >
-      {path}
-    </svg>
+    />
   );
 }
