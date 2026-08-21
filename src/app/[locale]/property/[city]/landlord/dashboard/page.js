@@ -16,7 +16,6 @@ import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
-import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import { inquiryStatusVariant } from '@/lib/statusVariant';
 
 /*
@@ -435,7 +434,7 @@ function VerificationCard({ isVerified, t }) {
   if (isVerified) {
     return (
       <Card tone="parchment" className="p-6 flex items-center gap-5">
-        <VerifiedSeal size={52} />
+        <Icon name="shieldCheck" className="w-12 h-12 text-yellow shrink-0" />
         <div className="flex-1">
           <p className="label-caps text-yellow">{t('widgetVerification')}</p>
           <p className="font-display text-2xl text-night mt-1">{t('verifiedTitle')}</p>

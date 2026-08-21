@@ -5,10 +5,9 @@ import { Link } from '@/i18n/navigation';
 import { getLandlordProfile } from '@/lib/landlordProfile';
 import ListingCard from '@/components/ListingCard';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
-import VerifiedSeal from '@/components/ui/VerifiedSeal';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
-import OrnamentRule from '@/components/ui/OrnamentRule';
+import Divider from '@/components/ui/Divider';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
@@ -76,7 +75,7 @@ export default async function LandlordProfilePage({ params }) {
         />
         <div className="min-w-0">
           <div className="flex items-center gap-2 mb-3">
-            <VerifiedSeal size={28} />
+            <Icon name="shieldCheck" className="w-7 h-7 text-yellow shrink-0" />
             <Pill variant="verified">{t('verified')}</Pill>
           </div>
           <h1 className="font-display text-4xl md:text-5xl text-night leading-tight text-balance">
@@ -86,7 +85,7 @@ export default async function LandlordProfilePage({ params }) {
         </div>
       </header>
 
-      <OrnamentRule className="my-8" />
+      <Divider decorative className="my-8" />
 
       {/* Their listings — same card as the directory */}
       {listings.length > 0 ? (

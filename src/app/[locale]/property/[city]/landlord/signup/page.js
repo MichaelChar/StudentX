@@ -9,7 +9,7 @@ import { useLocale, useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
 import FormField from '@/components/landlord/FormField';
-import EncryptButton from '@/components/ui/EncryptButton';
+import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import { uploadLandlordPhoto, validateProfilePhoto } from '@/lib/uploadLandlordPhoto';
 
@@ -209,12 +209,7 @@ export default function LandlordSignupPage() {
           </div>
         )}
 
-        <EncryptButton
-          type="submit"
-          disabled={loading}
-          className="w-full"
-          text={loading ? t('submitting') : t('submit')}
-        />
+        <Button variant="cta" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
       </form>
 
       <p className="mt-8 text-sm text-night/60">
