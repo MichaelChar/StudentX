@@ -78,15 +78,26 @@ const ALIASES = {
 
 // Tertiary has no fill or border, so it gets tighter horizontal padding —
 // otherwise it floats away from whatever it sits beside.
+//
+// `rounded-control`, not `rounded-lg`. The two render identically at the
+// default 16px root font-size — Tailwind's `--radius-lg` is 0.5rem and the F4
+// token is a flat 8px — so this changes no pixels for almost every visitor.
+// It is still worth saying: the geometry tokens are named by ROLE precisely so
+// a control declares itself a control (see the F4 comment in globals.css). A
+// bare `rounded-lg` reads as an arbitrary Tailwind step, and because it lands
+// on the same 8px it is invisible in review, which is how radius drift gets
+// back in. The one real difference: `rounded-lg` scales with a reader's root
+// font-size, `rounded-control` does not — a button's corner is a fixed detail,
+// not a typographic one.
 const SIZES = {
-  sm: 'text-[13px] px-3.5 py-2 rounded-lg',
-  md: 'text-sm px-5 py-3 rounded-lg',
-  lg: 'text-[15px] px-7 py-4 rounded-lg',
+  sm: 'text-[13px] px-3.5 py-2 rounded-control',
+  md: 'text-sm px-5 py-3 rounded-control',
+  lg: 'text-[15px] px-7 py-4 rounded-control',
 };
 const TERTIARY_SIZES = {
-  sm: 'text-[13px] px-1.5 py-2 rounded-lg',
-  md: 'text-sm px-2 py-3 rounded-lg',
-  lg: 'text-[15px] px-2.5 py-4 rounded-lg',
+  sm: 'text-[13px] px-1.5 py-2 rounded-control',
+  md: 'text-sm px-2 py-3 rounded-control',
+  lg: 'text-[15px] px-2.5 py-4 rounded-control',
 };
 
 export default function Button({
