@@ -253,7 +253,7 @@ function StudentLoginInner() {
           </p>
         )}
 
-        <Button variant="cta" type="submit" disabled={loading} className="w-full">
+        <Button variant="primary" type="submit" disabled={loading} className="w-full">
           {stage === 'redirect'
               ? t('submittingRedirect')
               : stage === 'auth'

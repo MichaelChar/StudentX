@@ -153,7 +153,7 @@ export default function ResetPasswordPage() {
           </p>
         )}
 
-        <Button variant="cta" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
+        <Button variant="primary" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
       </form>
     </AuthShell>
   );
