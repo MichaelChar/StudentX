@@ -1509,6 +1509,14 @@ review counts.
 20px card · 12px photo · 24px pill · 8px control · 32px modal. Focus-visible
 keeps its 4px.
 
+> ✅ **Shipped** — #396, #400, #401. Tokens live in `globals.css` as
+> `--radius-card` / `--radius-photo` / `--radius-pill` / `--radius-control` /
+> `--radius-modal`, and `rounded-sm` has **zero call sites left in `src/`**.
+> Two corrections to the line above, both from the sweep: the focus rule's own
+> `border-radius: 4px` was **removed**, not kept — it squared off every control
+> once F4 landed (see the defects note in the Foundation block); and the counts
+> here are the 2026-08-07 baseline, not a current census.
+
 **2. Card frame — borderless, photo-as-card.** This is the larger change and
 the one that actually produces Airbnb's grid.
 

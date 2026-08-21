@@ -60,8 +60,18 @@ style"; paste this block into **T5, T6, T7, T9** and any future UI prompt.
 > `<p className="label-caps text-yellow">EYEBROW</p>` then
 > `<h1 className="font-display text-3xl md:text-4xl text-night leading-tight">`.
 >
-> **Radius.** `rounded-sm` is the house radius. Not `rounded-lg`, not
-> `rounded-xl`, not `rounded-full` except on avatars and pills.
+> **Radius.** Use the **role-named geometry tokens**, never a bare Tailwind
+> radius: `rounded-card` (20px, listing/search card containers) ·
+> `rounded-photo` (12px, images inside a card, gallery tiles) · `rounded-pill`
+> (24px, filter chips and status pills) · `rounded-control` (8px, buttons,
+> inputs, selects) · `rounded-modal` (32px, modals and sheets).
+> `rounded-full` stays correct for avatars and circular icon buttons.
+> The role name is the point — it states what the element *is*, so the next
+> reader can tell a deliberate choice from a sweep artefact.
+> **`rounded-sm` is retired** (parity F4, #396/#400/#401 — zero call sites
+> left in `src/`); do not reintroduce it, and do not reach for `rounded-lg` or
+> `rounded-xl` instead. `rounded-lg` happens to equal `rounded-control` at
+> 8px, which makes it easy to add by accident and invisible in review.
 >
 > **Reuse the existing primitives. Do NOT create new ones, and do NOT inline
 > equivalents.** The full set is whatever is in `src/components/ui/` — list it
@@ -96,7 +106,7 @@ style"; paste this block into **T5, T6, T7, T9** and any future UI prompt.
 >
 > **Self-check before you finish** — grep your diff and confirm zero matches for:
 > `#[0-9a-fA-F]{6}`, `bg-gray-`, `text-gray-`, `text-slate-`, `bg-indigo-`,
-> `rounded-lg`, `rounded-xl`, `<svg`. Report the grep output.
+> `rounded-sm`, `rounded-lg`, `rounded-xl`, `<svg`. Report the grep output.
 
 ### Model choice
 
