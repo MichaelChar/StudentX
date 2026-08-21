@@ -266,7 +266,7 @@ function SignInDropdown({ t, landlordLoginHref }) {
             exit="closed"
             variants={menuVariants(prefersReduced)}
             style={{ originY: 0 }}
-            className="absolute right-0 top-full mt-2 w-52 overflow-hidden rounded-lg bg-stone p-1 shadow-lg ring-1 ring-night/10"
+            className="absolute right-0 top-full mt-2 w-52 overflow-hidden rounded-card bg-stone p-1 shadow-lg ring-1 ring-night/10"
           >
             {items.map((item) => (
               <motion.li key={item.href} role="none" variants={menuItemVariants(prefersReduced)}>
@@ -274,7 +274,7 @@ function SignInDropdown({ t, landlordLoginHref }) {
                   href={item.href}
                   role="menuitem"
                   onClick={() => setOpen(false)}
-                  className="block rounded-md px-4 py-2.5 text-sm text-night transition-colors hover:bg-blue/10 hover:text-blue"
+                  className="block rounded-control px-4 py-2.5 text-sm text-night transition-colors hover:bg-blue/10 hover:text-blue"
                 >
                   {item.label}
                 </Link>
