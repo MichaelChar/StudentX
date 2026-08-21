@@ -78,7 +78,7 @@ export default function StudentForgotPasswordPage() {
           </p>
         )}
 
-        <Button variant="cta" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
+        <Button variant="primary" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
       </form>
 
       <p className="mt-8 text-sm text-night/60">

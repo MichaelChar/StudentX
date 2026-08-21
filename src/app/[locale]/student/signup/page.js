@@ -163,7 +163,7 @@ export default function StudentSignupPage() {
           </div>
         )}
 
-        <Button variant="cta" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
+        <Button variant="primary" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
       </form>
 
       <div className="my-6 flex items-center gap-3">
