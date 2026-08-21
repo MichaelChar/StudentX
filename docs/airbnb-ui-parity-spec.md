@@ -506,10 +506,13 @@ Ordered. Each item is roughly one PR. `→` lists the files it lands in.
 
 ### F — Foundation (blocks everything; land alone, first)
 
-> ## ✅ FOUNDATION COMPLETE — 2026-08-20
+> ## ✅ FOUNDATION COMPLETE — 2026-08-21
 >
 > Every F item is now either shipped or formally cancelled. The list below is
 > kept verbatim as the original brief; this block is the current state.
+>
+> *(Dated 2026-08-20 when first written, with F10 still open; re-dated to the
+> day F10 actually landed. Nothing else in this block was rewritten.)*
 >
 > | Item | State | Where |
 > |---|---|---|
@@ -519,7 +522,7 @@ Ordered. Each item is roughly one PR. `→` lists the files it lands in.
 > | F7 primitives (Button · Pill/Chip · Card · Field · Divider) | ✅ Shipped | #393, #395, #408 |
 > | F8 new primitives | ✅ Shipped | #411 (Modal/Sheet/Popover/Tooltip + `ui/overlay/`), #410 (IconButton/Avatar/Skeleton/SegmentedControl/Counter) |
 > | F9 Carousel + BottomSheet | ✅ Shipped | #412 |
-> | F10 Lucide icon swap, retire decorative components | ⬜ **Outstanding** — the only F item left |
+> | F10 Lucide icon swap, retire decorative components | ✅ Shipped | #414 (Icon → Lucide), #415 (decorative components retired) |
 > | F11 four-state pass | ✅ Shipped | #402, #403, #404, #405, #406, #409 |
 > | F12 money formatter | ✅ Shipped | #389 |
 >
@@ -581,6 +584,11 @@ Ordered. Each item is roughly one PR. `→` lists the files it lands in.
   build `Carousel` and `BottomSheet`
 - **F10** Swap `Icon.js` to Lucide at 1.5px stroke; retire `OrnamentRule`,
   `EncryptButton`, `VerifiedSeal`, `SectionHeader` decorative components
+  — ✅ **done** (#414, #415). All four components are **deleted from `src/`**;
+  they are named here only as the original brief. Replacements: `OrnamentRule`
+  → `ui/Divider`; `EncryptButton` → `<Button variant="primary">`; `VerifiedSeal`
+  → `<Icon name="shieldCheck" className="… text-yellow" />`; `SectionHeader` had
+  no call sites and was dropped outright.
 - **F11** Four-state pass on every interactive: hover / `focus-visible` /
   active / disabled
 
