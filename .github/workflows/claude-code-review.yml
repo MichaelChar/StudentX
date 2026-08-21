@@ -42,7 +42,14 @@ jobs:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
           plugins: 'code-review@claude-code-plugins'
-          prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }}'
+          # `--comment` is what makes the review visible. Without it the plugin's
+          # command stops after step 7 — "If `--comment` argument was NOT provided,
+          # stop here. Do not post any GitHub comments." — so the review runs, spends
+          # the tokens, writes its findings to a log the action sanitises, and drops
+          # them. Every green run before 2026-08-21 did exactly that: #390, #391 and
+          # #397 all reviewed cleanly and posted nothing. The write scopes granted in
+          # #55 were the other half of this; they are useless on their own.
+          prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment'
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
