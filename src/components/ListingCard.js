@@ -145,13 +145,6 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         </div>
 
         <div className="mt-4 flex flex-wrap gap-1.5">
-          {listing.property_verified && listing.property_verification && (
-            <PropertyVerifiedBadge
-              verification={listing.property_verification}
-              size="sm"
-              className="relative z-10"
-            />
-          )}
           {floorUnspecified && (
             <Pill variant="info">{t('floorNotSpecified')}</Pill>
           )}
@@ -194,6 +187,33 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         aria-label={listing.title || listing.address}
         className="absolute inset-0 z-0 rounded-photo focus-visible:outline-2 outline-yellow focus-visible:outline-yellow focus-visible:outline-offset-2"
       />
+
+      {/* Verified badge — photo overlay, top-LEFT (Feature 19).
+
+          Deliberately a SIBLING of the photo container, not a child of it. The
+          photo is `overflow-hidden` to clip the carousel to its 12px radius,
+          which would also clip this badge's disclosure tooltip. Mounting it
+          out here — the same way the heart is mounted — lets the tooltip
+          escape while the badge still sits over the image.
+
+          The tooltip is not decoration: D6 (accommodation-marketplace-spec
+          §W4) keeps the bare word "Verified" only on condition that the badge
+          states what was checked and when. It travels with the badge. */}
+      {listing.property_verified && listing.property_verification && (
+        // Positioned by a WRAPPER, not by a class on the badge. The badge
+        // hardcodes `relative` to anchor its own tooltip, and passing
+        // `absolute` alongside it does nothing — Tailwind precedence is
+        // stylesheet order, not class-attribute order, and `relative` wins.
+        // The badge landed in normal flow below the card until this wrapper
+        // existed.
+        <span className="absolute top-3 left-3 z-10">
+          <PropertyVerifiedBadge
+            verification={listing.property_verification}
+            size="sm"
+            className="drop-shadow-[0_1px_3px_rgba(10,37,64,0.45)]"
+          />
+        </span>
+      )}
 
       {/* Save toggle — over the photo's top-RIGHT, above the stretched link.
           Moved from top-left in Feature 17: that corner is now the badge slot
