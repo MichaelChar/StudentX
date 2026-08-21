@@ -46,3 +46,50 @@ jobs:
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
+      # The action pipes the SDK stream through a sanitiser ("full output hidden
+      # for security"), so a failed review surfaces only `is_error:true` with no
+      # reason. That is the state this workflow sat in from 2026-08-18 onward: red
+      # on every PR, zero signal, nothing in the log to act on. This step runs only
+      # when the review step failed and prints the failure reason alone — the result
+      # envelope's error fields, including the error string itself, which is what
+      # separates a rejected token from an exhausted subscription quota
+      # (anthropics/claude-code-action#1613). It never prints the review body —
+      # that is what the sanitiser exists to protect.
+      - name: Explain review failure
+        if: always() && steps.claude-review.outcome == 'failure'
+        env:
+          EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
+        run: |
+          set -uo pipefail
+          FILE="${EXECUTION_FILE:-}"
+          [ -n "$FILE" ] || FILE="${RUNNER_TEMP}/claude-execution-output.json"
+
+          echo "::group::Result envelope"
+          if [ -f "$FILE" ]; then
+            jq -s '[.. | objects | select(.type? == "result")] | last
+                   | {subtype, is_error, terminal_reason, api_error_status,
+                      num_turns, duration_ms, total_cost_usd,
+                      error: ((.result // "") | tostring | .[0:300])}' "$FILE" \
+              || echo "could not parse $FILE"
+          else
+            echo "no execution output at $FILE"
+          fi
+          echo "::endgroup::"
+
+      # A green check on this job does not by itself mean a review happened. When a
+      # PR edits this file the action refuses to run — "the workflow file must exist
+      # and have identical content to the version on the repository's default
+      # branch" — and exits *success* without invoking Claude. Same class of silent
+      # no-op as the read-only scopes fixed in #55: the review is skipped, and the
+      # check is green. Annotate it rather than leave it invisible.
+      - name: Flag a review that never ran
+        if: always() && steps.claude-review.outcome == 'success'
+        env:
+          EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
+        run: |
+          set -uo pipefail
+          FILE="${EXECUTION_FILE:-}"
+          [ -n "$FILE" ] || FILE="${RUNNER_TEMP}/claude-execution-output.json"
+          if [ ! -f "$FILE" ]; then
+            echo "::warning title=No review ran::The action exited without invoking Claude — most often because this PR edits .github/workflows/claude-code-review.yml, which the action requires to match main. This job is green but nothing was reviewed."
+          fi
