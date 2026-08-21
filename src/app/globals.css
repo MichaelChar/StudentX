@@ -32,14 +32,16 @@
 
   /* Geometry scale — backlog F4 (docs/airbnb-ui-parity-spec.md §"Geometry,
      card frame & motion — DECIDED"). Named by ROLE, not by size, because the
-     migration off `rounded-sm` (186 sites) is a per-element judgement: a card
-     and a button both read `rounded-sm` today and must not land on the same
-     value. Using `rounded-card` / `rounded-control` makes each site state
-     what it is, so the next reader can tell a deliberate choice from a
+     migration off `rounded-sm` was a per-element judgement: a card and a
+     button both read `rounded-sm` before the sweep and must not land on the
+     same value. Using `rounded-card` / `rounded-control` makes each site
+     state what it is, so the next reader can tell a deliberate choice from a
      sweep artefact.
 
-     Additive on purpose: nothing consumes these yet, so this file changes no
-     pixels. The sweep is a separate PR. */
+     The sweep has since landed (#396, #400, #401): `rounded-sm` has zero
+     call sites left in `src/`, and these tokens carry the geometry. Reach
+     for the role name, not a bare Tailwind radius — `rounded-lg` happens to
+     equal `--radius-control` at 8px, but it says nothing about intent. */
   --radius-card: 20px;      /* listing/search card containers */
   --radius-photo: 12px;     /* images inside a card, gallery tiles */
   --radius-pill: 24px;      /* filter chips, status pills — fully round at 34px tall */
@@ -81,7 +83,9 @@
 
   /* Geometry — generates rounded-card / rounded-photo / rounded-pill /
      rounded-control / rounded-modal. Tailwind's own radius scale
-     (rounded-sm/lg/full) is left intact so existing markup is untouched. */
+     (rounded-sm/lg/full) is left intact: `rounded-full` is still the right
+     answer for avatars and circular controls, and the out-of-parity surfaces
+     (/admin, /admissions, /resources) still use the plain scale. */
   --radius-card: var(--radius-card);
   --radius-photo: var(--radius-photo);
   --radius-pill: var(--radius-pill);

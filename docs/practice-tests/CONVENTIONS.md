@@ -53,9 +53,12 @@
   `src/app/globals.css` via `@import "tailwindcss"` + an `@theme inline` block.
 - The themed page surface ("Stripe-modern" rebrand) is the relevant style for
   the practice-test pages. **Important:** the actual ausom pages do **not** use
-  the `src/components/ui/*` components (those are a separate, older
-  "neo-brutalist Propylaea" look — hard offset shadows, uppercase, `rounded-sm`).
-  Match `HubButton` and the inline-style hub pages instead. See §3 and §5.
+  the `src/components/ui/*` components — those are a separate family. (They
+  were the "neo-brutalist Propylaea" look — hard offset shadows, uppercase,
+  `rounded-sm` — until the Airbnb-structure parity work rewrote them flat and
+  sentence-case on role-named radius tokens; either way, not what the ausom
+  pages use.) Match `HubButton` and the inline-style hub pages instead.
+  See §3 and §5.
 
 ### Colors (`src/app/globals.css`)
 | Token | Value | Use |
@@ -103,9 +106,13 @@ borders `rgba(10,37,64,0.12)`, hairlines `rgba(10,37,64,0.06)`.
 
 ### Border radii
 - `HubButton` card: **`borderRadius: 22`** (px). Badge/arrow pills: `999` (full).
-- `ui/Card.js`: `rounded-sm`. `ui/Button.js`: `rounded` (sm/md), with `sm`/`lg`
-  size variants. Focus ring radius `4px`. (Use HubButton's `22` for new
-  practice-test cards to match the existing pages.)
+- `ui/*` uses role-named radius tokens from `globals.css` (parity F4): 20px
+  `rounded-card` · 12px `rounded-photo` · 24px `rounded-pill` · 8px
+  `rounded-control` · 32px `rounded-modal`. `ui/Card.js` is `rounded-card`;
+  `ui/Button.js` is 8px at every size. `rounded-sm` is retired repo-wide.
+  The focus rule sets no radius of its own — the 2px ring follows whatever
+  radius the element already has. (Use HubButton's `22` for new practice-test
+  cards to match the existing pages.)
 
 ### Shadows (HubButton)
 - Rest: `0 1px 3px rgba(10,37,64,0.06), 0 10px 28px -12px rgba(10,37,64,0.16)`.
@@ -210,25 +217,40 @@ Two distinct style families exist — **pick the right one for practice tests**.
   badge, the arrow-pill CTA, hover lift, and link vs. `<div>` rendering. This
   is the primary building block for new semester/subject/test pages.
 
-**Older "Propylaea/brutalist" set (`src/components/ui/`) — different look,
-likely NOT what practice-test pages want unless deliberately mixing:**
-- `Button.js` (`'use client'`) — neo-brutalist button, iris fill + `#0a2540`
-  hard offset shadow, uppercase, variants `primary|gold|onDark|outline|
-  outlineOnDark|ghost`, sizes `sm|md|lg`, optional `animated` WebGL mesh.
-  Links via `@/i18n/navigation`.
-- `Card.js` — parchment/stone/night/white tones, `rounded-sm`, optional hover
-  lift and thin border.
-- `Pill.js` — small uppercase label; variants `verified|pending|amenity|info|
-  onDark`. (A badge primitive, but styled differently from HubButton's "Soon".)
-- `ConfirmDialog.js` — the modal/dialog primitive. `Field.js` (form field),
-  `Icon.js`, `OrnamentRule.js`, `SectionHeader.js`, `Pill.js`, `VerifiedSeal.js`,
-  `EncryptButton.js`.
+**The `src/components/ui/` primitive set — different look, likely NOT what
+practice-test pages want unless deliberately mixing.** It was rewritten by the
+Airbnb-structure parity work (`docs/airbnb-ui-parity-spec.md`, phase F), so the
+old "Propylaea/brutalist" description of it no longer applies:
+- `Button.js` (`'use client'`) — flat, sentence-case, iris fill. Variants
+  `cta|primary|secondary|tertiary|destructive`, sizes `sm|md|lg`. The 3px
+  `night` offset shadow, the uppercase labels and the `animated` WebGL mesh are
+  all gone (`animated` survives as an alias for `cta`). Links via
+  `@/i18n/navigation`.
+- `Card.js` — parchment/night/white tones (`stone` and `white` are the same
+  colour), `rounded-card`, optional hover lift and thin border.
+- `Pill.js` — small label; variants `verified|pending|amenity|info`. (A badge
+  primitive, but styled differently from HubButton's "Soon".) `Chip.js` is the
+  filter-chip sibling.
+- Also present: `Field.js` (form field), `Icon.js`, `IconButton.js`,
+  `Avatar.js`, `Divider.js`, `Skeleton.js`, `SegmentedControl.js`, `Counter.js`,
+  `Carousel.js`, `BottomSheet.js`, `Modal.js`, `Sheet.js`, `Popover.js`,
+  `Tooltip.js` (+ `ui/overlay/`), `ConfirmDialog.js`.
 - Other top-level components of note: `BauhausLoader.js` /
   `CityGlobeLoader.js` / `GlobeLoader.js` (blocking spinners — keyframes in
   `globals.css`), `UnreadBadge.js`, `ListingCard.js`, `Navbar.js`.
 
-There is **no generic Modal** beyond `ConfirmDialog.js`, and the "badge" the
-ausom pages use is built inline in `HubButton`, not `Pill`.
+**Deleted, do not reach for them:** `OrnamentRule.js`, `SectionHeader.js`,
+`VerifiedSeal.js` and `EncryptButton.js` were retired in #415. Use `Divider` for
+a section rule, `<Button variant="primary">` for auth submits, and
+`<Icon name="shieldCheck" className="… text-yellow" />` for the verified mark.
+
+`Icon.js` is no longer a hand-drawn SVG set — it is a thin wrapper over
+`lucide-react` (#414). The `<Icon name="…" />` API is unchanged; adding a glyph
+means importing it from Lucide inside `Icon.js`, not drawing a path.
+
+There is now a generic `Modal.js` alongside `ConfirmDialog.js` (added by parity
+F8, #411), though the ausom pages use neither; the "badge" those pages show is
+still built inline in `HubButton`, not `Pill`.
 
 ## 6. Build / deploy
 

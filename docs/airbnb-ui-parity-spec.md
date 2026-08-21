@@ -506,10 +506,13 @@ Ordered. Each item is roughly one PR. `→` lists the files it lands in.
 
 ### F — Foundation (blocks everything; land alone, first)
 
-> ## ✅ FOUNDATION COMPLETE — 2026-08-20
+> ## ✅ FOUNDATION COMPLETE — 2026-08-21
 >
 > Every F item is now either shipped or formally cancelled. The list below is
 > kept verbatim as the original brief; this block is the current state.
+>
+> *(Dated 2026-08-20 when first written, with F10 still open; re-dated to the
+> day F10 actually landed. Nothing else in this block was rewritten.)*
 >
 > | Item | State | Where |
 > |---|---|---|
@@ -519,7 +522,7 @@ Ordered. Each item is roughly one PR. `→` lists the files it lands in.
 > | F7 primitives (Button · Pill/Chip · Card · Field · Divider) | ✅ Shipped | #393, #395, #408 |
 > | F8 new primitives | ✅ Shipped | #411 (Modal/Sheet/Popover/Tooltip + `ui/overlay/`), #410 (IconButton/Avatar/Skeleton/SegmentedControl/Counter) |
 > | F9 Carousel + BottomSheet | ✅ Shipped | #412 |
-> | F10 Lucide icon swap, retire decorative components | ⬜ **Outstanding** — the only F item left |
+> | F10 Lucide icon swap, retire decorative components | ✅ Shipped | #414 (Icon → Lucide), #415 (decorative components retired) |
 > | F11 four-state pass | ✅ Shipped | #402, #403, #404, #405, #406, #409 |
 > | F12 money formatter | ✅ Shipped | #389 |
 >
@@ -581,6 +584,11 @@ Ordered. Each item is roughly one PR. `→` lists the files it lands in.
   build `Carousel` and `BottomSheet`
 - **F10** Swap `Icon.js` to Lucide at 1.5px stroke; retire `OrnamentRule`,
   `EncryptButton`, `VerifiedSeal`, `SectionHeader` decorative components
+  — ✅ **done** (#414, #415). All four components are **deleted from `src/`**;
+  they are named here only as the original brief. Replacements: `OrnamentRule`
+  → `ui/Divider`; `EncryptButton` → `<Button variant="primary">`; `VerifiedSeal`
+  → `<Icon name="shieldCheck" className="… text-yellow" />`; `SectionHeader` had
+  no call sites and was dropped outright.
 - **F11** Four-state pass on every interactive: hover / `focus-visible` /
   active / disabled
 
@@ -1500,6 +1508,14 @@ review counts.
 **1. Radii — adopt Airbnb's scale.** `rounded-sm` (2px, 64 files) is retired.
 20px card · 12px photo · 24px pill · 8px control · 32px modal. Focus-visible
 keeps its 4px.
+
+> ✅ **Shipped** — #396, #400, #401. Tokens live in `globals.css` as
+> `--radius-card` / `--radius-photo` / `--radius-pill` / `--radius-control` /
+> `--radius-modal`, and `rounded-sm` has **zero call sites left in `src/`**.
+> Two corrections to the line above, both from the sweep: the focus rule's own
+> `border-radius: 4px` was **removed**, not kept — it squared off every control
+> once F4 landed (see the defects note in the Foundation block); and the counts
+> here are the 2026-08-07 baseline, not a current census.
 
 **2. Card frame — borderless, photo-as-card.** This is the larger change and
 the one that actually produces Airbnb's grid.

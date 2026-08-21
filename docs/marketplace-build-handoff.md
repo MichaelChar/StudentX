@@ -60,19 +60,39 @@ style"; paste this block into **T5, T6, T7, T9** and any future UI prompt.
 > `<p className="label-caps text-yellow">EYEBROW</p>` then
 > `<h1 className="font-display text-3xl md:text-4xl text-night leading-tight">`.
 >
-> **Radius.** `rounded-sm` is the house radius. Not `rounded-lg`, not
-> `rounded-xl`, not `rounded-full` except on avatars and pills.
+> **Radius.** Use the **role-named geometry tokens**, never a bare Tailwind
+> radius: `rounded-card` (20px, listing/search card containers) ·
+> `rounded-photo` (12px, images inside a card, gallery tiles) · `rounded-pill`
+> (24px, filter chips and status pills) · `rounded-control` (8px, buttons,
+> inputs, selects) · `rounded-modal` (32px, modals and sheets).
+> `rounded-full` stays correct for avatars and circular icon buttons.
+> The role name is the point — it states what the element *is*, so the next
+> reader can tell a deliberate choice from a sweep artefact.
+> **`rounded-sm` is retired** (parity F4, #396/#400/#401 — zero call sites
+> left in `src/`); do not reintroduce it, and do not reach for `rounded-lg` or
+> `rounded-xl` instead. `rounded-lg` happens to equal `rounded-control` at
+> 8px, which makes it easy to add by accident and invisible in review.
 >
 > **Reuse the existing primitives. Do NOT create new ones, and do NOT inline
-> equivalents:**
+> equivalents.** The full set is whatever is in `src/components/ui/` — list it
+> before you start rather than trusting this line. As of parity F10 (#415):
 > `Button` (variant, size) · `Card` (tone: parchment|stone|night|white, border) ·
-> `Pill` (variant: verified|amenity|info) · `Field` · `Icon` ·
-> `ConfirmDialog` · `SectionHeader` · `OrnamentRule` · `VerifiedSeal`.
+> `Pill` (variant: verified|amenity|info) · `Chip` · `Field` · `Icon` ·
+> `IconButton` · `Avatar` · `Divider` · `Skeleton` · `SegmentedControl` ·
+> `Counter` · `Carousel` · `BottomSheet` · `Modal` · `Sheet` · `Popover` ·
+> `Tooltip` · `ConfirmDialog`.
 > If you believe a new primitive is needed, STOP and report instead of adding one.
 >
-> **Icons.** `<Icon name="…" />` only. Never inline `<svg>`, never an icon
-> package. If the icon you need does not exist in `src/components/ui/Icon.js`,
-> add it to that file rather than inlining it elsewhere.
+> **`SectionHeader`, `OrnamentRule`, `VerifiedSeal` and `EncryptButton` no longer
+> exist** — deleted in #415. Use `Divider` for a section rule,
+> `<Button variant="primary">` for auth submits, and
+> `<Icon name="shieldCheck" className="… text-yellow" />` for the verified mark.
+>
+> **Icons.** `<Icon name="…" />` only. Never inline `<svg>`, and never import an
+> icon package in a page or component. `src/components/ui/Icon.js` is the single
+> wrapper over `lucide-react` (#414) — if the icon you need is missing, add the
+> Lucide import and map entry **in that file** rather than reaching for the
+> package elsewhere.
 >
 > **Every landlord page is wrapped in `LandlordShell`.** Every student-facing
 > page uses the `mx-auto max-w-7xl px-5 py-10 md:py-14` container.
@@ -86,7 +106,7 @@ style"; paste this block into **T5, T6, T7, T9** and any future UI prompt.
 >
 > **Self-check before you finish** — grep your diff and confirm zero matches for:
 > `#[0-9a-fA-F]{6}`, `bg-gray-`, `text-gray-`, `text-slate-`, `bg-indigo-`,
-> `rounded-lg`, `rounded-xl`, `<svg`. Report the grep output.
+> `rounded-sm`, `rounded-lg`, `rounded-xl`, `<svg`. Report the grep output.
 
 ### Model choice
 

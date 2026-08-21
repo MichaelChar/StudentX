@@ -99,6 +99,10 @@ start until 5 finishes.
   (EncryptButton scramble + Navbar dropdown animation), the Supabase
   client, next-intl + the **full 39 KB message catalog inlined into the
   HTML** (every page gets every namespace via `NextIntlClientProvider`).
+  *(Measured 2026-06-12. `EncryptButton` has since been deleted — parity
+  F10, #415 — and the auth forms now use `<Button variant="primary">`,
+  which pulls no `motion`. That contributor is gone; the catalog and
+  Supabase-client ones are not. Re-measure before acting on this figure.)*
   On a mid-range phone, download + hydration adds real seconds before
   the form is interactive.
 
@@ -179,10 +183,13 @@ start until 5 finishes.
    - Pass only the needed namespaces to `NextIntlClientProvider`
      (e.g. `pick(messages, ['nav', 'student.login', 'landlord.login',
      'loaders', …])` per layout) instead of the full 39 KB catalog.
-   - Replace or `next/dynamic`-import `EncryptButton`'s `motion`
+   - ~~Replace or `next/dynamic`-import `EncryptButton`'s `motion`
      dependency on auth pages (the scramble effect is `setInterval` —
      the `motion.button` wrapper is only scale-on-hover, achievable in
-     CSS).
+     CSS).~~ ✅ **Retired 2026-08-21.** `EncryptButton` was deleted
+     outright by parity F10 (#415) rather than trimmed; the auth forms
+     use `<Button variant="primary">`, whose hover is CSS. No `motion`
+     import remains on either login page.
    - Run `@next/bundle-analyzer` once to confirm what's in the 70 KB
      and 57 KB shared chunks; make sure Leaflet/d3/topojson never leak
      into the shared layout chunk.
