@@ -4,8 +4,10 @@ import { useState } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import Popover from '@/components/ui/Popover';
+import DateRangePanel from '@/components/property/DateRangePanel';
 import Icon from '@/components/ui/Icon';
 import { COUNTRIES, CITY_ACCENTS } from '@/lib/cityRoutes';
+import { parseISODate } from '@/lib/bookingDates';
 
 /*
   HeaderSearch — the header's search control (parity Feature 1).
@@ -27,6 +29,9 @@ import { COUNTRIES, CITY_ACCENTS } from '@/lib/cityRoutes';
   student picking Athens cannot be sent to results that do not exist — those
   rows route to the city's coming-soon page instead, and say so. Pretending
   otherwise would be the worst kind of parity.
+
+  The `When` panel now ships (DateRangePanel) and is the default for
+  `renderDatePanel`; the prop stays so a caller can substitute one.
 
   ⚠️ NOT BUILT, needs content that does not exist yet:
     - the one-line description per city ("Family friendly", "A hidden gem")
@@ -51,6 +56,24 @@ function CityTile({ accent }) {
       style={{ backgroundColor: a.bg }}
     />
   );
+}
+
+/*
+  `Sep 15 – Jun 30`, matching the pill in Feature 2's spec sketch. Bare
+  ISO strings are what the state holds but not what a student reads.
+*/
+function formatRange(dates) {
+  const fmt = (v) => {
+    const d = parseISODate(v);
+    return d
+      ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' })
+      : '';
+  };
+  if (!dates?.moveIn) return '';
+  const start = fmt(dates.moveIn);
+  const end = dates.moveOut ? fmt(dates.moveOut) : '';
+  const range = end ? `${start} – ${end}` : start;
+  return dates.flexDays ? `${range} ± ${dates.flexDays}d` : range;
 }
 
 function SegmentButton({ label, value, placeholder, onClick, expanded }) {
@@ -86,15 +109,15 @@ export default function HeaderSearch({
   const cityName =
     COUNTRIES.flatMap((c) => c.cities).find((c) => c.slug === selectedCity)?.name || '';
 
-  const dateLabel =
-    dates?.moveIn && dates?.moveOut
-      ? `${dates.moveIn} – ${dates.moveOut}`
-      : dates?.moveIn || '';
+  const dateLabel = formatRange(dates);
 
   function submit() {
     const params = new URLSearchParams();
     if (dates?.moveIn) params.set('move_in', dates.moveIn);
     if (dates?.moveOut) params.set('move_out', dates.moveOut);
+    // Flex is carried as its own param, never folded into the dates — see
+    // DateRangePanel. The results page widens the window when it reads this.
+    if (dates?.flexDays) params.set('flex_days', String(dates.flexDays));
     const qs = params.toString();
     router.push(`/property/${selectedCity}/results${qs ? `?${qs}` : ''}`);
   }
@@ -182,7 +205,9 @@ export default function HeaderSearch({
       >
         {/* The picker is injected so this component stays free of date maths
             and the caller owns the state. */}
-        {renderDatePanel?.({ value: dates, onChange: onDatesChange })}
+        {renderDatePanel
+          ? renderDatePanel({ value: dates, onChange: onDatesChange })
+          : <DateRangePanel value={dates} onChange={onDatesChange} />}
       </Popover>
 
       <button

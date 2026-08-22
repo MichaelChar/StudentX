@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useMemo, Suspense, useRef } from 'react';
-import { useSearchParams } from 'next/navigation';
+import { useSearchParams, useParams } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import dynamic from 'next/dynamic';
 import { useTranslations, useLocale } from 'next-intl';
@@ -12,6 +12,9 @@ import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
 import Chip from '@/components/ui/Chip';
 import FiltersModal from '@/components/property/FiltersModal';
+import HeaderSearch from '@/components/property/HeaderSearch';
+import DateRangePicker from '@/components/property/DateRangePicker';
+import { applyFlexDays, todayYmd } from '@/lib/dateRange';
 import { clearFilters } from '@/lib/filtersModal';
 import { formatPropertyType } from '@/lib/propertyType';
 import BauhausLoader from '@/components/BauhausLoader';
@@ -144,9 +147,20 @@ function buildFilterParams(filters, { includeBudget = true } = {}) {
   if (filters.selectedAmenities.includes('Bills included'))
     params.set('require_bills_included', 'true');
 
-  if (filters.moveIn && filters.moveOut) {
-    params.set('move_in', filters.moveIn);
-    params.set('move_out', filters.moveOut);
+  /*
+    Widen by the flexibility chips before querying. `applyFlexDays` moves
+    move-in back and move-out forward by N (§15: BOTH ends), clamped so a flexed
+    move-in cannot land in the past. The stored range is left untouched, so the
+    calendar keeps showing the dates the student actually clicked while the
+    search covers the wider window.
+  */
+  const window = applyFlexDays(
+    { moveIn: filters.moveIn, moveOut: filters.moveOut, flexDays: filters.flexDays || 0 },
+    todayYmd(),
+  );
+  if (window.moveIn && window.moveOut) {
+    params.set('move_in', window.moveIn);
+    params.set('move_out', window.moveOut);
   } else if (filters.availableFrom) {
     params.set('available_from', filters.availableFrom);
   }
@@ -198,6 +212,8 @@ function ResultsContent() {
   const locale = useLocale();
   const tSort = useTranslations('propylaea.results');
   const searchParams = useSearchParams();
+  // The route is /property/[city]/results; the bar links back into the same city.
+  const { city = 'thessaloniki' } = useParams();
   const router = useRouter();
 
   const [listings, setListings] = useState([]);
@@ -267,6 +283,11 @@ function ResultsContent() {
       selectedAmenities: parseAmenityParam(searchParams.get('amenities'), dealbreakersRaw),
       // Legacy single available_from still seeds moveIn for shareable URLs.
       availableFrom: isValidDateString(availableFromRaw) ? availableFromRaw : '',
+      // Feature 1's flexibility chips. A modifier on the search window, not
+      // part of the clicked range — see applyFlexDays.
+      flexDays: [0, 1, 2, 3, 7, 14].includes(Number(searchParams.get('flex')))
+        ? Number(searchParams.get('flex'))
+        : 0,
       moveIn: isValidDateString(moveInRaw) ? moveInRaw : '',
       moveOut: isValidDateString(moveOutRaw) ? moveOutRaw : '',
     };
@@ -346,6 +367,7 @@ function ResultsContent() {
     // release, but never written back — links heal to the new vocabulary.
     if (filters.selectedAmenities.length > 0)
       params.set('amenities', filters.selectedAmenities.join(','));
+    if (filters.flexDays) params.set('flex', String(filters.flexDays));
     if (filters.moveIn && filters.moveOut) {
       params.set('move_in', filters.moveIn);
       params.set('move_out', filters.moveOut);
@@ -558,6 +580,41 @@ function ResultsContent() {
             </button>
           </div>
         </div>
+      </div>
+
+      {/*
+        Feature 1 + 2 — the search bar, collapsed to a pill on results. This is
+        also where move-in/move-out get a UI again: Feature 7 removed the
+        sidebar's date inputs and sent them here, so between #428 and this PR a
+        student could only set dates from a URL or the quiz.
+
+        Dates commit straight into `filters`, so the grid, the histogram and the
+        live count all refetch through the same path as every other filter.
+      */}
+      <div className="mb-6">
+        <HeaderSearch
+          collapsed
+          city={city}
+          dates={{
+            moveIn: filters.moveIn,
+            moveOut: filters.moveOut,
+            flexDays: filters.flexDays || 0,
+          }}
+          onDatesChange={(next) =>
+            setFilters((p) => ({
+              ...p,
+              moveIn: next.moveIn,
+              moveOut: next.moveOut,
+              flexDays: next.flexDays,
+              // A picked range supersedes the legacy single-date param; leaving
+              // it set would keep narrowing the query behind the student's back.
+              availableFrom: next.moveIn ? '' : p.availableFrom,
+            }))
+          }
+          renderDatePanel={({ value, onChange }) => (
+            <DateRangePicker value={value} onChange={onChange} />
+          )}
+        />
       </div>
 
       {/*
