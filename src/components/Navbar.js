@@ -1,13 +1,12 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
-import { motion, AnimatePresence, useReducedMotion } from 'motion/react';
+import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { Link, useRouter, usePathname } from '@/i18n/navigation';
+import { useRouter, usePathname } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
-import UnreadBadge from './UnreadBadge';
+import AccountMenu from './AccountMenu';
 import TabTitleFlash from './TabTitleFlash';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
 
@@ -102,11 +101,23 @@ export default function Navbar() {
     router.push('/');
   }
 
+  // Landlords land on the dashboard; students get their real profile screen,
+  // NOT `/student/account` — that is a redirect() onto the saved view, which is
+  // the menu's Wishlists row.
   const accountHref =
-    authState.role === 'landlord' ? `/property/${currentCity}/landlord/dashboard` : '/student/account';
+    authState.role === 'landlord'
+      ? `/property/${currentCity}/landlord/dashboard`
+      : '/student/account/profile';
 
-  const inquiriesHref =
-    authState.role === 'landlord' ? `/property/${currentCity}/landlord/inquiries` : '/student/account';
+  // ⚠️ There is NO student inbox list page — `/student/inquiries` has only
+  // `[inquiry_id]`. Students reach threads from the accommodation view, which
+  // lists their inquiries alongside saved listings, so that is the honest
+  // destination today. A dedicated `/student/inquiries` index is the right
+  // follow-up; pointing this at a route that does not exist would be worse.
+  const messagesHref =
+    authState.role === 'landlord'
+      ? `/property/${currentCity}/landlord/inquiries`
+      : '/student/account/accommodation';
 
   // All hooks above run unconditionally; only the rendered output is gated
   // (React Rules of Hooks). Landlord shell pages have their own chrome.
@@ -115,12 +126,12 @@ export default function Navbar() {
   return (
     <>
       <TabTitleFlash count={unread.count} />
-      <AuthMenu
+      <AccountMenu
         t={t}
         authState={authState}
+        city={currentCity}
         accountHref={accountHref}
-        inquiriesHref={inquiriesHref}
-        landlordLoginHref={`/property/${currentCity}/landlord/login`}
+        messagesHref={messagesHref}
         unreadCount={unread.count}
         onSignOut={handleSignOut}
       />
@@ -128,161 +139,3 @@ export default function Navbar() {
   );
 }
 
-const PILL_CLASS =
-  'fixed top-11 right-5 z-50 flex items-center gap-3 bg-stone/80 backdrop-blur-sm rounded-full px-4 py-2 shadow-sm';
-
-function AuthMenu({ t, authState, accountHref, inquiriesHref, landlordLoginHref, unreadCount, onSignOut }) {
-  // Signed-in chrome (account + sign out) renders only once a role is
-  // CONFIRMED. While auth is still resolving — or for anonymous visitors —
-  // fall through to the interactive SignInDropdown immediately. The sign-in
-  // entry point must never be gated behind the getSession() round-trip, which
-  // can hang ~15s and otherwise leaves a dead, non-clickable "Sign in" pill.
-  if (authState.ready && authState.role) {
-    return (
-      <nav className={PILL_CLASS}>
-        <UnreadBadge count={unreadCount} href={inquiriesHref} />
-        <Link
-          href={accountHref}
-          className="label-caps text-blue hover:text-night transition-colors"
-        >
-          {t('myAccount')}
-        </Link>
-        <button
-          type="button"
-          onClick={onSignOut}
-          className="label-caps text-night/60 hover:text-blue active:text-blue/80 transition-colors"
-        >
-          {t('signOut')}
-        </button>
-      </nav>
-    );
-  }
-
-  return <SignInDropdown t={t} landlordLoginHref={landlordLoginHref} />;
-}
-
-// Staggered dropdown animation. Functions of `reduced` so prefers-reduced-motion
-// collapses the stagger/scale to an instant show/hide.
-const menuVariants = (reduced) => ({
-  open: {
-    scaleY: 1,
-    transition: {
-      when: 'beforeChildren',
-      staggerChildren: reduced ? 0 : 0.06,
-      duration: reduced ? 0 : 0.2,
-    },
-  },
-  closed: {
-    scaleY: 0,
-    transition: {
-      when: 'afterChildren',
-      staggerChildren: reduced ? 0 : 0.06,
-      duration: reduced ? 0 : 0.2,
-    },
-  },
-});
-
-const menuItemVariants = (reduced) => ({
-  open: { opacity: 1, y: 0, transition: { duration: reduced ? 0 : 0.2 } },
-  closed: { opacity: 0, y: reduced ? 0 : -12, transition: { duration: reduced ? 0 : 0.2 } },
-});
-
-// Inline Feather "chevron-down" (no react-icons dependency).
-function ChevronDown() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <polyline points="6 9 12 15 18 9" />
-    </svg>
-  );
-}
-
-function SignInDropdown({ t, landlordLoginHref }) {
-  const [open, setOpen] = useState(false);
-  const wrapperRef = useRef(null);
-  const prefersReduced = useReducedMotion();
-
-  useEffect(() => {
-    if (!open) return undefined;
-
-    function handlePointer(event) {
-      if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
-        setOpen(false);
-      }
-    }
-
-    function handleKey(event) {
-      if (event.key === 'Escape') setOpen(false);
-    }
-
-    document.addEventListener('mousedown', handlePointer);
-    document.addEventListener('keydown', handleKey);
-    return () => {
-      document.removeEventListener('mousedown', handlePointer);
-      document.removeEventListener('keydown', handleKey);
-    };
-  }, [open]);
-
-  const items = [
-    { href: '/student/login', label: t('signInAsStudent') },
-    { href: landlordLoginHref, label: t('signInAsLandlord') },
-  ];
-
-  return (
-    <div ref={wrapperRef} className="fixed top-11 right-5 z-50">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-haspopup="menu"
-        aria-expanded={open}
-        className="label-caps flex items-center gap-2 rounded-full bg-blue text-stone px-5 py-2 shadow-sm hover:bg-night active:bg-night/80 transition-colors"
-      >
-        <span>{t('signIn')}</span>
-        <motion.span
-          className="inline-flex"
-          initial={false}
-          animate={{ rotate: open ? 180 : 0 }}
-          transition={{ duration: prefersReduced ? 0 : 0.2 }}
-        >
-          <ChevronDown />
-        </motion.span>
-      </button>
-
-      <AnimatePresence>
-        {open && (
-          <motion.ul
-            role="menu"
-            initial="closed"
-            animate="open"
-            exit="closed"
-            variants={menuVariants(prefersReduced)}
-            style={{ originY: 0 }}
-            className="absolute right-0 top-full mt-2 w-52 overflow-hidden rounded-card bg-stone p-1 shadow-lg ring-1 ring-night/10"
-          >
-            {items.map((item) => (
-              <motion.li key={item.href} role="none" variants={menuItemVariants(prefersReduced)}>
-                <Link
-                  href={item.href}
-                  role="menuitem"
-                  onClick={() => setOpen(false)}
-                  className="block rounded-control px-4 py-2.5 text-sm text-night transition-colors hover:bg-blue/10 hover:text-blue"
-                >
-                  {item.label}
-                </Link>
-              </motion.li>
-            ))}
-          </motion.ul>
-        )}
-      </AnimatePresence>
-    </div>
-  );
-}
