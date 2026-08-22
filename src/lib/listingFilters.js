@@ -1,18 +1,21 @@
+import { stayDurationMonths, durationFitsListing } from "@/lib/bookingDates";
+
 /**
- * Shared listing-filter logic for /api/listings and
- * /api/listings/price-distribution.
+ * Shared listing-filter logic for /api/listings,
+ * /api/listings/price-distribution, and /api/listings/count-filtered.
  *
- * Both routes honour an identical filter set (faculty, types, neighborhoods,
+ * All three honour an identical filter set (faculty, types, neighborhoods,
  * exclude_amenities, verified_only, min_duration, exclude_ground_floor,
- * require_bills_included, available_from). The ONE intentional divergence is
- * budget: /api/listings applies its min_budget/max_budget clauses inline (they
- * live in that route, not here), while the price-distribution route drops them
- * so the histogram keeps above-budget supply visible behind the budget marker
- * (issue #218).
+ * require_bills_included, available_from, move_in/move_out). The ONE
+ * intentional divergence is budget: /api/listings and
+ * /api/listings/count-filtered apply min_budget/max_budget inline (those
+ * clauses live in the routes, not here), while the price-distribution route
+ * drops them so the histogram keeps above-budget supply visible behind the
+ * budget marker (issue #218). count-filtered MUST apply budget — `Show N
+ * places` has to match the list the student will see, not the histogram.
  *
- * Keeping the parse/validate/RPC/where-clause logic here means the two routes
- * can never drift on what a filter means — the distribution reflects exactly
- * the subset /api/listings would return for the same non-budget filters.
+ * Keeping the parse/validate/RPC/where-clause/residual logic here means the
+ * routes can never drift on what a filter means.
  */
 
 const ALLOWED_MIN_DURATIONS = [1, 5, 9];
@@ -260,4 +263,70 @@ export function hasGroundFloorTag(amenityNames) {
 export function hasAllRequiredAmenities(amenityNames, required) {
   const have = (amenityNames || []).map((a) => String(a).toLowerCase());
   return (required || []).every((r) => have.includes(String(r).toLowerCase()));
+}
+
+/**
+ * Amenity names off a raw PostgREST row. Guards the to-one embed arriving as
+ * an object OR a one-element array (same shape price-distribution already
+ * defends against). Used by the JS residuals so count-filtered never has to
+ * run transformListing just to read a name.
+ */
+export function amenityNamesOf(row) {
+  return (row?.listing_amenities || [])
+    .map((la) => {
+      const a = Array.isArray(la.amenities) ? la.amenities[0] : la.amenities;
+      return a?.name;
+    })
+    .filter(Boolean);
+}
+
+/**
+ * Whether the shared JS residuals will run after the query. When true, a
+ * `{ count: 'exact', head: true }` query cannot produce the same N as
+ * /api/listings — we have to fetch the lean rows and count in JS.
+ *
+ * Query-side filters (neighborhoods, types, faculty, min_duration,
+ * verified_only, bills, floor != 0, availability window, amenity-RPC ids,
+ * budget) do NOT trip this. Only the residuals that /api/listings itself
+ * cannot push into PostgREST:
+ *   - exclude_ground_floor amenity-tag check (SQL already dropped floor = 0)
+ *   - exclude_amenities when the SQL RPC is down
+ *   - stay-range blocked calendars + min/max duration fit
+ */
+export function listingCountNeedsRowFetch(f, amenityRpcFailed = false) {
+  return Boolean(
+    f.excludeGroundFloor ||
+      amenityRpcFailed ||
+      (f.moveInDate && f.moveOutDate),
+  );
+}
+
+/**
+ * Apply the JS residuals /api/listings runs after transformListing, but on
+ * raw PostgREST rows (count-filtered never fetches the full listing payload).
+ *
+ * Kept here — not inlined in the route — so a later listings refactor can
+ * call the same function and the count cannot silently diverge.
+ */
+export function applyListingFilterResiduals(
+  rows,
+  f,
+  { amenityRpcFailed = false, blockedIds = [] } = {},
+) {
+  let out = rows || [];
+  if (f.excludeGroundFloor) {
+    out = out.filter((row) => !hasGroundFloorTag(amenityNamesOf(row)));
+  }
+  if (f.excludeAmenities && amenityRpcFailed) {
+    const required = f.excludeAmenities.split(",").map((a) => a.trim());
+    out = out.filter((row) => hasAllRequiredAmenities(amenityNamesOf(row), required));
+  }
+  if (f.moveInDate && f.moveOutDate) {
+    const blocked = new Set(blockedIds);
+    const months = stayDurationMonths(f.moveInDate, f.moveOutDate);
+    out = out.filter(
+      (row) => !blocked.has(row.listing_id) && durationFitsListing(row, months),
+    );
+  }
+  return out;
 }
