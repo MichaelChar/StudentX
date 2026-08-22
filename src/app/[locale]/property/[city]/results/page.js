@@ -1,15 +1,19 @@
 'use client';
 
-import { useEffect, useState, useCallback, Suspense, useRef } from 'react';
+import { useEffect, useState, useCallback, useMemo, Suspense, useRef } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { useRouter, Link } from '@/i18n/navigation';
 import dynamic from 'next/dynamic';
-import { useTranslations } from 'next-intl';
+import { useTranslations, useLocale } from 'next-intl';
 
 import ListingCard from '@/components/ListingCard';
 import Button from '@/components/ui/Button';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
+import Chip from '@/components/ui/Chip';
+import FiltersModal from '@/components/property/FiltersModal';
+import { clearFilters } from '@/lib/filtersModal';
+import { formatPropertyType } from '@/lib/propertyType';
 import BauhausLoader from '@/components/BauhausLoader';
 import {
   buildPriceHistogram,
@@ -43,6 +47,117 @@ const HISTOGRAM_BUCKETS = 12;
 // Accepts a real YYYY-MM-DD date string; rejects bad shapes and impossible
 // dates (e.g. 2026-02-31). Mirrors the API's available_from validator so the
 // client never seeds state or fires a request the route would 400.
+/*
+  Feature 7's approved chip row: ten amenities pulled from the 19 the
+  `amenities` table already holds, chosen for density and recognisability.
+  The remaining nine live behind the modal's `Show more`.
+
+  Values are the amenity NAMES the API matches on — `exclude_amenities` is a
+  misnomer for "require all of these" (see lib/listingFilters.js), so these go
+  over the wire verbatim.
+*/
+/*
+  The full 19 the `amenities` table holds. Order matters: the modal splits at
+  ten, so CHIP_AMENITIES must be the first ten of this list for the row and the
+  modal's preview to agree.
+*/
+const ALL_AMENITIES = [
+  'Furnished',
+  'AC',
+  'Bills included',
+  'Washing machine',
+  'Wi-Fi',
+  'Elevator',
+  'Parking',
+  'Balcony',
+  'Heating',
+  'Dishwasher',
+  'Internet included',
+  'TV',
+  'Kitchen',
+  'Double-glazed windows',
+  'Weekly cleaning',
+  'Microwave',
+  'Oven',
+  'Gas heating',
+  'Private yard',
+];
+
+const CHIP_AMENITIES = [
+  'Furnished',
+  'AC',
+  'Bills included',
+  'Washing machine',
+  'Wi-Fi',
+  'Elevator',
+  'Parking',
+  'Balcony',
+  'Heating',
+  'Dishwasher',
+];
+
+// Dealbreakers were negative; amenities are positive. `ground_floor` has no
+// positive equivalent — that filter was removed outright (Feature 7), and
+// `Ground floor` stays a displayable amenity that simply is not filterable.
+const LEGACY_DEALBREAKER_TO_AMENITY = {
+  unfurnished: 'Furnished',
+  no_ac: 'AC',
+  bills_not_included: 'Bills included',
+};
+
+/*
+  Reads the new `?amenities=` param, falling back to translating a legacy
+  `?dealbreakers=` link. Kept for one release so shared URLs and the quiz's
+  current output do not break the moment this ships.
+*/
+function parseAmenityParam(amenitiesRaw, dealbreakersRaw) {
+  if (amenitiesRaw) return amenitiesRaw.split(',').filter(Boolean);
+  if (!dealbreakersRaw) return [];
+  return dealbreakersRaw
+    .split(',')
+    .map((d) => LEGACY_DEALBREAKER_TO_AMENITY[d])
+    .filter(Boolean);
+}
+
+/*
+  ONE param builder for all three consumers — the listings fetch, the price
+  histogram, and the live `Show N places` count.
+
+  They were three hand-rolled copies of the same translation, which is exactly
+  how a count can end up disagreeing with the list it counts. `includeBudget`
+  is the only real difference: the histogram deliberately drops price so
+  above-budget supply stays visible behind the marker (#218), while the list
+  and the count must both apply it.
+*/
+function buildFilterParams(filters, { includeBudget = true } = {}) {
+  const params = new URLSearchParams();
+  if (filters.selectedTypes.length > 0) params.set('types', filters.selectedTypes.join(','));
+  if (filters.selectedNeighborhoods.length > 0)
+    params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
+  if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
+
+  // `exclude_amenities` requires ALL of these (misnomer — see
+  // lib/listingFilters.js). `Bills included` has its own dedicated flag, so it
+  // is split out rather than sent as an amenity name.
+  const amenities = filters.selectedAmenities.filter((a) => a !== 'Bills included');
+  if (amenities.length > 0) params.set('exclude_amenities', amenities.join(','));
+  if (filters.selectedAmenities.includes('Bills included'))
+    params.set('require_bills_included', 'true');
+
+  if (filters.moveIn && filters.moveOut) {
+    params.set('move_in', filters.moveIn);
+    params.set('move_out', filters.moveOut);
+  } else if (filters.availableFrom) {
+    params.set('available_from', filters.availableFrom);
+  }
+
+  if (includeBudget) {
+    if (filters.minPrice) params.set('min_budget', String(filters.minPrice));
+    if (filters.maxPrice) params.set('max_budget', String(filters.maxPrice));
+  }
+  return params;
+}
+
 function isValidDateString(value) {
   if (typeof value !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(value)) return false;
   const parsed = new Date(`${value}T00:00:00Z`);
@@ -80,6 +195,7 @@ function SkeletonCard() {
 
 function ResultsContent() {
   const t = useTranslations('propylaea.results');
+  const locale = useLocale();
   const tSort = useTranslations('propylaea.results');
   const searchParams = useSearchParams();
   const router = useRouter();
@@ -107,19 +223,20 @@ function ResultsContent() {
     if (cameFromQuiz) setShowLoader(true);
   }, []);
   /* eslint-enable react-hooks/set-state-in-effect */
-  const [sortBy, setSortBy] = useState(() => {
-    const s = searchParams.get('sort_by');
-    return s === 'price' || s === 'priceDesc' ? s : 'match';
-  });
   const [viewMode, setViewMode] = useState(
     searchParams.get('view') === 'map' ? 'map' : 'list'
   );
   const [neighborhoodOptions, setNeighborhoodOptions] = useState([]);
   const [priceDistribution, setPriceDistribution] = useState([]);
-  const [filtersMobileOpen, setFiltersMobileOpen] = useState(false);
+  // Feature 7: the sidebar is gone, so every non-chip filter lives in here.
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  // Feature 9: `Show N places`, refreshed on every toggle before Apply.
+  const [pendingCount, setPendingCount] = useState(null);
 
   const [filters, setFilters] = useState(() => {
     const budget = Number(searchParams.get('budget'));
+    const minP = Number(searchParams.get('min_budget'));
+    const maxP = Number(searchParams.get('max_budget'));
     const types = searchParams.get('types');
     const neighborhoods = searchParams.get('neighborhoods');
     const minDurationRaw = Number(searchParams.get('min_duration'));
@@ -129,12 +246,25 @@ function ResultsContent() {
     const moveInRaw = searchParams.get('move_in') || availableFromRaw;
     const moveOutRaw = searchParams.get('move_out');
     return {
-      maxBudget: Number.isFinite(budget) && budget > 0 ? budget : DEFAULT_BUDGET,
+      // Feature 8 makes price a RANGE. Legacy `budget=` (single max) still
+      // seeds maxPrice, so existing links and quiz output keep working.
+      minPrice: Number.isFinite(minP) && minP > 0 ? minP : null,
+      maxPrice: Number.isFinite(maxP) && maxP > 0
+        ? maxP
+        : (Number.isFinite(budget) && budget > 0 ? budget : null),
       selectedTypes: types ? types.split(',').filter(Boolean) : [],
       selectedNeighborhoods: neighborhoods ? neighborhoods.split(',').filter(Boolean) : [],
-      verifiedOnly: searchParams.get('verified_only') === 'true',
       minDuration,
-      dealbreakers: dealbreakersRaw ? dealbreakersRaw.split(',').filter(Boolean) : [],
+      /*
+        POSITIVE amenities, not dealbreakers (Feature 7). `no_ac` ("no AC is a
+        dealbreaker") becomes `AC` ("has AC").
+
+        The API needed no change for this: `exclude_amenities` is misnamed — it
+        resolves through the `listings_with_all_amenities` RPC and means
+        "require ALL of these". The old UI was already translating dealbreakers
+        into required amenity names before sending them.
+      */
+      selectedAmenities: parseAmenityParam(searchParams.get('amenities'), dealbreakersRaw),
       // Legacy single available_from still seeds moveIn for shareable URLs.
       availableFrom: isValidDateString(availableFromRaw) ? availableFromRaw : '',
       moveIn: isValidDateString(moveInRaw) ? moveInRaw : '',
@@ -158,32 +288,7 @@ function ResultsContent() {
   // sits ABOVE the student's budget within their current search.
   const fetchDistribution = useCallback(async () => {
     try {
-      const params = new URLSearchParams();
-      if (filters.selectedTypes.length > 0)
-        params.set('types', filters.selectedTypes.join(','));
-      if (filters.selectedNeighborhoods.length > 0)
-        params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
-      if (filters.verifiedOnly) params.set('verified_only', 'true');
-      if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
-      if (filters.dealbreakers.length > 0) {
-        const requiredAmenities = [];
-        if (filters.dealbreakers.includes('unfurnished')) requiredAmenities.push('Furnished');
-        if (filters.dealbreakers.includes('no_ac')) requiredAmenities.push('AC');
-        if (requiredAmenities.length > 0)
-          params.set('exclude_amenities', requiredAmenities.join(','));
-        if (filters.dealbreakers.includes('ground_floor'))
-          params.set('exclude_ground_floor', 'true');
-        if (filters.dealbreakers.includes('bills_not_included'))
-          params.set('require_bills_included', 'true');
-      }
-      if (filters.moveIn && filters.moveOut) {
-        params.set('move_in', filters.moveIn);
-        params.set('move_out', filters.moveOut);
-      } else if (filters.moveIn || filters.availableFrom) {
-        params.set('available_from', filters.moveIn || filters.availableFrom);
-      }
-      // Budget (max_budget/min_budget) is deliberately omitted — the histogram
-      // must keep above-budget supply visible behind the marker.
+      const params = buildFilterParams(filters, { includeBudget: false });
       const qs = params.toString();
       const res = await fetch(`/api/listings/price-distribution${qs ? `?${qs}` : ''}`);
       if (!res.ok) return; // keep the last good distribution on error
@@ -192,12 +297,20 @@ function ResultsContent() {
     } catch {
       // Network error — keep the last good distribution.
     }
+    /*
+      Deliberately granular, NOT `[filters]`. buildFilterParams reads the whole
+      object, but this fetch must not re-run when price changes — the histogram
+      keeps above-budget supply visible behind the marker (#218), so a price
+      edit would refetch for a chart that ignores price. Every non-price field
+      the builder touches IS listed here; adding one to the builder means
+      adding it here too.
+    */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     filters.selectedTypes,
     filters.selectedNeighborhoods,
-    filters.verifiedOnly,
     filters.minDuration,
-    filters.dealbreakers,
+    filters.selectedAmenities,
     filters.availableFrom,
     filters.moveIn,
     filters.moveOut,
@@ -222,15 +335,17 @@ function ResultsContent() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const params = new URLSearchParams();
-    if (filters.maxBudget !== DEFAULT_BUDGET) params.set('budget', String(filters.maxBudget));
+    if (filters.minPrice) params.set('min_budget', String(filters.minPrice));
+    if (filters.maxPrice) params.set('max_budget', String(filters.maxPrice));
     if (filters.selectedTypes.length > 0)
       params.set('types', filters.selectedTypes.join(','));
     if (filters.selectedNeighborhoods.length > 0)
       params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
-    if (filters.verifiedOnly) params.set('verified_only', 'true');
     if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
-    if (filters.dealbreakers.length > 0)
-      params.set('dealbreakers', filters.dealbreakers.join(','));
+    // Written as `amenities=`; `dealbreakers=` is still READ on load for a
+    // release, but never written back — links heal to the new vocabulary.
+    if (filters.selectedAmenities.length > 0)
+      params.set('amenities', filters.selectedAmenities.join(','));
     if (filters.moveIn && filters.moveOut) {
       params.set('move_in', filters.moveIn);
       params.set('move_out', filters.moveOut);
@@ -239,49 +354,102 @@ function ResultsContent() {
     } else if (filters.availableFrom) {
       params.set('available_from', filters.availableFrom);
     }
-    if (sortBy !== 'match') params.set('sort_by', sortBy);
     if (viewMode === 'map') params.set('view', 'map');
     const next = params.toString();
     const current = window.location.search.replace(/^\?/, '');
     if (next === current) return;
     const url = next ? `${window.location.pathname}?${next}` : window.location.pathname;
     window.history.replaceState(null, '', url);
-  }, [filters, sortBy, viewMode]);
+  }, [filters, viewMode]);
+
+/*
+    Feature 9 — `Show N places`, refreshed on every toggle BEFORE anything is
+    applied. Uses the same builder as the list, so the count and the list can
+    never disagree about what a filter means. Debounced 300ms, mirroring
+    fetchDistribution; the endpoint is edge-cached per filter combination.
+  */
+  /*
+    PROPERTY_TYPE_GROUPS is `{ labelKey, values }`, where one group can cover
+    several type names (Studio + 1-Bedroom shared a sidebar chip). The modal
+    toggles ONE value per option, so the groups are flattened here — the
+    caller's job, as the modal's own notes point out.
+
+    Flattening is also the better list: "Studio" and "1-Bedroom" as separate
+    rows is clearer in a filter list than a combined chip, and it matches how
+    Airbnb's `Type of place` reads.
+  */
+  const propertyTypeOptions = useMemo(
+    () =>
+      PROPERTY_TYPE_GROUPS.flatMap((g) =>
+        g.values.map((v) => ({ value: v, label: formatPropertyType(v, locale) })),
+      ),
+    [locale],
+  );
+
+  const toggleAmenity = useCallback((amenity) => {
+    setFilters((p) => ({
+      ...p,
+      selectedAmenities: p.selectedAmenities.includes(amenity)
+        ? p.selectedAmenities.filter((a) => a !== amenity)
+        : [...p.selectedAmenities, amenity],
+    }));
+  }, []);
+
+  // Counts only what the chip row does NOT already show, so the badge tells the
+  // student how much is hidden behind the modal rather than restating the row.
+  const activeFilterCount =
+    (filters.minPrice ? 1 : 0) +
+    (filters.maxPrice ? 1 : 0) +
+    filters.selectedTypes.length +
+    filters.selectedNeighborhoods.length +
+    (filters.minDuration ? 1 : 0) +
+    filters.selectedAmenities.filter((a) => !CHIP_AMENITIES.includes(a)).length;
+
+  const fetchPendingCount = useCallback(async (draft) => {
+    try {
+      const qs = buildFilterParams(draft).toString();
+      const res = await fetch(`/api/listings/count-filtered${qs ? `?${qs}` : ''}`);
+      if (!res.ok) return;
+      const d = await res.json();
+      setPendingCount(typeof d.count === 'number' ? d.count : null);
+    } catch {
+      // Leave the last known count rather than flashing a wrong one.
+    }
+  }, []);
+
+  const [draftFilters, setDraftFilters] = useState(filters);
+
+  /*
+    Draft sync happens on OPEN, in the handler — not in an effect. Seeding it
+    from an effect trips `react-hooks/set-state-in-effect` and deserves to: it
+    would render the modal once with the previous session's toggles before
+    correcting. Doing it here means that frame never exists, and a dismissed
+    session cannot leak into the next one.
+  */
+  const openFilters = useCallback(() => {
+    setDraftFilters(filters);
+    setPendingCount(null);
+    setFiltersOpen(true);
+  }, [filters]);
+
+  // Only the debounced fetch lives in the effect; the setState happens inside
+  // the timeout callback, which is not a synchronous effect-body update.
+  useEffect(() => {
+    if (!filtersOpen) return;
+    const id = setTimeout(() => fetchPendingCount(draftFilters), 300);
+    return () => clearTimeout(id);
+  }, [filtersOpen, draftFilters, fetchPendingCount]);
 
   const fetchListings = useCallback(async () => {
     setLoading(true);
     setError(false);
     try {
-      const params = new URLSearchParams();
-      if (filters.maxBudget) params.set('max_budget', String(filters.maxBudget));
-      if (filters.selectedTypes.length > 0)
-        params.set('types', filters.selectedTypes.join(','));
-      if (filters.selectedNeighborhoods.length > 0)
-        params.set('neighborhoods', filters.selectedNeighborhoods.join(','));
-      if (filters.verifiedOnly) params.set('verified_only', 'true');
-      if (filters.minDuration) params.set('min_duration', String(filters.minDuration));
-      if (filters.dealbreakers.length > 0) {
-        const requiredAmenities = [];
-        if (filters.dealbreakers.includes('unfurnished')) requiredAmenities.push('Furnished');
-        if (filters.dealbreakers.includes('no_ac')) requiredAmenities.push('AC');
-        if (requiredAmenities.length > 0)
-          params.set('exclude_amenities', requiredAmenities.join(','));
-        if (filters.dealbreakers.includes('ground_floor'))
-          params.set('exclude_ground_floor', 'true');
-        if (filters.dealbreakers.includes('bills_not_included'))
-          params.set('require_bills_included', 'true');
-      }
-      if (filters.moveIn && filters.moveOut) {
-        params.set('move_in', filters.moveIn);
-        params.set('move_out', filters.moveOut);
-      } else if (filters.moveIn || filters.availableFrom) {
-        params.set('available_from', filters.moveIn || filters.availableFrom);
-      }
-      // 'match' is the UI default; the API enforces verified/featured tier
-      // priority in route.js regardless of sort_by, so 'match' collapses to
-      // 'price' asc.
+      const params = buildFilterParams(filters);
+      // Feature 7 removes the sort control entirely. route.js already enforces
+      // verified/featured-tier priority ahead of any sort_by, so the list order
+      // is unchanged by dropping it.
       params.set('sort_by', 'price');
-      params.set('sort_order', sortBy === 'priceDesc' ? 'desc' : 'asc');
+      params.set('sort_order', 'asc');
 
       const res = await fetch(`/api/listings?${params.toString()}`);
       if (!res.ok) {
@@ -297,10 +465,10 @@ function ResultsContent() {
     } finally {
       setLoading(false);
     }
-  }, [filters, sortBy]);
+  }, [filters]);
 
   // Fetch listings whenever the memoized fetchListings identity changes
-  // (i.e. filters, sortBy). Standard fetch-on-deps pattern; the inner
+  // (i.e. filters). Standard fetch-on-deps pattern; the inner
   // call updates state, which is intentional.
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect
@@ -335,7 +503,9 @@ function ResultsContent() {
   // How many listings in the current search cost more than the budget —
   // recomputed client-side against the (filtered) distribution as the slider
   // moves, surfaced as an explicit line under the chart so the tradeoff is legible.
-  const aboveBudgetCount = priceDistribution.filter((p) => p > filters.maxBudget).length;
+  const aboveBudgetCount = filters.maxPrice
+    ? priceDistribution.filter((p) => p > filters.maxPrice).length
+    : 0;
 
   return (
     <div className="mx-auto max-w-7xl px-5 py-10 md:py-14">
@@ -358,23 +528,6 @@ function ResultsContent() {
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
-          {/* Sort */}
-          <div className="relative">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className="appearance-none label-caps bg-transparent border border-night/20 text-night pl-4 pr-9 py-2 rounded-control cursor-pointer focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
-            >
-              <option value="match">{t('sortBestMatch')}</option>
-              <option value="price">{t('sortPriceAsc')}</option>
-              <option value="priceDesc">{t('sortPriceDesc')}</option>
-            </select>
-            <Icon
-              name="chevronDown"
-              className="w-3.5 h-3.5 text-night/50 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"
-            />
-          </div>
-
           {/* List / Map toggle */}
           <div
             className="flex items-stretch border border-night/20 rounded-control overflow-hidden"
@@ -407,46 +560,44 @@ function ResultsContent() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-[240px_1fr] gap-10">
-        {/* Filter panel */}
-        <aside className="hidden lg:block">
-          <div className="sticky top-6">
-            <FilterPanel
-              t={t}
-              filters={filters}
-              neighborhoodOptions={neighborhoodOptions}
-              histogram={priceHistogram}
-              aboveCount={aboveBudgetCount}
-              onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
-              onMoveIn={(v) => setFilters((p) => ({ ...p, moveIn: v, availableFrom: v }))}
-              onMoveOut={(v) => setFilters((p) => ({ ...p, moveOut: v }))}
-              onToggleType={(vals) => {
-                setFilters((prev) => {
-                  const allPresent = vals.every((v) => prev.selectedTypes.includes(v));
-                  return {
-                    ...prev,
-                    selectedTypes: allPresent
-                      ? prev.selectedTypes.filter((v) => !vals.includes(v))
-                      : [...prev.selectedTypes.filter((v) => !vals.includes(v)), ...vals],
-                  };
-                });
-              }}
-              onToggleNeighborhood={(v) => toggleIn('selectedNeighborhoods', v)}
-              onToggleVerified={() =>
-                setFilters((p) => ({ ...p, verifiedOnly: !p.verifiedOnly }))
-              }
-              onSetMinDuration={(v) =>
-                setFilters((p) => ({ ...p, minDuration: v }))
-              }
-              onRemoveDealbreaker={(db) =>
-                setFilters((p) => ({
-                  ...p,
-                  dealbreakers: p.dealbreakers.filter((x) => x !== db),
-                }))
-              }
-            />
-          </div>
-        </aside>
+      {/*
+        Feature 7 — the chip row replaces the sidebar entirely. Ten amenities
+        the `amenities` table already holds, horizontally scrollable, with
+        `Filters` pinned LEFT so it never scrolls out of reach. Everything the
+        chips do not cover lives in the modal.
+      */}
+      <div className="mb-8 flex items-center gap-3">
+        <Button
+          variant="secondary"
+          size="sm"
+          onClick={openFilters}
+          className="shrink-0 gap-2"
+        >
+          <Icon name="filter" className="h-4 w-4" />
+          {t('filtersEnglish')}
+          {activeFilterCount > 0 && (
+            <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-night px-1.5 py-0.5 text-[0.65rem] font-semibold text-white">
+              {activeFilterCount}
+            </span>
+          )}
+        </Button>
+
+        {/* `overflow-x-auto` not a wrap: Airbnb's row scrolls, and wrapping ten
+            chips would push the grid down a line on narrow desktops. */}
+        <div className="flex gap-2 overflow-x-auto pb-1 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {CHIP_AMENITIES.map((amenity) => (
+            <Chip
+              key={amenity}
+              selected={filters.selectedAmenities.includes(amenity)}
+              onClick={() => toggleAmenity(amenity)}
+            >
+              {amenity}
+            </Chip>
+          ))}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-1 gap-10">
 
         {/* Mobile filter drawer trigger */}
         <div className="lg:hidden">
@@ -494,7 +645,6 @@ function ResultsContent() {
                       key={listing.listing_id}
                       listing={listing}
                       fromQuery={searchParams.toString()}
-                      groundFloorDealbreaker={filters.dealbreakers.includes('ground_floor')}
                     />
                   ))}
                 </div>
@@ -521,63 +671,23 @@ function ResultsContent() {
         </div>
       </div>
 
-      {/* Mobile filter drawer */}
-      {filtersMobileOpen && (
-        <div className="fixed inset-0 z-50 lg:hidden">
-          <div
-            className="absolute inset-0 bg-night/60"
-            onClick={() => setFiltersMobileOpen(false)}
-          />
-          <aside className="absolute left-0 top-0 h-full w-[85%] max-w-sm bg-stone p-6 overflow-y-auto">
-            <div className="flex items-center justify-between mb-6">
-              <span className="label-caps text-night">
-                {t('filtersEnglish')}
-              </span>
-              <button
-                onClick={() => setFiltersMobileOpen(false)}
-                aria-label="Close filters"
-                className="p-1 text-night/60 hover:text-night active:text-night/80 transition-colors"
-              >
-                <Icon name="x" className="w-5 h-5" />
-              </button>
-            </div>
-            <FilterPanel
-              t={t}
-              filters={filters}
-              neighborhoodOptions={neighborhoodOptions}
-              histogram={priceHistogram}
-              aboveCount={aboveBudgetCount}
-              onBudget={(v) => setFilters((p) => ({ ...p, maxBudget: v }))}
-              onMoveIn={(v) => setFilters((p) => ({ ...p, moveIn: v, availableFrom: v }))}
-              onMoveOut={(v) => setFilters((p) => ({ ...p, moveOut: v }))}
-              onToggleType={(vals) => {
-                setFilters((prev) => {
-                  const allPresent = vals.every((v) => prev.selectedTypes.includes(v));
-                  return {
-                    ...prev,
-                    selectedTypes: allPresent
-                      ? prev.selectedTypes.filter((v) => !vals.includes(v))
-                      : [...prev.selectedTypes.filter((v) => !vals.includes(v)), ...vals],
-                  };
-                });
-              }}
-              onToggleNeighborhood={(v) => toggleIn('selectedNeighborhoods', v)}
-              onToggleVerified={() =>
-                setFilters((p) => ({ ...p, verifiedOnly: !p.verifiedOnly }))
-              }
-              onSetMinDuration={(v) =>
-                setFilters((p) => ({ ...p, minDuration: v }))
-              }
-              onRemoveDealbreaker={(db) =>
-                setFilters((p) => ({
-                  ...p,
-                  dealbreakers: p.dealbreakers.filter((x) => x !== db),
-                }))
-              }
-            />
-          </aside>
-        </div>
-      )}
+
+      <FiltersModal
+        open={filtersOpen}
+        onClose={() => setFiltersOpen(false)}
+        value={draftFilters}
+        onChange={setDraftFilters}
+        onApply={() => {
+          setFilters(draftFilters);
+          setFiltersOpen(false);
+        }}
+        onClearAll={() => setDraftFilters(clearFilters(draftFilters))}
+        resultCount={pendingCount}
+        distribution={priceDistribution}
+        propertyTypes={propertyTypeOptions}
+        neighborhoods={neighborhoodOptions}
+        amenities={ALL_AMENITIES}
+      />
     </div>
   );
 }
@@ -604,306 +714,6 @@ const DEALBREAKER_LABEL_KEYS = {
   lands, so above-budget supply is visible. Pure presentation — all bucketing
   happens in the helper.
 */
-function PriceHistogram({ t, histogram, budget, aboveCount }) {
-  const buckets = histogram || [];
-  const peak = maxBucketCount(buckets);
-
-  // Position the budget marker across the chart as a fraction of the range the
-  // buckets span. Falls back to the full range so the line never overflows.
-  const first = buckets[0];
-  const last = buckets[buckets.length - 1];
-  const lo = first ? first.from : BUDGET_MIN;
-  const hi = last ? last.to : BUDGET_MAX;
-  const clamped = Math.min(Math.max(budget, lo), hi);
-  const markerPct = hi > lo ? ((clamped - lo) / (hi - lo)) * 100 : 100;
-
-  if (peak === 0) {
-    return (
-      <p className="mt-3 text-[11px] text-night/40 font-sans">
-        {t('priceHistogramEmpty')}
-      </p>
-    );
-  }
-
-  return (
-    <div className="mt-3">
-      <div className="relative h-12 flex items-end gap-0.5" aria-hidden="true">
-        {buckets.map((b, i) => {
-          const inBudget = isBucketInBudget(b, budget);
-          // Floor non-empty bars at a sliver so they stay visible.
-          const heightPct = b.count > 0 ? Math.max((b.count / peak) * 100, 8) : 0;
-          return (
-            <div
-              key={i}
-              title={t('priceHistogramBarLabel', {
-                count: b.count,
-                from: formatMoney(Math.round(b.from)),
-                to: formatMoney(Math.round(b.to)),
-              })}
-              className={`flex-1 rounded-t-[2px] transition-colors ${
-                inBudget ? 'bg-blue' : 'bg-night/15'
-              }`}
-              style={{ height: `${heightPct}%` }}
-            />
-          );
-        })}
-        {/* Budget threshold marker */}
-        <div
-          className="absolute top-0 bottom-0 w-px bg-night/40"
-          style={{ left: `${markerPct}%` }}
-        />
-      </div>
-      <p className="mt-1.5 text-[11px] text-night/50 font-sans">
-        {t('priceHistogramCaption')}
-      </p>
-      {aboveCount > 0 && (
-        <p className="mt-0.5 text-[11px] font-sans text-night/70">
-          {t('priceHistogramAboveBudget', { count: aboveCount })}
-        </p>
-      )}
-    </div>
-  );
-}
-
-function FilterPanel({
-  t,
-  filters,
-  neighborhoodOptions,
-  histogram,
-  aboveCount,
-  onBudget,
-  onMoveIn,
-  onMoveOut,
-  onToggleType,
-  onToggleNeighborhood,
-  onToggleVerified,
-  onSetMinDuration,
-  onRemoveDealbreaker,
-}) {
-  const tQuiz = useTranslations('propylaea.quiz');
-  const neighborhoods = neighborhoodOptions.length > 0
-    ? neighborhoodOptions
-    : ['Kentro', 'Ano Poli', 'Analipsi', 'Kalamaria', 'Toumba', 'Faliro'];
-
-  return (
-    <div>
-      <p className="label-caps text-night/80 mb-6">
-        {t('filtersEnglish')} &middot; {t('filtersRefine')}
-      </p>
-
-      {/* Max price */}
-      <section className="mb-8">
-        <p className="label-caps text-night/60 mb-3">{t('maxPrice')}</p>
-        <p className="font-display text-2xl text-blue">
-          {t('upTo')} {formatMoney(filters.maxBudget)}
-          <span className="text-sm text-night/50">/mo</span>
-        </p>
-        <PriceHistogram
-          t={t}
-          histogram={histogram}
-          budget={filters.maxBudget}
-          aboveCount={aboveCount}
-        />
-        <input
-          type="range"
-          min={BUDGET_MIN}
-          max={BUDGET_MAX}
-          step={25}
-          value={filters.maxBudget}
-          onChange={(e) => onBudget(Number(e.target.value))}
-          className="w-full mt-3"
-          aria-label={t('maxPrice')}
-        />
-      </section>
-
-      {/* Stay dates — move-in / move-out pair */}
-      <section className="mb-8">
-        <p className="label-caps text-night/60 mb-3">{t('stayDates')}</p>
-        <div className="space-y-2">
-          <label className="block">
-            <span className="text-[11px] text-night/50 font-sans">{t('moveIn')}</span>
-            <div className="mt-1 flex items-center gap-2">
-              <input
-                type="date"
-                value={filters.moveIn || ''}
-                onChange={(e) => onMoveIn(e.target.value)}
-                className="flex-1 rounded-control border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
-                aria-label={t('moveIn')}
-              />
-              {filters.moveIn && (
-                <button
-                  type="button"
-                  onClick={() => onMoveIn('')}
-                  aria-label={t('moveInClear')}
-                  className="p-2 text-night/50 hover:text-night active:text-night/80 transition-colors"
-                >
-                  <Icon name="x" className="w-4 h-4" aria-hidden="true" />
-                </button>
-              )}
-            </div>
-          </label>
-          <label className="block">
-            <span className="text-[11px] text-night/50 font-sans">{t('moveOut')}</span>
-            <div className="mt-1 flex items-center gap-2">
-              <input
-                type="date"
-                value={filters.moveOut || ''}
-                onChange={(e) => onMoveOut(e.target.value)}
-                className="flex-1 rounded-control border border-night/20 bg-white px-3 py-2 text-sm font-sans text-night focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
-                aria-label={t('moveOut')}
-              />
-              {filters.moveOut && (
-                <button
-                  type="button"
-                  onClick={() => onMoveOut('')}
-                  aria-label={t('moveOutClear')}
-                  className="p-2 text-night/50 hover:text-night active:text-night/80 transition-colors"
-                >
-                  <Icon name="x" className="w-4 h-4" aria-hidden="true" />
-                </button>
-              )}
-            </div>
-          </label>
-        </div>
-        <p className="mt-2 text-[11px] text-night/50 font-sans">
-          {t('stayDatesHint')}
-        </p>
-      </section>
-
-      {/* Neighborhood */}
-      <section className="mb-8">
-        <p className="label-caps text-night/60 mb-3">{t('neighborhood')}</p>
-        <div className="flex flex-wrap gap-1.5">
-          {neighborhoods.map((n) => {
-            const active = filters.selectedNeighborhoods.includes(n);
-            return (
-              <button
-                key={n}
-                type="button"
-                onClick={() => onToggleNeighborhood(n)}
-                aria-pressed={active}
-                className={`px-3 py-1.5 rounded-control border text-xs font-sans transition-colors ${
-                  active
-                    ? 'border-blue bg-blue text-white'
-                    : 'border-night/20 text-night/70 hover:border-blue active:bg-blue/10'
-                }`}
-              >
-                {n}
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Type */}
-      <section className="mb-8">
-        <p className="label-caps text-night/60 mb-3">{t('type')}</p>
-        <div className="flex flex-wrap gap-1.5">
-          {PROPERTY_TYPE_GROUPS.map((group) => {
-            const active = group.values.every((v) => filters.selectedTypes.includes(v));
-            return (
-              <button
-                key={group.labelKey}
-                type="button"
-                onClick={() => onToggleType(group.values)}
-                aria-pressed={active}
-                className={`px-3 py-1.5 rounded-control border text-xs font-sans transition-colors ${
-                  active
-                    ? 'border-blue bg-blue text-white'
-                    : 'border-night/20 text-night/70 hover:border-blue active:bg-blue/10'
-                }`}
-              >
-                {tQuiz(group.labelKey)}
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Stay length */}
-      <section className="mb-8">
-        <p className="label-caps text-night/60 mb-3">{t('minDuration')}</p>
-        <div className="flex flex-wrap gap-1.5">
-          <button
-            type="button"
-            onClick={() => onSetMinDuration(null)}
-            aria-pressed={filters.minDuration === null}
-            className={`px-2.5 py-1 rounded-control border text-xs font-sans transition-colors ${
-              filters.minDuration === null
-                ? 'border-blue bg-blue text-white'
-                : 'border-night/20 text-night/70 hover:border-blue active:bg-blue/10'
-            }`}
-          >
-            {t('minDurationAny')}
-          </button>
-          {MIN_DURATION_OPTIONS.map((opt) => {
-            const active = filters.minDuration === opt.value;
-            return (
-              <button
-                key={opt.value}
-                type="button"
-                onClick={() => onSetMinDuration(active ? null : opt.value)}
-                aria-pressed={active}
-                className={`px-2.5 py-1 rounded-control border font-sans transition-colors text-left leading-tight ${
-                  active
-                    ? 'border-blue bg-blue text-white'
-                    : 'border-night/20 text-night/70 hover:border-blue active:bg-blue/10'
-                }`}
-              >
-                <span className="block text-xs">{t(opt.nameKey)}</span>
-                <span className="block text-[10px] opacity-60">{t(opt.monthsKey)}</span>
-              </button>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* Dealbreakers (from quiz) */}
-      {filters.dealbreakers.length > 0 && (
-        <section className="mb-8">
-          <p className="label-caps text-night/60 mb-3">{t('dealbreakers')}</p>
-          <div className="flex flex-wrap gap-1.5">
-            {filters.dealbreakers.map((db) => {
-              const labelKey = DEALBREAKER_LABEL_KEYS[db];
-              if (!labelKey) return null;
-              const label = tQuiz(labelKey);
-              return (
-                <button
-                  key={db}
-                  type="button"
-                  onClick={() => onRemoveDealbreaker(db)}
-                  aria-label={t('removeDealbreaker', { label })}
-                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-control border border-night/20 text-xs font-sans text-night/80 hover:border-night hover:text-night active:bg-night/5 transition-colors"
-                >
-                  <span>{label}</span>
-                  <Icon name="x" className="w-3 h-3 opacity-60" aria-hidden="true" />
-                </button>
-              );
-            })}
-          </div>
-        </section>
-      )}
-
-      {/* Verified only */}
-      <section className="mb-8">
-        <button
-          type="button"
-          onClick={onToggleVerified}
-          aria-pressed={filters.verifiedOnly}
-          className={`w-full flex items-center gap-2 px-3 py-2 rounded-control border text-xs font-sans transition-colors ${
-            filters.verifiedOnly
-              ? 'border-yellow bg-yellow text-white'
-              : 'border-night/20 text-night/70 hover:border-yellow active:bg-yellow/10'
-          }`}
-        >
-          <Icon name="shieldCheck" className="w-4 h-4" />
-          {t('verifiedLandlordsOnly')}
-        </button>
-      </section>
-    </div>
-  );
-}
-
 export default function ResultsPage() {
   return (
     <Suspense
