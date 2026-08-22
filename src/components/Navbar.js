@@ -109,15 +109,10 @@ export default function Navbar() {
       ? `/property/${currentCity}/landlord/dashboard`
       : '/student/account/profile';
 
-  // ⚠️ There is NO student inbox list page — `/student/inquiries` has only
-  // `[inquiry_id]`. Students reach threads from the accommodation view, which
-  // lists their inquiries alongside saved listings, so that is the honest
-  // destination today. A dedicated `/student/inquiries` index is the right
-  // follow-up; pointing this at a route that does not exist would be worse.
   const messagesHref =
     authState.role === 'landlord'
       ? `/property/${currentCity}/landlord/inquiries`
-      : '/student/account/accommodation';
+      : '/student/inquiries';
 
   // All hooks above run unconditionally; only the rendered output is gated
   // (React Rules of Hooks). Landlord shell pages have their own chrome.

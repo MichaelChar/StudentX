@@ -1144,7 +1144,8 @@
       "interestStatusSent": "Sent",
       "interestSentOn": "Sent {when}",
       "viewGig": "View gig",
-      "unpaidLabel": "Unpaid"
+      "unpaidLabel": "Unpaid",
+      "tabMessages": "Messages"
     },
     "profile": {
       "title": "Guest profile",
