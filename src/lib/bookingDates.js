@@ -132,3 +132,55 @@ export function costSummary({
     total_rent: totalRent,
   };
 }
+
+/* ------------------------------------------------------------------ *
+ * Calendar-grid helpers
+ *
+ * Extracted from AvailabilityCalendar when the Feature 1 date-range panel
+ * needed the same month maths. Everything here is UTC — the grid must not
+ * shift a day for a student loading the page from a different timezone.
+ * ------------------------------------------------------------------ */
+
+/** UTC Date → YYYY-MM-DD. */
+export function ymd(date) {
+  return date.toISOString().slice(0, 10);
+}
+
+/** First day of a month as a UTC Date. `monthIndex` may over/underflow. */
+export function startOfMonth(year, monthIndex) {
+  return new Date(Date.UTC(year, monthIndex, 1));
+}
+
+/** Number of days in a month. */
+export function daysInMonth(year, monthIndex) {
+  return new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
+}
+
+/**
+ * Monday-based weekday index 0..6 for a UTC date.
+ * Europe reads calendars Mon-first; JS's getUTCDay() is Sun-first.
+ */
+export function mondayIndex(date) {
+  const dow = date.getUTCDay(); // 0 Sun .. 6 Sat
+  return dow === 0 ? 6 : dow - 1;
+}
+
+/** Shift a YYYY-MM-DD string by N days. Returns null on an invalid input. */
+export function addDays(value, days) {
+  const d = parseISODate(value);
+  if (!d) return null;
+  return ymd(new Date(d.getTime() + days * 86_400_000));
+}
+
+/**
+ * Cells for one month grid: leading nulls to pad to the Monday column,
+ * then one `{ day, dateStr }` per day. Callers decorate with their own state.
+ */
+export function monthCells(year, monthIndex) {
+  const cells = [];
+  for (let i = 0; i < mondayIndex(startOfMonth(year, monthIndex)); i += 1) cells.push(null);
+  for (let day = 1; day <= daysInMonth(year, monthIndex); day += 1) {
+    cells.push({ day, dateStr: ymd(new Date(Date.UTC(year, monthIndex, day))) });
+  }
+  return cells;
+}

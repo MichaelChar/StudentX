@@ -3,27 +3,19 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Icon from '@/components/ui/Icon';
-import { datesOverlap } from '@/lib/bookingDates';
+import {
+  datesOverlap,
+  daysInMonth,
+  mondayIndex,
+  startOfMonth,
+  ymd,
+} from '@/lib/bookingDates';
 
 const WEEKDAYS = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
 
-function ymd(d) {
-  return d.toISOString().slice(0, 10);
-}
 
-function startOfMonth(year, monthIndex) {
-  return new Date(Date.UTC(year, monthIndex, 1));
-}
 
-function daysInMonth(year, monthIndex) {
-  return new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
-}
 
-/** Monday-based weekday index 0..6 for a UTC date. */
-function mondayIndex(date) {
-  const dow = date.getUTCDay(); // 0 Sun .. 6 Sat
-  return dow === 0 ? 6 : dow - 1;
-}
 
 /**
  * Month grid with three occupancy states from listing_availability_blocks:
