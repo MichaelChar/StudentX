@@ -27,14 +27,10 @@ import {
   landlord chip (→ landlord profile) and the favorite toggle, both z-10.
 */
 
-export default function ListingCard({ listing, fromQuery = '', groundFloorDealbreaker = false }) {
+export default function ListingCard({ listing, fromQuery = '' }) {
   const t = useTranslations('propylaea.results');
   const tCard = useTranslations('listingCard');
   const locale = useLocale();
-  // When the student set "no ground floor" but this listing has no recorded
-  // floor, flag it so they ask before viewing rather than discovering on the
-  // day (NULL floors are kept in results, not filtered out — see #100).
-  const floorUnspecified = groundFloorDealbreaker && listing.floor == null;
 
   // Thread current results search-state into the listing URL so the
   // detail page's back link returns to the same filtered view. Caller
@@ -145,9 +141,6 @@ export default function ListingCard({ listing, fromQuery = '', groundFloorDealbr
         </div>
 
         <div className="mt-4 flex flex-wrap gap-1.5">
-          {floorUnspecified && (
-            <Pill variant="info">{t('floorNotSpecified')}</Pill>
-          )}
           {listing.bills_included && (
             <Pill variant="amenity">{t('billsIncluded')}</Pill>
           )}
