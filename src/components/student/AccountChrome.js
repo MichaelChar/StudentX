@@ -11,6 +11,9 @@ export default async function AccountChrome({ locale, student, active, children 
 
   const tabs = [
     { id: 'accommodation', label: t('tabAccommodation'), href: '/student/account/accommodation' },
+    // Not under /student/account — the inbox lives at /student/inquiries,
+    // alongside the thread pages it lists.
+    { id: 'messages', label: t('tabMessages'), href: '/student/inquiries' },
     { id: 'bookings', label: t('tabBookings'), href: '/student/account/bookings' },
     { id: 'profile', label: t('tabProfile'), href: '/student/account/profile' },
     { id: 'gigs', label: t('tabHolidayGigs'), href: '/student/account/gigs' },
