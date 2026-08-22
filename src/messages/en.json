@@ -740,6 +740,27 @@
       "featuredBody": "Vetted landlords, walkable to the School of Medicine, fair rent — handpicked for incoming first-years.",
       "featuredCta": "See programme listings"
     },
+    "filtersModal": {
+      "title": "Filters",
+      "close": "Close",
+      "priceRange": "Price range",
+      "priceMin": "Minimum",
+      "priceMax": "Maximum",
+      "priceMinPlaceholder": "Min",
+      "priceMaxPlaceholder": "Max",
+      "priceHistogramEmpty": "No price data to chart",
+      "priceHistogramBarLabel": "{count, plural, =0 {No listings} one {# listing} other {# listings}} between {from} and {to}",
+      "typeOfPlace": "Type of place",
+      "duration": "Duration",
+      "durationMonth": "{n, plural, one {# month} other {# months}}",
+      "amenities": "Amenities",
+      "showMore": "Show more",
+      "showLess": "Show less",
+      "neighbourhood": "Neighbourhood",
+      "clearAll": "Clear all",
+      "showPlaces": "{count, plural, one {Show # place} other {Show # places}}",
+      "showPlacesPending": "Show places"
+    },
     "listing": {
       "back": "Back to results",
       "verified": "SuperLandlord",
