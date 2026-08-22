@@ -863,8 +863,42 @@ Study surfaces (`/resources`, `/student/ausom`) and `/gigs` sit in the
 middle group in all three states — they are unreachable from the header
 otherwise.
 
-Structure above is a **draft shape, not yet approved** — ordering and
-labels are open.
+#### ✅ Ordering APPROVED — 2026-08-21
+
+The draft above stands as the ordering: frequency-descending, with rare and
+destructive actions last. What was *not* right were three destinations, found
+by checking the routes rather than the draft.
+
+| Draft row | Problem | Resolution |
+|---|---|---|
+| `Account` + `Wishlists` | **Same screen.** `/student/account` is a `redirect()` to `/student/account/accommodation`, which *is* the saved-listings page — two rows, one destination | `Wishlists` → `/student/account/accommodation`; `Account` → `/student/account/profile`. Both already exist; no new routes |
+| `Help centre` | **No destination.** There is no `/help` route | **Row dropped.** A nav row to a page that does not exist is worse than no row. Re-add when support content exists |
+| Study group in the landlord menu | A landlord is not a medical student | **Kept in all three states** (founder's call). The study surfaces are unreachable from the header otherwise, and reachability wins over tidiness |
+
+Final structure:
+
+```
+LOGGED OUT           LOGGED IN (student)      LOGGED IN (landlord)
+──────────────       ─────────────────────    ────────────────────
+Sign up              Messages       (badge)   Messages      (badge)
+Log in               Bookings                 Reservations
+──────────────       Wishlists                Listings
+Resources            ──────────────────       ────────────────────
+Practice tests       Resources                Resources
+Services             Practice tests           Practice tests
+──────────────       Services                 Services
+Become a host        ──────────────────       ────────────────────
+                     Account                  Account
+                     Log out                  Log out
+```
+
+`Become a host` sits in the logged-out group only, per Feature 5 — present and
+reachable, deliberately not prominent.
+
+⚠️ **Orphan found while scoping this:** `/student/flashcards` has **zero**
+inbound links anywhere in the app. It is not in the approved structure above
+(it belongs under practice tests, not as a peer), so either `/student/ausom`
+should link to it or it should be retired. Not resolved here.
 
 **Supersedes:** the account-menu half of backlog item **S1**.
 
