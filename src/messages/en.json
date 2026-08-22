@@ -1013,6 +1013,14 @@
           "receivingUniversity": "Receiving university"
         }
       }
+    },
+    "search": {
+      "whereLabel": "Where",
+      "wherePlaceholder": "Search destinations",
+      "whenLabel": "When",
+      "addDates": "Add dates",
+      "submit": "Search",
+      "comingSoon": "Coming soon"
     }
   },
   "student": {
