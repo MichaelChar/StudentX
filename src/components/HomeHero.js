@@ -3,27 +3,9 @@
 import { useRef } from 'react';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
+import Icon from './ui/Icon';
 
 const IRIS = '#635BFF';
-
-// Down-chevron scroll cue shown beneath the wordmark.
-function ChevronDown() {
-  return (
-    <svg
-      width="34"
-      height="34"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.25"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden="true"
-    >
-      <path d="M6 9l6 6 6-6" />
-    </svg>
-  );
-}
 
 // Scroll-driven homepage hero: a prepared landscape illustration (white canvas)
 // is shown in full on a white stage with the StudentX wordmark + a scroll cue
@@ -76,7 +58,7 @@ export default function HomeHero() {
             className="w-[62vw] max-w-4xl h-auto px-4"
           />
           <span style={{ color: IRIS }}>
-            <ChevronDown />
+            <Icon name="chevronDown" className="w-[34px] h-[34px]" strokeWidth={2.25} />
           </span>
         </div>
       </section>
@@ -114,7 +96,7 @@ export default function HomeHero() {
             animate={{ y: [0, 10, 0] }}
             transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <ChevronDown />
+            <Icon name="chevronDown" className="w-[34px] h-[34px]" strokeWidth={2.25} />
           </motion.span>
         </motion.div>
       </div>
