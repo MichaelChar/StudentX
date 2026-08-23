@@ -57,6 +57,7 @@ function ModalPanel({
   size,
   initialFocusRef,
   closeOnBackdrop,
+  historyEntry,
   className,
   reduced,
   ...rest
@@ -73,6 +74,10 @@ function ModalPanel({
     closeOnEscape: true,
     closeOnOutsideClick: false,
     closeOnBackdrop,
+    // S8 — back closes the dialog instead of leaving the page. Opt out with
+    // `historyEntry={false}` for a dialog that must not be dismissible by a
+    // back gesture.
+    historyEntry,
   });
 
   const labelledBy = title != null && title !== '' ? titleId : undefined;
@@ -137,6 +142,7 @@ export default function Modal({
   size = 'md',
   initialFocusRef,
   closeOnBackdrop = true,
+  historyEntry = true,
   className = '',
   ...rest
 }) {
@@ -153,6 +159,7 @@ export default function Modal({
           size={size}
           initialFocusRef={initialFocusRef}
           closeOnBackdrop={closeOnBackdrop}
+          historyEntry={historyEntry}
           className={className}
           reduced={reduced}
           {...rest}
