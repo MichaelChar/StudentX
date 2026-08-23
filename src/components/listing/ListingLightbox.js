@@ -6,6 +6,7 @@ import { motion, useMotionValue } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import Icon from '@/components/ui/Icon';
 import { variantUrl } from '@/lib/photoVariants';
+import useOverlayHistory from '@/components/ui/overlay/history';
 
 /*
   Full-screen photo lightbox for the listing detail page (Item 8).
@@ -17,6 +18,9 @@ import { variantUrl } from '@/lib/photoVariants';
     touch devices scales it; when zoomed the photo pans and track-swipe is
     suspended.
   - Esc closes, Arrow keys navigate, focus is trapped, body scroll locked.
+  - Back closes it too (backlog S8) — on a phone the back gesture is how you
+    leave a full-screen photo, and without the history entry it would leave
+    the listing instead.
   - Keeps next/image (object-contain) + real alt text — no background-image.
 */
 
@@ -38,6 +42,9 @@ export default function ListingLightbox({ photos, title, startIndex = 0, onClose
   const dragX = useMotionValue(0);
   const dialogRef = useRef(null);
   const closeBtnRef = useRef(null);
+
+  // S8 — this component mounts only while open, so `active` is simply true.
+  useOverlayHistory({ onClose });
 
   const zoomed = scale > 1;
   const maxIndex = photos.length - 1;
@@ -197,6 +204,9 @@ export default function ListingLightbox({ photos, title, startIndex = 0, onClose
 
 function ZoomableImage({ src, alt, active, scale, setScale, t }) {
   const pinch = useRef({ startDist: 0, startScale: 1 });
+  // S8 — this component mounts only while open, so `active` is simply true.
+  useOverlayHistory({ onClose });
+
   const zoomed = scale > 1;
 
   function onClick() {

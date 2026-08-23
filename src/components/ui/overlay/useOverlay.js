@@ -2,6 +2,8 @@
 
 import { useEffect, useId, useRef } from 'react';
 
+import { pushOverlayEntry } from './history';
+
 /*
   useOverlay — behaviour core for the F8 overlay family (Modal, Sheet,
   Popover, Tooltip).
@@ -26,10 +28,12 @@ import { useEffect, useId, useRef } from 'react';
   an account menu. Tooltip reuses Escape (and the stack, so Esc closes
   the tooltip before a parent modal) and nothing else.
 
-  History (backlog S8, separate PR): treating an open Modal/Sheet as a
-  history entry so the browser back button calls onClose rather than
-  leaving the page would hook in *here* — pushState on activate, popstate
-  → onClose. Left unimplemented on purpose.
+  History (backlog S8): an open Modal/Sheet IS a history entry, so the
+  browser/phone back button closes it rather than leaving the page. Opt in
+  with `historyEntry` — see ./history.js for the push/retract contract.
+  Modal and Sheet enable it; Popover and Tooltip do not, because a menu or
+  a tooltip is transient and putting one in the back stack would make back
+  mean two different things on the same screen.
 */
 
 const FOCUSABLE_SELECTOR =
@@ -174,6 +178,7 @@ export default function useOverlay({
   closeOnOutsideClick = false,
   closeOnBackdrop = true,
   restoreFocus = true,
+  historyEntry = false,
 } = {}) {
   const overlayId = useId();
   const callbacks = useRef({
@@ -206,6 +211,9 @@ export default function useOverlay({
     const entry = { id: overlayId, rootRef, initialFocusRef, callbacks };
     const unregister = registerOverlay(entry);
     if (lockScroll) acquireScrollLock();
+    const releaseHistory = historyEntry
+      ? pushOverlayEntry(overlayId, callbacks)
+      : null;
 
     const node = rootRef?.current;
     const focusTarget =
@@ -216,6 +224,9 @@ export default function useOverlay({
 
     return () => {
       unregister();
+      // Retract before the scroll lock so a popstate-driven close cannot
+      // land while the body is still frozen.
+      releaseHistory?.();
       if (lockScroll) releaseScrollLock();
       if (
         restoreFocus &&

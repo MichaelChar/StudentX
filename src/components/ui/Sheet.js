@@ -77,6 +77,7 @@ function SheetPanel({
   footer,
   initialFocusRef,
   closeOnBackdrop,
+  historyEntry,
   className,
   reduced,
   ...rest
@@ -93,6 +94,8 @@ function SheetPanel({
     closeOnEscape: true,
     closeOnOutsideClick: false,
     closeOnBackdrop,
+    // S8 — a sheet is the mobile face of a modal, so back closes it too.
+    historyEntry,
   });
 
   const labelledBy = title != null && title !== '' ? titleId : undefined;
@@ -181,6 +184,7 @@ export default function Sheet({
   footer,
   initialFocusRef,
   closeOnBackdrop = true,
+  historyEntry = true,
   className = '',
   ...rest
 }) {
@@ -199,6 +203,7 @@ export default function Sheet({
           footer={footer}
           initialFocusRef={initialFocusRef}
           closeOnBackdrop={closeOnBackdrop}
+          historyEntry={historyEntry}
           className={className}
           reduced={reduced}
           {...rest}
