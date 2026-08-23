@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { useTranslations } from 'next-intl';
 import Popover from '@/components/ui/Popover';
-import DateRangePanel from '@/components/property/DateRangePanel';
+import DateRangePicker from '@/components/property/DateRangePicker';
 import Icon from '@/components/ui/Icon';
 import { COUNTRIES, CITY_ACCENTS } from '@/lib/cityRoutes';
 import { parseISODate } from '@/lib/bookingDates';
@@ -30,8 +30,9 @@ import { parseISODate } from '@/lib/bookingDates';
   rows route to the city's coming-soon page instead, and say so. Pretending
   otherwise would be the worst kind of parity.
 
-  The `When` panel now ships (DateRangePanel) and is the default for
-  `renderDatePanel`; the prop stays so a caller can substitute one.
+  The `When` panel defaults to `DateRangePicker` (parity S4) so a caller that
+  mounts this bar without wiring one still gets the real picker rather than an
+  empty popover. `renderDatePanel` stays so a caller can substitute one.
 
   ⚠️ NOT BUILT, needs content that does not exist yet:
     - the one-line description per city ("Family friendly", "A hidden gem")
@@ -116,8 +117,9 @@ export default function HeaderSearch({
     if (dates?.moveIn) params.set('move_in', dates.moveIn);
     if (dates?.moveOut) params.set('move_out', dates.moveOut);
     // Flex is carried as its own param, never folded into the dates — see
-    // DateRangePanel. The results page widens the window when it reads this.
-    if (dates?.flexDays) params.set('flex_days', String(dates.flexDays));
+    // lib/dateRange's applyFlexDays. The param is `flex`, which is what
+    // results/page.js reads and writes; anything else is silently dropped.
+    if (dates?.flexDays) params.set('flex', String(dates.flexDays));
     const qs = params.toString();
     router.push(`/property/${selectedCity}/results${qs ? `?${qs}` : ''}`);
   }
@@ -207,7 +209,7 @@ export default function HeaderSearch({
             and the caller owns the state. */}
         {renderDatePanel
           ? renderDatePanel({ value: dates, onChange: onDatesChange })
-          : <DateRangePanel value={dates} onChange={onDatesChange} />}
+          : <DateRangePicker value={dates} onChange={onDatesChange} />}
       </Popover>
 
       <button

@@ -1,4 +1,9 @@
-import { parseISODate } from '@/lib/bookingDates';
+import {
+  daysInMonth,
+  mondayIndex,
+  parseISODate,
+  ymd as formatYmd,
+} from '@/lib/bookingDates';
 
 /*
   Date maths for the property DateRangePicker (parity S4 / Feature 1).
@@ -24,6 +29,14 @@ import { parseISODate } from '@/lib/bookingDates';
      the past.
 */
 
+/*
+  Re-exported so this module's public surface is unchanged: callers and tests
+  import these from here. The definitions live in bookingDates because
+  AvailabilityCalendar needs the same maths and two copies of a calendar grid
+  is precisely how an off-by-one week appears in one place and not the other.
+*/
+export { daysInMonth, formatYmd, mondayIndex };
+
 export const FLEX_DAY_OPTIONS = [0, 1, 2, 3, 7, 14];
 export const EMPTY_VALUE = Object.freeze({
   moveIn: '',
@@ -44,9 +57,6 @@ export function isValidDateString(value) {
   return parseISODate(value) != null;
 }
 
-export function formatYmd(date) {
-  return date.toISOString().slice(0, 10);
-}
 
 /** Local calendar day of `now` as YYYY-MM-DD. */
 export function todayYmd(now = new Date()) {
@@ -63,15 +73,7 @@ export function addDays(ymd, n) {
   return formatYmd(date);
 }
 
-export function daysInMonth(year, monthIndex) {
-  return new Date(Date.UTC(year, monthIndex + 1, 0)).getUTCDate();
-}
 
-/** Monday-based weekday index 0..6 for a UTC date. Matches AvailabilityCalendar. */
-export function mondayIndex(date) {
-  const dow = date.getUTCDay();
-  return dow === 0 ? 6 : dow - 1;
-}
 
 export function addMonths(year, monthIndex, delta) {
   const date = new Date(Date.UTC(year, monthIndex + Number(delta), 1));

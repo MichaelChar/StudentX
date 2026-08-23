@@ -136,9 +136,13 @@ export function costSummary({
 /* ------------------------------------------------------------------ *
  * Calendar-grid helpers
  *
- * Extracted from AvailabilityCalendar when the Feature 1 date-range panel
- * needed the same month maths. Everything here is UTC — the grid must not
- * shift a day for a student loading the page from a different timezone.
+ * The low-level month maths, shared by AvailabilityCalendar and by
+ * lib/dateRange (the property date picker). Everything here is UTC — a grid
+ * must not shift a day for a student loading the page from another timezone.
+ *
+ * Note the deliberate contrast with lib/dateRange's `todayYmd`, which is
+ * LOCAL: "which day is it for this student" is a different question from
+ * "which calendar cell is this date", and only the former is timezone-bound.
  * ------------------------------------------------------------------ */
 
 /** UTC Date → YYYY-MM-DD. */
@@ -165,22 +169,4 @@ export function mondayIndex(date) {
   return dow === 0 ? 6 : dow - 1;
 }
 
-/** Shift a YYYY-MM-DD string by N days. Returns null on an invalid input. */
-export function addDays(value, days) {
-  const d = parseISODate(value);
-  if (!d) return null;
-  return ymd(new Date(d.getTime() + days * 86_400_000));
-}
 
-/**
- * Cells for one month grid: leading nulls to pad to the Monday column,
- * then one `{ day, dateStr }` per day. Callers decorate with their own state.
- */
-export function monthCells(year, monthIndex) {
-  const cells = [];
-  for (let i = 0; i < mondayIndex(startOfMonth(year, monthIndex)); i += 1) cells.push(null);
-  for (let day = 1; day <= daysInMonth(year, monthIndex); day += 1) {
-    cells.push({ day, dateStr: ymd(new Date(Date.UTC(year, monthIndex, day))) });
-  }
-  return cells;
-}

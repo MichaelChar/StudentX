@@ -1045,12 +1045,7 @@
       "whenLabel": "When",
       "addDates": "Add dates",
       "submit": "Search",
-      "comingSoon": "Coming soon",
-      "prevMonth": "Previous month",
-      "nextMonth": "Next month",
-      "exactDates": "Exact dates",
-      "flexDays": "± {days} days",
-      "clearDates": "Clear dates"
+      "comingSoon": "Coming soon"
     }
   },
   "student": {
