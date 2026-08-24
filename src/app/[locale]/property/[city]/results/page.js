@@ -506,6 +506,18 @@ function ResultsContent() {
     }));
   }
 
+  /*
+    Feature 13 — the ONE piece of shared hover state, lifted to the common
+    parent that Feature 11's split layout already gave us. A card and its pin
+    live in two different subtrees, so the correspondence has to be owned
+    above both.
+
+    Deliberately not context and not a store: it is a single nullable id whose
+    only consumers are directly below this component. A provider for it would
+    be more moving parts than the feature has.
+  */
+  const [hoveredListingId, setHoveredListingId] = useState(null);
+
   const loaderVisible = showLoader && loading;
 
   // Derived (pure) — bucket the price distribution for the current search
@@ -676,7 +688,11 @@ function ResultsContent() {
           {/* Map — mobile only; the desktop map is the sticky column. */}
           {viewMode === 'map' && !loading && !error && (
             <div style={{ height: '70vh', minHeight: 420 }} className="lg:hidden mb-6 rounded-card overflow-hidden border border-night/10">
-              <ListingsMap listings={listings} />
+              <ListingsMap
+                listings={listings}
+                hoveredListingId={hoveredListingId}
+                onPinHover={setHoveredListingId}
+              />
             </div>
           )}
 
@@ -704,11 +720,27 @@ function ResultsContent() {
               {!loading && !error && listings.length > 0 && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {listings.map((listing) => (
-                    <ListingCard
+                    /*
+                      CARD → PIN. A plain wrapper, NOT a prop on ListingCard:
+                      the card is a server component, and giving it mouse
+                      handlers would mean marking it 'use client' across every
+                      other surface that renders it.
+
+                      Safe against the card's stretched-link pattern too —
+                      mouseenter/mouseleave bubble from the children regardless
+                      of the z-0 link overlay, so nothing here competes for the
+                      click the way a z-10 control would.
+                    */
+                    <div
                       key={listing.listing_id}
-                      listing={listing}
-                      fromQuery={searchParams.toString()}
-                    />
+                      onMouseEnter={() => setHoveredListingId(listing.listing_id)}
+                      onMouseLeave={() => setHoveredListingId(null)}
+                    >
+                      <ListingCard
+                        listing={listing}
+                        fromQuery={searchParams.toString()}
+                      />
+                    </div>
                   ))}
                 </div>
               )}
@@ -744,7 +776,11 @@ function ResultsContent() {
         <aside className="hidden lg:block lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
           {!loading && !error && (
             <div className="h-full rounded-card overflow-hidden border border-night/10">
-              <ListingsMap listings={listings} />
+              <ListingsMap
+                listings={listings}
+                hoveredListingId={hoveredListingId}
+                onPinHover={setHoveredListingId}
+              />
             </div>
           )}
           {(loading || error) && (
