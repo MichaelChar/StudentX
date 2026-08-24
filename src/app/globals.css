@@ -283,18 +283,22 @@ input[type="range"]::-moz-range-thumb {
 }
 
 /* Hover and the card→pin sync class (Feature 13) share one treatment, so a
-   pin looks identical whether the pointer is on the pin or on its card. */
+   pin looks identical whether the pointer is on the pin or on its card.
+
+   Hover LIFTS — it deliberately does NOT change the fill. Solid night is
+   reserved to mean "visited", and an earlier draft that darkened on hover made
+   the two indistinguishable: a hovered unvisited pin looked exactly like a
+   visited one, so the only state carrying information stopped carrying it.
+   Scale, border and shadow do the work instead, and they read on both fills. */
 .sx-price-pin:hover .sx-price-pin__label,
 .sx-price-pin--active .sx-price-pin__label {
-  transform: translate(-50%, -50%) scale(1.09);
-  background: var(--color-night);
-  color: #fff;
+  transform: translate(-50%, -50%) scale(1.12);
   border-color: var(--color-night);
-  box-shadow: 0 4px 12px rgba(10, 37, 64, 0.32);
+  box-shadow: 0 6px 16px rgba(10, 37, 64, 0.3);
 }
 
-/* Visited — solid night at rest. Already the hover colour, so hover only
-   lifts it rather than restating the fill. */
+/* Visited — solid night, at rest and on hover. This is the one state that
+   tells the student something they cannot see anywhere else on the map. */
 .sx-price-pin--visited .sx-price-pin__label {
   background: var(--color-night);
   color: #fff;
