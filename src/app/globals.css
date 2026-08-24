@@ -238,3 +238,82 @@ input[type="range"]::-moz-range-thumb {
     animation: none !important;
   }
 }
+
+/*
+  Price-bubble map pins (parity Feature 12) — src/lib/mapPriceIcon.js.
+
+  Plain CSS rather than Tailwind classes in the icon HTML: the markup is built
+  as a string inside a Leaflet `divIcon`, and states have to change without
+  React re-rendering the element, so the styling has to live somewhere Leaflet
+  can toggle a class against.
+
+  Three states:
+    default  — white pill, the resting state
+    :hover   — lifts and darkens (also driven by --active for card→pin sync)
+    visited  — solid night, so a student can see where they have already looked
+*/
+.sx-price-pin {
+  /* Leaflet positions the icon by its top-left corner. `iconAnchor: [0,0]`
+     plus this translate centres the pill on the coordinate without needing a
+     fixed pixel size, so the box can size to the price text. */
+  width: auto !important;
+  height: auto !important;
+  transform-origin: center center;
+}
+
+.sx-price-pin__label {
+  display: inline-block;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  padding: 5px 10px;
+  border-radius: var(--radius-pill);
+  background: #fff;
+  color: var(--color-night);
+  font-family: var(--font-sans);
+  font-size: 0.75rem;
+  font-weight: 700;
+  line-height: 1.1;
+  border: 1px solid rgba(10, 37, 64, 0.12);
+  box-shadow: 0 1px 3px rgba(10, 37, 64, 0.22);
+  transition:
+    transform 150ms ease,
+    background-color 150ms ease,
+    color 150ms ease,
+    box-shadow 150ms ease;
+}
+
+/* Hover and the card→pin sync class (Feature 13) share one treatment, so a
+   pin looks identical whether the pointer is on the pin or on its card. */
+.sx-price-pin:hover .sx-price-pin__label,
+.sx-price-pin--active .sx-price-pin__label {
+  transform: translate(-50%, -50%) scale(1.09);
+  background: var(--color-night);
+  color: #fff;
+  border-color: var(--color-night);
+  box-shadow: 0 4px 12px rgba(10, 37, 64, 0.32);
+}
+
+/* Visited — solid night at rest. Already the hover colour, so hover only
+   lifts it rather than restating the fill. */
+.sx-price-pin--visited .sx-price-pin__label {
+  background: var(--color-night);
+  color: #fff;
+  border-color: var(--color-night);
+}
+
+/* A hovered pin must paint over its neighbours, or the lift is hidden behind
+   whichever marker Leaflet happened to render later. */
+.sx-price-pin:hover,
+.sx-price-pin--active {
+  z-index: 1000 !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sx-price-pin__label {
+    transition: none;
+  }
+  .sx-price-pin:hover .sx-price-pin__label,
+  .sx-price-pin--active .sx-price-pin__label {
+    transform: translate(-50%, -50%);
+  }
+}
