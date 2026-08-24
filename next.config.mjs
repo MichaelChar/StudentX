@@ -21,9 +21,16 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 //   - script-src: only inline JSON-LD in src/app/[locale]/listing/[id]/layout.js;
 //     covered by 'unsafe-inline'.
 //   - img-src: static.wixstatic.com (listing photos), Supabase storage
-//     (uploaded photos), *.tile.openstreetmap.org (map tiles), unpkg.com
-//     (Leaflet marker PNGs), assets.bergeinsatz.ch (Holiday Gigs seed
-//     photos); all listed below.
+//     (uploaded photos), *.tile.openstreetmap.org (legacy map tiles),
+//     *.basemaps.cartocdn.com (CartoDB Positron tiles — parity Feature 11),
+//     unpkg.com (Leaflet marker PNGs), assets.bergeinsatz.ch (Holiday Gigs
+//     seed photos); all listed below.
+//
+//     Map tiles are CSP-only and deliberately NOT in images.remotePatterns:
+//     Leaflet renders tiles as plain <img>, never through next/image, so a
+//     remotePattern would be dead config. The OSM host has worked this way in
+//     prod since the map shipped. (Feature 11's brief says add both; that
+//     instruction is about next/image hosts and does not apply to tiles.)
 //   - connect-src: Supabase REST/Auth (https) + Realtime (wss) +
 //     nominatim.openstreetmap.org (landlord wizard address geocoding).
 //     The wss scheme is required separately — Safari (and CSP3 spec)
@@ -66,7 +73,7 @@ const SECURITY_HEADERS = [
       "default-src 'self'",
       `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
       "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org https://unpkg.com https://assets.bergeinsatz.ch",
+      "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com https://assets.bergeinsatz.ch",
       "font-src 'self' data: https://fonts.gstatic.com",
       "connect-src 'self' https://ecluqurlfbvkxrnoyhaq.supabase.co wss://ecluqurlfbvkxrnoyhaq.supabase.co https://nominatim.openstreetmap.org",
       "object-src 'none'",

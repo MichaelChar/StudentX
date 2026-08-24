@@ -41,9 +41,21 @@ export default function ListingsMap({ listings }) {
         style={{ height: '100%', width: '100%' }}
         scrollWheelZoom={false}
       >
+        {/*
+          CartoDB Positron, not OSM default (parity Feature 11).
+
+          Airbnb's map is pale, desaturated and nearly label-free, so the map
+          recedes and the price pins carry the attention. OSM default is the
+          opposite — saturated, densely labelled, every POI marked. Same
+          component, opposite impression.
+
+          `{r}` resolves to `@2x` on retina. The host must be in BOTH the CSP
+          `img-src` allowlist and `images.remotePatterns` in next.config.mjs —
+          per CLAUDE.md, missing either breaks tiles in prod.
+        */}
         <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
+          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         {withCoords.map((listing) => (
           <Marker key={listing.listing_id} position={[listing.lat, listing.lng]}>

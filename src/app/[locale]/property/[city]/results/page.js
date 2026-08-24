@@ -550,9 +550,14 @@ function ResultsContent() {
         </div>
 
         <div className="flex flex-wrap items-center gap-4">
-          {/* List / Map toggle */}
+          {/*
+            Feature 11 — the toggle is MOBILE ONLY now. On desktop the grid and
+            the map are both permanently visible, so a toggle there would only
+            let a student hide half of their own results. `view=` survives as
+            the mobile control and nothing else.
+          */}
           <div
-            className="flex items-stretch border border-night/20 rounded-control overflow-hidden"
+            className="flex items-stretch border border-night/20 rounded-control overflow-hidden lg:hidden"
             role="group"
             aria-label="View mode"
           >
@@ -654,30 +659,31 @@ function ResultsContent() {
         </div>
       </div>
 
-      <div className="grid grid-cols-1 gap-10">
+      {/*
+        Feature 11 — desktop results are a 2-column card grid (~62%) beside a
+        sticky full-height map (~38%), both always visible. Below `lg` the two
+        stay mutually exclusive and the toggle above picks between them, which
+        is the only place `view=` still means anything.
 
-        {/* Mobile filter drawer trigger */}
-        <div className="lg:hidden">
-          <Button variant="outline" onClick={() => setFiltersMobileOpen(true)}>
-            <Icon name="filter" className="w-4 h-4" />
-            {t('filtersEnglish')}
-          </Button>
-        </div>
+        The map column is `sticky` rather than `fixed` so it stops at the
+        footer instead of floating over it, and it is the RIGHT column so a
+        student reading cards left-to-right is not interrupted by it.
+      */}
+      <div className="grid grid-cols-1 lg:grid-cols-[62fr_38fr] lg:items-start gap-10">
 
         {/* Main content */}
-        <div>
-          {/* Map view */}
+        <div className="min-w-0">
+          {/* Map — mobile only; the desktop map is the sticky column. */}
           {viewMode === 'map' && !loading && !error && (
-            <div style={{ height: '70vh', minHeight: 420 }} className="mb-6 rounded-card overflow-hidden border border-night/10">
+            <div style={{ height: '70vh', minHeight: 420 }} className="lg:hidden mb-6 rounded-card overflow-hidden border border-night/10">
               <ListingsMap listings={listings} />
             </div>
           )}
 
-          {/* List view */}
-          {viewMode === 'list' && (
-            <>
+          {/* Cards. Always rendered on desktop; on mobile only in list view. */}
+          <div className={viewMode === 'map' ? 'hidden lg:block' : undefined}>
               {loading && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {Array.from({ length: 6 }).map((_, i) => (
                     <SkeletonCard key={i} />
                   ))}
@@ -696,7 +702,7 @@ function ResultsContent() {
               )}
 
               {!loading && !error && listings.length > 0 && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {listings.map((listing) => (
                     <ListingCard
                       key={listing.listing_id}
@@ -723,9 +729,28 @@ function ResultsContent() {
                   </Link>
                 </div>
               )}
-            </>
-          )}
+          </div>
         </div>
+
+        {/*
+          The sticky map column. `h-[calc(100vh-3rem)]` with `top-6` keeps it
+          exactly one viewport tall with the page's own gutter above it, so it
+          never scrolls internally against the page.
+
+          Known limitation, accepted per Feature 11: at current inventory this
+          is 38% of the viewport holding three pins. Structurally correct, not
+          yet doing useful work — it earns its space as listings grow.
+        */}
+        <aside className="hidden lg:block lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
+          {!loading && !error && (
+            <div className="h-full rounded-card overflow-hidden border border-night/10">
+              <ListingsMap listings={listings} />
+            </div>
+          )}
+          {(loading || error) && (
+            <div className="h-full rounded-card border border-night/10 bg-parchment" />
+          )}
+        </aside>
       </div>
 
 
