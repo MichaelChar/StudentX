@@ -2,24 +2,18 @@
 
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import Link from 'next/link';
-import { useEffect } from 'react';
+import { useMemo, useSyncExternalStore } from 'react';
 import { useLocale } from 'next-intl';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatMoney } from '@/lib/formatMoney';
-
-// Fix missing marker icons in webpack/Next.js builds
-function useLeafletIcons() {
-  useEffect(() => {
-    delete L.Icon.Default.prototype._getIconUrl;
-    L.Icon.Default.mergeOptions({
-      iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
-      iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
-      shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
-    });
-  }, []);
-}
+import { priceIconOptions } from '@/lib/mapPriceIcon';
+import {
+  getVisitedSnapshot,
+  getVisitedServerSnapshot,
+  subscribeVisited,
+} from '@/lib/visitedListings';
 
 // Thessaloniki city center
 const THESSALONIKI_CENTER = [40.6301, 22.9439];
@@ -27,10 +21,34 @@ const DEFAULT_ZOOM = 13;
 
 export default function ListingsMap({ listings }) {
   const locale = useLocale();
-  useLeafletIcons();
 
-  const withCoords = listings.filter(
-    (l) => l.lat != null && l.lng != null
+  /*
+    Visited ids, via useSyncExternalStore — the React-sanctioned way to read a
+    browser store that the server cannot see.
+
+    The obvious alternative (useState + read in an effect) renders every pin
+    white, then immediately corrects some to black. That is both a hydration
+    mismatch and a synchronous setState in an effect body, which this repo's
+    React Compiler lint rules reject. useSyncExternalStore makes the
+    server/client difference explicit instead: getServerSnapshot says "nothing
+    visited", and the client swaps in the real set at hydration.
+  */
+  const visitedIds = useSyncExternalStore(
+    subscribeVisited,
+    getVisitedSnapshot,
+    getVisitedServerSnapshot,
+  );
+
+  /*
+    Migration 106 made location.lat / location.lng NOT NULL, so in a correct
+    database this filter drops nothing. It stays because the API's fallback
+    SELECT path can still answer with a partially-joined row, and a listing
+    with no coordinate would otherwise be rendered at [undefined, undefined]
+    — which Leaflet turns into a thrown error, not a missing pin.
+  */
+  const withCoords = useMemo(
+    () => listings.filter((l) => l.lat != null && l.lng != null),
+    [listings],
   );
 
   return (
@@ -57,8 +75,27 @@ export default function ListingsMap({ listings }) {
           attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
+        {/*
+          Price-bubble pins (parity Feature 12). The teardrop markers — and
+          the unpkg.com icon URLs that patched Leaflet's broken default icon
+          paths under bundling — are gone: a divIcon carries its own markup, so
+          there is no image to resolve and nothing to fetch cross-origin.
+        */}
         {withCoords.map((listing) => (
-          <Marker key={listing.listing_id} position={[listing.lat, listing.lng]}>
+          <Marker
+            key={listing.listing_id}
+            position={[listing.lat, listing.lng]}
+            icon={L.divIcon(
+              priceIconOptions(listing, {
+                visited: visitedIds.has(listing.listing_id),
+              }),
+            )}
+            title={
+              listing.monthly_price != null
+                ? `${formatMoney(listing.monthly_price, listing.currency)}/mo`
+                : undefined
+            }
+          >
             <Popup>
               <div className="text-sm min-w-[160px] max-w-[220px]">
                 <p className="font-semibold text-night mb-0.5 line-clamp-2">

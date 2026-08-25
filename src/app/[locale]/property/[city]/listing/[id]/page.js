@@ -9,6 +9,7 @@ import ListingGallery from '@/components/listing/ListingGallery';
 import BookingWidget from '@/components/listing/BookingWidget';
 import AvailabilityCalendar from '@/components/listing/AvailabilityCalendar';
 import ViewTracker from '@/components/listing/ViewTracker';
+import VisitedTracker from '@/components/listing/VisitedTracker';
 import ReportListingModal from '@/components/listing/ReportListingModal';
 import PropertyVerifiedBadge from '@/components/listing/PropertyVerifiedBadge';
 import FavoriteButton from '@/components/FavoriteButton';
@@ -82,6 +83,10 @@ export default async function ListingPage({ params, searchParams }) {
   return (
     <div className="mx-auto max-w-6xl px-5 pt-8 pb-28 sm:pb-12 md:py-12">
       {isAuthed && <ViewTracker listingId={listing.listing_id} />}
+      {/* Local-only "you have looked at this" record, driving the visited map
+          pin on the results page (parity Feature 12). Unconditional, unlike
+          ViewTracker above — see the component for why the two are separate. */}
+      <VisitedTracker listingId={listing.listing_id} />
 
       {/* Back link — server-rendered Link. Threads the prior /results
           filter state via ?from= so the back nav lands on the same
