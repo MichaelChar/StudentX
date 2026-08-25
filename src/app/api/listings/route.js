@@ -12,6 +12,7 @@ import {
 import { stayDurationMonths, durationFitsListing } from "@/lib/bookingDates";
 import { listingIdsBlockedInRange } from "@/lib/bookingBlocks";
 import { parseBoundsParams, applyBoundsFilter } from "@/lib/mapBounds";
+import { parsePageParam, paginate } from "@/lib/listingPagination";
 
 const LISTING_SELECT = `
   listing_id,
@@ -215,6 +216,38 @@ export async function GET(request) {
     results.sort((a, b) =>
       compareListingsByRank(a, b, { sortBy: f.sortBy, sortOrder: f.sortOrder }),
     );
+
+    /*
+      Numbered pagination (parity Feature 15).
+
+      OPT-IN, not default-on: `/api/listings` has two other consumers —
+      DirectoryCarousel (takes the head of the directory) and the
+      synthetic-en-listing canary — and silently capping them at 18 to serve
+      the results grid would be a behaviour change they never asked for. Only a
+      request that sends `page` gets a page.
+
+      The slice MUST happen here, after the sort above, and must never become a
+      SQL LIMIT/OFFSET: ranking is computed in JS from is_verified,
+      listingCompleteness and avg_response_ms, so a DB-level range would
+      paginate BEFORE ranking and hand back an arbitrary 18 rows that merely
+      look sorted. See the header comment in lib/listingPagination.js.
+    */
+    const pageParam = searchParams.get("page");
+    if (pageParam !== null) {
+      const paged = paginate(results, parsePageParam(pageParam));
+      const pagedResponse = NextResponse.json({
+        listings: paged.items,
+        page: paged.page,
+        per_page: paged.perPage,
+        total: paged.total,
+        total_pages: paged.totalPages,
+      });
+      pagedResponse.headers.set(
+        "Cache-Control",
+        "public, s-maxage=300, stale-while-revalidate=600"
+      );
+      return pagedResponse;
+    }
 
     const response = NextResponse.json({ listings: results });
     response.headers.set(
