@@ -52,8 +52,17 @@ deletes them in `afterEach`.
   `POST /api/landlord/listings` and removes it in `afterEach` (runs on failure).
 - Bookings are cancelled before listing delete so
   `listing_availability_blocks` (`pending` / `booked`) do not leak.
-- Protected production listing ids (`0100001`–`0100004`) are hard-blocked from
-  mutation helpers — never point tests at them for writes.
+- Protected production listing ids are hard-blocked from mutation helpers —
+  never point tests at them for writes. **The real guard is the fixture title,
+  not the id list:** `deleteFixtureListing` reads the listing back and refuses
+  to delete anything whose title does not start with `E2E `. An id list goes
+  stale (this one named `0100001`–`0100004`, which existed in no environment,
+  so it was inert for its entire life); a title check does not.
+- ⚠️ **There is no dedicated e2e landlord yet.** The only landlord account the
+  credentials can sign in as is `0106`, which owns every live listing in the
+  public directory. That is exactly what this section says not to do. Until a
+  dedicated account exists, the title guard is the only thing between a
+  misbehaving teardown and the live inventory — do not weaken it.
 - Workers = 1 so fixtures do not race.
 
 If a journey cannot guarantee cleanup, it must `test.skip` rather than ship a
