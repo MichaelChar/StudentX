@@ -44,10 +44,14 @@ import { useEffect, useId, useRef } from 'react';
   The first cut stamped each entry with its id in `history.state` and used that
   to decide whether the top entry was still ours. It does not survive: Next's
   App Router owns history.state (`__PRIVATE_NEXTJS_INTERNALS_TREE`) and
-  replaces it on its own schedule, and results/page.js additionally calls
+  replaces it on its own schedule, and results/page.js additionally called
   `replaceState(null, ...)` on filter changes. Verified in the browser — the
   marker was gone within a frame of the modal opening, so teardown never
   retracted and stale entries piled up, making back appear dead.
+
+  (results/page.js now passes `window.history.state` through rather than null,
+  so that second eraser is gone. Next's own replaces remain, so the conclusion
+  below is unchanged: do not put ownership in history.state.)
 
   Ownership is therefore tracked HERE, in a module-level map, and "did someone
   navigate while we were open" is answered by history.length — Next's
