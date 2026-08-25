@@ -18,18 +18,30 @@ const BOUND_PARAMS = ['min_lat', 'max_lat', 'min_lng', 'max_lng'];
   3dp ≈ 110m at this latitude — far finer than a student can aim a map pan, and
   coarse enough that small pointer wobbles land on the same value.
 
-  This exists for CACHING, not for precision. Raw float bounds make every
-  request a unique URL, so every bounds search is a guaranteed edge-cache miss
-  to origin; the spec's own Feature 14 cost analysis names that as the first
-  real cost of map search. Snapping means a student returning to roughly the
-  same view reuses a cached response.
+  This exists for KEY STABILITY, not for precision. Raw float bounds make every
+  request a unique URL; snapping means a student returning to roughly the same
+  view asks the same question twice.
 
-  §15 of the spec argues quantisation is unnecessary because the button only
-  fires at a settled position. That is true of the request COUNT and irrelevant
-  to the cache KEY — two students settling on "the city centre" still produce
-  two different keys unless the value is snapped. It is also far cheaper to do
-  now than to retrofit once bounds are in shareable URLs, which is what the
-  2026-08-24 handoff asks for.
+  BE PRECISE ABOUT THE BENEFIT — measured against prod, 2026-08-25:
+  `/api/listings` comes back with `s-maxage=300` but NO `cf-cache-status` and
+  no `age`, on repeated identical requests, while `/favicon.ico` on the same
+  host returns `cf-cache-status: HIT`. Cloudflare is not edge-caching
+  Worker-served routes here at all, so today quantisation saves ZERO origin
+  hits. Anyone citing "it protects the origin" as the reason is citing
+  something that is not currently true.
+
+  What it does buy, today:
+    - a shareable URL that is a sane, stable string rather than 14 decimals
+    - browser-level reuse of an identical request within a session
+    - the precondition for edge caching to help at all, if the Worker cache
+      situation is ever fixed
+    - it is cheap now and annoying to retrofit once bounds are in shared links
+
+  That last one is the honest primary reason, and is what the 2026-08-24
+  handoff asks for. §15 of the spec argues quantisation is unnecessary because
+  the button only fires at a settled position; that reasons about the request
+  COUNT and does not reach the KEY, but with nothing edge-cached the practical
+  gap between the two positions is currently small.
 */
 export const BOUNDS_PRECISION = 3;
 
