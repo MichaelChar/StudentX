@@ -6,6 +6,8 @@
 import { createClient } from '@supabase/supabase-js';
 import {
   assertNotProtectedListing,
+  isFixtureTitle,
+  FIXTURE_TITLE_PREFIX,
   e2eBaseUrl,
   supabasePublicConfig,
 } from '../fixtures/env.mjs';
@@ -123,6 +125,45 @@ export async function createFixtureListing(landlordToken, opts = {}) {
 export async function deleteFixtureListing(landlordToken, listingId) {
   if (!listingId) return;
   assertNotProtectedListing(listingId);
+
+  /*
+    Read the listing back and refuse to delete anything that is not ours.
+
+    The id allowlist in fixtures/env.mjs is a hardcoded list and hardcoded
+    lists go stale — it previously named four ids that existed in no
+    environment, so the guard had been inert for its whole life. This check
+    cannot go stale: the suite titles every fixture "E2E …", nobody titles a
+    real listing that, and a listing added to prod tomorrow is protected
+    automatically.
+
+    It matters here more than it would elsewhere. The only landlord the e2e
+    credentials can sign in as is the one that owns the entire live public
+    directory, so a teardown that deleted the wrong id would take the site's
+    inventory with it.
+
+    A GET that fails is treated as "cannot confirm", and cannot-confirm means
+    do not delete. Leaking a fixture is cheap; deleting a real listing is not.
+  */
+  const check = await apiFetch(`/api/landlord/listings/${listingId}`, {
+    token: landlordToken,
+  });
+  if (check.status === 404) return; // already gone
+  if (!check.res.ok) {
+    console.warn(
+      `[e2e cleanup] refusing to delete ${listingId}: could not read it back `
+        + `(${check.status}). Leaving it in place.`,
+    );
+    return;
+  }
+  const title = check.data?.listing?.title ?? check.data?.title;
+  if (!isFixtureTitle(title)) {
+    throw new Error(
+      `Refusing to delete listing ${listingId}: title ${JSON.stringify(title)} `
+        + `does not start with ${JSON.stringify(FIXTURE_TITLE_PREFIX)}, so it was `
+        + 'not created by this suite.',
+    );
+  }
+
   const { res, data, status } = await apiFetch(
     `/api/landlord/listings/${listingId}`,
     { method: 'DELETE', token: landlordToken },
