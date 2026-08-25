@@ -424,7 +424,25 @@ function ResultsContent() {
     const current = window.location.search.replace(/^\?/, '');
     if (next === current) return;
     const url = next ? `${window.location.pathname}?${next}` : window.location.pathname;
-    window.history.replaceState(null, '', url);
+    /*
+      Pass the EXISTING state through, never `null`.
+
+      `replaceState(null, ...)` does not merely leave history.state alone — it
+      overwrites it, destroying whatever was there, including Next App Router's
+      own `__PRIVATE_NEXTJS_INTERNALS_TREE`. Next repopulates it, so nothing
+      visibly breaks, but "the framework puts it back" is not a guarantee to
+      build on.
+
+      It has already cost real time once: S8 (#433) originally tracked open
+      overlays by stamping a marker into history.state, and this line was one
+      of the two things erasing it. S8 now keeps ownership in a module-level
+      map instead (see components/ui/overlay/history.js), so it no longer
+      depends on this — but the URL sync has no reason to be clearing state it
+      does not own.
+
+      Same pattern the overlay module already uses for its own push.
+    */
+    window.history.replaceState(window.history.state, '', url);
   }, [filters, viewMode, activeBounds]);
 
 /*
