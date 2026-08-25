@@ -1,6 +1,6 @@
 'use client';
 
-import { MapContainer, TileLayer, Marker, Popup, useMapEvent } from 'react-leaflet';
+import { MapContainer, TileLayer, Marker, Popup, useMap, useMapEvent } from 'react-leaflet';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from 'react';
 import 'leaflet/dist/leaflet.css';
@@ -96,10 +96,81 @@ function PopupViewportClamp() {
   return null;
 }
 
+/*
+  Reports the map's visible bounds to the parent (parity Feature 14).
+
+  Reporting is all this does. Nothing here fetches: the decision (spec §15,
+  re-confirmed 2026-08-24) is that results refetch only when the student asks
+  via `Search this area`.
+
+  WHY USER-INITIATED IS TRACKED SEPARATELY:
+  `moveend` fires for programmatic moves too, and Leaflet emits a couple during
+  initial layout as the sticky map column settles and the container is
+  measured. Treating those as pans made `Search this area` appear on page load,
+  before the student had touched anything — observed, not theorised.
+
+  `dragstart` and `zoomstart` fire only for real gestures (including the +/−
+  buttons), so they are what separates "the student moved the map" from "the
+  map finished laying itself out". A non-user settle re-baselines silently
+  instead of counting as drift.
+*/
+function MapViewportReporter({ onViewportChange }) {
+  const map = useMap();
+  const userMovedRef = useRef(false);
+
+  const report = useCallback(
+    (userInitiated) => {
+      if (!onViewportChange) return;
+      const b = map.getBounds();
+      const bounds = {
+        minLat: b.getSouth(),
+        maxLat: b.getNorth(),
+        minLng: b.getWest(),
+        maxLng: b.getEast(),
+      };
+
+      /*
+        Leaflet returns a zero-area box — a single point — while the container
+        is still unsized, which is what `getBounds()` gives on mount. That is
+        not a viewport anyone is looking at, so reporting it would seed a
+        meaningless baseline. Wait for the real one; `moveend` follows as soon
+        as the map has laid itself out.
+      */
+      if (bounds.minLat === bounds.maxLat || bounds.minLng === bounds.maxLng) return;
+
+      onViewportChange(bounds, { userInitiated });
+    },
+    [map, onViewportChange],
+  );
+
+  // Ref writes in event handlers, not during render.
+  useMapEvent('dragstart', () => {
+    userMovedRef.current = true;
+  });
+  useMapEvent('zoomstart', () => {
+    userMovedRef.current = true;
+  });
+
+  useMapEvent('moveend', () => {
+    const userInitiated = userMovedRef.current;
+    userMovedRef.current = false;
+    report(userInitiated);
+  });
+
+  // Baseline on mount. The setState happens in the parent via a callback
+  // rather than synchronously in this effect's body.
+  useEffect(() => {
+    report(false);
+  }, [report]);
+
+  return null;
+}
+
 export default function ListingsMap({
   listings,
   hoveredListingId = null,
   onPinHover,
+  onViewportChange,
 }) {
   /*
     Visited ids, via useSyncExternalStore — the React-sanctioned way to read a
@@ -213,6 +284,7 @@ export default function ListingsMap({
           url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
         />
         <PopupViewportClamp />
+        <MapViewportReporter onViewportChange={onViewportChange} />
         {/*
           Price-bubble pins (parity Feature 12). The teardrop markers — and
           the unpkg.com icon URLs that patched Leaflet's broken default icon

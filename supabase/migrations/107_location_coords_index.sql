@@ -1,0 +1,34 @@
+-- S17: composite index on location(lat, lng) for map-bounds search.
+--
+-- Why:
+--   Parity Feature 14 ("search as I move the map") adds min_lat / max_lat /
+--   min_lng / max_lng params to /api/listings, applied as a bounding-box
+--   filter against location.lat / location.lng. `location` today carries only
+--   idx_location_neighborhood (001_create_schema.sql), so a bbox query is a
+--   sequential scan on every pan.
+--
+-- Numbering: prod's highest APPLIED migration is 106 (verified via
+--   list_migrations, 2026-08-24 — the repo cannot recreate prod, so the number
+--   comes from prod's history, not from the highest file here). 107 is free.
+--
+-- ORDERING: this is additive and index-only — it breaks nothing if it lands
+--   before the consuming code, and the code degrades to a sequential scan if it
+--   lands after. Either order is safe. Apply during PR review per CLAUDE.md.
+--
+-- Why (lat, lng) btree and not PostGIS / GiST:
+--   A btree on (lat, lng) serves `lat BETWEEN ? AND ? AND lng BETWEEN ? AND ?`
+--   by ranging on lat and filtering lng within it. That is the right shape at
+--   this scale — 13 location rows now, and a city's worth later. PostGIS is the
+--   answer for radius search, nearest-neighbour ordering, or polygon
+--   containment, none of which Feature 14 needs; adding the extension for a
+--   rectangle would be cost without a question to answer.
+--
+--   lat leads because it is the more selective of the two for a city-shaped
+--   box: Thessaloniki's inventory spans ~0.055 degrees of latitude against
+--   ~0.032 of longitude in prod today, and a north-south pan is the common
+--   gesture on a coastal city laid out along its waterfront.
+--
+-- Migration 106 already made lat/lng NOT NULL, so no partial-index predicate
+-- is needed and every row is covered.
+
+CREATE INDEX IF NOT EXISTS idx_location_lat_lng ON location (lat, lng);

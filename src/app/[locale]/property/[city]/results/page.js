@@ -14,6 +14,8 @@ import Chip from '@/components/ui/Chip';
 import FiltersModal from '@/components/property/FiltersModal';
 import HeaderSearch from '@/components/property/HeaderSearch';
 import DateRangePicker from '@/components/property/DateRangePicker';
+import SearchThisAreaButton from '@/components/property/SearchThisAreaButton';
+import MapAreaEmptyState from '@/components/property/MapAreaEmptyState';
 import { applyFlexDays, todayYmd } from '@/lib/dateRange';
 import { clearFilters } from '@/lib/filtersModal';
 import { formatPropertyType } from '@/lib/propertyType';
@@ -24,6 +26,12 @@ import {
   isBucketInBudget,
 } from '@/lib/priceHistogram';
 import { formatMoney } from '@/lib/formatMoney';
+import {
+  parseBoundsParams,
+  boundsToParams,
+  boundsDrift,
+  BOUNDS_DRIFT_THRESHOLD,
+} from '@/lib/mapBounds';
 
 /*
   Propylaea results page — matches page 06 of the reference design.
@@ -249,6 +257,34 @@ function ResultsContent() {
   // Feature 9: `Show N places`, refreshed on every toggle before Apply.
   const [pendingCount, setPendingCount] = useState(null);
 
+  /*
+    Map-bounds search (parity Feature 14). Three separate pieces, because they
+    answer three different questions:
+
+      activeBounds   the box the CURRENT RESULTS were fetched for. null = the
+                     whole city. This is the only one that reaches the API or
+                     the URL.
+      mapBounds      where the map is looking RIGHT NOW, debounced.
+      searchBaseline where the map was looking when results were last fetched.
+
+    activeBounds and searchBaseline look redundant and are not: after
+    `Search all of Thessaloniki`, activeBounds is null (query the whole city)
+    while searchBaseline is the viewport the student is still sitting in, so
+    drift is measured from what they can see rather than from nothing.
+
+    Seeded from the URL so a shared "search this area" link reproduces the
+    same box. Invalid bounds in a hand-edited URL degrade to a whole-city
+    search rather than erroring on a browsing page — the API validates too,
+    and it is the one that returns a 400.
+  */
+  const [activeBounds, setActiveBounds] = useState(
+    () => parseBoundsParams(searchParams).bounds ?? null,
+  );
+  const [mapBounds, setMapBounds] = useState(null);
+  const [searchBaseline, setSearchBaseline] = useState(
+    () => parseBoundsParams(searchParams).bounds ?? null,
+  );
+
   const [filters, setFilters] = useState(() => {
     const budget = Number(searchParams.get('budget'));
     const minP = Number(searchParams.get('min_budget'));
@@ -377,12 +413,19 @@ function ResultsContent() {
       params.set('available_from', filters.availableFrom);
     }
     if (viewMode === 'map') params.set('view', 'map');
+    // Feature 14 — bounds in the URL keep a map-scoped search shareable and
+    // back-safe, in the same quantised form the API parses.
+    if (activeBounds) {
+      for (const [k, v] of Object.entries(boundsToParams(activeBounds))) {
+        params.set(k, v);
+      }
+    }
     const next = params.toString();
     const current = window.location.search.replace(/^\?/, '');
     if (next === current) return;
     const url = next ? `${window.location.pathname}?${next}` : window.location.pathname;
     window.history.replaceState(null, '', url);
-  }, [filters, viewMode]);
+  }, [filters, viewMode, activeBounds]);
 
 /*
     Feature 9 — `Show N places`, refreshed on every toggle BEFORE anything is
@@ -473,6 +516,14 @@ function ResultsContent() {
       params.set('sort_by', 'price');
       params.set('sort_order', 'asc');
 
+      // Feature 14 — quantised so the URL, the request and the edge-cache key
+      // are all the same string.
+      if (activeBounds) {
+        for (const [k, v] of Object.entries(boundsToParams(activeBounds))) {
+          params.set(k, v);
+        }
+      }
+
       const res = await fetch(`/api/listings?${params.toString()}`);
       if (!res.ok) {
         const detail = await res.text().catch(() => '');
@@ -487,7 +538,7 @@ function ResultsContent() {
     } finally {
       setLoading(false);
     }
-  }, [filters]);
+  }, [filters, activeBounds]);
 
   // Fetch listings whenever the memoized fetchListings identity changes
   // (i.e. filters). Standard fetch-on-deps pattern; the inner
@@ -517,6 +568,69 @@ function ResultsContent() {
     be more moving parts than the feature has.
   */
   const [hoveredListingId, setHoveredListingId] = useState(null);
+
+  /*
+    Feature 14 — the map-move handler, debounced 300ms to match the two
+    existing debounces on this page (fetchDistribution and fetchPendingCount).
+
+    What the 300ms governs here is DIFFERENT, and worth being explicit about:
+    it delays when the `Search this area` button is allowed to APPEAR, not when
+    anything refetches. Nothing touches the API until the student clicks. The
+    debounce exists so the button does not flicker in and out while a pan is
+    still settling.
+
+    Leaflet's `moveend` has already coalesced the gesture; this coalesces the
+    momentum scroll that can follow it on a trackpad.
+  */
+  const pendingViewportRef = useRef(null);
+  const [viewportTick, setViewportTick] = useState(0);
+
+  const handleViewportChange = useCallback((bounds, { userInitiated } = {}) => {
+    pendingViewportRef.current = { bounds, userInitiated };
+    setViewportTick((n) => n + 1);
+  }, []);
+
+  useEffect(() => {
+    if (!pendingViewportRef.current) return undefined;
+    const id = setTimeout(() => {
+      const { bounds, userInitiated } = pendingViewportRef.current;
+      setMapBounds(bounds);
+      /*
+        A settle the student did NOT cause — initial layout, the sticky column
+        being measured — re-baselines silently, so it can never be mistaken for
+        a pan and offer `Search this area` on page load. A real gesture leaves
+        the baseline alone so the drift it created is what the button reacts to.
+
+        Done inside the timeout rather than in its own effect because as a
+        separate effect it is a synchronous setState in an effect body, which
+        this repo's React Compiler lint rules reject.
+      */
+      setSearchBaseline((prev) => (userInitiated && prev ? prev : bounds));
+    }, 300);
+    return () => clearTimeout(id);
+  }, [viewportTick]);
+
+  const searchThisArea = useCallback(() => {
+    if (!mapBounds) return;
+    setActiveBounds(mapBounds);
+    setSearchBaseline(mapBounds);
+  }, [mapBounds]);
+
+  // `Search all of Thessaloniki` — drop the box, keep the baseline at what the
+  // student is actually looking at so the button does not immediately re-offer.
+  const searchWholeCity = useCallback(() => {
+    setActiveBounds(null);
+    setSearchBaseline(mapBounds);
+  }, [mapBounds]);
+
+  const showSearchThisArea =
+    boundsDrift(searchBaseline, mapBounds) > BOUNDS_DRIFT_THRESHOLD;
+
+
+  // The empty grid only means "nothing in THIS BOX" when a box is applied.
+  // Without one it is the ordinary no-matches case, and telling a student to
+  // zoom out would be advice that cannot help them.
+  const boundsEmpty = !loading && !error && listings.length === 0 && activeBounds !== null;
 
   const loaderVisible = showLoader && loading;
 
@@ -555,9 +669,17 @@ function ResultsContent() {
         <div>
           <p className="label-caps text-yellow">{t('eyebrow')}</p>
           <h1 className="mt-2 font-display text-3xl md:text-4xl text-night leading-tight">
+            {/*
+              When a map box is what emptied the grid, the generic
+              "No matches for these filters" actively contradicts the empty
+              state directly beneath it, which says the area is the reason.
+              Same count, different cause, so it needs its own line.
+            */}
             {loading
               ? t('titleLoading')
-              : t('titleTemplate', { count: listings.length })}
+              : boundsEmpty
+                ? t('titleEmptyArea')
+                : t('titleTemplate', { count: listings.length })}
           </h1>
         </div>
 
@@ -686,12 +808,20 @@ function ResultsContent() {
         {/* Main content */}
         <div className="min-w-0">
           {/* Map — mobile only; the desktop map is the sticky column. */}
-          {viewMode === 'map' && !loading && !error && (
-            <div style={{ height: '70vh', minHeight: 420 }} className="lg:hidden mb-6 rounded-card overflow-hidden border border-night/10">
+          {/* Same reasoning as the desktop column: mounted through `loading` so
+              a search cannot reset the student's viewport. */}
+          {viewMode === 'map' && !error && (
+            <div style={{ height: '70vh', minHeight: 420 }} className="relative lg:hidden mb-6 rounded-card overflow-hidden border border-night/10">
               <ListingsMap
                 listings={listings}
                 hoveredListingId={hoveredListingId}
                 onPinHover={setHoveredListingId}
+                onViewportChange={handleViewportChange}
+              />
+              <SearchThisAreaButton
+                visible={showSearchThisArea}
+                onClick={searchThisArea}
+                loading={loading}
               />
             </div>
           )}
@@ -745,7 +875,13 @@ function ResultsContent() {
                 </div>
               )}
 
-              {!loading && !error && listings.length === 0 && (
+              {/* Trap C from the spec: at current inventory a half-screen pan
+                  returns zero results, and a blank grid reads as "we have
+                  nothing" rather than "nothing HERE". The bounds case gets its
+                  own copy and its own one-click way out. */}
+              {boundsEmpty && <MapAreaEmptyState onReset={searchWholeCity} />}
+
+              {!loading && !error && listings.length === 0 && !boundsEmpty && (
                 <div className="text-center py-20">
                   <p className="font-display text-2xl text-night mb-2">
                     No matches yet.
@@ -774,16 +910,38 @@ function ResultsContent() {
           yet doing useful work — it earns its space as listings grow.
         */}
         <aside className="hidden lg:block lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
-          {!loading && !error && (
-            <div className="h-full rounded-card overflow-hidden border border-night/10">
+          {/*
+            Mounted through `loading`, NOT gated on it.
+
+            The map used to live behind `{!loading && ...}`, which unmounted and
+            remounted it on every fetch — and a remounted MapContainer starts at
+            the default centre and zoom. That was survivable when the map only
+            reflected results; with Feature 14 it breaks the feature outright:
+            the student pans somewhere, hits `Search this area`, and the map
+            jumps back to the city centre while the URL still describes the box
+            they can no longer see. Observed, then fixed.
+
+            `listings` is not cleared until the new response lands, so the
+            previous pins stay put during the fetch instead of flashing empty.
+
+            `relative` anchors the Search-this-area control, which sits over the
+            tiles at z-[1000] — above Leaflet's own panes, which top out ~700.
+          */}
+          {!error ? (
+            <div className="relative h-full rounded-card overflow-hidden border border-night/10">
               <ListingsMap
                 listings={listings}
                 hoveredListingId={hoveredListingId}
                 onPinHover={setHoveredListingId}
+                onViewportChange={handleViewportChange}
+              />
+              <SearchThisAreaButton
+                visible={showSearchThisArea}
+                onClick={searchThisArea}
+                loading={loading}
               />
             </div>
-          )}
-          {(loading || error) && (
+          ) : (
             <div className="h-full rounded-card border border-night/10 bg-parchment" />
           )}
         </aside>
