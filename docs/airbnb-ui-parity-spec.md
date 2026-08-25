@@ -1079,7 +1079,16 @@ This is an **API and schema change**, not a UI change. Requirements:
    extends the existing `replaceState` pattern in `results/page.js`.
 4. **Debounced map-move handler**, matching the existing 300ms debounce.
 
-#### Three schema traps found while scoping this
+#### Three schema traps found while scoping this — all now resolved
+
+> **Status, 2026-08-25.** A and B were fixed by `106_coords_not_null.sql`
+> (shipped as S18 in #392): `lat`/`lng` are NOT NULL and the
+> Thessaloniki-hardcoded CHECK is replaced by a global one. **Verified applied
+> to prod**, not just present in the repo — prod carries migration drift, so
+> repo presence is not evidence. C is built: see `MapAreaEmptyState`.
+> The bbox index itself is `107_location_coords_index.sql`, numbered off
+> prod's highest *applied* migration.
+
 
 **A. `lat` / `lng` are nullable** (post-migration 014). Any listing without
 coordinates is **invisible to a bounds query** — it silently vanishes the
@@ -1100,10 +1109,10 @@ returns zero results. Mitigation — an explicit empty state
 (*"No stays in this area"* + a `Zoom out` / `Search all of Thessaloniki`
 action) rather than a blank grid.
 
-**Open sub-decision:** automatic refetch on every map move, or a
-`Search this area` button the student opts into. Airbnb does automatic.
-At current inventory the manual button is far more forgiving. Not yet
-decided.
+**Sub-decision — RESOLVED, ship the `Search this area` button.** Decided
+2026-08-08 (§15), re-confirmed with measurements 2026-08-24, built 2026-08-25.
+Automatic refetch is **not** built and is not to be added behind a flag. See
+§15 for the full reasoning and the revisit trigger.
 
 **Adds:** a new backlog item, **S17 — bounds search (API + migration)**.
 
@@ -2494,18 +2503,16 @@ most work. If either reads as an empty square rather than a tinted one on a
 white card, deepen its background a few percent — **do not shift the hue**,
 which would break the family.
 
-**Feature 14 — automatic refetch: cost analysed, still the founder's call.**
+**Feature 14 — automatic refetch vs `Search this area`.**
 
 Money is not the constraint. Worker invocations are ~$0.30/million and an
 indexed `(lat, lng)` bbox query is sub-10ms at any realistic inventory. Two
 real costs:
 
-1. **It defeats edge caching.** `/api/listings/price-distribution` is
-   edge-cached per filter combination because combos repeat. A bounding box has
-   effectively unlimited distinct values — every few pixels of pan is a new key
-   — so every refetch becomes a cache miss to origin. **Mitigation: quantise
-   the bbox** (round to ~3 dp, or snap to a tile grid) so keys repeat. That is
-   a design step, not a config flag.
+1. **It defeats edge caching.** A bounding box has effectively unlimited
+   distinct values — every few pixels of pan is a new key — so every refetch
+   becomes a cache miss to origin. **Mitigation: quantise the bbox** (round to
+   ~3 dp, or snap to a tile grid) so keys repeat.
 2. **List churn.** The grid re-renders on every map settle, so cards reorder
    under the cursor mid-pan. More irritating than latency, and the usual
    complaint about map search.
@@ -2513,9 +2520,46 @@ real costs:
 Plus the known sparse-inventory case: small pans return empty grids.
 
 **✅ DECIDED 2026-08-08 — ship the `Search this area` button.** One deliberate
-request at a settled position: cacheable, no churn, no empty-grid surprise. No
-bbox quantisation needed while the user opts in at a settled position. Automatic
-refetch is not built. Revisit when Thessaloniki is dense.
+request at a settled position: cacheable, no churn, no empty-grid surprise.
+Automatic refetch is not built.
+
+**✅ RE-CONFIRMED 2026-08-24, with measurements** (prod `studentx.uk` + live
+Supabase). These are measured, not estimated, and they are what dates the
+decision:
+
+- All 3 listings sit in a **0.98 × 1.16 km** box. The desktop map pane is
+  ~471 × 672 px, which at the default zoom 13 is **6.8 × 9.8 km**. The entire
+  inventory is **1.7% of the visible map**, and panning just over half a pane
+  width returns zero results. With automatic, the dominant experience at
+  current inventory is watching the grid empty itself.
+- `/api/listings` on prod takes **0.35–1.17s** for a unique URL. Automatic
+  costs 300ms debounce + ~0.9s per settled move ≈ **1.2s of grid churn per
+  pan**; the button costs the same 1.2s but only when asked for — the
+  difference between "lag" and "it's working".
+- Request multiplier is roughly **5–10×** (~15–40 map moves per browsing
+  session vs ~2–5 deliberate clicks).
+- **Egress is the real cost, and it is the student's mobile data.** There is
+  no `.limit()` on `/api/listings`, so payload scales linearly at ~6.0
+  KB/listing: 0.02 MB at 3 listings, **0.59 MB at 100**, 1.76 MB at 300.
+  Automatic × 20 pans at 100 listings is ~12 MB per session.
+- Money is **not** the deciding factor and nobody should claim it is: at
+  current traffic both options sit well inside a $5/mo Workers plan.
+
+**⏳ WHEN THIS EXPIRES — revisit automatic once Thessaloniki passes ~100
+listings AND Feature 15 (pagination, 18/page) has landed.** At that density
+the inventory fills a meaningful fraction of the pane and automatic starts
+earning its cost. Until both are true, this stays decided.
+
+**↩️ SUPERSEDED — bbox quantisation IS built, from day one.** The 2026-08-08
+note above concluded "no bbox quantisation needed while the user opts in at a
+settled position". That reasoning is about the request COUNT and does not
+reach the cache KEY: two students settling on "the city centre" still produce
+two different keys unless the value is snapped. Bounds are quantised to 3 dp
+(~110m) and, per the 2026-08-24 handoff, in the URL from the start — cheap
+now, annoying to retrofit once bounds are in shareable links. Quantisation
+expands **outward** (floor the minimums, ceil the maximums) so the queried box
+is always a superset of the visible one; rounding to nearest could drop a
+listing whose pin is visibly on screen. See `src/lib/mapBounds.js`.
 
 **This closes the final open sub-decision. All 59 features and every sub-decision
 are now resolved.**

@@ -749,7 +749,13 @@
       "removeDealbreaker": "Remove {label}",
       "featuredTitle": "Aristotle Medical Housing Programme",
       "featuredBody": "Vetted landlords, walkable to the School of Medicine, fair rent — handpicked for incoming first-years.",
-      "featuredCta": "See programme listings"
+      "featuredCta": "See programme listings",
+      "searchThisArea": "Search this area",
+      "searchThisAreaLoading": "Searching…",
+      "mapEmptyTitle": "No stays in this area",
+      "mapEmptyBody": "Try zooming out, or search the whole city.",
+      "mapEmptyAction": "Search all of Thessaloniki",
+      "titleEmptyArea": "No stays in this map area"
     },
     "filtersModal": {
       "title": "Filters",

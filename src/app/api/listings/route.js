@@ -11,6 +11,7 @@ import {
 } from "@/lib/listingFilters";
 import { stayDurationMonths, durationFitsListing } from "@/lib/bookingDates";
 import { listingIdsBlockedInRange } from "@/lib/bookingBlocks";
+import { parseBoundsParams, applyBoundsFilter } from "@/lib/mapBounds";
 
 const LISTING_SELECT = `
   listing_id,
@@ -66,6 +67,18 @@ export async function GET(request) {
       return NextResponse.json({ error: f.error }, { status: 400 });
     }
 
+    /*
+      Map-bounds search (parity Feature 14). Parsed here rather than in
+      parseListingFilters because /api/listings is the ONLY consumer — the
+      price histogram deliberately describes the whole search, not the current
+      viewport (issue #218), so scoping it to the map would make the chart
+      disagree with the question it answers.
+    */
+    const { bounds, error: boundsError } = parseBoundsParams(searchParams);
+    if (boundsError) {
+      return NextResponse.json({ error: boundsError }, { status: 400 });
+    }
+
     const minBudget = searchParams.get("min_budget");
     const maxBudget = searchParams.get("max_budget");
 
@@ -102,6 +115,7 @@ export async function GET(request) {
     let query = supabase.from("listings").select(LISTING_SELECT);
     query = query.eq("listing_status", "active");
     query = applyListingFilters(query, f, { amenityListingIds });
+    query = applyBoundsFilter(query, bounds);
 
     // Filter: min budget
     if (minBudget) {
@@ -139,6 +153,9 @@ export async function GET(request) {
       let fallbackQuery = supabase.from("listings").select(LISTING_SELECT_FALLBACK);
       fallbackQuery = fallbackQuery.eq("listing_status", "active");
       fallbackQuery = applyListingFilters(fallbackQuery, f, { fallback: true, amenityListingIds });
+      // The fallback SELECT keeps the `location!inner` join, so bounds are
+      // honoured on this path too — unlike verified_only, which cannot be.
+      fallbackQuery = applyBoundsFilter(fallbackQuery, bounds);
       if (minBudget) fallbackQuery = fallbackQuery.gte("rent.monthly_price", Number(minBudget));
       if (maxBudget) fallbackQuery = fallbackQuery.lte("rent.monthly_price", Number(maxBudget));
 
