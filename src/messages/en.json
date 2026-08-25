@@ -755,7 +755,11 @@
       "mapEmptyTitle": "No stays in this area",
       "mapEmptyBody": "Try zooming out, or search the whole city.",
       "mapEmptyAction": "Search all of Thessaloniki",
-      "titleEmptyArea": "No stays in this map area"
+      "titleEmptyArea": "No stays in this map area",
+      "paginationLabel": "Search results pagination",
+      "paginationPrevious": "Previous page",
+      "paginationNext": "Next page",
+      "paginationGoToPage": "Go to page {page}"
     },
     "filtersModal": {
       "title": "Filters",

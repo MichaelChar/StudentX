@@ -16,6 +16,7 @@ import HeaderSearch from '@/components/property/HeaderSearch';
 import DateRangePicker from '@/components/property/DateRangePicker';
 import SearchThisAreaButton from '@/components/property/SearchThisAreaButton';
 import MapAreaEmptyState from '@/components/property/MapAreaEmptyState';
+import ResultsPagination from '@/components/property/ResultsPagination';
 import { applyFlexDays, todayYmd } from '@/lib/dateRange';
 import { clearFilters } from '@/lib/filtersModal';
 import { formatPropertyType } from '@/lib/propertyType';
@@ -32,6 +33,7 @@ import {
   boundsDrift,
   BOUNDS_DRIFT_THRESHOLD,
 } from '@/lib/mapBounds';
+import { parsePageParam } from '@/lib/listingPagination';
 
 /*
   Propylaea results page — matches page 06 of the reference design.
@@ -281,6 +283,24 @@ function ResultsContent() {
     () => parseBoundsParams(searchParams).bounds ?? null,
   );
   const [mapBounds, setMapBounds] = useState(null);
+
+  /*
+    Feature 15 — numbered pagination, 18/page. Seeded from the URL so a shared
+    or bookmarked link lands on the same page, and so returning from a listing
+    restores the page the student was on rather than the top of the list.
+  */
+  const [page, setPage] = useState(() => parsePageParam(searchParams.get('page')));
+  const [totalPages, setTotalPages] = useState(1);
+  /*
+    Total across ALL pages, not the length of the current one.
+
+    The heading reads "N listings in Thessaloniki". Before pagination that was
+    `listings.length`, which was the whole result set; with 18/page it silently
+    became "the size of this page" — a 40-result search would have announced
+    "18 listings" on page 1 and "4 listings" on page 3. Caught in the browser
+    at 2/page, where it read "2 listings" over 3 real ones.
+  */
+  const [totalCount, setTotalCount] = useState(0);
   const [searchBaseline, setSearchBaseline] = useState(
     () => parseBoundsParams(searchParams).bounds ?? null,
   );
@@ -420,6 +440,9 @@ function ResultsContent() {
         params.set(k, v);
       }
     }
+    // Page 1 is the default, so it stays out of the URL — a clean /results is
+    // page 1, and `?page=1` would be a second URL for the same content.
+    if (page > 1) params.set('page', String(page));
     const next = params.toString();
     const current = window.location.search.replace(/^\?/, '');
     if (next === current) return;
@@ -443,7 +466,7 @@ function ResultsContent() {
       Same pattern the overlay module already uses for its own push.
     */
     window.history.replaceState(window.history.state, '', url);
-  }, [filters, viewMode, activeBounds]);
+  }, [filters, viewMode, activeBounds, page]);
 
 /*
     Feature 9 — `Show N places`, refreshed on every toggle BEFORE anything is
@@ -542,6 +565,11 @@ function ResultsContent() {
         }
       }
 
+      // Feature 15 — sending `page` is what opts this caller into pagination;
+      // the API leaves other consumers (DirectoryCarousel, the canary) on the
+      // full-list response.
+      params.set('page', String(page));
+
       const res = await fetch(`/api/listings?${params.toString()}`);
       if (!res.ok) {
         const detail = await res.text().catch(() => '');
@@ -549,6 +577,17 @@ function ResultsContent() {
       }
       const data = await res.json();
       setListings(data.listings || []);
+      setTotalPages(data.total_pages || 1);
+      setTotalCount(
+        typeof data.total === 'number' ? data.total : (data.listings || []).length,
+      );
+      /*
+        Trust the API's clamped page over our own. `?page=99` on a 2-page
+        search comes back as page 2 with page-2 results; if the URL kept
+        saying 99 the pagination control would highlight a page that does not
+        exist and Next would refetch the same clamp forever.
+      */
+      if (typeof data.page === 'number' && data.page !== page) setPage(data.page);
     } catch (err) {
       console.error('fetchListings failed:', err);
       setError(true);
@@ -556,7 +595,7 @@ function ResultsContent() {
     } finally {
       setLoading(false);
     }
-  }, [filters, activeBounds]);
+  }, [filters, activeBounds, page]);
 
   // Fetch listings whenever the memoized fetchListings identity changes
   // (i.e. filters). Standard fetch-on-deps pattern; the inner
@@ -628,6 +667,33 @@ function ResultsContent() {
     return () => clearTimeout(id);
   }, [viewportTick]);
 
+  /*
+    Any change to WHAT is being searched resets to page 1. Staying on page 4
+    while the filters change means landing on page 4 of a different, possibly
+    shorter result set — usually an empty grid that reads as "no matches" when
+    there are plenty on page 1.
+
+    Deliberately keyed on filters + bounds and NOT on `page` itself, or every
+    page change would immediately reset itself.
+  */
+  const resultSetKey = useMemo(
+    () => JSON.stringify([filters, activeBounds]),
+    [filters, activeBounds],
+  );
+  const [seenResultSetKey, setSeenResultSetKey] = useState(resultSetKey);
+  if (seenResultSetKey !== resultSetKey) {
+    /*
+      Adjusting state during render — React's documented pattern for deriving
+      state from a change, and the reason it is state rather than a ref: this
+      repo's React Compiler rules reject reading or writing a ref during
+      render, and an effect would be a synchronous setState in an effect body,
+      which they also reject. React re-renders before committing, so there is
+      no wasted paint.
+    */
+    setSeenResultSetKey(resultSetKey);
+    if (page !== 1) setPage(1);
+  }
+
   const searchThisArea = useCallback(() => {
     if (!mapBounds) return;
     setActiveBounds(mapBounds);
@@ -697,7 +763,7 @@ function ResultsContent() {
               ? t('titleLoading')
               : boundsEmpty
                 ? t('titleEmptyArea')
-                : t('titleTemplate', { count: listings.length })}
+                : t('titleTemplate', { count: totalCount })}
           </h1>
         </div>
 
@@ -891,6 +957,25 @@ function ResultsContent() {
                     </div>
                   ))}
                 </div>
+              )}
+
+              {/*
+                Feature 15 — numbered pagination, not infinite scroll. Renders
+                nothing at one page. Sits below the grid so the site footer
+                stays reachable, which is half the point of not using infinite
+                scroll.
+              */}
+              {!loading && !error && listings.length > 0 && (
+                <ResultsPagination
+                  page={page}
+                  totalPages={totalPages}
+                  onPageChange={(next) => {
+                    setPage(next);
+                    // Airbnb returns you to the top of the results on a page
+                    // change; landing mid-grid on page 2 reads as a broken jump.
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                />
               )}
 
               {/* Trap C from the spec: at current inventory a half-screen pan
