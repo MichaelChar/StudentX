@@ -210,3 +210,52 @@ describe('applyListingFilterResiduals', () => {
     expect(out.map((r) => r.listing_id)).toEqual(['ok']);
   });
 });
+
+/*
+  S15 — the commute filter. `max_walk_minutes` is the only filter param that
+  is meaningless on its own: a walk time is measured TO somewhere, so it is
+  rejected without a faculty rather than silently ignored.
+*/
+describe('parseListingFilters — max_walk_minutes (S15)', () => {
+  it('is null when absent', () => {
+    expect(parseListingFilters(sp('faculty=auth-medical')).maxWalkMinutes).toBeNull();
+  });
+
+  it('treats an empty value as absent rather than as zero', () => {
+    const f = parseListingFilters(sp('faculty=auth-medical&max_walk_minutes='));
+    expect(f.error).toBeUndefined();
+    expect(f.maxWalkMinutes).toBeNull();
+  });
+
+  it('parses a valid value', () => {
+    expect(
+      parseListingFilters(sp('faculty=auth-medical&max_walk_minutes=15')).maxWalkMinutes,
+    ).toBe(15);
+  });
+
+  // Mirrors the existing rule for sort_by='walk_minutes'.
+  it('requires a faculty, and says so', () => {
+    expect(parseListingFilters(sp('max_walk_minutes=15')).error).toContain('faculty');
+  });
+
+  it('rejects non-positive and non-integer values', () => {
+    for (const bad of ['0', '-5', 'abc', '1.5', 'NaN', 'Infinity']) {
+      expect(
+        parseListingFilters(sp(`faculty=auth-medical&max_walk_minutes=${bad}`)).error,
+      ).toContain('max_walk_minutes');
+    }
+  });
+
+  // A sanity ceiling, not a product rule — clamping silently would hide a typo.
+  it('rejects an absurd ceiling rather than clamping it', () => {
+    const f = parseListingFilters(sp('faculty=auth-medical&max_walk_minutes=999'));
+    expect(f.error).toContain('240');
+    expect(f.maxWalkMinutes).toBeUndefined();
+  });
+
+  it('accepts exactly the ceiling', () => {
+    expect(
+      parseListingFilters(sp('faculty=auth-medical&max_walk_minutes=240')).maxWalkMinutes,
+    ).toBe(240);
+  });
+});

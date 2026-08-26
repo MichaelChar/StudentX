@@ -17,6 +17,7 @@ import DateRangePicker from '@/components/property/DateRangePicker';
 import SearchThisAreaButton from '@/components/property/SearchThisAreaButton';
 import MapAreaEmptyState from '@/components/property/MapAreaEmptyState';
 import ResultsPagination from '@/components/property/ResultsPagination';
+import CommuteFilterChip from '@/components/property/CommuteFilterChip';
 import { applyFlexDays, todayYmd } from '@/lib/dateRange';
 import { clearFilters } from '@/lib/filtersModal';
 import { formatPropertyType } from '@/lib/propertyType';
@@ -152,6 +153,22 @@ function buildFilterParams(filters, { includeBudget = true } = {}) {
   // `exclude_amenities` requires ALL of these (misnomer — see
   // lib/listingFilters.js). `Bills included` has its own dedicated flag, so it
   // is split out rather than sent as an amenity name.
+  /*
+    Commute (S15). `faculty` alone SCOPES which distance the API returns — it
+    deliberately excludes nothing — so sending it is safe even with no walk
+    limit, and it is what makes the card meta line show the student's own
+    faculty rather than the nearest two.
+
+    `max_walk_minutes` is the part that actually narrows the results, and the
+    API rejects it without a faculty, so it is only sent alongside one.
+  */
+  if (filters.facultyId) {
+    params.set('faculty', filters.facultyId);
+    if (filters.maxWalkMinutes) {
+      params.set('max_walk_minutes', String(filters.maxWalkMinutes));
+    }
+  }
+
   const amenities = filters.selectedAmenities.filter((a) => a !== 'Bills included');
   if (amenities.length > 0) params.set('exclude_amenities', amenities.join(','));
   if (filters.selectedAmenities.includes('Bills included'))
@@ -346,8 +363,48 @@ function ResultsContent() {
         : 0,
       moveIn: isValidDateString(moveInRaw) ? moveInRaw : '',
       moveOut: isValidDateString(moveOutRaw) ? moveOutRaw : '',
+      /*
+        Commute (S15). Seeded from the URL so a shared "within 15 min of my
+        faculty" link reproduces that search, and so the quiz can hand a
+        faculty straight to results.
+
+        Only shape-validated here — an unknown faculty id is left alone rather
+        than dropped. The API validates it properly, and silently discarding a
+        param the student can see in their own URL is worse than an empty grid
+        that explains itself.
+      */
+      facultyId: /^[a-z0-9-]+$/.test(searchParams.get('faculty') || '')
+        ? searchParams.get('faculty')
+        : null,
+      maxWalkMinutes: [10, 15, 20, 30].includes(Number(searchParams.get('max_walk_minutes')))
+        ? Number(searchParams.get('max_walk_minutes'))
+        : null,
     };
   });
+
+  /*
+    Faculties for the commute chip. Fetched once — the list is static reference
+    data (13 rows) and /api/faculties is cached for a day. Failure leaves the
+    array empty, which the chip renders as a loading line rather than an empty
+    popover.
+  */
+  const [faculties, setFaculties] = useState([]);
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch('/api/faculties');
+        if (!res.ok) return;
+        const data = await res.json();
+        if (!cancelled) setFaculties(data.faculties || []);
+      } catch {
+        // Chip stays in its loading state; the rest of the page is unaffected.
+      }
+    })();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     fetch('/api/neighborhoods')
@@ -443,6 +500,12 @@ function ResultsContent() {
     // Page 1 is the default, so it stays out of the URL — a clean /results is
     // page 1, and `?page=1` would be a second URL for the same content.
     if (page > 1) params.set('page', String(page));
+    if (filters.facultyId) {
+      params.set('faculty', filters.facultyId);
+      if (filters.maxWalkMinutes) {
+        params.set('max_walk_minutes', String(filters.maxWalkMinutes));
+      }
+    }
     const next = params.toString();
     const current = window.location.search.replace(/^\?/, '');
     if (next === current) return;
@@ -715,6 +778,24 @@ function ResultsContent() {
   // Without one it is the ordinary no-matches case, and telling a student to
   // zoom out would be advice that cannot help them.
   const boundsEmpty = !loading && !error && listings.length === 0 && activeBounds !== null;
+  /*
+    Same reasoning as boundsEmpty: when the COMMUTE limit is what emptied the
+    grid, the generic "try widening your budget or selecting more
+    neighborhoods" is actively wrong — the student narrowed by walk time and
+    neither budget nor neighborhood is why they see nothing. Naming the real
+    cause, and offering the control that caused it, is the difference between
+    an explicable empty state and a dead end.
+
+    Ordered after boundsEmpty so a map-scoped search still explains itself as
+    a map problem; both at once is rare and the map is the more recent action.
+  */
+  const commuteEmpty =
+    !loading
+    && !error
+    && listings.length === 0
+    && !boundsEmpty
+    && Boolean(filters.facultyId)
+    && Boolean(filters.maxWalkMinutes);
 
   const loaderVisible = showLoader && loading;
 
@@ -763,7 +844,9 @@ function ResultsContent() {
               ? t('titleLoading')
               : boundsEmpty
                 ? t('titleEmptyArea')
-                : t('titleTemplate', { count: totalCount })}
+                : commuteEmpty
+                  ? t('commuteEmptyTitle', { minutes: filters.maxWalkMinutes })
+                  : t('titleTemplate', { count: totalCount })}
           </h1>
         </div>
 
@@ -861,6 +944,37 @@ function ResultsContent() {
             </span>
           )}
         </Button>
+
+        {/*
+          Commute (S15) — pinned LEFT of the scrolling amenities, next to
+          Filters, because it is the one filter that is StudentX's own.
+
+          Airbnb's row is amenities only, which is exactly how the
+          differentiator fell out of the UI when the sidebar went (Feature 7):
+          `faculty_distances` is precomputed and healed nightly by a cron, the
+          API has always supported `faculty`, and yet no control anywhere let a
+          student choose one. Parity does not mean deleting the thing Airbnb
+          has no equivalent for — see spec §5.2.
+
+          Outside the scroll container on purpose: a student who never
+          horizontally scrolls must still see it.
+        */}
+        <div className="shrink-0">
+          <CommuteFilterChip
+            faculties={faculties}
+            value={{
+              facultyId: filters.facultyId,
+              maxMinutes: filters.maxWalkMinutes,
+            }}
+            onChange={(next) =>
+              setFilters((p) => ({
+                ...p,
+                facultyId: next.facultyId,
+                maxWalkMinutes: next.maxMinutes,
+              }))
+            }
+          />
+        </div>
 
         {/* `overflow-x-auto` not a wrap: Airbnb's row scrolls, and wrapping ten
             chips would push the grid down a line on narrow desktops. */}
@@ -984,7 +1098,31 @@ function ResultsContent() {
                   own copy and its own one-click way out. */}
               {boundsEmpty && <MapAreaEmptyState onReset={searchWholeCity} />}
 
-              {!loading && !error && listings.length === 0 && !boundsEmpty && (
+              {commuteEmpty && (
+                <div className="text-center py-20">
+                  <p className="font-display text-2xl text-night mb-2">
+                    {t('commuteEmptyTitle', { minutes: filters.maxWalkMinutes })}
+                  </p>
+                  <p className="text-night/60 mb-6">
+                    {t('commuteEmptyBody', {
+                      faculty:
+                        faculties.find((f) => f.id === filters.facultyId)?.name
+                        ?? t('commuteChip'),
+                    })}
+                  </p>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      setFilters((p) => ({ ...p, maxWalkMinutes: null }))
+                    }
+                    className="label-caps text-blue hover:text-night focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded-control"
+                  >
+                    {t('commuteEmptyAction')} &rarr;
+                  </button>
+                </div>
+              )}
+
+              {!loading && !error && listings.length === 0 && !boundsEmpty && !commuteEmpty && (
                 <div className="text-center py-20">
                   <p className="font-display text-2xl text-night mb-2">
                     No matches yet.
