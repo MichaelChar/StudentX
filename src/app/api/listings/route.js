@@ -213,6 +213,36 @@ export async function GET(request) {
       );
     }
 
+    /*
+      Commute filter (S15) — "within N minutes' walk of my faculty".
+
+      Filtered HERE in JS, not in SQL, because `faculty_distances` is a plain
+      embed rather than an `!inner` join: a PostgREST filter on an embedded
+      column narrows the embedded ROWS, it does not exclude the parent listing.
+      That is exactly what `?faculty=` wants (it scopes which distance is
+      shown, and deliberately hides nothing), but it is the opposite of what a
+      max-walk filter wants. Switching the embed to `!inner` would silently
+      change `?faculty=` from scoping to excluding, so the narrow fix stays
+      here — the same reasoning as the ground-floor tag check above.
+
+      Runs BEFORE the sort and the pagination slice, so page 1 is the top
+      ranked matches and `total` counts matches rather than candidates.
+
+      `f.faculty` is guaranteed present — parseListingFilters rejects
+      max_walk_minutes without it — so the scoped embed holds at most the one
+      faculty, and a listing with no row for it is correctly excluded.
+    */
+    if (f.maxWalkMinutes !== null) {
+      results = results.filter((listing) =>
+        (listing.faculty_distances ?? []).some(
+          (fd) =>
+            fd.faculty_id === f.faculty &&
+            typeof fd.walk_minutes === "number" &&
+            fd.walk_minutes <= f.maxWalkMinutes,
+        ),
+      );
+    }
+
     results.sort((a, b) =>
       compareListingsByRank(a, b, { sortBy: f.sortBy, sortOrder: f.sortOrder }),
     );

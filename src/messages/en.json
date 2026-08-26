@@ -759,7 +759,20 @@
       "paginationLabel": "Search results pagination",
       "paginationPrevious": "Previous page",
       "paginationNext": "Next page",
-      "paginationGoToPage": "Go to page {page}"
+      "paginationGoToPage": "Go to page {page}",
+      "commuteChip": "Commute",
+      "commuteHeading": "Distance to your faculty",
+      "commuteFacultyLabel": "Faculty",
+      "commuteMaxWalkLabel": "Max walk time",
+      "commuteAnyMinutes": "Any",
+      "commuteMinutesOption": "{minutes} min",
+      "commuteChipSummary": "{faculty} · {minutes} min walk",
+      "commutePickFacultyFirst": "Choose a faculty first",
+      "commuteLoading": "Loading faculties…",
+      "commuteClear": "Clear",
+      "commuteEmptyTitle": "No stays within {minutes} minutes",
+      "commuteEmptyBody": "Nothing is that close to {faculty}. Try a longer walk time.",
+      "commuteEmptyAction": "Widen the walk time"
     },
     "filtersModal": {
       "title": "Filters",

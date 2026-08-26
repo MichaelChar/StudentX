@@ -50,6 +50,7 @@ function parseValidDate(value) {
  */
 export function parseListingFilters(searchParams) {
   const faculty = searchParams.get("faculty");
+  const maxWalkMinutesRaw = searchParams.get("max_walk_minutes");
   const types = searchParams.get("types");
   const neighborhoods = searchParams.get("neighborhoods");
   const excludeAmenities = searchParams.get("exclude_amenities");
@@ -121,6 +122,31 @@ export function parseListingFilters(searchParams) {
   if (faculty && !/^[a-z0-9-]+$/.test(faculty)) {
     return { error: "faculty must be a valid faculty ID (e.g. 'auth-main')" };
   }
+
+  /*
+    max_walk_minutes — "within N minutes' walk of MY faculty" (S15).
+
+    Requires `faculty` for the same reason sort_by='walk_minutes' does: a walk
+    time is measured to somewhere, and without a faculty there is no somewhere.
+    Rejected explicitly rather than ignored, so a caller that drops the faculty
+    gets told instead of silently receiving unfiltered results.
+  */
+  let maxWalkMinutes = null;
+  if (maxWalkMinutesRaw !== null && maxWalkMinutesRaw !== "") {
+    const n = Number(maxWalkMinutesRaw);
+    if (!Number.isInteger(n) || n <= 0) {
+      return { error: "max_walk_minutes must be a positive integer" };
+    }
+    // 240 is a sanity ceiling, not a product rule: anything beyond four hours'
+    // walk is a typo or a probe, and clamping silently would hide both.
+    if (n > 240) {
+      return { error: "max_walk_minutes must be 240 or less" };
+    }
+    if (!faculty) {
+      return { error: "max_walk_minutes requires a faculty param" };
+    }
+    maxWalkMinutes = n;
+  }
   if (types !== null && types.trim() === "") {
     return { error: "types must be a non-empty comma-separated list of property type names" };
   }
@@ -130,6 +156,7 @@ export function parseListingFilters(searchParams) {
 
   return {
     faculty,
+    maxWalkMinutes,
     types,
     neighborhoods,
     excludeAmenities,
