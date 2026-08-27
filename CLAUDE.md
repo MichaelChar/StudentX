@@ -421,6 +421,19 @@ to run the app or tests, copy `.env.local` into the worktree and symlink
 `node_modules`. Agents must use worktree-absolute paths in Edit/Write —
 relative or main-checkout paths silently modify the main working copy.
 
+**A symlinked `node_modules` supports `lint` and `test` but NOT `build`.**
+Next 16's Turbopack rejects it outright:
+
+```
+Symlink [project]/node_modules is invalid, it points out of the filesystem root
+```
+
+So don't ask a worktree agent for a green build, and don't read "build failed"
+from one as a regression — have it say which gate it actually ran. Either run
+the build yourself from the main checkout, or have the agent copy
+`node_modules` rather than symlink it (costs disk, works). Hit again 2026-08-27
+by an agent that worked around it on its own and reported the workaround.
+
 ## Common commands
 
 Local dev:
