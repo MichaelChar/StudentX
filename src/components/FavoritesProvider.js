@@ -13,6 +13,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { useAccessToken } from '@/lib/useAccessToken';
 import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import { safeNextPath } from '@/lib/safeNext';
 
@@ -208,18 +209,12 @@ function FavoriteAuthGate({ open, onClose }) {
         <p className="text-night/70 leading-relaxed mb-8">{tFav('gateBody')}</p>
 
         <div className="space-y-3">
-          <Link
-            href={`/student/signup${nextQuery}`}
-            className="inline-flex items-center justify-center w-full bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
-          >
+          <Button href={`/student/signup${nextQuery}`} className="w-full">
             {t('signUp')}
-          </Link>
-          <Link
-            href={`/student/login${nextQuery}`}
-            className="inline-flex items-center justify-center w-full border border-blue text-blue font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-blue hover:text-white transition-colors"
-          >
+          </Button>
+          <Button href={`/student/login${nextQuery}`} variant="secondary" className="w-full">
             {t('signIn')}
-          </Link>
+          </Button>
         </div>
 
         <p className="mt-6 text-sm text-night/50">

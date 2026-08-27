@@ -1,9 +1,9 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
 import GigCard from '@/components/GigCard';
 import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import { useGigFavorites } from '@/components/GigFavoritesProvider';
 
@@ -25,12 +25,9 @@ export default function SavedGigs({ gigs }) {
       <Card tone="parchment" className="p-12 text-center">
         <Icon name="heart" className="w-12 h-12 mx-auto text-night/30 mb-3" />
         <p className="font-display text-xl text-night/60 mb-5">{t('empty')}</p>
-        <Link
-          href="/gigs"
-          className="inline-flex items-center justify-center bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
-        >
+        <Button href="/gigs">
           {t('browse')}
-        </Link>
+        </Button>
       </Card>
     );
   }

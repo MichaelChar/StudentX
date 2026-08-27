@@ -1,9 +1,9 @@
 import { Suspense } from 'react';
 import { redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
 import { requireStudent } from '@/lib/requireStudent';
 import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import AccountChrome from '@/components/student/AccountChrome';
 import StudentBookingCard from '@/components/booking/StudentBookingCard';
@@ -97,12 +97,9 @@ async function BookingsSection({ locale }) {
       <Card tone="parchment" className="p-12 text-center">
         <Icon name="calendar" className="w-12 h-12 mx-auto text-night/30 mb-3" />
         <p className="font-display text-xl text-night/60 mb-5">{t('empty')}</p>
-        <Link
-          href="/property/thessaloniki/results"
-          className="inline-flex items-center justify-center bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
-        >
+        <Button href="/property/thessaloniki/results">
           {t('emptyCta')}
-        </Link>
+        </Button>
       </Card>
     );
   }
