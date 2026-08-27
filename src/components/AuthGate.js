@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import AuthGateRescue from '@/components/AuthGateRescue';
 import { hasAuthCookie } from '@/lib/requireStudent';
@@ -61,33 +62,21 @@ export default async function AuthGate({ next, locale, mode = 'guest' }) {
 
           {isWrongRole ? (
             <div className="space-y-3">
-              <Link
-                href={`/student/signup${nextQuery}`}
-                className="inline-flex items-center justify-center w-full bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
-              >
+              <Button href={`/student/signup${nextQuery}`} className="w-full">
                 {t('wrongRoleSwitch')}
-              </Link>
-              <Link
-                href="/property/thessaloniki/landlord/dashboard"
-                className="inline-flex items-center justify-center w-full border border-blue text-blue font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-blue hover:text-white transition-colors"
-              >
+              </Button>
+              <Button href="/property/thessaloniki/landlord/dashboard" variant="secondary" className="w-full">
                 {t('wrongRoleDashboard')}
-              </Link>
+              </Button>
             </div>
           ) : (
             <div className="space-y-3">
-              <Link
-                href={`/student/signup${nextQuery}`}
-                className="inline-flex items-center justify-center w-full bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
-              >
+              <Button href={`/student/signup${nextQuery}`} className="w-full">
                 {t('signUp')}
-              </Link>
-              <Link
-                href={`/student/login${nextQuery}`}
-                className="inline-flex items-center justify-center w-full border border-blue text-blue font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-blue hover:text-white transition-colors"
-              >
+              </Button>
+              <Button href={`/student/login${nextQuery}`} variant="secondary" className="w-full">
                 {t('signIn')}
-              </Link>
+              </Button>
             </div>
           )}
 

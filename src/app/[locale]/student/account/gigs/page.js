@@ -5,6 +5,7 @@ import { Link } from '@/i18n/navigation';
 import { requireStudent } from '@/lib/requireStudent';
 import { transformGig } from '@/lib/transformGig';
 import Card from '@/components/ui/Card';
+import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import AccountChrome from '@/components/student/AccountChrome';
 import SavedGigs from '@/components/student/SavedGigs';
@@ -139,12 +140,9 @@ async function InterestsSection({ locale }) {
       <Card tone="parchment" className="p-12 text-center">
         <Icon name="message" className="w-12 h-12 mx-auto text-night/30 mb-3" />
         <p className="font-display text-xl text-night/60 mb-5">{t('gigsInterestsEmpty')}</p>
-        <Link
-          href="/gigs"
-          className="inline-flex items-center justify-center bg-blue text-white font-sans font-semibold uppercase tracking-[0.08em] text-xs px-5 py-3 rounded hover:bg-night transition-colors"
-        >
+        <Button href="/gigs">
           {t('gigsInterestsCta')}
-        </Link>
+        </Button>
       </Card>
     );
   }
