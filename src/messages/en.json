@@ -1335,7 +1335,9 @@
       "loadError": "Couldn't load your saved listings. Try refreshing the page.",
       "gateTitle": "Sign in to save listings",
       "gateBody": "Create a free student account to build your shortlist and pick up right where you left off — it takes about a minute.",
-      "close": "Close"
+      "close": "Close",
+      "panelTitleCount": "{count, plural, one {# saved listing} other {# saved listings}}",
+      "emptyBody": "Tap the heart on any listing to keep it here while you compare."
     },
     "practice": {
       "back": "Semester 2",
