@@ -10,7 +10,7 @@ import { isProfileComplete } from '@/lib/studentProfileFields';
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import StudentProfileForm from '@/components/student/StudentProfileForm';
+import ProfileGateModal from '@/components/listing/ProfileGateModal';
 import {
   responseTimeBucket,
   RESPONSE_BUCKET_WITHIN_HOUR,
@@ -43,15 +43,27 @@ const ERROR_TO_KEY = {
  * Guest profile must be complete at request-to-book (not at signup). When
  * fields are missing we block submit and show the profile form inline.
  */
-export default function BookingWidget({ listing, nextPath }) {
+export default function BookingWidget({ listing, nextPath,
+  initialMoveIn = '',
+  initialMoveOut = '',
+}) {
   const t = useTranslations('propylaea.listing.booking');
   const tListing = useTranslations('listing');
   const tListingPage = useTranslations('propylaea.listing');
   const router = useRouter();
   const accessToken = useAccessToken();
 
-  const [moveIn, setMoveIn] = useState('');
-  const [moveOut, setMoveOut] = useState('');
+  /*
+    Seeded from the results search (Feature 33). A student who set a stay range
+    on results should not be asked for it again one page later; re-typing dates
+    is the single most annoying re-entry on this flow.
+
+    Lazy initialiser, not an effect: seeding in an effect would render one
+    frame with empty inputs and then correct it, and this repo's React Compiler
+    rules reject a synchronous setState in an effect body anyway.
+  */
+  const [moveIn, setMoveIn] = useState(initialMoveIn);
+  const [moveOut, setMoveOut] = useState(initialMoveOut);
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
@@ -213,20 +225,38 @@ export default function BookingWidget({ listing, nextPath }) {
     await submitBooking(accessToken);
   }
 
-  function handleProfileSaved(student) {
+  /*
+    Feature 33 — on save the modal closes and the booking CONTINUES, so the
+    student does not press "Request to book" twice.
+
+    Safe to submit straight through: handleSubmit validates the stay range and
+    the message BEFORE it ever reaches the profile gate, so by the time this
+    runs those are already known-good. Nothing here can submit a request the
+    student had not already completed.
+
+    An incomplete save leaves the modal open and does not submit — the student
+    is still mid-form, and closing it would lose their work.
+  */
+  async function handleProfileSaved(student) {
     setProfile(student);
-    if (isProfileComplete(student)) {
-      setNeedProfile(false);
-      setError('');
-    } else {
+    if (!isProfileComplete(student)) {
       setNeedProfile(true);
+      return;
     }
+    setNeedProfile(false);
+    setError('');
+    if (accessToken) await submitBooking(accessToken);
   }
 
   return (
     <>
       <aside>
-        <div className="lg:sticky lg:top-6">
+        {/*
+          Feature 33 — pinned at top: 80px (the measured offset), not the 24px
+          it used before. 80px clears the site header so the card does not
+          slide under it as the page scrolls.
+        */}
+        <div className="lg:sticky lg:top-20">
           <Card tone="white" className="p-6">
             <p className="font-display text-3xl text-blue">
               {listing.monthly_price != null ? (
@@ -345,30 +375,36 @@ export default function BookingWidget({ listing, nextPath }) {
                   </p>
                 </form>
 
-                {needProfile && accessToken ? (
-                  <div className="space-y-3">
-                    <div className="rounded-card border border-night/10 bg-parchment p-4">
-                      <p className="font-display text-lg text-night">{t('profileGateTitle')}</p>
-                      <p className="mt-1 text-sm text-night/60 leading-relaxed">
-                        {t('profileGateBody')}
-                      </p>
-                    </div>
-                    <StudentProfileForm
-                      initialStudent={profile}
-                      accessToken={accessToken}
-                      onSaved={handleProfileSaved}
-                      requireComplete
-                      showDisplayName={false}
-                      compact
-                      submitLabel={t('profileGateSave')}
-                    />
-                  </div>
-                ) : null}
               </div>
             )}
           </Card>
         </div>
       </aside>
+
+      {/*
+        Feature 33 — the profile gate is a MODAL, not an inline expansion.
+
+        It used to render StudentProfileForm inside the card. At 373px pinned
+        at top:80px that form either overflows the viewport or makes the card
+        scroll against itself, which breaks the sticky behaviour and the
+        compact shape the redesign is for. The card must never change height.
+
+        Modal supplies the backdrop, focus trap, Escape and — via its default
+        `historyEntry` — a history entry, so mobile back closes it. None of
+        that is reimplemented here.
+      */}
+      {accessToken ? (
+        <ProfileGateModal
+          open={needProfile}
+          onClose={() => setNeedProfile(false)}
+          initialStudent={profile}
+          accessToken={accessToken}
+          onSaved={handleProfileSaved}
+          title={t('profileGateTitle')}
+          description={t('profileGateBody')}
+          closeLabel={t('profileGateClose')}
+        />
+      ) : null}
 
       {/* Mobile sticky bar */}
       <div
