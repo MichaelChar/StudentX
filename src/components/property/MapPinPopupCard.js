@@ -17,7 +17,7 @@ function isValidPhotoUrl(url) {
 export default function MapPinPopupCard({ listing }) {
   const tCard = useTranslations('listingCard');
   const photo = (listing.photos ?? []).find(isValidPhotoUrl);
-  const title = listing.title || listing.address;
+  const title = listing.title || listing.neighborhood;
 
   return (
     <div className="w-[220px]">

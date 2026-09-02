@@ -76,7 +76,7 @@ export async function generateMetadata({ params }) {
       // present we fall back to a self-hosted SVG so og:image is never empty
       // and never relies on a host we don't control.
       images: photo
-        ? [{ url: photo, alt: `${propertyType} at ${address}` }]
+        ? [{ url: photo, alt: `${propertyType} in ${neighborhood}` }]
         : [
             {
               url: `${SITE_URL}/og-default.png`,
@@ -132,7 +132,14 @@ export default async function ListingLayout({ children, params }) {
       ...(photo && { image: photo }),
       address: {
         "@type": "PostalAddress",
-        streetAddress: address,
+        /*
+          streetAddress is OMITTED, not emptied, when the address is withheld
+          pre-booking. `streetAddress: ""` is a claim that the street is blank;
+          leaving the key out says we are not publishing it, which is what is
+          actually true. Search engines treat a missing optional field far
+          better than a present empty one.
+        */
+        ...(address ? { streetAddress: address } : {}),
         addressLocality: neighborhood,
         addressRegion: "Thessaloniki",
         addressCountry: "GR",

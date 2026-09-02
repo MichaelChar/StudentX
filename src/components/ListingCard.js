@@ -84,7 +84,9 @@ export default function ListingCard({ listing, fromQuery = '' }) {
       <div className="relative aspect-[4/3] rounded-photo overflow-hidden bg-parchment">
         <CardPhotos
           photos={listing.photos}
-          alt={listing.address}
+          // Address is withheld pre-booking, so the alt describes the place
+          // rather than naming a door. See lib/transformListing.js.
+          alt={listing.title || listing.neighborhood || ''}
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
         />
       </div>
@@ -117,7 +119,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
           </p>
         )}
         <h3 className="mt-1.5 font-display text-2xl text-night leading-tight line-clamp-2">
-          {listing.title || listing.address}
+          {listing.title || listing.neighborhood}
         </h3>
 
         <div className="mt-4 flex items-baseline justify-between gap-3">
@@ -177,7 +179,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
           the whole card; sits below the chip/favorite (z-0 vs z-10). */}
       <Link
         href={href}
-        aria-label={listing.title || listing.address}
+        aria-label={listing.title || listing.neighborhood}
         className="absolute inset-0 z-0 rounded-photo focus-visible:outline-2 outline-yellow focus-visible:outline-yellow focus-visible:outline-offset-2"
       />
 

@@ -107,7 +107,7 @@ export default async function ListingPage({ params, searchParams }) {
           <ListingGallery
             mosaic
             photos={photos}
-            title={listing.title || listing.address || 'Listing'}
+            title={listing.title || listing.neighborhood || 'Listing'}
           />
         ) : (
           <div className="aspect-[16/9] rounded-photo bg-parchment flex items-center justify-center">
@@ -127,8 +127,15 @@ export default async function ListingPage({ params, searchParams }) {
                 {listing.neighborhood} &middot; Thessaloniki
               </p>
               <h1 className="mt-1 font-display text-4xl md:text-5xl text-night leading-tight text-balance">
-                {listing.title || listing.address}
+                {listing.title || listing.neighborhood}
               </h1>
+              {/*
+                Renders only when a caller asked for the precise address.
+                transformListing withholds it by default, so pre-booking this
+                is absent and the neighbourhood line above carries the
+                location. Kept rather than deleted: this is where the address
+                belongs once a confirmed booking reveals it.
+              */}
               {listing.address && (
                 <p
                   className="mt-2 label-caps text-night/60"
