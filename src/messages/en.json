@@ -886,7 +886,8 @@
         "errorProfileIncomplete": "Complete your guest profile so the landlord can review your request.",
         "profileGateTitle": "Your guest profile",
         "profileGateBody": "Landlords see age, gender, bio, and universities — never your email. Fill this in once, then contact the landlord.",
-        "profileGateSave": "Save profile"
+        "profileGateSave": "Save profile",
+        "profileGateClose": "Close"
       },
       "calendar": {
         "title": "Availability",

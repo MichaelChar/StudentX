@@ -46,6 +46,27 @@ export default async function ListingPage({ params, searchParams }) {
     fromRawInput && fromRawInput.length <= MAX_FROM_LENGTH ? fromRawInput : '';
   const backHref = fromRaw ? `/property/thessaloniki/results?${fromRaw}` : '/property/thessaloniki/results';
 
+  /*
+    Stay dates the student picked on results, recovered from `from=`.
+    Shape-validated only (YYYY-MM-DD); BookingWidget re-parses and re-validates
+    before it will submit anything, so a malformed value here can at worst
+    prefill a field the student then corrects.
+  */
+  const stayFromResults = (() => {
+    if (!fromRaw) return { moveIn: '', moveOut: '' };
+    let params;
+    try {
+      params = new URLSearchParams(fromRaw);
+    } catch {
+      return { moveIn: '', moveOut: '' };
+    }
+    const ymd = (v) => (typeof v === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(v) ? v : '');
+    return {
+      moveIn: ymd(params.get('move_in')),
+      moveOut: ymd(params.get('move_out')),
+    };
+  })();
+
   const auth = await requireStudent();
   const isAuthed = auth && auth.kind !== 'wrong-role';
 
@@ -118,7 +139,9 @@ export default async function ListingPage({ params, searchParams }) {
       </section>
 
       {/* Main content */}
-      <div className="grid grid-cols-1 lg:grid-cols-[1fr_340px] gap-10">
+      {/* Feature 33 — the booking column is 373px, the measured width of
+          Airbnb's sticky card. Was 340px. */}
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_373px] gap-10">
         {/* Left column */}
         <div>
           {/* Hero stripe — address */}
@@ -397,7 +420,20 @@ export default async function ListingPage({ params, searchParams }) {
         </div>
 
         {/* Right column — booking widget for everyone (gate only on submit). */}
+        {/*
+          Feature 33 — the dates the student already chose on results are
+          threaded here inside `from=` (which carries the whole results query
+          string, for the back link). Reading them out means the booking card
+          opens pre-filled instead of asking for a stay range the student
+          entered one page ago.
+
+          Parsed from `from` rather than adding new top-level params: the
+          value is already there, and a second copy of the same dates in the
+          URL is two things to keep in sync.
+        */}
         <BookingWidget
+          initialMoveIn={stayFromResults.moveIn}
+          initialMoveOut={stayFromResults.moveOut}
           listing={listing}
           nextPath={`/property/thessaloniki/listing/${listing.listing_id}${fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : ''}`}
         />
