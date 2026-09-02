@@ -6,6 +6,7 @@ import { AnimatePresence } from 'motion/react';
 import { useTranslations } from 'next-intl';
 import { variantUrl } from '@/lib/photoVariants';
 import ListingLightbox from '@/components/listing/ListingLightbox';
+import GalleryMosaic from '@/components/listing/GalleryMosaic';
 
 /*
   Listing photo gallery (Item 8) — replaces the old tall 2-column grid.
@@ -19,7 +20,7 @@ import ListingLightbox from '@/components/listing/ListingLightbox';
 
 const MAX_THUMBS = 5;
 
-export default function ListingGallery({ photos, title }) {
+export default function ListingGallery({ photos, title, mosaic = false }) {
   const t = useTranslations('propylaea.gallery');
   const [active, setActive] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
@@ -29,6 +30,49 @@ export default function ListingGallery({ photos, title }) {
 
   const visible = photos.slice(0, MAX_THUMBS);
   const hiddenCount = photos.length - MAX_THUMBS;
+
+  /*
+    Feature 26 — the Airbnb mosaic, OPT-IN rather than the default.
+
+    ListingGallery has three call sites: the property PDP, the landlord's
+    wizard preview, and /gigs/[id]. Feature 26 is a Guest-PDP feature about
+    property photography, and one gig already carries exactly 5 photos — so
+    flipping the default would silently restyle a different product surface
+    whose content type (tutoring, moving help) the spec never considered.
+
+    The PDP and the wizard preview opt in; the preview must match what a
+    student actually sees or it stops being a preview. Gigs keeps the
+    main-image-plus-strip arrangement until someone decides otherwise.
+  */
+  if (mosaic) {
+    return (
+      <>
+        <GalleryMosaic
+          photos={photos.map((src, i) => ({
+            // Variant policy stays here, not in the presentational component:
+            // the hero is a full-width render, the 2x2 tiles are quarter-width.
+            src: variantUrl(src, 'full'),
+            thumbSrc: variantUrl(src, 'card'),
+            alt: t('photoAlt', { title, number: i + 1 }),
+          }))}
+          onPhotoClick={open}
+          onShowAll={() => open(0)}
+          showAllLabel={t('showAllPhotos')}
+          openLabel={t('openLightbox')}
+        />
+        <AnimatePresence>
+          {lightboxIndex !== null && (
+            <ListingLightbox
+              photos={photos}
+              title={title}
+              startIndex={lightboxIndex}
+              onClose={close}
+            />
+          )}
+        </AnimatePresence>
+      </>
+    );
+  }
 
   return (
     <>

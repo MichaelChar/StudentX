@@ -105,6 +105,7 @@ export default async function ListingPage({ params, searchParams }) {
       <section className="mb-10">
         {photos.length > 0 ? (
           <ListingGallery
+            mosaic
             photos={photos}
             title={listing.title || listing.address || 'Listing'}
           />
