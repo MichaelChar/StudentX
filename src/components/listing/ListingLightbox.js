@@ -204,8 +204,6 @@ export default function ListingLightbox({ photos, title, startIndex = 0, onClose
 
 function ZoomableImage({ src, alt, active, scale, setScale, t }) {
   const pinch = useRef({ startDist: 0, startScale: 1 });
-  // S8 — this component mounts only while open, so `active` is simply true.
-  useOverlayHistory({ onClose });
 
   const zoomed = scale > 1;
 
