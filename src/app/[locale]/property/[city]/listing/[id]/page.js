@@ -12,6 +12,7 @@ import ViewTracker from '@/components/listing/ViewTracker';
 import VisitedTracker from '@/components/listing/VisitedTracker';
 import ReportListingModal from '@/components/listing/ReportListingModal';
 import PropertyVerifiedBadge from '@/components/listing/PropertyVerifiedBadge';
+import ListingHighlights from '@/components/listing/ListingHighlights';
 import FavoriteButton from '@/components/FavoriteButton';
 import ListingCard from '@/components/ListingCard';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
@@ -21,13 +22,8 @@ import Icon from '@/components/ui/Icon';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatDistance } from '@/lib/formatDistance';
 import { formatMoney } from '@/lib/formatMoney';
-import {
-  responseTimeBucket,
-  RESPONSE_BUCKET_WITHIN_HOUR,
-  RESPONSE_BUCKET_WITHIN_DAY,
-  RESPONSE_BUCKET_WITHIN_2_DAYS,
-} from '@/lib/responseTimeBucket';
 import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
+import { deriveListingHighlights } from '@/lib/listingHighlights';
 
 const CANCELLATION_COPY_KEY = {
   free: 'cancellationFree',
@@ -60,25 +56,31 @@ export default async function ListingPage({ params, searchParams }) {
   const t = await getTranslations({ locale, namespace: 'propylaea.listing' });
   const tListing = await getTranslations({ locale, namespace: 'listing' });
 
+  /*
+    Feature 29 — listing highlights.
+
+    `?faculty=` carries the student's own faculty through from the commute
+    filter (S15) and the quiz, so the commute row can name THEIR faculty
+    rather than whichever happens to be nearest. See lib/listingHighlights.js.
+
+    Translated here rather than in the component: this is a server component
+    with getTranslations, and keeping the renderer copy-free means it stays a
+    dumb presentational stack.
+  */
+  const highlightRows = deriveListingHighlights(listing, {
+    selectedFacultyId: typeof sp.faculty === 'string' ? sp.faculty : null,
+  }).map((row) => ({
+    icon: row.icon,
+    title: t(row.title.key, row.title.params),
+    subtitle: row.subtitle ? t(row.subtitle.key, row.subtitle.params) : null,
+  }));
+
   const photos = (listing.photos || []).filter(
     (url) => typeof url === 'string' && url.startsWith('http'),
   );
   // Free admin-approved verification. Gates the "listed by" profile link
   // (public landlord profiles require is_verified).
   const isVerified = listing.is_verified === true;
-
-  const responseBucket = responseTimeBucket(
-    listing.avg_response_ms,
-    listing.response_stats_at,
-  );
-  const responseLabelKey =
-    responseBucket === RESPONSE_BUCKET_WITHIN_HOUR
-      ? 'responseWithinHour'
-      : responseBucket === RESPONSE_BUCKET_WITHIN_DAY
-        ? 'responseWithinDay'
-        : responseBucket === RESPONSE_BUCKET_WITHIN_2_DAYS
-          ? 'responseWithin2Days'
-          : null;
 
   return (
     <div className="mx-auto max-w-6xl px-5 pt-8 pb-28 sm:pb-12 md:py-12">
@@ -141,11 +143,6 @@ export default async function ListingPage({ params, searchParams }) {
                   />
                 </div>
               )}
-              {responseLabelKey && (
-                <p className="mt-3 text-sm text-night/55 font-sans">
-                  {t(responseLabelKey)}
-                </p>
-              )}
             </div>
 
             {/* Save / shortlist toggle. Renders for everyone — a
@@ -179,6 +176,21 @@ export default async function ListingPage({ params, searchParams }) {
               </span>
             </Link>
           )}
+
+          {/*
+            Feature 29 — highlights, positioned under the host row exactly as
+            the reference has them.
+
+            This REPLACES the standalone "Usually replies within an hour" line
+            that used to sit under the address. Keeping both would have printed
+            the same fact twice, ~200px apart, which is what building this
+            surfaced. One consequence worth knowing: the old line also covered
+            the `within_2_days` bucket and the highlight row deliberately does
+            not — per the spec, "replies within two days" is an apology, not a
+            highlight — so that case is no longer surfaced anywhere. Reversible
+            in one line if you disagree.
+          */}
+          <ListingHighlights rows={highlightRows} />
 
           {/* Field grid — rent, deposit, type + marketplace fields */}
           <Card tone="parchment" border={false} className="p-6 md:p-8 mb-10">
