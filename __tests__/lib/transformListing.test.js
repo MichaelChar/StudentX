@@ -1,5 +1,6 @@
+import { BOUNDS_PRECISION } from '@/lib/mapBounds';
 import { describe, it, expect } from 'vitest';
-import { transformListing, listingCompleteness } from '@/lib/transformListing';
+import { transformListing, listingCompleteness, LOCATION_PRECISION } from '@/lib/transformListing';
 
 const fullRow = {
   listing_id: '0100006',
@@ -56,7 +57,7 @@ describe('transformListing', () => {
       avg_response_ms: 3_600_000,
       response_stats_at: null,
       title: 'Sunny studio near Medical School',
-      address: '12 Egnatias',
+      address: null, // withheld by default — see the privacy block below
       neighborhood: 'Center',
       lat: 40.63,
       lng: 22.94,
@@ -241,5 +242,72 @@ describe('listingCompleteness', () => {
         floor: null,
       }),
     ).toBe(0);
+  });
+});
+
+/*
+  Location privacy. A listing is someone's home, and prod was serving the
+  house number and 15-decimal coordinates to anyone who curled the URL.
+
+  The default is the security property under test: a new call site that
+  forgets `precise` must leak nothing.
+*/
+describe('transformListing — location is coarsened by default', () => {
+  const row = {
+    location: {
+      address: 'Plateia Laodigitrias 5',
+      neighborhood: 'Center',
+      lat: 40.637818927824505,
+      lng: 22.95279,
+    },
+  };
+
+  it('withholds the street address unless asked', () => {
+    expect(transformListing(row).address).toBeNull();
+    expect(transformListing(row, {}).address).toBeNull();
+    expect(transformListing(row, { precise: false }).address).toBeNull();
+  });
+
+  it('rounds coordinates to ~110m unless asked', () => {
+    const out = transformListing(row);
+    expect(out.lat).toBe(40.638);
+    expect(out.lng).toBe(22.953);
+  });
+
+  it('still gives the neighbourhood, which is not the sensitive part', () => {
+    expect(transformListing(row).neighborhood).toBe('Center');
+  });
+
+  it('returns everything precisely when explicitly asked', () => {
+    const out = transformListing(row, { precise: true });
+    expect(out.address).toBe('Plateia Laodigitrias 5');
+    expect(out.lat).toBe(40.637818927824505);
+    expect(out.lng).toBe(22.95279);
+  });
+
+  /*
+    Deterministic, not jittered: the same listing must land in the same place
+    on the results map and on the detail page. A per-request offset would make
+    the pin visibly wander, which reads as a bug.
+  */
+  it('is deterministic across calls', () => {
+    expect(transformListing(row).lat).toBe(transformListing(row).lat);
+  });
+
+  it('coarsening cannot resurrect a missing coordinate', () => {
+    const bare = { location: { neighborhood: 'Center' } };
+    expect(transformListing(bare).lat).toBeNull();
+    expect(transformListing(bare).lng).toBeNull();
+  });
+
+  // -0 serialises as "-0" and would fork a cache key from "0".
+  it('normalises negative zero', () => {
+    const out = transformListing({ location: { lat: -0.0001, lng: -0.0001 } });
+    expect(Object.is(out.lat, -0)).toBe(false);
+    expect(out.lat).toBe(0);
+  });
+
+  it('shares the grid mapBounds quantises to, so pins and bounds agree', () => {
+    expect(LOCATION_PRECISION).toBe(BOUNDS_PRECISION);
   });
 });
