@@ -907,7 +907,10 @@
       "highlightResponseDayTitle": "Responds within a day",
       "highlightResponseDaySubtitle": "Typically replies within 24 hours",
       "whereYoullBeHeading": "Where you’ll be",
-      "whereYoullBeCaption": "Approximate area only. The exact address is shared once your booking is confirmed."
+      "whereYoullBeCaption": "Approximate area only. The exact address is shared once your booking is confirmed.",
+      "meetHostHeading": "Meet your host",
+      "meetHostMessage": "Message host",
+      "meetHostProfile": "View profile"
     },
     "landlordProfile": {
       "back": "Back to listings",

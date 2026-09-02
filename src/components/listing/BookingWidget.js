@@ -43,6 +43,9 @@ const ERROR_TO_KEY = {
  * Guest profile must be complete at request-to-book (not at signup). When
  * fields are missing we block submit and show the profile form inline.
  */
+/** Shared so Feature 37's "Message host" can target this field by id. */
+export const MESSAGE_FIELD_ID = 'booking-message';
+
 export default function BookingWidget({ listing, nextPath,
   initialMoveIn = '',
   initialMoveOut = '',
@@ -308,6 +311,12 @@ export default function BookingWidget({ listing, nextPath,
                   <label className="block">
                     <span className="label-caps text-night/60">{t('message')}</span>
                     <textarea
+                      /*
+                        Feature 37's "Message host" scrolls here and focuses
+                        this field — the booking form IS the message path, so a
+                        second contact entry point would be a second inbox.
+                      */
+                      id={MESSAGE_FIELD_ID}
                       rows={4}
                       required
                       minLength={10}

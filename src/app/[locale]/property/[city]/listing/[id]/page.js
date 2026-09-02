@@ -14,6 +14,7 @@ import ReportListingModal from '@/components/listing/ReportListingModal';
 import PropertyVerifiedBadge from '@/components/listing/PropertyVerifiedBadge';
 import ListingHighlights from '@/components/listing/ListingHighlights';
 import WhereYoullBe from '@/components/listing/WhereYoullBe';
+import MeetYourHostSection from '@/components/listing/MeetYourHostSection';
 import FavoriteButton from '@/components/FavoriteButton';
 import ListingCard from '@/components/ListingCard';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
@@ -25,6 +26,12 @@ import { formatDistance } from '@/lib/formatDistance';
 import { formatMoney } from '@/lib/formatMoney';
 import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 import { deriveListingHighlights } from '@/lib/listingHighlights';
+import {
+  responseTimeBucket,
+  RESPONSE_BUCKET_WITHIN_HOUR,
+  RESPONSE_BUCKET_WITHIN_DAY,
+  RESPONSE_BUCKET_WITHIN_2_DAYS,
+} from '@/lib/responseTimeBucket';
 
 const CANCELLATION_COPY_KEY = {
   free: 'cancellationFree',
@@ -77,6 +84,38 @@ export default async function ListingPage({ params, searchParams }) {
 
   const t = await getTranslations({ locale, namespace: 'propylaea.listing' });
   const tListing = await getTranslations({ locale, namespace: 'listing' });
+  /*
+    The host card's badge is LANDLORD ID VERIFICATION, which this codebase
+    labels "SuperLandlord" — the same word the profile page it links to uses.
+    Reusing that key rather than adding a second string keeps the two from
+    drifting into different words for one thing, and avoids conflating it with
+    the separate property-verification badge (Feature 19) or the paid tier.
+  */
+  const tLandlord = await getTranslations({ locale, namespace: 'propylaea.landlordProfile' });
+
+  /*
+    Response time for the host card (Feature 37).
+
+    Derived here rather than reusing Feature 29's highlight row, because the
+    two deliberately differ: the highlight is gated to within_hour/within_day
+    only — "replies within two days" is an apology, not a selling point — while
+    "who is this person" is a fair place to state it plainly. Same bucketer,
+    different editorial rule, which is why this is not shared code.
+
+    Null (unknown or stale) means the card omits the line entirely.
+  */
+  const hostResponseBucket = responseTimeBucket(
+    listing.avg_response_ms,
+    listing.response_stats_at,
+  );
+  const hostResponseLabel =
+    hostResponseBucket === RESPONSE_BUCKET_WITHIN_HOUR
+      ? t('responseWithinHour')
+      : hostResponseBucket === RESPONSE_BUCKET_WITHIN_DAY
+        ? t('responseWithinDay')
+        : hostResponseBucket === RESPONSE_BUCKET_WITHIN_2_DAYS
+          ? t('responseWithin2Days')
+          : null;
 
   /*
     Feature 29 — listing highlights.
@@ -396,6 +435,40 @@ export default async function ListingPage({ params, searchParams }) {
               </div>
             </section>
           )}
+
+          {/*
+            Feature 37 — "Meet your host", low on the page as the spec places
+            it. A student handing over a deposit and living in someone's
+            property for nine months should not have to leave the listing to
+            find out who they are.
+
+            The profile link is gated on is_verified because that page 404s for
+            unverified landlords — passing null means the card renders without
+            a link rather than offering a broken one.
+
+            Response time also appears in Feature 29's highlights near the top.
+            That duplication is deliberate and unlike the one removed in #449:
+            these are far apart and answer different questions — the highlight
+            is a scannable fact, this is part of "who is this person". The
+            reference does the same.
+          */}
+          <section className="mb-10">
+            <MeetYourHostSection
+              heading={t('meetHostHeading')}
+              name={listing.landlord?.name}
+              photoUrl={listing.landlord?.profile_photo_url}
+              verified={isVerified}
+              verifiedLabel={tLandlord('verified')}
+              responseLabel={hostResponseLabel}
+              profileHref={
+                isVerified
+                  ? `/property/thessaloniki/landlords/${listing.listing_id.slice(0, 4)}`
+                  : null
+              }
+              messageLabel={t('meetHostMessage')}
+              profileLabel={t('meetHostProfile')}
+            />
+          </section>
 
           {/* Cancellation policy — display only. */}
           <section className="mb-10">
