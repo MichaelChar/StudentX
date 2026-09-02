@@ -904,7 +904,9 @@
       "highlightResponseHourTitle": "Responds within an hour",
       "highlightResponseHourSubtitle": "Typically replies in under an hour",
       "highlightResponseDayTitle": "Responds within a day",
-      "highlightResponseDaySubtitle": "Typically replies within 24 hours"
+      "highlightResponseDaySubtitle": "Typically replies within 24 hours",
+      "whereYoullBeHeading": "Where you’ll be",
+      "whereYoullBeCaption": "Approximate area only. The exact address is shared once your booking is confirmed."
     },
     "landlordProfile": {
       "back": "Back to listings",
