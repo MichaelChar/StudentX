@@ -13,6 +13,7 @@ import VisitedTracker from '@/components/listing/VisitedTracker';
 import ReportListingModal from '@/components/listing/ReportListingModal';
 import PropertyVerifiedBadge from '@/components/listing/PropertyVerifiedBadge';
 import ListingHighlights from '@/components/listing/ListingHighlights';
+import WhereYoullBe from '@/components/listing/WhereYoullBe';
 import FavoriteButton from '@/components/FavoriteButton';
 import ListingCard from '@/components/ListingCard';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
@@ -333,6 +334,29 @@ export default async function ListingPage({ params, searchParams }) {
               </dl>
             </section>
           )}
+
+          {/*
+            Feature 36 — "Where you'll be".
+
+            Sits directly under the university distances so the location story
+            reads as one block: the map says roughly where, the distances say
+            how far. Airbnb puts its equivalent after amenities, but the
+            distances are this audience's version of the same question and
+            splitting them would leave the map floating.
+
+            An approximate CIRCLE, never a pin. transformListing already
+            withholds the street address and coarsens the coordinates (#452);
+            this section is the visible half of that promise, and the caption
+            says outright when the exact address arrives.
+          */}
+          <section className="mb-10">
+            <WhereYoullBe
+              lat={listing.lat}
+              lng={listing.lng}
+              heading={t('whereYoullBeHeading')}
+              caption={t('whereYoullBeCaption')}
+            />
+          </section>
 
           {/* Amenities */}
           {listing.amenities?.length > 0 && (
