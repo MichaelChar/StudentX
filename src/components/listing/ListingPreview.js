@@ -113,7 +113,7 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
         {/* Photo gallery — reuses the production gallery + lightbox */}
         <section className="mb-10">
           {photos.length > 0 ? (
-            <ListingGallery photos={photos} title={headline} />
+            <ListingGallery mosaic photos={photos} title={headline} />
           ) : (
             <div className="aspect-[16/9] rounded-photo bg-parchment flex items-center justify-center">
               <Icon name="photo" className="w-16 h-16 text-night/20" />
