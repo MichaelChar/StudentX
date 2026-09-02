@@ -896,7 +896,15 @@
         "state_available": "Available",
         "state_pending": "Pending",
         "state_booked": "Booked"
-      }
+      },
+      "highlightCommuteTitle": "{minutes} min walk to {faculty}",
+      "highlightCommuteSubtitle": "Also {minutes} min from {faculty}",
+      "highlightBillsTitle": "Bills included",
+      "highlightBillsSubtitle": "Utilities are part of the monthly rent",
+      "highlightResponseHourTitle": "Responds within an hour",
+      "highlightResponseHourSubtitle": "Typically replies in under an hour",
+      "highlightResponseDayTitle": "Responds within a day",
+      "highlightResponseDaySubtitle": "Typically replies within 24 hours"
     },
     "landlordProfile": {
       "back": "Back to listings",
