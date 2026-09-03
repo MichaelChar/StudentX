@@ -6,6 +6,7 @@ import {
   getSupabaseWithToken,
   getSupabaseAsService,
 } from '@/lib/supabaseServer';
+import { landlordIdForUser } from '@/lib/landlordAuth';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { writeUniversityDistances } from '@/lib/universityDistances';
 import { parseListingWriteBody } from '@/lib/landlordListingBody';
@@ -15,14 +16,6 @@ import {
   FLAGS_LIVE,
 } from '@/lib/listingGoLive';
 
-async function getLandlordId(userId) {
-  const { data } = await getSupabaseAsService()
-    .from('landlords')
-    .select('landlord_id')
-    .eq('auth_user_id', userId)
-    .single();
-  return data?.landlord_id ?? null;
-}
 
 const SINGLE_LISTING_SELECT = `
   listing_id, landlord_id, title, rent_id, location_id, property_type_id,
@@ -54,7 +47,7 @@ export async function GET(request, { params }) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const landlordId = await getLandlordId(user.id);
+  const landlordId = await landlordIdForUser(getSupabaseWithToken(token), user.id);
   if (!landlordId) {
     return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
   }
@@ -111,7 +104,7 @@ export async function PATCH(request, { params }) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const landlordId = await getLandlordId(user.id);
+  const landlordId = await landlordIdForUser(getSupabaseWithToken(token), user.id);
   if (!landlordId) {
     return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
   }
@@ -362,7 +355,7 @@ export async function DELETE(request, { params }) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const landlordId = await getLandlordId(user.id);
+  const landlordId = await landlordIdForUser(getSupabaseWithToken(token), user.id);
   if (!landlordId) {
     return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
   }

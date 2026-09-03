@@ -9,13 +9,14 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const extractToken = vi.fn();
 const getUserFromToken = vi.fn();
 const getSupabaseAsService = vi.fn();
+const getSupabaseWithToken = vi.fn();
 const requireAdminApi = vi.fn();
 
 vi.mock('@/lib/supabaseServer', () => ({
   extractToken: (...args) => extractToken(...args),
   getUserFromToken: (...args) => getUserFromToken(...args),
   getSupabaseAsService: (...args) => getSupabaseAsService(...args),
-  getSupabaseWithToken: vi.fn(),
+  getSupabaseWithToken: (...args) => getSupabaseWithToken(...args),
 }));
 
 vi.mock('@/lib/requireAdmin', () => ({
@@ -79,6 +80,7 @@ beforeEach(() => {
   extractToken.mockReset();
   getUserFromToken.mockReset();
   getSupabaseAsService.mockReset();
+  getSupabaseWithToken.mockReset();
   requireAdminApi.mockReset();
 });
 
@@ -134,11 +136,15 @@ describe('landlord property-verification request', () => {
   it('rejects a duplicate pending request with 409', async () => {
     extractToken.mockReturnValue('tok');
     getUserFromToken.mockResolvedValue({ id: 'user-1', email: 'll@x.com' });
+    getSupabaseWithToken.mockReturnValue({
+      from: () => chain({ data: { landlord_id: '0100' }, error: null }),
+    });
 
     getSupabaseAsService.mockReturnValue({
       from(name) {
         if (name === 'landlords') {
-          return chain({ data: { landlord_id: '0100' }, error: null });
+          // The self-lookup must NOT reach the service-role client any more.
+          throw new Error('landlords must be read on the caller token, not service role');
         }
         if (name === 'listings') {
           return chain({
@@ -190,10 +196,14 @@ describe('landlord property-verification request', () => {
     getUserFromToken.mockResolvedValue({ id: 'user-1', email: 'll@x.com' });
 
     let inserted = null;
+    getSupabaseWithToken.mockReturnValue({
+      from: () => chain({ data: { landlord_id: '0100' }, error: null }),
+    });
     getSupabaseAsService.mockReturnValue({
       from(name) {
         if (name === 'landlords') {
-          return chain({ data: { landlord_id: '0100' }, error: null });
+          // The self-lookup must NOT reach the service-role client any more.
+          throw new Error('landlords must be read on the caller token, not service role');
         }
         if (name === 'listings') {
           return chain({

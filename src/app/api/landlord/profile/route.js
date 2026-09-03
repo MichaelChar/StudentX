@@ -4,7 +4,6 @@ import {
   extractToken,
   getUserFromToken,
   getSupabaseWithToken,
-  getSupabaseAsService,
   cleanupFreshOrphanAuthUser,
 } from '@/lib/supabaseServer';
 import { normalizeSingleLine } from '@/lib/textNormalize';
@@ -103,11 +102,22 @@ export async function POST(request) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  // Service-role for these two reads: they select `email` and filter on
-  // `email` / `auth_user_id`, which migration 065 removes from the anon
-  // column allowlist on landlords. user.id / user.email are JWT-derived.
+  /*
+    Both reads run on the CALLER'S OWN TOKEN, not the service-role key.
+
+    Migration 065 removed `email`, `onboarding_completed` and `auth_user_id`
+    from the **anon** column allowlist; `authenticated` kept all three, and
+    getSupabaseWithToken sends the caller's JWT, so PostgREST runs these as
+    `authenticated`. RLS permits them too (landlords SELECT is public/true).
+
+    The orphan read looks at a row that is not yet the caller's, which is the
+    point of it — but it can only ever match `user.email`, which is JWT-derived.
+    A caller cannot widen it to somebody else's row.
+  */
+  const selfSupabase = getSupabaseWithToken(token);
+
   // Return existing profile if already created
-  const { data: existing } = await getSupabaseAsService()
+  const { data: existing } = await selfSupabase
     .from('landlords')
     .select('landlord_id, name, email, onboarding_completed')
     .eq('auth_user_id', user.id)
@@ -116,7 +126,7 @@ export async function POST(request) {
   if (existing) return NextResponse.json({ landlord: existing });
 
   // Check if a landlord exists with the same email but no auth_user_id (e.g. seeded data)
-  const { data: orphan } = await getSupabaseAsService()
+  const { data: orphan } = await selfSupabase
     .from('landlords')
     .select('landlord_id, name, email, onboarding_completed')
     .eq('email', user.email)

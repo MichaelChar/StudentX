@@ -55,20 +55,30 @@ function table(terminal) {
   return chain;
 }
 
-// Migration 065: the `existing` and `orphan` reads select `email` (owner-only
-// PII, no longer in the anon column allowlist) so the route runs them on the
-// service-role client. Only the max-landlord_id auto-numbering read — which
-// selects `landlord_id` alone — stays on the anon client.
-function fakeServiceSupabase({ existing = null, orphan = null } = {}) {
-  // getSupabaseAsService() is called once per read; returning this same object
-  // both times lets the shared queue hand back existing, then orphan.
+/*
+  The `existing` and `orphan` reads select `email` and `onboarding_completed`,
+  which migration 065 removed from the ANON column allowlist. They therefore
+  must not run on the anon client — that part of the original note stands.
+
+  What changed: they run on the CALLER'S TOKEN, not the service-role key.
+  `authenticated` kept SELECT on all three of `email`, `onboarding_completed`
+  and `auth_user_id`; only `anon` lost them. The service-role key was never
+  required, and depending on it made this route 500 in any environment without
+  that secret.
+
+  `extra` serves the calls that follow the two reads — the insert branch, which
+  goes through the same token-scoped client.
+*/
+function fakeSelfSupabase({ existing = null, orphan = null, extra = null, rpc } = {}) {
   const sequence = [
     table({ data: existing, error: existing ? null : { code: 'PGRST116' } }),
     table({ data: orphan, error: orphan ? null : { code: 'PGRST116' } }),
   ];
-  return {
-    from: vi.fn(() => sequence.shift() ?? table({ data: null, error: null })),
+  const client = {
+    from: vi.fn(() => sequence.shift() ?? extra ?? table({ data: null, error: null })),
   };
+  if (rpc) client.rpc = rpc;
+  return client;
 }
 
 function fakeAnonSupabase({ maxRow = null } = {}) {
@@ -95,20 +105,18 @@ describe('POST /api/landlord/profile — role-conflict cleanup', () => {
   it('orphan-link branch: returns 409 + delegates to cleanupFreshOrphanAuthUser', async () => {
     extractToken.mockReturnValue('jwt');
     getUserFromToken.mockResolvedValue(FRESH_USER());
-    getSupabaseAsService.mockReturnValue(
-      fakeServiceSupabase({
+    getSupabase.mockReturnValue(fakeAnonSupabase({}));
+    getSupabaseWithToken.mockReturnValue(
+      fakeSelfSupabase({
         orphan: { landlord_id: 'L42', email: 'fresh@example.com' },
+        rpc: vi.fn(async () => ({
+          error: {
+            code: '23505',
+            message: 'Email fresh@example.com already registered as a student',
+          },
+        })),
       })
     );
-    getSupabase.mockReturnValue(fakeAnonSupabase({}));
-    getSupabaseWithToken.mockReturnValue({
-      rpc: vi.fn(async () => ({
-        error: {
-          code: '23505',
-          message: 'Email fresh@example.com already registered as a student',
-        },
-      })),
-    });
 
     const res = await POST(jsonRequest({ name: 'Fresh Landlord' }));
 
@@ -124,7 +132,6 @@ describe('POST /api/landlord/profile — role-conflict cleanup', () => {
   it('new-insert branch: returns 409 + delegates to cleanupFreshOrphanAuthUser', async () => {
     extractToken.mockReturnValue('jwt');
     getUserFromToken.mockResolvedValue(FRESH_USER());
-    getSupabaseAsService.mockReturnValue(fakeServiceSupabase({}));
     getSupabase.mockReturnValue(fakeAnonSupabase({ maxRow: { landlord_id: '0041' } }));
 
     const insertChain = {
@@ -138,9 +145,7 @@ describe('POST /api/landlord/profile — role-conflict cleanup', () => {
         },
       }),
     };
-    getSupabaseWithToken.mockReturnValue({
-      from: vi.fn(() => insertChain),
-    });
+    getSupabaseWithToken.mockReturnValue(fakeSelfSupabase({ extra: insertChain }));
 
     const res = await POST(jsonRequest({ name: 'Fresh Landlord' }));
 
@@ -148,8 +153,13 @@ describe('POST /api/landlord/profile — role-conflict cleanup', () => {
     const body = await res.json();
     expect(body).toEqual({ error: 'role_conflict', conflict_role: 'student' });
     expect(cleanupFreshOrphanAuthUser).toHaveBeenCalledTimes(1);
-    // Security regression (migration 065): the email-bearing existing/orphan
-    // lookups must run on the service-role client, never the anon client.
-    expect(getSupabaseAsService).toHaveBeenCalled();
+    /*
+      Security regression (migration 065): the email-bearing existing/orphan
+      lookups must never run on the ANON client, which has no SELECT on
+      `email`. They run on the caller's own token — `authenticated` kept that
+      grant — and the service-role key is not involved at all.
+    */
+    expect(getSupabaseWithToken).toHaveBeenCalledWith('jwt');
+    expect(getSupabaseAsService).not.toHaveBeenCalled();
   });
 });
