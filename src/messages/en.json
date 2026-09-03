@@ -1014,7 +1014,18 @@
         "openMenu": "Open navigation",
         "openAccountMenu": "Account",
         "waiting": "Waiting for your reply",
-        "viewsLabel": "views · last 30 days"
+        "viewsLabel": "views · last 30 days",
+        "banner": {
+          "idCheckTitle": "Verify your ID to publish",
+          "idCheckBody": "Free, and it unblocks every listing at once.",
+          "submitTitle": "One listing still needs details",
+          "submitBody": "Finish it and submit — it stays private until you do.",
+          "videoCallTitle": "Book your video walkthrough",
+          "videoCallBody": "The last step before we can publish your listing.",
+          "adminReviewTitle": "We're reviewing your listing",
+          "adminReviewBody": "Nothing for you to do — we'll email you when it's live.",
+          "cta": "Open"
+        }
       },
       "settings": {
         "eyebrow": "Settings",
