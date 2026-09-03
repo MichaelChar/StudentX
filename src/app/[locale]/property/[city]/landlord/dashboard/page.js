@@ -1,36 +1,48 @@
 import { Suspense, cache } from 'react';
 import { redirect } from 'next/navigation';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
-import Image from 'next/image';
 
 import { Link } from '@/i18n/navigation';
 import { requireLandlord } from '@/lib/requireStudent';
-import { getSupabase } from '@/lib/supabase';
 import { selectLandlordListings } from '@/lib/landlordListingSelect';
-import { getLandlordResponseTime } from '@/lib/landlordResponseTime';
-import { variantUrl } from '@/lib/photoVariants';
 import { formatMoney } from '@/lib/formatMoney';
+import {
+  listingBlocker,
+  liveReservations,
+  todayHeadline,
+  waitingOnReply,
+} from '@/lib/hostToday';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
+import CompositeAvatar from '@/components/landlord/CompositeAvatar';
+import TodayCard from '@/components/landlord/TodayCard';
 import Button from '@/components/ui/Button';
-import Card from '@/components/ui/Card';
-import Pill from '@/components/ui/Pill';
-import Icon from '@/components/ui/Icon';
-import { inquiryStatusVariant } from '@/lib/statusVariant';
 
 /*
-  Propylaea landlord dashboard — server-rendered (#254).
+  The landlord's "Today" — parity Feature 49.
 
-  Was 'use client' with a three-phase gate (LandlordShell session probe →
-  page getSession → 5 parallel fetches). Now it mirrors the student account
-  page: requireLandlord() guards server-side, the shell + topbar greeting
-  paint on the first byte (gated={false}), and each widget streams in its own
-  <Suspense> as its query resolves. requireLandlord() is React.cache()'d, so
-  every loader below resolves it from the per-request cache (one round-trip).
+  This replaced a six-tile metrics grid (ACTIVE LISTINGS / PENDING REQUESTS /
+  PENDING INQUIRIES / VIEWS THIS MONTH / CONVERSION RATE / AVG. RESPONSE TIME)
+  sitting above two widget panels. Airbnb's Today has no metrics at all, and
+  the spec's argument for copying that is the audit: landlord response latency
+  IS the conversion mechanism. A metrics grid reports how a landlord did; an
+  action list tells them what to do next.
 
-  API routes (/api/landlord/{listings,inquiries,analytics,response-time})
-  are preserved — other pages and client flows still consume them. The
-  loaders here copy those routes' queries.
+  Where the six tiles went (Feature 49 addendum): ACTIVE LISTINGS and
+  AVG. RESPONSE TIME to the public landlord profile, PENDING REQUESTS and
+  PENDING INQUIRIES to the dot on the Messages nav tab, VIEWS THIS MONTH to
+  the nav's top-right, CONVERSION RATE dropped outright.
+
+  NO PAGE HEADER FROM THE SHELL. Every other landlord page passes `eyebrow` and
+  `title` to LandlordShell. This one owns its heading, because the heading IS
+  the data ("3 people are waiting on you") and the shell's title prop is
+  rendered before any Suspense boundary — passing it would block first paint on
+  a query, which is exactly what #254 removed.
+
+  ON THE RESERVATIONS SECTION. Airbnb's Today is a reservations dashboard.
+  StudentX has one row in `bookings` in the entire database and its state is
+  `expired`, so that section is correct but renders nothing today. The section
+  that does work is the reply queue. See lib/hostToday.js.
 */
 
 // ---- Per-request data loaders (cache()'d → one query each per request) ----
@@ -51,96 +63,34 @@ const loadVerification = cache(async () => {
     .select('is_verified')
     .eq('landlord_id', auth.landlord.landlord_id)
     .maybeSingle();
-  return {
-    isVerified: data?.is_verified === true,
-  };
+  return { isVerified: data?.is_verified === true };
 });
 
+/*
+  No listing filter on either of these. Both tables carry a landlord-scoped
+  SELECT policy keyed on auth.uid() ("Landlords can read their own listing
+  inquiries", "Landlords read own listing bookings"), so a token-scoped client
+  already sees exactly this landlord's rows — the same reasoning that took the
+  service-role client out of /api/landlord/nav-summary.
+*/
 const loadInquiries = cache(async () => {
   const auth = await requireLandlord();
-  if (!auth || auth.kind === 'wrong-role') return { recent: [], pendingCount: 0 };
+  if (!auth || auth.kind === 'wrong-role') return [];
   const { data, error } = await auth.supabase
     .from('inquiries')
-    .select(`
-      inquiry_id,
-      listing_id,
-      student_name,
-      student_email,
-      student_phone,
-      message,
-      status,
-      replied_at,
-      created_at,
-      listings ( listing_id, location ( address ) )
-    `)
+    .select('inquiry_id, listing_id, student_name, status, created_at')
     .order('created_at', { ascending: false });
-  if (error) return { recent: [], pendingCount: 0 };
-  const inquiries = data || [];
-  return {
-    recent: inquiries.slice(0, 5),
-    pendingCount: inquiries.filter((i) => i.status === 'pending').length,
-  };
+  return error ? [] : data || [];
 });
 
-const loadPendingBookings = cache(async () => {
+const loadBookings = cache(async () => {
   const auth = await requireLandlord();
-  if (!auth || auth.kind === 'wrong-role') return { count: 0 };
-  const listings = await loadListings();
-  const listingIds = listings.map((l) => l.listing_id).filter(Boolean);
-  if (listingIds.length === 0) return { count: 0 };
+  if (!auth || auth.kind === 'wrong-role') return [];
   const { data, error } = await auth.supabase
     .from('bookings')
-    .select('booking_id')
-    .in('listing_id', listingIds)
-    .eq('state', 'requested');
-  if (error) return { count: 0 };
-  return { count: (data || []).length };
-});
-
-const loadAnalytics = cache(async () => {
-  const auth = await requireLandlord();
-  if (!auth || auth.kind === 'wrong-role') return { conversion_rate: 0, views_last_30_days: 0 };
-  const listings = await loadListings();
-  const listingIds = listings.map((l) => l.listing_id).filter(Boolean);
-  if (listingIds.length === 0) return { conversion_rate: 0, views_last_30_days: 0 };
-
-  const thirtyDaysAgo = new Date();
-  thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
-  const cutoff = thirtyDaysAgo.toISOString().split('T')[0];
-
-  // Same queries as /api/landlord/analytics: listing_views token-scoped,
-  // inquiries via the anon client (mirrors the route exactly).
-  const [allViewsRes, recentViewsRes, allInquiriesRes] = await Promise.all([
-    auth.supabase.from('listing_views').select('listing_id, view_count').in('listing_id', listingIds),
-    auth.supabase
-      .from('listing_views')
-      .select('listing_id, view_count')
-      .in('listing_id', listingIds)
-      .gte('view_date', cutoff),
-    getSupabase().from('inquiries').select('listing_id, created_at').in('listing_id', listingIds),
-  ]);
-
-  const totalViews = (allViewsRes.data || []).reduce((s, v) => s + v.view_count, 0);
-  const viewsLast30 = (recentViewsRes.data || []).reduce((s, v) => s + v.view_count, 0);
-  const totalInquiries = (allInquiriesRes.data || []).length;
-  const conversionRate = totalViews > 0 ? (totalInquiries / totalViews) * 100 : 0;
-
-  return {
-    conversion_rate: Math.round(conversionRate * 10) / 10,
-    views_last_30_days: viewsLast30,
-  };
-});
-
-const loadResponseTime = cache(async () => {
-  const auth = await requireLandlord();
-  if (!auth || auth.kind === 'wrong-role') return { count: 0, formatted: null };
-  const listings = await loadListings();
-  const listingIds = listings.map((l) => l.listing_id).filter(Boolean);
-  try {
-    return await getLandlordResponseTime(auth.supabase, listingIds);
-  } catch {
-    return { count: 0, formatted: null };
-  }
+    .select('booking_id, listing_id, student_name, state, move_in, move_out, created_at')
+    .order('created_at', { ascending: false });
+  return error ? [] : data || [];
 });
 
 // ---- Page ----
@@ -161,360 +111,324 @@ export default async function LandlordDashboardPage({ params }) {
   }
 
   const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
-  const landlordName = (auth.landlord.name || '').trim();
 
   return (
-    <LandlordShell
-      gated={false}
-      landlordName={landlordName}
-      eyebrow={t('welcomeEyebrow')}
-      title={
-        landlordName
-          ? t('welcomeTitleNamed', { name: landlordName })
-          : t('welcomeTitle')
-      }
-      actions={
-        <Button href="/property/thessaloniki/landlord/listings/new" variant="gold" size="sm">
-          {t('quickNewListing')}
-        </Button>
-      }
-    >
-      {/* Stats row */}
-      <Suspense fallback={<StatsRowSkeleton />}>
-        <StatsRow locale={locale} />
-      </Suspense>
-
-      {/* Two-column widget grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <section className="lg:col-span-2">
-          <Suspense
-            fallback={<ListingsCardSkeleton title={t('widgetListings')} viewAll={t('widgetListingsViewAll')} />}
-          >
-            <ListingsWidget locale={locale} />
-          </Suspense>
-        </section>
-
-        <section>
-          <Suspense
-            fallback={<InquiriesCardSkeleton title={t('widgetInquiries')} viewAll={t('widgetInquiriesViewAll')} />}
-          >
-            <InquiriesWidget locale={locale} />
-          </Suspense>
-        </section>
-      </div>
-
-      {/* Verification card */}
-      <section className="mt-6">
-        <Suspense fallback={null}>
-          <VerificationWidget locale={locale} />
+    <LandlordShell gated={false} landlordName={(auth.landlord.name || '').trim()}>
+      <div className="mx-auto max-w-3xl">
+        <Suspense fallback={<HeadlineSkeleton eyebrow={t('eyebrow')} />}>
+          <Headline locale={locale} />
         </Suspense>
-      </section>
+
+        <Suspense fallback={null}>
+          <WaitingSection locale={locale} />
+        </Suspense>
+
+        <Suspense fallback={null}>
+          <BlockersSection locale={locale} />
+        </Suspense>
+
+        <Suspense fallback={null}>
+          <ReservationsSection locale={locale} />
+        </Suspense>
+
+        <Suspense fallback={null}>
+          <ListingsSection locale={locale} />
+        </Suspense>
+      </div>
     </LandlordShell>
   );
 }
 
-// ---- Streamed widgets ----
+// ---- Streamed sections ----
 
-async function StatsRow({ locale }) {
+async function Headline({ locale }) {
   const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
-  const [listings, analytics, inquiries, responseTime, pendingBookings] =
-    await Promise.all([
-      loadListings(),
-      loadAnalytics(),
-      loadInquiries(),
-      loadResponseTime(),
-      loadPendingBookings(),
-    ]);
-
-  const activeListings = listings.length;
-  const pendingInquiryCount = inquiries.pendingCount;
-  const pendingRequestCount = pendingBookings.count;
-  const views30d = analytics?.views_last_30_days ?? 0;
-  const conversionPct = analytics?.conversion_rate ?? 0;
-  const hasReplies = (responseTime?.count ?? 0) > 0;
-  const responseTimeValue = hasReplies ? responseTime.formatted : '—';
+  const [inquiries, bookings] = await Promise.all([loadInquiries(), loadBookings()]);
+  const { count, longestWait } = todayHeadline(waitingOnReply({ inquiries, bookings }));
 
   return (
-    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-10">
-      <StatTile label={t('statListings')} value={activeListings} />
-      <StatTile
-        label={t('statPendingRequests')}
-        value={pendingRequestCount}
-        accent={pendingRequestCount > 0}
-        href="/property/thessaloniki/landlord/reservations"
-      />
-      <StatTile label={t('statInquiries')} value={pendingInquiryCount} accent={pendingInquiryCount > 0} />
-      <StatTile label={t('statViews')} value={views30d} />
-      <StatTile label={t('statConversion')} value={`${conversionPct}%`} />
-      <StatTile
-        label={t('statResponseTime')}
-        value={responseTimeValue}
-        caption={!hasReplies ? t('statResponseTimeEmpty') : undefined}
-      />
-    </section>
+    <header className="pt-10 pb-8 text-center">
+      <p className="label-caps text-blue">{t('eyebrow')}</p>
+      <h1 className="font-display text-4xl md:text-5xl text-night leading-tight mt-2">
+        {count === 0 ? t('headingNone') : t('headingWaiting', { count })}
+      </h1>
+      <p className="text-night/60 mt-3">
+        {count === 0
+          ? t('headingNoneBody')
+          : longestWait && t('longestWait', { duration: longestWait })}
+      </p>
+      <div className="mt-6 flex justify-center">
+        <Button href="/property/thessaloniki/landlord/listings/new" variant="gold" size="sm">
+          {t('quickNewListing')}
+        </Button>
+      </div>
+    </header>
   );
 }
 
-async function ListingsWidget({ locale }) {
+async function WaitingSection({ locale }) {
   const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
-  const tLegacy = await getTranslations({ locale, namespace: 'landlord.dashboard' });
+  const [inquiries, bookings, listings] = await Promise.all([
+    loadInquiries(),
+    loadBookings(),
+    loadListings(),
+  ]);
+
+  const waiting = waitingOnReply({ inquiries, bookings });
+  if (waiting.length === 0) return null;
+
+  const byId = new Map(listings.map((l) => [l.listing_id, l]));
+
+  return (
+    <Section title={t('waitingSection')}>
+      {waiting.map((row) => {
+        const listing = byId.get(row.listingId);
+        const titleKey = row.kind === 'booking'
+          ? (row.personName ? 'waitingBooking' : 'waitingBookingAnon')
+          : (row.personName ? 'waitingInquiry' : 'waitingInquiryAnon');
+
+        return (
+          <TodayCard
+            key={`${row.kind}-${row.id}`}
+            tone="alert"
+            eyebrow={t('waitingFor', { duration: formatWait(row.waitedMs) })}
+            media={<ListingAvatar listing={listing} personName={row.personName} />}
+            title={t(titleKey, { name: row.personName ?? '' })}
+            subtitle={listingLabel(listing)}
+            href={
+              row.kind === 'booking'
+                ? `/property/thessaloniki/landlord/reservations/${row.id}`
+                : `/property/thessaloniki/landlord/inquiries/${row.id}/chat`
+            }
+            actionLabel={t('waitingReply')}
+          />
+        );
+      })}
+    </Section>
+  );
+}
+
+async function BlockersSection({ locale }) {
+  const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
+  const [listings, { isVerified }] = await Promise.all([loadListings(), loadVerification()]);
+
+  const blocked = listings
+    .map((listing) => ({
+      listing,
+      ...(listingBlocker({
+        listing,
+        isVerified,
+        propertyVerifications: listing.property_verifications,
+      }) || {}),
+    }))
+    .filter((row) => row.blocker);
+
+  if (blocked.length === 0) return null;
+
+  /*
+    De-duplicated on `id_check`. It is account-level, so with three unpublished
+    listings the naive mapping produces the same "Verify your ID" card three
+    times — a list that looks like three tasks and is one.
+  */
+  const seenIdCheck = { done: false };
+  const cards = blocked.filter((row) => {
+    if (row.blocker !== 'id_check') return true;
+    if (seenIdCheck.done) return false;
+    seenIdCheck.done = true;
+    return true;
+  });
+
+  return (
+    <Section title={t('blockersSection')}>
+      {cards.map(({ listing, blocker, actionable }) => (
+        <TodayCard
+          key={`${blocker}-${listing.listing_id}`}
+          tone={actionable ? 'alert' : 'default'}
+          media={<ListingAvatar listing={listing} />}
+          title={t(blockerTitleKey(blocker))}
+          subtitle={t(blockerBodyKey(blocker))}
+          href={actionable ? blockerHref(blocker, listing) : null}
+          actionLabel={actionable ? t('blockerAction') : null}
+        />
+      ))}
+    </Section>
+  );
+}
+
+async function ReservationsSection({ locale }) {
+  const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
+  const [bookings, listings] = await Promise.all([loadBookings(), loadListings()]);
+  const stays = liveReservations(bookings);
+  const byId = new Map(listings.map((l) => [l.listing_id, l]));
+
+  return (
+    <Section
+      title={t('reservationsSection')}
+      seeAll={{ href: '/property/thessaloniki/landlord/reservations', label: t('reservationsSeeAll') }}
+    >
+      {stays.length === 0 ? (
+        <p className="text-night/50 text-sm py-2">{t('reservationsEmpty')}</p>
+      ) : (
+        stays.map((b) => {
+          const listing = byId.get(b.listing_id);
+          return (
+            <TodayCard
+              key={b.booking_id}
+              media={<ListingAvatar listing={listing} personName={b.student_name} />}
+              title={t(b.student_name ? 'reservationStay' : 'reservationStayAnon', {
+                name: b.student_name ?? '',
+                date: formatDate(b.move_in),
+              })}
+              subtitle={listingLabel(listing)}
+              href={`/property/thessaloniki/landlord/reservations/${b.booking_id}`}
+            />
+          );
+        })
+      )}
+    </Section>
+  );
+}
+
+async function ListingsSection({ locale }) {
+  const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
   const listings = await loadListings();
+  if (listings.length === 0) return null;
 
   return (
-    <Card tone="white" className="p-6">
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="font-display text-2xl text-night">{t('widgetListings')}</h2>
-        <Link
-          href="/property/thessaloniki/landlord/listings"
-          className="label-caps text-blue hover:text-night"
-        >
-          {t('widgetListingsViewAll')} →
-        </Link>
-      </div>
-
-      {listings.length === 0 ? (
-        <div className="text-center py-12 border border-dashed border-night/15 rounded-card">
-          <p className="text-night/60 mb-4">{tLegacy('noListings')}</p>
-          <Button href="/property/thessaloniki/landlord/listings/new" variant="primary" size="sm">
-            {tLegacy('addFirst')}
-          </Button>
-        </div>
-      ) : (
-        <ul className="divide-y divide-night/10">
-          {listings.slice(0, 5).map((listing) => (
-            <li key={listing.listing_id} className="py-4 first:pt-0 last:pb-0">
-              <ListingRow listing={listing} />
-            </li>
-          ))}
-        </ul>
-      )}
-    </Card>
+    <Section
+      title={t('listingsSection')}
+      seeAll={{ href: '/property/thessaloniki/landlord/listings', label: t('listingsSeeAll') }}
+    >
+      {listings.slice(0, 5).map((listing) => (
+        <TodayCard
+          key={listing.listing_id}
+          media={<ListingAvatar listing={listing} />}
+          title={listing.location?.address || listing.title || '—'}
+          subtitle={priceLabel(listing)}
+          href={`/property/thessaloniki/landlord/listings/${listing.listing_id}/edit`}
+        />
+      ))}
+    </Section>
   );
-}
-
-async function InquiriesWidget({ locale }) {
-  const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
-  const { recent } = await loadInquiries();
-
-  return (
-    <Card tone="white" className="p-6 h-full">
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="font-display text-2xl text-night">{t('widgetInquiries')}</h2>
-        <Link
-          href="/property/thessaloniki/landlord/inquiries"
-          className="label-caps text-blue hover:text-night"
-        >
-          {t('widgetInquiriesViewAll')} →
-        </Link>
-      </div>
-
-      {recent.length === 0 ? (
-        <p className="text-night/60 text-sm py-6">No inquiries yet.</p>
-      ) : (
-        <ul className="space-y-3">
-          {recent.map((inq) => (
-            <li key={inq.inquiry_id || inq.id}>
-              <InquiryRow inquiry={inq} />
-            </li>
-          ))}
-        </ul>
-      )}
-    </Card>
-  );
-}
-
-async function VerificationWidget({ locale }) {
-  const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });
-  const { isVerified } = await loadVerification();
-  return <VerificationCard isVerified={isVerified} t={t} />;
 }
 
 // ---- Presentational (pure JSX, no hooks — safe in RSC) ----
 
-function StatTile({ label, value, accent, caption, href }) {
-  const inner = (
-    <Card
-      tone={accent ? 'night' : 'parchment'}
-      border={false}
-      // Was a hand-rolled `hover:shadow-[...] transition-shadow` here, which
-      // animates box-shadow — not permitted by the F5 motion rule. Card's
-      // `hover` prop now does the compliant transform lift.
-      hover={!!href}
-      className={`p-5 ${accent ? 'text-stone' : ''}`}
-    >
-      <p className={`label-caps ${accent ? 'text-yellow' : 'text-night/60'}`}>{label}</p>
-      <p
-        className={`mt-2 font-display text-4xl md:text-5xl leading-none ${
-          accent ? 'text-stone' : 'text-blue'
-        }`}
-      >
-        {value}
-      </p>
-      {caption && (
-        <p className={`mt-2 text-xs ${accent ? 'text-stone/60' : 'text-night/40'}`}>{caption}</p>
-      )}
-    </Card>
-  );
-  if (href) {
-    return (
-      <Link href={href} className="block focus-visible:outline-2 outline-yellow focus-visible:outline-yellow focus-visible:outline-offset-2 rounded-card">
-        {inner}
-      </Link>
-    );
-  }
-  return inner;
-}
-
-function ListingRow({ listing }) {
-  const photo = listing.photos?.find((url) => typeof url === 'string' && url.startsWith('http'));
-  const address = listing.location?.address || 'Untitled listing';
-  const neighborhood = listing.location?.neighborhood;
-  const price = listing.rent?.monthly_price;
-
+function Section({ title, seeAll, children }) {
   return (
-    <div className="flex items-center gap-4">
-      <div className="relative w-16 h-16 rounded-photo bg-parchment overflow-hidden shrink-0">
-        {photo ? (
-          <Image src={variantUrl(photo, 'thumb')} alt={address} fill className="object-cover" sizes="64px" />
-        ) : (
-          <div className="flex items-center justify-center h-full text-night/20">
-            <Icon name="photo" className="w-6 h-6" />
-          </div>
+    <section className="mb-10">
+      <div className="flex items-baseline justify-between mb-3">
+        <h2 className="font-display text-xl text-night">{title}</h2>
+        {seeAll && (
+          <Link href={seeAll.href} className="label-caps text-blue hover:text-night transition-colors">
+            {seeAll.label} →
+          </Link>
         )}
       </div>
-
-      <div className="flex-1 min-w-0">
-        <p className="font-display text-lg text-night truncate">{address}</p>
-        <p className="label-caps text-night/50 mt-0.5 truncate">
-          {neighborhood}
-          {price != null && (
-            <> · {formatMoney(price, listing.rent?.currency)}/mo</>
-          )}
-        </p>
-      </div>
-
-      <div className="flex items-center gap-2 shrink-0">
-        <Link
-          href={`/property/thessaloniki/landlord/listings/${listing.listing_id}/edit`}
-          className="label-caps text-blue hover:text-night transition-colors"
-        >
-          Edit
-        </Link>
-      </div>
-    </div>
-  );
-}
-
-function InquiryRow({ inquiry }) {
-  const status = inquiry.status || 'pending';
-  const statusVariant = inquiryStatusVariant(status);
-  const statusLabel =
-    status === 'pending' ? 'New' : status === 'replied' ? 'Replied' : 'Closed';
-  const date = inquiry.created_at ? new Date(inquiry.created_at).toLocaleDateString() : '';
-  const inquiryId = inquiry.inquiry_id || inquiry.id;
-
-  return (
-    <Link
-      href={`/property/thessaloniki/landlord/inquiries/${inquiryId}/chat`}
-      className="block rounded-card border border-night/10 p-3 hover:border-blue transition-colors"
-    >
-      <div className="flex items-start justify-between gap-3 mb-1">
-        <p className="font-display text-base text-night truncate">
-          {inquiry.student_name || inquiry.name || 'Student'}
-        </p>
-        <Pill variant={statusVariant}>{statusLabel}</Pill>
-      </div>
-      {inquiry.message && <p className="text-xs text-night/60 line-clamp-2">{inquiry.message}</p>}
-      {date && <p className="label-caps text-night/40 mt-1">{date}</p>}
-    </Link>
-  );
-}
-
-function VerificationCard({ isVerified, t }) {
-  if (isVerified) {
-    return (
-      <Card tone="parchment" className="p-6 flex items-center gap-5">
-        <Icon name="shieldCheck" className="w-12 h-12 text-yellow shrink-0" />
-        <div className="flex-1">
-          <p className="label-caps text-yellow">{t('widgetVerification')}</p>
-          <p className="font-display text-2xl text-night mt-1">{t('verifiedTitle')}</p>
-          <p className="text-night/70 text-sm mt-1">{t('verifiedBody')}</p>
-        </div>
-      </Card>
-    );
-  }
-
-  return (
-    <Card tone="night" className="p-6 md:p-8">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-5">
-        <div className="flex items-center gap-5">
-          <div className="w-12 h-12 rounded-full border border-yellow/50 flex items-center justify-center">
-            <Icon name="shield" className="w-5 h-5 text-yellow" />
-          </div>
-          <div>
-            <p className="label-caps text-yellow">{t('widgetVerification')}</p>
-            <p className="font-display text-2xl text-stone mt-1">{t('unverifiedTitle')}</p>
-            <p className="text-stone/70 text-sm mt-1 max-w-md">{t('unverifiedBody')}</p>
-          </div>
-        </div>
-        <Button href="/property/thessaloniki/landlord/verification" variant="gold" size="md">
-          {t('quickVerify')}
-        </Button>
-      </div>
-    </Card>
-  );
-}
-
-// ---- Suspense skeletons (titles passed in so the card chrome paints with the
-// real heading; only the data body pulses) ----
-
-function StatsRowSkeleton() {
-  return (
-    <section className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-10">
-      {[1, 2, 3, 4, 5].map((i) => (
-        <Card key={i} tone="parchment" border={false} className="p-5">
-          <div className="h-3 w-16 bg-night/10 rounded animate-pulse" />
-          <div className="mt-3 h-9 w-16 bg-night/10 rounded animate-pulse" />
-        </Card>
-      ))}
+      <div className="space-y-3">{children}</div>
     </section>
   );
 }
 
-function ListingsCardSkeleton({ title, viewAll }) {
+function ListingAvatar({ listing, personName = null }) {
+  const photo = listing?.photos?.find((url) => typeof url === 'string' && url.startsWith('http'));
   return (
-    <Card tone="white" className="p-6">
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="font-display text-2xl text-night">{title}</h2>
-        <span className="label-caps text-blue/60">{viewAll} →</span>
-      </div>
-      <ul className="divide-y divide-night/10">
-        {[1, 2, 3].map((i) => (
-          <li key={i} className="py-4 flex items-center gap-4 first:pt-0 last:pb-0">
-            <div className="w-16 h-16 rounded-control bg-parchment animate-pulse" />
-            <div className="flex-1 space-y-2">
-              <div className="h-4 w-2/3 bg-parchment rounded animate-pulse" />
-              <div className="h-3 w-1/3 bg-parchment rounded animate-pulse" />
-            </div>
-          </li>
-        ))}
-      </ul>
-    </Card>
+    <CompositeAvatar
+      photoUrl={photo ?? null}
+      photoAlt={listing?.location?.address || listing?.title || ''}
+      personName={personName || ''}
+      personPhotoUrl={null}
+      /*
+        One size for the whole feed. Sizing on whether a person is involved
+        made the listing and blocker rows visibly smaller than the reply
+        queue, which reads as a hierarchy that is not intended — the badge
+        already carries that difference.
+      */
+      size="md"
+    />
   );
 }
 
-function InquiriesCardSkeleton({ title, viewAll }) {
+function listingLabel(listing) {
+  if (!listing) return null;
+  return listing.location?.address || listing.title || null;
+}
+
+function priceLabel(listing) {
+  const price = listing?.rent?.monthly_price;
+  const hood = listing?.location?.neighborhood;
+  if (price == null) return hood || null;
+  const money = `${formatMoney(price, listing.rent?.currency)}/mo`;
+  return hood ? `${hood} · ${money}` : money;
+}
+
+const BLOCKER_TITLES = {
+  id_check: 'blockerIdCheck',
+  submit: 'blockerSubmit',
+  video_call: 'blockerVideoCall',
+  admin_review: 'blockerAdminReview',
+};
+
+const BLOCKER_BODIES = {
+  id_check: 'blockerIdCheckBody',
+  submit: 'blockerSubmitBody',
+  video_call: 'blockerVideoCallBody',
+  admin_review: 'blockerAdminReviewBody',
+};
+
+function blockerTitleKey(blocker) {
+  return BLOCKER_TITLES[blocker] ?? 'blockerAdminReview';
+}
+
+function blockerBodyKey(blocker) {
+  return BLOCKER_BODIES[blocker] ?? 'blockerAdminReviewBody';
+}
+
+/*
+  Two destinations, because two of the blockers are not listing fields at all
+  (Feature 51's table). ID verification and the video call live on the
+  verification page; an unsubmitted listing goes to its editor.
+*/
+function blockerHref(blocker, listing) {
+  if (blocker === 'id_check' || blocker === 'video_call') {
+    return '/property/thessaloniki/landlord/verification';
+  }
+  return `/property/thessaloniki/landlord/listings/${listing.listing_id}/edit`;
+}
+
+const MINUTE = 60 * 1000;
+const HOUR = 60 * MINUTE;
+const DAY = 24 * HOUR;
+
+/*
+  Deliberately coarse — a wait is a rough age, not a stopwatch. `formatDuration`
+  in landlordResponseTime.js is the precise one and is used for the headline's
+  single "longest wait" figure; per-card it would put "3d 4h" on every row.
+*/
+function formatWait(ms) {
+  if (!Number.isFinite(ms) || ms < 0) return '';
+  if (ms < HOUR) return `${Math.max(1, Math.round(ms / MINUTE))}m`;
+  if (ms < DAY) return `${Math.floor(ms / HOUR)}h`;
+  return `${Math.floor(ms / DAY)}d`;
+}
+
+function formatDate(iso) {
+  if (!iso) return '—';
+  const d = new Date(iso.length === 10 ? `${iso}T00:00:00Z` : iso);
+  if (Number.isNaN(d.getTime())) return '—';
+  return d.toLocaleDateString('en-GB', {
+    day: 'numeric',
+    month: 'short',
+    timeZone: 'UTC',
+  });
+}
+
+function HeadlineSkeleton({ eyebrow }) {
   return (
-    <Card tone="white" className="p-6 h-full">
-      <div className="flex items-center justify-between mb-5">
-        <h2 className="font-display text-2xl text-night">{title}</h2>
-        <span className="label-caps text-blue/60">{viewAll} →</span>
-      </div>
-      <div className="space-y-4">
-        {[1, 2, 3].map((i) => (
-          <div key={i} className="h-16 bg-parchment rounded animate-pulse" />
-        ))}
-      </div>
-    </Card>
+    <header className="pt-10 pb-8 text-center">
+      <p className="label-caps text-blue">{eyebrow}</p>
+      <div className="mx-auto mt-3 h-10 w-72 max-w-full bg-parchment rounded animate-pulse" />
+      <div className="mx-auto mt-4 h-4 w-40 bg-parchment rounded animate-pulse" />
+    </header>
   );
 }
