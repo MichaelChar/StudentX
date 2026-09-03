@@ -51,10 +51,12 @@ import {
   ~1,500.
 
   NAME MAP, not a re-export. The keys below are StudentX's vocabulary and must
-  stay stable: `LandlordShell` looks icons up **dynamically** from its nav
-  config (`<Icon name={item.icon} />`), so a name that exists only at a literal
-  call site is not the whole set — `cog` is reachable *only* that way. Dropping
-  a key here fails silently at runtime rather than at build time.
+  stay stable: `LandlordAccountMenu` looks icons up **dynamically** from its
+  menu config (`<Icon name={item.icon} />`), so a name that exists only at a
+  literal call site is not the whole set — `cog` is reachable *only* that way.
+  Dropping a key here fails silently at runtime rather than at build time.
+  (This was `LandlordShell`'s sidebar until Feature 49 replaced it with a
+  text-only top nav; the dynamic lookup moved into the account menu with it.)
 */
 const ICONS = {
   home: House,

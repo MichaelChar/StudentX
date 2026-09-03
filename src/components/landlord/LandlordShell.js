@@ -3,29 +3,48 @@
 import { useState, useEffect } from 'react';
 import { useTranslations } from 'next-intl';
 import { usePathname } from 'next/navigation';
-import { useRouter, Link } from '@/i18n/navigation';
+import { useRouter } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { signOutSafely } from '@/lib/authHelpers';
+import { hasWaiting } from '@/lib/hostNavSummary';
 
-import Icon from '@/components/ui/Icon';
+import LandlordTopNav from '@/components/landlord/LandlordTopNav';
+import LandlordAccountMenu from '@/components/landlord/LandlordAccountMenu';
 import BauhausLoader from '@/components/BauhausLoader';
 
 /*
-  Landlord shell — fixed sidebar + topbar wrapper.
-  Used by every authenticated landlord page (dashboard, listings, inquiries,
-  verification, billing). Auth pages (login/signup/etc.) skip this shell.
+  Landlord shell — top nav + page header wrapper.
 
-  Auth gate is the shell's responsibility: if no Supabase session, redirect
-  to /property/thessaloniki/landlord/login. This centralizes the check so pages don't re-implement.
+  Used by every authenticated landlord page. Auth pages (login/signup/etc.)
+  skip this shell.
+
+  SIDEBAR → TOP NAV (parity Feature 49). This was a 240px fixed dark sidebar
+  carrying six destinations: Dashboard / Listings / Reservations / Inquiries /
+  Verification / Settings. Feature 49 cuts it to a top bar with three —
+  `Today · Listings · Messages` — and moves the rest into the account menu.
+  The reason is not aesthetic: six equally-weighted destinations tell a
+  landlord nothing about what to do next, and the sidebar spent a sixth of the
+  viewport saying so on every page.
+
+  The `eyebrow` / `title` / `actions` prop contract is UNCHANGED, so all
+  eleven pages that render this shell needed no edit. Only the chrome moved.
+
+  Auth gate is still the shell's responsibility: no Supabase session →
+  redirect to the landlord login. This centralizes the check so pages don't
+  re-implement it.
 */
 
+const CITY = 'thessaloniki';
+
+/*
+  Exactly three, in this order. `messages` points at the existing inquiries
+  inbox — Feature 53 rebuilds that surface as three panes, but the destination
+  and the label are settled now so the nav does not change twice.
+*/
 const NAV_ITEMS = [
-  { key: 'dashboard', href: '/property/thessaloniki/landlord/dashboard', icon: 'home' },
-  { key: 'listings', href: '/property/thessaloniki/landlord/listings', icon: 'book' },
-  { key: 'reservations', href: '/property/thessaloniki/landlord/reservations', icon: 'calendar' },
-  { key: 'inquiries', href: '/property/thessaloniki/landlord/inquiries', icon: 'message' },
-  { key: 'verification', href: '/property/thessaloniki/landlord/verification', icon: 'shield' },
-  { key: 'settings', href: '/property/thessaloniki/landlord/settings', icon: 'cog' },
+  { key: 'today', href: `/property/${CITY}/landlord/dashboard` },
+  { key: 'listings', href: `/property/${CITY}/landlord/listings` },
+  { key: 'messages', href: `/property/${CITY}/landlord/inquiries`, dotted: true },
 ];
 
 export default function LandlordShell({
@@ -44,53 +63,79 @@ export default function LandlordShell({
   const tLoaders = useTranslations('loaders');
   const router = useRouter();
   const pathname = usePathname();
-  const [drawerOpen, setDrawerOpen] = useState(false);
   const [landlordName, setLandlordName] = useState(landlordNameProp);
+  const [photoUrl, setPhotoUrl] = useState(null);
+  const [summary, setSummary] = useState(null);
   // When ungated, there is nothing to wait for — paint on first render.
   const [sessionReady, setSessionReady] = useState(!gated);
 
-  // Auth gate — centralized here, so each gated page doesn't re-check.
+  /*
+    One effect, one session lookup, two fire-and-forget fetches.
+
+    Everything after the gate is chrome: the greeting, the avatar, the views
+    figure and the Messages dot. None of it blocks the page — `sessionReady`
+    flips as soon as auth is known (#256), and each piece of state renders
+    conditionally so a late arrival just pops in.
+
+    Both fetches run on the ungated dashboard too. It supplies `landlordName`
+    as a prop but not the photo, and the nav numbers are the shell's business
+    on every page regardless of who guarded auth.
+  */
   useEffect(() => {
-    if (!gated) return; // server-gated page owns auth + greeting
+    let cancelled = false;
+
     (async () => {
       const supabase = getSupabaseBrowser();
       const {
         data: { session },
       } = await supabase.auth.getSession();
-      if (!session) {
-        router.replace('/property/thessaloniki/landlord/login');
-        return;
-      }
-      if (!session.user.email_confirmed_at) {
-        router.replace('/property/thessaloniki/landlord/verify-email');
-        return;
-      }
-      setSessionReady(true); // ← unblock the page now; the greeting is cosmetic (#256)
 
-      // Best-effort profile name fetch so topbar can greet. Fire-and-forget —
-      // it updates state whenever it lands and the greeting renders
-      // conditionally, so a late name just pops in (no full-screen wait).
+      if (gated) {
+        if (!session) {
+          router.replace(`/property/${CITY}/landlord/login`);
+          return;
+        }
+        if (!session.user.email_confirmed_at) {
+          router.replace(`/property/${CITY}/landlord/verify-email`);
+          return;
+        }
+        if (!cancelled) setSessionReady(true);
+      }
+
+      if (!session) return;
+      const headers = { Authorization: `Bearer ${session.access_token}` };
+
       // GET (not POST): the shell only reads, and POST-on-every-mount would
       // attempt to create a landlord row for any authed user — including
-      // students, which now hits the prevent_dual_role trigger (migration 036).
-      if (!landlordNameProp) {
-        try {
-          const profileRes = await fetch('/api/landlord/profile', {
-            headers: { Authorization: `Bearer ${session.access_token}` },
-          });
-          if (profileRes.ok) {
-            const { landlord } = await profileRes.json();
-            if (landlord?.name) setLandlordName(landlord.name);
-          }
-        } catch {}
-      }
+      // students, which hits the prevent_dual_role trigger (migration 036).
+      const profile = fetch('/api/landlord/profile', { headers })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((body) => {
+          if (cancelled || !body?.landlord) return;
+          if (body.landlord.name) setLandlordName(body.landlord.name);
+          if (body.landlord.profile_photo_url) setPhotoUrl(body.landlord.profile_photo_url);
+        })
+        .catch(() => {});
+
+      const nav = fetch('/api/landlord/nav-summary', { headers })
+        .then((res) => (res.ok ? res.json() : null))
+        .then((body) => {
+          if (!cancelled && body?.summary) setSummary(body.summary);
+        })
+        .catch(() => {});
+
+      await Promise.all([profile, nav]);
     })();
-  }, [router, gated, landlordNameProp]);
+
+    return () => {
+      cancelled = true;
+    };
+  }, [router, gated]);
 
   async function handleSignOut() {
     const supabase = getSupabaseBrowser();
     await signOutSafely(supabase);
-    router.push('/property/thessaloniki/landlord/login');
+    router.push(`/property/${CITY}/landlord/login`);
   }
 
   // Loading state while the gated auth check resolves (never shown when ungated)
@@ -106,135 +151,62 @@ export default function LandlordShell({
     );
   }
 
-  return (
-    <div className="min-h-screen bg-stone flex">
-      {/* Sidebar — desktop */}
-      <aside className="hidden lg:flex w-[240px] flex-col bg-night text-stone fixed inset-y-0 left-0 z-[60]">
-        <SidebarContent
-          t={t}
-          pathname={pathname}
-          onSignOut={handleSignOut}
-        />
-      </aside>
+  const waiting = hasWaiting(summary);
 
-      {/* Mobile drawer */}
-      {drawerOpen && (
-        <>
-          <div
-            className="fixed inset-0 bg-night/60 z-40 lg:hidden"
-            onClick={() => setDrawerOpen(false)}
+  const items = NAV_ITEMS.map((item) => ({
+    key: item.key,
+    href: item.href,
+    label: t(item.key),
+    active: Boolean(pathname?.includes(item.href)),
+    dot: Boolean(item.dotted && waiting),
+    dotLabel: t('waiting'),
+  }));
+
+  /*
+    Hidden at zero rather than shown as "0". This sits in permanent chrome on
+    every page: a landlord who has just created their first listing would read
+    a standing zero as a scoreboard, and the addendum re-homed this metric
+    precisely to stop it being one. Nothing to report, nothing rendered.
+  */
+  const views = summary?.viewsLast30 > 0 ? summary.viewsLast30.toLocaleString('en-GB') : null;
+
+  return (
+    <div className="min-h-screen bg-stone flex flex-col">
+      <LandlordTopNav
+        items={items}
+        brand="StudentX"
+        homeHref={`/property/${CITY}/landlord/dashboard`}
+        navLabel={t('primaryNav')}
+        menuLabel={t('openMenu')}
+        viewsValue={views}
+        viewsLabel={t('viewsLabel')}
+        trailing={
+          <LandlordAccountMenu
+            t={t}
+            name={landlordName}
+            photoUrl={photoUrl}
+            city={CITY}
+            onSignOut={handleSignOut}
           />
-          <aside className="fixed inset-y-0 left-0 w-72 max-w-[80%] bg-night text-stone z-50 lg:hidden flex flex-col">
-            <SidebarContent
-              t={t}
-              pathname={pathname}
-              onSignOut={handleSignOut}
-              onNavigate={() => setDrawerOpen(false)}
-            />
-          </aside>
-        </>
+        }
+      />
+
+      {/* Page header — the eyebrow/title/actions contract every page relies on */}
+      {(eyebrow || title || actions) && (
+        <div className="px-5 md:px-8 pt-8 pb-2 flex items-end gap-4">
+          <div className="flex-1 min-w-0">
+            {eyebrow && <p className="label-caps text-blue">{eyebrow}</p>}
+            {title && (
+              <h1 className="font-display text-3xl md:text-4xl text-night leading-tight mt-1 truncate">
+                {title}
+              </h1>
+            )}
+          </div>
+          {actions && <div className="flex items-center gap-3 shrink-0">{actions}</div>}
+        </div>
       )}
 
-      {/* Main area */}
-      <div className="flex-1 lg:ml-[240px] flex flex-col min-w-0">
-        {/* Topbar */}
-        <header className="sticky top-0 z-20 bg-stone border-b border-night/10">
-          <div className="px-5 md:px-8 py-4 flex items-center gap-4">
-            {/* Mobile menu */}
-            <button
-              onClick={() => setDrawerOpen(true)}
-              className="lg:hidden p-1 text-night hover:text-blue active:text-blue/80 transition-colors"
-              aria-label="Open menu"
-            >
-              <Icon name="list" className="w-5 h-5" />
-            </button>
-
-            <div className="flex-1 min-w-0">
-              {eyebrow && (
-                <p className="label-caps text-yellow">{eyebrow}</p>
-              )}
-              {title && (
-                <h1 className="font-display text-2xl md:text-3xl text-night leading-tight truncate">
-                  {title}
-                  {landlordName && eyebrow?.toLowerCase().includes('welcome') ? (
-                    <span className="italic text-yellow"> {landlordName}</span>
-                  ) : null}
-                </h1>
-              )}
-            </div>
-
-            <div className="flex items-center gap-4 shrink-0">
-              {actions}
-              <button
-                type="button"
-                onClick={handleSignOut}
-                title={t('signOut')}
-                className="label-caps text-night/60 hover:text-blue active:text-blue/80 transition-colors hidden md:inline-flex items-center gap-1.5"
-              >
-                <Icon name="logout" className="w-4 h-4" />
-                {t('signOut')}
-              </button>
-            </div>
-          </div>
-        </header>
-
-        <main className="flex-1 px-5 md:px-8 py-8">{children}</main>
-      </div>
+      <main className="flex-1 px-5 md:px-8 py-6">{children}</main>
     </div>
-  );
-}
-
-function SidebarContent({ t, pathname, onSignOut, onNavigate }) {
-  return (
-    <>
-      {/* Brand */}
-      <div className="px-6 pt-7 pb-8">
-        <p className="font-display text-xl text-stone">StudentX</p>
-        <p className="label-caps text-stone/40 mt-1">Landlord portal</p>
-      </div>
-
-      <div aria-hidden="true" className="mx-6 h-px bg-stone/10" />
-
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
-        {NAV_ITEMS.map((item) => {
-          const active = pathname?.includes(item.href);
-          return (
-            <Link
-              key={item.key}
-              href={item.href}
-              onClick={onNavigate}
-              aria-current={active ? 'page' : undefined}
-              className={`group flex items-center gap-3 px-3 py-2.5 rounded-control label-caps transition-colors relative ${
-                active
-                  ? 'bg-white/5 text-stone'
-                  : 'text-stone/60 hover:bg-white/5 hover:text-stone'
-              }`}
-            >
-              {active && (
-                <span
-                  aria-hidden="true"
-                  className="absolute left-0 top-2 bottom-2 w-0.5 bg-yellow rounded-r"
-                />
-              )}
-              <Icon name={item.icon} className="w-4 h-4 shrink-0" />
-              <span>{t(item.key)}</span>
-            </Link>
-          );
-        })}
-      </nav>
-
-      {/* Footer — sign out + version */}
-      <div className="px-6 py-5 border-t border-stone/10">
-        <button
-          type="button"
-          onClick={onSignOut}
-          className="label-caps text-stone/60 hover:text-stone active:text-stone/80 transition-colors inline-flex items-center gap-2"
-        >
-          <Icon name="logout" className="w-4 h-4" />
-          {t('signOut')}
-        </button>
-      </div>
-    </>
   );
 }
