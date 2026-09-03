@@ -917,7 +917,11 @@
       "howPayingStep2": "We hold it until you’ve moved in. The landlord is transferred the rent one business day after your arrival, so you have until then to confirm the property is as you expected.",
       "howPayingStep3Label": "Step 3",
       "howPayingStep3": "After that, it’s between you and your landlord.",
-      "offPlatformWarning": "Payments made outside StudentX aren’t held, can’t be refunded by us, and are how rental scams work. If a landlord asks you to pay another way, report it."
+      "offPlatformWarning": "Payments made outside StudentX aren’t held, can’t be refunded by us, and are how rental scams work. If a landlord asks you to pay another way, report it.",
+      "shareLabel": "Share",
+      "shareAria": "Share this listing",
+      "shareCopied": "Link copied",
+      "shareCopyFailed": "Couldn’t copy — select the address bar instead"
     },
     "landlordProfile": {
       "back": "Back to listings",
