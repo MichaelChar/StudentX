@@ -11,12 +11,6 @@ import { isProfileComplete } from '@/lib/studentProfileFields';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import ProfileGateModal from '@/components/listing/ProfileGateModal';
-import {
-  responseTimeBucket,
-  RESPONSE_BUCKET_WITHIN_HOUR,
-  RESPONSE_BUCKET_WITHIN_DAY,
-  RESPONSE_BUCKET_WITHIN_2_DAYS,
-} from '@/lib/responseTimeBucket';
 import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 
 const CANCELLATION_COPY_KEY = {
@@ -52,7 +46,6 @@ export default function BookingWidget({ listing, nextPath,
 }) {
   const t = useTranslations('propylaea.listing.booking');
   const tListing = useTranslations('listing');
-  const tListingPage = useTranslations('propylaea.listing');
   const router = useRouter();
   const accessToken = useAccessToken();
 
@@ -114,19 +107,6 @@ export default function BookingWidget({ listing, nextPath,
       cancelled = true;
     };
   }, [accessToken]);
-
-  const responseBucket = responseTimeBucket(
-    listing.avg_response_ms,
-    listing.response_stats_at,
-  );
-  const responseHint =
-    responseBucket === RESPONSE_BUCKET_WITHIN_HOUR
-      ? tListingPage('responseWithinHour')
-      : responseBucket === RESPONSE_BUCKET_WITHIN_DAY
-        ? tListingPage('responseWithinDay')
-        : responseBucket === RESPONSE_BUCKET_WITHIN_2_DAYS
-          ? tListingPage('responseWithin2Days')
-          : t('replyHint');
 
 
   const range = useMemo(() => {
@@ -379,9 +359,6 @@ export default function BookingWidget({ listing, nextPath,
                   >
                     {sending ? t('submitting') : t('requestCta')}
                   </Button>
-                  <p className="label-caps text-night/50 text-center">
-                    {responseHint}
-                  </p>
                 </form>
 
               </div>
