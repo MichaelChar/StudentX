@@ -3,9 +3,9 @@ import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
 import { getLandlordProfile } from '@/lib/landlordProfile';
+import { landlordProfileStats } from '@/lib/landlordProfileStats';
 import ListingCard from '@/components/ListingCard';
-import LandlordAvatar from '@/components/landlord/LandlordAvatar';
-import Pill from '@/components/ui/Pill';
+import AboutMeCard from '@/components/landlord/AboutMeCard';
 import Icon from '@/components/ui/Icon';
 import Divider from '@/components/ui/Divider';
 
@@ -47,12 +47,6 @@ export default async function LandlordProfilePage({ params }) {
   const t = await getTranslations({ locale, namespace: 'propylaea.landlordProfile' });
 
   const memberSince = formatMemberSince(landlord.created_at);
-  const meta = [
-    memberSince ? t('memberSince', { date: memberSince }) : null,
-    t('propertyCount', { count: listings.length }),
-  ]
-    .filter(Boolean)
-    .join('  ·  ');
 
   return (
     <div className="mx-auto max-w-6xl px-5 pt-8 pb-20 md:py-12">
@@ -65,27 +59,28 @@ export default async function LandlordProfilePage({ params }) {
         {t('back')}
       </Link>
 
-      {/* Header — avatar, verified badge, name, member-since + property count */}
-      <header className="flex flex-col sm:flex-row sm:items-center gap-6 mb-2">
-        <LandlordAvatar
-          name={landlord.name}
-          photoUrl={landlord.profile_photo_url}
-          size={104}
-          className="border-2 border-yellow/60"
-        />
-        <div className="min-w-0">
-          <div className="flex items-center gap-2 mb-3">
-            <Icon name="shieldCheck" className="w-7 h-7 text-yellow shrink-0" />
-            <Pill variant="verified">{t('verified')}</Pill>
-          </div>
-          <h1 className="font-display text-4xl md:text-5xl text-night leading-tight text-balance">
-            {landlord.name}
-          </h1>
-          <p className="label-caps text-night/50 mt-3">{meta}</p>
-        </div>
-      </header>
+      <AboutMeCard
+        name={landlord.name}
+        photoUrl={landlord.profile_photo_url}
+        /*
+          Single-city platform, so "Thessaloniki, Greece" on its own is true of
+          every landlord and tells a student nothing. Paired with member-since
+          the line carries something; without a date it falls back to the bare
+          location rather than showing an empty slot.
+        */
+        location={memberSince ? t('locationSince', { date: memberSince }) : t('location')}
+        isVerified={landlord.is_verified}
+        verifiedLabel={t('verified')}
+        identityLine={t('identityLine')}
+        stats={renderStats(landlordProfileStats({
+          landlord,
+          activeListingCount: listings.length,
+        }), t)}
+      />
 
-      <Divider decorative className="my-8" />
+      <Divider decorative className="my-10" />
+
+      <h2 className="font-display text-2xl text-night mb-5">{t('listingsHeading')}</h2>
 
       {/* Their listings — same card as the directory */}
       {listings.length > 0 ? (
@@ -99,4 +94,17 @@ export default async function LandlordProfilePage({ params }) {
       )}
     </div>
   );
+}
+
+/*
+  Turns the key-only rows from lib/landlordProfileStats.js into the strings
+  AboutMeCard renders. The split keeps every "which stat, and is it worth
+  showing" decision unit-testable and out of a React render.
+*/
+function renderStats(rows, t) {
+  return rows.map((row) => ({
+    key: row.key,
+    value: row.valueKey ? t(row.valueKey) : String(row.count),
+    label: t(row.labelKey, row.count == null ? undefined : { count: row.count }),
+  }));
 }

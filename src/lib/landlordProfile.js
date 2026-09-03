@@ -7,13 +7,23 @@ import { transformListing } from '@/lib/transformListing';
 // never be selected on this anon/public path. profile_photo_url was granted to
 // anon in migration 057; created_at powers the "member since" line.
 const LANDLORD_SELECT =
-  'landlord_id, name, is_verified, profile_photo_url, created_at';
+  'landlord_id, name, is_verified, profile_photo_url, created_at, ' +
+  'avg_response_ms, response_stats_at';
 
 // Fallback for an environment that hasn't run migration 057 yet (no
 // profile_photo_url column/grant). The verified gate still works — only the
 // avatar is missing and the UI falls back to a monogram.
 const LANDLORD_SELECT_FALLBACK =
   'landlord_id, name, is_verified, created_at';
+
+/*
+  Second fallback: the photo column exists but the response-stat columns do
+  not. Without this, a DB that has run 057 but not 103 would drop all the way
+  to the oldest select and silently lose the avatar too — a worse page than the
+  one problem actually warrants.
+*/
+const LANDLORD_SELECT_NO_STATS =
+  'landlord_id, name, is_verified, profile_photo_url, created_at';
 
 // Listings for one landlord — mirrors the public /api/listings shape so the
 // reused <ListingCard> renders identically. Main select carries
@@ -83,15 +93,19 @@ export const getLandlordProfile = cache(async (landlordId) => {
       .single();
 
     // PGRST116 = no row; anything else may be a missing column on a
-    // half-migrated DB — retry with the pre-#057 column set.
+    // half-migrated DB — step down one column set at a time so a single
+    // missing column costs only that column.
     if (error && error.code !== 'PGRST116') {
-      const fb = await supabase
-        .from('landlords')
-        .select(LANDLORD_SELECT_FALLBACK)
-        .eq('landlord_id', landlordId)
-        .single();
-      landlord = fb.data;
-      error = fb.error;
+      for (const columns of [LANDLORD_SELECT_NO_STATS, LANDLORD_SELECT_FALLBACK]) {
+        const fb = await supabase
+          .from('landlords')
+          .select(columns)
+          .eq('landlord_id', landlordId)
+          .single();
+        landlord = fb.data;
+        error = fb.error;
+        if (!error || error.code === 'PGRST116') break;
+      }
     }
 
     if (error || !landlord) return null;
@@ -100,10 +114,22 @@ export const getLandlordProfile = cache(async (landlordId) => {
     // --- Their listings (same shape as the public directory) ---
     // Newest first (listing_id's per-landlord sequence increases with
     // recency — see the LLLLNNN format in docs/schema.md).
+    /*
+      ACTIVE ONLY. This filter was missing, and `listings` is world-readable
+      ("Public can read listings", qual `true`), so RLS was never going to
+      supply it — a landlord with a draft or a disabled listing had it shown on
+      their public profile alongside the live ones. Every listing in the
+      database is currently active, so nothing was actually leaking yet; the
+      code path was simply wrong and would have leaked on the first draft.
+
+      It is also what Feature 49's addendum means by the ACTIVE LISTINGS stat:
+      "count of listing_status = 'active' for the landlord".
+    */
     let { data: rows, error: listErr } = await supabase
       .from('listings')
       .select(LISTINGS_SELECT)
       .eq('landlord_id', landlordId)
+      .eq('listing_status', 'active')
       .order('listing_id', { ascending: false });
 
     if (listErr) {
@@ -111,6 +137,7 @@ export const getLandlordProfile = cache(async (landlordId) => {
         .from('listings')
         .select(LISTINGS_SELECT_FALLBACK)
         .eq('landlord_id', landlordId)
+        .eq('listing_status', 'active')
         .order('listing_id', { ascending: false });
       rows = fb.data;
       listErr = fb.error;
@@ -127,6 +154,10 @@ export const getLandlordProfile = cache(async (landlordId) => {
         is_verified: landlord.is_verified ?? false,
         profile_photo_url: landlord.profile_photo_url ?? null,
         created_at: landlord.created_at ?? null,
+        // Raw values, not a bucket: responseTimeBucket() is the display
+        // decision and belongs at the render site, where `now` is known.
+        avg_response_ms: landlord.avg_response_ms ?? null,
+        response_stats_at: landlord.response_stats_at ?? null,
       },
       listings,
     };
