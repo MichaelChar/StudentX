@@ -6,16 +6,9 @@ import {
   getSupabaseWithToken,
   getSupabaseAsService,
 } from '@/lib/supabaseServer';
+import { landlordIdForUser } from '@/lib/landlordAuth';
 import { writeUniversityDistances } from '@/lib/universityDistances';
 
-async function getLandlordId(userId) {
-  const { data } = await getSupabaseAsService()
-    .from('landlords')
-    .select('landlord_id')
-    .eq('auth_user_id', userId)
-    .single();
-  return data?.landlord_id ?? null;
-}
 
 /**
  * Duplicate a listing for multi-room stock ("… – Room 1 / Room 2").
@@ -29,7 +22,7 @@ export async function POST(request, { params }) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const landlordId = await getLandlordId(user.id);
+  const landlordId = await landlordIdForUser(getSupabaseWithToken(token), user.id);
   if (!landlordId) {
     return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
   }

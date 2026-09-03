@@ -3,20 +3,14 @@ import {
   extractToken,
   getUserFromToken,
   getSupabaseAsService,
+  getSupabaseWithToken,
 } from '@/lib/supabaseServer';
+import { landlordIdForUser } from '@/lib/landlordAuth';
 import {
   hasPendingPropertyVerification,
   isPropertyVerified,
 } from '@/lib/propertyVerification';
 
-async function getLandlordId(userId) {
-  const { data } = await getSupabaseAsService()
-    .from('landlords')
-    .select('landlord_id')
-    .eq('auth_user_id', userId)
-    .single();
-  return data?.landlord_id ?? null;
-}
 
 /**
  * POST /api/landlord/listings/[id]/property-verification
@@ -32,7 +26,7 @@ export async function POST(request, { params }) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const landlordId = await getLandlordId(user.id);
+  const landlordId = await landlordIdForUser(getSupabaseWithToken(token), user.id);
   if (!landlordId) {
     return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
   }

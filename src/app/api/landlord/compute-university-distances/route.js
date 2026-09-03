@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { extractToken, getUserFromToken, getSupabaseAsService } from '@/lib/supabaseServer';
+import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
 import { computeUniversityDistances } from '@/lib/computeUniversityDistances';
 
 /**
@@ -27,7 +27,13 @@ export async function POST(request) {
     return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
   }
 
-  const supabase = getSupabaseAsService();
+  /*
+    `faculties` is fully public — RLS "Public can read faculties" (qual true)
+    and every column selected here is granted to anon and authenticated alike.
+    There is nothing for a service-role key to unlock, and using one here made
+    the route 500 in any environment without that secret.
+  */
+  const supabase = getSupabaseWithToken(token);
   const { data: faculties, error } = await supabase
     .from('faculties')
     .select('faculty_id, university, lat, lng');

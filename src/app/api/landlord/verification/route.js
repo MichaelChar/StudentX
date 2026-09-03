@@ -1,10 +1,26 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
+import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { landlordRowForUser } from '@/lib/landlordAuth';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB
 const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'image/webp', 'application/pdf'];
 
+/*
+  This route KEEPS the service-role client, unlike its ten siblings.
+
+  The landlord self-lookup moved to the caller's own token (see
+  lib/landlordAuth.js), but `verification_requests` genuinely requires it:
+  the table has RLS **enabled with zero policies**, which is deny-all for both
+  `anon` and `authenticated`. Its permissive column grants are moot under that,
+  and a token-scoped read returns nothing rather than failing loudly.
+
+  Deny-all is a defensible posture for a table holding ID-verification records
+  — but it means this one route still 500s in an environment with no
+  SUPABASE_SERVICE_ROLE_KEY. Giving landlords a scoped SELECT policy on their
+  own requests would fix that; it is a migration against ID-document data and
+  deserves its own review, not a rider on a refactor.
+*/
 function getServiceSupabase() {
   return createClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL,
@@ -13,17 +29,6 @@ function getServiceSupabase() {
   );
 }
 
-// Service-role: migration 065 drops auth_user_id from the anon column
-// allowlist on landlords, so this self-lookup can't run on the anon client.
-// userId is JWT-derived, so it stays scoped to the authenticated caller.
-async function getLandlordId(userId) {
-  const { data } = await getServiceSupabase()
-    .from('landlords')
-    .select('landlord_id, is_verified')
-    .eq('auth_user_id', userId)
-    .single();
-  return data ?? null;
-}
 
 export async function POST(request) {
   const token = extractToken(request);
@@ -32,7 +37,7 @@ export async function POST(request) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const landlord = await getLandlordId(user.id);
+  const landlord = await landlordRowForUser(getSupabaseWithToken(token), user.id, 'landlord_id, is_verified');
   if (!landlord) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
   // Guard: ID already approved.
@@ -115,7 +120,7 @@ export async function GET(request) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const landlord = await getLandlordId(user.id);
+  const landlord = await landlordRowForUser(getSupabaseWithToken(token), user.id, 'landlord_id, is_verified');
   if (!landlord) return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
 
   const supabase = getServiceSupabase();
