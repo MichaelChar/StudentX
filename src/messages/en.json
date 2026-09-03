@@ -607,6 +607,24 @@
         "blackoutRange": "Each blackout end date must be on or after its start",
         "photosRequired": "Add at least {count} photos before submitting",
         "prefillFailed": "Could not prefill university distances. Try again or enter them manually."
+      },
+      "sections": {
+        "heading": "Edit your listing",
+        "lede": "Open any section, in any order. Changes save when you save the listing.",
+        "needsDetails": "Needs details",
+        "progressAllDone": "Everything's filled in",
+        "progress": "{incomplete, plural, one {# section needs details} other {# sections need details}}",
+        "photos": "Photos",
+        "property": "Title, description & amenities",
+        "price": "Price & terms",
+        "address": "Address",
+        "universities": "Distance to campus",
+        "availability": "Availability",
+        "summaryPhotos": "{count, plural, one {# photo} other {# photos}}",
+        "summaryPrice": "€{price}/mo",
+        "summaryUniversities": "{count, plural, one {# campus} other {# campuses}}",
+        "summaryText": "{text}",
+        "summaryEmpty": "Not set"
       }
     }
   },
