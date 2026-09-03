@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { useRouter } from '@/i18n/navigation';
+import { useSearchParams } from 'next/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useAccessToken } from '@/lib/useAccessToken';
 import ListingForm from '@/components/ListingForm';
@@ -15,6 +16,7 @@ export default function EditListingPage() {
   const t = useTranslations('landlord.editListing');
   const tWiz = useTranslations('landlord.listingWizard');
   const router = useRouter();
+  const searchParams = useSearchParams();
   const accessToken = useAccessToken();
   const { id } = useParams();
   const [initialValues, setInitialValues] = useState(null);
@@ -156,6 +158,14 @@ export default function EditListingPage() {
         ) : (
           initialValues && (
             <ListingForm
+              /*
+                EDIT uses the section list (Feature 51); CREATE keeps the
+                wizard. `?section=` is the deep link Feature 50's
+                action-required banner will use to open the one section that
+                is blocking go-live.
+              */
+              mode="sections"
+              initialSection={searchParams.get('section')}
               initialValues={initialValues}
               listingId={id}
               isVerified={isVerified}

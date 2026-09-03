@@ -31,6 +31,13 @@ import StepPrice from '@/components/listing-wizard/StepPrice';
 import StepAvailability from '@/components/listing-wizard/StepAvailability';
 import StepPhotos from '@/components/listing-wizard/StepPhotos';
 import StepReview from '@/components/listing-wizard/StepReview';
+import EditorSection from '@/components/listing-wizard/EditorSection';
+import {
+  LISTING_SECTIONS,
+  sectionProgress,
+  sectionSummary,
+  sectionCompleteness,
+} from '@/lib/listingSections';
 import {
   applyPasteSuggestions,
   parseListingPaste,
@@ -101,6 +108,23 @@ function emptyForm(initial = {}) {
  *   - accessToken: bearer token for prefill API
  */
 export default function ListingForm({
+  /*
+    'wizard' (default) is the guided create flow — one step at a time, with a
+    progress bar. 'sections' is Feature 51's EDIT view: every section listed,
+    each opening in place, in any order.
+
+    Both render the SAME step components. The difference is only how they are
+    sequenced, which is why this is a mode rather than a second editor: forking
+    it would give a landlord two forms that drift apart on the fields they
+    share.
+  */
+  mode = 'wizard',
+  /*
+    Section to open on mount. Feature 50's action-required banner deep-links
+    here (`?section=photos`) — that landing point is the whole reason Feature 51
+    replaces the wizard for editing.
+  */
+  initialSection = null,
   initialValues = {},
   listingId: listingIdProp = null,
   onSaveDraft,
@@ -124,6 +148,9 @@ export default function ListingForm({
     [includeImport],
   );
   const [step, setStep] = useState(0);
+  // Sections mode: which section is expanded. One at a time — six open
+  // panels is six mounted maps and file inputs, and nothing to scan.
+  const [openSection, setOpenSection] = useState(initialSection);
   // Edit pages pass listingIdProp; new listings stash the id returned from
   // the first draft create. Prefer the prop when present.
   const [createdId, setCreatedId] = useState(null);
@@ -707,6 +734,192 @@ export default function ListingForm({
   const stepKey = STEPS[step];
   const isImportStep = stepKey === 'import';
 
+  /*
+    One renderer, two layouts. The wizard shows a single step inside a Card;
+    the section list shows all six inside collapsibles. Both call this, so the
+    two editors cannot drift apart on the fields they share.
+  */
+  function renderStepBody(key) {
+    return (
+      <>
+      {key === 'import' && (
+        <StepImport
+          pasteText={pasteText}
+          setPasteText={setPasteText}
+          amenities={amenities}
+          lastResult={pasteResult}
+          onSkip={skipImport}
+          onApply={applyImport}
+        />
+      )}
+      {key === 'address' && (
+        <StepAddress
+          form={form}
+          setField={setField}
+          neighborhoods={neighborhoods}
+          suggested={suggested}
+          onDismissSuggestion={dismissSuggestion}
+        />
+      )}
+      {key === 'property' && (
+        <StepProperty
+          form={form}
+          setField={setField}
+          toggleAmenity={toggleAmenity}
+          propertyTypes={propertyTypes}
+          amenities={amenities}
+          suggested={suggested}
+          onDismissSuggestion={dismissSuggestion}
+        />
+      )}
+      {key === 'universities' && (
+        <StepUniversities
+          form={form}
+          setField={setField}
+          universities={universities}
+          prefillLoading={prefillLoading}
+          onPrefill={() => prefillDistances()}
+          onAddUniversity={addUniversityRow}
+        />
+      )}
+      {key === 'price' && (
+        <StepPrice
+          form={form}
+          setField={setField}
+          suggested={suggested}
+          onDismissSuggestion={dismissSuggestion}
+        />
+      )}
+      {key === 'availability' && (
+        <StepAvailability
+          form={form}
+          setField={setField}
+          suggested={suggested}
+          onDismissSuggestion={dismissSuggestion}
+        />
+      )}
+      {key === 'photos' && (
+        <StepPhotos
+          form={form}
+          setField={setField}
+          fileInputRef={fileInputRef}
+          uploading={uploading}
+          photoError={photoError}
+          dragIndex={dragIndex}
+          dragOverIndex={dragOverIndex}
+          setDragIndex={setDragIndex}
+          setDragOverIndex={setDragOverIndex}
+          onFiles={handlePhotoFiles}
+          onRemove={removePhoto}
+          onReorder={reorderPhoto}
+        />
+      )}
+      {key === 'review' && (
+        <StepReview
+          form={form}
+          amenities={amenities}
+          universities={universities}
+          onPreview={() => setShowPreview(true)}
+          checklist={checklist}
+        />
+      )}
+      </>
+    );
+  }
+
+  if (mode === 'sections') {
+    const done = sectionCompleteness(form);
+    const progress = sectionProgress(form);
+
+    return (
+      <>
+        {(loading || saving) && (
+          <BauhausLoader
+            mode="overlay"
+            eyebrow={loading ? tLoaders('uploading') : t('savingDraft')}
+            statuses={tLoaders.raw('uploadingCycle')}
+          />
+        )}
+
+        <div className="space-y-6">
+          <StatusLadder current={ladder.current} completed={ladder.completed} />
+
+          <div>
+            <h2 className="font-display text-2xl text-night">
+              {t('sections.heading')}
+            </h2>
+            <p className="mt-1 text-sm text-night/60">{t('sections.lede')}</p>
+            {/*
+              Says how much is outstanding, never how much is finished.
+              "4 of 6 done" invites a landlord to feel satisfied at 4; the
+              number that matters is the one still blocking go-live.
+            */}
+            <p className="mt-3 label-caps text-night/50">
+              {progress.incomplete === 0
+                ? t('sections.progressAllDone')
+                : t('sections.progress', { incomplete: progress.incomplete })}
+            </p>
+          </div>
+
+          <div className="space-y-3">
+            {LISTING_SECTIONS.map((section) => {
+              const summary = sectionSummary(form, section.key);
+              return (
+                <EditorSection
+                  key={section.key}
+                  id={`section-${section.key}`}
+                  title={t(`sections.${section.key}`)}
+                  summary={
+                    summary
+                      ? t(`sections.${summary.key}`, summary.params)
+                      : t('sections.summaryEmpty')
+                  }
+                  incomplete={!done[section.key]}
+                  incompleteLabel={t('sections.needsDetails')}
+                  open={openSection === section.key}
+                  onToggle={() =>
+                    setOpenSection((cur) => (cur === section.key ? null : section.key))
+                  }
+                >
+                  {renderStepBody(section.step)}
+                </EditorSection>
+              );
+            })}
+          </div>
+
+          {error && (
+            <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3">
+              {error}
+            </p>
+          )}
+          {saveHint && !error && <p className="text-xs text-night/50">{saveHint}</p>}
+
+          <div className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-end">
+            <Button type="button" variant="outline" onClick={() => setShowPreview(true)}>
+              {t('review.preview')}
+            </Button>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={handleFinalSubmit}
+              disabled={loading}
+            >
+              {loading ? t('submitting') : submitLabel || t('submit')}
+            </Button>
+          </div>
+        </div>
+
+        {showPreview && (
+          <ListingPreview
+            form={form}
+            amenities={amenities}
+            onClose={() => setShowPreview(false)}
+          />
+        )}
+      </>
+    );
+  }
+
   return (
     <>
       {(loading || saving) && (
@@ -780,87 +993,7 @@ export default function ListingForm({
         )}
 
         <Card tone="white" className="p-5 md:p-8">
-          {isImportStep && (
-            <StepImport
-              pasteText={pasteText}
-              setPasteText={setPasteText}
-              amenities={amenities}
-              lastResult={pasteResult}
-              onSkip={skipImport}
-              onApply={applyImport}
-            />
-          )}
-          {stepKey === 'address' && (
-            <StepAddress
-              form={form}
-              setField={setField}
-              neighborhoods={neighborhoods}
-              suggested={suggested}
-              onDismissSuggestion={dismissSuggestion}
-            />
-          )}
-          {stepKey === 'property' && (
-            <StepProperty
-              form={form}
-              setField={setField}
-              toggleAmenity={toggleAmenity}
-              propertyTypes={propertyTypes}
-              amenities={amenities}
-              suggested={suggested}
-              onDismissSuggestion={dismissSuggestion}
-            />
-          )}
-          {stepKey === 'universities' && (
-            <StepUniversities
-              form={form}
-              setField={setField}
-              universities={universities}
-              prefillLoading={prefillLoading}
-              onPrefill={() => prefillDistances()}
-              onAddUniversity={addUniversityRow}
-            />
-          )}
-          {stepKey === 'price' && (
-            <StepPrice
-              form={form}
-              setField={setField}
-              suggested={suggested}
-              onDismissSuggestion={dismissSuggestion}
-            />
-          )}
-          {stepKey === 'availability' && (
-            <StepAvailability
-              form={form}
-              setField={setField}
-              suggested={suggested}
-              onDismissSuggestion={dismissSuggestion}
-            />
-          )}
-          {stepKey === 'photos' && (
-            <StepPhotos
-              form={form}
-              setField={setField}
-              fileInputRef={fileInputRef}
-              uploading={uploading}
-              photoError={photoError}
-              dragIndex={dragIndex}
-              dragOverIndex={dragOverIndex}
-              setDragIndex={setDragIndex}
-              setDragOverIndex={setDragOverIndex}
-              onFiles={handlePhotoFiles}
-              onRemove={removePhoto}
-              onReorder={reorderPhoto}
-            />
-          )}
-          {stepKey === 'review' && (
-            <StepReview
-              form={form}
-              amenities={amenities}
-              universities={universities}
-              onPreview={() => setShowPreview(true)}
-              checklist={checklist}
-            />
-          )}
+          {renderStepBody(stepKey)}
         </Card>
 
         {error && (
