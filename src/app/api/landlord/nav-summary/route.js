@@ -1,6 +1,15 @@
 import { NextResponse } from 'next/server';
-import { extractToken, getSupabaseWithToken } from '@/lib/supabaseServer';
-import { getHostNavSummary, summariseHostNav } from '@/lib/hostNavSummary';
+import {
+  extractToken,
+  getUserFromToken,
+  getSupabaseWithToken,
+} from '@/lib/supabaseServer';
+import {
+  getHostGoLiveInputs,
+  getHostNavSummary,
+  summariseHostNav,
+} from '@/lib/hostNavSummary';
+import { pickActionRequired } from '@/lib/hostActionRequired';
 
 /*
   The host nav's three numbers — parity Feature 49 addendum.
@@ -33,10 +42,27 @@ export async function GET(request) {
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   try {
-    const summary = await getHostNavSummary(getSupabaseWithToken(token));
-    return NextResponse.json({ summary });
+    const supabase = getSupabaseWithToken(token);
+    const user = await getUserFromToken(token);
+
+    /*
+      The go-live inputs need the caller's user id (to resolve landlord_id, the
+      only filter `listings` responds to). Everything else is scoped by RLS, so
+      the two halves run in parallel and a failure in either degrades alone.
+    */
+    const [summary, goLive] = await Promise.all([
+      getHostNavSummary(supabase),
+      user ? getHostGoLiveInputs(supabase, user.id) : { listings: [], isVerified: false },
+    ]);
+
+    return NextResponse.json({
+      summary,
+      // Feature 50's banner. Null when nothing is blocking — the shell renders
+      // nothing rather than an empty container.
+      actionRequired: pickActionRequired(goLive),
+    });
   } catch (err) {
     console.error('nav-summary failed, serving zeroed summary:', err);
-    return NextResponse.json({ summary: summariseHostNav() });
+    return NextResponse.json({ summary: summariseHostNav(), actionRequired: null });
   }
 }

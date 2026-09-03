@@ -137,3 +137,45 @@ export async function getHostNavSummary(supabase, { now } = {}) {
     pendingInquiryRows: inquiriesRes.error ? [] : inquiriesRes.data,
   });
 }
+
+/**
+ * The one thing blocking go-live, for the banner that follows the landlord
+ * across tabs — parity Feature 50.
+ *
+ * Fetched here rather than on the Listings page because the banner appears on
+ * Listings AND Messages, and this summary is the one request every landlord
+ * page already makes. It is the only part that needs `listings`, which is
+ * world-readable ("Public can read listings", qual `true`) and therefore
+ * scopes nothing — so this is the one query in the module that must be
+ * filtered by landlord_id explicitly.
+ *
+ * Selects the minimum: three listing columns plus the verification rows the
+ * gate reads. The full landlord listing select carries photos, amenities and
+ * distances, none of which a banner needs on every page load.
+ *
+ * @param {import('@supabase/supabase-js').SupabaseClient} supabase token-scoped
+ * @param {string} userId JWT-derived
+ * @returns {Promise<{ listings: Array, isVerified: boolean }>}
+ */
+export async function getHostGoLiveInputs(supabase, userId) {
+  const { data: landlord } = await supabase
+    .from('landlords')
+    .select('landlord_id, is_verified')
+    .eq('auth_user_id', userId)
+    .single();
+
+  if (!landlord?.landlord_id) return { listings: [], isVerified: false };
+
+  const { data, error } = await supabase
+    .from('listings')
+    .select(
+      'listing_id, listing_status, flags, property_verifications ( status, verified_at )',
+    )
+    .eq('landlord_id', landlord.landlord_id)
+    .order('listing_id', { ascending: false });
+
+  return {
+    listings: error ? [] : data || [],
+    isVerified: landlord.is_verified === true,
+  };
+}

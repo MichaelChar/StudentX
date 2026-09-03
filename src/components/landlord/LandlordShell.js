@@ -7,9 +7,11 @@ import { useRouter } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { signOutSafely } from '@/lib/authHelpers';
 import { hasWaiting } from '@/lib/hostNavSummary';
+import { actionRequiredHref } from '@/lib/hostActionRequired';
 
 import LandlordTopNav from '@/components/landlord/LandlordTopNav';
 import LandlordAccountMenu from '@/components/landlord/LandlordAccountMenu';
+import ActionRequiredBanner from '@/components/landlord/ActionRequiredBanner';
 import BauhausLoader from '@/components/BauhausLoader';
 
 /*
@@ -35,6 +37,22 @@ import BauhausLoader from '@/components/BauhausLoader';
 */
 
 const CITY = 'thessaloniki';
+
+/*
+  Blocker keys are snake_case (they come from listingGoLive.js); message keys
+  are camelCase. Mapped explicitly rather than transformed, so a new blocker
+  fails loudly at review instead of silently rendering a missing message.
+*/
+const BANNER_KEYS = {
+  id_check: 'idCheck',
+  submit: 'submit',
+  video_call: 'videoCall',
+  admin_review: 'adminReview',
+};
+
+function bannerKey(blocker) {
+  return BANNER_KEYS[blocker] || 'adminReview';
+}
 
 /*
   Exactly three, in this order. `messages` points at the existing inquiries
@@ -66,6 +84,7 @@ export default function LandlordShell({
   const [landlordName, setLandlordName] = useState(landlordNameProp);
   const [photoUrl, setPhotoUrl] = useState(null);
   const [summary, setSummary] = useState(null);
+  const [actionRequired, setActionRequired] = useState(null);
   // When ungated, there is nothing to wait for — paint on first render.
   const [sessionReady, setSessionReady] = useState(!gated);
 
@@ -120,7 +139,10 @@ export default function LandlordShell({
       const nav = fetch('/api/landlord/nav-summary', { headers })
         .then((res) => (res.ok ? res.json() : null))
         .then((body) => {
-          if (!cancelled && body?.summary) setSummary(body.summary);
+          if (cancelled || !body) return;
+          if (body.summary) setSummary(body.summary);
+          // null is meaningful here — it means nothing is blocking go-live.
+          setActionRequired(body.actionRequired ?? null);
         })
         .catch(() => {});
 
@@ -205,6 +227,20 @@ export default function LandlordShell({
           />
         }
       />
+
+      {/*
+        Feature 50's banner. It lives in the shell, not on the Listings page,
+        because the spec has it FOLLOW the host across tabs until resolved —
+        it appears on both Listings and Messages in the captures.
+      */}
+      {actionRequired && (
+        <ActionRequiredBanner
+          title={t(`banner.${bannerKey(actionRequired.blocker)}Title`)}
+          body={t(`banner.${bannerKey(actionRequired.blocker)}Body`)}
+          href={actionRequiredHref(actionRequired, CITY)}
+          ctaLabel={t('banner.cta')}
+        />
+      )}
 
       {/* Page header — the eyebrow/title/actions contract every page relies on */}
       {(eyebrow || title || actions) && (
