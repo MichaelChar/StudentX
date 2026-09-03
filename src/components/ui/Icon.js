@@ -11,6 +11,7 @@ import {
   Heart,
   House,
   Image as ImageIcon,
+  LayoutGrid,
   List,
   ListFilter,
   LogOut,
@@ -67,6 +68,10 @@ const ICONS = {
   filter: ListFilter,
   map: MapIcon,
   list: List,
+  // Feature 50's list/grid toggle. `filter` (three decreasing bars) was the
+  // nearest existing glyph and reads as "filter", which is a different control
+  // entirely — a misleading icon is worse than one more import.
+  grid: LayoutGrid,
   check: Check,
   calendar: Calendar,
   walk: Footprints,

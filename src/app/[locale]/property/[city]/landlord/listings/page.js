@@ -8,6 +8,7 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useAccessToken } from '@/lib/useAccessToken';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
+import LandlordListingCard from '@/components/landlord/LandlordListingCard';
 import { variantUrl } from '@/lib/photoVariants';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -22,9 +23,33 @@ import {
   pickLatestRejectedPropertyVerification,
 } from '@/lib/propertyVerification';
 import { formatMoney } from '@/lib/formatMoney';
+import { listingChipStatus, listingsSummary } from '@/lib/hostListingStatus';
 
 /*
-  Propylaea landlord listings index — View · Edit · Duplicate · Disable · Delete.
+  The landlord's listings — parity Feature 50.
+
+  Feature 50 replaces a dense row list with a three-up grid of photo cards:
+  status chip overlaid top-left, title beneath, rent as the grey subtitle
+  (NOT Airbnb's "Home in <city>, <country>" — a landlord knows where their own
+  properties are and is comparing prices).
+
+  BOTH VIEWS SHIP, AND THAT IS WHY THE TOGGLE EXISTS. Airbnb's grid card is
+  click-to-edit and carries no controls. This page's row carries six: View,
+  Edit, Duplicate, Disable, Request video call, Delete. Dropping the row would
+  drop five capabilities to gain a layout, and burying them in a per-card
+  overflow menu would put Delete one careless tap from a live listing. So the
+  grid is the parity presentation and the default, the list keeps every action,
+  and the spec's own list/grid toggle is what lets a landlord choose.
+
+  The toggle is NOT persisted. Reading localStorage during render would risk a
+  hydration mismatch, and the correct fix (useSyncExternalStore) is more
+  machinery than a three-listing account justifies. Worth adding the day a
+  landlord says they keep re-toggling it.
+
+  The chip is binary — Listed / Action required — exactly as Airbnb. The five
+  granular go-live states belong to the action-required banner, which ships
+  with Feature 51: the banner deep-links to one incomplete editor section, and
+  a linear wizard has no such landing point.
 */
 export default function LandlordListingsPage() {
   const t = useTranslations('landlord.dashboard');
@@ -38,6 +63,7 @@ export default function LandlordListingsPage() {
   const [busyId, setBusyId] = useState(null);
   const [confirmTarget, setConfirmTarget] = useState(null);
   const [isVerified, setIsVerified] = useState(false);
+  const [view, setView] = useState('grid');
 
   async function loadListings(token) {
     const res = await fetch('/api/landlord/listings', {
@@ -215,9 +241,19 @@ export default function LandlordListingsPage() {
       eyebrow={tWiz('eyebrow')}
       title={t('title')}
       actions={
-        <Button href="/property/thessaloniki/landlord/listings/new" variant="gold" size="sm">
-          + {t('addListing')}
-        </Button>
+        <div className="flex items-center gap-3">
+          {listings.length > 0 && (
+            <ViewToggle
+              view={view}
+              onChange={setView}
+              gridLabel={t('viewGrid')}
+              listLabel={t('viewList')}
+            />
+          )}
+          <Button href="/property/thessaloniki/landlord/listings/new" variant="gold" size="sm">
+            + {t('addListing')}
+          </Button>
+        </div>
       }
     >
       {error && (
@@ -240,6 +276,42 @@ export default function LandlordListingsPage() {
             {t('addFirst')}
           </Button>
         </Card>
+      ) : view === 'grid' ? (
+        <>
+          {/*
+            "2 of 3 live" rather than a bare count. The grid's whole job is to
+            show which listings are earning; the heading says how many at a
+            glance without repeating a chip on every card.
+          */}
+          <p className="label-caps text-night/50 mb-4">
+            {t('gridCount', listingsSummary(listings))}
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8">
+            {listings.map((listing) => {
+              const { needsAction } = listingChipStatus(listing);
+              const address = listing.location?.address || t('noAddress');
+              const price = listing.rent?.monthly_price;
+              return (
+                <LandlordListingCard
+                  key={listing.listing_id}
+                  href={`/property/thessaloniki/landlord/listings/${listing.listing_id}/edit`}
+                  photoUrl={listing.photos?.find(
+                    (url) => typeof url === 'string' && url.startsWith('http'),
+                  )}
+                  photoAlt={address}
+                  title={listing.title || address}
+                  subtitle={
+                    price != null
+                      ? `${formatMoney(price, listing.rent?.currency)}/mo`
+                      : null
+                  }
+                  statusLabel={needsAction ? t('statusActionRequired') : t('statusListed')}
+                  needsAction={needsAction}
+                />
+              );
+            })}
+          </div>
+        </>
       ) : (
         <Card tone="white" className="overflow-hidden">
           <ul className="divide-y divide-night/10">
@@ -281,6 +353,48 @@ export default function LandlordListingsPage() {
         />
       )}
     </LandlordShell>
+  );
+}
+
+/*
+  The list/grid toggle — parity Feature 50, top-right beside the `+` button.
+
+  A radiogroup rather than two buttons: the two options are mutually exclusive
+  states of one control, and a screen reader should hear "Grid view, selected,
+  1 of 2" rather than two unrelated buttons. Icons carry the meaning visually;
+  the accessible name comes from the translated label, not the glyph.
+*/
+function ViewToggle({ view, onChange, gridLabel, listLabel }) {
+  const options = [
+    { value: 'grid', label: gridLabel, icon: 'grid' },
+    { value: 'list', label: listLabel, icon: 'list' },
+  ];
+  return (
+    <div
+      role="radiogroup"
+      aria-label={gridLabel}
+      className="inline-flex items-center rounded-control border border-night/15 p-0.5"
+    >
+      {options.map((opt) => {
+        const active = view === opt.value;
+        return (
+          <button
+            key={opt.value}
+            type="button"
+            role="radio"
+            aria-checked={active}
+            aria-label={opt.label}
+            onClick={() => onChange(opt.value)}
+            className={`inline-flex items-center justify-center rounded-[6px] px-2.5 py-1.5 transition-colors
+              focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2 ${
+                active ? 'bg-night text-stone' : 'text-night/50 hover:text-night'
+              }`}
+          >
+            <Icon name={opt.icon} className="w-4 h-4" />
+          </button>
+        );
+      })}
+    </div>
   );
 }
 

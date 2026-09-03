@@ -263,7 +263,12 @@
       "statusDraft": "Draft",
       "statusSubmitted": "Submitted",
       "statusActive": "Live",
-      "statusDisabled": "Disabled"
+      "statusDisabled": "Disabled",
+      "statusListed": "Listed",
+      "statusActionRequired": "Action required",
+      "viewGrid": "Grid view",
+      "viewList": "List view",
+      "gridCount": "{live} of {total} live"
     },
     "listingForm": {
       "locationSection": "Location",
