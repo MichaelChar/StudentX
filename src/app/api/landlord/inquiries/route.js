@@ -30,7 +30,7 @@ export async function GET(request) {
       status,
       replied_at,
       created_at,
-      listings ( listing_id, location ( address ) )
+      listings ( listing_id, photos, location ( address ) )
     `)
     .order('created_at', { ascending: false });
 

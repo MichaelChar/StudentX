@@ -408,7 +408,20 @@
       "markClosed": "Close",
       "reopen": "Reopen",
       "openChat": "Open chat",
-      "profileError": "Landlord profile not found"
+      "profileError": "Landlord profile not found",
+      "paneHeading": "Messages",
+      "searchPlaceholder": "Search by name, address or message",
+      "filterAll": "All",
+      "filterUnread": "Unread",
+      "emptyList": "No messages yet.",
+      "emptySearch": "Nothing matches that search.",
+      "pickThread": "Choose a conversation",
+      "pickThreadBody": "Pick a message on the left to read and reply.",
+      "reservationHeading": "Reservation",
+      "reservationNone": "No booking is tied to this conversation yet.",
+      "closePanel": "Close reservation panel",
+      "openPanel": "Show reservation panel",
+      "threadListLabel": "Conversations"
     },
     "listingWizard": {
       "eyebrow": "Listings",
