@@ -1,4 +1,8 @@
 import { notFound } from 'next/navigation';
+
+/* Same source the layout uses for canonical and OG URLs, so a shared link and
+   a crawled link are the same string. */
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
@@ -17,6 +21,7 @@ import WhereYoullBe from '@/components/listing/WhereYoullBe';
 import MeetYourHostSection from '@/components/listing/MeetYourHostSection';
 import HowPayingWorks from '@/components/listing/HowPayingWorks';
 import PaymentSafetyNotice from '@/components/listing/PaymentSafetyNotice';
+import ShareButton from '@/components/listing/ShareButton';
 import FavoriteButton from '@/components/FavoriteButton';
 import ListingCard from '@/components/ListingCard';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
@@ -46,7 +51,7 @@ const CANCELLATION_COPY_KEY = {
 const MAX_FROM_LENGTH = 512;
 
 export default async function ListingPage({ params, searchParams }) {
-  const { locale, id } = await params;
+  const { locale, city, id } = await params;
   const sp = (await searchParams) || {};
   setRequestLocale(locale);
 
@@ -218,13 +223,37 @@ export default async function ListingPage({ params, searchParams }) {
               )}
             </div>
 
-            {/* Save / shortlist toggle. Renders for everyone — a
-                signed-out tap opens the sign-in gate (FavoritesProvider). */}
-            <FavoriteButton
-              listingId={listing.listing_id}
-              withLabel
-              className="md:self-start shrink-0"
-            />
+            {/*
+              Feature 42 — Share beside Save, as the reference has them.
+
+              Student housing is rarely a solo decision: flatmates decide
+              together and parents usually pay, so a listing gets sent to two
+              or three people before anyone commits. In Greece that happens on
+              WhatsApp and Viber, which is exactly what the native share sheet
+              opens with. Desktop falls back to copying the link.
+
+              The canonical absolute URL is built here rather than read from
+              window.location: the share target should be the clean public URL,
+              not whatever tracking or `from=` params the student happens to
+              have arrived with.
+            */}
+            <div className="flex items-center gap-3 md:self-start shrink-0">
+              <ShareButton
+                url={`${SITE_URL}/property/${city}/listing/${listing.listing_id}`}
+                title={listing.title || listing.neighborhood || ''}
+                label={t('shareLabel')}
+                ariaLabel={t('shareAria')}
+                copiedLabel={t('shareCopied')}
+                copyFailedLabel={t('shareCopyFailed')}
+              />
+
+              {/* Save / shortlist toggle. Renders for everyone — a
+                  signed-out tap opens the sign-in gate (FavoritesProvider). */}
+              <FavoriteButton
+                listingId={listing.listing_id}
+                withLabel
+              />
+            </div>
           </div>
 
           {/* Listed by — verified landlords link to their public profile.

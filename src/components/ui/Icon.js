@@ -21,6 +21,7 @@ import {
   Plus,
   Search,
   Settings,
+  Share2,
   Shield,
   ShieldCheck,
   Star,
@@ -75,6 +76,11 @@ const ICONS = {
   cog: Settings,
   photo: ImageIcon,
   message: MessageSquare,
+  // Share2 (nodes + connectors), not Share (box + arrow): the latter reads as
+  // "export/upload" and this is "send to a person". Added for Feature 42 —
+  // there was no share glyph, and the alternative was reusing `message`, which
+  // is the inquiry icon on the same page.
+  share: Share2,
   chevronDown: ChevronDown,
   chevronRight: ChevronRight,
   arrowRight: ArrowRight,
