@@ -130,7 +130,22 @@ export default function LandlordShell({
     return () => {
       cancelled = true;
     };
-  }, [router, gated]);
+    /*
+      `router` is deliberately NOT a dependency. next-intl's useRouter() hands
+      back a fresh object every render, so listing it re-runs this effect on
+      every state change it causes — measured at eight identical
+      /api/landlord/nav-summary requests inside 60ms on one dashboard load.
+      Its methods are stable; only the wrapper's identity churns, so re-running
+      on it buys nothing and costs a request storm on every landlord page.
+
+      An earlier attempt guarded the fetch with a ref instead. That was worse:
+      under StrictMode the first invocation set the ref and was then cancelled
+      by its own cleanup, while the second saw the ref and skipped the fetch —
+      so the Messages dot never rendered at all. Fix the dependency, not the
+      symptom.
+    */
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [gated]);
 
   async function handleSignOut() {
     const supabase = getSupabaseBrowser();
@@ -193,11 +208,17 @@ export default function LandlordShell({
 
       {/* Page header — the eyebrow/title/actions contract every page relies on */}
       {(eyebrow || title || actions) && (
-        <div className="px-5 md:px-8 pt-8 pb-2 flex items-end gap-4">
+        /*
+          Stacks below `sm`. Side by side, a long title ("Good to see you,
+          michaelcharlesg") is squeezed by the action button into "Good to
+          see …" on a 375px screen — the greeting loses the name that is the
+          entire point of it.
+        */
+        <div className="px-5 md:px-8 pt-8 pb-2 flex flex-col gap-3 sm:flex-row sm:items-end sm:gap-4">
           <div className="flex-1 min-w-0">
             {eyebrow && <p className="label-caps text-blue">{eyebrow}</p>}
             {title && (
-              <h1 className="font-display text-3xl md:text-4xl text-night leading-tight mt-1 truncate">
+              <h1 className="font-display text-3xl md:text-4xl text-night leading-tight mt-1">
                 {title}
               </h1>
             )}

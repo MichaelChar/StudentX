@@ -1,11 +1,6 @@
 import { NextResponse } from 'next/server';
-import {
-  extractToken,
-  getUserFromToken,
-  getSupabaseWithToken,
-  getSupabaseAsService,
-} from '@/lib/supabaseServer';
-import { getHostNavSummary } from '@/lib/hostNavSummary';
+import { extractToken, getSupabaseWithToken } from '@/lib/supabaseServer';
+import { getHostNavSummary, summariseHostNav } from '@/lib/hostNavSummary';
 
 /*
   The host nav's three numbers — parity Feature 49 addendum.
@@ -14,52 +9,34 @@ import { getHostNavSummary } from '@/lib/hostNavSummary';
   round-trip instead of three (analytics + bookings + inquiries). It returns
   presence booleans, never counts: see the note in lib/hostNavSummary.js.
 
-  Deliberately NOT cached at the edge. It is per-landlord and changes the
-  moment a student sends anything; a stale dot is the failure mode the whole
-  feature is built to avoid. It is also an auth-touching route, so OpenNext on
-  Workers would force it private regardless (see CLAUDE.md).
-*/
+  NO SERVICE-ROLE CLIENT AND NO LANDLORD LOOKUP. Its sibling routes open with
+  a service-role read of `landlords.auth_user_id` because they need
+  `landlord_id` to filter `listings`. We never query `listings` — all three
+  tables here carry landlord-scoped RLS policies keyed on `auth.uid()` — so
+  that step would buy nothing and cost the one dependency that makes this
+  route fail in an environment without the service key.
 
-// Service-role: migration 065 drops auth_user_id from the anon column
-// allowlist on landlords, so this self-lookup can't run on the anon client.
-// userId is JWT-derived, so the read stays scoped to the authenticated caller.
-async function getLandlordId(userId) {
-  const { data } = await getSupabaseAsService()
-    .from('landlords')
-    .select('landlord_id')
-    .eq('auth_user_id', userId)
-    .single();
-  return data?.landlord_id ?? null;
-}
+  IT NEVER 5xx's. This is chrome on every landlord page: a 500 here would put
+  a red line in the console of every screen a landlord opens, to say a dot is
+  missing. Failures degrade to a zeroed summary and are logged server-side.
+
+  Deliberately not cached at the edge. It is per-caller and changes the moment
+  a student sends anything; a stale dot is the failure mode the whole feature
+  exists to avoid. It is also auth-touching, so OpenNext on Workers would
+  force it private regardless (see CLAUDE.md).
+*/
 
 export async function GET(request) {
   const token = extractToken(request);
+  // 401 is the one real status this route returns — an unauthenticated caller
+  // is a bug at the call site, not a degraded nav.
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const user = await getUserFromToken(token);
-  if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-
-  const landlordId = await getLandlordId(user.id);
-  /*
-    404, not 500. A signed-in STUDENT hitting this has no landlord row, and
-    that is an ordinary outcome, not a fault — the shell treats it as "no nav
-    numbers" and carries on.
-  */
-  if (!landlordId) {
-    return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+  try {
+    const summary = await getHostNavSummary(getSupabaseWithToken(token));
+    return NextResponse.json({ summary });
+  } catch (err) {
+    console.error('nav-summary failed, serving zeroed summary:', err);
+    return NextResponse.json({ summary: summariseHostNav() });
   }
-
-  const authedSupabase = getSupabaseWithToken(token);
-
-  const { data: listings } = await authedSupabase
-    .from('listings')
-    .select('listing_id')
-    .eq('landlord_id', landlordId);
-
-  const listingIds = (listings || []).map((l) => l.listing_id).filter(Boolean);
-
-  // getHostNavSummary swallows its own query errors — chrome must not 500.
-  const summary = await getHostNavSummary(authedSupabase, listingIds);
-
-  return NextResponse.json({ summary });
 }

@@ -87,45 +87,48 @@ export function hasWaiting(summary) {
 }
 
 /**
- * Fetch + reduce, honouring RLS via the passed client.
+ * Fetch + reduce. Every scoping decision is RLS's, not ours.
+ *
+ * NO LANDLORD LOOKUP, AND NO SERVICE-ROLE CLIENT. All three tables carry a
+ * landlord-scoped SELECT policy that resolves the landlord from `auth.uid()`
+ * itself:
+ *
+ *   bookings       "Landlords read own listing bookings"
+ *   inquiries      "Landlords can read their own listing inquiries"
+ *   listing_views  "Landlords can read own listing views"
+ *
+ * so a token-scoped client already sees exactly this landlord's rows and
+ * nothing else. The sibling landlord routes resolve `landlord_id` first
+ * because they need it to filter `listings` — which is world-readable
+ * ("Public can read listings", qual `true`) and therefore scopes nothing. We
+ * never touch `listings`, so we never need the id, and dropping that step
+ * takes the service-role key out of the path for chrome that renders on every
+ * landlord page.
+ *
+ * A student calling this sees their OWN pending inquiries and bookings, via
+ * the student-side policies on the same tables. That is their own data, and
+ * they never render this nav — but it is why the result must not be treated
+ * as proof the caller is a landlord.
  *
  * Returns a zeroed summary rather than throwing on any failure: this feeds
- * chrome that wraps every landlord page, and a dead nav is a far worse
- * outcome than a missing dot. Callers that need to know a query failed should
- * not use this function.
+ * chrome wrapping every landlord page, and a dead nav is a far worse outcome
+ * than a missing dot. Callers that need to know a query failed should not use
+ * this function.
  *
  * @param {import('@supabase/supabase-js').SupabaseClient} supabase
- *        token-scoped client, so RLS limits rows to this landlord.
- * @param {string[]} listingIds  the landlord's listing ids.
+ *        token-scoped client, so RLS limits rows to the caller.
  * @param {{ now?: number|Date }} [opts]
  * @returns {Promise<{ viewsLast30: number, hasPendingRequests: boolean, hasPendingInquiries: boolean }>}
  */
-export async function getHostNavSummary(supabase, listingIds, { now } = {}) {
-  const ids = (listingIds || []).filter(Boolean);
-  if (ids.length === 0) return summariseHostNav();
-
+export async function getHostNavSummary(supabase, { now } = {}) {
   const cutoff = viewsCutoffDate(now);
 
   // `limit(1)` on both presence checks — we only ever ask "any?", so pulling
   // the whole queue back would be waste on every single page render.
   const [viewsRes, bookingsRes, inquiriesRes] = await Promise.all([
-    supabase
-      .from('listing_views')
-      .select('view_count')
-      .in('listing_id', ids)
-      .gte('view_date', cutoff),
-    supabase
-      .from('bookings')
-      .select('booking_id')
-      .in('listing_id', ids)
-      .eq('state', 'requested')
-      .limit(1),
-    supabase
-      .from('inquiries')
-      .select('inquiry_id')
-      .in('listing_id', ids)
-      .eq('status', 'pending')
-      .limit(1),
+    supabase.from('listing_views').select('view_count').gte('view_date', cutoff),
+    supabase.from('bookings').select('booking_id').eq('state', 'requested').limit(1),
+    supabase.from('inquiries').select('inquiry_id').eq('status', 'pending').limit(1),
   ]);
 
   return summariseHostNav({
