@@ -47,6 +47,7 @@ export default function MeetYourHost({
   onMessageHost,
   messageLabel,
   profileLabel,
+  footer = null,
 }) {
   const hostName = typeof name === 'string' ? name.trim() : '';
   // A host card with no host is worse than no card.
@@ -125,6 +126,9 @@ export default function MeetYourHost({
             ) : null}
           </div>
         ) : null}
+
+        {/* Slot — Feature 38's notice lands here, under the actions. */}
+        {footer}
       </Card>
     </section>
   );

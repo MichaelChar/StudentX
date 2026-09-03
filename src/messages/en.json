@@ -910,7 +910,15 @@
       "whereYoullBeCaption": "Approximate area only. The exact address is shared once your booking is confirmed.",
       "meetHostHeading": "Meet your host",
       "meetHostMessage": "Message host",
-      "meetHostProfile": "View profile"
+      "meetHostProfile": "View profile",
+      "howPayingHeading": "How paying works",
+      "howPayingStep1Label": "Step 1",
+      "howPayingStep1": "Chat with the landlord and confirm the property meets your expectations. After, transfer the first month’s rent to us.",
+      "howPayingStep2Label": "Step 2",
+      "howPayingStep2": "We hold it until you’ve moved in. The landlord is transferred the rent one business day after your arrival, so you have until then to confirm the property is as you expected.",
+      "howPayingStep3Label": "Step 3",
+      "howPayingStep3": "After that, it’s between you and your landlord.",
+      "offPlatformWarning": "Payments made outside StudentX aren’t held, can’t be refunded by us, and are how rental scams work. If a landlord asks you to pay another way, report it."
     },
     "landlordProfile": {
       "back": "Back to listings",

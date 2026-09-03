@@ -15,6 +15,8 @@ import PropertyVerifiedBadge from '@/components/listing/PropertyVerifiedBadge';
 import ListingHighlights from '@/components/listing/ListingHighlights';
 import WhereYoullBe from '@/components/listing/WhereYoullBe';
 import MeetYourHostSection from '@/components/listing/MeetYourHostSection';
+import HowPayingWorks from '@/components/listing/HowPayingWorks';
+import PaymentSafetyNotice from '@/components/listing/PaymentSafetyNotice';
 import FavoriteButton from '@/components/FavoriteButton';
 import ListingCard from '@/components/ListingCard';
 import LandlordAvatar from '@/components/landlord/LandlordAvatar';
@@ -467,6 +469,46 @@ export default async function ListingPage({ params, searchParams }) {
               }
               messageLabel={t('meetHostMessage')}
               profileLabel={t('meetHostProfile')}
+              /*
+                Feature 38 — the off-platform warning, under Message host.
+                That is where the temptation actually occurs: opening a thread
+                is the moment a scammer moves a student to WhatsApp.
+
+                The held-money explanation is NOT repeated here — "How paying
+                works" carries it, immediately below. The spec's third
+                placement (beside the booking CTA) would print these same two
+                sentences a second time on one page, and the booking card is
+                sticky so both could be on screen at once.
+              */
+              footer={<PaymentSafetyNotice body={t('offPlatformWarning')} />}
+            />
+          </section>
+
+          {/*
+            Feature 47 — "How paying works".
+
+            Directly after the host section, as the spec places it. It answers
+            the questions the booking card leaves open — what do I pay now, who
+            holds it, when does the landlord get it — without sending a student
+            off the listing mid-decision.
+
+            This section carries the held-money explanation, which is why
+            Feature 38's notice under "Message host" is the off-platform
+            warning alone: the two would otherwise print the same three
+            sentences twice on one page.
+
+            Step 3 is the trimmed version, by founder decision (2026-09-03).
+            The spec recommends restoring the deposit clause; the deposit is
+            already shown in the field grid above.
+          */}
+          <section className="mb-10">
+            <HowPayingWorks
+              heading={t('howPayingHeading')}
+              steps={[
+                { label: t('howPayingStep1Label'), body: t('howPayingStep1') },
+                { label: t('howPayingStep2Label'), body: t('howPayingStep2') },
+                { label: t('howPayingStep3Label'), body: t('howPayingStep3') },
+              ]}
             />
           </section>
 
