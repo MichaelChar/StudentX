@@ -925,12 +925,21 @@
     },
     "landlordProfile": {
       "back": "Back to listings",
-      "verified": "SuperLandlord",
+      "verified": "Identity verified",
       "memberSince": "Member since {date}",
       "propertyCount": "{count, plural, =0 {No properties listed} one {# property} other {# properties}}",
       "emptyState": "This landlord has no listings at the moment.",
-      "metaTitle": "{name} — SuperLandlord",
-      "metaDescription": "Browse all student housing listed by {name}, a SuperLandlord on StudentX Thessaloniki."
+      "metaTitle": "{name} — verified landlord on StudentX",
+      "metaDescription": "Browse student housing in Thessaloniki listed by {name}, an ID-verified landlord on StudentX.",
+      "location": "Thessaloniki, Greece",
+      "identityLine": "We've checked this landlord's government ID.",
+      "statActiveListings": "{count, plural, one {Active listing} other {Active listings}}",
+      "statReplies": "Replies",
+      "replyWithinHour": "Within an hour",
+      "replyWithinDay": "Within a day",
+      "replyWithin2Days": "Within 2 days",
+      "listingsHeading": "Their listings",
+      "locationSince": "Thessaloniki · Member since {date}"
     },
     "gallery": {
       "openLightbox": "Open photo gallery",
