@@ -338,7 +338,13 @@ function ListingAvatar({ listing, personName = null }) {
       photoAlt={listing?.location?.address || listing?.title || ''}
       personName={personName || ''}
       personPhotoUrl={null}
-      size={personName ? 'md' : 'sm'}
+      /*
+        One size for the whole feed. Sizing on whether a person is involved
+        made the listing and blocker rows visibly smaller than the reply
+        queue, which reads as a hierarchy that is not intended — the badge
+        already carries that difference.
+      */
+      size="md"
     />
   );
 }

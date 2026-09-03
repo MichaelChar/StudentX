@@ -54,7 +54,13 @@ export default function TodayCard({
           ) : null}
         </div>
         {actionLabel ? (
-          <span className="inline-flex shrink-0 items-center gap-1 label-caps text-blue">
+          /*
+            Hidden below `sm`. The whole card is the link, so this is a hint
+            rather than a control — and at 375px it steals enough width to
+            clamp the sentence to "Michael Charles asked about th...", which
+            costs the reader far more than the hint gives them.
+          */
+          <span className="hidden sm:inline-flex shrink-0 items-center gap-1 label-caps text-blue">
             {actionLabel}
             <Icon name="arrowRight" className="w-4 h-4" />
           </span>
