@@ -1726,11 +1726,16 @@ host-section-only placement.
 > move-in — not before. If the property isn't as described, tell
 > us before then and we'll refund you.
 
-> ⚠️ **Open — same-page duplication.** Paragraph 1 is identical in both
-> placements, so the PDP would render those three sentences twice. §W5's
-> intended repetition is *across* surfaces (listing → checkout), not twice on
-> one page. Options: (a) reduce the `Message host` block to the off-platform
-> paragraph only, (b) drop the CTA-side notice, (c) accept it. **Not decided.**
+> ✅ **RESOLVED 2026-09-03 — option (a), and the CTA-side notice is not built.**
+> The `Message host` block is the **off-platform paragraph only**; Feature 47's
+> "How paying works" carries the held-money explanation, immediately below the
+> host card. Verified on the rendered page: each block appears exactly once.
+>
+> The third placement (beside the booking CTA) is **deliberately not built**.
+> It would print the off-platform paragraph a second time on the same page,
+> and since Feature 33 made the booking card sticky, both copies can be on
+> screen simultaneously. §W5's repetition is *across* surfaces — the checkout
+> placement still stands and is unaffected.
 
 #### Competitive note
 
@@ -1748,6 +1753,15 @@ research.)
 This copy makes a promise that is only true once **W6** (move-in
 confirmation) and **W3** (Stripe Connect escrow) exist. **Do not ship the
 notice before the machinery.**
+
+> **Status 2026-09-03 — shipped, with the guard consciously overridden.** W6
+> exists (`moved_in` state, landlord reservations, move-in problem ops alert).
+> W3 does **not**: there is no Stripe Connect escrow in the codebase. The
+> founder confirmed the flow is **operational but manual** — money is received
+> and released by hand — so the promise is true of the business even though no
+> code enforces it. The copy therefore ships as approved, and nothing in it
+> claims automation. Revisit when W3 lands, at which point the wording can
+> stop depending on a person remembering.
 
 **Supersedes:** backlog item **P11**'s safety-notice half.
 
@@ -1980,11 +1994,16 @@ CTA-side notice becomes:
 
 #### ⚠️ Two open issues
 
-**1. Step 3 no longer answers the deposit question.** The earlier draft read
-"The deposit and every month's rent from the second month onward are paid to
-them directly." Trimmed, it does not tell a student a deposit is coming —
-reintroducing the €450-becomes-€900 surprise Feature 45 was designed around.
-**Recommend restoring that clause.**
+**1. ✅ RESOLVED 2026-09-03 — keep the trimmed Step 3.** Founder decision
+against the recommendation below: the deposit is already shown in the PDP's
+field grid, and the three steps stay short. Recorded so it is not reopened.
+
+The recommendation was: the earlier draft read "The deposit and every month's
+rent from the second month onward are paid to them directly." Trimmed, it does
+not tell a student a deposit is coming — the €450-becomes-€900 surprise
+Feature 45 was designed around. **Note the booking card's cost summary shows
+`total_rent` and not the deposit**, so the field grid is the only place it
+appears; worth revisiting if Feature 45 changes that.
 
 **2. ✅ RESOLVED — confirmation window is "until the landlord is paid".**
 

@@ -258,7 +258,13 @@ export async function sendMoveInPromptEmail({
 }
 
 /**
- * Ops alert when a student reports a move-in problem (no payments / escrow).
+ * Ops alert when a student reports a move-in problem.
+ *
+ * The money IS held — manually, outside this codebase, not by Stripe Connect
+ * (W3 is unbuilt). So this alert is time-critical rather than informational:
+ * the landlord payout goes out one business day after arrival, and until it
+ * does there is still something to withhold. Said plainly in the body because
+ * whoever reads it has to act, not just file it.
  */
 export async function sendMoveInProblemOpsEmail({
   bookingId,
@@ -294,7 +300,9 @@ export async function sendMoveInProblemOpsEmail({
       replyTo: studentEmail || undefined,
       subject: `Move-in problem reported — ${label}`,
       html: `
-        <p>A student reported a problem after move-in (offline booking — no escrow freeze).</p>
+        <p>A student reported a problem after move-in.</p>
+          <p><strong>The payout is held manually until one business day after arrival.</strong>
+          If that has not happened yet it can still be withheld — check before releasing.</p>
         <p><strong>Booking:</strong> ${safe(bookingId)}</p>
         <p><strong>Listing:</strong> ${safe(label)} (${safe(listingId)})</p>
         <p><strong>Student:</strong> ${safe(studentName || '—')} &lt;${safe(studentEmail || '—')}&gt;</p>
