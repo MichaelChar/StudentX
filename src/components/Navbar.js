@@ -11,7 +11,7 @@ import TabTitleFlash from './TabTitleFlash';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
 
 // Routes under /property/{city}/landlord/ that render their own LandlordShell
-// (sidebar + topbar) — the floating Navbar pill is redundant there. Auth-only
+// (its own top nav) — the floating Navbar pill is redundant there. Auth-only
 // pages (login, signup, etc.) are excluded so the pill still shows on those
 // centered forms.
 const LANDLORD_SHELL_RE =

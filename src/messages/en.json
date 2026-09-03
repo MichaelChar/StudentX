@@ -971,13 +971,18 @@
     },
     "landlord": {
       "nav": {
-        "dashboard": "Dashboard",
+        "today": "Today",
         "listings": "Listings",
+        "messages": "Messages",
         "reservations": "Reservations",
-        "inquiries": "Inquiries",
         "verification": "Verification",
         "settings": "Settings",
-        "signOut": "Sign out"
+        "signOut": "Sign out",
+        "primaryNav": "Landlord",
+        "openMenu": "Open navigation",
+        "openAccountMenu": "Account",
+        "waiting": "Waiting for your reply",
+        "viewsLabel": "views · last 30 days"
       },
       "settings": {
         "eyebrow": "Settings",
