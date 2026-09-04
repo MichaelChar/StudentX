@@ -1,289 +1,36 @@
 import { NextResponse } from "next/server";
-import { getSupabase } from "@/lib/supabase";
-import { transformListing } from "@/lib/transformListing";
-import { compareListingsByRank } from "@/lib/listingRank";
-import {
-  parseListingFilters,
-  resolveRequiredAmenityIds,
-  applyListingFilters,
-  hasGroundFloorTag,
-  hasAllRequiredAmenities,
-} from "@/lib/listingFilters";
-import { stayDurationMonths, durationFitsListing } from "@/lib/bookingDates";
-import { listingIdsBlockedInRange } from "@/lib/bookingBlocks";
-import { parseBoundsParams, applyBoundsFilter } from "@/lib/mapBounds";
-import { parsePageParam, paginate } from "@/lib/listingPagination";
+import { searchListings } from "@/lib/listingSearch";
 
-const LISTING_SELECT = `
-  listing_id,
-  title,
-  description,
-  photos,
-  floor,
-  sqm,
-  bedrooms,
-  bathrooms,
-  available_from,
-  available_to,
-  min_duration_months,
-  max_duration_months,
-  smoking_allowed,
-  pets_allowed,
-  additional_rules,
-  rent!inner ( monthly_price, currency, bills_included, deposit ),
-  location!inner ( address, neighborhood, lat, lng ),
-  property_types!inner ( name ),
-  landlords!inner ( name, is_verified, profile_photo_url, avg_response_ms, response_stats_at ),
-  listing_amenities ( amenities ( amenity_id, name ) ),
-  faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) ),
-  listing_university_distances ( university_id, distance_meters, universities ( name, short_name ) ),
-  property_verifications ( verification_id, method, verified_at )
-`;
+/*
+  Public listing search.
 
-// Fallback SELECT for pre-migration compatibility (e.g. missing
-// listing_university_distances from migration 066). Omits is_verified so a
-// half-migrated env still answers; verified_only is skipped on that path.
-const LISTING_SELECT_FALLBACK = `
-  listing_id,
-  title,
-  description,
-  photos,
-  floor,
-  rent!inner ( monthly_price, currency, bills_included, deposit ),
-  location!inner ( address, neighborhood, lat, lng ),
-  property_types!inner ( name ),
-  landlords!inner ( name ),
-  listing_amenities ( amenities ( amenity_id, name ) ),
-  faculty_distances ( faculty_id, walk_minutes, transit_minutes, faculties ( name, university ) )
-`;
-
+  The query itself lives in `lib/listingSearch.js` (issue #443) because it has
+  a second caller: the results page's server component renders the first page
+  of listings into the HTML, and going through this route over HTTP to do that
+  would be a Worker calling itself. This file owns only the HTTP contract —
+  status codes and cache headers.
+*/
 export async function GET(request) {
   try {
     const { searchParams } = new URL(request.url);
+    const { status, body } = await searchListings(searchParams);
 
-    // Shared (non-budget) filter parsing + validation. Budget is handled inline
-    // below — it's the one filter the price-distribution route drops (issue #218).
-    const f = parseListingFilters(searchParams);
-    if (f.error) {
-      return NextResponse.json({ error: f.error }, { status: 400 });
-    }
-
+    const response = NextResponse.json(body, { status });
     /*
-      Map-bounds search (parity Feature 14). Parsed here rather than in
-      parseListingFilters because /api/listings is the ONLY consumer — the
-      price histogram deliberately describes the whole search, not the current
-      viewport (issue #218), so scoping it to the map would make the chart
-      disagree with the question it answers.
+      No edge cache on a degraded answer. `degraded` means the fallback SELECT
+      could not honour `verified_only`, so the search failed CLOSED and
+      returned an empty list — correct for one request, and wrong to hold at
+      the edge for five minutes after the schema catches up.
+
+      Before the extraction this path happened to escape the header by being a
+      separate early return. That was luck, not intent; this states it.
     */
-    const { bounds, error: boundsError } = parseBoundsParams(searchParams);
-    if (boundsError) {
-      return NextResponse.json({ error: boundsError }, { status: 400 });
-    }
-
-    const minBudget = searchParams.get("min_budget");
-    const maxBudget = searchParams.get("max_budget");
-
-    const supabase = getSupabase();
-
-    // Amenity AND-filter: resolve qualifying listing_ids via SQL RPC
-    const {
-      listingIds: amenityListingIds,
-      failed: amenityRpcFailed,
-      empty: amenityEmpty,
-    } = await resolveRequiredAmenityIds(supabase, f.excludeAmenities);
-
-    if (amenityEmpty) {
-      const response = NextResponse.json({ listings: [] });
+    if (status === 200 && !body?.degraded) {
       response.headers.set(
         "Cache-Control",
         "public, s-maxage=300, stale-while-revalidate=600"
       );
-      return response;
     }
-
-    // Stay-range search: listing ids with overlapping pending/booked holds.
-    // Filtered in JS after transform (avoids PostgREST not.in quoting quirks).
-    let blockedIds = [];
-    if (f.moveInDate && f.moveOutDate) {
-      try {
-        blockedIds = await listingIdsBlockedInRange(f.moveInDate, f.moveOutDate);
-      } catch (err) {
-        console.warn("listingIdsBlockedInRange failed:", err?.message || err);
-      }
-    }
-
-    // Build query — only public-visible listings (listing_status = active)
-    let query = supabase.from("listings").select(LISTING_SELECT);
-    query = query.eq("listing_status", "active");
-    query = applyListingFilters(query, f, { amenityListingIds });
-    query = applyBoundsFilter(query, bounds);
-
-    // Filter: min budget
-    if (minBudget) {
-      const budget = Number(minBudget);
-      if (isNaN(budget) || budget <= 0) {
-        return NextResponse.json(
-          { error: "min_budget must be a positive number" },
-          { status: 400 }
-        );
-      }
-      query = query.gte("rent.monthly_price", budget);
-    }
-
-    // Filter: max budget
-    if (maxBudget) {
-      const budget = Number(maxBudget);
-      if (isNaN(budget) || budget <= 0) {
-        return NextResponse.json(
-          { error: "max_budget must be a positive number" },
-          { status: 400 }
-        );
-      }
-      query = query.lte("rent.monthly_price", budget);
-    }
-
-    // No DB-level ordering: ranking is computed in JS after transform.
-    // Single listings round-trip — response time comes from the join
-    // (landlords.avg_response_ms), not a per-landlord service-role scan.
-    let { data, error } = await query;
-
-    // If query fails (e.g. is_verified not migrated yet), retry with the
-    // reduced SELECT that omits it.
-    if (error) {
-      console.warn("Listings query failed, retrying without verified columns:", error.message);
-      let fallbackQuery = supabase.from("listings").select(LISTING_SELECT_FALLBACK);
-      fallbackQuery = fallbackQuery.eq("listing_status", "active");
-      fallbackQuery = applyListingFilters(fallbackQuery, f, { fallback: true, amenityListingIds });
-      // The fallback SELECT keeps the `location!inner` join, so bounds are
-      // honoured on this path too — unlike verified_only, which cannot be.
-      fallbackQuery = applyBoundsFilter(fallbackQuery, bounds);
-      if (minBudget) fallbackQuery = fallbackQuery.gte("rent.monthly_price", Number(minBudget));
-      if (maxBudget) fallbackQuery = fallbackQuery.lte("rent.monthly_price", Number(maxBudget));
-
-      const fallbackResult = await fallbackQuery;
-      if (fallbackResult.error) {
-        console.error("Supabase fallback query error:", fallbackResult.error);
-        return NextResponse.json(
-          { error: "Failed to fetch listings" },
-          { status: 500 }
-        );
-      }
-
-      // The fallback SELECT has no is_verified join, so applyListingFilters
-      // skips verified_only on this path. Returning the unfiltered rows would
-      // silently answer "show me verified listings only" with every listing —
-      // a safety claim the data can't back. Fail closed instead: empty result
-      // plus an explicit `degraded` marker, so the caller can say "temporarily
-      // unavailable" rather than "no matches".
-      if (f.verifiedOnly) {
-        console.error(
-          "verified_only requested but the fallback SELECT cannot honour it — returning empty",
-        );
-        return NextResponse.json({ listings: [], degraded: true });
-      }
-
-      data = fallbackResult.data;
-    }
-
-    // Transform rows to API shape
-    let results = data.map(transformListing);
-
-    // Residual amenity-tag check for excludeGroundFloor — the `floor != 0`
-    // half is now in SQL above, so this only catches listings whose floor
-    // is unset/non-zero but carry the "ground floor" amenity tag anyway.
-    if (f.excludeGroundFloor) {
-      results = results.filter((listing) => !hasGroundFloorTag(listing.amenities));
-    }
-
-    // Amenity AND-filter fallback: only needed when the SQL RPC was unavailable
-    if (f.excludeAmenities && amenityRpcFailed) {
-      const required = f.excludeAmenities.split(",").map((a) => a.trim());
-      results = results.filter((listing) => hasAllRequiredAmenities(listing.amenities, required));
-    }
-
-    // Stay-range: drop blocked calendars + enforce min/max duration fit.
-    // SQL already applied available_from / available_to via applyListingFilters.
-    if (f.moveInDate && f.moveOutDate) {
-      const blocked = new Set(blockedIds);
-      const months = stayDurationMonths(f.moveInDate, f.moveOutDate);
-      results = results.filter(
-        (listing) =>
-          !blocked.has(listing.listing_id) &&
-          durationFitsListing(listing, months),
-      );
-    }
-
-    /*
-      Commute filter (S15) — "within N minutes' walk of my faculty".
-
-      Filtered HERE in JS, not in SQL, because `faculty_distances` is a plain
-      embed rather than an `!inner` join: a PostgREST filter on an embedded
-      column narrows the embedded ROWS, it does not exclude the parent listing.
-      That is exactly what `?faculty=` wants (it scopes which distance is
-      shown, and deliberately hides nothing), but it is the opposite of what a
-      max-walk filter wants. Switching the embed to `!inner` would silently
-      change `?faculty=` from scoping to excluding, so the narrow fix stays
-      here — the same reasoning as the ground-floor tag check above.
-
-      Runs BEFORE the sort and the pagination slice, so page 1 is the top
-      ranked matches and `total` counts matches rather than candidates.
-
-      `f.faculty` is guaranteed present — parseListingFilters rejects
-      max_walk_minutes without it — so the scoped embed holds at most the one
-      faculty, and a listing with no row for it is correctly excluded.
-    */
-    if (f.maxWalkMinutes !== null) {
-      results = results.filter((listing) =>
-        (listing.faculty_distances ?? []).some(
-          (fd) =>
-            fd.faculty_id === f.faculty &&
-            typeof fd.walk_minutes === "number" &&
-            fd.walk_minutes <= f.maxWalkMinutes,
-        ),
-      );
-    }
-
-    results.sort((a, b) =>
-      compareListingsByRank(a, b, { sortBy: f.sortBy, sortOrder: f.sortOrder }),
-    );
-
-    /*
-      Numbered pagination (parity Feature 15).
-
-      OPT-IN, not default-on: `/api/listings` has two other consumers —
-      DirectoryCarousel (takes the head of the directory) and the
-      synthetic-en-listing canary — and silently capping them at 18 to serve
-      the results grid would be a behaviour change they never asked for. Only a
-      request that sends `page` gets a page.
-
-      The slice MUST happen here, after the sort above, and must never become a
-      SQL LIMIT/OFFSET: ranking is computed in JS from is_verified,
-      listingCompleteness and avg_response_ms, so a DB-level range would
-      paginate BEFORE ranking and hand back an arbitrary 18 rows that merely
-      look sorted. See the header comment in lib/listingPagination.js.
-    */
-    const pageParam = searchParams.get("page");
-    if (pageParam !== null) {
-      const paged = paginate(results, parsePageParam(pageParam));
-      const pagedResponse = NextResponse.json({
-        listings: paged.items,
-        page: paged.page,
-        per_page: paged.perPage,
-        total: paged.total,
-        total_pages: paged.totalPages,
-      });
-      pagedResponse.headers.set(
-        "Cache-Control",
-        "public, s-maxage=300, stale-while-revalidate=600"
-      );
-      return pagedResponse;
-    }
-
-    const response = NextResponse.json({ listings: results });
-    response.headers.set(
-      "Cache-Control",
-      "public, s-maxage=300, stale-while-revalidate=600"
-    );
     return response;
   } catch (err) {
     console.error("Unexpected error in GET /api/listings:", err);
