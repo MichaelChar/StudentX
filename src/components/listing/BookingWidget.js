@@ -10,7 +10,7 @@ import { isProfileComplete } from '@/lib/studentProfileFields';
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
-import ProfileGateModal from '@/components/listing/ProfileGateModal';
+import ProfileGate from '@/components/listing/ProfileGate';
 import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 
 const CANCELLATION_COPY_KEY = {
@@ -379,19 +379,19 @@ export default function BookingWidget({ listing, nextPath,
       </aside>
 
       {/*
-        Feature 33 — the profile gate is a MODAL, not an inline expansion.
+        Feature 33 — the profile gate is an OVERLAY, not an inline expansion.
 
         It used to render StudentProfileForm inside the card. At 373px pinned
         at top:80px that form either overflows the viewport or makes the card
         scroll against itself, which breaks the sticky behaviour and the
         compact shape the redesign is for. The card must never change height.
 
-        Modal supplies the backdrop, focus trap, Escape and — via its default
-        `historyEntry` — a history entry, so mobile back closes it. None of
-        that is reimplemented here.
+        Feature 59 finishes the decision: a bottom sheet below `md`, a centre
+        modal above it. ProfileGate owns that switch; the backdrop, focus trap,
+        Escape and history entry come from the primitives either way.
       */}
       {accessToken ? (
-        <ProfileGateModal
+        <ProfileGate
           open={needProfile}
           onClose={() => setNeedProfile(false)}
           initialStudent={profile}
@@ -420,19 +420,49 @@ export default function BookingWidget({ listing, nextPath,
         className="md:hidden fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-night/10 bg-white/95 px-5 py-3 backdrop-blur"
         style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
       >
-        <p className="font-display text-2xl text-blue leading-none">
-          {listing.monthly_price != null ? (
-            <>
-              {formatMoney(listing.monthly_price, listing.currency)}
-              <span className="text-sm text-night/50">/mo</span>
-            </>
-          ) : (
-            <span className="text-sm text-night/50">{tListing('priceOnRequest')}</span>
-          )}
-        </p>
+        {/*
+          Feature 45 — first month's rent, one figure. `min-w-0` so a long
+          currency string wraps inside its own column instead of squeezing the
+          CTA, which must never shrink below its label.
+        */}
+        <div className="min-w-0">
+          <p className="font-display text-2xl text-blue leading-none">
+            {listing.monthly_price != null ? (
+              <>
+                {formatMoney(listing.monthly_price, listing.currency)}
+                <span className="text-sm text-night/50">/mo</span>
+              </>
+            ) : (
+              <span className="text-sm text-night/50">{tListing('priceOnRequest')}</span>
+            )}
+          </p>
+          {/*
+            Feature 44's no-charge line, UNDER THE PRICE rather than under the
+            CTA where the desktop card puts it. Founder's call (2026-09-04):
+            a one-row bar has no "beneath the CTA", and a second row would take
+            the bar from ~71px to ~100px — 12% of a 375×812 screen, permanently,
+            on every listing. Beside the money is where the hesitation is
+            anyway.
+          */}
+          <p className="mt-0.5 truncate text-xs text-night/50">
+            {t('noChargeYet')}
+          </p>
+        </div>
+        {/*
+          `variant="cta"` is the `.bg-brand` gradient, per spec §14.1 — the
+          wordmark gradient is the fill that section names for this exact
+          control. The variant's own note says one per screen at most, and the
+          inline form's submit stays `gold` for that reason: this bar is the
+          page's persistent conversion prompt, and by the time a student is
+          filling in dates they have already converted. Founder's call
+          (2026-09-04).
+
+          It does not book anything — it scrolls to the form, which is where
+          the actual submit and its own no-charge line live.
+        */}
         <Button
           type="button"
-          variant="gold"
+          variant="cta"
           className="shrink-0"
           onClick={() => {
             const el = document.getElementById('booking-widget-focus');
