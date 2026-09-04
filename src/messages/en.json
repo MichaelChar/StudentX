@@ -29,7 +29,18 @@
     "resources": "Resources",
     "practiceTests": "Practice tests",
     "services": "Services",
-    "openMenuUnread": "Open menu, {count} unread"
+    "openMenuUnread": "Open menu, {count} unread",
+    "mobileTabs": {
+      "label": "Main",
+      "explore": "Explore",
+      "wishlists": "Wishlists",
+      "messages": "Messages",
+      "profile": "Profile",
+      "logIn": "Log in",
+      "today": "Today",
+      "listings": "Listings",
+      "waiting": "Waiting for your reply"
+    }
   },
   "footer": {
     "tagline": "The official housing partner for first-year medical students at Aristotle University of Thessaloniki.",

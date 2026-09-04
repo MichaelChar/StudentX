@@ -7,6 +7,8 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
 import AccountMenu from './AccountMenu';
+import MobileTabBar from './MobileTabBar';
+import { activeTabKey, mobileTabsFor } from '@/lib/mobileTabs';
 import TabTitleFlash from './TabTitleFlash';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
 
@@ -19,6 +21,7 @@ const LANDLORD_SHELL_RE =
 
 export default function Navbar() {
   const t = useTranslations('nav');
+  const tMobile = useTranslations('nav.mobileTabs');
   const router = useRouter();
   const pathname = usePathname();
   const [authState, setAuthState] = useState({ ready: false, role: null, name: null });
@@ -114,13 +117,52 @@ export default function Navbar() {
       ? `/property/${currentCity}/landlord/inquiries`
       : '/student/inquiries';
 
+  /*
+    The mobile bottom tab bar — parity Feature 56.
+
+    It lives here rather than in the layout because Navbar already resolves the
+    two things it needs: the caller's ROLE and the unread count. A second
+    component computing both would mean a second getSession and a second
+    /api/me/unread on every page.
+
+    It renders on EVERY route, including the landlord shell — the bar is what
+    replaces the desktop top nav below `md`, so suppressing it there would
+    leave a landlord on a phone with no navigation at all. The floating account
+    pill stays suppressed, because LandlordShell has its own.
+  */
+  const tabs = mobileTabsFor({ role: authState.role, city: currentCity }).map((tab) => ({
+    key: tab.key,
+    href: tab.href,
+    label: tMobile(tab.labelKey),
+    icon: tab.icon,
+    active: false,
+    dot: Boolean(tab.dotted && unread.count > 0),
+    dotLabel: tMobile('waiting'),
+  }));
+  const activeKey = activeTabKey(
+    mobileTabsFor({ role: authState.role, city: currentCity }),
+    pathname,
+  );
+  for (const tab of tabs) tab.active = tab.key === activeKey;
+
+  /*
+    Hold the bar back until auth is KNOWN. Rendering the signed-out pair first
+    and swapping to four tabs a beat later is a visible flicker on the surface
+    a student uses most, and worse than a moment with no bar.
+  */
+  const tabBar = authState.ready ? (
+    <MobileTabBar tabs={tabs} ariaLabel={tMobile('label')} />
+  ) : null;
+
   // All hooks above run unconditionally; only the rendered output is gated
-  // (React Rules of Hooks). Landlord shell pages have their own chrome.
-  if (pathname && LANDLORD_SHELL_RE.test(pathname)) return null;
+  // (React Rules of Hooks). Landlord shell pages have their own top chrome —
+  // but they still need the mobile bar.
+  if (pathname && LANDLORD_SHELL_RE.test(pathname)) return tabBar;
 
   return (
     <>
       <TabTitleFlash count={unread.count} />
+      {tabBar}
       <AccountMenu
         t={t}
         authState={authState}
