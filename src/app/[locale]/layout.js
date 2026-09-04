@@ -108,7 +108,17 @@ export default async function LocaleLayout({ children, params }) {
           <FavoritesProvider>
             <GigFavoritesProvider>
               <Navbar />
-              <main className="flex-1">{children}</main>
+              {/*
+                Bottom clearance for Feature 56's mobile tab bar, which is
+                `fixed` and would otherwise cover the last rows of every page.
+                Padding rather than a spacer element so it does not appear in
+                the accessibility tree, and `env(safe-area-inset-bottom)` on top
+                so the reserved space matches the bar's own height on a phone
+                with a home indicator.
+              */}
+              <main className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+                {children}
+              </main>
             </GigFavoritesProvider>
           </FavoritesProvider>
         </NextIntlClientProvider>
