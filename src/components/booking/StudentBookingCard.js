@@ -8,6 +8,7 @@ import { stayDurationMonths } from '@/lib/bookingDates';
 import { formatMoney } from '@/lib/formatMoney';
 import { variantUrl } from '@/lib/photoVariants';
 import { bookingStateVariant } from '@/lib/statusVariant';
+import { requestWait, requestWaitMessage } from '@/lib/bookingRequestWait';
 
 function isValidPhotoUrl(url) {
   return typeof url === 'string' && url.startsWith('http');
@@ -42,6 +43,15 @@ export default async function StudentBookingCard({ booking, locale }) {
   const neighborhood = loc?.neighborhood;
   const months = stayDurationMonths(booking.move_in, booking.move_out);
 
+  /*
+    Feature 44, part 4 — the pending state must be reachable from the bookings
+    list, not only from the detail page. A student checking "has anyone replied
+    yet" opens this list; making them click into each request to learn how long
+    is left defeats the point of showing the timer at all.
+  */
+  const wait = requestWait(booking);
+  const waitMessage = wait ? requestWaitMessage(booking) : null;
+
   return (
     <li>
       <Card tone="white" className="p-5 md:p-6">
@@ -74,6 +84,21 @@ export default async function StudentBookingCard({ booking, locale }) {
                 {t(`state_${booking.state}`)}
               </Pill>
             </div>
+
+            {/*
+              Only while `requested`. Magenta once the window is short or gone:
+              running low on time is not the student's fault, so this is the
+              app's attention token, not an error colour.
+            */}
+            {waitMessage && (
+              <p
+                className={`text-sm mb-1 ${
+                  wait.urgent || wait.lapsed ? 'text-magenta' : 'text-night/60'
+                }`}
+              >
+                {t(waitMessage.key, waitMessage.params)}
+              </p>
+            )}
 
             <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 text-sm">
               <div>
