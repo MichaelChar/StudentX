@@ -25,9 +25,22 @@ import Icon from '@/components/ui/Icon';
   being lifted out of the container it belongs to. Negative margin is the only
   thing that does it in place.
 
-  Layering: everything drawn on the photo is `z-10`, the same rule `CardPhotos`
-  follows. Nothing here goes above `z-20` — the sticky booking bar and the
-  lightbox live above that and must not have to fight this component for it.
+  LAYERING — `z-0` on the root is load-bearing, not decoration.
+
+  Everything drawn on the photo is `z-10`, the rule `CardPhotos` follows. With
+  the root at `z-auto` those tens are NOT scoped to the hero: they compete in
+  the root stacking context, and they beat anything below 10 in it.
+
+  The PDP's content sheet is `relative z-[1]`, so every overlay rendered inside
+  it — the profile gate, the report-listing modal — is a `z-50` nested in a
+  context worth 1. Against the counter pill's 10 in the root context, 1 loses:
+  the pill painted straight through an open bottom sheet. (Hit-testing hid it,
+  because the pill is `pointer-events-none` and `elementFromPoint` skips those.
+  It was only visible in a screenshot.)
+
+  `z-0` gives this component its own stacking context, so the tens stay inside
+  it and the hero as a whole sits below the sheet at 1. Same fix, and the same
+  reason, as the `.leaflet-container { z-index: 0 }` rule in globals.css.
 */
 
 // Below this, a pointer that moved is still a tap. Above it, the gesture was a
@@ -38,9 +51,13 @@ function CounterPill({ label }) {
   return (
     // aria-hidden: `Carousel` already announces "3 of 28" per slide, and a
     // second live count is noise, not redundancy that helps.
+    // `bottom-8`, not `bottom-3`: the PDP's content sheet overlaps the photo's
+    // lower edge by 24px, so the last 24px of this box is never visible. At
+    // `bottom-3` the pill sat inside that band and the sheet clipped it in
+    // half. 32px clears the overlap with a little air left over.
     <span
       aria-hidden="true"
-      className="pointer-events-none absolute bottom-3 right-3 z-10 rounded-pill bg-night/70 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm"
+      className="pointer-events-none absolute bottom-8 right-3 z-10 rounded-pill bg-night/70 px-2.5 py-1 text-xs font-medium text-white backdrop-blur-sm"
     >
       {label}
     </span>
@@ -118,7 +135,7 @@ export default function MobilePdpHero({
   const single = photos.length === 1;
 
   return (
-    <div className={`relative -mx-5 ${className}`}>
+    <div className={`relative z-0 -mx-5 ${className}`}>
       {!hasPhotos && <EmptyHero />}
 
       {/* One photo mounts no carousel and draws no counter — `CardPhotos`
