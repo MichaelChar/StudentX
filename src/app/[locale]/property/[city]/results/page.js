@@ -831,7 +831,20 @@ function ResultsContent() {
       )}
       {/* Header row */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
-        <div>
+        {/*
+          `pr-24` below `sm` keeps the title clear of the floating account pill
+          (`AccountMenu`, fixed top-11 right-5). At 375px the pill occupies
+          x 275–355 and this h1 ran to x=350, so `3 listings in Thessaloniki`
+          had its last word sitting under a blurred pill. 96px of padding wraps
+          it a word earlier instead.
+
+          Dropped at `sm`, where the row turns horizontal and the title block
+          stops spanning the full width. Founder's call (2026-09-04): reserve
+          space per page rather than shrink or drop the pill on mobile — the
+          pill's panel is still the only route to /resources, /gigs and
+          /student/ausom, which the two-tab logged-out bar does not carry.
+        */}
+        <div className="pr-24 sm:pr-0">
           <p className="label-caps text-yellow">{t('eyebrow')}</p>
           <h1 className="mt-2 font-display text-3xl md:text-4xl text-night leading-tight">
             {/*
