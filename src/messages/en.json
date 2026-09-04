@@ -904,7 +904,7 @@
         "cancellationEnglish": "Cancellation policy",
         "cancellationFree": "Free cancellation more than 60 days before move-in",
         "cancellationHalf": "50% refund 30–60 days before move-in",
-        "requestCta": "Contact landlord",
+        "requestCta": "Request to book",
         "submitting": "Sending…",
         "stickyBarLabel": "Contact landlord",
         "successTitle": "Request sent",
@@ -922,7 +922,8 @@
         "profileGateTitle": "Your guest profile",
         "profileGateBody": "Landlords see age, gender, bio, and universities — never your email. Fill this in once, then contact the landlord.",
         "profileGateSave": "Save profile",
-        "profileGateClose": "Close"
+        "profileGateClose": "Close",
+        "noChargeYet": "You won't be charged yet."
       },
       "calendar": {
         "title": "Availability",
@@ -1386,7 +1387,13 @@
       "group_disputed": "Problem reported",
       "group_declined": "Declined",
       "group_expired": "Expired",
-      "group_cancelled": "Cancelled"
+      "group_cancelled": "Cancelled",
+      "waitHeading": "Waiting on the landlord",
+      "waitDays": "{days, plural, one {They have # day to reply} other {They have # days to reply}}",
+      "waitHours": "{hours, plural, one {They have # hour left to reply} other {They have # hours left to reply}}",
+      "waitLapsed": "This request has run out of time",
+      "waitLapsedBody": "We'll close it shortly. You can send a new request any time.",
+      "waitBody": "You won't be charged unless they accept."
     },
     "chat": {
       "title": "Conversation",

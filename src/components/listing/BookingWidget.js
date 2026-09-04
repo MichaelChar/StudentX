@@ -359,6 +359,17 @@ export default function BookingWidget({ listing, nextPath,
                   >
                     {sending ? t('submitting') : t('requestCta')}
                   </Button>
+
+                  {/*
+                    Feature 44 part 1: the no-charge line sits DIRECTLY beneath
+                    the CTA, where the hesitation is. The longer escrow
+                    paragraph (`noCharge`) stays up in the cost block — it
+                    explains how the deposit is held, which is a different
+                    question from "does pressing this take my money".
+                  */}
+                  <p className="mt-2 text-center text-xs text-night/50">
+                    {t('noChargeYet')}
+                  </p>
                 </form>
 
               </div>

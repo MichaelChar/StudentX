@@ -14,6 +14,8 @@ import { stayDurationMonths } from '@/lib/bookingDates';
 import { formatMoney } from '@/lib/formatMoney';
 import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 import { bookingStateVariant } from '@/lib/statusVariant';
+import { requestWait, requestWaitMessage } from '@/lib/bookingRequestWait';
+import BookingRequestWait from '@/components/student/BookingRequestWait';
 
 const CANCELLATION_COPY_KEY = {
   free: 'cancellationFree',
@@ -177,6 +179,14 @@ export default function StudentBookingDetail({ bookingId }) {
             {t(`state_${booking.state}`)}
           </Pill>
         </div>
+
+        {/*
+          Feature 44, part 3 — the part the spec calls most important. A silent
+          two-day timer killed ~87% of requests at Nostus; this shows it to the
+          person it costs. Only rendered while `requested`: every other state
+          has resolved, and a countdown there would be noise.
+        */}
+        <PendingRequestNotice booking={booking} t={t} />
 
         <dl className="grid grid-cols-2 md:grid-cols-4 gap-6">
           <DetailField label={t('colMoveIn')} value={formatDate(booking.move_in)} />
@@ -377,6 +387,40 @@ function DetailField({ label, value }) {
     <div>
       <dt className="label-caps text-night/50">{label}</dt>
       <dd className="mt-1 font-display text-xl text-night">{value}</dd>
+    </div>
+  );
+}
+
+
+/*
+  The wait: how long the landlord has left, and what happens meanwhile.
+
+  FEATURE 44 PART 2 IS NOT HERE. The spec also asks for "how long this landlord
+  typically takes, shown at request time". `BookingRequestWait` accepts a
+  `typicallyLine` for exactly that, and it is passed null: the booking-detail
+  query does not join `landlords`, so `avg_response_ms` never reaches this
+  component. Adding that join is a one-line change to
+  /api/bookings/[id]/route.js and was deliberately not made here.
+
+  Rendering the line without the data would show nothing while looking
+  implemented, which is the worse of the two outcomes.
+*/
+function PendingRequestNotice({ booking, t }) {
+  const wait = requestWait(booking);
+  if (!wait) return null;
+
+  const message = requestWaitMessage(booking);
+
+  return (
+    <div className="mb-6">
+      <BookingRequestWait
+        heading={t('waitHeading')}
+        waitLine={message ? t(message.key, message.params) : ''}
+        body={wait.lapsed ? t('waitLapsedBody') : t('waitBody')}
+        typicallyLine={null}
+        urgent={wait.urgent}
+        lapsed={wait.lapsed}
+      />
     </div>
   );
 }
