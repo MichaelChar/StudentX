@@ -247,8 +247,31 @@ export default async function ListingPage({ params, searchParams }) {
         StudentX has no ratings, so the reference's centred rating line has no
         counterpart here — the centred block is neighbourhood, title and the
         property-verified badge.
+
+        NO `z-[1]` HERE, AND THAT IS DELIBERATE. It had one, added to sit above
+        the photo. A z-index makes this a stacking context, which TRAPS every
+        overlay rendered inside it — the report modal and the booking widget's
+        profile gate both are. Their `z-50` became "50 inside a context worth
+        1", and lost to anything at the ROOT worth more than 1.
+
+        What that broke, on DESKTOP: the floating account pill is `z-50` at the
+        root, so it painted over an open modal's scrim and stayed clickable
+        through it. Verified by toggling this one property with both overlays
+        open — at the pill's coordinates the topmost element flips between the
+        pill's button and the modal's scrim.
+
+        Mobile was never affected, and it is worth saying why, because the
+        obvious guess is wrong: the sticky booking bar is `z-40` but it is
+        rendered INSIDE this element too, so it compared 40 against 50 within
+        the same context and lost correctly either way.
+
+        Nothing is needed in its place. `MobilePdpHero` sets `z-0`, and a
+        positioned element with `z-index: auto` that comes LATER in the
+        document paints above a `z-0` one — so this still overlaps the photo
+        (checked at y=484, inside the 24px band), and its overlays keep the
+        root stacking context, where 50 means 50.
       */}
-      <div className="relative z-[1] -mx-5 -mt-6 rounded-t-modal bg-stone px-5 pt-6 md:mx-0 md:mt-0 md:rounded-none md:px-0 md:pt-0">
+      <div className="relative -mx-5 -mt-6 rounded-t-modal bg-stone px-5 pt-6 md:mx-0 md:mt-0 md:rounded-none md:px-0 md:pt-0">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_373px] gap-10">
         {/* Left column */}
         <div>
