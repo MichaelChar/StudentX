@@ -28,6 +28,7 @@ import LandlordAvatar from '@/components/landlord/LandlordAvatar';
 import Pill from '@/components/ui/Pill';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
+import { FLOATING_CONTROL } from '@/components/ui/floatingControl';
 import { formatPropertyType } from '@/lib/propertyType';
 import { formatDistance } from '@/lib/formatDistance';
 import { formatMoney } from '@/lib/formatMoney';
@@ -151,7 +152,14 @@ export default async function ListingPage({ params, searchParams }) {
   const isVerified = listing.is_verified === true;
 
   return (
-    <div className="mx-auto max-w-6xl px-5 pt-8 pb-28 sm:pb-12 md:py-12">
+    /*
+      `pb-28` clears the sticky booking bar, which now breaks at `md` along
+      with the tab bar and the chromeless hero — so the clearance has to break
+      at `md` too. It said `sm:pb-12`, which pulled the padding away 128px
+      before the bar it was clearing disappeared, leaving the last section
+      under the bar between 640 and 768px.
+    */
+    <div className="mx-auto max-w-6xl px-5 pt-8 pb-28 md:py-12">
       {isAuthed && <ViewTracker listingId={listing.listing_id} />}
       {/* Local-only "you have looked at this" record, driving the visited map
           pin on the results page (parity Feature 12). Unconditional, unlike
@@ -160,22 +168,61 @@ export default async function ListingPage({ params, searchParams }) {
 
       {/* Back link — server-rendered Link. Threads the prior /results
           filter state via ?from= so the back nav lands on the same
-          filtered view the user came from (set by ListingCard). */}
+          filtered view the user came from (set by ListingCard).
+
+          Hidden below `md`: Feature 58 moves it onto the photograph as a
+          floating arrow (`backSlot`), where it is the ONLY way off this page
+          once the tab bar and the account pill come off. */}
       <Link
         href={backHref}
-        className="inline-flex items-center gap-2 label-caps text-night/60 hover:text-blue transition-colors mb-8"
+        className="hidden md:inline-flex items-center gap-2 label-caps text-night/60 hover:text-blue transition-colors mb-8"
       >
         <Icon name="chevronRight" className="w-3.5 h-3.5 rotate-180" />
         {t('back')}
       </Link>
 
-      {/* Photo gallery — inline main image + thumbnail strip → lightbox */}
-      <section className="mb-10">
+      {/*
+        Photo gallery. At `md` and up: the Feature 26 mosaic, unchanged.
+        Below it: Feature 58's full-bleed hero with the controls floating on
+        the image — see MobilePdpHero for why the bleed is a negative margin.
+
+        `-mt-8` cancels the page's own `pt-8` so the photo reaches the top of
+        the viewport. It has to be undone at `md`, where the back link above
+        is visible again and owns that space.
+      */}
+      <section className="-mt-8 md:mt-0 md:mb-10">
         {photos.length > 0 ? (
           <ListingGallery
             mosaic
+            mobileHero
             photos={photos}
             title={listing.title || listing.neighborhood || 'Listing'}
+            backSlot={
+              <Link
+                href={backHref}
+                aria-label={t('back')}
+                className={`${FLOATING_CONTROL} outline-blue focus-visible:outline-blue`}
+              >
+                <Icon
+                  name="chevronRight"
+                  className="w-[18px] h-[18px] rotate-180 text-night/70"
+                />
+              </Link>
+            }
+            actionsSlot={
+              <>
+                <ShareButton
+                  floating
+                  url={`${SITE_URL}/property/${city}/listing/${listing.listing_id}`}
+                  title={listing.title || listing.neighborhood || ''}
+                  label={t('shareLabel')}
+                  ariaLabel={t('shareAria')}
+                  copiedLabel={t('shareCopied')}
+                  copyFailedLabel={t('shareCopyFailed')}
+                />
+                <FavoriteButton listingId={listing.listing_id} />
+              </>
+            }
           />
         ) : (
           <div className="aspect-[16/9] rounded-photo bg-parchment flex items-center justify-center">
@@ -187,16 +234,31 @@ export default async function ListingPage({ params, searchParams }) {
       {/* Main content */}
       {/* Feature 33 — the booking column is 373px, the measured width of
           Airbnb's sticky card. Was 340px. */}
+      {/*
+        Feature 58 — the content sheet.
+
+        Below `md` the body is a rounded-top surface that OVERLAPS the photo's
+        lower edge by 24px, which is the whole trick: the photograph reads as
+        something the page is sitting on top of rather than a banner stacked
+        above it. `-mx-5 px-5` so the rounded corners reach the screen edges
+        the photo already reaches; every one of those is undone at `md`, where
+        the mosaic is back inside its container and there is no sheet.
+
+        StudentX has no ratings, so the reference's centred rating line has no
+        counterpart here — the centred block is neighbourhood, title and the
+        property-verified badge.
+      */}
+      <div className="relative z-[1] -mx-5 -mt-6 rounded-t-modal bg-stone px-5 pt-6 md:mx-0 md:mt-0 md:rounded-none md:px-0 md:pt-0">
       <div className="grid grid-cols-1 lg:grid-cols-[1fr_373px] gap-10">
         {/* Left column */}
         <div>
           {/* Hero stripe — address */}
           <div className="flex flex-col md:flex-row md:items-start gap-5 mb-8">
             <div className="flex-1">
-              <p className="label-caps text-night/50">
+              <p className="label-caps text-night/50 text-center md:text-left">
                 {listing.neighborhood} &middot; Thessaloniki
               </p>
-              <h1 className="mt-1 font-display text-4xl md:text-5xl text-night leading-tight text-balance">
+              <h1 className="mt-1 font-display text-3xl sm:text-4xl md:text-5xl text-night leading-tight text-balance text-center md:text-left">
                 {listing.title || listing.neighborhood}
               </h1>
               {/*
@@ -208,14 +270,14 @@ export default async function ListingPage({ params, searchParams }) {
               */}
               {listing.address && (
                 <p
-                  className="mt-2 label-caps text-night/60"
+                  className="mt-2 label-caps text-night/60 text-center md:text-left"
                   aria-label={t('streetAddressA11y')}
                 >
                   {listing.address}
                 </p>
               )}
               {listing.property_verified && listing.property_verification && (
-                <div className="mt-3">
+                <div className="mt-3 flex justify-center md:justify-start">
                   <PropertyVerifiedBadge
                     verification={listing.property_verification}
                   />
@@ -237,7 +299,10 @@ export default async function ListingPage({ params, searchParams }) {
               not whatever tracking or `from=` params the student happens to
               have arrived with.
             */}
-            <div className="flex items-center gap-3 md:self-start shrink-0">
+            {/* Hidden below `md` — Feature 58 floats both of these on the
+                photograph instead, so keeping the labelled pair here would
+                print Share and Save twice on a phone. */}
+            <div className="hidden md:flex items-center gap-3 md:self-start shrink-0">
               <ShareButton
                 url={`${SITE_URL}/property/${city}/listing/${listing.listing_id}`}
                 title={listing.title || listing.neighborhood || ''}
@@ -581,6 +646,7 @@ export default async function ListingPage({ params, searchParams }) {
           listing={listing}
           nextPath={`/property/thessaloniki/listing/${listing.listing_id}${fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : ''}`}
         />
+      </div>
       </div>
 
       {/* Similar listings — same neighbourhood first, then nearest price. */}

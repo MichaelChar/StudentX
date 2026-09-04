@@ -403,11 +403,21 @@ export default function BookingWidget({ listing, nextPath,
         />
       ) : null}
 
-      {/* Mobile sticky bar */}
+      {/*
+        Mobile sticky bar — Feature 59's surface, and the counterpart to
+        Feature 33's sticky card, which cannot pin to anything at 375px.
+
+        `md:hidden`, NOT `sm:hidden`. The bottom tab bar (Feature 56) and the
+        chromeless PDP (Feature 58) both break at `md`, and while this said
+        `sm` a phone held between 640 and 768px got the tab bar with no booking
+        bar — the one width where the only route to booking was scrolling back
+        to the inline widget on a page with no header. Founder's call
+        (2026-09-04): one breakpoint for all three.
+      */}
       <div
         role="region"
         aria-label={t('stickyBarLabel')}
-        className="sm:hidden fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-night/10 bg-white/95 px-5 py-3 backdrop-blur"
+        className="md:hidden fixed inset-x-0 bottom-0 z-40 flex items-center justify-between gap-4 border-t border-night/10 bg-white/95 px-5 py-3 backdrop-blur"
         style={{ paddingBottom: 'max(0.75rem, env(safe-area-inset-bottom))' }}
       >
         <p className="font-display text-2xl text-blue leading-none">

@@ -109,3 +109,31 @@ export function activeTabKey(tabs, pathname) {
   }
   return best?.key ?? null;
 }
+
+/*
+  The listing detail page, which is CHROMELESS below `md` — parity Features 58
+  and 59. Both the floating account pill and the bottom tab bar come off,
+  leaving the photo running to all four edges with only the floating back arrow
+  and the sticky booking bar on it.
+
+  That is the spec's decision, and it names its own consequence: a student
+  landing here from a shared WhatsApp link reaches the rest of the site only by
+  going back. Airbnb behaves identically.
+
+  It lives here, next to the tabs themselves, because TWO components have to
+  agree about it — `Navbar`, which decides whether to render the bar, and the
+  spacer in the layout, which reserves the room the bar would occupy. Two
+  copies of this regex would eventually disagree, and the failure would be a
+  strip of dead space at the bottom of one route.
+*/
+const LISTING_PDP_RE = /^\/property\/[^/]+\/listing\/[^/]+\/?$/;
+
+/**
+ * Does this route drop its mobile chrome (tab bar + account pill) below `md`?
+ *
+ * @param {string|null|undefined} pathname
+ * @returns {boolean}
+ */
+export function isChromelessMobileRoute(pathname) {
+  return typeof pathname === 'string' && LISTING_PDP_RE.test(pathname);
+}
