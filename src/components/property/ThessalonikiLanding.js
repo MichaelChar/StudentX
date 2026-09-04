@@ -61,7 +61,18 @@ export default function ThessalonikiLanding() {
       {/* Hero — Stripe-style WebGL mesh gradient background */}
       <section className="relative overflow-hidden">
         <StripeGradientMesh />
-        <div className="relative mx-auto max-w-6xl px-5 pt-20 pb-24 md:pt-28 md:pb-32">
+        {/*
+          `pt-24` rather than `pt-20` on mobile: the floating account pill
+          (`AccountMenu`, fixed top-11 right-5) ends at y=92, and at 80px of
+          padding the headline's first line started at y=80 and reached x=283
+          against the pill's left edge at x=275 — a small corner of
+          `Thessaloniki.` disappeared under it.
+
+          Padding rather than the `pr-24` used on results: this h1 is four
+          lines at 375px already, and reserving 96px on the right would push it
+          to five. Sixteen more pixels above it costs nothing by comparison.
+        */}
+        <div className="relative mx-auto max-w-6xl px-5 pt-24 pb-24 md:pt-28 md:pb-32">
           <h1 className="font-display text-4xl md:text-6xl lg:text-[4.5rem] leading-[1.05] max-w-3xl text-night">
             {t('headline')}
           </h1>

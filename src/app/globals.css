@@ -321,3 +321,23 @@ input[type="range"]::-moz-range-thumb {
     transform: translate(-50%, -50%);
   }
 }
+
+/* Leaflet paints its internal layers at z-index 400 (panes), 700 (popups) and
+   1000 (controls). `.leaflet-container` is `position: relative` with no
+   z-index, so those numbers are NOT scoped to the map — they compete in
+   whatever stacking context the map's ancestors provide, and beat anything
+   below 400 in it.
+
+   That is how the mobile results map ended up painting OVER the Filters modal
+   (`fixed inset-0 z-50`): 400 > 50. The desktop map escaped only by accident —
+   its column is `lg:sticky`, and a sticky element creates a stacking context
+   on its own, which contained the same numbers.
+
+   Setting an explicit z-index here makes every `.leaflet-container` create its
+   own stacking context, so 400/700/1000 stay inside the map. `0` rather than
+   `auto` is the whole point; the value is otherwise irrelevant. Controls
+   rendered as SIBLINGS of the map (SearchThisAreaButton at z-[1000]) are
+   outside that context and still paint above it. */
+.leaflet-container {
+  z-index: 0;
+}
