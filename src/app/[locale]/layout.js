@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { pickMessages, CLIENT_NAMESPACES } from '@/lib/pickMessages';
 import Navbar from '@/components/Navbar';
+import MobileBarSpacer from '@/components/MobileBarSpacer';
 import SessionSync from '@/components/SessionSync';
 import FavoritesProvider from '@/components/FavoritesProvider';
 import GigFavoritesProvider from '@/components/GigFavoritesProvider';
@@ -108,16 +109,12 @@ export default async function LocaleLayout({ children, params }) {
           <FavoritesProvider>
             <GigFavoritesProvider>
               <Navbar />
-              {/*
-                Bottom clearance for Feature 56's mobile tab bar, which is
-                `fixed` and would otherwise cover the last rows of every page.
-                Padding rather than a spacer element so it does not appear in
-                the accessibility tree, and `env(safe-area-inset-bottom)` on top
-                so the reserved space matches the bar's own height on a phone
-                with a home indicator.
-              */}
-              <main className="flex-1 pb-[calc(4rem+env(safe-area-inset-bottom))] md:pb-0">
+              <main className="flex-1">
                 {children}
+                {/* Bottom clearance for the mobile tab bar. A component, not
+                    padding, because the bar is absent on the chromeless
+                    listing page and the room must go with it. */}
+                <MobileBarSpacer />
               </main>
             </GigFavoritesProvider>
           </FavoritesProvider>

@@ -8,7 +8,7 @@ import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
 import AccountMenu from './AccountMenu';
 import MobileTabBar from './MobileTabBar';
-import { activeTabKey, mobileTabsFor } from '@/lib/mobileTabs';
+import { activeTabKey, isChromelessMobileRoute, mobileTabsFor } from '@/lib/mobileTabs';
 import TabTitleFlash from './TabTitleFlash';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
 
@@ -18,6 +18,7 @@ import { DEFAULT_CITY } from '@/lib/cityRoutes';
 // centered forms.
 const LANDLORD_SHELL_RE =
   /\/property\/[^/]+\/landlord\/(?!(login|signup|forgot-password|reset-password|verify-email|onboarding)([/?]|$))/;
+
 
 export default function Navbar() {
   const t = useTranslations('nav');
@@ -150,9 +151,12 @@ export default function Navbar() {
     and swapping to four tabs a beat later is a visible flicker on the surface
     a student uses most, and worse than a moment with no bar.
   */
-  const tabBar = authState.ready ? (
-    <MobileTabBar tabs={tabs} ariaLabel={tMobile('label')} />
-  ) : null;
+  const chromelessMobile = isChromelessMobileRoute(pathname);
+
+  const tabBar =
+    authState.ready && !chromelessMobile ? (
+      <MobileTabBar tabs={tabs} ariaLabel={tMobile('label')} />
+    ) : null;
 
   // All hooks above run unconditionally; only the rendered output is gated
   // (React Rules of Hooks). Landlord shell pages have their own top chrome —
@@ -171,6 +175,7 @@ export default function Navbar() {
         messagesHref={messagesHref}
         unreadCount={unread.count}
         onSignOut={handleSignOut}
+        hideBelowMd={chromelessMobile}
       />
     </>
   );

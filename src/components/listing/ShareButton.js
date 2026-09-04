@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import Icon from '@/components/ui/Icon';
+import { FLOATING_CONTROL } from '@/components/ui/floatingControl';
 
 /*
   Share a listing with the people who actually decide — flatmates and
@@ -54,6 +55,7 @@ export default function ShareButton({
   copiedLabel,
   copyFailedLabel,
   className = '',
+  floating = false,
 }) {
   const [status, setStatus] = useState('idle');
   const timerRef = useRef(null);
@@ -126,6 +128,37 @@ export default function ShareButton({
       : status === 'failed'
         ? 'border-magenta bg-magenta/5 text-magenta'
         : 'border-night/20 text-night/70 hover:border-blue hover:text-blue active:bg-blue/10';
+
+  /*
+    Feature 58 — the chromeless mobile PDP puts Share on the photograph, where
+    an outlined pill with an uppercase word cannot go. Same two-shape pattern
+    `FavoriteButton` already uses for the heart, so the pair stay symmetrical
+    on the hero.
+
+    The visible label and the tone classes drop out with the pill; the sr-only
+    live region does NOT — the copied/failed confirmation is the entire point
+    of the control on a desktop that has no share sheet.
+  */
+  if (floating) {
+    return (
+      <button
+        type="button"
+        onClick={handleClick}
+        aria-label={ariaLabel}
+        className={`${FLOATING_CONTROL} outline-blue focus-visible:outline-blue ${className}`}
+      >
+        <Icon
+          name={status === 'copied' ? 'check' : 'share'}
+          className={`w-[18px] h-[18px] transition-colors ${
+            status === 'failed' ? 'text-magenta' : 'text-night/70'
+          }`}
+        />
+        <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+          {status === 'idle' ? '' : visibleLabel}
+        </span>
+      </button>
+    );
+  }
 
   return (
     <button

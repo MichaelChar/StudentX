@@ -97,6 +97,12 @@ export default function AccountMenu({
   messagesHref,
   unreadCount = 0,
   onSignOut,
+  // Feature 58 — the mobile PDP is chromeless, so the pill has to disappear
+  // below `md` on that one route while staying put everywhere else. A prop
+  // rather than a wrapper `<div className="hidden md:block">`: this component
+  // IS the fixed positioning context, and wrapping it would mean the wrapper
+  // owns `fixed` on some routes and the child on others.
+  hideBelowMd = false,
 }) {
   const [open, setOpen] = useState(false);
 
@@ -133,7 +139,9 @@ export default function AccountMenu({
   );
 
   return (
-    <div className="fixed top-11 right-5 z-50">
+    <div
+      className={`fixed top-11 right-5 z-50${hideBelowMd ? ' hidden md:block' : ''}`}
+    >
       <Popover
         open={open}
         onOpenChange={setOpen}

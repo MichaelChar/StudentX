@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl';
 import Icon from '@/components/ui/Icon';
 import { useFavorites } from '@/components/FavoritesProvider';
+import { FLOATING_CONTROL } from '@/components/ui/floatingControl';
 
 /*
   Heart / save toggle for a single listing. Two looks:
@@ -60,7 +61,7 @@ export default function FavoriteButton({ listingId, withLabel = false, className
       onClick={handleClick}
       aria-pressed={saved}
       aria-label={ariaLabel}
-      className={`inline-flex items-center justify-center w-9 h-9 rounded-full bg-white/85 backdrop-blur-sm shadow-[0_1px_6px_-1px_rgba(10,20,54,0.3)] transition-[transform,background-color] hover:bg-white hover:scale-105 active:scale-100 focus-visible:outline-2 focus-visible:outline-offset-2 outline-magenta focus-visible:outline-magenta ${className}`}
+      className={`${FLOATING_CONTROL} outline-magenta focus-visible:outline-magenta ${className}`}
     >
       <Icon
         name="heart"

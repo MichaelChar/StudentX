@@ -1002,7 +1002,8 @@
       "close": "Close gallery",
       "zoomIn": "Zoom in",
       "zoomOut": "Zoom out",
-      "showAllPhotos": "Show all photos"
+      "showAllPhotos": "Show all photos",
+      "heroCarouselLabel": "Listing photos"
     },
     "report": {
       "trigger": "Report this listing",

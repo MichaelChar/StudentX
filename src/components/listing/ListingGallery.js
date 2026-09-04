@@ -7,6 +7,7 @@ import { useTranslations } from 'next-intl';
 import { variantUrl } from '@/lib/photoVariants';
 import ListingLightbox from '@/components/listing/ListingLightbox';
 import GalleryMosaic from '@/components/listing/GalleryMosaic';
+import MobilePdpHero from '@/components/listing/MobilePdpHero';
 
 /*
   Listing photo gallery (Item 8) — replaces the old tall 2-column grid.
@@ -20,7 +21,17 @@ import GalleryMosaic from '@/components/listing/GalleryMosaic';
 
 const MAX_THUMBS = 5;
 
-export default function ListingGallery({ photos, title, mosaic = false }) {
+export default function ListingGallery({
+  photos,
+  title,
+  mosaic = false,
+  // Feature 58 — below `md`, replace the mosaic with the full-bleed chromeless
+  // hero. Opt-in for the same reason `mosaic` is: /gigs renders this component
+  // too, and a gig is not a property.
+  mobileHero = false,
+  backSlot,
+  actionsSlot,
+}) {
   const t = useTranslations('propylaea.gallery');
   const [active, setActive] = useState(0);
   const [lightboxIndex, setLightboxIndex] = useState(null);
@@ -47,6 +58,33 @@ export default function ListingGallery({ photos, title, mosaic = false }) {
   if (mosaic) {
     return (
       <>
+        {/*
+          The two galleries are both in the DOM and swapped by CSS rather than
+          by a width hook — a hook would either flash the wrong one at hydration
+          or hold the LCP image back a frame.
+
+          It costs nothing to load. The mosaic's hero and the mobile hero's
+          first photo resolve to the SAME `full` variant, so that is one fetch
+          on both breakpoints; the mosaic's 2×2 tiles already live inside
+          `hidden md:grid` and are lazy, so a phone never asks for them; and
+          the hero's photos 2..N are lazy too, so a desktop never asks for
+          those. What is hidden is genuinely not fetched.
+        */}
+        {mobileHero && (
+          <MobilePdpHero
+            className="md:hidden"
+            photos={photos.map((src, i) => ({
+              src: variantUrl(src, 'full'),
+              alt: t('photoAlt', { title, number: i + 1 }),
+            }))}
+            counterLabel={(current, total) => t('counter', { current, total })}
+            carouselLabel={t('heroCarouselLabel')}
+            onPhotoClick={open}
+            backSlot={backSlot}
+            actionsSlot={actionsSlot}
+          />
+        )}
+        <div className={mobileHero ? 'hidden md:block' : undefined}>
         <GalleryMosaic
           photos={photos.map((src, i) => ({
             // Variant policy stays here, not in the presentational component:
@@ -60,6 +98,7 @@ export default function ListingGallery({ photos, title, mosaic = false }) {
           showAllLabel={t('showAllPhotos')}
           openLabel={t('openLightbox')}
         />
+        </div>
         <AnimatePresence>
           {lightboxIndex !== null && (
             <ListingLightbox
