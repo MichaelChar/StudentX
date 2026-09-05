@@ -1,11 +1,10 @@
 'use client';
 
-import { useId, useSyncExternalStore } from 'react';
+import { useId } from 'react';
 
 import Icon from '@/components/ui/Icon';
 import IconButton from '@/components/ui/IconButton';
-import Modal from '@/components/ui/Modal';
-import BottomSheet from '@/components/ui/BottomSheet';
+import ResponsiveDialog from '@/components/ui/ResponsiveDialog';
 import StudentProfileForm from '@/components/student/StudentProfileForm';
 
 /*
@@ -16,24 +15,12 @@ import StudentProfileForm from '@/components/student/StudentProfileForm';
   viewport or makes the card scroll against itself, which breaks the pin. The
   form lives here so the card never changes height.
 
-  WHY IT IS TWO OVERLAYS (Feature 59). Feature 33 also decided this opens as a
-  BOTTOM SHEET, not a modal — and Feature 59 is where that lands, because the
-  mobile PDP is the surface the decision was about. A centre modal on a phone
-  wastes the edges and reads as a desktop pattern shrunk down; a bottom sheet
-  on a 1280px desktop reads as a phone pattern stretched out. So the shape
-  follows the viewport and the CONTENT does not change at all.
-
-  Both primitives already carry backdrop, focus trap, Escape, scroll lock and a
-  history entry, so mobile back closes either one. None of that is
-  reimplemented here, and none of it is passed — so it cannot drift from the
-  primitives.
-
-  The breakpoint is read with `useSyncExternalStore`, the same mechanic
-  `Carousel` uses and for the same reason: reading `innerWidth` in an effect
-  and calling setState trips this repo's `react-hooks/set-state-in-effect`
-  rule, and it deserves to — it renders once at the wrong size and again at the
-  right one. There is no SSR hazard either way, because `open` is false until a
-  student presses the CTA, which is necessarily after hydration.
+  WHY IT IS AN OVERLAY AND NOT ONE SHAPE (Feature 59). Feature 33 decided this
+  opens as a bottom sheet; the mobile PDP is the surface it was decided for.
+  `ResponsiveDialog` owns that switch — a centre modal on desktop, a sheet on a
+  phone — along with the viewport read and the reasons for it. Backdrop, focus
+  trap, scroll lock, Escape and the history entry come from the primitives
+  underneath it, so mobile back closes either shape.
 
   Save does not close. The parent continues the booking request after `onSaved`
   and owns that sequence; closing here would unmount the form before it could
@@ -50,26 +37,6 @@ import StudentProfileForm from '@/components/student/StudentProfileForm';
   their role=dialog node.
 */
 
-// `md`, matching the tab bar, the chromeless hero and the sticky booking bar.
-// One breakpoint for the whole mobile treatment — see isChromelessMobileRoute.
-const DESKTOP_QUERY = '(min-width: 768px)';
-
-function subscribeToViewport(onChange) {
-  const mq = window.matchMedia(DESKTOP_QUERY);
-  mq.addEventListener('change', onChange);
-  return () => mq.removeEventListener('change', onChange);
-}
-
-function readIsDesktop() {
-  return window.matchMedia(DESKTOP_QUERY).matches;
-}
-
-// Server (and pre-hydration) assumes the narrow case, as Carousel does. It is
-// never observed: the gate cannot be open before a student has pressed a CTA.
-function readIsDesktopOnServer() {
-  return false;
-}
-
 export default function ProfileGate({
   open,
   onClose,
@@ -81,18 +48,6 @@ export default function ProfileGate({
   closeLabel,
 }) {
   const titleId = useId();
-  /*
-    All three arguments are module-level functions, so their identities never
-    change and `useSyncExternalStore` never resubscribes. Wrapping the first in
-    `useCallback` is what the obvious version does, and the React Compiler
-    rejects it outright — `useCallback` wants an inline function expression,
-    and a hoisted one is already as stable as a memo could make it.
-  */
-  const isDesktop = useSyncExternalStore(
-    subscribeToViewport,
-    readIsDesktop,
-    readIsDesktopOnServer,
-  );
 
   const body = (
     <div className="space-y-4">
@@ -126,17 +81,9 @@ export default function ProfileGate({
     </div>
   );
 
-  if (isDesktop) {
-    return (
-      <Modal open={open} onClose={onClose} size="md" aria-labelledby={titleId}>
-        {body}
-      </Modal>
-    );
-  }
-
   return (
-    <BottomSheet open={open} onClose={onClose} aria-labelledby={titleId}>
+    <ResponsiveDialog open={open} onClose={onClose} aria-labelledby={titleId}>
       {body}
-    </BottomSheet>
+    </ResponsiveDialog>
   );
 }

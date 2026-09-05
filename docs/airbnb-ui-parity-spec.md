@@ -1803,17 +1803,24 @@ the city.
 
 **Supersedes:** backlog item **P13**.
 
-### ⏳ Feature 41 — Report listing — **DEFER to 2026-09-06**
+### ✅ Feature 41 — Report listing — **DONE 2026-09-05**
 
-`ReportListingModal.js` already exists and works. **Only the restyle is
-deferred** — the feature keeps functioning throughout.
+`ReportListingModal.js` already existed and worked. **Only the restyle was
+deferred** — the feature kept functioning throughout.
 
-⚠️ **This deferral is not inventory-gated**, unlike Features 10 and 40.
-Consequence: the report modal renders in the **old geometry (2px radii)**
-inside a PDP using the **new geometry (32px modal radius)**. A visible
-inconsistency, not a functional problem — but it will not resolve itself by
-waiting, and it should be judged on whether the PDP redesign has shipped,
-not on listing count.
+The deferral was never inventory-gated, unlike Features 10 and 40: its
+criterion was "has the PDP redesign shipped?". Features 58 and 59 shipped it,
+so this was picked up the day after rather than waiting for the 09-06
+reminder.
+
+What it was: the dialog was the last hand-rolled overlay on the PDP — its own
+`fixed inset-0`, its own `night/60` scrim, its own `useModalA11y` call, and a
+`Card` at 20px radii sitting inside a page that had moved to 32px
+`rounded-modal` and a blurred `night/40` scrim.
+
+It now goes through `ui/ResponsiveDialog.js` — a bottom sheet below `md`, a
+centre modal above, which is backlog M6 and the second call site for the
+`Sheet` primitive after Feature 59's profile gate.
 
 Value beyond parity, recorded: this is the cheapest fraud-detection channel
 available. §W4 of `accommodation-marketplace-spec.md` notes the video-call
