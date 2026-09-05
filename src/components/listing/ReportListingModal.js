@@ -1,11 +1,11 @@
 'use client';
 
-import { useRef, useState } from 'react';
+import { useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import useModalA11y from '@/lib/useModalA11y';
-import Card from '@/components/ui/Card';
+import ResponsiveDialog from '@/components/ui/ResponsiveDialog';
 import Icon from '@/components/ui/Icon';
+import IconButton from '@/components/ui/IconButton';
 import Button from '@/components/ui/Button';
 
 // Fixed reason set — must mirror ALLOWED_REASONS in
@@ -21,15 +21,36 @@ const REASONS = [
 const MAX_NOTE_LEN = 1000;
 
 /**
- * "Report this listing" — a subtle trigger link + a small modal. Anyone
- * (signed in or not) can flag a listing; on submit it POSTs to
- * /api/listings/report and the ops inbox gets an email. Email-only v1, no DB.
+ * "Report this listing" — a subtle trigger link plus a dialog. Anyone (signed
+ * in or not) can flag a listing; on submit it POSTs to /api/listings/report and
+ * the ops inbox gets an email. Email-only v1, no DB.
  *
  * Rendered directly by the listing detail page (not inside a shared detail
  * component) so the trigger lives alongside the page, not the reusable parts.
+ *
+ * RESTYLE — parity Feature 41. Only the presentation changed; the reason set,
+ * the request and the states are the same. It was the last hand-rolled overlay
+ * on the PDP: its own `fixed inset-0`, its own `night/60` scrim, its own
+ * `useModalA11y` call and a `Card` at 20px radii, sitting inside a page that
+ * had moved to 32px `rounded-modal` and a `night/40` blurred scrim. That is
+ * what the spec meant by "old geometry inside a new PDP", and it was never
+ * going to resolve itself by waiting — the deferral was gated on the redesign
+ * shipping, which it now has.
+ *
+ * The dialog is a bottom sheet on a phone and a centre modal on desktop, which
+ * is `ResponsiveDialog`'s whole job. Focus trap, scroll lock, Escape, the
+ * scrim and the history entry come from the primitives beneath it, so the
+ * local `useModalA11y` wiring is gone.
+ *
+ * WORTH MORE THAN PARITY, recorded in the spec: this is the cheapest
+ * fraud-detection channel available. §W4 of the marketplace spec notes the
+ * video call confirms the room exists but not the building, the neighbours, or
+ * that keys are handed over — and escrow means StudentX pays the refund on a
+ * misrepresented listing. A report that arrives pre-booking is worth money.
  */
 export default function ReportListingModal({ listingId }) {
   const t = useTranslations('propylaea.report');
+  const titleId = useId();
 
   const [open, setOpen] = useState(false);
   const [reason, setReason] = useState('');
@@ -37,8 +58,6 @@ export default function ReportListingModal({ listingId }) {
   const [submitting, setSubmitting] = useState(false);
   const [status, setStatus] = useState('idle'); // 'idle' | 'success' | 'error'
   const [error, setError] = useState('');
-
-  const dialogRef = useRef(null);
 
   function close() {
     if (submitting) return;
@@ -50,15 +69,6 @@ export default function ReportListingModal({ listingId }) {
     setStatus('idle');
     setError('');
   }
-
-  // Focus trap, Esc-to-close, scroll lock, focus restore — shared with every
-  // other modal. Esc is suppressed while a submit is in flight (close() also
-  // guards on `submitting`); the trap stays live.
-  useModalA11y(dialogRef, {
-    onClose: close,
-    active: open,
-    closeOnEscape: !submitting,
-  });
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -108,112 +118,141 @@ export default function ReportListingModal({ listingId }) {
         {t('trigger')}
       </button>
 
-      {open && (
-        <div
-          ref={dialogRef}
-          className="fixed inset-0 z-50 flex items-center justify-center p-4"
-          role="dialog"
-          aria-modal="true"
-          aria-label={t('title')}
-        >
-          <div className="absolute inset-0 bg-night/60" onClick={close} />
-          <Card tone="white" className="relative z-10 w-full max-w-lg p-6 md:p-8">
-            <div className="flex items-start justify-between mb-4 gap-3">
-              <div>
-                <p className="font-display text-2xl text-night">{t('title')}</p>
-                <p className="mt-1 text-sm text-night/60">{t('subtitle')}</p>
+      {/*
+        `closeOnBackdrop` is left at its default. An accidental backdrop tap
+        loses at most a radio choice and a note the student has not sent, and
+        the primitives already refuse to close while `submitting` is not the
+        thing guarding it — `close()` is.
+      */}
+      <ResponsiveDialog open={open} onClose={close} aria-labelledby={titleId}>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 id={titleId} className="font-display text-2xl text-night leading-tight">
+              {t('title')}
+            </h2>
+            <p className="mt-1 text-sm text-night/60">{t('subtitle')}</p>
+          </div>
+          <IconButton
+            label={t('closeAriaLabel')}
+            size="sm"
+            variant="ghost"
+            onClick={close}
+            disabled={submitting}
+          >
+            <Icon name="x" className="w-4 h-4" />
+          </IconButton>
+        </div>
+
+        {status === 'success' ? (
+          <div className="mt-6">
+            <p className="flex items-center gap-2 font-display text-lg text-night">
+              <Icon name="check" className="w-5 h-5 text-blue" />
+              {t('successTitle')}
+            </p>
+            <p className="mt-2 text-sm text-night/60">{t('successBody')}</p>
+            <Button
+              type="button"
+              variant="primary"
+              onClick={close}
+              className="mt-6 w-full justify-center"
+            >
+              {t('done')}
+            </Button>
+          </div>
+        ) : (
+          <form onSubmit={handleSubmit} className="mt-6 space-y-6">
+            <fieldset>
+              <legend className="label-caps text-night/70 mb-2">
+                {t('reasonLegend')}
+              </legend>
+              {/*
+                Each reason is a full-width row rather than a bare inline
+                radio. The whole row is the <label>, so the tap area is the row
+                and not the 16px control — the old inline labels were the
+                height of the text.
+
+                `py-3` rather than `py-2.5`: measured at 40px, which is under
+                the 44px minimum touch target, and this is a bottom sheet on a
+                phone now.
+              */}
+              <div className="space-y-1">
+                {REASONS.map((r) => (
+                  <label
+                    key={r}
+                    className={`flex cursor-pointer items-center gap-3 rounded-control px-3 py-3 text-sm transition-colors ${
+                      reason === r
+                        ? 'bg-parchment text-night'
+                        : 'text-night/80 hover:bg-parchment/60'
+                    }`}
+                  >
+                    <input
+                      type="radio"
+                      name="report-reason"
+                      value={r}
+                      checked={reason === r}
+                      onChange={() => setReason(r)}
+                      className="h-4 w-4 shrink-0 accent-blue"
+                    />
+                    {t(`reason_${r}`)}
+                  </label>
+                ))}
               </div>
-              <button
-                type="button"
-                onClick={close}
-                disabled={submitting}
-                className="p-1 text-night/60 hover:text-night active:text-night/80 transition-colors disabled:opacity-50"
-                aria-label={t('closeAriaLabel')}
+            </fieldset>
+
+            <div>
+              <label
+                htmlFor="report-note"
+                className="label-caps text-night/70 block mb-1.5"
               >
-                <Icon name="x" className="w-5 h-5" />
-              </button>
+                {t('noteLabel')}
+              </label>
+              {/*
+                `bg-parchment`, matching every other textarea on this page. It
+                was `bg-stone/40` — white at 40% on a white card, i.e. a field
+                with no fill at all, which is only invisible rather than wrong
+                while the surface behind it happens to be white too.
+              */}
+              <textarea
+                id="report-note"
+                rows={3}
+                value={note}
+                onChange={(e) => setNote(e.target.value)}
+                placeholder={t('notePlaceholder')}
+                maxLength={MAX_NOTE_LEN}
+                className="w-full resize-none rounded-control border border-night/15 bg-parchment px-3.5 py-3 text-sm text-night focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
+              />
             </div>
 
-            {status === 'success' ? (
-              <div className="py-4">
-                <p className="flex items-center gap-2 font-display text-lg text-night">
-                  <Icon name="check" className="w-5 h-5 text-blue" />
-                  {t('successTitle')}
-                </p>
-                <p className="mt-2 text-sm text-night/60">{t('successBody')}</p>
-                <Button
-                  type="button"
-                  variant="primary"
-                  onClick={close}
-                  className="mt-5 w-full justify-center"
-                >
-                  {t('done')}
-                </Button>
-              </div>
-            ) : (
-              <form onSubmit={handleSubmit} className="space-y-5">
-                <fieldset className="space-y-2.5">
-                  <legend className="label-caps text-night/70 mb-1">
-                    {t('reasonLegend')}
-                  </legend>
-                  {REASONS.map((r) => (
-                    <label
-                      key={r}
-                      className="flex items-center gap-3 text-sm text-night/80 cursor-pointer"
-                    >
-                      <input
-                        type="radio"
-                        name="report-reason"
-                        value={r}
-                        checked={reason === r}
-                        onChange={() => setReason(r)}
-                        className="h-4 w-4 accent-blue"
-                      />
-                      {t(`reason_${r}`)}
-                    </label>
-                  ))}
-                </fieldset>
+            {/*
+              Magenta on parchment, the repo's error treatment (see
+              StudentProfileForm and the booking widget). It was Tailwind's
+              default `red-700 / red-50 / red-200`, which is not in the palette
+              at all — CLAUDE.md gives magenta as the attention/error accent.
 
-                <div>
-                  <label
-                    htmlFor="report-note"
-                    className="label-caps text-night/70 block mb-1.5"
-                  >
-                    {t('noteLabel')}
-                  </label>
-                  <textarea
-                    id="report-note"
-                    rows={3}
-                    value={note}
-                    onChange={(e) => setNote(e.target.value)}
-                    placeholder={t('notePlaceholder')}
-                    maxLength={MAX_NOTE_LEN}
-                    className="w-full rounded-control border border-night/15 bg-stone/40 px-3.5 py-3 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/20 focus-visible:border-blue resize-none"
-                  />
-                </div>
-
-                {error && (
-                  <p
-                    role="alert"
-                    className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-3 py-2"
-                  >
-                    {error}
-                  </p>
-                )}
-
-                <Button
-                  type="submit"
-                  variant="primary"
-                  disabled={submitting}
-                  className="w-full justify-center"
-                >
-                  {submitting ? t('submitting') : t('submit')}
-                </Button>
-              </form>
+              Only this file is changed. Nine other landlord-side surfaces
+              carry the same default reds; sweeping them is its own task, not
+              a restyle of one dialog.
+            */}
+            {error && (
+              <p
+                role="alert"
+                className="rounded-control border border-night/10 bg-parchment px-3 py-2 text-sm text-magenta"
+              >
+                {error}
+              </p>
             )}
-          </Card>
-        </div>
-      )}
+
+            <Button
+              type="submit"
+              variant="primary"
+              disabled={submitting}
+              className="w-full justify-center"
+            >
+              {submitting ? t('submitting') : t('submit')}
+            </Button>
+          </form>
+        )}
+      </ResponsiveDialog>
     </>
   );
 }
