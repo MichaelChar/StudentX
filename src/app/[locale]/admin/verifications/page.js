@@ -88,7 +88,7 @@ export default function AdminVerificationsPage() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-magenta bg-parchment border border-night/10 rounded-lg px-6 py-4">{error}</p>
+        <p className="text-magenta bg-parchment border border-night/10 rounded-control px-6 py-4">{error}</p>
       </div>
     );
   }
@@ -102,7 +102,7 @@ export default function AdminVerificationsPage() {
             <button
               key={s}
               onClick={() => handleFilterChange(s)}
-              className={`text-sm px-3 py-1.5 rounded-lg border transition-colors capitalize ${
+              className={`text-sm px-3 py-1.5 rounded-control border transition-colors capitalize ${
                 statusFilter === s ? 'bg-night text-white border-night' : 'border-gray-200 text-night/60 hover:border-night/40 active:bg-night/10'
               }`}
             >
@@ -144,7 +144,7 @@ export default function AdminVerificationsPage() {
                     href={req.document_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="shrink-0 text-sm px-3 py-1.5 rounded-lg border border-gray-200 text-night/70 hover:border-night hover:text-night transition-colors"
+                    className="shrink-0 text-sm px-3 py-1.5 rounded-control border border-gray-200 text-night/70 hover:border-night hover:text-night transition-colors"
                   >
                     View document ↗
                   </a>
@@ -158,20 +158,20 @@ export default function AdminVerificationsPage() {
                     value={notesMap[req.id] || ''}
                     onChange={(e) => setNotesMap((prev) => ({ ...prev, [req.id]: e.target.value }))}
                     rows={2}
-                    className="w-full rounded-lg border border-gray-200 bg-parchment px-3 py-2 text-sm text-night focus-visible:ring-2 focus-visible:ring-yellow/50 focus-visible:border-yellow resize-none"
+                    className="w-full rounded-control border border-gray-200 bg-parchment px-3 py-2 text-sm text-night focus-visible:ring-2 focus-visible:ring-yellow/50 focus-visible:border-yellow resize-none"
                   />
                   <div className="flex gap-2">
                     <button
                       onClick={() => handleAction(req.id, 'approve')}
                       disabled={!!actionStates[req.id]}
-                      className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-colors disabled:opacity-50"
+                      className="px-4 py-2 rounded-control bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-colors disabled:opacity-50"
                     >
                       {actionStates[req.id] === 'approving' ? 'Approving…' : 'Approve'}
                     </button>
                     <button
                       onClick={() => handleAction(req.id, 'reject')}
                       disabled={!!actionStates[req.id]}
-                      className="px-4 py-2 rounded-lg border border-magenta/40 text-magenta text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
+                      className="px-4 py-2 rounded-control border border-magenta/40 text-magenta text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
                     >
                       {actionStates[req.id] === 'rejecting' ? 'Rejecting…' : 'Reject'}
                     </button>

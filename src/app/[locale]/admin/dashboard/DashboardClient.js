@@ -47,9 +47,9 @@ function ListingRow({ listing, landlords, onAssign }) {
     <div className="flex items-center gap-3 py-2 border-t border-gray-100">
       {cover ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={cover} alt="" className="w-12 h-12 rounded object-cover bg-gray-100" />
+        <img src={cover} alt="" className="w-12 h-12 rounded-photo object-cover bg-gray-100" />
       ) : (
-        <div className="w-12 h-12 rounded bg-gray-100 grid place-items-center text-[10px] text-night/30">no photo</div>
+        <div className="w-12 h-12 rounded-photo bg-gray-100 grid place-items-center text-[10px] text-night/30">no photo</div>
       )}
       <div className="flex-1 min-w-0">
         <p className="text-sm text-night truncate">{listing.address || listing.source_url || listing.id}</p>
@@ -60,7 +60,7 @@ function ListingRow({ listing, landlords, onAssign }) {
       <Badge status={listing.status} />
       {onAssign && (
         <select
-          className="text-xs border border-gray-200 rounded px-2 py-1"
+          className="text-xs border border-gray-200 rounded-control px-2 py-1"
           defaultValue=""
           onChange={(e) => e.target.value && onAssign(listing.id, e.target.value)}
         >
@@ -106,7 +106,7 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
   };
 
   return (
-    <div className="border border-gray-200 rounded-lg p-4 mb-4">
+    <div className="border border-gray-200 rounded-card p-4 mb-4">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-display font-semibold text-night">{landlord.display_name || landlord.id}</h3>
         <Badge status={landlord.status} />
@@ -115,7 +115,7 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
         {['display_name', 'phone', 'email', 'notes'].map((f) => (
           <input
             key={f}
-            className="text-sm border border-gray-200 rounded px-2 py-1"
+            className="text-sm border border-gray-200 rounded-control px-2 py-1"
             placeholder={f.replace('_', ' ')}
             value={edit[f]}
             onChange={(e) => setEdit((s) => ({ ...s, [f]: e.target.value }))}
@@ -123,10 +123,10 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
         ))}
       </div>
       <div className="flex flex-wrap gap-2 mb-2">
-        <button onClick={save} className="text-xs bg-night text-white rounded px-3 py-1.5 hover:bg-night/90 active:bg-night/80 transition-colors">
+        <button onClick={save} className="text-xs bg-night text-white rounded-control px-3 py-1.5 hover:bg-night/90 active:bg-night/80 transition-colors">
           Save
         </button>
-        <button onClick={generate} className="text-xs bg-blue text-white rounded px-3 py-1.5 hover:bg-blue/90 active:bg-blue/80 transition-colors">
+        <button onClick={generate} className="text-xs bg-blue text-white rounded-control px-3 py-1.5 hover:bg-blue/90 active:bg-blue/80 transition-colors">
           Generate claim link
         </button>
         {landlord.published_landlord_id && (
@@ -135,10 +135,10 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
       </div>
       {claimUrl && (
         <div className="flex items-center gap-2 mb-2">
-          <input readOnly value={claimUrl} className="flex-1 text-xs border border-gray-200 rounded px-2 py-1 bg-gray-50" />
+          <input readOnly value={claimUrl} className="flex-1 text-xs border border-gray-200 rounded-control px-2 py-1 bg-gray-50" />
           <button
             onClick={() => navigator.clipboard?.writeText(claimUrl)}
-            className="text-xs border border-gray-200 rounded px-2 py-1 hover:bg-night/5 active:bg-night/10 transition-colors"
+            className="text-xs border border-gray-200 rounded-control px-2 py-1 hover:bg-night/5 active:bg-night/10 transition-colors"
           >
             Copy
           </button>
@@ -237,58 +237,58 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
           <Link href="/admin/migrate-fake-listings" className="text-sm text-blue underline">
             Migrate fake listings →
           </Link>
-          <button onClick={refresh} className="text-sm border border-gray-200 rounded px-3 py-1.5 hover:bg-night/5 active:bg-night/10 transition-colors">
+          <button onClick={refresh} className="text-sm border border-gray-200 rounded-control px-3 py-1.5 hover:bg-night/5 active:bg-night/10 transition-colors">
             Refresh
           </button>
         </div>
       </div>
-      {msg && <p className="text-sm text-night/70 bg-parchment rounded px-3 py-2 mb-4">{msg}</p>}
+      {msg && <p className="text-sm text-night/70 bg-parchment rounded-control px-3 py-2 mb-4">{msg}</p>}
 
-      <section className="border border-gray-200 rounded-lg p-4 mb-6">
+      <section className="border border-gray-200 rounded-card p-4 mb-6">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Ingest from a URL</h2>
         <div className="flex gap-2 mb-3">
           <input
-            className="flex-1 text-sm border border-gray-200 rounded px-3 py-2"
+            className="flex-1 text-sm border border-gray-200 rounded-control px-3 py-2"
             placeholder="https://www.spitogatos.gr/…"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
           />
-          <button onClick={ingestSingle} className="text-sm bg-blue text-white rounded px-4 py-2 hover:bg-blue/90 active:bg-blue/80 transition-colors">
+          <button onClick={ingestSingle} className="text-sm bg-blue text-white rounded-control px-4 py-2 hover:bg-blue/90 active:bg-blue/80 transition-colors">
             Ingest
           </button>
         </div>
         <textarea
-          className="w-full text-sm border border-gray-200 rounded px-3 py-2 mb-2"
+          className="w-full text-sm border border-gray-200 rounded-control px-3 py-2 mb-2"
           rows={3}
           placeholder="Batch: one URL per line"
           value={batch}
           onChange={(e) => setBatch(e.target.value)}
         />
-        <button onClick={ingestBatch} className="text-sm border border-gray-200 rounded px-4 py-2 hover:bg-night/5 active:bg-night/10 transition-colors">
+        <button onClick={ingestBatch} className="text-sm border border-gray-200 rounded-control px-4 py-2 hover:bg-night/5 active:bg-night/10 transition-colors">
           Queue batch
         </button>
       </section>
 
-      <section className="border border-gray-200 rounded-lg p-4 mb-6">
+      <section className="border border-gray-200 rounded-card p-4 mb-6">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">New pending landlord</h2>
         <div className="grid grid-cols-2 gap-2 mb-3">
           {['display_name', 'phone', 'email', 'notes'].map((f) => (
             <input
               key={f}
-              className="text-sm border border-gray-200 rounded px-2 py-1"
+              className="text-sm border border-gray-200 rounded-control px-2 py-1"
               placeholder={f.replace('_', ' ')}
               value={form[f]}
               onChange={(e) => setForm((s) => ({ ...s, [f]: e.target.value }))}
             />
           ))}
         </div>
-        <button onClick={createLandlord} className="text-sm bg-night text-white rounded px-4 py-2 hover:bg-night/90 active:bg-night/80 transition-colors">
+        <button onClick={createLandlord} className="text-sm bg-night text-white rounded-control px-4 py-2 hover:bg-night/90 active:bg-night/80 transition-colors">
           Create landlord
         </button>
       </section>
 
       {unassigned.length > 0 && (
-        <section className="border border-gray-200 rounded-lg p-4 mb-6">
+        <section className="border border-gray-200 rounded-card p-4 mb-6">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-1">Unassigned listings</h2>
           {unassigned.map((l) => (
             <ListingRow key={l.id} listing={l} landlords={landlords} onAssign={assign} />

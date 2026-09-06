@@ -51,7 +51,7 @@ export default function AdminMetricsPage() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-magenta bg-parchment border border-night/10 rounded-lg px-6 py-4">{error}</p>
+        <p className="text-magenta bg-parchment border border-night/10 rounded-control px-6 py-4">{error}</p>
       </div>
     );
   }

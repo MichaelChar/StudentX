@@ -114,7 +114,7 @@ export default function AdminListingGoLivePage() {
               key={f}
               type="button"
               onClick={() => handleFilterChange(f)}
-              className={`text-sm px-3 py-1.5 rounded-lg border transition-colors capitalize ${
+              className={`text-sm px-3 py-1.5 rounded-control border transition-colors capitalize ${
                 filter === f
                   ? 'bg-night text-white border-night'
                   : 'border-gray-200 text-night/60 hover:border-night/40 active:bg-night/10'

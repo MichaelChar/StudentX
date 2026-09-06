@@ -998,7 +998,7 @@ sells. At current inventory the same line reads `3 homes in Thessaloniki`,
 which advertises the exact constraint the marketplace spec names (3 listings
 vs. Nostus's ~294 in-city). No logic needed for the count-free version.
 
-**⏰ Revisit 2026-09-06** — add the count back once inventory flatters it.
+**⏰ Revisit 2026-09-20** — add the count back once inventory flatters it.
 Scheduled reminder set (`studentx-revisit-results-count`).
 
 ### ✅ Feature 11 — Split layout + Positron tiles — **BUILD**
@@ -1781,7 +1781,7 @@ which publishes an unverified liability claim on their behalf.
 
 **Supersedes:** backlog item **P12**.
 
-### ⏳ Feature 40 — "More stays nearby" — **DEFER to 2026-09-06**
+### ⏳ Feature 40 — "More stays nearby" — **DEFER to 2026-09-20**
 
 Horizontal carousel of other listings at the foot of the PDP. Not built now.
 
@@ -1799,7 +1799,7 @@ bounded neighbourhood/distance lookup excluding the current listing.
 the city.
 
 **⏰ Attached to the existing reminder** `studentx-revisit-results-count`
-(fires 2026-09-06), which now covers both this and Feature 10.
+(fires 2026-09-20), which now covers both this and Feature 10.
 
 **Supersedes:** backlog item **P13**.
 
@@ -1829,8 +1829,8 @@ neighbours, or that keys are handed over. Since escrow means StudentX pays
 the refund on a misrepresented listing, catching problems pre-booking is
 worth real money.
 
-**⏰ Added to** `studentx-revisit-results-count` (fires 2026-09-06), with its
-own non-inventory criterion.
+**⏰ Was on** `studentx-revisit-results-count` with its own non-inventory
+criterion. Removed from that reminder when it shipped on 2026-09-05.
 
 **Supersedes:** backlog item **P14**.
 
@@ -1859,7 +1859,7 @@ done for this. Noted, accepted.
 
 ## Booking features
 
-### ⏳ Feature 43 — Instant Book — **DEFER to 2026-09-06**
+### ⏳ Feature 43 — Instant Book — **DEFER to 2026-09-20**
 
 Not built. StudentX stays **request-to-book only** — every booking waits on
 landlord acceptance. No Instant Book filter chip (which also keeps Feature 7's
@@ -1891,7 +1891,7 @@ makes the chip meaningful, since it genuinely varies.
 **Threshold to revisit:** real landlord response time and actual
 request→booking conversion, once there is booking data. **Not** listing count.
 
-**⏰ Added to** `studentx-revisit-results-count` (fires 2026-09-06) as its
+**⏰ Added to** `studentx-revisit-results-count` (fires 2026-09-20) as its
 conversion-gated item.
 
 ### ✅ Feature 44 — Request-to-book treatment — **BUILD**
@@ -2230,7 +2230,7 @@ justification is the audit: landlords are **racing each other** to respond
 time is 1d 10h. Putting dates, guest profile and accept/decline in the same
 view as the message removes the round-trip that costs the booking.
 
-### ⏳ Feature 54 — Host Insights / Earnings — **DEFER to 2026-09-06**
+### ⏳ Feature 54 — Host Insights / Earnings — **DEFER to 2026-09-20**
 
 No host-facing analytics or earnings page. `admin/metrics` stays admin-only.
 
@@ -2244,7 +2244,7 @@ the home for earnings: paid out, held in escrow, due.
 ⚠️ **Data-gated, not inventory-gated.** The threshold is completed bookings
 and payouts existing at all, not listing count.
 
-**⏰ Added to** `studentx-revisit-results-count` (fires 2026-09-06) as its
+**⏰ Added to** `studentx-revisit-results-count` (fires 2026-09-20) as its
 second data-gated item, alongside Feature 43.
 
 ### ❌ Feature 55 — "Switch to traveling" role toggle — **SKIP**
