@@ -14,6 +14,24 @@
   /* Extended palette — Stripe-style accents used in gradients + highlights */
   --color-magenta: #ff5fa2;
   --color-yellow: #ffcb57;
+  /*
+    `jade` is the SUCCESS token — approved, verified, published, saved. It is
+    the counterpart to `magenta`, which this palette already uses for
+    error/danger (see the note above Button's `destructive` variant).
+
+    It is deliberately DARKER than its neighbours, and that is the one thing to
+    understand before "brightening it up to match". magenta and yellow are
+    decorative accents that happen to get used for state; as text on parchment
+    they measure 2.60:1 and 1.39:1, both failing WCAG AA. Green has no
+    decorative use here at all — every single site is an approve button, a
+    status badge or a success message, i.e. something a person has to READ.
+
+    #08805e is the brightest value that clears AA in both roles it must fill:
+    4.53:1 as text on parchment, and 4.93:1 for white text on it as a solid
+    button fill. Anything brighter fails one of the two. Founder's call,
+    2026-09-06, made against those measurements rather than on the swatch.
+  */
+  --color-jade: #08805e;
   --color-iris-soft: #ece7ff;   /* Section backgrounds, hub gradient */
   --color-peach-soft: #ffe7d6;  /* Hub gradient stop */
 
@@ -65,6 +83,7 @@
   /* Extended palette */
   --color-magenta: var(--color-magenta);
   --color-yellow: var(--color-yellow);
+  --color-jade: var(--color-jade);
   --color-iris-soft: var(--color-iris-soft);
   --color-peach-soft: var(--color-peach-soft);
 

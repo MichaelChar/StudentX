@@ -6,7 +6,7 @@ import { Link, useRouter } from '@/i18n/navigation';
 
 const STATUS_BADGE = {
   open: 'bg-blue-50 text-blue-700 border-blue-200',
-  accepted: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+  accepted: 'bg-parchment text-jade border-night/10',
   rejected: 'bg-parchment text-magenta border-night/10',
   resolved: 'bg-night/5 text-night/60 border-night/15',
 };
@@ -211,7 +211,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('accepted')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-control bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-control bg-jade text-white text-sm font-semibold hover:bg-jade/90 active:bg-jade/80 transition-colors disabled:opacity-50"
                 >
                   {isPending ? t('saving') : t('actions.accept')}
                 </button>

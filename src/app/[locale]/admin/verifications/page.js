@@ -164,7 +164,7 @@ export default function AdminVerificationsPage() {
                     <button
                       onClick={() => handleAction(req.id, 'approve')}
                       disabled={!!actionStates[req.id]}
-                      className="px-4 py-2 rounded-control bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-colors disabled:opacity-50"
+                      className="px-4 py-2 rounded-control bg-jade text-white text-sm font-semibold hover:bg-jade/90 active:bg-jade/80 transition-colors disabled:opacity-50"
                     >
                       {actionStates[req.id] === 'approving' ? 'Approving…' : 'Approve'}
                     </button>
@@ -189,7 +189,7 @@ export default function AdminVerificationsPage() {
 function StatusBadge({ status }) {
   const styles = {
     pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
-    approved: 'bg-emerald-50 text-emerald-700 border-emerald-200',
+    approved: 'bg-parchment text-jade border-night/10',
     rejected: 'bg-parchment text-magenta border-night/10',
   };
   return (

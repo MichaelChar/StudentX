@@ -27,9 +27,9 @@ const STATUS_STYLES = {
   assigned: 'bg-blue/10 text-blue',
   needs_manual_entry: 'bg-yellow/30 text-night/70',
   error: 'bg-parchment text-magenta',
-  published: 'bg-green-50 text-green-700',
+  published: 'bg-parchment text-jade',
   claim_sent: 'bg-blue/10 text-blue',
-  claimed: 'bg-green-50 text-green-700',
+  claimed: 'bg-parchment text-jade',
   archived: 'bg-gray-100 text-night/40',
 };
 
@@ -130,7 +130,7 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
           Generate claim link
         </button>
         {landlord.published_landlord_id && (
-          <span className="text-xs text-green-700 self-center">published as {landlord.published_landlord_id}</span>
+          <span className="text-xs text-jade self-center">published as {landlord.published_landlord_id}</span>
         )}
       </div>
       {claimUrl && (
