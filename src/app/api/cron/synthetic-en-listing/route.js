@@ -403,6 +403,106 @@ async function checkNoMissingMessage(appUrl) {
   }
 }
 
+/*
+  TIER 3 of the CARTO-key guard (issue #472) — the only layer that reaches a
+  human without someone going looking.
+
+  IT MUST INSPECT THE CLIENT BUNDLE, NOT process.env. That distinction is the
+  whole reason this exists. The key is a `wrangler.jsonc` var, so inside this
+  Worker `process.env.NEXT_PUBLIC_CARTO_KEY` reads back fine — while the
+  browser bundle, which is what actually builds the tile URL, was compiled
+  without it. A server-side env check would report a confident green over a
+  watermarked map. That false green is what went unnoticed on 2026-09-06.
+
+  WHY IT CRAWLS TWO LEVELS. `ListingsMap` is loaded with `next/dynamic`, so its
+  chunk is never referenced in the page HTML — the first version of this check
+  scanned only the HTML\u2019s script tags, found no CARTO URL at all, and
+  returned "skipped" against a production that was actively serving the
+  watermark. A monitor that reports skipped forever is worse than no monitor,
+  because it looks like coverage. Measured against prod: 15 chunks in the HTML,
+  none containing the tile URL; one of them names the dynamic chunk, which does.
+  Sixteen fetches total, which is what CHUNK_FETCH_BUDGET is sized for.
+
+  Skips rather than fails when it genuinely cannot tell — Cloudflare 5xx,
+  timeouts, or a page with no chunks. It shares an alert email with checks that
+  matter more, and a monitor that cries wolf gets muted.
+
+  Brittleness, stated rather than hidden: it depends on Next emitting
+  `/_next/static/chunks/*.js` and on chunks naming their lazy children. A
+  future output shape would surface as a hard failure rather than a silent
+  skip, which is the right way round.
+*/
+const CHUNK_FETCH_BUDGET = 40;
+
+async function checkCartoTileKey(appUrl) {
+  const name = 'carto-tile-key';
+  const pageUrl = `${appUrl}/property/thessaloniki/results`;
+  try {
+    const res = await fetchUrl(pageUrl);
+    if (INCONCLUSIVE_CF_5XX.has(res.status)) {
+      return { name, ok: true, skipped: true, reason: `skipped: Cloudflare ${res.status}` };
+    }
+    if (res.status !== 200) {
+      return { name, ok: false, reason: `status ${res.status} from ${pageUrl}` };
+    }
+    const html = await res.text();
+    const queue = [...new Set(html.match(/\/_next\/static\/chunks\/[^"']+?\.js/g) || [])];
+    if (queue.length === 0) {
+      return { name, ok: true, skipped: true, reason: 'skipped: no script chunks in page HTML' };
+    }
+
+    const seen = new Set(queue);
+    let fetched = 0;
+    let sawCarto = false;
+
+    while (queue.length > 0 && fetched < CHUNK_FETCH_BUDGET) {
+      const chunk = queue.shift();
+      const r = await fetchUrl(`${appUrl}${chunk}`);
+      fetched += 1;
+      if (r.status !== 200) continue;
+      const js = await r.text();
+
+      if (js.includes('basemaps.cartocdn.com')) {
+        sawCarto = true;
+        if (/basemaps\.cartocdn\.com[^"'`]*\?key=/.test(js)) return { name, ok: true };
+      }
+
+      // Lazy children are named inside their parent — this is what reaches the
+      // dynamically imported map chunk.
+      for (const m of js.match(/static\/chunks\/[A-Za-z0-9_./-]+\.js/g) || []) {
+        const url = `/_next/${m}`;
+        if (!seen.has(url)) {
+          seen.add(url);
+          queue.push(url);
+        }
+      }
+    }
+
+    if (!sawCarto) {
+      return {
+        name,
+        ok: true,
+        skipped: true,
+        reason: `skipped: no CARTO tile URL found in ${fetched} chunks (budget ${CHUNK_FETCH_BUDGET})`,
+      };
+    }
+    return {
+      name,
+      ok: false,
+      reason:
+        'CARTO tile URL carries no ?key= — tiles are serving the "API KEY REQUIRED" ' +
+        'watermark. NEXT_PUBLIC_CARTO_KEY is missing from the Cloudflare BUILD ' +
+        'environment; a wrangler.jsonc var is runtime-only and does not reach the ' +
+        'build. See #472.',
+    };
+  } catch (err) {
+    return (
+      skipIfInconclusiveError(name, err) ||
+      { name, ok: false, reason: `fetch threw: ${err.message || err.name}` }
+    );
+  }
+}
+
 // Anon listing detail must actually be edge-cached, not merely advertise a
 // cacheable Cache-Control. The header probe (en-listing-anon-cache) stayed
 // green even when the deployed Cache Rule matched the wrong path and nothing
@@ -664,6 +764,7 @@ export async function runSyntheticEnListing() {
     additional.push(await checkEnLocale(check));
   }
   additional.push(await checkCronScheduleDrift());
+  additional.push(await checkCartoTileKey(appUrl));
   for (const r of additional) {
     checks.push(r);
     if (!r.ok) failures.push(r);
