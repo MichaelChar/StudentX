@@ -117,7 +117,7 @@ export default function AdminListingGoLivePage() {
               className={`text-sm px-3 py-1.5 rounded-control border transition-colors capitalize ${
                 filter === f
                   ? 'bg-night text-white border-night'
-                  : 'border-gray-200 text-night/60 hover:border-night/40 active:bg-night/10'
+                  : 'border-night/10 text-night/60 hover:border-night/40 active:bg-night/10'
               }`}
             >
               {t(`filter.${f}`)}
@@ -135,7 +135,7 @@ export default function AdminListingGoLivePage() {
       {loading ? (
         <p className="text-night/50">{t('loading')}</p>
       ) : listings.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-card">
+        <div className="text-center py-16 border-2 border-dashed border-night/10 rounded-card">
           <p className="text-night/50">{t('empty', { filter })}</p>
         </div>
       ) : (

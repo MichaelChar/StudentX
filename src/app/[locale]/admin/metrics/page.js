@@ -69,7 +69,7 @@ export default function AdminMetricsPage() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-display text-2xl font-bold text-night">Internal Metrics</h1>
         {cached && (
-          <span className="text-xs text-night/40 bg-gray-100 rounded-full px-3 py-1">cached</span>
+          <span className="text-xs text-night/40 bg-parchment rounded-full px-3 py-1">cached</span>
         )}
       </div>
 
@@ -131,16 +131,16 @@ export default function AdminMetricsPage() {
       {/* Tier Breakdown */}
       <section>
         <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Tier Breakdown</h2>
-        <div className="border border-gray-200 rounded-card overflow-hidden">
+        <div className="border border-night/10 rounded-card overflow-hidden">
           <table className="w-full text-sm">
-            <thead className="bg-gray-50">
+            <thead className="bg-parchment">
               <tr>
                 <th className="text-left px-4 py-3 font-semibold text-night/70">Plan</th>
                 <th className="text-right px-4 py-3 font-semibold text-night/70">Landlords</th>
                 <th className="text-right px-4 py-3 font-semibold text-night/70">Share</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-night/5">
               {/* Free tier row */}
               {(() => {
                 const count = metrics.freeLandlords;
@@ -148,7 +148,7 @@ export default function AdminMetricsPage() {
                   ? Math.round((count / metrics.totalLandlords) * 1000) / 10
                   : 0;
                 return (
-                  <tr className="hover:bg-gray-50">
+                  <tr className="hover:bg-parchment">
                     <td className="px-4 py-3 text-night">Starter (Free)</td>
                     <td className="px-4 py-3 text-right font-mono text-night">{count}</td>
                     <td className="px-4 py-3 text-right text-night/50">{share}%</td>
@@ -164,7 +164,7 @@ export default function AdminMetricsPage() {
                     : 0;
                   const label = planNames[planId] || planId.replace(/_/g, ' ');
                   return (
-                    <tr key={planId} className="hover:bg-gray-50">
+                    <tr key={planId} className="hover:bg-parchment">
                       <td className="px-4 py-3 text-night capitalize">{label}</td>
                       <td className="px-4 py-3 text-right font-mono text-night">{count}</td>
                       <td className="px-4 py-3 text-right text-night/50">{share}%</td>
@@ -181,14 +181,19 @@ export default function AdminMetricsPage() {
 
 function KpiCard({ label, value, trend, note }) {
   return (
-    <div className="bg-gray-50 border border-gray-100 rounded-card p-4">
+    <div className="bg-parchment border border-night/5 rounded-card p-4">
       <p className="text-xs text-night/50 mb-1">{label}</p>
       <div className="flex items-end gap-2">
         <p className="font-display text-xl font-bold text-night">{value}</p>
         {/*
-          THE ONLY TWO TAILWIND DEFAULT COLOURS LEFT IN src/, AND DELIBERATELY.
-          #478 swept the reds to `magenta`, this PR swept the greens to `jade`;
-          both passed over this pair on the same reasoning.
+          TAILWIND DEFAULTS, KEPT DELIBERATELY. #478 swept the reds to
+          `magenta` and #481 the greens to `jade`; both passed over this pair
+          on the same reasoning.
+
+          (#481's version of this comment claimed these were "the only two
+          defaults left in src/". That was wrong when written — 62 greys and a
+          handful of blues and yellows were still there. Corrected here rather
+          than left to mislead the next sweep.)
 
           These arrows are a DIRECTION, not a state. `jade` means "approved,
           verified, published" and `magenta` means "error" — painting a routine

@@ -11,12 +11,12 @@ const money = (v) => {
 
 function PhotoStrip({ photos }) {
   const urls = (Array.isArray(photos) ? photos : []).map((p) => p?.url).filter(Boolean);
-  if (!urls.length) return <div className="h-40 bg-gray-100 rounded-lg grid place-items-center text-night/30 text-sm">No photos</div>;
+  if (!urls.length) return <div className="h-40 bg-parchment rounded-lg grid place-items-center text-night/30 text-sm">No photos</div>;
   return (
     <div className="flex gap-2 overflow-x-auto pb-1">
       {urls.map((u, i) => (
         // eslint-disable-next-line @next/next/no-img-element
-        <img key={i} src={u} alt="" className="h-40 w-56 object-cover rounded-lg bg-gray-100 flex-shrink-0" />
+        <img key={i} src={u} alt="" className="h-40 w-56 object-cover rounded-lg bg-parchment flex-shrink-0" />
       ))}
     </div>
   );
@@ -93,13 +93,13 @@ export default function ClaimClient({ token, landlord, listings }) {
         Review the details below and publish them to the StudentX directory. You can edit anything before publishing.
       </p>
 
-      <section className="border border-gray-200 rounded-lg p-4 mb-6">
+      <section className="border border-night/10 rounded-lg p-4 mb-6">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Your contact details</h2>
         <div className="grid sm:grid-cols-3 gap-2">
           {['display_name', 'phone', 'email'].map((f) => (
             <input
               key={f}
-              className="text-sm border border-gray-200 rounded px-2 py-1.5"
+              className="text-sm border border-night/10 rounded px-2 py-1.5"
               placeholder={f.replace('_', ' ')}
               value={contact[f]}
               onChange={(e) => setContact((s) => ({ ...s, [f]: e.target.value }))}
@@ -114,30 +114,30 @@ export default function ClaimClient({ token, landlord, listings }) {
         <p className="text-night/50">There are no listings waiting to be published.</p>
       ) : (
         claimable.map((l) => (
-          <div key={l.id} className="border border-gray-200 rounded-lg p-4 mb-4">
+          <div key={l.id} className="border border-night/10 rounded-lg p-4 mb-4">
             <PhotoStrip photos={l.photos_json} />
             <div className="grid sm:grid-cols-2 gap-2 mt-3">
               <input
-                className="text-sm border border-gray-200 rounded px-2 py-1.5"
+                className="text-sm border border-night/10 rounded px-2 py-1.5"
                 placeholder="address"
                 value={edits[l.id].address}
                 onChange={(e) => setListingField(l.id, 'address', e.target.value)}
               />
               <input
-                className="text-sm border border-gray-200 rounded px-2 py-1.5"
+                className="text-sm border border-night/10 rounded px-2 py-1.5"
                 placeholder="neighborhood"
                 value={edits[l.id].neighborhood}
                 onChange={(e) => setListingField(l.id, 'neighborhood', e.target.value)}
               />
               <input
                 type="number"
-                className="text-sm border border-gray-200 rounded px-2 py-1.5"
+                className="text-sm border border-night/10 rounded px-2 py-1.5"
                 placeholder={`price ${currencySymbol()} / month`}
                 value={edits[l.id].price_eur_month}
                 onChange={(e) => setListingField(l.id, 'price_eur_month', e.target.value)}
               />
               <select
-                className="text-sm border border-gray-200 rounded px-2 py-1.5"
+                className="text-sm border border-night/10 rounded px-2 py-1.5"
                 value={edits[l.id].property_type}
                 onChange={(e) => setListingField(l.id, 'property_type', e.target.value)}
               >
@@ -149,7 +149,7 @@ export default function ClaimClient({ token, landlord, listings }) {
               </select>
             </div>
             <textarea
-              className="w-full text-sm border border-gray-200 rounded px-2 py-1.5 mt-2"
+              className="w-full text-sm border border-night/10 rounded px-2 py-1.5 mt-2"
               rows={3}
               placeholder="description"
               value={edits[l.id].description}

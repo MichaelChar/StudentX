@@ -48,7 +48,7 @@ export default function GigsMap({ gigs, selectedCountries = [] }) {
   }
 
   return (
-    <div className="h-full w-full rounded-card overflow-hidden border border-gray-200">
+    <div className="h-full w-full rounded-card overflow-hidden border border-night/10">
       <MapContainer
         center={center}
         zoom={zoom}
@@ -65,12 +65,12 @@ export default function GigsMap({ gigs, selectedCountries = [] }) {
               <div className="text-sm min-w-[160px] max-w-[220px]">
                 <p className="font-semibold text-night mb-0.5 line-clamp-2">{gig.title}</p>
                 {gig.employer_name && (
-                  <p className="text-gray-600 text-xs mb-1">{gig.employer_name}</p>
+                  <p className="text-night/60 text-xs mb-1">{gig.employer_name}</p>
                 )}
-                <p className="text-gray-500 text-xs mb-1">
+                <p className="text-night/50 text-xs mb-1">
                   {[gig.city, gig.country_name].filter(Boolean).join(', ')}
                 </p>
-                <p className="text-gray-500 text-xs mb-2">{payLabel(gig)}</p>
+                <p className="text-night/50 text-xs mb-2">{payLabel(gig)}</p>
                 <Link
                   href={`/gigs/${gig.gig_id}`}
                   className="text-xs font-medium text-blue-600 hover:underline"

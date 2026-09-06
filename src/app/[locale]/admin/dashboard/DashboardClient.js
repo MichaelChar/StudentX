@@ -23,19 +23,19 @@ const money = (v) => {
 };
 
 const STATUS_STYLES = {
-  pending: 'bg-gray-100 text-night/60',
+  pending: 'bg-parchment text-night/60',
   assigned: 'bg-blue/10 text-blue',
   needs_manual_entry: 'bg-yellow/30 text-night/70',
   error: 'bg-parchment text-magenta',
   published: 'bg-parchment text-jade',
   claim_sent: 'bg-blue/10 text-blue',
   claimed: 'bg-parchment text-jade',
-  archived: 'bg-gray-100 text-night/40',
+  archived: 'bg-parchment text-night/40',
 };
 
 function Badge({ status }) {
   return (
-    <span className={`text-[11px] rounded-full px-2 py-0.5 ${STATUS_STYLES[status] || 'bg-gray-100 text-night/60'}`}>
+    <span className={`text-[11px] rounded-full px-2 py-0.5 ${STATUS_STYLES[status] || 'bg-parchment text-night/60'}`}>
       {status}
     </span>
   );
@@ -44,12 +44,12 @@ function Badge({ status }) {
 function ListingRow({ listing, landlords, onAssign }) {
   const cover = Array.isArray(listing.photos_json) && listing.photos_json[0]?.url;
   return (
-    <div className="flex items-center gap-3 py-2 border-t border-gray-100">
+    <div className="flex items-center gap-3 py-2 border-t border-night/5">
       {cover ? (
         // eslint-disable-next-line @next/next/no-img-element
-        <img src={cover} alt="" className="w-12 h-12 rounded-photo object-cover bg-gray-100" />
+        <img src={cover} alt="" className="w-12 h-12 rounded-photo object-cover bg-parchment" />
       ) : (
-        <div className="w-12 h-12 rounded-photo bg-gray-100 grid place-items-center text-[10px] text-night/30">no photo</div>
+        <div className="w-12 h-12 rounded-photo bg-parchment grid place-items-center text-[10px] text-night/30">no photo</div>
       )}
       <div className="flex-1 min-w-0">
         <p className="text-sm text-night truncate">{listing.address || listing.source_url || listing.id}</p>
@@ -60,7 +60,7 @@ function ListingRow({ listing, landlords, onAssign }) {
       <Badge status={listing.status} />
       {onAssign && (
         <select
-          className="text-xs border border-gray-200 rounded-control px-2 py-1"
+          className="text-xs border border-night/10 rounded-control px-2 py-1"
           defaultValue=""
           onChange={(e) => e.target.value && onAssign(listing.id, e.target.value)}
         >
@@ -106,7 +106,7 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
   };
 
   return (
-    <div className="border border-gray-200 rounded-card p-4 mb-4">
+    <div className="border border-night/10 rounded-card p-4 mb-4">
       <div className="flex items-center justify-between mb-3">
         <h3 className="font-display font-semibold text-night">{landlord.display_name || landlord.id}</h3>
         <Badge status={landlord.status} />
@@ -115,7 +115,7 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
         {['display_name', 'phone', 'email', 'notes'].map((f) => (
           <input
             key={f}
-            className="text-sm border border-gray-200 rounded-control px-2 py-1"
+            className="text-sm border border-night/10 rounded-control px-2 py-1"
             placeholder={f.replace('_', ' ')}
             value={edit[f]}
             onChange={(e) => setEdit((s) => ({ ...s, [f]: e.target.value }))}
@@ -135,10 +135,10 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
       </div>
       {claimUrl && (
         <div className="flex items-center gap-2 mb-2">
-          <input readOnly value={claimUrl} className="flex-1 text-xs border border-gray-200 rounded-control px-2 py-1 bg-gray-50" />
+          <input readOnly value={claimUrl} className="flex-1 text-xs border border-night/10 rounded-control px-2 py-1 bg-parchment" />
           <button
             onClick={() => navigator.clipboard?.writeText(claimUrl)}
-            className="text-xs border border-gray-200 rounded-control px-2 py-1 hover:bg-night/5 active:bg-night/10 transition-colors"
+            className="text-xs border border-night/10 rounded-control px-2 py-1 hover:bg-night/5 active:bg-night/10 transition-colors"
           >
             Copy
           </button>
@@ -146,7 +146,7 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
       )}
       <div>
         {listings.length === 0 ? (
-          <p className="text-xs text-night/40 py-2 border-t border-gray-100">No listings assigned yet.</p>
+          <p className="text-xs text-night/40 py-2 border-t border-night/5">No listings assigned yet.</p>
         ) : (
           listings.map((l) => <ListingRow key={l.id} listing={l} landlords={[]} />)
         )}
@@ -237,18 +237,18 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
           <Link href="/admin/migrate-fake-listings" className="text-sm text-blue underline">
             Migrate fake listings →
           </Link>
-          <button onClick={refresh} className="text-sm border border-gray-200 rounded-control px-3 py-1.5 hover:bg-night/5 active:bg-night/10 transition-colors">
+          <button onClick={refresh} className="text-sm border border-night/10 rounded-control px-3 py-1.5 hover:bg-night/5 active:bg-night/10 transition-colors">
             Refresh
           </button>
         </div>
       </div>
       {msg && <p className="text-sm text-night/70 bg-parchment rounded-control px-3 py-2 mb-4">{msg}</p>}
 
-      <section className="border border-gray-200 rounded-card p-4 mb-6">
+      <section className="border border-night/10 rounded-card p-4 mb-6">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Ingest from a URL</h2>
         <div className="flex gap-2 mb-3">
           <input
-            className="flex-1 text-sm border border-gray-200 rounded-control px-3 py-2"
+            className="flex-1 text-sm border border-night/10 rounded-control px-3 py-2"
             placeholder="https://www.spitogatos.gr/…"
             value={url}
             onChange={(e) => setUrl(e.target.value)}
@@ -258,24 +258,24 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
           </button>
         </div>
         <textarea
-          className="w-full text-sm border border-gray-200 rounded-control px-3 py-2 mb-2"
+          className="w-full text-sm border border-night/10 rounded-control px-3 py-2 mb-2"
           rows={3}
           placeholder="Batch: one URL per line"
           value={batch}
           onChange={(e) => setBatch(e.target.value)}
         />
-        <button onClick={ingestBatch} className="text-sm border border-gray-200 rounded-control px-4 py-2 hover:bg-night/5 active:bg-night/10 transition-colors">
+        <button onClick={ingestBatch} className="text-sm border border-night/10 rounded-control px-4 py-2 hover:bg-night/5 active:bg-night/10 transition-colors">
           Queue batch
         </button>
       </section>
 
-      <section className="border border-gray-200 rounded-card p-4 mb-6">
+      <section className="border border-night/10 rounded-card p-4 mb-6">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">New pending landlord</h2>
         <div className="grid grid-cols-2 gap-2 mb-3">
           {['display_name', 'phone', 'email', 'notes'].map((f) => (
             <input
               key={f}
-              className="text-sm border border-gray-200 rounded-control px-2 py-1"
+              className="text-sm border border-night/10 rounded-control px-2 py-1"
               placeholder={f.replace('_', ' ')}
               value={form[f]}
               onChange={(e) => setForm((s) => ({ ...s, [f]: e.target.value }))}
@@ -288,7 +288,7 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
       </section>
 
       {unassigned.length > 0 && (
-        <section className="border border-gray-200 rounded-card p-4 mb-6">
+        <section className="border border-night/10 rounded-card p-4 mb-6">
           <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-1">Unassigned listings</h2>
           {unassigned.map((l) => (
             <ListingRow key={l.id} listing={l} landlords={landlords} onAssign={assign} />
