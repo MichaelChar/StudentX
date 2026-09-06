@@ -180,7 +180,7 @@ export default function StepAddress({
           <p className="mt-1.5 text-xs text-night/50">{t('searching')}</p>
         )}
         {searchError && (
-          <p className="mt-1.5 text-xs text-red-700">{searchError}</p>
+          <p className="mt-1.5 text-xs text-magenta">{searchError}</p>
         )}
         {suggestions.length > 0 && (
           <ul className="absolute z-20 mt-1 w-full bg-white border border-night/10 rounded-card shadow-sm max-h-56 overflow-auto">

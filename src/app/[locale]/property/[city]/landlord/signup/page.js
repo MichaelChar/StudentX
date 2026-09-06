@@ -189,13 +189,13 @@ export default function LandlordSignupPage() {
             </div>
           </div>
           {photoError && (
-            <p className="text-sm text-red-700 mt-2">{photoError}</p>
+            <p className="text-sm text-magenta mt-2">{photoError}</p>
           )}
         </div>
 
         {error && (
           <div className="space-y-2">
-            <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-3 py-2">
+            <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2">
               {error}
             </p>
             {conflictRole === 'student' && (

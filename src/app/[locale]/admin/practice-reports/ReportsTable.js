@@ -7,12 +7,12 @@ import { Link, useRouter } from '@/i18n/navigation';
 const STATUS_BADGE = {
   open: 'bg-blue-50 text-blue-700 border-blue-200',
   accepted: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-  rejected: 'bg-red-50 text-red-600 border-red-200',
+  rejected: 'bg-parchment text-magenta border-night/10',
   resolved: 'bg-night/5 text-night/60 border-night/15',
 };
 
 const KIND_BADGE = {
-  error: 'bg-red-50 text-red-600 border-red-200',
+  error: 'bg-parchment text-magenta border-night/10',
   edit: 'bg-yellow-50 text-yellow-700 border-yellow-200',
 };
 
@@ -204,7 +204,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                 />
               </Field>
 
-              {error && <p className="text-sm text-red-600">{error}</p>}
+              {error && <p className="text-sm text-magenta">{error}</p>}
 
               <div className="flex flex-wrap items-center gap-2">
                 <button
@@ -219,7 +219,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('rejected')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 active:bg-red-100 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-lg border border-magenta/40 text-magenta text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
                 >
                   {t('actions.reject')}
                 </button>

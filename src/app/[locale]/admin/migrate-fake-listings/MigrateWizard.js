@@ -126,7 +126,7 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
         <div className="text-sm rounded px-3 py-2 mb-4 bg-green-50 text-green-800">
           {summary.migrated} migrated, {summary.skipped} skipped, {summary.errors} errors.
           {summary.errorDetail?.length > 0 && (
-            <ul className="mt-1 list-disc pl-5 text-red-600">
+            <ul className="mt-1 list-disc pl-5 text-magenta">
               {summary.errorDetail.map((e, i) => (
                 <li key={i}>{e}</li>
               ))}

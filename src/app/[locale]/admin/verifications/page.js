@@ -88,7 +88,7 @@ export default function AdminVerificationsPage() {
   if (error) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <p className="text-red-600 bg-red-50 border border-red-100 rounded-lg px-6 py-4">{error}</p>
+        <p className="text-magenta bg-parchment border border-night/10 rounded-lg px-6 py-4">{error}</p>
       </div>
     );
   }
@@ -171,7 +171,7 @@ export default function AdminVerificationsPage() {
                     <button
                       onClick={() => handleAction(req.id, 'reject')}
                       disabled={!!actionStates[req.id]}
-                      className="px-4 py-2 rounded-lg border border-red-200 text-red-600 text-sm font-semibold hover:bg-red-50 active:bg-red-100 transition-colors disabled:opacity-50"
+                      className="px-4 py-2 rounded-lg border border-magenta/40 text-magenta text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
                     >
                       {actionStates[req.id] === 'rejecting' ? 'Rejecting…' : 'Reject'}
                     </button>
@@ -190,7 +190,7 @@ function StatusBadge({ status }) {
   const styles = {
     pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
     approved: 'bg-emerald-50 text-emerald-700 border-emerald-200',
-    rejected: 'bg-red-50 text-red-600 border-red-200',
+    rejected: 'bg-parchment text-magenta border-night/10',
   };
   return (
     <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border capitalize ${styles[status] || ''}`}>

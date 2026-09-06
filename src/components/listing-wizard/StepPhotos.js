@@ -188,7 +188,7 @@ export default function StepPhotos({
         </div>
       )}
 
-      {photoError && <p className="text-sm text-red-700">{photoError}</p>}
+      {photoError && <p className="text-sm text-magenta">{photoError}</p>}
 
       <div>
         <label className={labelClass} htmlFor="wiz-video">

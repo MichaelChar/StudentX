@@ -26,7 +26,7 @@ const STATUS_STYLES = {
   pending: 'bg-gray-100 text-night/60',
   assigned: 'bg-blue/10 text-blue',
   needs_manual_entry: 'bg-yellow/30 text-night/70',
-  error: 'bg-red-50 text-red-600',
+  error: 'bg-parchment text-magenta',
   published: 'bg-green-50 text-green-700',
   claim_sent: 'bg-blue/10 text-blue',
   claimed: 'bg-green-50 text-green-700',
