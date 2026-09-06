@@ -38,7 +38,10 @@ Around that core sit the monetizing / retention surfaces:
 - **Backend:** Supabase (`@supabase/supabase-js@^2`) — Postgres + Auth + Storage + Realtime.
 - **Email:** Resend (`resend@^4`) — live in prod, see Email section.
 - **Payments:** Stripe (`stripe@^22`) — landlord plans + verified-tier upgrades.
-- **Maps:** Leaflet + `react-leaflet@^5`; OSM tiles; topojson + d3-geo for region shapes.
+- **Maps:** Leaflet + `react-leaflet@^5`; topojson + d3-geo for region shapes.
+  Tiles are **CARTO Positron** (`light_all`) on the results map and the PDP's
+  "Where you'll be"; plain OSM on `/gigs` and the wizard's address picker.
+  CARTO needs an API key — see Maps below.
 - **CSS:** Tailwind v4 (`tailwindcss@^4` + `@tailwindcss/postcss`).
 - **Hosting:** Cloudflare Workers via OpenNext (`@opennextjs/cloudflare@^1.20`),
   `wrangler@^4`. Live on `https://studentx.uk`; the Workers URL
@@ -199,6 +202,42 @@ Conventions still in force:
    Re-enabling ISR/prerendering requires first wiring OpenNext's R2 incremental
    cache (available on `@opennextjs/cloudflare` ≥ 1.20 — which we now run, but
    the R2 cache is NOT configured). Without it, the 1101s come back.
+
+## Maps
+
+Four surfaces mount Leaflet: the results map (`ListingsMap.js`), the PDP's
+"Where you'll be" (`ApproximateLocationMap.js`), `/gigs` (`GigsMap.js`) and the
+listing wizard's address picker (`AddressMap.js`).
+
+**CARTO tiles need `NEXT_PUBLIC_CARTO_KEY`.** CARTO began watermarking
+unauthenticated Positron tiles with "API KEY REQUIRED" in 2026 (issue #472).
+The key is appended as `?key=`. It is **public by necessity** — Leaflet builds
+the tile URL in the browser, so it ships in the client bundle; what protects it
+is CARTO's domain restriction, not secrecy. It lives in `wrangler.jsonc`'s
+`vars` block alongside the Supabase anon key, and because `NEXT_PUBLIC_*` are
+inlined at BUILD time it must be present in the Cloudflare Workers Build
+environment — a key that exists only in `.env.local` gives a green build and a
+watermarked production map.
+
+Tile hosts are CSP-only and deliberately NOT in `images.remotePatterns`:
+Leaflet renders tiles as plain `<img>`, never through `next/image`. See the
+header comment in `next.config.mjs`.
+
+**Vector tiles are a LIBRARY MIGRATION, not a URL swap.** CARTO calls its
+raster service "being retired" and is "considering" stopping its data updates
+— with no announced date as of 2026-09-06. Do not read that as a small job:
+Leaflet cannot render vector tiles at all (`TileLayer` is raster-only), so
+vector means MapLibre GL JS or a WebGL plugin. Measured 2026-09-06 —
+`ListingsMap` 34 Leaflet call sites, `AddressMap` 18, `GigsMap` 13,
+`ApproximateLocationMap` 12. The expensive part is not the count: the results
+price pins are `L.divIcon`, i.e. real DOM nodes, which is exactly why parity
+Features 11-13 (price bubbles, card-pin hover sync, visited state) work as they
+do, and ten `globals.css` rules target `.sx-price-pin`. MapLibre has no
+divIcon. The CSP would also need `worker-src` / `blob:`, which it does not
+currently allow.
+
+Scheduled decision check: `studentx-carto-vector-decision`, 2026-12-06. It
+re-checks for a dated retirement announcement rather than assuming one.
 
 ## Cron architecture
 
