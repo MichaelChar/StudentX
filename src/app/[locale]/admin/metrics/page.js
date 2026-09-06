@@ -186,14 +186,16 @@ function KpiCard({ label, value, trend, note }) {
       <div className="flex items-end gap-2">
         <p className="font-display text-xl font-bold text-night">{value}</p>
         {/*
-          TAILWIND DEFAULTS, KEPT DELIBERATELY. #478 swept the reds to
-          `magenta` and #481 the greens to `jade`; both passed over this pair
-          on the same reasoning.
+          THE LAST TWO TAILWIND DEFAULT COLOURS IN src/, AND DELIBERATELY SO.
+          Five sweeps took every other one: #478 reds → `magenta`, #481 greens
+          → `jade`, #482 greys → `night`/`parchment`, #483 blues → `blue`, and
+          this PR yellows → a `yellow` surface. Each passed over this pair on
+          the same reasoning.
 
-          (#481's version of this comment claimed these were "the only two
-          defaults left in src/". That was wrong when written — 62 greys and a
-          handful of blues and yellows were still there. Corrected here rather
-          than left to mislead the next sweep.)
+          (An earlier version of this comment made that claim in #481, when it
+          was NOT yet true — 62 greys and a handful of blues and yellows were
+          still there. It is true now. Kept visible because a comment that
+          overstates its own completeness is how the next reader gets misled.)
 
           These arrows are a DIRECTION, not a state. `jade` means "approved,
           verified, published" and `magenta` means "error" — painting a routine

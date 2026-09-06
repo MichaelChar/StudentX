@@ -188,7 +188,7 @@ export default function AdminVerificationsPage() {
 
 function StatusBadge({ status }) {
   const styles = {
-    pending: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+    pending: 'bg-yellow/20 text-night border-night/10',
     approved: 'bg-parchment text-jade border-night/10',
     rejected: 'bg-parchment text-magenta border-night/10',
   };
