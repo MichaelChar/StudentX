@@ -123,7 +123,7 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
       </section>
 
       {summary && (
-        <div className="text-sm rounded-control px-3 py-2 mb-4 bg-green-50 text-green-800">
+        <div className="text-sm rounded-control px-3 py-2 mb-4 bg-parchment text-jade">
           {summary.migrated} migrated, {summary.skipped} skipped, {summary.errors} errors.
           {summary.errorDetail?.length > 0 && (
             <ul className="mt-1 list-disc pl-5 text-magenta">
@@ -162,7 +162,7 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
                     .filter(Boolean)
                     .join(' · ')}
                 </p>
-                {c.already_migrated && <span className="text-[11px] text-green-700">already staged</span>}
+                {c.already_migrated && <span className="text-[11px] text-jade">already staged</span>}
               </div>
               <select
                 className="text-xs border border-gray-200 rounded-control px-2 py-1"

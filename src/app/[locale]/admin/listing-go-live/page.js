@@ -223,7 +223,7 @@ function StatusPill({ live, t }) {
     <span
       className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
         live
-          ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
+          ? 'bg-parchment text-jade border-night/10'
           : 'bg-parchment text-night/60 border-night/15'
       }`}
     >
@@ -237,7 +237,7 @@ function GateChip({ ok, label }) {
     <li
       className={`px-2 py-1 rounded-card border ${
         ok
-          ? 'bg-emerald-50 text-emerald-800 border-emerald-200'
+          ? 'bg-parchment text-jade border-night/10'
           : 'bg-parchment text-night/50 border-night/10'
       }`}
     >

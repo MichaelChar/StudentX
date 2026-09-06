@@ -185,6 +185,20 @@ function KpiCard({ label, value, trend, note }) {
       <p className="text-xs text-night/50 mb-1">{label}</p>
       <div className="flex items-end gap-2">
         <p className="font-display text-xl font-bold text-night">{value}</p>
+        {/*
+          THE ONLY TWO TAILWIND DEFAULT COLOURS LEFT IN src/, AND DELIBERATELY.
+          #478 swept the reds to `magenta`, this PR swept the greens to `jade`;
+          both passed over this pair on the same reasoning.
+
+          These arrows are a DIRECTION, not a state. `jade` means "approved,
+          verified, published" and `magenta` means "error" — painting a routine
+          month-on-month dip in the error colour would make every ordinary
+          fluctuation read as something being wrong. The semantic tokens would
+          be actively worse here than the neutral defaults.
+
+          If a future sweep wants them tokenised, the honest fix is a pair of
+          trend tokens that mean up/down, not a reuse of success/error.
+        */}
         {trend === 'up' && <span className="text-xs text-green-600 mb-0.5">↑</span>}
         {trend === 'down' && <span className="text-xs text-red-500 mb-0.5">↓</span>}
       </div>
