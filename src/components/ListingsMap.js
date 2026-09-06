@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from 'r
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { priceIconOptions, PIN_CLASS } from '@/lib/mapPriceIcon';
+import { CARTO_ATTRIBUTION, CARTO_POSITRON_URL } from '@/lib/mapTiles';
 import MapPinPopupCard from '@/components/property/MapPinPopupCard';
 import {
   getVisitedSnapshot,
@@ -275,14 +276,16 @@ export default function ListingsMap({
           opposite — saturated, densely labelled, every POI marked. Same
           component, opposite impression.
 
-          `{r}` resolves to `@2x` on retina. The host must be in BOTH the CSP
-          `img-src` allowlist and `images.remotePatterns` in next.config.mjs —
-          per CLAUDE.md, missing either breaks tiles in prod.
+          The URL and its attribution live in `lib/mapTiles.js` — CARTO now
+          requires an API key (#472), and a key duplicated across two tile
+          URLs is one edit away from half the maps still being watermarked.
+
+          The host must be in the CSP `img-src` allowlist in next.config.mjs.
+          NOT in `images.remotePatterns`: Leaflet renders tiles as plain
+          <img>, never through next/image, so a remotePattern is dead config
+          — see that file's own header comment.
         */}
-        <TileLayer
-          attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
-          url="https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png"
-        />
+        <TileLayer attribution={CARTO_ATTRIBUTION} url={CARTO_POSITRON_URL} />
         <PopupViewportClamp />
         <MapViewportReporter onViewportChange={onViewportChange} />
         {/*
