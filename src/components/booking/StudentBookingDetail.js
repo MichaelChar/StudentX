@@ -16,6 +16,7 @@ import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 import { bookingStateVariant } from '@/lib/statusVariant';
 import { requestWait, requestWaitMessage } from '@/lib/bookingRequestWait';
 import BookingRequestWait from '@/components/student/BookingRequestWait';
+import Skeleton from '@/components/ui/Skeleton';
 
 const CANCELLATION_COPY_KEY = {
   free: 'cancellationFree',
@@ -118,7 +119,7 @@ export default function StudentBookingDetail({ bookingId }) {
   }
 
   if (loading) {
-    return <div className="h-40 bg-parchment rounded-card animate-pulse" />;
+    return <Skeleton variant="card" height={160} />;
   }
 
   if (!booking) {

@@ -12,6 +12,7 @@ import Icon from '@/components/ui/Icon';
 import { stayDurationMonths } from '@/lib/bookingDates';
 import { formatMoney } from '@/lib/formatMoney';
 import { bookingStateVariant } from '@/lib/statusVariant';
+import Skeleton from '@/components/ui/Skeleton';
 
 const TABS = ['requested', 'accepted', 'confirmed', 'declined', 'cancelled'];
 
@@ -119,7 +120,7 @@ export default function LandlordReservationsPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-16 bg-parchment rounded-control animate-pulse" />
+            <Skeleton key={i} variant="card" height={64} />
           ))}
         </div>
       ) : filtered.length === 0 ? (

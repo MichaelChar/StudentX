@@ -17,6 +17,7 @@ import LandlordShell from '@/components/landlord/LandlordShell';
 import CompositeAvatar from '@/components/landlord/CompositeAvatar';
 import TodayCard from '@/components/landlord/TodayCard';
 import Button from '@/components/ui/Button';
+import Skeleton from '@/components/ui/Skeleton';
 
 /*
   The landlord's "Today" — parity Feature 49.
@@ -427,8 +428,8 @@ function HeadlineSkeleton({ eyebrow }) {
   return (
     <header className="pt-10 pb-8 text-center">
       <p className="label-caps text-blue">{eyebrow}</p>
-      <div className="mx-auto mt-3 h-10 w-72 max-w-full bg-parchment rounded animate-pulse" />
-      <div className="mx-auto mt-4 h-4 w-40 bg-parchment rounded animate-pulse" />
+      <Skeleton variant="text" width={288} height={40} className="mx-auto mt-3 max-w-full" />
+      <Skeleton variant="text" width={160} height={16} className="mx-auto mt-4" />
     </header>
   );
 }

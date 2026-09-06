@@ -3,6 +3,7 @@
 import { useEffect } from 'react';
 import { useRouter } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import Skeleton from '@/components/ui/Skeleton';
 
 /**
  * Post-signup landlord landing. Paid plan selection was removed with
@@ -31,9 +32,9 @@ export default function LandlordOnboardingPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center">
-      <div className="animate-pulse space-y-4 w-full max-w-md px-4">
-        <div className="h-8 w-48 bg-parchment rounded mx-auto" />
-        <div className="h-32 bg-parchment rounded-card" />
+      <div className="space-y-4 w-full max-w-md px-4">
+        <Skeleton variant="text" width={192} height={32} className="mx-auto" />
+        <Skeleton variant="card" height={128} />
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ import {
 } from '@/lib/bookingDates';
 import { landlordFirstMonthReceive } from '@/lib/bookingFees';
 import { formatMoney } from '@/lib/formatMoney';
+import Skeleton from '@/components/ui/Skeleton';
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -111,7 +112,7 @@ export default function LandlordReservationDetailPage() {
   if (loading) {
     return (
       <LandlordShell eyebrow={t('eyebrow')} title={t('detailTitle')}>
-        <div className="h-40 bg-parchment rounded-card animate-pulse" />
+        <Skeleton variant="card" height={160} />
       </LandlordShell>
     );
   }

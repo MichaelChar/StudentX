@@ -6,6 +6,7 @@ import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import { formatMoney } from '@/lib/formatMoney';
+import Skeleton from '@/components/ui/Skeleton';
 
 /*
   StudentInquiries — the student's message threads.
@@ -154,11 +155,11 @@ export function InquiriesSkeleton() {
           <Card tone="white" className="p-5 md:p-6">
             <div className="flex items-start justify-between gap-4">
               <div className="min-w-0 flex-1 space-y-2">
-                <div className="h-6 w-2/3 bg-parchment rounded animate-pulse" />
-                <div className="h-3 w-1/3 bg-parchment rounded animate-pulse" />
-                <div className="h-3 w-3/4 bg-parchment rounded animate-pulse mt-3" />
+                <Skeleton variant="text" width="66%" height={24} />
+                <Skeleton variant="text" width="33%" />
+                <Skeleton variant="text" width="75%" className="mt-3" />
               </div>
-              <div className="h-6 w-16 bg-parchment rounded animate-pulse" />
+              <Skeleton variant="text" width={64} height={24} />
             </div>
           </Card>
         </li>

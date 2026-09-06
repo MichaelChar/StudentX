@@ -11,6 +11,7 @@ import { useTranslations } from 'next-intl';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
 import Button from '@/components/ui/Button';
+import Skeleton from '@/components/ui/Skeleton';
 
 export default function EditListingPage() {
   const t = useTranslations('landlord.editListing');
@@ -144,9 +145,9 @@ export default function EditListingPage() {
     <LandlordShell eyebrow={tWiz('eyebrow')} title={t('title')}>
       <div className="max-w-3xl">
         {loading ? (
-          <div className="space-y-4 animate-pulse">
-            <div className="h-40 bg-parchment rounded-card" />
-            <div className="h-40 bg-parchment rounded-card" />
+          <div className="space-y-4">
+            <Skeleton variant="card" height={160} />
+            <Skeleton variant="card" height={160} />
           </div>
         ) : error ? (
           <div className="text-center py-12">

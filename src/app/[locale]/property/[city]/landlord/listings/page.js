@@ -24,6 +24,7 @@ import {
 } from '@/lib/propertyVerification';
 import { formatMoney } from '@/lib/formatMoney';
 import { listingChipStatus, listingsSummary } from '@/lib/hostListingStatus';
+import Skeleton from '@/components/ui/Skeleton';
 
 /*
   The landlord's listings — parity Feature 50.
@@ -265,7 +266,7 @@ export default function LandlordListingsPage() {
       {loading ? (
         <div className="space-y-3">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-24 bg-parchment rounded-card animate-pulse" />
+            <Skeleton key={i} variant="card" height={96} />
           ))}
         </div>
       ) : listings.length === 0 ? (
