@@ -56,7 +56,7 @@ export default function ReportsTable({
   });
 
   const filterPill = (active) =>
-    `text-sm px-3 py-1.5 rounded-lg border transition-colors ${
+    `text-sm px-3 py-1.5 rounded-control border transition-colors ${
       active ? 'bg-night text-white border-night' : 'border-night/15 text-night/60 hover:border-night/40'
     }`;
 
@@ -92,11 +92,11 @@ export default function ReportsTable({
       </div>
 
       {reports.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-night/15 rounded-[22px]">
+        <div className="text-center py-16 border-2 border-dashed border-night/15 rounded-card">
           <p className="text-night/50">{t('empty', { status: t(`status.${activeStatus}`).toLowerCase() })}</p>
         </div>
       ) : (
-        <div className="border border-night/10 rounded-[22px] overflow-hidden bg-white">
+        <div className="border border-night/10 rounded-card overflow-hidden bg-white">
           <table className="w-full text-sm">
             <thead className="bg-parchment">
               <tr className="text-left text-night/55">
@@ -200,7 +200,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   onChange={(e) => setNote(e.target.value)}
                   rows={2}
                   placeholder={t('adminNotePlaceholder')}
-                  className="w-full rounded-lg border border-night/15 bg-white px-3 py-2 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/40 focus-visible:border-blue resize-none"
+                  className="w-full rounded-control border border-night/15 bg-white px-3 py-2 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/40 focus-visible:border-blue resize-none"
                 />
               </Field>
 
@@ -211,7 +211,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('accepted')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-lg bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-control bg-emerald-600 text-white text-sm font-semibold hover:bg-emerald-700 active:bg-emerald-800 transition-colors disabled:opacity-50"
                 >
                   {isPending ? t('saving') : t('actions.accept')}
                 </button>
@@ -219,7 +219,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('rejected')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-lg border border-magenta/40 text-magenta text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-control border border-magenta/40 text-magenta text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
                 >
                   {t('actions.reject')}
                 </button>
@@ -227,13 +227,13 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('resolved')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-lg border border-night/20 text-night/70 text-sm font-semibold hover:bg-night/5 active:bg-night/10 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-control border border-night/20 text-night/70 text-sm font-semibold hover:bg-night/5 active:bg-night/10 transition-colors disabled:opacity-50"
                 >
                   {t('actions.resolve')}
                 </button>
                 <Link
                   href={deepLink}
-                  className="ml-auto text-sm px-3 py-2 rounded-lg border border-blue/30 text-blue font-semibold hover:bg-blue/5 transition-colors"
+                  className="ml-auto text-sm px-3 py-2 rounded-control border border-blue/30 text-blue font-semibold hover:bg-blue/5 transition-colors"
                 >
                   {t('viewQuestion')}
                 </Link>

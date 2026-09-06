@@ -102,18 +102,18 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
         (michaelcharlesg) are never shown here and can never be deleted. Safe to re-run.
       </p>
 
-      <section className="border border-gray-200 rounded-lg p-4 mb-6">
+      <section className="border border-gray-200 rounded-card p-4 mb-6">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Create pending landlords</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {['a', 'b'].map((slot) => (
             <div key={slot} className="flex gap-2">
               <input
-                className="flex-1 text-sm border border-gray-200 rounded px-3 py-2"
+                className="flex-1 text-sm border border-gray-200 rounded-control px-3 py-2"
                 placeholder={`Pending landlord ${slot === 'a' ? '1' : '2'} name`}
                 value={names[slot]}
                 onChange={(e) => setNames((s) => ({ ...s, [slot]: e.target.value }))}
               />
-              <button onClick={() => createLandlord(slot)} className="text-sm bg-night text-white rounded px-3 py-2 hover:bg-night/90 active:bg-night/80 transition-colors">
+              <button onClick={() => createLandlord(slot)} className="text-sm bg-night text-white rounded-control px-3 py-2 hover:bg-night/90 active:bg-night/80 transition-colors">
                 Create
               </button>
             </div>
@@ -123,7 +123,7 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
       </section>
 
       {summary && (
-        <div className="text-sm rounded px-3 py-2 mb-4 bg-green-50 text-green-800">
+        <div className="text-sm rounded-control px-3 py-2 mb-4 bg-green-50 text-green-800">
           {summary.migrated} migrated, {summary.skipped} skipped, {summary.errors} errors.
           {summary.errorDetail?.length > 0 && (
             <ul className="mt-1 list-disc pl-5 text-magenta">
@@ -134,9 +134,9 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
           )}
         </div>
       )}
-      {msg && <p className="text-sm text-night/70 bg-parchment rounded px-3 py-2 mb-4">{msg}</p>}
+      {msg && <p className="text-sm text-night/70 bg-parchment rounded-control px-3 py-2 mb-4">{msg}</p>}
 
-      <section className="border border-gray-200 rounded-lg overflow-hidden mb-6">
+      <section className="border border-gray-200 rounded-card overflow-hidden mb-6">
         <div className="grid grid-cols-[auto_1fr_auto] gap-3 items-center bg-gray-50 px-4 py-2 text-xs font-semibold text-night/50">
           <span>Cover</span>
           <span>Listing</span>
@@ -149,9 +149,9 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
             <div key={c.listing_id} className="grid grid-cols-[auto_1fr_auto] gap-3 items-center px-4 py-2 border-t border-gray-100">
               {c.cover ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={c.cover} alt="" className="w-14 h-14 rounded object-cover bg-gray-100" />
+                <img src={c.cover} alt="" className="w-14 h-14 rounded-photo object-cover bg-gray-100" />
               ) : (
-                <div className="w-14 h-14 rounded bg-gray-100 grid place-items-center text-[10px] text-night/30">none</div>
+                <div className="w-14 h-14 rounded-photo bg-gray-100 grid place-items-center text-[10px] text-night/30">none</div>
               )}
               <div className="min-w-0">
                 <p className="text-sm text-night truncate">
@@ -165,7 +165,7 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
                 {c.already_migrated && <span className="text-[11px] text-green-700">already staged</span>}
               </div>
               <select
-                className="text-xs border border-gray-200 rounded px-2 py-1"
+                className="text-xs border border-gray-200 rounded-control px-2 py-1"
                 value={selections[c.listing_id] || ''}
                 onChange={(e) => setSelections((s) => ({ ...s, [c.listing_id]: e.target.value }))}
               >
@@ -185,7 +185,7 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
       <button
         onClick={runMigration}
         disabled={running || candidates.length === 0}
-        className="text-sm bg-blue text-white rounded px-5 py-2.5 hover:bg-blue/90 active:bg-blue/80 transition-colors disabled:opacity-40"
+        className="text-sm bg-blue text-white rounded-control px-5 py-2.5 hover:bg-blue/90 active:bg-blue/80 transition-colors disabled:opacity-40"
       >
         {running ? 'Migrating…' : 'Migrate'}
       </button>
