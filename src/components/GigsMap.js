@@ -73,7 +73,7 @@ export default function GigsMap({ gigs, selectedCountries = [] }) {
                 <p className="text-night/50 text-xs mb-2">{payLabel(gig)}</p>
                 <Link
                   href={`/gigs/${gig.gig_id}`}
-                  className="text-xs font-medium text-blue-600 hover:underline"
+                  className="text-xs font-medium text-blue hover:underline"
                 >
                   View gig →
                 </Link>

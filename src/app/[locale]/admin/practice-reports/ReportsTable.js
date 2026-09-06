@@ -5,7 +5,7 @@ import { useTranslations } from 'next-intl';
 import { Link, useRouter } from '@/i18n/navigation';
 
 const STATUS_BADGE = {
-  open: 'bg-blue-50 text-blue-700 border-blue-200',
+  open: 'bg-parchment text-blue border-night/10',
   accepted: 'bg-parchment text-jade border-night/10',
   rejected: 'bg-parchment text-magenta border-night/10',
   resolved: 'bg-night/5 text-night/60 border-night/15',
