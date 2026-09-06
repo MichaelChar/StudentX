@@ -150,7 +150,7 @@ export default function EditListingPage() {
           </div>
         ) : error ? (
           <div className="text-center py-12">
-            <p className="text-red-700 mb-4">{error}</p>
+            <p className="text-magenta mb-4">{error}</p>
             <Button href="/property/thessaloniki/landlord/listings" variant="ghost">
               ← {t('backToDashboard')}
             </Button>

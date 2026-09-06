@@ -129,13 +129,13 @@ export default function LandlordVerificationPage() {
         ) : latestRequest?.status === 'rejected' ? (
           /* Rejected — allow re-upload */
           <div className="space-y-6">
-            <div className="rounded-card border border-red-200 bg-red-50 px-6 py-4">
-              <p className="label-caps text-red-700 mb-1">Rejected</p>
-              <p className="font-display text-base text-red-800 mb-1">
+            <div className="rounded-card border border-night/10 bg-parchment px-6 py-4">
+              <p className="label-caps text-magenta mb-1">Rejected</p>
+              <p className="font-display text-base text-magenta mb-1">
                 Previous submission rejected
               </p>
               {latestRequest.review_notes && (
-                <p className="text-sm text-red-700">{latestRequest.review_notes}</p>
+                <p className="text-sm text-magenta">{latestRequest.review_notes}</p>
               )}
             </div>
             <UploadForm
@@ -186,7 +186,7 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
     <form onSubmit={onSubmit} className="space-y-5">
       <div>
         <label className="label-caps text-night/70 mb-2 block">
-          Government-issued ID <span className="text-red-600 normal-case">*</span>
+          Government-issued ID <span className="text-magenta normal-case">*</span>
         </label>
         <p className="text-xs text-night/50 mb-3">
           Passport, national ID card, or driver&apos;s license. JPEG, PNG, or PDF · max 10 MB.
@@ -224,7 +224,7 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
       </div>
 
       {submitError && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-3 py-2">
+        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2">
           {submitError}
         </p>
       )}

@@ -250,7 +250,7 @@ export default function ChatThread({
       </form>
 
       {error && (
-        <p role="alert" className="px-4 pb-3 text-xs text-red-600">
+        <p role="alert" className="px-4 pb-3 text-xs text-magenta">
           {error}
         </p>
       )}

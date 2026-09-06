@@ -108,7 +108,7 @@ export default function ClaimClient({ token, landlord, listings }) {
         </div>
       </section>
 
-      {result?.error && <p className="text-sm bg-red-50 text-red-600 rounded px-3 py-2 mb-4">{result.error}</p>}
+      {result?.error && <p className="text-sm bg-parchment text-magenta rounded px-3 py-2 mb-4">{result.error}</p>}
 
       {claimable.length === 0 ? (
         <p className="text-night/50">There are no listings waiting to be published.</p>

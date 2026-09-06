@@ -107,7 +107,7 @@ export default function LandlordInquiryChatPage() {
       {state.loading ? (
         <div className="bg-parchment rounded-card h-[60vh] animate-pulse" />
       ) : state.error || !inquiry ? (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3">
+        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
           {state.error || t('loadError')}
         </p>
       ) : (

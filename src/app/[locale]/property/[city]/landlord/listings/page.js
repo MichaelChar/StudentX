@@ -257,7 +257,7 @@ export default function LandlordListingsPage() {
       }
     >
       {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -504,7 +504,7 @@ function ListingRow({
             <p className="mt-2 text-sm text-night/60">{tPv('pendingHint')}</p>
           )}
           {!propertyVerified && !pendingPv && rejectedPv?.notes && (
-            <p className="mt-2 text-sm text-red-700">
+            <p className="mt-2 text-sm text-magenta">
               {tPv('rejectedHint', { notes: rejectedPv.notes })}
             </p>
           )}
@@ -557,7 +557,7 @@ function ListingRow({
           type="button"
           onClick={onDelete}
           disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-control border border-red-300 text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors disabled:opacity-50"
+          className="label-caps px-3 py-1.5 rounded-control border border-magenta/40 text-magenta hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
         >
           {busy ? t('deleting') : t('delete')}
         </button>

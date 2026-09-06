@@ -107,7 +107,7 @@ export default function LandlordInquiriesPage() {
   return (
     <LandlordShell eyebrow={t('paneHeading')} title={t('title')}>
       {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}

@@ -131,7 +131,7 @@ export default function AdminPropertyVerificationsPage() {
   if (error && requests.length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center px-4">
-        <p className="text-red-700 bg-red-50 border border-red-200 rounded-card px-6 py-4">
+        <p className="text-magenta bg-parchment border border-night/10 rounded-card px-6 py-4">
           {error}
         </p>
       </div>
@@ -164,7 +164,7 @@ export default function AdminPropertyVerificationsPage() {
       </div>
 
       {error && (
-        <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -366,7 +366,7 @@ function StatusBadge({ status, t }) {
   const styles = {
     pending: 'bg-yellow/20 text-night border-yellow/40',
     approved: 'bg-blue/10 text-blue border-blue/30',
-    rejected: 'bg-red-50 text-red-700 border-red-200',
+    rejected: 'bg-parchment text-magenta border-night/10',
   };
   return (
     <span

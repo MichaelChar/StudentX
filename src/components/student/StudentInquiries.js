@@ -62,7 +62,7 @@ export async function InquiriesSection({ locale }) {
 
   if (error) {
     return (
-      <p className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-control px-4 py-3">
+      <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
         {t('loadError')}
       </p>
     );
