@@ -181,7 +181,7 @@ export default function LandlordSignupPage() {
               />
               <label
                 htmlFor="photo"
-                className="inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-gray-200 rounded-lg text-sm text-night/60 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-night/10 rounded-lg text-sm text-night/60 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors"
               >
                 {photoPreview ? t('photoReplace') : t('photoChoose')}
               </label>

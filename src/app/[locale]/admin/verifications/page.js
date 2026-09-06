@@ -103,7 +103,7 @@ export default function AdminVerificationsPage() {
               key={s}
               onClick={() => handleFilterChange(s)}
               className={`text-sm px-3 py-1.5 rounded-control border transition-colors capitalize ${
-                statusFilter === s ? 'bg-night text-white border-night' : 'border-gray-200 text-night/60 hover:border-night/40 active:bg-night/10'
+                statusFilter === s ? 'bg-night text-white border-night' : 'border-night/10 text-night/60 hover:border-night/40 active:bg-night/10'
               }`}
             >
               {s}
@@ -113,13 +113,13 @@ export default function AdminVerificationsPage() {
       </div>
 
       {requests.length === 0 ? (
-        <div className="text-center py-16 border-2 border-dashed border-gray-200 rounded-card">
+        <div className="text-center py-16 border-2 border-dashed border-night/10 rounded-card">
           <p className="text-night/50">No {statusFilter} verification requests.</p>
         </div>
       ) : (
         <div className="space-y-5">
           {requests.map((req) => (
-            <div key={req.id} className="border border-gray-200 rounded-card p-5 bg-white">
+            <div key={req.id} className="border border-night/10 rounded-card p-5 bg-white">
               <div className="flex flex-col sm:flex-row sm:items-start gap-4">
                 <div className="flex-1 min-w-0">
                   <div className="flex items-center gap-2 mb-1">
@@ -144,7 +144,7 @@ export default function AdminVerificationsPage() {
                     href={req.document_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="shrink-0 text-sm px-3 py-1.5 rounded-control border border-gray-200 text-night/70 hover:border-night hover:text-night transition-colors"
+                    className="shrink-0 text-sm px-3 py-1.5 rounded-control border border-night/10 text-night/70 hover:border-night hover:text-night transition-colors"
                   >
                     View document ↗
                   </a>
@@ -152,13 +152,13 @@ export default function AdminVerificationsPage() {
               </div>
 
               {req.status === 'pending' && (
-                <div className="mt-4 pt-4 border-t border-gray-100 space-y-3">
+                <div className="mt-4 pt-4 border-t border-night/5 space-y-3">
                   <textarea
                     placeholder="Review notes (optional, shown to landlord on rejection)"
                     value={notesMap[req.id] || ''}
                     onChange={(e) => setNotesMap((prev) => ({ ...prev, [req.id]: e.target.value }))}
                     rows={2}
-                    className="w-full rounded-control border border-gray-200 bg-parchment px-3 py-2 text-sm text-night focus-visible:ring-2 focus-visible:ring-yellow/50 focus-visible:border-yellow resize-none"
+                    className="w-full rounded-control border border-night/10 bg-parchment px-3 py-2 text-sm text-night focus-visible:ring-2 focus-visible:ring-yellow/50 focus-visible:border-yellow resize-none"
                   />
                   <div className="flex gap-2">
                     <button

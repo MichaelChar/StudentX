@@ -260,7 +260,7 @@ export default function ListingsMap({
   );
 
   return (
-    <div className="h-full w-full rounded-card overflow-hidden border border-gray-200">
+    <div className="h-full w-full rounded-card overflow-hidden border border-night/10">
       <MapContainer
         center={THESSALONIKI_CENTER}
         zoom={DEFAULT_ZOOM}

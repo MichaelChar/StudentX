@@ -102,13 +102,13 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
         (michaelcharlesg) are never shown here and can never be deleted. Safe to re-run.
       </p>
 
-      <section className="border border-gray-200 rounded-card p-4 mb-6">
+      <section className="border border-night/10 rounded-card p-4 mb-6">
         <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Create pending landlords</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {['a', 'b'].map((slot) => (
             <div key={slot} className="flex gap-2">
               <input
-                className="flex-1 text-sm border border-gray-200 rounded-control px-3 py-2"
+                className="flex-1 text-sm border border-night/10 rounded-control px-3 py-2"
                 placeholder={`Pending landlord ${slot === 'a' ? '1' : '2'} name`}
                 value={names[slot]}
                 onChange={(e) => setNames((s) => ({ ...s, [slot]: e.target.value }))}
@@ -136,8 +136,8 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
       )}
       {msg && <p className="text-sm text-night/70 bg-parchment rounded-control px-3 py-2 mb-4">{msg}</p>}
 
-      <section className="border border-gray-200 rounded-card overflow-hidden mb-6">
-        <div className="grid grid-cols-[auto_1fr_auto] gap-3 items-center bg-gray-50 px-4 py-2 text-xs font-semibold text-night/50">
+      <section className="border border-night/10 rounded-card overflow-hidden mb-6">
+        <div className="grid grid-cols-[auto_1fr_auto] gap-3 items-center bg-parchment px-4 py-2 text-xs font-semibold text-night/50">
           <span>Cover</span>
           <span>Listing</span>
           <span>Assign to</span>
@@ -146,12 +146,12 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
           <p className="px-4 py-6 text-sm text-night/40">No fake listings left to migrate.</p>
         ) : (
           candidates.map((c) => (
-            <div key={c.listing_id} className="grid grid-cols-[auto_1fr_auto] gap-3 items-center px-4 py-2 border-t border-gray-100">
+            <div key={c.listing_id} className="grid grid-cols-[auto_1fr_auto] gap-3 items-center px-4 py-2 border-t border-night/5">
               {c.cover ? (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={c.cover} alt="" className="w-14 h-14 rounded-photo object-cover bg-gray-100" />
+                <img src={c.cover} alt="" className="w-14 h-14 rounded-photo object-cover bg-parchment" />
               ) : (
-                <div className="w-14 h-14 rounded-photo bg-gray-100 grid place-items-center text-[10px] text-night/30">none</div>
+                <div className="w-14 h-14 rounded-photo bg-parchment grid place-items-center text-[10px] text-night/30">none</div>
               )}
               <div className="min-w-0">
                 <p className="text-sm text-night truncate">
@@ -165,7 +165,7 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
                 {c.already_migrated && <span className="text-[11px] text-jade">already staged</span>}
               </div>
               <select
-                className="text-xs border border-gray-200 rounded-control px-2 py-1"
+                className="text-xs border border-night/10 rounded-control px-2 py-1"
                 value={selections[c.listing_id] || ''}
                 onChange={(e) => setSelections((s) => ({ ...s, [c.listing_id]: e.target.value }))}
               >
