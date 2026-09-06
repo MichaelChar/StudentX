@@ -68,6 +68,14 @@
     // NEXT_PUBLIC_* are inlined at build time, so any local .env.local with a
     // dev URL (http://localhost:3000) leaks into the build unless overridden
     // explicitly at build (or the Worker is built from CI with no .env.local).
+    // CARTO Basemaps key (issue #472). PUBLIC BY NECESSITY, not by oversight:
+    // Leaflet builds the tile URL in the browser, so it ships in the client
+    // bundle whatever we do — CARTO protects it with a DOMAIN RESTRICTION to
+    // studentx.uk, not with secrecy. Same reasoning as the anon key above.
+    // It must be HERE and not only in .env.local: NEXT_PUBLIC_* are inlined at
+    // build time, so a key the Cloudflare build cannot see produces a green
+    // build and a watermarked production map.
+    "NEXT_PUBLIC_CARTO_KEY": "cb1_2ypu_1_adbddc7f0fc4aa172f9d85ad",
     "NEXT_PUBLIC_SITE_URL": "https://studentx.uk",
     "NEXT_PUBLIC_APP_URL": "https://studentx.uk",
     // Synthetic uptime check — guards against the i18n regression class fixed
