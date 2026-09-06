@@ -13,7 +13,7 @@ const STATUS_BADGE = {
 
 const KIND_BADGE = {
   error: 'bg-parchment text-magenta border-night/10',
-  edit: 'bg-yellow-50 text-yellow-700 border-yellow-200',
+  edit: 'bg-yellow/20 text-night border-night/10',
 };
 
 function formatDate(iso) {
