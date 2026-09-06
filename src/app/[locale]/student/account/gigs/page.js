@@ -9,6 +9,7 @@ import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import AccountChrome from '@/components/student/AccountChrome';
 import SavedGigs from '@/components/student/SavedGigs';
+import Skeleton from '@/components/ui/Skeleton';
 
 /*
   Holiday Gigs section of the student account — mirrors the accommodation
@@ -202,10 +203,10 @@ function GridSkeleton() {
     <div className="grid grid-cols-1 sm:grid-cols-2 gap-5" aria-busy="true">
       {[0, 1].map((i) => (
         <div key={i} className="rounded-card border border-night/10 bg-white overflow-hidden">
-          <div className="aspect-[4/3] bg-parchment animate-pulse" />
+          <Skeleton variant="photo" className="rounded-none" />
           <div className="p-5 space-y-3">
-            <div className="h-3 w-28 bg-parchment rounded animate-pulse" />
-            <div className="h-5 w-3/4 bg-parchment rounded animate-pulse" />
+            <Skeleton variant="text" width={112} />
+            <Skeleton variant="text" width="75%" height={20} />
           </div>
         </div>
       ))}
@@ -220,8 +221,8 @@ function ListSkeleton() {
         <li key={i}>
           <Card tone="white" className="p-5 md:p-6">
             <div className="space-y-2">
-              <div className="h-6 w-2/3 bg-parchment rounded animate-pulse" />
-              <div className="h-3 w-1/3 bg-parchment rounded animate-pulse" />
+              <Skeleton variant="text" width="66%" height={24} />
+              <Skeleton variant="text" width="33%" />
             </div>
           </Card>
         </li>

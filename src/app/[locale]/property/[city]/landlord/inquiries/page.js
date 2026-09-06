@@ -10,6 +10,7 @@ import ChatThread from '@/components/chat/ChatThread';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
 import Chip from '@/components/ui/Chip';
+import Skeleton from '@/components/ui/Skeleton';
 import {
   THREAD_FILTERS,
   defaultThreadId,
@@ -157,7 +158,7 @@ export default function LandlordInquiriesPage() {
           {loading ? (
             <div className="p-4 space-y-3">
               {[1, 2, 3].map((i) => (
-                <div key={i} className="h-16 bg-parchment rounded-card animate-pulse" />
+                <Skeleton key={i} variant="card" height={64} />
               ))}
             </div>
           ) : visible.length === 0 ? (

@@ -6,6 +6,7 @@ import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import ListingCard from '@/components/ListingCard';
 import Icon from '@/components/ui/Icon';
+import ListingCardSkeleton from '@/components/ListingCardSkeleton';
 
 /*
   Item 7 — directory carousel.
@@ -179,7 +180,7 @@ export default function DirectoryCarousel() {
                 className="shrink-0 px-2.5"
                 style={{ width: `${cardWidthPct}%` }}
               >
-                <SkeletonCard />
+                <ListingCardSkeleton />
               </div>
             ))}
           </div>
@@ -257,18 +258,3 @@ function PagerArrow({ dir, label, disabled, onClick }) {
   );
 }
 
-function SkeletonCard() {
-  return (
-    <div className="rounded-control border border-night/10 bg-white overflow-hidden animate-pulse">
-      <div className="aspect-[4/3] bg-parchment" />
-      <div className="p-5 space-y-3">
-        <div className="h-3 w-28 bg-parchment rounded" />
-        <div className="h-5 w-3/4 bg-parchment rounded" />
-        <div className="flex justify-between">
-          <div className="h-3 w-20 bg-parchment rounded" />
-          <div className="h-4 w-16 bg-parchment rounded" />
-        </div>
-      </div>
-    </div>
-  );
-}

@@ -10,6 +10,7 @@ import LandlordShell from '@/components/landlord/LandlordShell';
 import ChatThread from '@/components/chat/ChatThread';
 import Icon from '@/components/ui/Icon';
 import { formatMoney } from '@/lib/formatMoney';
+import Skeleton from '@/components/ui/Skeleton';
 
 export default function LandlordInquiryChatPage() {
   const t = useTranslations('student.chat');
@@ -105,7 +106,7 @@ export default function LandlordInquiryChatPage() {
       </Link>
 
       {state.loading ? (
-        <div className="bg-parchment rounded-card h-[60vh] animate-pulse" />
+        <Skeleton variant="card" height="60vh" />
       ) : state.error || !inquiry ? (
         <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
           {state.error || t('loadError')}

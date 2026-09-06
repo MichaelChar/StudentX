@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { Link } from '@/i18n/navigation';
 import { useAccessToken } from '@/lib/useAccessToken';
+import Skeleton from '@/components/ui/Skeleton';
 
 /**
  * "Express interest" form on a gig detail page. Reuses the property inquiry
@@ -19,7 +20,7 @@ export default function GigInquiryForm({ gigId }) {
 
   // token === null → still resolving the session.
   if (token === null) {
-    return <div className="h-24 animate-pulse rounded-card bg-parchment" />;
+    return <Skeleton variant="card" height={96} />;
   }
 
   // Signed out.

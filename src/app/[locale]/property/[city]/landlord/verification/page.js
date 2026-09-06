@@ -8,6 +8,7 @@ import LandlordShell from '@/components/landlord/LandlordShell';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
+import Skeleton from '@/components/ui/Skeleton';
 
 export default function LandlordVerificationPage() {
   const accessToken = useAccessToken();
@@ -93,9 +94,9 @@ export default function LandlordVerificationPage() {
     <LandlordShell eyebrow="Verification" title="Get verified">
       <div className="max-w-lg">
         {loading ? (
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 w-48 bg-parchment rounded-control" />
-            <div className="h-32 bg-parchment rounded-card" />
+          <div className="space-y-4">
+            <Skeleton variant="text" width={192} height={32} />
+            <Skeleton variant="card" height={128} />
           </div>
         ) : isVerified ? (
           <Card tone="parchment" className="px-6 py-5 flex items-start gap-4">

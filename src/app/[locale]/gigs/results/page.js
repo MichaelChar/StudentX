@@ -18,11 +18,12 @@ import { Link } from '@/i18n/navigation';
 import GigCard from '@/components/GigCard';
 import { buildPriceHistogram, maxBucketCount } from '@/lib/priceHistogram';
 import { formatMoney } from '@/lib/formatMoney';
+import Skeleton from '@/components/ui/Skeleton';
 
 const GigsMap = dynamic(() => import('@/components/GigsMap'), {
   ssr: false,
   loading: () => (
-    <div className="h-full w-full rounded-control border border-night/10 bg-parchment animate-pulse" />
+    <Skeleton variant="card" className="h-full w-full border border-night/10" />
   ),
 });
 
@@ -291,9 +292,10 @@ function GigsResultsInner() {
             ) : loading ? (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">
                 {Array.from({ length: 6 }).map((_, i) => (
-                  <div
+                  <Skeleton
                     key={i}
-                    className="aspect-[4/5] animate-pulse rounded-photo border border-night/10 bg-parchment"
+                    variant="photo"
+                    className="aspect-[4/5] border border-night/10"
                   />
                 ))}
               </div>

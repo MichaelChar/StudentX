@@ -8,6 +8,7 @@ import Icon from '@/components/ui/Icon';
 import AccountChrome from '@/components/student/AccountChrome';
 import StudentBookingCard from '@/components/booking/StudentBookingCard';
 import { BOOKING_STATES } from '@/lib/bookingState';
+import Skeleton from '@/components/ui/Skeleton';
 
 /*
   Student bookings list — account-area surface grouped by state.
@@ -147,11 +148,11 @@ function BookingsSkeleton() {
         <li key={i}>
           <Card tone="white" className="p-5 md:p-6">
             <div className="flex gap-4">
-              <div className="w-24 h-24 bg-parchment rounded-card animate-pulse shrink-0" />
+              <Skeleton variant="card" width={96} height={96} className="shrink-0" />
               <div className="flex-1 space-y-2">
-                <div className="h-6 w-2/3 bg-parchment rounded animate-pulse" />
-                <div className="h-3 w-1/3 bg-parchment rounded animate-pulse" />
-                <div className="h-3 w-3/4 bg-parchment rounded animate-pulse mt-3" />
+                <Skeleton variant="text" width="66%" height={24} />
+                <Skeleton variant="text" width="33%" />
+                <Skeleton variant="text" width="75%" className="mt-3" />
               </div>
             </div>
           </Card>

@@ -12,11 +12,12 @@ import {
 import Icon from '@/components/ui/Icon';
 import Card from '@/components/ui/Card';
 import SuggestedMark from '@/components/listing-wizard/SuggestedMark';
+import Skeleton from '@/components/ui/Skeleton';
 
 const AddressMap = dynamic(() => import('./AddressMap'), {
   ssr: false,
   loading: () => (
-    <div className="h-64 sm:h-80 w-full rounded-card bg-parchment border border-night/10 animate-pulse" />
+    <Skeleton variant="card" className="h-64 sm:h-80 w-full border border-night/10" />
   ),
 });
 

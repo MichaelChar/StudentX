@@ -7,6 +7,7 @@ import dynamic from 'next/dynamic';
 import { useTranslations, useLocale } from 'next-intl';
 
 import ListingCard from '@/components/ListingCard';
+import ListingCardSkeleton from '@/components/ListingCardSkeleton';
 import Button from '@/components/ui/Button';
 import Pill from '@/components/ui/Pill';
 import Icon from '@/components/ui/Icon';
@@ -34,6 +35,7 @@ import {
   boundsDrift,
   BOUNDS_DRIFT_THRESHOLD,
 } from '@/lib/mapBounds';
+import Skeleton from '@/components/ui/Skeleton';
 import {
   buildFilterParams,
   buildListingsQuery,
@@ -123,8 +125,11 @@ const CHIP_AMENITIES = [
 */
 function MapLoadingFallback() {
   return (
-    <div className="h-full w-full rounded-control bg-parchment animate-pulse flex items-center justify-center">
-      <span className="text-night/40 text-sm">Loading map…</span>
+    <div className="relative h-full w-full">
+      <Skeleton variant="card" className="absolute inset-0 h-full w-full" />
+      <span className="absolute inset-0 flex items-center justify-center text-night/40 text-sm">
+        Loading map…
+      </span>
     </div>
   );
 }
@@ -134,21 +139,6 @@ const ListingsMap = dynamic(() => import('@/components/ListingsMap'), {
   loading: () => <MapLoadingFallback />,
 });
 
-function SkeletonCard() {
-  return (
-    <div className="rounded-control border border-night/10 bg-white overflow-hidden animate-pulse">
-      <div className="aspect-[4/3] bg-parchment" />
-      <div className="p-5 space-y-3">
-        <div className="h-3 w-28 bg-parchment rounded" />
-        <div className="h-5 w-3/4 bg-parchment rounded" />
-        <div className="flex justify-between">
-          <div className="h-3 w-20 bg-parchment rounded" />
-          <div className="h-4 w-16 bg-parchment rounded" />
-        </div>
-      </div>
-    </div>
-  );
-}
 
 function ResultsContent({ initialData, initialQuery }) {
   const t = useTranslations('propylaea.results');
@@ -929,7 +919,7 @@ function ResultsContent({ initialData, initialQuery }) {
               {loading && (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   {Array.from({ length: 6 }).map((_, i) => (
-                    <SkeletonCard key={i} />
+                    <ListingCardSkeleton key={i} />
                   ))}
                 </div>
               )}
@@ -1136,10 +1126,10 @@ export default function ResultsClient({ initialData, initialQuery }) {
     <Suspense
       fallback={
         <div className="mx-auto max-w-7xl px-5 py-10">
-          <div className="h-8 w-48 bg-parchment rounded animate-pulse mb-8" />
+          <Skeleton variant="text" width={192} height={32} className="mb-8" />
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {Array.from({ length: 6 }).map((_, i) => (
-              <SkeletonCard key={i} />
+              <ListingCardSkeleton key={i} />
             ))}
           </div>
         </div>
