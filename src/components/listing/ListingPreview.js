@@ -219,7 +219,7 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
                     type="button"
                     disabled
                     aria-disabled="true"
-                    className="w-full justify-center inline-flex items-center bg-yellow text-white font-display font-semibold px-6 py-3 rounded-lg opacity-60 cursor-not-allowed"
+                    className="w-full justify-center inline-flex items-center bg-yellow text-white font-display font-semibold px-6 py-3 rounded-control opacity-60 cursor-not-allowed"
                   >
                     {t('previewInquire')}
                   </button>
