@@ -72,9 +72,11 @@
     // Leaflet builds the tile URL in the browser, so it ships in the client
     // bundle whatever we do — CARTO protects it with a DOMAIN RESTRICTION to
     // studentx.uk, not with secrecy. Same reasoning as the anon key above.
-    // It must be HERE and not only in .env.local: NEXT_PUBLIC_* are inlined at
-    // build time, so a key the Cloudflare build cannot see produces a green
-    // build and a watermarked production map.
+    // NOTE: this entry is NOT what makes the map work. NEXT_PUBLIC_* are inlined
+    // at BUILD time and these vars are RUNTIME bindings — the value that reaches
+    // the client bundle comes from the committed .env.production. Kept here for
+    // symmetry with the Supabase pair and in case server code ever needs it at
+    // runtime. See #472; assuming this entry was sufficient is what broke it.
     "NEXT_PUBLIC_CARTO_KEY": "cb1_2ypu_1_adbddc7f0fc4aa172f9d85ad",
     "NEXT_PUBLIC_SITE_URL": "https://studentx.uk",
     "NEXT_PUBLIC_APP_URL": "https://studentx.uk",

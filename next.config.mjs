@@ -119,10 +119,11 @@ const PRIVATE_CACHE_HEADERS = [
   TIER 1 of the CARTO-key guard — warn on any build (issue #472).
 
   `NEXT_PUBLIC_*` are inlined by Next at BUILD time. `wrangler.jsonc` vars are
-  RUNTIME bindings and do not reach the build container, so a key that lives
-  only there produces a green build and a watermarked production map. That is
-  exactly what shipped on 2026-09-06: the code was correct, the value was in
-  wrangler.jsonc, and the tiles came out unkeyed anyway.
+  RUNTIME bindings and do not reach the build, so a key that lives only there
+  produces a green build and a watermarked production map. That is exactly what
+  shipped on 2026-09-06. The values that DO reach the build come from a
+  committed `.env.production` — there are no Cloudflare dashboard build
+  variables configured at all.
 
   This warns and does not throw, deliberately. It runs in CI too — where the
   key is legitimately absent, because `.env.local` is gitignored and CI has no
@@ -137,10 +138,10 @@ if (!process.env.NEXT_PUBLIC_CARTO_KEY) {
   console.warn(
     '\n\u26A0\uFE0F  NEXT_PUBLIC_CARTO_KEY is not set.\n' +
       '   Map tiles will render with CARTO\u2019s "API KEY REQUIRED" watermark.\n' +
-      '   Local dev: add it to .env.local.\n' +
-      '   Production: it must be a BUILD variable in the Cloudflare dashboard\n' +
-      '   (Workers & Pages \u2192 studentx \u2192 Settings \u2192 Build). A wrangler.jsonc\n' +
-      '   var alone is a runtime binding and will NOT reach this build.\n' +
+      '   Local dev:  add it to .env.local.\n' +
+      '   Production: add it to .env.production, which is committed and is what\n' +
+      '   supplies NEXT_PUBLIC_* to the Cloudflare build. A wrangler.jsonc var\n' +
+      '   alone is a runtime binding and will NOT reach this build.\n' +
       '   See issue #472 and src/lib/mapTiles.js.\n',
   );
 }

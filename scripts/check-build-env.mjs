@@ -35,9 +35,10 @@ const REQUIRED = [
     name: 'NEXT_PUBLIC_CARTO_KEY',
     why: 'CARTO basemap tiles render with an "API KEY REQUIRED" watermark without it.',
     where:
-      'Cloudflare dashboard → Workers & Pages → studentx → Settings → Build →\n' +
-      '    environment variables. A wrangler.jsonc `vars` entry is a RUNTIME\n' +
-      '    binding and does NOT reach this build.',
+      '.env.production — which IS committed, deliberately, and already holds the\n' +
+      '    Supabase public values. Next loads it during a production build; that is\n' +
+      '    how NEXT_PUBLIC_* reach the client bundle on Cloudflare. A wrangler.jsonc\n' +
+      '    `vars` entry is a RUNTIME binding and does NOT reach the build.',
     issue: '#472',
   },
 ];
