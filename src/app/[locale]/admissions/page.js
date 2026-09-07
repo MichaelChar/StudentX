@@ -107,7 +107,7 @@ export default async function AdmissionsPage({ params }) {
 
           <ol className="mt-12 grid gap-8 sm:grid-cols-2">
             {steps.map((step) => (
-              <li key={step.n} className="rounded-2xl bg-white p-7 border border-night/10">
+              <li key={step.n} className="rounded-card bg-white p-7 border border-night/10">
                 <span className="font-display text-sm font-semibold text-blue">
                   {String(step.n).padStart(2, '0')}
                 </span>
@@ -125,7 +125,7 @@ export default async function AdmissionsPage({ params }) {
           <h2 className="font-display text-3xl md:text-4xl text-night">{t('proof.heading')}</h2>
           <div className="mt-10 grid gap-6 sm:grid-cols-3">
             {stats.map((stat) => (
-              <div key={stat.n} className="rounded-2xl bg-parchment p-7">
+              <div key={stat.n} className="rounded-card bg-parchment p-7">
                 <p className="font-display text-4xl text-blue">{stat.value}</p>
                 <p className="mt-3 text-sm text-night/70 leading-relaxed">{stat.label}</p>
               </div>

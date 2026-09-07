@@ -188,10 +188,19 @@ function GigsResultsInner() {
                 <p className="label-caps mb-1 text-night/50">{t('payDistribution')}</p>
                 <p className="mb-2 text-xs text-night/40">{t('payDistributionHint')}</p>
                 <div className="flex h-20 items-end gap-1">
+                  {/*
+                    `rounded-t-[2px]`, not a geometry token. A chart bar has no
+                    role in the F4 set — card/photo/pill/control/modal all
+                    describe surfaces or controls — and `rounded-control` (8px)
+                    on a bar a few pixels wide reads as a lozenge. Matches
+                    FiltersModal's histogram, which documents the same
+                    exception; it was `rounded-t-sm`, which is 4px in Tailwind
+                    v4, so the two charts were quietly different.
+                  */}
                   {histogram.map((b, i) => (
                     <div
                       key={i}
-                      className="flex-1 rounded-t-sm bg-blue/30"
+                      className="flex-1 rounded-t-[2px] bg-blue/30"
                       style={{ height: `${Math.max(4, (b.count / histPeak) * 100)}%` }}
                       title={`${formatMoney(Math.round(b.from))}–${formatMoney(Math.round(b.to))}: ${b.count}`}
                     />
