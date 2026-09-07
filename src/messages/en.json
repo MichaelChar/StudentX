@@ -279,6 +279,7 @@
       "statusActionRequired": "Action required",
       "viewGrid": "Grid view",
       "viewList": "List view",
+      "viewToggleLabel": "View as",
       "gridCount": "{live} of {total} live"
     },
     "listingForm": {

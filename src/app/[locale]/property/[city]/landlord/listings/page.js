@@ -13,6 +13,7 @@ import { variantUrl } from '@/lib/photoVariants';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import Icon from '@/components/ui/Icon';
+import SegmentedControl from '@/components/ui/SegmentedControl';
 import Pill from '@/components/ui/Pill';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import StatusLadder from '@/components/listing-wizard/StatusLadder';
@@ -249,6 +250,7 @@ export default function LandlordListingsPage() {
               onChange={setView}
               gridLabel={t('viewGrid')}
               listLabel={t('viewList')}
+              groupLabel={t('viewToggleLabel')}
             />
           )}
           <Button href="/property/thessaloniki/landlord/listings/new" variant="gold" size="sm">
@@ -360,42 +362,44 @@ export default function LandlordListingsPage() {
 /*
   The list/grid toggle — parity Feature 50, top-right beside the `+` button.
 
-  A radiogroup rather than two buttons: the two options are mutually exclusive
-  states of one control, and a screen reader should hear "Grid view, selected,
-  1 of 2" rather than two unrelated buttons. Icons carry the meaning visually;
-  the accessible name comes from the translated label, not the glyph.
+  Now `ui/SegmentedControl`, which was already the same control: a bordered
+  `rounded-control` track with `p-0.5`, ink fill on the selected segment, and a
+  radiogroup rather than two buttons so a screen reader hears "Grid view,
+  selected, 1 of 2".
+
+  It was hand-rolled, and the one thing the hand-rolled version did BETTER was
+  the nested radius — `rounded-[6px]` inside an 8px track with 2px of padding
+  is geometrically correct concentric rounding, where the primitive nests 8px
+  in 8px. Losing those two pixels is the price of not maintaining a second
+  implementation of a control that already exists; the primitive is the place
+  to fix it for every call site if it ever matters.
+
+  Two things improve on the way. The focus ring was yellow and is now blue,
+  which is the platform focus token. And the radiogroup was labelled
+  `aria-label={gridLabel}` — announcing the whole group as "Grid view" — which
+  is now the group's own label.
 */
-function ViewToggle({ view, onChange, gridLabel, listLabel }) {
-  const options = [
-    { value: 'grid', label: gridLabel, icon: 'grid' },
-    { value: 'list', label: listLabel, icon: 'list' },
-  ];
+function ViewToggle({ view, onChange, gridLabel, listLabel, groupLabel }) {
   return (
-    <div
-      role="radiogroup"
-      aria-label={gridLabel}
-      className="inline-flex items-center rounded-control border border-night/15 p-0.5"
-    >
-      {options.map((opt) => {
-        const active = view === opt.value;
-        return (
-          <button
-            key={opt.value}
-            type="button"
-            role="radio"
-            aria-checked={active}
-            aria-label={opt.label}
-            onClick={() => onChange(opt.value)}
-            className={`inline-flex items-center justify-center rounded-[6px] px-2.5 py-1.5 transition-colors
-              focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2 ${
-                active ? 'bg-night text-stone' : 'text-night/50 hover:text-night'
-              }`}
-          >
-            <Icon name={opt.icon} className="w-4 h-4" />
-          </button>
-        );
-      })}
-    </div>
+    <SegmentedControl
+      label={groupLabel}
+      value={view}
+      onChange={onChange}
+      options={[
+        {
+          value: 'grid',
+          label: gridLabel,
+          iconOnly: true,
+          icon: <Icon name="grid" className="w-4 h-4" />,
+        },
+        {
+          value: 'list',
+          label: listLabel,
+          iconOnly: true,
+          icon: <Icon name="list" className="w-4 h-4" />,
+        },
+      ]}
+    />
   );
 }
 
