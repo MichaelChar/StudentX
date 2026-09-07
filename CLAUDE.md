@@ -57,7 +57,12 @@ Around that core sit the monetizing / retention surfaces:
 .
 ├── CLAUDE.md                    ← this file
 ├── next.config.mjs              ← security headers, CSP (enforced), cache policy
-├── wrangler.jsonc               ← Worker name, vars, cron triggers
+├── wrangler.jsonc               ← Worker name, RUNTIME vars, cron triggers
+├── .env.production              ← COMMITTED. The only thing that puts
+│                                  NEXT_PUBLIC_* into the production client
+│                                  bundle — see Environment variables
+├── scripts/check-build-output.mjs ← run by `cf:build`; fails the deploy if the
+│                                  CARTO tile URL came out unkeyed (#472)
 ├── cf/
 │   └── worker-entry.mjs         ← Worker shim adding `scheduled` handler
 ├── src/
@@ -399,6 +404,72 @@ surface in `wrangler tail`.
   `{ kind: 'wrong-role' }` (signed in, but not as a student), or `null`.
   Wrapped in `React.cache()` so layout + page share one round-trip.
   `requireLandlord()` mirrors it for landlord-side surfaces.
+
+## Environment variables — READ THIS BEFORE ADDING ONE
+
+Four separate places hold configuration, and picking the wrong one produces a
+**green build and a silently broken production site**. That is not theoretical:
+it happened on 2026-09-06 (#472) and cost three wrong diagnoses before anyone
+checked the built bundle.
+
+### The one rule that matters
+
+**`NEXT_PUBLIC_*` are inlined by Next at BUILD time. Everything else is read at
+RUNTIME.** So the question is never "is the value configured?" — it is **"is it
+configured in the place that is present when the value is needed?"**
+
+| where | when it applies | reaches the client bundle? |
+|---|---|---|
+| `.env.local` | local dev only — **gitignored** | yes, locally |
+| `.env.production` | **committed**; loaded by `next build` | **yes — this is the only thing that does in prod** |
+| `wrangler.jsonc` `vars` | runtime bindings inside the Worker | **NO** |
+| `wrangler secret put` | runtime secrets inside the Worker | **NO** |
+
+There are **no build variables configured in the Cloudflare dashboard**. The
+Builds settings page reads "No build variables or secrets configured". Do not
+send anyone there; it is not the mechanism in use.
+
+### So, deciding where a new variable goes
+
+1. **Is it read in a `'use client'` component, or in a lib that one imports?**
+   (`lib/supabaseBrowser.js`, `lib/mapTiles.js` are the current examples.)
+   → it must be `NEXT_PUBLIC_*` **and live in `.env.production`**, or it will be
+   `undefined` in the browser no matter what `wrangler.jsonc` says.
+2. **Is it read only in server components, route handlers, or cron jobs?**
+   → a `wrangler.jsonc` `vars` entry is enough. `NEXT_PUBLIC_SITE_URL` and
+   `NEXT_PUBLIC_APP_URL` are this case — every one of their ~26 call sites is
+   server-side, which is why they work while living nowhere else.
+3. **Is it a genuine secret?** → `wrangler secret put NAME --name studentx`.
+   Never `.env.production`, which is committed.
+
+### `.env.production` is committed, deliberately
+
+It holds `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY` and
+`NEXT_PUBLIC_CARTO_KEY` — all three public by necessity, because they ship in
+the client bundle whatever we do. The anon key is RLS-protected; the CARTO key
+is domain-restricted to studentx.uk. Secrecy is not what protects either.
+
+Issue #251 tracks the discomfort with this pattern. Until it is resolved,
+**only add a value here if it is already public by construction.**
+
+### Adding a client-read variable — the checklist
+
+Setting it in one place and seeing a green build proves nothing. The build
+succeeds either way; that is the whole failure mode.
+
+```
+1. add to .env.production   (production build)
+2. add to .env.local        (your dev)
+3. rebuild and GREP THE OUTPUT:
+     rm -rf .next && npm run build
+     grep -rl "<the value>" .next/static/chunks
+```
+
+If it is not in a chunk, it will not be in the browser. `npm run cf:build`
+now runs `scripts/check-build-output.mjs`, which makes exactly this assertion
+for the CARTO key and fails the deploy rather than shipping a broken map — see
+the header of that file for why it checks the emitted bundle rather than
+`process.env`.
 
 ## Email (Resend)
 
