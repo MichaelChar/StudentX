@@ -20,10 +20,13 @@
   which that file already documents as intentionally public for the same
   reason.
 
-  `NEXT_PUBLIC_*` is inlined at BUILD time. The value must therefore exist in
-  the Cloudflare Workers Build environment, not merely at runtime — a key
-  living only in a local `.env.local` produces a green build and a watermarked
-  production map, which is a silent failure worth stating twice.
+  `NEXT_PUBLIC_*` is inlined at BUILD time, so the value must exist AT BUILD.
+  For production that means `.env.production`, which is committed and is what
+  Next loads during a production build — not `wrangler.jsonc`, whose `vars` are
+  runtime bindings, and not the Cloudflare dashboard, which has no build
+  variables configured. A key living only in `.env.local` gives a green build
+  and a watermarked production map: a silent failure, and one that already
+  happened once (#472).
 
   The key is appended ONLY when present. Interpolating a missing value would
   send `?key=undefined`, which is worse than sending nothing: CARTO would

@@ -213,11 +213,12 @@ listing wizard's address picker (`AddressMap.js`).
 unauthenticated Positron tiles with "API KEY REQUIRED" in 2026 (issue #472).
 The key is appended as `?key=`. It is **public by necessity** — Leaflet builds
 the tile URL in the browser, so it ships in the client bundle; what protects it
-is CARTO's domain restriction, not secrecy. It lives in `wrangler.jsonc`'s
-`vars` block alongside the Supabase anon key, and because `NEXT_PUBLIC_*` are
-inlined at BUILD time it must be present in the Cloudflare Workers Build
-environment — a key that exists only in `.env.local` gives a green build and a
-watermarked production map.
+is CARTO's domain restriction, not secrecy. **It lives in the committed `.env.production`**, alongside the Supabase public
+values — that file is what supplies `NEXT_PUBLIC_*` to a production build, and
+there are NO build variables configured in the Cloudflare dashboard. A
+`wrangler.jsonc` var is a RUNTIME binding and never reaches the build; putting
+the key only there is what caused #472's second round, giving a green build and
+a watermarked production map.
 
 Tile hosts are CSP-only and deliberately NOT in `images.remotePatterns`:
 Leaflet renders tiles as plain `<img>`, never through `next/image`. See the
