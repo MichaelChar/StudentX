@@ -3,9 +3,16 @@ import { defineConfig, devices } from '@playwright/test';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadEnvFiles } from './e2e/helpers/loadEnv.mjs';
+import { assertNoPartialCredentials } from './e2e/helpers/credentialCheck.mjs';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 loadEnvFiles(__dirname);
+
+// Half-configured credentials are a misconfiguration, not an opt-out, and
+// must not present as a skip — a skip reads as a pass (#439). Asserted here
+// rather than in a globalSetup file on purpose: a globalSetup that imports
+// a module the specs also import poisons Playwright's module cache for it.
+assertNoPartialCredentials();
 
 const baseURL = (process.env.E2E_BASE_URL || 'http://localhost:3100').replace(
   /\/$/,
@@ -28,6 +35,9 @@ export default defineConfig({
   expect: { timeout: 15_000 },
   reporter: [
     ['list'],
+    // Prints what actually executed vs. what was skipped, so a fully
+    // skipped run cannot be mistaken for a clean one (#439).
+    [path.join(__dirname, 'e2e/helpers/coverageReporter.mjs')],
     ['html', { open: 'never', outputFolder: 'playwright-report' }],
   ],
   outputDir: 'test-results',

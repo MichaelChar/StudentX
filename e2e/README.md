@@ -38,9 +38,33 @@ Credentials are **env-only** — never commit them.
 | `E2E_LANDLORD_EMAIL` | Landlord test account email |
 | `E2E_LANDLORD_PASSWORD` | Landlord test account password |
 | `E2E_SKIP_WEBSERVER` | Set `1` if you already started the app and do not want Playwright to spawn `next dev` |
+| `E2E_REQUIRE_ALL` | Set `1` to make ANY skipped test fail the run (see below) |
 
 Optional: journey 1 (discovery) runs **without** student/landlord credentials.
 Journeys 2–5 need both roles. Journey 6 needs landlord only.
+
+### A skip is not a pass (#439)
+
+Playwright prints `-` for a skipped test and exits `0`, so a run with no
+credentials configured looks exactly like a clean one. That is how PR #398's
+assertions reached `main` unexecuted and stayed that way unnoticed. Three
+things now keep that visible:
+
+1. **Half-configured credentials fail the run.** If `E2E_LANDLORD_EMAIL` is
+   set but `E2E_LANDLORD_PASSWORD` is not, the config throws before any test
+   runs. A typo is a misconfiguration, not an opt-out, and must not present
+   as a skip. Setting **neither** is still a legitimate opt-out and still
+   skips.
+2. **Every run ends with a coverage summary** naming what did not execute —
+   "0 of 1 test(s) actually executed" — instead of leaving you to infer it
+   from a glyph. If nothing ran at all, it says so in as many words.
+3. **`E2E_REQUIRE_ALL=1` turns any skip into a non-zero exit.** Off by
+   default, because skipping is the documented way to run a subset locally.
+   It exists for whoever eventually wires an advisory CI job, so they do not
+   have to invent it.
+
+None of this wires the suite into CI — see the note at the top of this file,
+which is still the standing decision.
 
 Use **dedicated** accounts — not production landlords tied to the three real
 curated listings. The suite creates fixture listings titled `E2E …` and
