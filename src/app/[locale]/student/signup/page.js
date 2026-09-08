@@ -104,7 +104,7 @@ export default function StudentSignupPage() {
       // shared verify-email screen, mirroring the landlord flow.
       router.push('/student/verify-email');
     } catch (err) {
-      setError(err.message || 'Something went wrong. Please try again.');
+      setError(err.message || t('genericError'));
     } finally {
       setLoading(false);
     }

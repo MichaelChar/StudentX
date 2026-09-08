@@ -209,7 +209,8 @@
       "forgotPassword": "Forgot password?",
       "roleConflictStudentTitle": "This email is registered as a student.",
       "roleConflictStudentBody": "Each StudentX email can be either a student or a landlord — not both. Switch to the student login to continue.",
-      "roleConflictStudentCta": "Go to student login"
+      "roleConflictStudentCta": "Go to student login",
+      "genericError": "Something went wrong. Please try again."
     },
     "signup": {
       "title": "Create a Landlord Account",
@@ -233,7 +234,8 @@
       "photoReplace": "Choose a different photo",
       "photoHelp": "Shown on your public profile and listings once you're verified. JPG, PNG or WebP, up to 8 MB.",
       "photoInvalidType": "Please choose a JPG, PNG or WebP image.",
-      "photoTooLarge": "That image is too large. Please choose one under 8 MB."
+      "photoTooLarge": "That image is too large. Please choose one under 8 MB.",
+      "genericError": "Something went wrong. Please try again."
     },
     "dashboard": {
       "welcome": "Welcome back, {name}!",
@@ -405,7 +407,8 @@
       "passwordTooShort": "Password must be at least 8 characters.",
       "passwordMismatch": "Passwords do not match.",
       "invalidLink": "This reset link is invalid or has expired. Please request a new one.",
-      "requestNewLink": "Request a new reset link"
+      "requestNewLink": "Request a new reset link",
+      "genericError": "Something went wrong. Please try again."
     },
     "inquiries": {
       "title": "Inquiries",
@@ -820,7 +823,9 @@
       "commuteClear": "Clear",
       "commuteEmptyTitle": "No stays within {minutes} minutes",
       "commuteEmptyBody": "Nothing is that close to {faculty}. Try a longer walk time.",
-      "commuteEmptyAction": "Widen the walk time"
+      "commuteEmptyAction": "Widen the walk time",
+      "error": "Something went wrong.",
+      "tryAgain": "Try again"
     },
     "filtersModal": {
       "title": "Filters",
@@ -1206,7 +1211,8 @@
       "submitting": "Creating account…",
       "or": "or",
       "haveAccount": "Already have an account?",
-      "loginLink": "Sign in"
+      "loginLink": "Sign in",
+      "genericError": "Something went wrong. Please try again."
     },
     "login": {
       "portal": "Student portal",
@@ -1228,7 +1234,8 @@
       "signupLink": "Create one",
       "roleConflictLandlordTitle": "This email is registered as a landlord.",
       "roleConflictLandlordBody": "Each StudentX email can be either a student or a landlord — not both. Switch to the landlord login to continue.",
-      "roleConflictLandlordCta": "Go to landlord login"
+      "roleConflictLandlordCta": "Go to landlord login",
+      "genericError": "Something went wrong. Please try again."
     },
     "forgotPassword": {
       "portal": "Student portal",
@@ -1259,7 +1266,8 @@
       "goToLogin": "Sign in",
       "invalidLinkTitle": "Reset link expired",
       "invalidLink": "This reset link is no longer valid. Request a new one to continue.",
-      "requestNewLink": "Request a new link"
+      "requestNewLink": "Request a new link",
+      "genericError": "Something went wrong. Please try again."
     },
     "verifyEmail": {
       "portal": "Student portal",

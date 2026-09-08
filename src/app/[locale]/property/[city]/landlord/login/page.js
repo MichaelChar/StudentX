@@ -171,7 +171,7 @@ function LandlordLoginInner() {
         }
       }
       emit({ error: true, stage: 'exception' });
-      setError(lastErr?.message || 'Something went wrong. Please try again.');
+      setError(lastErr?.message || t('genericError'));
     } finally {
       setStage('');
     }
