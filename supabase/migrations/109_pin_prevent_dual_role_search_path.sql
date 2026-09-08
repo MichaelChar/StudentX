@@ -1,0 +1,18 @@
+-- Pin search_path on the dual-role guard (#247, advisor 0011
+-- function_search_path_mutable).
+--
+-- `prevent_dual_role()` is the BEFORE-INSERT trigger on public.students and
+-- public.landlords that stops one email registering as both. It is SECURITY
+-- INVOKER, not DEFINER — the original audit note said otherwise and the issue
+-- carries the correction — so the privilege-escalation risk here is low. An
+-- unpinned search_path is still worth closing: it is the advisor-recommended
+-- fix, and a function whose name resolution depends on the caller's session is
+-- a latent hazard regardless of who it runs as.
+--
+-- SAFE TO SET TO '' — verified against the live definition before applying:
+-- every table reference is schema-qualified (public.students, public.landlords)
+-- and the only functions called are pg_catalog builtins (lower, format), which
+-- are resolved regardless of search_path. This matters more than usual: the
+-- function is a trigger on ACCOUNT CREATION, so an unqualified reference left
+-- behind would surface as students and landlords being unable to sign up.
+ALTER FUNCTION public.prevent_dual_role() SET search_path = '';
