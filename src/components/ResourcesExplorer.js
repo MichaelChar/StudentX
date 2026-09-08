@@ -354,8 +354,15 @@ function metaLine(resource) {
   return null;
 }
 
+/*
+  `rounded-card` (20px), not the 18px this carried since July 2026 — two
+  pixels off, and predating the geometry tokens (#396, August) rather than
+  drifting from them. Snapped so the card is in the system; the bespoke
+  shadows below are deliberately left alone, since no shadow token exists
+  for them to snap to.
+*/
 const CARD_CLASS =
-  'block rounded-[18px] border border-night/10 bg-white p-5 shadow-[0_1px_3px_rgba(10,37,64,0.06),0_10px_28px_-12px_rgba(10,37,64,0.16)] transition-[transform,border-color] hover:-translate-y-0.5 hover:border-blue hover:shadow-[0_22px_48px_-18px_rgba(99,91,255,0.30),0_6px_18px_-10px_rgba(10,37,64,0.10)]';
+  'block rounded-card border border-night/10 bg-white p-5 shadow-[0_1px_3px_rgba(10,37,64,0.06),0_10px_28px_-12px_rgba(10,37,64,0.16)] transition-[transform,border-color] hover:-translate-y-0.5 hover:border-blue hover:shadow-[0_22px_48px_-18px_rgba(99,91,255,0.30),0_6px_18px_-10px_rgba(10,37,64,0.10)]';
 const CARD_STYLE = { textDecoration: 'none', color: '#0a2540' };
 
 function ResourceCardBody({ resource, meta }) {

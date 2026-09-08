@@ -28,6 +28,21 @@ import { useRef } from 'react';
   Sentence case, like Chip and Button — these are actions, not micro-labels.
   Property results currently uses `.label-caps`; that is the call site's
   look, not this primitive's.
+
+  ICON-ONLY OPTIONS. An option may set `iconOnly` to render its glyph without
+  visible text — the landlord listings grid/list toggle is this shape, and
+  adopting the primitive there would otherwise have grown it into a wider
+  icon-plus-text control nobody asked for.
+
+  When `iconOnly` is set the icon STOPS being `aria-hidden` and `opt.label`
+  becomes the button's `aria-label` instead of its text. Both halves matter: an
+  aria-hidden glyph with no text leaves a control with no accessible name, and
+  a screen reader would announce an anonymous radio. The label is required
+  either way, so the two modes differ in where the label goes, not whether
+  there is one.
+
+  Padding narrows to a square-ish box, because the size scale's horizontal
+  padding is sized for text beside the glyph.
 */
 
 const TRACK =
@@ -43,6 +58,12 @@ const SEGMENT =
 const SIZES = {
   sm: 'text-xs px-3 py-1.5',
   md: 'text-sm px-3.5 py-2',
+};
+
+// Icon-only segments drop the text-sized horizontal padding.
+const ICON_ONLY_SIZES = {
+  sm: 'px-2 py-1.5',
+  md: 'px-2.5 py-2',
 };
 
 const STATES = {
@@ -63,6 +84,7 @@ export default function SegmentedControl({
 }) {
   const buttonRefs = useRef([]);
   const sizeClass = SIZES[size] || SIZES.md;
+  const iconSizeClass = ICON_ONLY_SIZES[size] || ICON_ONLY_SIZES.md;
   const selectedIndex = options.findIndex((opt) => opt.value === value);
   const tabbableIndex = selectedIndex >= 0 ? selectedIndex : 0;
 
@@ -124,14 +146,20 @@ export default function SegmentedControl({
             disabled={disabled}
             onClick={() => activate(i)}
             onKeyDown={onKeyDown}
-            className={`${SEGMENT} ${sizeClass} ${selected ? STATES.on : STATES.off}`}
+            aria-label={opt.iconOnly ? opt.label : undefined}
+            className={`${SEGMENT} ${
+              opt.iconOnly ? iconSizeClass : sizeClass
+            } ${selected ? STATES.on : STATES.off}`}
           >
             {opt.icon ? (
-              <span className="inline-flex shrink-0" aria-hidden="true">
+              <span
+                className="inline-flex shrink-0"
+                aria-hidden={opt.iconOnly ? undefined : 'true'}
+              >
                 {opt.icon}
               </span>
             ) : null}
-            {opt.label}
+            {opt.iconOnly ? null : opt.label}
           </button>
         );
       })}
