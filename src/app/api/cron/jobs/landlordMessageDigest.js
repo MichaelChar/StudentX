@@ -38,10 +38,12 @@ export async function runLandlordMessageDigest() {
   const supabase = getServiceSupabase();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';
 
-  const { data: pending, error: fetchError } = await supabase.rpc(
-    'get_pending_landlord_notifications',
-    { p_min_interval: MIN_INTERVAL },
-  );
+  // No argument: `p_min_interval` has been dead since migration 045 rewrote
+  // this function to gate on last_notified_at rather than elapsed time, and
+  // migration 116 drops it from the signature. MIN_INTERVAL below is still
+  // passed to claim_*_message_notification, where it is live — it is what
+  // makes the claim idempotent across overlapping ticks.
+  const { data: pending, error: fetchError } = await supabase.rpc('get_pending_landlord_notifications');
 
   if (fetchError) {
     console.error('[landlord-digest] failed to fetch pending notifications:', fetchError);
