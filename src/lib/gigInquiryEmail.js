@@ -1,6 +1,19 @@
+import { createClient } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
+
+// Mirrors inquiryEmail.js. The anon client CANNOT write gig_inquiries:
+// the table has RLS on with INSERT and SELECT policies only, so an update
+// through it matches zero rows — silently, because Supabase does not raise
+// when RLS filters an update away. That is issue #503, and it meant
+// email_sent was never actually set.
+function getServiceSupabase() {
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL,
+    process.env.SUPABASE_SERVICE_ROLE_KEY,
+  );
+}
 
 const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
@@ -71,10 +84,24 @@ export async function sendGigInquiryEmail({
       `,
     });
 
-    await supabase
-      .from('gig_inquiries')
-      .update({ email_sent: true })
-      .eq('inquiry_id', inquiryId);
+    // Service client + SECURITY DEFINER RPC, exactly as the listing
+    // equivalent does with mark_inquiry_email_sent (migration 021). The
+    // RPC is idempotent (`AND email_sent = false`), so a retry or a
+    // future backfill cannot double-count.
+    //
+    // The result IS checked. A silently-discarded no-op is what let #503
+    // hide: the write had never worked, and nothing said so.
+    const { data: marked, error: markError } = await getServiceSupabase().rpc(
+      'mark_gig_inquiry_email_sent',
+      { p_inquiry_id: inquiryId },
+    );
+    if (markError) {
+      console.error(`Gig inquiry ${inquiryId}: email sent but marking it failed:`, markError);
+    } else if (!marked) {
+      // Not an error — most likely already true from an earlier attempt.
+      // Worth a line, because it also covers "the row vanished".
+      console.warn(`Gig inquiry ${inquiryId}: email_sent was already set (no-op).`);
+    }
   } catch (err) {
     console.error('Failed to send gig inquiry email:', err);
   }
