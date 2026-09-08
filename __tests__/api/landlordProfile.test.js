@@ -163,3 +163,46 @@ describe('POST /api/landlord/profile — role-conflict cleanup', () => {
     expect(getSupabaseAsService).not.toHaveBeenCalled();
   });
 });
+
+/*
+  Migration 112 changed link_orphan_landlord from `RETURNS void` to
+  `RETURNS boolean`, because a zero-row UPDATE used to be indistinguishable
+  from a successful claim — and the route answered `{ landlord }` either way.
+  The guard that most often produces that zero-row case is the new
+  `email_confirmed_at IS NOT NULL` check, i.e. exactly the account-takeover
+  path in #246. These two tests pin both sides of the boolean.
+*/
+describe('POST /api/landlord/profile — orphan link honours the RPC result', () => {
+  const ORPHAN = { landlord_id: 'L42', email: 'fresh@example.com' };
+
+  function arrange(rpcResult) {
+    extractToken.mockReturnValue('jwt');
+    getUserFromToken.mockResolvedValue(FRESH_USER());
+    getSupabase.mockReturnValue(fakeAnonSupabase({}));
+    getSupabaseWithToken.mockReturnValue(
+      fakeSelfSupabase({ orphan: ORPHAN, rpc: vi.fn(async () => rpcResult) })
+    );
+  }
+
+  it('links the account when the RPC returns true', async () => {
+    arrange({ data: true, error: null });
+
+    const res = await POST(jsonRequest({ name: 'Fresh Landlord' }));
+
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ landlord: ORPHAN });
+  });
+
+  it('403s when the RPC returns false — an unconfirmed email claims nothing', async () => {
+    // No error is raised: the UPDATE simply matched no row. The old
+    // `RETURNS void` shape made this look identical to success.
+    arrange({ data: false, error: null });
+
+    const res = await POST(jsonRequest({ name: 'Fresh Landlord' }));
+
+    expect(res.status).toBe(403);
+    expect(await res.json()).toEqual({ error: 'link_not_permitted' });
+    // Not a role conflict, so no auth-user cleanup should be attempted.
+    expect(cleanupFreshOrphanAuthUser).not.toHaveBeenCalled();
+  });
+});

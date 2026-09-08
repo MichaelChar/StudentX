@@ -137,9 +137,10 @@ export async function POST(request) {
     // Use SECURITY DEFINER function to link orphan record (RLS UPDATE policy
     // requires auth_user_id = auth.uid(), but orphan has auth_user_id = null)
     const authedSupabase = getSupabaseWithToken(token);
-    const { error: linkError } = await authedSupabase.rpc('link_orphan_landlord', {
-      p_landlord_id: orphan.landlord_id,
-    });
+    const { data: linked, error: linkError } = await authedSupabase.rpc(
+      'link_orphan_landlord',
+      { p_landlord_id: orphan.landlord_id }
+    );
     if (linkError) {
       if (isRoleConflict(linkError)) {
         await cleanupFreshOrphanAuthUser(user);
@@ -150,6 +151,15 @@ export async function POST(request) {
       }
       console.error('Failed to link landlord profile:', linkError);
       return NextResponse.json({ error: 'Failed to link profile' }, { status: 500 });
+    }
+    // A no-op is not an error: link_orphan_landlord's UPDATE simply matches
+    // no row when a guard fails — most importantly when the caller's email
+    // is unconfirmed (migration 112). Before it returned boolean, that case
+    // was indistinguishable from success and this route answered
+    // `{ landlord: orphan }`, telling the client it had claimed an account
+    // it had NOT claimed. Answer 403 instead.
+    if (!linked) {
+      return NextResponse.json({ error: 'link_not_permitted' }, { status: 403 });
     }
     return NextResponse.json({ landlord: orphan });
   }
