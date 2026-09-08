@@ -1235,6 +1235,8 @@
       "roleConflictLandlordTitle": "This email is registered as a landlord.",
       "roleConflictLandlordBody": "Each StudentX email can be either a student or a landlord — not both. Switch to the landlord login to continue.",
       "roleConflictLandlordCta": "Go to landlord login",
+      "roleConflictLandlordOrphanBody": "Your landlord account hasn't been set up yet — finish creating it to continue.",
+      "roleConflictLandlordOrphanCta": "Complete landlord signup",
       "genericError": "Something went wrong. Please try again."
     },
     "forgotPassword": {

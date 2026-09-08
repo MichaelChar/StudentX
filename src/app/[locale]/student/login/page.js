@@ -33,11 +33,19 @@ function StudentLoginInner() {
   // ?email=<addr> prefill — used by the landlord-signup roleConflict CTA
   // to deep-link a dual-role student straight back to their own login.
   const initialEmail = searchParams.get('email') || '';
-  // ?roleConflict=landlord (carried by requireStudent's wrong-role
-  // redirect when the auth user has a landlord row) — render a clear
-  // banner with a CTA to landlord login instead of silently bouncing.
+  // ?roleConflict=landlord | landlord-orphan (carried by requireStudent's
+  // wrong-role redirect when the auth user has a landlord row) — render a
+  // clear banner instead of silently bouncing.
+  //
+  // The two values need DIFFERENT CTAs (issue #148). A linked landlord can
+  // sign in, so "go to landlord login" is right. An ORPHAN landlord row has
+  // auth_user_id = NULL and therefore no auth.users linkage, so a password
+  // form can never succeed for it — sending them there swaps a silent
+  // bounce for a confident dead end. They need landlord SIGNUP, which runs
+  // the link_orphan_landlord flow and claims the waiting row.
   const roleConflict = searchParams.get('roleConflict');
-  const showLandlordConflict = roleConflict === 'landlord';
+  const isOrphanLandlord = roleConflict === 'landlord-orphan';
+  const showLandlordConflict = roleConflict === 'landlord' || isOrphanLandlord;
 
   const [email, setEmail] = useState(initialEmail);
   const [password, setPassword] = useState('');
@@ -205,15 +213,24 @@ function StudentLoginInner() {
       {showLandlordConflict && (
         <div className="mb-6 rounded-card border border-yellow/40 bg-yellow/10 px-4 py-3 text-sm text-night">
           <p className="font-medium">{t('roleConflictLandlordTitle')}</p>
-          <p className="mt-1 text-night/70">{t('roleConflictLandlordBody')}</p>
+          <p className="mt-1 text-night/70">
+            {isOrphanLandlord
+              ? t('roleConflictLandlordOrphanBody')
+              : t('roleConflictLandlordBody')}
+          </p>
           <Link
             href={{
-              pathname: '/property/thessaloniki/landlord/login',
+              pathname: isOrphanLandlord
+                ? '/property/thessaloniki/landlord/signup'
+                : '/property/thessaloniki/landlord/login',
               query: initialEmail ? { email: initialEmail } : {},
             }}
             className="mt-2 inline-block text-blue font-medium hover:text-night"
           >
-            {t('roleConflictLandlordCta')} →
+            {isOrphanLandlord
+              ? t('roleConflictLandlordOrphanCta')
+              : t('roleConflictLandlordCta')}{' '}
+            →
           </Link>
         </div>
       )}
