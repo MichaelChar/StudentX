@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
+import { isAdminEmail } from '@/lib/requireAdmin';
 
 function getServiceSupabase() {
   return createClient(
@@ -10,11 +11,6 @@ function getServiceSupabase() {
   );
 }
 
-function isAdmin(user) {
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map((e) => e.trim()).filter(Boolean);
-  return adminEmails.includes(user.email);
-}
-
 export async function GET(request) {
   const token = extractToken(request);
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -22,7 +18,7 @@ export async function GET(request) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  if (!isAdmin(user)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!isAdminEmail(user.email)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const { searchParams } = new URL(request.url);
   const status = searchParams.get('status') || 'pending';

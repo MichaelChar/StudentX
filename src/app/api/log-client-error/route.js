@@ -6,10 +6,16 @@ import { NextResponse } from 'next/server';
 // was only found via a user report). Clients POST a tiny payload here; it's
 // logged so failures surface in `wrangler tail` / Worker logs.
 //
-// Always returns 204 — a beacon must never surface its own error to the user.
-// Fields are clamped; nothing here is trusted or echoed back. Not rate-limited
-// yet (a public unauth endpoint) — acceptable for a low-volume beacon, but
-// worth a Durable-Object counter if abuse shows up.
+// Always returns 204 — a beacon must never surface its own error to the user,
+// including when it is the one dropping the event. Fields are clamped; nothing
+// here is trusted or echoed back.
+//
+// Rate-limited per IP per isolate (#252C). Best-effort by construction: each
+// Cloudflare colo runs its own recycling isolate, so the Map is neither global
+// nor durable and a determined flood across colos still gets through. It caps
+// the cheap case — one client looping — which is the realistic abuse of a
+// public unauthenticated endpoint. A Durable Object is the real fix if volume
+// ever justifies it.
 
 const ALLOWED_CONTEXTS = new Set([
   'signOut',
@@ -27,11 +33,43 @@ function clamp(value, max) {
   return typeof value === 'string' ? value.slice(0, max) : '';
 }
 
+// Per-isolate token bucket, mirroring /api/listings/report's shape.
+const BEACON_MAX = 20; // events
+const BEACON_WINDOW_MS = 60 * 1000; // per minute per IP
+
+const beaconHits = new Map();
+
+function overBeaconBudget(ip) {
+  const now = Date.now();
+  const cutoff = now - BEACON_WINDOW_MS;
+  const recent = (beaconHits.get(ip) || []).filter((t) => t > cutoff);
+  if (recent.length >= BEACON_MAX) {
+    beaconHits.set(ip, recent);
+    return true;
+  }
+  recent.push(now);
+  beaconHits.set(ip, recent);
+  return false;
+}
+
 export async function POST(request) {
   let body;
   try {
     body = await request.json();
   } catch {
+    return new NextResponse(null, { status: 204 });
+  }
+
+  /*
+    `cf-connecting-ip` only — the same reasoning as the report route: the
+    alternatives are client-settable, so honouring them would let one client
+    rotate a header and never hit the cap. Off Cloudflare everything shares the
+    'unknown' bucket, which fails toward limiting rather than away from it.
+  */
+  const ip = request.headers.get('cf-connecting-ip') || 'unknown';
+  if (overBeaconBudget(ip)) {
+    // Silently dropped: still 204, because the contract above says a beacon
+    // never reports its own failure.
     return new NextResponse(null, { status: 204 });
   }
 
