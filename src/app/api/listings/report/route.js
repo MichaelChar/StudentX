@@ -40,13 +40,33 @@ const reportHits = new Map();
  * the client). Falls back to 'unknown' so the limiter still buckets when no
  * header is present (e.g. local dev).
  */
+/*
+  `cf-connecting-ip` ONLY in production (#252B).
+
+  `x-forwarded-for` and `x-real-ip` are client-settable. Behind Cloudflare they
+  are irrelevant because `cf-connecting-ip` is always present and is set by the
+  edge — but the fallback meant that anywhere the CF header was missing, an
+  attacker could rotate a spoofed XFF and reset the per-IP limit on every
+  request, which is the same as having no limiter.
+
+  Off Cloudflare the fallback is still useful (local dev), so it is kept there
+  and only there. In production an absent CF header collapses to one shared
+  'unknown' bucket: stricter than trusting the client, and it fails toward
+  rate-limiting rather than away from it.
+
+  The limiter remains best-effort and per-isolate by design — see the note
+  above `RATE_LIMIT`. This removes the trivial spoof, not the architectural
+  limit; #219 tracks making it durable.
+*/
 function clientIp(request) {
   const cf = request.headers.get('cf-connecting-ip');
   if (cf) return cf.trim();
-  const xff = request.headers.get('x-forwarded-for');
-  if (xff) return xff.split(',')[0].trim();
-  const real = request.headers.get('x-real-ip');
-  if (real) return real.trim();
+  if (process.env.NODE_ENV !== 'production') {
+    const xff = request.headers.get('x-forwarded-for');
+    if (xff) return xff.split(',')[0].trim();
+    const real = request.headers.get('x-real-ip');
+    if (real) return real.trim();
+  }
   return 'unknown';
 }
 

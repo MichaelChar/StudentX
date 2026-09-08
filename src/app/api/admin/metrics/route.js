@@ -3,16 +3,12 @@ import { extractToken, getUserFromToken } from '@/lib/supabaseServer';
 import { getStripeMetrics } from '@/lib/metrics/stripe';
 import { getSupabaseMetrics } from '@/lib/metrics/supabase';
 import { computeMetrics } from '@/lib/metrics/compute';
+import { isAdminEmail } from '@/lib/requireAdmin';
 
 // 5-minute in-memory cache
 let cache = null;
 let cacheTime = 0;
 const CACHE_TTL_MS = 5 * 60 * 1000;
-
-function isAdmin(user) {
-  const adminEmails = (process.env.ADMIN_EMAILS || '').split(',').map((e) => e.trim()).filter(Boolean);
-  return adminEmails.includes(user.email);
-}
 
 export async function GET(request) {
   const token = extractToken(request);
@@ -21,7 +17,7 @@ export async function GET(request) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  if (!isAdmin(user)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
+  if (!isAdminEmail(user.email)) return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
 
   const now = Date.now();
   if (cache && now - cacheTime < CACHE_TTL_MS) {
