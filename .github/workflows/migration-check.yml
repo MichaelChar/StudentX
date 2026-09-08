@@ -113,7 +113,7 @@ jobs:
             if grep -qxE "(${stem}|${stripped})" /tmp/applied-names.txt; then
               echo "✓ $stem is applied to prod"
             else
-              echo "::error file=$f::Migration '$stem' is not yet applied to production Supabase. Apply it ('supabase db push --linked') before merging. See CLAUDE.md > Database (Supabase) > Migration ordering."
+              echo "::error file=$f::Migration '$stem' is not yet applied to production Supabase. Apply it with mcp__supabase__apply_migration (one named migration at a time), or run its statements directly — do NOT use 'supabase db push --linked', which CLAUDE.md bans because prod has migration drift and that command applies EVERY local migration missing from prod's history. If this migration drops something the currently-deployed code still uses, this gate is EXPECTED to be red until the deploy lands; the gate is advisory. See CLAUDE.md > Database (Supabase)."
               missing=1
             fi
           done <<< "${{ steps.diff.outputs.new_files }}"
