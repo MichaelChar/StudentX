@@ -1,0 +1,43 @@
+# gitleaks config for StudentX — see .github/workflows/secret-scan.yml
+#
+# Extends the upstream ruleset rather than replacing it. Without `useDefault`,
+# declaring this file would DISABLE every built-in rule, leaving a scanner
+# that finds nothing and reports success. Silent, and the worst failure mode
+# a security backstop can have.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "The two credentials that are public by construction and intentionally committed."
+
+# THIS ALLOWLIST MATCHES EXACT VALUES, NOT PATHS. That is the whole design,
+# and it was arrived at by testing rather than by reasoning.
+#
+# The obvious version of this file — and the one issue #251 suggests —
+# allowlists the PATH `.env.production`. That version was written, run, and
+# it FAILED THE ONLY TEST THAT MATTERS: a service-role JWT planted in
+# `.env.production` passed the scan completely clean.
+#
+# The reason is that Supabase's anon and service_role keys share a
+# byte-identical prefix — same header, same `"iss":"supabase"` — and differ
+# only in the base64'd `role` claim further along. An allowlisted path waves
+# through everything in the file regardless of which one it is.
+#
+# So a path allowlist would have shipped a scanner that ignores the exact
+# file #251 was filed about. Pinning the exact values instead means ANY other
+# secret in that file — a service-role key above all — still fails the scan.
+#
+# Cost of this approach: rotating either key requires updating this file, and
+# the scan fails loudly until someone does. That is the right trade for a
+# backstop — a key rotation should be a conscious event, not a silent one.
+#
+# Why these two are safe to commit at all: both ship in the client bundle
+# whatever we do, so secrecy protects neither.
+#   - the Supabase anon key is a JWT with "role":"anon", protected by RLS
+#   - the CARTO key is protected by a domain restriction to studentx.uk
+regexes = [
+  # NEXT_PUBLIC_SUPABASE_ANON_KEY
+  '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9\.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVjbHVxdXJsZmJ2a3hybm95aGFxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3ODQ0MzUsImV4cCI6MjA5MDM2MDQzNX0\.XspsrkDjv_AWltPgFqBQSocLXU4tBmq1auu_Zg8qTBE''',
+  # NEXT_PUBLIC_CARTO_KEY
+  '''cb1_2ypu_1_adbddc7f0fc4aa172f9d85ad''',
+]
