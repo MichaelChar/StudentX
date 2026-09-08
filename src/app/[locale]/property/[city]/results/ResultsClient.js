@@ -927,10 +927,10 @@ function ResultsContent({ initialData, initialQuery }) {
               {!loading && error && (
                 <div className="text-center py-20">
                   <p className="font-display text-2xl text-night mb-3">
-                    Something went wrong.
+                    {t('error')}
                   </p>
                   <Button onClick={fetchListings} variant="gold">
-                    Try again
+                    {t('tryAgain')}
                   </Button>
                 </div>
               )}

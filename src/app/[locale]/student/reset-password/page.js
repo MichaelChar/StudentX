@@ -72,7 +72,7 @@ export default function StudentResetPasswordPage() {
       }
       setDone(true);
     } catch (err) {
-      setError(err.message || t('genericError') || 'Something went wrong.');
+      setError(err.message || t('genericError'));
     } finally {
       setLoading(false);
     }
