@@ -5,6 +5,8 @@ import {
   fetchListingHtml,
   extractListingFields,
   buildPendingListing,
+  isFetchableUrl,
+  isDisallowedHost,
 } from '@/lib/pendingIngest';
 
 const LONG_BODY = '<p>Sunny studio in Ano Poli near AUTH campus. </p>'.repeat(120); // > 2KB
@@ -15,10 +17,23 @@ function fakeImageResponse() {
 
 // One mock standing in for fetch(): image URLs return bytes, everything else
 // returns the given html with the given status.
+//
+// It serves BYTES via arrayBuffer(), not only text(), because fetchListingHtml
+// reads bytes so it can cap the response size before decoding (#248). A mock
+// offering only text() sends the production code down its read_failed branch —
+// which is exactly how four of these tests caught the change. `headers.get` is
+// present because the redirect loop asks for `location`.
 function makeFetch({ html = LONG_BODY, status = 200 } = {}) {
   return vi.fn(async (u) => {
     if (/\.(jpe?g|png|webp)/i.test(u) || u.includes('/photo')) return fakeImageResponse();
-    return { ok: status < 400, status, url: u, text: async () => html };
+    return {
+      ok: status < 400,
+      status,
+      url: u,
+      headers: { get: () => null },
+      text: async () => html,
+      arrayBuffer: async () => new TextEncoder().encode(html).buffer,
+    };
   });
 }
 
@@ -152,5 +167,96 @@ describe('buildPendingListing', () => {
       fetchImpl: makeFetch(),
     });
     expect(row.status).toBe('error');
+  });
+});
+
+/*
+  SSRF guard (#248). The original issue targeted the spiti.gr/xe.gr importer,
+  deleted in #367 — but the surface moved here, and widened: this pipeline is
+  site-agnostic, so there is no allowlist to fall back on, and the photo URLs
+  come from the SCRAPED PAGE rather than from the admin.
+*/
+describe('isDisallowedHost / isFetchableUrl — SSRF guard', () => {
+  it('blocks the cloud metadata endpoint', () => {
+    // The single most valuable SSRF target on any cloud host.
+    expect(isDisallowedHost('169.254.169.254')).toBe(true);
+    expect(isFetchableUrl('http://169.254.169.254/latest/meta-data/')).toBe(false);
+  });
+
+  it('blocks loopback and localhost', () => {
+    expect(isDisallowedHost('127.0.0.1')).toBe(true);
+    expect(isDisallowedHost('localhost')).toBe(true);
+    expect(isDisallowedHost('api.localhost')).toBe(true);
+    expect(isDisallowedHost('[::1]')).toBe(true);
+  });
+
+  it('blocks every RFC1918 private range', () => {
+    expect(isDisallowedHost('10.0.0.1')).toBe(true);
+    expect(isDisallowedHost('172.16.0.1')).toBe(true);
+    expect(isDisallowedHost('172.31.255.254')).toBe(true);
+    expect(isDisallowedHost('192.168.1.1')).toBe(true);
+  });
+
+  it('does NOT block 172.15 / 172.32, which are public', () => {
+    // The 172 private block is 16-31 only; over-blocking would break real sites.
+    expect(isDisallowedHost('172.15.0.1')).toBe(false);
+    expect(isDisallowedHost('172.32.0.1')).toBe(false);
+  });
+
+  it('allows ordinary public hosts', () => {
+    expect(isFetchableUrl('https://www.spiti.gr/listing/1')).toBe(true);
+    expect(isFetchableUrl('http://xe.gr/x')).toBe(true);
+  });
+
+  it('rejects non-http schemes and unparseable input', () => {
+    expect(isFetchableUrl('file:///etc/passwd')).toBe(false);
+    expect(isFetchableUrl('ftp://example.com/x')).toBe(false);
+    expect(isFetchableUrl('not a url')).toBe(false);
+    expect(isFetchableUrl('')).toBe(false);
+  });
+});
+
+describe('fetchListingHtml — SSRF and size limits', () => {
+  it('refuses a private host before making any request', async () => {
+    const spy = vi.fn();
+    const r = await fetchListingHtml('http://169.254.169.254/latest/', spy);
+    expect(r).toEqual({ ok: false, reason: 'blocked_host' });
+    expect(spy).not.toHaveBeenCalled(); // never dialled
+  });
+
+  it('refuses a redirect that leaves public space', async () => {
+    // The classic bypass: a public URL 302s to the metadata endpoint.
+    const impl = vi.fn(async () => ({
+      ok: false,
+      status: 302,
+      url: 'https://x.gr/1',
+      headers: { get: (k) => (k === 'location' ? 'http://169.254.169.254/' : null) },
+    }));
+    const r = await fetchListingHtml('https://x.gr/1', impl);
+    expect(r).toEqual({ ok: false, reason: 'blocked_redirect' });
+  });
+
+  it('stops after too many hops', async () => {
+    const impl = vi.fn(async () => ({
+      ok: false,
+      status: 302,
+      url: 'https://x.gr/a',
+      headers: { get: (k) => (k === 'location' ? 'https://x.gr/next' : null) },
+    }));
+    const r = await fetchListingHtml('https://x.gr/a', impl);
+    expect(r).toEqual({ ok: false, reason: 'too_many_redirects' });
+  });
+
+  it('rejects a body over the size cap', async () => {
+    const huge = new ArrayBuffer(3 * 1024 * 1024); // > 2 MB
+    const impl = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      url: 'https://x.gr/1',
+      headers: { get: () => null },
+      arrayBuffer: async () => huge,
+    }));
+    const r = await fetchListingHtml('https://x.gr/1', impl);
+    expect(r).toEqual({ ok: false, reason: 'too_large', status: 200 });
   });
 });

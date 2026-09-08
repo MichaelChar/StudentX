@@ -74,22 +74,110 @@ export function isBlockedResponse(status, body) {
   return markers.some((m) => lower.includes(m));
 }
 
+/*
+  SSRF guard (#248).
+
+  The original issue was written against `src/lib/importers/index.js`, the
+  spiti.gr/xe.gr URL importer, which was deleted in #367. The surface did not
+  go away with it — it moved here, and in one respect got wider: that importer
+  had a two-host allowlist, and this pipeline is deliberately SITE-AGNOSTIC, so
+  an allowlist is not available as a mitigation.
+
+  Two call paths fetch remote URLs, and the second is the one that matters:
+
+    fetchListingHtml       an admin pastes the URL
+    downloadPhotosToBucket the URLs come from the SCRAPED PAGE, chosen by an
+                           LLM reading attacker-controlled HTML
+
+  So a hostile listing page can hand us `<img src="http://169.254.169.254/...">`
+  and the Worker would fetch it. Admin-gating the routes does not help, because
+  the admin never sees or approves these URLs.
+
+  What this blocks: loopback, private RFC1918, link-local (which includes the
+  169.254.169.254 cloud metadata endpoint), and anything not http(s). What it
+  deliberately does NOT do is resolve DNS — a hostname pointing at a private
+  address still passes. Blocking that properly needs resolution before connect,
+  which the Workers runtime does not expose. This raises the bar from "trivial"
+  to "needs a DNS record you control"; it is not a complete defence and should
+  not be described as one.
+*/
+export function isDisallowedHost(hostname) {
+  const h = String(hostname || '').toLowerCase();
+  if (!h) return true;
+  if (h === 'localhost' || h.endsWith('.localhost')) return true;
+
+  const v4 = h.match(/^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/);
+  if (v4) {
+    const a = Number(v4[1]);
+    const b = Number(v4[2]);
+    if (a === 0 || a === 127 || a === 10) return true;
+    if (a === 169 && b === 254) return true; // link-local + cloud metadata
+    if (a === 172 && b >= 16 && b <= 31) return true;
+    if (a === 192 && b === 168) return true;
+  }
+
+  // IPv6 literals arrive bracketed from URL.hostname
+  if (h === '[::1]' || h === '::1') return true;
+  if (h.startsWith('[fc') || h.startsWith('[fd') || h.startsWith('[fe80')) return true;
+  if (h.startsWith('fc') || h.startsWith('fd') || h.startsWith('fe80')) return true;
+  return false;
+}
+
+/** http(s) only, and not pointed at a private/loopback/link-local host. */
+export function isFetchableUrl(raw) {
+  let u;
+  try {
+    u = new URL(String(raw));
+  } catch {
+    return false;
+  }
+  if (u.protocol !== 'http:' && u.protocol !== 'https:') return false;
+  return !isDisallowedHost(u.hostname);
+}
+
+const MAX_HTML_BYTES = 2 * 1024 * 1024; // 2 MB — a listing page is far smaller
+const MAX_PHOTO_BYTES = 8 * 1024 * 1024; // 8 MB — a generous single photo
+const MAX_REDIRECTS = 2;
+
 // Fetch with browser headers + a hard timeout. Never throws — failures resolve to
 // { ok: false, reason }, so the caller can mark needs_manual_entry and move on.
 export async function fetchListingHtml(url, fetchImpl = fetch) {
+  if (!isFetchableUrl(url)) return { ok: false, reason: 'blocked_host' };
+
   let res;
+  let current = String(url);
   try {
-    res = await fetchImpl(url, {
-      headers: BROWSER_HEADERS,
-      redirect: 'follow',
-      signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
-    });
+    /*
+      `redirect: 'manual'` so each hop is re-checked. Following automatically
+      would let a public URL redirect to a private one — the classic bypass of
+      a front-door host check.
+    */
+    for (let hop = 0; ; hop += 1) {
+      res = await fetchImpl(current, {
+        headers: BROWSER_HEADERS,
+        redirect: 'manual',
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      });
+      if (res.status < 300 || res.status >= 400) break;
+      const loc = res.headers.get?.('location');
+      if (!loc) break;
+      if (hop >= MAX_REDIRECTS) return { ok: false, reason: 'too_many_redirects' };
+      current = new URL(loc, current).toString();
+      if (!isFetchableUrl(current)) return { ok: false, reason: 'blocked_redirect' };
+    }
   } catch {
     return { ok: false, reason: 'fetch_failed' };
   }
+
   let body = '';
   try {
-    body = await res.text();
+    // Bounded read: a hostile or merely enormous page must not exhaust the
+    // Worker's memory. arrayBuffer() so the cap is in BYTES, before decoding.
+    const buf = await res.arrayBuffer();
+    if (buf.byteLength > MAX_HTML_BYTES) {
+      return { ok: false, reason: 'too_large', status: res.status };
+    }
+    body = new TextDecoder('utf-8').decode(buf);
   } catch {
     return { ok: false, reason: 'read_failed', status: res.status };
   }
@@ -144,12 +232,21 @@ export async function downloadPhotosToBucket({ supabase, listingId, photoUrls, f
   for (let i = 0; i < photoUrls.length && out.length < max; i++) {
     const src = photoUrls[i];
     try {
-      const r = await fetchImpl(src, { headers: BROWSER_HEADERS, signal: AbortSignal.timeout(FETCH_TIMEOUT_MS) });
+      // These URLs came out of the scraped page, not from the admin — see the
+      // SSRF note above. Skip rather than fail: one bad photo must not sink
+      // the whole ingest.
+      if (!isFetchableUrl(src)) continue;
+      const r = await fetchImpl(src, {
+        headers: BROWSER_HEADERS,
+        redirect: 'manual',
+        signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
+      });
       if (!r.ok) continue;
       const ct = r.headers.get('content-type') || '';
       if (ct && !ct.startsWith('image/')) continue;
       const buf = await r.arrayBuffer();
       if (!buf || buf.byteLength === 0) continue;
+      if (buf.byteLength > MAX_PHOTO_BYTES) continue;
       const ext = photoExtFromUrl(src);
       const path = `pending/${listingId}/photo-${out.length}.${ext}`;
       const { error } = await supabase.storage
