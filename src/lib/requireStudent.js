@@ -59,16 +59,66 @@ export const requireStudent = cache(async function requireStudent() {
 
   if (error || !student) {
     // Wrong-role: probe the landlords table so the redirect can carry
-    // the conflict context. One extra round-trip only on the unhappy
-    // path; the cache wrapper still amortises across layout + page.
-    const { data: landlord } = await supabase
+    // the conflict context. Extra round-trips only on the unhappy path;
+    // the cache wrapper still amortises across layout + page.
+    const { data: linked } = await supabase
       .from('landlords')
-      .select('email')
+      .select('email, auth_user_id')
       .eq('auth_user_id', user.id)
       .maybeSingle();
+
+    let landlord = linked;
+
+    // ORPHAN LANDLORDS — issue #148. A landlords row can exist with
+    // auth_user_id = NULL: curated or seeded rows waiting to be claimed.
+    // The probe above cannot see them, so conflict_role came back null,
+    // the redirect carried no ?roleConflict, and the login page rendered
+    // a bare form — a bounce loop with nothing on screen explaining it.
+    //
+    // Reached today by signing up as a LANDLORD (so no students row is
+    // created) while an unclaimed landlords row holds that email, then
+    // visiting any student-guarded page before completing the landlord
+    // profile that links the two.
+    //
+    // `ilike` with no wildcards is case-insensitive equality, matching
+    // how prevent_dual_role compares with lower() on both sides.
+    //
+    // Two queries rather than one `.or()`: PostgREST's or-filter is a
+    // comma-separated mini-language, so an email would have to be
+    // escaped into it. Two indexed lookups on a path that already
+    // failed beat getting that escaping subtly wrong.
+    let isOrphan = false;
+    if (!landlord && user.email) {
+      const { data: orphan } = await supabase
+        .from('landlords')
+        .select('email, auth_user_id')
+        .is('auth_user_id', null)
+        .ilike('email', user.email)
+        .maybeSingle();
+      if (orphan) {
+        landlord = orphan;
+        // Derived from WHICH query matched, not from inspecting
+        // landlord.auth_user_id. The query above already filters
+        // `.is('auth_user_id', null)`, so anything it returns is an
+        // orphan by construction — whereas testing the field would
+        // misread a row whose auth_user_id merely wasn't selected as an
+        // orphan, and route a linked landlord to signup instead of
+        // login. A caller's SELECT list should not be able to change
+        // which page a user lands on.
+        isOrphan = true;
+      }
+    }
+
     return {
       kind: 'wrong-role',
-      conflict_role: landlord ? 'landlord' : null,
+      // 'landlord-orphan' is a distinct VALUE rather than a separate
+      // flag so the eight redirect call sites keep forwarding
+      // conflict_role untouched and only the login page learns the new
+      // case. The distinction matters: an orphan landlord has no
+      // auth.users linkage, so "switch to landlord login" would
+      // dead-end at a password form that can never succeed. They need
+      // signup, which runs the link_orphan_landlord flow.
+      conflict_role: landlord ? (isOrphan ? 'landlord-orphan' : 'landlord') : null,
       email: landlord?.email ?? user.email ?? null,
     };
   }
@@ -104,6 +154,15 @@ export const requireLandlord = cache(async function requireLandlord() {
     .maybeSingle();
 
   if (error || !landlord) {
+    // NOTE: no email fallback here, and that asymmetry is deliberate.
+    // Issue #148 asked for the orphan probe to be mirrored on this side,
+    // but `students.auth_user_id` is NOT NULL, so an orphan student row
+    // cannot exist — this auth_user_id lookup is already complete.
+    // (`landlords.auth_user_id` IS nullable, which is why the student
+    // side above needs the extra query.) A symmetric change here would
+    // also be blocked by RLS: `students` is SELECT-restricted to
+    // auth_user_id = auth.uid(), so a lookup by email returns nothing
+    // regardless. Don't "fix" this to match.
     const { data: student } = await supabase
       .from('students')
       .select('email')
