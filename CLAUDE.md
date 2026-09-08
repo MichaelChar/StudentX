@@ -281,9 +281,13 @@ re-PUT the live schedules via the CF API or `wrangler deploy`, then verify
 drift — the procedure (including the drift-check `curl`) is in
 `docs/runbooks/cron-schedule-sync.md`.
 
-**All cron routes auth via `CRON_SECRET`** — accepted via either the
-`x-cron-secret` header OR `?secret=` query param. `CRON_SECRET` is a Worker
-secret, set with `wrangler secret put CRON_SECRET --name studentx`.
+**All cron routes auth via `CRON_SECRET`, header only** — `x-cron-secret`.
+The `?secret=` query-param branch was removed in #245: a secret in a URL
+reaches logs, proxies and error reports. `cf/worker-entry.mjs` already sends
+the header, and its CRON_ROUTES entry carries `query: null`, so nothing
+depended on it. `CRON_SECRET` is a Worker secret, set with
+`wrangler secret put CRON_SECRET --name studentx`. A missing secret fails
+CLOSED.
 
 Cloudflare trigger (`wrangler.jsonc` / `CRON_ROUTES` / live schedules):
 
