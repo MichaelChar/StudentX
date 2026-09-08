@@ -44,6 +44,22 @@ export function hasBookingAuth() {
   return hasStudentAuth() && hasLandlordAuth();
 }
 
+/**
+ * Real curated listings that must never be mutated or deleted by e2e.
+ *
+ * These are the ids actually live in prod (verified against the database,
+ * 2026-08-25). The previous list — 0100001–0100004 — matched NO row in
+ * `listings`, so this guard protected nothing while reading as though it did.
+ *
+ * A prefix guard on the landlord id is deliberately NOT used, tempting as it
+ * looks: every live listing belongs to landlord 0106, which is also the only
+ * landlord the e2e credentials can sign in as, so the suite's own fixtures are
+ * created under 0106 too. Blocking the prefix would block the fixtures' own
+ * cleanup and leak a listing per run.
+ *
+ * That is why this list is NOT the real protection — FIXTURE_TITLE_PREFIX is
+ * (see below). This list stays as a cheap, explicit second opinion.
+ */
 export const PROTECTED_LISTING_IDS = Object.freeze([
   '0106001',
   '0106002',
