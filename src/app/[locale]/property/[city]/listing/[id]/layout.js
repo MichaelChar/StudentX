@@ -63,6 +63,15 @@ export async function generateMetadata({ params }) {
   return {
     title,
     description,
+    /*
+      A paused listing keeps its title, description and canonical, so it
+      would otherwise stay indexable while unbookable (#205). Say noindex
+      explicitly for as long as it is hidden; `follow: true` so the links
+      out of the page still carry weight. Resuming drops the directive
+      again, which is exactly why soft-hide beats 404 here — the URL never
+      leaves the index badly, it just stops ranking while paused.
+    */
+    ...(listing.paused ? { robots: { index: false, follow: true } } : {}),
     alternates: {
       canonical: url,
     },
