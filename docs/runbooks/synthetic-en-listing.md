@@ -133,7 +133,7 @@ curl -X POST -H "x-cron-secret: $CRON_SECRET" \
 
 Production (manual run, doesn't wait for the next 15-min tick):
 - Cloudflare dashboard → Workers → `studentx` → Triggers → "Trigger Cron" on `*/15 * * * *`, OR
-- `curl -X POST -H "x-cron-secret: <secret>" https://studentx.studentx-gr.workers.dev/api/cron/synthetic-en-listing`
+- `curl -X POST -H "x-cron-secret: <secret>" https://studentx.uk/api/cron/synthetic-en-listing`
 
 ## Domain context
 

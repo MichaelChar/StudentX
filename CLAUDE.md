@@ -44,8 +44,9 @@ Around that core sit the monetizing / retention surfaces:
   CARTO needs an API key — see Maps below.
 - **CSS:** Tailwind v4 (`tailwindcss@^4` + `@tailwindcss/postcss`).
 - **Hosting:** Cloudflare Workers via OpenNext (`@opennextjs/cloudflare@^1.20`),
-  `wrangler@^4`. Live on `https://studentx.uk`; the Workers URL
-  `https://studentx.studentx-gr.workers.dev` still resolves.
+  `wrangler@^4`. Live on `https://studentx.uk` **only** — `workers_dev` is
+  `false` since #515, so `studentx.studentx-gr.workers.dev` no longer serves
+  the app. Manual cron curls and any other tooling must target `studentx.uk`.
 - **Lint:** `eslint@^9` + `eslint-config-next`.
 
 > `package.json` is authoritative for exact versions — check it, don't
