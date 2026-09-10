@@ -5,6 +5,7 @@ import {
   evaluateAuthedCacheHeader,
   skipIfInconclusiveError,
   resolveSyntheticListingId,
+  evaluateVaryCookie,
 } from '@/app/api/cron/synthetic-en-listing/route';
 
 // Cache-header regression guards. Pre-PR #105 the canary asserted
@@ -238,5 +239,66 @@ describe('resolveSyntheticListingId', () => {
       },
     });
     expect(result).toEqual({ listingId: '0106002', reason: null });
+  });
+});
+
+/*
+  Issue #67 — the Vary: Cookie assertion.
+
+  evaluateAnonCacheHeader and evaluateAuthedCacheHeader prove the ORIGIN
+  stamps the right Cache-Control per caller. Neither can prove the CDN keeps
+  the two apart — and that is the half that leaks. Without Vary: Cookie,
+  Cloudflare may hand the anon-cached body to a request carrying an
+  sb-access-token; the origin is never consulted, so the authed check keeps
+  passing while the leak happens.
+*/
+describe('evaluateVaryCookie (#67)', () => {
+  it('passes on an exact Vary: Cookie', () => {
+    expect(evaluateVaryCookie({ status: 200, vary: 'Cookie' })).toEqual({ ok: true });
+  });
+
+  it('passes when Cookie sits in a list', () => {
+    expect(evaluateVaryCookie({ status: 200, vary: 'Accept-Encoding, Cookie' })).toEqual({
+      ok: true,
+    });
+    expect(evaluateVaryCookie({ status: 200, vary: 'Cookie, Accept-Encoding' })).toEqual({
+      ok: true,
+    });
+  });
+
+  it('is case-insensitive', () => {
+    expect(evaluateVaryCookie({ status: 200, vary: 'accept-encoding, cookie' })).toEqual({
+      ok: true,
+    });
+  });
+
+  it('FAILS when Vary is absent — the actual regression', () => {
+    const r = evaluateVaryCookie({ status: 200, vary: '' });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/Vary: Cookie/);
+    expect(r.reason).toMatch(/\(none\)/);
+  });
+
+  it('FAILS when Vary lists other headers but not Cookie', () => {
+    expect(evaluateVaryCookie({ status: 200, vary: 'Accept-Encoding' }).ok).toBe(false);
+  });
+
+  it('does not match a header that merely contains the word cookie', () => {
+    // `Vary: Set-Cookie` is not `Vary: Cookie` — it varies on a RESPONSE
+    // header name and does nothing to separate anon from authed requests.
+    // A naive includes('cookie') would pass this and report a split that
+    // does not exist.
+    expect(evaluateVaryCookie({ status: 200, vary: 'Set-Cookie' }).ok).toBe(false);
+  });
+
+  it('stays quiet on a non-200, like its sibling evaluators', () => {
+    // A 522 error page carries Cloudflare's own headers, which say nothing
+    // about our middleware. evaluateBody already flags the status.
+    expect(evaluateVaryCookie({ status: 522, vary: '' })).toEqual({ ok: true });
+  });
+
+  it('labels which fetch failed', () => {
+    const r = evaluateVaryCookie({ status: 200, vary: '' }, 'authed listing detail');
+    expect(r.reason).toMatch(/^authed listing detail/);
   });
 });

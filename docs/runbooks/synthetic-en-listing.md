@@ -31,8 +31,16 @@ Forbidden (must NOT be present):
 **Cache headers (anon fetch — `en-listing-anon-cache`):**
 - Response **must** include `public, s-maxage=` — middleware (PR #105 / issue #67) sets this for visitors without an `sb-access-token` cookie so Cloudflare's edge can cache the AuthGate body across anon viewers. If the header drops back to `private` we silently lose the perf win.
 
+**Vary header (anon fetch — `en-listing-vary-cookie`):**
+- The anon response **must** include `Vary: Cookie`.
+
+  This is the assertion that makes the two Cache-Control checks mean anything. Those prove the *origin* stamps the right header for each caller; neither can prove the **CDN keeps the two apart**, and that is the half that leaks. Without `Vary: Cookie`, Cloudflare may serve the anon-cached body to a request carrying an `sb-access-token` — the origin is never consulted, so `en-listing-authed-cache` keeps passing while a signed-in user is handed a cached anon body (and an authed body could be stored under a key an anon visitor later matches).
+
+  Matched with a word-boundary regex, not a substring test: `Vary: Set-Cookie` contains "cookie" but varies on a *response* header name and does nothing to separate anon from authed requests. A naive `includes('cookie')` would report a split that does not exist.
+
 **Cache headers (authed fetch — `en-listing-authed-cache`):**
 - A second fetch goes out with `Cookie: sb-access-token=synthetic-canary-stub`. The middleware checks cookie *presence* only (not validity), so any non-empty value trips the authed branch. The response **must NOT** include `public, s-maxage=`. If it does, the gated body is CDN-cacheable across users — the original session-leak shape that issue #67 was filed for.
+- The same response must **also** still carry `Vary: Cookie`. Both conditions report under this one check name rather than two, so a single middleware regression raises one alert instead of double-flagging.
 
 Any failed assertion (or non-200, or fetch timeout) attempts to send an email via Resend to `SYNTHETIC_ALERT_EMAIL`.
 

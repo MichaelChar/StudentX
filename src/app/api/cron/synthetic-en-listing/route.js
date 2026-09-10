@@ -117,6 +117,7 @@ async function fetchListingHtml(url, { cookie } = {}) {
     status: res.status,
     body,
     cacheControl: res.headers.get('cache-control') || '',
+    vary: res.headers.get('vary') || '',
     cfCacheStatus: res.headers.get('cf-cache-status') || '',
   };
 }
@@ -183,6 +184,43 @@ export function evaluateAuthedCacheHeader({ status, cacheControl }) {
     return {
       ok: false,
       reason: `authed listing detail returned public, s-maxage=... — session-leak risk: ${cacheControl}`,
+    };
+  }
+  return { ok: true };
+}
+
+/*
+  `Vary: Cookie` — the assertion that makes the other two mean something.
+
+  evaluateAnonCacheHeader and evaluateAuthedCacheHeader prove the ORIGIN
+  stamps the right Cache-Control for each caller. They cannot prove the CDN
+  keeps the two apart, and that is the half that actually leaks.
+
+  Without Vary: Cookie, Cloudflare may serve the anon-cached copy to a
+  request that HAS an sb-access-token — the origin is never consulted, so
+  the authed check keeps passing while a cached anon body is handed to a
+  signed-in user (and, worse, an authed body could be stored under a key an
+  anon visitor later matches). The failure is invisible to every check that
+  only inspects origin responses.
+
+  Asserted on both fetches: the header has to be present on the anon
+  response (that is the one that gets STORED) and on the authed response
+  (so a future change cannot drop it on the branch that must never be
+  cached). Issue #67.
+*/
+const VARY_COOKIE_RE = /(^|,)\s*cookie\s*(,|$)/i;
+
+export function evaluateVaryCookie({ status, vary }, label = 'listing detail') {
+  if (status != null && status !== 200) {
+    return { ok: true };
+  }
+  if (!VARY_COOKIE_RE.test(vary || '')) {
+    return {
+      ok: false,
+      reason:
+        `${label} must send \`Vary: Cookie\` (issue #67) — without it the CDN can ` +
+        `serve an anon-cached body to a signed-in request, which no ` +
+        `origin-header check can detect. Got: ${vary || '(none)'}`,
     };
   }
   return { ok: true };
@@ -676,6 +714,7 @@ export async function runSyntheticEnListing() {
   if (skipListingChecks) {
     record('en-listing-locale', listingSkip);
     record('en-listing-anon-cache', listingSkip);
+    record('en-listing-vary-cookie', listingSkip);
     record('en-listing-authed-cache', listingSkip);
   } else {
     try {
@@ -685,6 +724,10 @@ export async function runSyntheticEnListing() {
         'en-listing-anon-cache',
         evaluateAnonCacheHeader({ status: fetched.status, cacheControl: fetched.cacheControl }),
       );
+      record(
+        'en-listing-vary-cookie',
+        evaluateVaryCookie({ status: fetched.status, vary: fetched.vary }, 'anon listing detail'),
+      );
       if (fetched.status !== 200 || !checks.find((c) => c.name === 'en-listing-locale')?.ok) {
         enListingExcerpt = (fetched.body || '').slice(0, 500);
       }
@@ -692,6 +735,7 @@ export async function runSyntheticEnListing() {
       const reason = `fetch threw: ${err.name || 'Error'} ${err.message || ''}`.trim();
       record('en-listing-locale', { ok: false, reason });
       record('en-listing-anon-cache', { ok: false, reason });
+      record('en-listing-vary-cookie', { ok: false, reason });
     }
 
     // --- Same URL, with synthetic auth cookie: authed cache header ----------
@@ -700,10 +744,18 @@ export async function runSyntheticEnListing() {
     // branch, so we can verify the per-request split without a real JWT.)
     try {
       const fetched = await fetchListingHtml(enListingUrl, { cookie: SYNTHETIC_AUTH_COOKIE });
-      record(
-        'en-listing-authed-cache',
-        evaluateAuthedCacheHeader({ status: fetched.status, cacheControl: fetched.cacheControl }),
+      const authedVary = evaluateVaryCookie(
+        { status: fetched.status, vary: fetched.vary },
+        'authed listing detail',
       );
+      const authedCache = evaluateAuthedCacheHeader({
+        status: fetched.status,
+        cacheControl: fetched.cacheControl,
+      });
+      // One check, both conditions: the authed response must be
+      // non-public AND still carry Vary: Cookie. Reporting them
+      // separately would double-alert on a single middleware regression.
+      record('en-listing-authed-cache', authedCache.ok ? authedVary : authedCache);
     } catch (err) {
       const reason = `fetch threw: ${err.name || 'Error'} ${err.message || ''}`.trim();
       record('en-listing-authed-cache', { ok: false, reason });
