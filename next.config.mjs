@@ -182,6 +182,30 @@ const nextConfig = {
         source: '/student/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
+      /*
+        /claim/:token — token-scoped, NEVER cacheable (#130).
+
+        This route renders a specific landlord's pending profile and their
+        listings, server-loaded via the SERVICE CLIENT because RLS denies
+        anon. It was falling through to the public catch-all below and
+        serving `public, s-maxage=300` — verified on prod.
+
+        That was latent only because Cloudflare does not cache HTML without
+        a Cache Rule. #130 exists to add exactly such a rule, which would
+        have turned a dormant misconfiguration into a live one: a
+        per-landlord page sitting in a shared CDN cache. Fixing the header
+        is the durable half; excluding /claim in the rule expression is the
+        belt-and-braces half.
+
+        The cache key would include the token, so this is not one landlord
+        seeing another's page — it is a claim page outliving its own
+        invalidation, which is bad enough for a link that grants account
+        access.
+      */
+      {
+        source: '/claim/:path*',
+        headers: PRIVATE_CACHE_HEADERS,
+      },
       // (#261 reverted) An experiment to mark the login/signup shells
       // `public, s-maxage=300` was merged then reverted: custom-domain Worker
       // responses bypass Cloudflare's CDN cache, so the header changed nothing
@@ -209,7 +233,7 @@ const nextConfig = {
       // those paths now 301 to their unprefixed equivalent.
       {
         source:
-          '/((?!api|_next|property/[^/]+/landlord|property/[^/]+/listing|student|.*\\..*).*)',
+          '/((?!api|_next|property/[^/]+/landlord|property/[^/]+/listing|student|claim|.*\\..*).*)',
         headers: PUBLIC_CACHE_HEADERS,
       },
     ];
