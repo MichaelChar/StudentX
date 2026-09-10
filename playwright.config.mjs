@@ -33,6 +33,10 @@ export default defineConfig({
   workers: 1,
   timeout: 90_000,
   expect: { timeout: 15_000 },
+  // Sweeps leftover `E2E ` fixture listings even when a test crashes. Since
+  // fixtures are now published (they must be, or they cannot be booked), a
+  // leaked one is a listing on the PUBLIC site — see the file's header.
+  globalTeardown: path.join(__dirname, 'e2e/helpers/globalTeardown.mjs'),
   reporter: [
     ['list'],
     // Prints what actually executed vs. what was skipped, so a fully
