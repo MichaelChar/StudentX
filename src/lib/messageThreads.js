@@ -19,8 +19,28 @@
   message removes the round-trip that costs the booking.
 */
 
-/** Filter pills above the list. `all` is the default. */
-export const THREAD_FILTERS = ['all', 'unread'];
+/*
+  Filter pills above the list. `all` is the default.
+
+  These ARE the inquiry-status ladder (issue #206), not a separate vocabulary:
+  'unread' selects status 'pending', which the row pill labels "New". #206 asks
+  for an Unread chip AND a New/Replied/Closed status filter, but those are the
+  same predicate — isUnread(inquiry) is `status === 'pending'` — so shipping
+  both would be two controls for one set, disagreeing about what to call it.
+  One ladder, and the chip reuses the pill's own label so they cannot drift.
+
+  The value stays 'unread' rather than becoming 'pending' so existing callers
+  and tests keep working; only the label is the ladder's.
+*/
+export const THREAD_FILTERS = ['all', 'unread', 'replied', 'closed'];
+
+/**
+ * The inquiry status each filter selects. `all` matches everything.
+ * Anything not pending/replied is "closed" — matching inquiryStatusVariant,
+ * which falls through to the `amenity` (closed) pill for unknown values, so a
+ * status nobody has seen yet lands in one bucket rather than vanishing.
+ */
+const FILTER_STATUS = { unread: 'pending', replied: 'replied' };
 
 /**
  * An inquiry the landlord has not yet answered.
@@ -50,12 +70,26 @@ export function isUnread(inquiry) {
  * @param {{ filter?: string, query?: string }} [opts]
  * @returns {Array}
  */
-export function filterThreads(inquiries, { filter = 'all', query = '' } = {}) {
+export function filterThreads(
+  inquiries,
+  { filter = 'all', query = '', listingId = null } = {},
+) {
   const rows = Array.isArray(inquiries) ? inquiries : [];
   const q = String(query || '').trim().toLowerCase();
 
   return rows.filter((row) => {
-    if (filter === 'unread' && !isUnread(row)) return false;
+    if (filter !== 'all') {
+      const wanted = FILTER_STATUS[filter];
+      if (wanted) {
+        if (row?.status !== wanted) return false;
+      } else if (filter === 'closed') {
+        // Everything that is neither awaiting a reply nor replied to.
+        if (row?.status === 'pending' || row?.status === 'replied') return false;
+      }
+    }
+    // Listing filter (#206). Compared as strings because listing ids are
+    // zero-padded text ('0106002') and a loose compare would collapse them.
+    if (listingId && String(row?.listing_id ?? '') !== String(listingId)) return false;
     if (!q) return true;
     const haystack = [
       row?.student_name,
@@ -115,4 +149,31 @@ export function threadPhoto(inquiry) {
   const photos = inquiry?.listings?.photos;
   if (!Array.isArray(photos)) return null;
   return photos.find((url) => typeof url === 'string' && url.startsWith('http')) ?? null;
+}
+
+/**
+ * The listings represented in the thread list, for the "by listing" filter
+ * (#206) — id plus the label a landlord recognises.
+ *
+ * Derived from the inquiries rather than fetched from /api/landlord/listings
+ * on purpose: the filter should only offer listings that HAVE threads.
+ * Offering all of them means most choices return an empty list, which reads
+ * as a broken filter rather than an empty listing.
+ *
+ * Sorted by label so the order is stable between renders; deduplicated by id.
+ *
+ * @param {Array|null} inquiries
+ * @returns {Array<{ listing_id: string, label: string }>}
+ */
+export function threadListings(inquiries) {
+  const rows = Array.isArray(inquiries) ? inquiries : [];
+  const byId = new Map();
+  for (const row of rows) {
+    const id = row?.listing_id;
+    if (!id || byId.has(id)) continue;
+    const label =
+      row?.listings?.location?.address || row?.listings?.title || String(id);
+    byId.set(id, { listing_id: String(id), label: String(label) });
+  }
+  return [...byId.values()].sort((a, b) => a.label.localeCompare(b.label));
 }

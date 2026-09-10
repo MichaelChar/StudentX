@@ -436,7 +436,9 @@
       "reservationNone": "No booking is tied to this conversation yet.",
       "closePanel": "Close reservation panel",
       "openPanel": "Show reservation panel",
-      "threadListLabel": "Conversations"
+      "threadListLabel": "Conversations",
+      "filterListingLabel": "Filter by listing",
+      "filterListingAll": "All listings"
     },
     "listingWizard": {
       "eyebrow": "Listings",

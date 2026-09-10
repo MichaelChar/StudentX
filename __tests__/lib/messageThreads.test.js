@@ -5,6 +5,7 @@ import {
   isUnread,
   threadPhoto,
   unreadCount,
+  threadListings,
 } from '@/lib/messageThreads';
 
 const t = (over = {}) => ({
@@ -140,5 +141,107 @@ describe('threadPhoto', () => {
     expect(threadPhoto(t({ listings: { photos: [] } }))).toBeNull();
     expect(threadPhoto(t({ listings: {} }))).toBeNull();
     expect(threadPhoto(null)).toBeNull();
+  });
+});
+
+/*
+  Issue #206 — inbox filters.
+
+  Note the issue asks for an "Unread" chip AND a New/Replied/Closed status
+  filter. Those are the same predicate (isUnread is `status === 'pending'`,
+  which the row pill labels "New"), so they are ONE ladder here rather than
+  two controls disagreeing about what to call one set.
+*/
+describe('filterThreads — status ladder (#206)', () => {
+  const rows = [
+    { inquiry_id: 'a', status: 'pending', listing_id: '0106001' },
+    { inquiry_id: 'b', status: 'replied', listing_id: '0106002' },
+    { inquiry_id: 'c', status: 'closed', listing_id: '0106001' },
+    { inquiry_id: 'd', status: 'archived', listing_id: '0106002' },
+  ];
+  const ids = (r) => r.map((x) => x.inquiry_id);
+
+  it('all returns everything', () => {
+    expect(ids(filterThreads(rows, { filter: 'all' }))).toEqual(['a', 'b', 'c', 'd']);
+  });
+
+  it('unread selects only pending', () => {
+    expect(ids(filterThreads(rows, { filter: 'unread' }))).toEqual(['a']);
+  });
+
+  it('replied selects only replied', () => {
+    expect(ids(filterThreads(rows, { filter: 'replied' }))).toEqual(['b']);
+  });
+
+  it('closed catches every non-pending, non-replied status', () => {
+    // 'archived' is not a status anyone has seen, but it must land somewhere
+    // rather than vanish — mirroring inquiryStatusVariant's fall-through.
+    expect(ids(filterThreads(rows, { filter: 'closed' }))).toEqual(['c', 'd']);
+  });
+});
+
+describe('filterThreads — by listing (#206)', () => {
+  const rows = [
+    { inquiry_id: 'a', status: 'pending', listing_id: '0106001' },
+    { inquiry_id: 'b', status: 'replied', listing_id: '0106002' },
+  ];
+
+  it('narrows to one listing', () => {
+    const out = filterThreads(rows, { listingId: '0106001' });
+    expect(out.map((r) => r.inquiry_id)).toEqual(['a']);
+  });
+
+  it('compares ids as strings so zero-padding survives', () => {
+    // '0106001' must not be coerced to 106001 and matched loosely.
+    expect(filterThreads(rows, { listingId: 106001 })).toEqual([]);
+  });
+
+  it('combines with the status ladder', () => {
+    expect(filterThreads(rows, { filter: 'replied', listingId: '0106001' })).toEqual([]);
+    expect(
+      filterThreads(rows, { filter: 'pending' in {} ? 'x' : 'unread', listingId: '0106001' }),
+    ).toHaveLength(1);
+  });
+
+  it('an empty listingId means no listing filter', () => {
+    expect(filterThreads(rows, { listingId: '' })).toHaveLength(2);
+  });
+});
+
+describe('threadListings (#206)', () => {
+  it('dedupes, labels by address, and sorts by label', () => {
+    const out = threadListings([
+      { listing_id: '0106002', listings: { location: { address: 'Zeta 2' } } },
+      { listing_id: '0106001', listings: { location: { address: 'Alpha 1' } } },
+      { listing_id: '0106002', listings: { location: { address: 'Zeta 2' } } },
+    ]);
+    expect(out).toEqual([
+      { listing_id: '0106001', label: 'Alpha 1' },
+      { listing_id: '0106002', label: 'Zeta 2' },
+    ]);
+  });
+
+  it('falls back to title, then to the id', () => {
+    const out = threadListings([
+      { listing_id: '0106003', listings: { title: 'Studio in Ano Poli' } },
+      { listing_id: '0106004' },
+    ]);
+    // Sorted by LABEL, so the id-fallback row sorts first — digits before
+    // letters. Asserting the order rather than just membership keeps the
+    // "stable between renders" promise honest.
+    expect(out).toEqual([
+      { listing_id: '0106004', label: '0106004' },
+      { listing_id: '0106003', label: 'Studio in Ano Poli' },
+    ]);
+  });
+
+  it('only offers listings that actually have threads', () => {
+    // The filter must not list a property with no conversations — every such
+    // choice would return an empty list and read as a broken filter.
+    expect(threadListings([])).toEqual([]);
+  });
+
+  it('tolerates junk rows', () => {
+    expect(threadListings([null, {}, { listing_id: null }])).toEqual([]);
   });
 });

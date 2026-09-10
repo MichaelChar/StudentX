@@ -16,6 +16,7 @@ import {
   defaultThreadId,
   filterThreads,
   isUnread,
+  threadListings,
   threadPhoto,
   unreadCount,
 } from '@/lib/messageThreads';
@@ -44,12 +45,16 @@ import {
   The per-thread route `/inquiries/[id]/chat` stays. It is a working deep link
   from emails and digests, and the fallback on a screen too narrow for panes.
 */
+// Filter value -> the en.json status key whose label the row pill uses.
+const FILTER_STATUS_KEY = { unread: 'pending', replied: 'replied', closed: 'closed' };
+
 export default function LandlordInquiriesPage() {
   const t = useTranslations('landlord.inquiries');
   const [inquiries, setInquiries] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [filter, setFilter] = useState('all');
+  const [listingId, setListingId] = useState('');
   const [query, setQuery] = useState('');
   const [selectedId, setSelectedId] = useState(null);
   const [viewerUserId, setViewerUserId] = useState(null);
@@ -99,9 +104,11 @@ export default function LandlordInquiriesPage() {
   }, [fetchInquiries]);
 
   const visible = useMemo(
-    () => filterThreads(inquiries, { filter, query }),
-    [inquiries, filter, query],
+    () => filterThreads(inquiries, { filter, query, listingId }),
+    [inquiries, filter, query, listingId],
   );
+  // Only listings that actually have threads — see threadListings.
+  const listingOptions = useMemo(() => threadListings(inquiries), [inquiries]);
   const selected = inquiries.find((i) => i.inquiry_id === selectedId) || null;
   const waiting = unreadCount(inquiries);
 
@@ -140,19 +147,54 @@ export default function LandlordInquiriesPage() {
                            focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
               />
             </label>
-            <div className="flex gap-2">
+            {/*
+              The status ladder (#206). Chips reuse the ROW PILL's own labels
+              (status_pending / status_replied / status_closed) so the filter
+              and the thing it filters cannot end up calling one state two
+              names. 'unread' keeps its value for callers and tests; only its
+              label comes from the ladder.
+            */}
+            <div className="flex flex-wrap gap-2">
               {THREAD_FILTERS.map((f) => (
                 <Chip
                   key={f}
                   selected={filter === f}
                   onClick={() => setFilter(f)}
                 >
-                  {f === 'unread' && waiting > 0
-                    ? `${t('filterUnread')} ${waiting}`
-                    : t(f === 'all' ? 'filterAll' : 'filterUnread')}
+                  {f === 'all' ? t('filterAll') : t(`status_${FILTER_STATUS_KEY[f]}`)}
+                  {f === 'unread' && waiting > 0 ? ` ${waiting}` : ''}
                 </Chip>
               ))}
             </div>
+
+            {/*
+              By-listing filter (#206). A select rather than more chips: a
+              landlord with several properties would push the status ladder
+              onto a third row, and the two axes read better as different
+              controls than as one long strip of pills.
+
+              Hidden entirely below two listings — a filter that can only ever
+              be "all" or "the one listing you have" is noise.
+            */}
+            {listingOptions.length > 1 && (
+              <label className="block">
+                <span className="sr-only">{t('filterListingLabel')}</span>
+                <select
+                  value={listingId}
+                  onChange={(e) => setListingId(e.target.value)}
+                  className="w-full rounded-control border border-night/15 bg-stone py-2 px-3 text-sm
+                             text-night focus-visible:outline-2 focus-visible:outline-yellow
+                             focus-visible:outline-offset-2"
+                >
+                  <option value="">{t('filterListingAll')}</option>
+                  {listingOptions.map((l) => (
+                    <option key={l.listing_id} value={l.listing_id}>
+                      {l.label}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
           </div>
 
           {loading ? (
