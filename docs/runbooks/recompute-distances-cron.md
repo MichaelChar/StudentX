@@ -82,7 +82,7 @@ For testing without waiting for 09:15 UTC:
 # Production
 curl -X POST \
   -H "x-cron-secret: $CRON_SECRET" \
-  https://studentx.studentx-gr.workers.dev/api/cron/recompute-distances
+  https://studentx.uk/api/cron/recompute-distances
 
 # Local dev (CRON_SECRET in .env.local)
 curl -X POST \

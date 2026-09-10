@@ -1,11 +1,27 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   "name": "studentx",
-  // Expose the Worker on Cloudflare's free `*.workers.dev` subdomain so the
-  // deployment has a public URL even before a custom domain is wired up.
-  // The hostname will be `studentx.<account-subdomain>.workers.dev`. Safe
-  // to leave on alongside a future custom domain — both serve the same code.
-  "workers_dev": true,
+  // OFF since issue #515. This used to expose the Worker on Cloudflare's free
+  // `*.workers.dev` subdomain so the deployment had a public URL before the
+  // custom domain existed. The old comment here said it was "safe to leave on
+  // alongside a future custom domain — both serve the same code", which was
+  // true functionally and wrong as a security posture:
+  //
+  //   - `studentx.studentx-gr.workers.dev` served the ENTIRE app on 200, and
+  //     its robots.txt was byte-identical to the real one (Allow: /), so
+  //     crawlers were invited to a second copy. Canonical tags pointed home,
+  //     which limited the SEO damage but did not remove the origin.
+  //   - Zone-level protections do NOT apply to a workers.dev hostname: it is
+  //     not in the studentx.uk zone, so Cache Rules, WAF and rate limiting
+  //     configured there silently covered nothing on this origin — including
+  //     the Cache Rule tracked by #130.
+  //   - Anyone signing in there got cookies scoped to a hostname no email
+  //     link, sitemap entry or canonical URL points at.
+  //
+  // The `routes` block below pins the custom domains, so the app is unaffected.
+  // The synthetic canary is unaffected too — it fetches over the
+  // WORKER_SELF_REFERENCE service binding, not the network.
+  "workers_dev": false,
   // cf/worker-entry.mjs wraps .open-next/worker.js to add a `scheduled` handler
   // (OpenNext v1.x doesn't ship one). The wrapper imports the built worker, so
   // `npm run cf:build` must have run before `wrangler deploy`.

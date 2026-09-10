@@ -7,6 +7,15 @@
 > [#95](https://github.com/MichaelChar/StudentX/pull/95). PR #63 (pre-staged
 > email-subdomain branch) was superseded and closed.
 
+> **Superseded detail (2026-09-10, issue #515):** every reference below to
+> `studentx.studentx-gr.workers.dev` is now **historical**. `workers_dev` is
+> `false`, so that hostname no longer serves the app at all — it was a second
+> public origin serving the whole site, outside the `studentx.uk` zone and so
+> outside its Cache Rules, WAF and rate limiting. If you are reusing this
+> runbook for a future domain swap, note that the "production URL points at
+> workers.dev" starting condition in blocker 4 no longer applies: there is no
+> fallback public hostname during the gap, so plan the cutover accordingly.
+
 **Originally blocked:** Resend transactional email · Cloudflare zone-scoped features · production URL flip · [PR #51](https://github.com/MichaelChar/StudentX/pull/51) (closed pending domain) · [PR #63](https://github.com/MichaelChar/StudentX/pull/63) (pre-staged re-apply, closed)
 
 ## Why this exists
