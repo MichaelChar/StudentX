@@ -5,6 +5,8 @@ import { rankSimilarListings } from '@/lib/similarListings';
 
 const LISTING_SELECT = `
   listing_id,
+  listing_status,
+  flags,
   title,
   description,
   photos,
@@ -69,15 +71,48 @@ const SIMILAR_DISPLAY_LIMIT = 4;
 export const getListingForRender = cache(async (id) => {
   if (!id || !/^\d[\d-]+$/.test(id)) return null;
   try {
+    /*
+      PAUSED LISTINGS ARE SOFT-HIDDEN, NOT 404'd (issue #205).
+
+      This query deliberately does NOT pin listing_status = 'active' the way
+      every other public query does. A landlord who pauses a listing — the
+      dashboard's Pause control, which sets listing_status = 'disabled' via
+      flagsForDisableToggle — is saying "not right now", not "gone". 404ing
+      would break every link a student already has and drop the page out of
+      the index each time, for a listing that is expected to come back. That
+      is the whole reason pause exists instead of delete.
+
+      So the filtering moves below, and it distinguishes two cases that a
+      single `listing_status` check cannot:
+
+        - PAUSED: was publicly live once (flags.admin_live_approved), now
+          disabled. Render the page with an "unavailable" state, no booking
+          CTA, and noindex while it lasts.
+        - NEVER PUBLIC: draft, submitted-awaiting-review, or admin-disabled
+          before approval. 404 exactly as before — these have no audience to
+          preserve a link for, and showing them would leak listings the
+          go-live gate has not passed.
+
+      admin_live_approved is the right discriminator because it is stamped by
+      /api/admin/listing-go-live and nothing landlord-reachable can set it,
+      so this cannot become a way to surface an unapproved listing.
+    */
     const { data, error } = await getSupabase()
       .from('listings')
       .select(LISTING_SELECT)
       .eq('listing_id', id)
-      .eq('listing_status', 'active')
       .single();
 
     if (error || !data) return null;
-    return transformListing(data);
+
+    if (data.listing_status !== 'active') {
+      const wasLive = data.flags?.admin_live_approved === true;
+      const landlordPaused = data.listing_status === 'disabled' && wasLive;
+      if (!landlordPaused) return null;
+      return { ...transformListing(data), paused: true };
+    }
+
+    return { ...transformListing(data), paused: false };
   } catch {
     return null;
   }

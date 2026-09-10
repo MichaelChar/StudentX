@@ -663,12 +663,36 @@ export default async function ListingPage({ params, searchParams }) {
           value is already there, and a second copy of the same dates in the
           URL is two things to keep in sync.
         */}
-        <BookingWidget
-          initialMoveIn={stayFromResults.moveIn}
-          initialMoveOut={stayFromResults.moveOut}
-          listing={listing}
-          nextPath={`/property/thessaloniki/listing/${listing.listing_id}${fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : ''}`}
-        />
+        {/*
+          Paused listings keep their page but lose the booking CTA (#205).
+          A paused listing must not take new inquiries — the acceptance
+          criterion — so the widget is REPLACED rather than disabled: a
+          greyed-out form still reads as "try again in a moment", while a
+          plain statement sets the right expectation and leaves the rest of
+          the page (photos, location, host) useful to someone deciding
+          whether to come back.
+        */}
+        {listing.paused ? (
+          <div className="rounded-card border border-night/10 bg-parchment p-6">
+            <p className="font-display text-lg text-night">
+              {t('pausedTitle')}
+            </p>
+            <p className="mt-2 text-sm text-night/70">{t('pausedBody')}</p>
+            <Link
+              href="/property/thessaloniki/results"
+              className="mt-4 inline-block text-blue font-medium hover:text-night"
+            >
+              {t('pausedCta')} →
+            </Link>
+          </div>
+        ) : (
+          <BookingWidget
+            initialMoveIn={stayFromResults.moveIn}
+            initialMoveOut={stayFromResults.moveOut}
+            listing={listing}
+            nextPath={`/property/thessaloniki/listing/${listing.listing_id}${fromRaw ? `?from=${encodeURIComponent(fromRaw)}` : ''}`}
+          />
+        )}
       </div>
       </div>
 
