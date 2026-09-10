@@ -63,6 +63,17 @@ test.describe('Booking request + profile gate', () => {
     const studentSession = await signInWithPassword(student.email, student.password);
     ctx.studentToken = studentSession.accessToken;
 
+    /*
+      Empty the profile so the gate this journey exists to test is reachable.
+
+      afterEach calls completeGuestProfile() to leave the account usable, but
+      nothing ever undid that — so the gate could only fire on an account
+      that had never booked. The first run to actually execute this test
+      (2026-09-10) failed here on an assertion that had never been wrong,
+      only never run. Without this the journey is single-use.
+    */
+    await clearGuestProfile(ctx.studentToken);
+
     const fixture = await createFixtureListing(ctx.landlordToken, {
       runId: `booking-req-${Date.now()}`,
     });
@@ -82,18 +93,37 @@ test.describe('Booking request + profile gate', () => {
     expect(Array.isArray(blocked.data.missing_fields)).toBe(true);
     expect(blocked.data.missing_fields.length).toBeGreaterThan(0);
 
-    // --- UI: listing shows inline guest-profile form; CTA disabled ---
+    /*
+      --- UI: the guest-profile gate is a MODAL, opened by a failed submit ---
+
+      This section used to assert an inline form inside the booking `aside`,
+      visible on load, with the CTA disabled. Both halves are stale as of
+      Feature 59: ProfileGate is now a bottom sheet below `md` and a centre
+      modal above it, and BookingWidget only sets `needProfile` when a submit
+      comes back PROFILE_INCOMPLETE (BookingWidget.js:157). Before that first
+      attempt the CTA is enabled and no gate exists anywhere in the DOM.
+
+      So the flow is now: fill dates → submit → gate appears. Asserted at
+      PAGE level rather than inside the aside, because a modal portals out of
+      it — scoping to `aside` is what made this fail even once the gate did
+      render.
+    */
     await establishBrowserSession(page, student, { role: 'student' });
     await page.goto(`/property/thessaloniki/listing/${ctx.listingId}`);
     await expect(page.locator('h1').first()).toBeVisible({ timeout: 30_000 });
 
     const widget = page.locator('aside').first();
-    await expect(widget.getByText(/Your guest profile/i)).toBeVisible({
+    await widget.locator('input[type="date"]').first().fill(moveIn);
+    await widget.locator('input[type="date"]').nth(1).fill(moveOut);
+    await widget
+      .locator('textarea')
+      .fill('I would like to book this studio for the winter semester stay.');
+    await widget.getByRole('button', { name: /Request to book/i }).click();
+
+    // The gate opens on the PROFILE_INCOMPLETE response, not on load.
+    await expect(page.getByText(/Your guest profile/i).first()).toBeVisible({
       timeout: 20_000,
     });
-    await expect(
-      widget.getByRole('button', { name: /Request to book/i }),
-    ).toBeDisabled();
 
     // --- Complete profile, then submit successfully ---
     await completeGuestProfile(ctx.studentToken);
@@ -101,8 +131,8 @@ test.describe('Booking request + profile gate', () => {
     await expect(page.locator('h1').first()).toBeVisible();
 
     const widget2 = page.locator('aside').first();
-    // Gate copy should be gone once profile is complete.
-    await expect(widget2.getByText(/Your guest profile/i)).toHaveCount(0, {
+    // Gate is gone once the profile is complete — nothing re-opens it.
+    await expect(page.getByText(/Your guest profile/i)).toHaveCount(0, {
       timeout: 15_000,
     });
 

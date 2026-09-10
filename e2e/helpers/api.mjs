@@ -20,6 +20,24 @@ const FIXTURE_PHOTO_URLS = [
   'https://static.wixstatic.com/media/253972_6075044d097348699595e87c4bb820bf~mv2.jpg/v1/fill/w_508,h_382,al_c,q_80,usm_0.66_1.00_0.01,enc_avif,quality_auto/253972_6075044d097348699595e87c4bb820bf~mv2.jpg',
 ];
 
+/*
+  Service-role client, for arranging state the app deliberately will not let a
+  landlord arrange (see publishFixtureListing). Kept out of fixtures/env.mjs
+  because that module is imported by every spec and this key must not spread.
+*/
+function serviceClient() {
+  const { url } = supabasePublicConfig();
+  const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
+  if (!url || !key) {
+    throw new Error(
+      'SUPABASE_SERVICE_ROLE_KEY is required to publish e2e fixtures — the ' +
+        'booking journeys cannot run without it, because a landlord-submitted ' +
+        'listing is not bookable until admin go-live.',
+    );
+  }
+  return createClient(url, key, { auth: { persistSession: false } });
+}
+
 export async function signInWithPassword(email, password) {
   const { url, anon } = supabasePublicConfig();
   if (!url || !anon) {
@@ -119,7 +137,67 @@ export async function createFixtureListing(landlordToken, opts = {}) {
   }
 
   assertNotProtectedListing(data.listing_id);
+  await publishFixtureListing(data.listing_id, title);
   return { listingId: data.listing_id, title, body };
+}
+
+/*
+  Promote a fixture to publicly bookable.
+
+  WHY THIS EXISTS. createFixtureListing posts `submit: true`, and a landlord
+  submit deliberately NEVER publishes — landlordListingBody sets
+  listing_status='disabled' with flags.listing_status='submitted'. Only
+  /api/admin/listing-go-live grants 'active', and it requires an ID-verified
+  landlord plus a completed video-call property_verifications row.
+
+  bookingService rejects any listing whose listing_status is 'disabled'
+  (LISTING_DISABLED). So without this step the booking journeys create a
+  listing that CANNOT be booked, and journeys 2-5 fail by construction —
+  which is exactly what they did the first time they were ever executed
+  (2026-09-10). The suite predates the go-live gate and never caught up.
+
+  WHY A DIRECT WRITE RATHER THAN THE ADMIN ROUTE. Driving the real go-live
+  endpoint would need an admin session plus a video-call verification row
+  per run — arranging the gate, not testing it. These journeys test BOOKING;
+  the gate has its own coverage. So this arranges the end state the gate
+  produces, and mirrors its flags exactly so a fixture is indistinguishable
+  from an approved listing.
+
+  SAFETY. Refuses anything whose title is not the E2E fixture prefix, so it
+  can never promote a real listing — the same guard deleteFixtureListing
+  uses, and the reason FIXTURE_TITLE_PREFIX exists rather than an id list.
+*/
+async function publishFixtureListing(listingId, title) {
+  if (!isFixtureTitle(title)) {
+    throw new Error(
+      `Refusing to publish "${title}" — not an ${FIXTURE_TITLE_PREFIX}fixture.`,
+    );
+  }
+  const service = serviceClient();
+  const { data: prev, error: readErr } = await service
+    .from('listings')
+    .select('flags, title')
+    .eq('listing_id', listingId)
+    .single();
+  if (readErr) throw new Error(`publishFixtureListing read failed: ${readErr.message}`);
+  if (!isFixtureTitle(prev?.title)) {
+    throw new Error(`Refusing to publish ${listingId} — stored title is not a fixture.`);
+  }
+
+  const { error } = await service
+    .from('listings')
+    .update({
+      listing_status: 'active',
+      flags: {
+        ...(prev.flags || {}),
+        disabled: false,
+        listing_status: 'live',
+        admin_live_approved: true,
+        admin_live_by: 'e2e-fixture',
+      },
+    })
+    .eq('listing_id', listingId);
+  if (error) throw new Error(`publishFixtureListing failed: ${error.message}`);
 }
 
 export async function deleteFixtureListing(landlordToken, listingId) {
@@ -264,7 +342,16 @@ export async function patchStudentProfile(studentToken, updates) {
   return data.student;
 }
 
-/** Clear guest-profile required fields so the booking gate trips. */
+/*
+  Clear guest-profile required fields so the booking gate trips.
+
+  This helper already existed and was simply never called in journey 2's
+  SETUP — only completeGuestProfile() ran, in afterEach, to leave the account
+  usable. So the PROFILE_INCOMPLETE gate could fire exactly once per account,
+  ever. The first run that actually executed the journey (2026-09-10) failed
+  on that assertion: not wrong, just never run. Call this before asserting
+  the gate or the journey is single-use.
+*/
 export async function clearGuestProfile(studentToken) {
   return patchStudentProfile(studentToken, {
     date_of_birth: null,

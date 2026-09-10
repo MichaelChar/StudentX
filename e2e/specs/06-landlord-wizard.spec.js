@@ -80,7 +80,25 @@ test.describe('Landlord listing wizard', () => {
     });
 
     await page.goto('/property/thessaloniki/landlord/listings/new');
-    await expect(page.getByText(/Step 1 of 7/i)).toBeVisible({ timeout: 30_000 });
+
+    /*
+      The wizard is EIGHT steps now, not seven. ListingForm builds
+      `STEPS = includeImport ? ['import', ...MAIN_STEPS] : MAIN_STEPS`, and
+      the import step ("Start from a description") sits at the FRONT — so
+      every subsequent number shifted by one as well as the total changing.
+      This test asserted "Step 1 of 7" and failed on the first run that ever
+      executed it (2026-09-10).
+
+      Absolute step numbers are brittle for exactly this reason; they are
+      kept because the numbering IS part of what this journey checks (the
+      progress indicator), but a step added or removed will break them again
+      by design rather than by accident.
+    */
+    await expect(page.getByText(/Step 1 of 8/i)).toBeVisible({ timeout: 30_000 });
+    // Skip the paste-a-description step to reach Address.
+    await page.getByRole('button', { name: /Start from scratch/i }).click();
+    // Address — what used to be step 1, now step 2 behind the import step.
+    await expect(page.getByText(/Step 2 of 8/i)).toBeVisible({ timeout: 15_000 });
 
     // --- Step 1: Address — coords not typeable ---
     expect(await page.locator('input[name="lat"], input#lat').count()).toBe(0);
@@ -111,14 +129,14 @@ test.describe('Landlord listing wizard', () => {
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 2: Property ---
-    await expect(page.getByText(/Step 2 of 7/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 3 of 8/i)).toBeVisible({ timeout: 15_000 });
     await page.locator('#wiz-type').selectOption({ label: 'Studio' }).catch(async () => {
       await page.locator('#wiz-type').selectOption({ index: 1 });
     });
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 3: Universities — empty rows must block ---
-    await expect(page.getByText(/Step 3 of 7/i)).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByText(/Step 4 of 8/i)).toBeVisible({ timeout: 20_000 });
     // Wait for auto-prefill attempt, then strip rows down to exactly one so
     // the "+ Add university" regression assertions below start from a known
     // state.
@@ -213,21 +231,21 @@ test.describe('Landlord listing wizard', () => {
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 4: Price ---
-    await expect(page.getByText(/Step 4 of 7/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 5 of 8/i)).toBeVisible({ timeout: 15_000 });
     const price = page.locator('input[type="number"]').first();
     if (await price.count()) await price.fill('450');
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 5: Availability ---
-    await expect(page.getByText(/Step 5 of 7/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 6 of 8/i)).toBeVisible({ timeout: 15_000 });
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 6: Photos (soft continue with zero) ---
-    await expect(page.getByText(/Step 6 of 7/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 7 of 8/i)).toBeVisible({ timeout: 15_000 });
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 7: Review — <5 photos blocks submit ---
-    await expect(page.getByText(/Step 7 of 7/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 8 of 8/i)).toBeVisible({ timeout: 15_000 });
     await page.getByRole('button', { name: /Submit|Publish|Create/i }).click();
     await expect(
       page.getByText(/Add at least 5 photos before submitting|at least 5 photos/i),

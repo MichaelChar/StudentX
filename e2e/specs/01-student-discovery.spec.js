@@ -12,17 +12,26 @@ test.describe('Student discovery', () => {
   }) => {
     const { moveIn, moveOut } = futureStayWindow();
 
-    await page.goto('/property/thessaloniki/results');
+    /*
+      Dates come in through the URL, not by typing.
+
+      This used to fill two `input[type="date"]` on the refine panel. Those
+      are gone: the results page now opens a DateRangePicker calendar behind
+      an "Add dates" button, so the selector matched nothing and the test
+      timed out at 90s — the first time it was ever executed (2026-09-10).
+
+      `move_in` / `move_out` are read by initialFiltersFromParams and are the
+      same params the picker itself writes, so this exercises the filtered
+      query on a real shareable URL. It deliberately does NOT test the picker
+      widget — driving a calendar grid by aria-label is a separate concern
+      and belongs in its own test, not bolted onto the discovery journey.
+    */
+    await page.goto(
+      `/property/thessaloniki/results?move_in=${moveIn}&move_out=${moveOut}`,
+    );
     await expect(page.getByRole('heading').first()).toBeVisible({ timeout: 30_000 });
 
-    // Date filters on the refine panel (aria-labels from en.json moveIn / moveOut).
-    const moveInInput = page.locator('input[type="date"][aria-label="Move-in"], input[type="date"]').first();
-    const moveOutInput = page.locator('input[type="date"]').nth(1);
-
-    await moveInInput.fill(moveIn);
-    await moveOutInput.fill(moveOut);
-
-    // Wait for filtered fetch to settle (loader gone or cards present).
+    // Wait for the filtered fetch to settle (loader gone or cards present).
     await page.waitForTimeout(800);
     await expect(
       page.locator('a[href*="/property/thessaloniki/listing/"]').first(),

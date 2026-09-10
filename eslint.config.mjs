@@ -28,6 +28,14 @@ const eslintConfig = defineConfig([
     // Vitest coverage output (also gitignored). Generated files; not
     // ours to lint.
     "coverage/**",
+    // Playwright output (both gitignored). `playwright-report/` bundles a
+    // whole trace-viewer app — minified vendor JS that produced 241 eslint
+    // ERRORS the first time anyone actually ran the e2e suite and then
+    // linted. `test-results/` holds per-failure screenshots and traces.
+    // Neither is ours to lint. eslint does not read .gitignore, so being
+    // gitignored is not enough on its own.
+    "playwright-report/**",
+    "test-results/**",
   ]),
   /*
     `no-undef` — ON, and the reason is a shipped production crash.
