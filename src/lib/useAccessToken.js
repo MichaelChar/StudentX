@@ -88,6 +88,36 @@ export async function resolveAccessToken(supabase) {
  * Returns null until the first session load resolves, then the token
  * (string) or '' if signed out.
  */
+/*
+  One in-flight resolution shared by every mounted consumer.
+
+  There are 13 useAccessToken consumers, and several mount together — an
+  account page has FavoritesProvider, GigFavoritesProvider and the page's own
+  component at minimum. Each was independently calling getSession(), and
+  gotrue serialises all of them behind ONE Navigator lock. The observed
+  symptom was five simultaneous "getSession did not settle in 8000ms"
+  warnings: one operation wedges the lock and every sibling queues behind it
+  until it times out.
+
+  Sharing the promise turns N lock operations per page into one. It does not
+  fix a wedge that happens anyway, but it removes the pile-up that makes a
+  single slow acquire fan out into every component on the page.
+
+  Cleared on settle, so a later mount re-resolves rather than reusing a stale
+  answer. Deliberately NOT inside resolveAccessToken: that stays pure so the
+  unit tests can pass it different mock clients without sharing state.
+*/
+let sharedResolve = null;
+
+function sharedResolveAccessToken(supabase) {
+  if (!sharedResolve) {
+    sharedResolve = resolveAccessToken(supabase).finally(() => {
+      sharedResolve = null;
+    });
+  }
+  return sharedResolve;
+}
+
 export function useAccessToken() {
   const [token, setToken] = useState(null);
 
@@ -111,7 +141,7 @@ export function useAccessToken() {
       fix had exactly that bug — a good token at t=1s replaced by '' at t=8s.
     */
     (async () => {
-      const next = await resolveAccessToken(supabase);
+      const next = await sharedResolveAccessToken(supabase);
       if (cancelled || haveToken) return;
       setToken(next);
     })();

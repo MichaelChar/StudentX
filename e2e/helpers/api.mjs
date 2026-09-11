@@ -391,6 +391,40 @@ export async function completeGuestProfile(studentToken, overrides = {}) {
  * @param {{ role?: 'student' | 'landlord' }} [opts]
  */
 export async function establishBrowserSession(page, credentials, opts = {}) {
+  /*
+    E2E_LOGIN_VIA_UI=1 — sign in through the real form instead of seeding
+    localStorage with a session minted over the API.
+
+    This exists as a DISCRIMINATOR for issue #521, where getSession() hangs
+    (">8000ms, never settles") and leaves detail pages unable to load. One
+    hypothesis is that it is an artifact of this helper rather than a product
+    defect: the suite calls signInWithPassword repeatedly across specs, so the
+    refresh_token seeded here can already be superseded by the time the
+    browser tries to use it, and a refresh against a revoked token may be what
+    stalls inside gotrue's lock.
+
+    Signing in through the UI produces a session the browser minted itself,
+    with a refresh token nothing else has touched. If the hang disappears
+    under this flag, #521 is largely a harness problem; if it persists, it is
+    a real defect and the flag has cost nothing to find out.
+
+    Kept rather than deleted after the experiment: it is the slower but more
+    faithful path, and a future auth regression is worth being able to test
+    both ways without rewriting the helper.
+  */
+  const role0 = opts.role || 'student';
+  if (process.env.E2E_LOGIN_VIA_UI) {
+    await loginViaUi(page, {
+      email: credentials.email,
+      password: credentials.password,
+      loginPath:
+        role0 === 'landlord'
+          ? '/property/thessaloniki/landlord/login'
+          : '/student/login',
+    });
+    return;
+  }
+
   const session = await signInWithPassword(credentials.email, credentials.password);
   const { url } = supabasePublicConfig();
   const ref = new URL(url).hostname.split('.')[0];
