@@ -119,24 +119,45 @@ export const getListingForRender = cache(async (id) => {
 });
 
 /**
- * Other active listings for the detail-page "Similar" rail.
- * Active-only, excludes `current.listing_id`, ranked by same neighbourhood
- * then closest monthly price (see rankSimilarListings).
+ * Candidate pool for the detail-page "Similar" rail — the DB half.
+ *
+ * Takes the listing ID, NOT the resolved listing, and that is the whole
+ * point: the candidate query needs nothing from the current listing
+ * except to exclude it, so it must not wait on getListingForRender.
+ * Splitting fetch from rank lets the page fire both queries at once
+ * (see the Promise.all in the listing page) instead of paying two
+ * serial Supabase round-trips on every uncached PDP render.
+ *
+ * Ranking — which genuinely does need the current listing, for its
+ * neighbourhood and price — happens afterwards in rankSimilarCandidates,
+ * synchronously and against the pool this returns.
  */
-export const getSimilarListings = cache(async (current) => {
-  if (!current?.listing_id) return [];
+export const getSimilarCandidates = cache(async (id) => {
+  if (!id) return [];
   try {
     const { data, error } = await getSupabase()
       .from('listings')
       .select(SIMILAR_LISTING_SELECT)
       .eq('listing_status', 'active')
-      .neq('listing_id', current.listing_id)
+      .neq('listing_id', id)
       .limit(SIMILAR_CANDIDATE_LIMIT);
 
     if (error || !data) return [];
-    const candidates = data.map((row) => transformListing(row));
-    return rankSimilarListings(candidates, current, SIMILAR_DISPLAY_LIMIT);
+    return data.map((row) => transformListing(row));
   } catch {
     return [];
   }
 });
+
+/**
+ * Rank a pool from getSimilarCandidates against the resolved listing.
+ * Pure and synchronous — rankSimilarListings re-excludes current.listing_id
+ * itself, so the .neq() above is an optimisation, not the correctness check.
+ *
+ * @param {Array<object>} candidates
+ * @param {object|null} current
+ */
+export function rankSimilarCandidates(candidates, current) {
+  if (!current?.listing_id || !Array.isArray(candidates)) return [];
+  return rankSimilarListings(candidates, current, SIMILAR_DISPLAY_LIMIT);
+}
