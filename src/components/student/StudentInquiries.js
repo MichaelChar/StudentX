@@ -99,7 +99,23 @@ export async function InquiriesSection({ locale }) {
               <div className="flex items-start justify-between gap-4 mb-4">
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2 mb-1">
-                    <p className="font-display text-xl text-night truncate">{address}</p>
+                    {/*
+                      The address is the thread's identity, so it is also the
+                      obvious thing to click when a student wants to re-check
+                      the property they are negotiating over. Falls back to
+                      plain text when the listing row is gone (deleted or
+                      RLS-hidden), where a link would 404.
+                    */}
+                    {listing ? (
+                      <Link
+                        href={`/property/thessaloniki/listing/${inq.listing_id}`}
+                        className="font-display text-xl text-night truncate hover:text-blue transition-colors"
+                      >
+                        {address}
+                      </Link>
+                    ) : (
+                      <p className="font-display text-xl text-night truncate">{address}</p>
+                    )}
                     {unread > 0 && (
                       <span
                         aria-label={t('unread', { count: unread })}
@@ -138,6 +154,15 @@ export async function InquiriesSection({ locale }) {
                   <Icon name="message" className="w-3.5 h-3.5" />
                   {t('openThread')}
                 </Link>
+                {listing && (
+                  <Link
+                    href={`/property/thessaloniki/listing/${inq.listing_id}`}
+                    className="inline-flex items-center justify-center gap-1 border border-night/15 text-night/70 text-xs font-sans font-semibold uppercase tracking-[0.08em] px-3 py-1.5 rounded hover:border-night/30 hover:text-night transition-colors"
+                  >
+                    <Icon name="home" className="w-3.5 h-3.5" />
+                    {t('viewListing')}
+                  </Link>
+                )}
               </div>
             </Card>
           </li>
