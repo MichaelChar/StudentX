@@ -472,7 +472,7 @@
         },
         "universities": {
           "title": "Universities & commute",
-          "lede": "At least two universities. Prefill from the pin, then adjust if needed."
+          "lede": "How far this listing is from each university in the city."
         },
         "price": {
           "title": "Price & terms",
