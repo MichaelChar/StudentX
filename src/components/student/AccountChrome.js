@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
+import Icon from '@/components/ui/Icon';
 import SignOutButton from '@/components/student/SignOutButton';
 
 /*
@@ -23,7 +24,23 @@ export default async function AccountChrome({ locale, student, active, children 
     <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
       <div className="flex items-start justify-between gap-4 mb-2">
         <p className="label-caps text-yellow">{t('eyebrow')}</p>
-        <SignOutButton />
+        <div className="flex items-center gap-4">
+          {/*
+            Browsing was previously only reachable from an empty state: a
+            student with one saved listing and one thread had no route back
+            into the directory without going via the navbar or the logo. The
+            account shell is where they land from an email digest, so the
+            entry point belongs here, on every tab.
+          */}
+          <Link
+            href="/property/thessaloniki/results"
+            className="inline-flex items-center gap-1.5 label-caps text-blue hover:text-night transition-colors"
+          >
+            <Icon name="search" className="w-4 h-4" />
+            {t('browseListings')}
+          </Link>
+          <SignOutButton />
+        </div>
       </div>
       <h1 className="font-display text-3xl md:text-4xl text-night mb-1">{t('heading')}</h1>
       <p className="text-night/60 mb-8">{student.display_name} · {student.email}</p>
