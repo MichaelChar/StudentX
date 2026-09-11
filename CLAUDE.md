@@ -111,8 +111,18 @@ Around that core sit the monetizing / retention surfaces:
 ```js
 locales: ['en']
 defaultLocale: 'en'
-localePrefix: 'never'  // all URLs unprefixed; /en/* and /el/* 301 to /*
+localePrefix: 'never'   // all URLs unprefixed; /en/* and /el/* 301 to /*
+localeCookie: false     // #130 — see below, this one is load-bearing
 ```
+
+**`localeCookie: false` is an invariant, not a preference.** next-intl
+otherwise sets `Set-Cookie: NEXT_LOCALE=en` on every response, and Cloudflare
+skips its cache for any response carrying `Set-Cookie` — so it made every
+anonymous page uncacheable at the edge. With one locale the cookie can only
+ever hold `'en'`, so it bought nothing. Removed in #511 (issue #130). Do not
+re-add it without reading `docs/second-locale-assessment.md`, which covers
+what a second locale would cost and why the cookie is the crux of that
+decision.
 
 Greek was removed from the platform in issue #158 / Step B (PR following
 #157). The single-locale config keeps the `[locale]` route segment in
