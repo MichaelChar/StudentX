@@ -11,8 +11,8 @@ import {
 
 /**
  * Journey 6 — Landlord listing wizard (7 steps).
- * Assert map pin sets coords (not typeable), <2 university distances blocks,
- * <5 photos blocks final submit.
+ * Assert map pin sets coords (not typeable), the universities step is
+ * read-only and measured from that pin, and <5 photos blocks final submit.
  *
  * Does not publish a listing unless a draft is auto-created; any draft
  * created mid-wizard is deleted in afterEach.
@@ -37,7 +37,7 @@ test.describe('Landlord listing wizard', () => {
     ctx.listingId = undefined;
   });
 
-  test('7 steps; coords from map; universities and photos gates', async ({
+  test('7 steps; coords from map; universities read-only; photos gate', async ({
     page,
   }) => {
     const landlord = landlordCredentials();
@@ -152,102 +152,29 @@ test.describe('Landlord listing wizard', () => {
     });
     await page.getByRole('button', { name: /Continue/i }).click();
 
-    // --- Step 3: Universities — empty rows must block ---
+    // --- Step 3: Universities — measured from the pin, nothing to fill in ---
     await expect(page.getByText(/Step 4 of 8/i).first()).toBeVisible({ timeout: 20_000 });
-    // Wait for auto-prefill attempt, then strip rows down to exactly one so
-    // the "+ Add university" regression assertions below start from a known
-    // state.
-    await page.waitForTimeout(2000);
-    for (let i = 0; i < 6; i += 1) {
-      const remove = page.getByRole('button', { name: /Remove/i });
-      if ((await remove.count()) <= 1) break;
-      await remove.first().click();
-      await page.waitForTimeout(150);
-    }
-    const uniRows = page.locator('#university-distance-rows > div');
-    await expect(uniRows).toHaveCount(1);
 
-    // --- Regression (PR #381): "+ Add university" must add exactly ONE
-    // row, the new row must get its distance from the map pin (it used to
-    // stay an empty landlord shell), and typing over an existing row must
-    // survive a later "Prefill from pin" click.
-    const uniRowSelects = page.locator('#university-distance-rows select');
-    const prefillButton = page.getByRole('button', { name: 'Prefill from pin' });
-
-    // 1. "+ Add university" adds exactly one row (bug: it used to add every
-    // remaining university in one click).
-    const rowCountBeforeAdd = await uniRowSelects.count();
-    await page.getByRole('button', { name: '+ Add university' }).click();
-    // Add computes the new row's distance via the same prefill call as the
-    // button above, so wait for prefillLoading to clear before counting.
-    await expect(prefillButton).toBeEnabled({ timeout: 15_000 });
-    await expect(uniRowSelects).toHaveCount(rowCountBeforeAdd + 1);
-
-    // 2. The new row already has a non-empty distance from the pin and is
-    // marked "Computed" (bug: it stayed an empty "Yours" shell).
-    const addedRow = uniRows.last();
-    const addedRowDistance = addedRow.locator(
-      'input[type="number"][aria-label]',
-    );
-    await expect(addedRowDistance).not.toHaveValue('');
-    await expect(addedRow.getByText('Computed', { exact: true })).toBeVisible();
-
-    // 3. Typing into the first row flips its pill to "Yours"; a later
-    // Prefill from pin must not clobber that landlord-entered value.
-    const firstRow = uniRows.first();
-    const firstRowDistance = firstRow.locator(
-      'input[type="number"][aria-label]',
-    );
-    await firstRowDistance.fill('1234');
-    await expect(firstRow.getByText('Yours', { exact: true })).toBeVisible();
-    await prefillButton.click();
-    await expect(prefillButton).toBeEnabled({ timeout: 15_000 });
-    await expect(firstRowDistance).toHaveValue('1234');
-    await expect(firstRow.getByText('Yours', { exact: true })).toBeVisible();
-
-    // Ensure no filled distances remain, to test the <2-universities gate.
-    const distInputs = page.locator('input[type="number"][aria-label]');
-    const n = await distInputs.count();
-    for (let i = 0; i < n; i += 1) {
-      await distInputs.nth(i).fill('');
-    }
-
-    await page.getByRole('button', { name: /Continue/i }).click();
-    // `.first()` — the copy appears twice on this step (the inline hint and
-    // the validation error), so a bare getByText trips strict mode. The
-    // assertion is "the requirement is stated", not "stated exactly once".
+    // Every university in the city is listed, nearest first, with the metres
+    // the pin API returned. The step used to be a row builder the landlord had
+    // to populate by hand ("+ Add university", typed metres, Computed/Yours
+    // provenance pills); it is now read-only and the pin is the only input.
+    const uniRows = page.locator('#university-distance-rows > li');
+    await expect(uniRows).toHaveCount(STUB_UNIVERSITY_DISTANCES.length, {
+      timeout: 20_000,
+    });
+    await expect(uniRows.nth(0)).toContainText('800 m');
+    await expect(uniRows.nth(1)).toContainText('1500 m');
+    await expect(uniRows.nth(2)).toContainText('4200 m');
+    await expect(page.locator('#university-distance-rows input')).toHaveCount(0);
     await expect(
-      page.getByText(/Add distances for at least 2 universities|at least 2/i).first(),
-    ).toBeVisible({ timeout: 10_000 });
+      page.getByRole('button', {
+        name: /Prefill from pin|\+ Add university|Remove this university/i,
+      }),
+    ).toHaveCount(0);
+    await expect(page.getByText(/check the location pin/i).first()).toBeVisible();
 
-    // Recover with two distances via prefill or manual add.
-    const prefill = page.getByRole('button', { name: /Prefill|prefill/i });
-    if (await prefill.count()) {
-      await prefill.first().click();
-      await page.waitForTimeout(2500);
-    }
-    let filled = 0;
-    const after = page.locator('input[type="number"][aria-label]');
-    const afterCount = await after.count();
-    for (let i = 0; i < afterCount; i += 1) {
-      const v = await after.nth(i).inputValue();
-      if (v && Number(v) > 0) filled += 1;
-      else {
-        await after.nth(i).fill(String(1500 + i * 100));
-        filled += 1;
-      }
-    }
-    if (filled < 2) {
-      const add = page.getByRole('button', { name: /Add/i });
-      while ((await after.count()) < 2 && (await add.count())) {
-        await add.first().click();
-      }
-      const again = page.locator('input[type="number"][aria-label]');
-      for (let i = 0; i < Math.min(2, await again.count()); i += 1) {
-        await again.nth(i).fill(String(1600 + i * 200));
-      }
-    }
-
+    // Continue with zero landlord input — the step must never gate on typing.
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 4: Price ---
