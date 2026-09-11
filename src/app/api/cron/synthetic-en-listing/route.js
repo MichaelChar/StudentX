@@ -227,6 +227,34 @@ export function evaluateVaryCookie({ status, vary }, label = 'listing detail') {
   return { ok: true };
 }
 
+/*
+  Is a CDN cache status on an AUTHED request a session leak?
+
+  Pure half of cf-cache-authed-not-hit, exported so the leak rule itself is
+  unit-tested rather than only exercised against live Cloudflare.
+
+  Only HIT is a leak. MISS, EXPIRED, BYPASS, DYNAMIC and REVALIDATED all mean
+  the origin was consulted, which is the whole requirement. An ABSENT status
+  is NOT treated as a leak here — the caller has already established the CDN
+  is in play (it warms anonymously and skips when no status header comes
+  back), so absent at this point means the request was not served from cache.
+
+  Issue #67 (the leak shape) / #130 (the rule that creates the opportunity).
+*/
+export function evaluateAuthedCacheStatus({ cacheStatus }) {
+  if ((cacheStatus || '').toUpperCase() !== 'HIT') return { ok: true };
+  return {
+    ok: false,
+    reason:
+      'SESSION LEAK: an authed request (sb-access-token present) was served ' +
+      'cf-cache-status: HIT — Cloudflare answered it from the anon cache entry, ' +
+      'so the origin never ran and the signed-in visitor got the anonymous, ' +
+      'contact-info-gated body. Disable the Cache Rule first, then check it still ' +
+      'carries `not http.cookie contains "sb-access-token"` and that Vary: Cookie ' +
+      'survives on the anon response (#67 / #130).',
+  };
+}
+
 // Resolve which listing the four listing-dependent checks should probe.
 //
 // `SYNTHETIC_LISTING_ID` (wrangler.jsonc var) used to be taken on faith, on
@@ -593,6 +621,71 @@ async function checkCfCacheStatusHit(appUrl, listingId) {
   }
 }
 
+/*
+  The other half of #131 — and the one that matters once the #130 Cache Rule
+  is live.
+
+  checkCfCacheStatusHit proves the anon body IS edge-cached. This proves the
+  AUTHED request is not served that cached body. They are different failure
+  modes and only this one leaks a session.
+
+  evaluateAuthedCacheHeader and evaluateVaryCookie already assert the ORIGIN
+  behaves — private Cache-Control on the authed branch, Vary: Cookie on both.
+  Neither can see the CDN. If a Cache Rule is ever widened, reordered, or
+  loses its `not http.cookie contains "sb-access-token"` clause, Cloudflare
+  starts answering authed requests from the anon entry, the origin is never
+  consulted, and every origin-side check stays green while a signed-in
+  student is handed the anonymous (contact-info-gated) body. That is exactly
+  the class of bug the rule change in #130 introduces the opportunity for, so
+  it gets its own check rather than riding on the anon one.
+
+  Warms the edge ANONYMOUSLY first — the point is to create a cached entry
+  and then confirm the authed request refuses to match it. A HIT here is the
+  failure. Skips on the same inconclusive conditions as its sibling.
+*/
+async function checkCfCacheAuthedNotHit(appUrl, listingId) {
+  const name = 'cf-cache-authed-not-hit';
+  const url = `${appUrl}/property/thessaloniki/listing/${listingId}`;
+  const fetchWith = (headers) =>
+    fetch(url, {
+      headers: { 'user-agent': 'StudentX-synthetic/1.0', ...headers },
+      signal: AbortSignal.timeout(6000),
+      redirect: 'manual',
+    });
+  try {
+    // Warm anonymously so there IS an anon entry to (wrongly) match.
+    const warm = await fetchWith({});
+    if (INCONCLUSIVE_CF_5XX.has(warm.status)) {
+      return { name, ok: true, skipped: true, reason: `skipped: Cloudflare ${warm.status}` };
+    }
+    if (!warm.headers.get('cf-cache-status')) {
+      return { name, ok: true, skipped: true, reason: 'skipped: no cf-cache-status header (not behind CDN)' };
+    }
+
+    const res = await fetchWith({ cookie: SYNTHETIC_AUTH_COOKIE });
+    if (INCONCLUSIVE_CF_5XX.has(res.status)) {
+      return { name, ok: true, skipped: true, reason: `skipped: Cloudflare ${res.status}` };
+    }
+    const leak = evaluateAuthedCacheStatus({
+      cacheStatus: res.headers.get('cf-cache-status'),
+    });
+    if (!leak.ok) return { name, ...leak };
+
+    // Belt-and-braces: whatever the CDN did, the body it returned must not be
+    // advertising itself as publicly cacheable.
+    const authed = evaluateAuthedCacheHeader({
+      status: res.status,
+      cacheControl: res.headers.get('cache-control') || '',
+    });
+    return authed.ok ? { name, ok: true } : { name, ...authed };
+  } catch (err) {
+    if (err.name === 'TimeoutError' || err.name === 'AbortError') {
+      return { name, ok: true, skipped: true, reason: `skipped: ${err.name}` };
+    }
+    return { name, ok: false, reason: `fetch threw: ${err.message || err.name}` };
+  }
+}
+
 // Page-render check: assert at least one expected EN marker is present
 // (forgiving against copy tweaks). The Greek-leak half was dropped when the
 // site went English-only (#158).
@@ -781,6 +874,9 @@ export async function runSyntheticEnListing() {
     skipListingChecks
       ? Promise.resolve({ name: 'cf-cache-status-hit', ...listingSkip })
       : checkCfCacheStatusHit(appUrl, listingId),
+    skipListingChecks
+      ? Promise.resolve({ name: 'cf-cache-authed-not-hit', ...listingSkip })
+      : checkCfCacheAuthedNotHit(appUrl, listingId),
   ]);
 
   // Heavy property-page locale checks run sequentially via service binding.

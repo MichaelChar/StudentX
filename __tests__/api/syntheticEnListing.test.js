@@ -6,6 +6,7 @@ import {
   skipIfInconclusiveError,
   resolveSyntheticListingId,
   evaluateVaryCookie,
+  evaluateAuthedCacheStatus,
 } from '@/app/api/cron/synthetic-en-listing/route';
 
 // Cache-header regression guards. Pre-PR #105 the canary asserted
@@ -300,5 +301,47 @@ describe('evaluateVaryCookie (#67)', () => {
   it('labels which fetch failed', () => {
     const r = evaluateVaryCookie({ status: 200, vary: '' }, 'authed listing detail');
     expect(r.reason).toMatch(/^authed listing detail/);
+  });
+});
+
+/*
+  #130 turns on a Cloudflare Cache Rule for anon /property/*. The risk it
+  introduces is that an AUTHED request gets answered from the anon cache
+  entry — the origin never runs, so every origin-side check in this file
+  stays green while a signed-in student is handed the anonymous,
+  contact-info-gated body (#67).
+
+  evaluateAuthedCacheStatus is the rule that detects it. HIT is the only
+  leak; every other status means the origin was consulted.
+*/
+describe('evaluateAuthedCacheStatus (#130 session-leak guard)', () => {
+  it('flags HIT as a session leak', () => {
+    const r = evaluateAuthedCacheStatus({ cacheStatus: 'HIT' });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/SESSION LEAK/);
+  });
+
+  it('is case-insensitive — Cloudflare casing must not create a blind spot', () => {
+    expect(evaluateAuthedCacheStatus({ cacheStatus: 'hit' }).ok).toBe(false);
+    expect(evaluateAuthedCacheStatus({ cacheStatus: 'Hit' }).ok).toBe(false);
+  });
+
+  it.each(['MISS', 'EXPIRED', 'BYPASS', 'DYNAMIC', 'REVALIDATED'])(
+    'passes %s — the origin was consulted, which is the requirement',
+    (status) => {
+      expect(evaluateAuthedCacheStatus({ cacheStatus: status }).ok).toBe(true);
+    },
+  );
+
+  it('passes an absent status — the caller has already established the CDN is in play', () => {
+    expect(evaluateAuthedCacheStatus({ cacheStatus: '' }).ok).toBe(true);
+    expect(evaluateAuthedCacheStatus({ cacheStatus: null }).ok).toBe(true);
+    expect(evaluateAuthedCacheStatus({}).ok).toBe(true);
+  });
+
+  it('names the first remediation step, since the fix is dashboard-side', () => {
+    const { reason } = evaluateAuthedCacheStatus({ cacheStatus: 'HIT' });
+    expect(reason).toMatch(/Disable the Cache Rule first/);
+    expect(reason).toMatch(/sb-access-token/);
   });
 });
