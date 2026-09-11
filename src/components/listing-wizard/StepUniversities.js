@@ -74,6 +74,11 @@ export default function StepUniversities({
         </p>
       </div>
 
+      <div className="flex items-start gap-2 rounded-control bg-parchment px-3 py-2.5">
+        <Icon name="map-pin" className="w-4 h-4 shrink-0 mt-0.5 text-blue" />
+        <p className="text-xs text-night/70 leading-relaxed">{t('pinNote')}</p>
+      </div>
+
       <div className="flex flex-wrap items-center gap-2">
         <Button
           type="button"

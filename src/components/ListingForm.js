@@ -17,6 +17,7 @@ import {
 import {
   MIN_UNIVERSITY_DISTANCES,
   mergePrefillUniversityDistances,
+  ensureAllUniversityRows,
 } from '@/lib/universityDistances';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
@@ -621,10 +622,10 @@ export default function ListingForm({
     }
     const next = Math.min(step + 1, STEPS.length - 1);
     setStep(next);
-    // Prefill university distances when first entering that step with empty rows.
-    if (STEPS[next] === 'universities' && (form.university_distances || []).length === 0) {
-      // Fire-and-forget; errors surface in the step UI.
-      void prefillDistances();
+    // Entering the universities step: list every university and prefill from
+    // the pin. Fire-and-forget; landlord edits are preserved by the merge.
+    if (STEPS[next] === 'universities') {
+      void ensureUniversityRows();
     }
   }
 
@@ -658,15 +659,20 @@ export default function ListingForm({
    * @param {number|undefined} maxRowsOverride - row cap for the merge. Defaults
    *   to every university in the city (Prefill fills the whole list); "+ Add
    *   university" passes its own row count so one click adds exactly one uni.
+   * @param {{ silent?: boolean }} [opts] - `silent` suppresses the error banner
+   *   for the automatic prefill that runs on entering the step: the landlord
+   *   did not ask for it, so a missing pin or an OSRM hiccup should leave the
+   *   rows editable rather than shout at them.
    */
-  async function prefillDistances(existingOverride, maxRowsOverride) {
+  async function prefillDistances(existingOverride, maxRowsOverride, opts = {}) {
+    const silent = opts.silent === true;
     const coords = validateRequiredCoords(form.lat, form.lng);
     if (!coords.ok) {
-      setError(t('errors.coordsRequired'));
+      if (!silent) setError(t('errors.coordsRequired'));
       return;
     }
     setPrefillLoading(true);
-    setError('');
+    if (!silent) setError('');
     try {
       const token =
         accessToken ||
@@ -702,10 +708,25 @@ export default function ListingForm({
       );
       setField('university_distances', next);
     } catch (err) {
-      setError(err.message || t('errors.prefillFailed'));
+      if (!silent) setError(err.message || t('errors.prefillFailed'));
     } finally {
       setPrefillLoading(false);
     }
+  }
+
+  /**
+   * Entering the universities step: show every city university up front and
+   * fill the numbers from the map pin, so the landlord's job is to correct a
+   * prefilled list rather than to build one. Landlord-typed values survive —
+   * mergePrefillUniversityDistances only refreshes computed/empty rows.
+   */
+  async function ensureUniversityRows() {
+    const withAll = ensureAllUniversityRows(
+      form.university_distances || [],
+      (universities || []).map((u) => u.university_id),
+    );
+    setField('university_distances', withAll);
+    await prefillDistances(withAll, withAll.length, { silent: true });
   }
 
   /**
@@ -732,6 +753,16 @@ export default function ListingForm({
     // so "+ Add university" adds one uni rather than every remaining one.
     setField('university_distances', newRows);
     await prefillDistances(newRows, newRows.length);
+  }
+
+  /**
+   * Section list: one panel open at a time. Opening the universities panel
+   * prefills it the same way the wizard step does.
+   */
+  function toggleSection(key) {
+    const opening = openSection !== key;
+    setOpenSection(opening ? key : null);
+    if (opening && key === 'universities') void ensureUniversityRows();
   }
 
   const ladder = useMemo(() => {
@@ -904,9 +935,7 @@ export default function ListingForm({
                   incomplete={!done[section.key]}
                   incompleteLabel={t('sections.needsDetails')}
                   open={openSection === section.key}
-                  onToggle={() =>
-                    setOpenSection((cur) => (cur === section.key ? null : section.key))
-                  }
+                  onToggle={() => toggleSection(section.key)}
                 >
                   {renderStepBody(section.step)}
                 </EditorSection>

@@ -529,8 +529,9 @@
         "amenitiesLabel": "Amenities"
       },
       "universities": {
-        "lede": "Distances are prefilled from your map pin. Adjust any number you disagree with.",
+        "lede": "Every university is listed and prefilled from your map pin. Adjust any number you disagree with.",
         "minRequired": "At least {count} universities are required.",
+        "pinNote": "If a distance looks wrong, check the location pin on the Address step — every number here is measured from it.",
         "prefill": "Prefill from pin",
         "prefilling": "Computing…",
         "add": "+ Add university",
