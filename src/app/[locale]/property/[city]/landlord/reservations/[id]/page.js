@@ -63,6 +63,14 @@ export default function LandlordReservationDetailPage() {
     // null = still resolving; '' = signed out. Only '' is terminal.
     if (accessToken == null) return;
     if (!accessToken) {
+      /*
+        '' means the client could not resolve a session, NOT that the landlord
+        is signed out — this page is server-guarded by requireLandlord, so the
+        server already accepted it (#521). Show the load error rather than
+        falling through to `notFound`: the reservation exists, and telling a
+        landlord it doesn't sends them hunting for the wrong problem.
+      */
+      setError(t('loadError'));
       setLoading(false);
       return;
     }
@@ -133,7 +141,25 @@ export default function LandlordReservationDetailPage() {
     return (
       <LandlordShell eyebrow={t('eyebrow')} title={t('detailTitle')}>
         <Card tone="parchment" className="p-12 text-center">
-          <p className="font-display text-xl text-night/60">{t('notFound')}</p>
+          {/* "Could not load" is a different thing from "does not exist", and
+              the only one of the two worth offering a retry for. */}
+          <p className="font-display text-xl text-night/60">
+            {error || t('notFound')}
+          </p>
+          {error && (
+            <Button
+              variant="secondary"
+              size="sm"
+              className="mt-4"
+              onClick={() => {
+                setError('');
+                setLoading(true);
+                load();
+              }}
+            >
+              {t('retry')}
+            </Button>
+          )}
           <Link
             href="/property/thessaloniki/landlord/reservations"
             className="label-caps text-blue mt-4 inline-block"
