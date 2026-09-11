@@ -72,11 +72,25 @@ export function fromAddressFor(recipientName, email = FROM_EMAIL) {
 }
 
 /**
- * Ops / admin inboxes (synthetic alerts, listing reports, gig interest,
- * move-in problems). Override with OPS_DISPLAY_NAME; defaults to Michael
- * because that is the live ops recipient.
+ * Ops / admin mail: synthetic-check alerts, listing reports, gig interest,
+ * move-in problems.
+ *
+ * DELIBERATELY PLAIN `StudentX` — not `StudentX loves {name}`.
+ *
+ * The personalised form is for student- and landlord-facing mail, where warmth
+ * is the point. Ops mail is the opposite job: it is read while something is
+ * wrong, often on a phone, often at speed, and the sender column is how you
+ * triage it. "StudentX loves Michael" on a 3am alert that a listing page is
+ * 500ing buries the signal in branding aimed at someone else — the recipient
+ * IS the operator, so addressing them affectionately in the From line tells
+ * them nothing they do not know and costs a scannable sender.
+ *
+ * This previously read OPS_DISPLAY_NAME (default "Michael"). That var is now
+ * removed rather than left unread: a wrangler var nothing consumes is worse
+ * than no var, because the next person to change it will believe it works.
+ *
+ * The mailbox is unchanged either way, so SPF/DKIM/DMARC are unaffected.
  */
 export function opsFromAddress(email = FROM_EMAIL) {
-  const name = (process.env.OPS_DISPLAY_NAME || 'Michael').trim();
-  return fromAddressFor(name, email);
+  return `${FROM_BRAND} <${email}>`;
 }
