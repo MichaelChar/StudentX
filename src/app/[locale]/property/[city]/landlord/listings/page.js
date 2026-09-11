@@ -121,7 +121,22 @@ export default function LandlordListingsPage() {
       if (res.ok) {
         setListings((prev) => prev.filter((l) => l.listing_id !== listingId));
       } else {
-        setError(t('deleteError'));
+        /*
+          A listing with bookings cannot be deleted (#519) — the API answers
+          409 LISTING_HAS_BOOKINGS rather than the old bare 500. Say so, and
+          name PAUSE, because that is what the landlord actually wants: the
+          booking history has to survive, but "not taking enquiries right
+          now" is exactly what pause does (#205).
+
+          Any other failure keeps the generic message — this branch is
+          narrow so a real error is never mislabelled as "you have bookings".
+        */
+        const body = await res.json().catch(() => ({}));
+        setError(
+          body.error_code === 'LISTING_HAS_BOOKINGS'
+            ? t('deleteHasBookings')
+            : t('deleteError'),
+        );
       }
     } catch (err) {
       console.error('[LandlordListings] delete failed:', err);

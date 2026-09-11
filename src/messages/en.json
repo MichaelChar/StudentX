@@ -282,7 +282,8 @@
       "viewGrid": "Grid view",
       "viewList": "List view",
       "viewToggleLabel": "View as",
-      "gridCount": "{live} of {total} live"
+      "gridCount": "{live} of {total} live",
+      "deleteHasBookings": "This listing has bookings, so it can't be deleted — that history has to stay. Use Pause to take it off the site instead."
     },
     "listingForm": {
       "locationSection": "Location",
