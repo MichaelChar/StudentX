@@ -4,6 +4,7 @@ import {
   MAX_DISTANCE_METERS,
   hasFilledDistance,
   mergePrefillUniversityDistances,
+  ensureAllUniversityRows,
 } from '@/lib/universityDistances';
 
 const VALID = new Set(['auth', 'uom', 'ihu']);
@@ -232,5 +233,46 @@ describe('parseUniversityDistances', () => {
 
   it('rejects non-object entries', () => {
     expect(parseUniversityDistances(['auth'], VALID).error).toBeTruthy();
+  });
+});
+
+describe('ensureAllUniversityRows', () => {
+  const IDS = ['auth', 'uom', 'ihu'];
+
+  it('lists every university when the form is empty', () => {
+    expect(ensureAllUniversityRows([], IDS)).toEqual([
+      { university_id: 'auth', distance_meters: '', source: 'landlord' },
+      { university_id: 'uom', distance_meters: '', source: 'landlord' },
+      { university_id: 'ihu', distance_meters: '', source: 'landlord' },
+    ]);
+  });
+
+  it('keeps existing rows untouched and appends only the missing ones', () => {
+    const existing = [
+      { university_id: 'uom', distance_meters: '900', source: 'landlord' },
+      { university_id: 'auth', distance_meters: '1487', source: 'computed' },
+    ];
+    expect(ensureAllUniversityRows(existing, IDS)).toEqual([
+      ...existing,
+      { university_id: 'ihu', distance_meters: '', source: 'landlord' },
+    ]);
+  });
+
+  it('does not duplicate a university already listed', () => {
+    const existing = [
+      { university_id: 'auth', distance_meters: '800', source: 'computed' },
+    ];
+    const out = ensureAllUniversityRows(existing, ['auth', 'auth', 'uom']);
+    expect(out.map((r) => r.university_id)).toEqual(['auth', 'uom']);
+  });
+
+  it('tolerates missing inputs', () => {
+    expect(ensureAllUniversityRows(undefined, undefined)).toEqual([]);
+    expect(ensureAllUniversityRows(null, IDS)).toHaveLength(3);
+  });
+
+  it('rows it adds are empty, so they cannot satisfy the minimum', () => {
+    const rows = ensureAllUniversityRows([], IDS);
+    expect(rows.every((r) => !hasFilledDistance(r.distance_meters))).toBe(true);
   });
 });

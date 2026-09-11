@@ -262,3 +262,31 @@ export async function writeUniversityDistances(supabase, listingId, rows) {
 
   return { error: insertError ? insertError.message : null };
 }
+
+/**
+ * Ensure every city university has a row, so the landlord sees the full list
+ * rather than having to click "+ Add university" to discover the rest.
+ *
+ * Existing rows keep their order, value and provenance; missing universities
+ * are appended as empty landlord shells (empty values are filtered out of the
+ * payload and do not count toward MIN_UNIVERSITY_DISTANCES, so this cannot
+ * fake a completed step).
+ *
+ * @param {Array<{ university_id?: string, distance_meters?: unknown, source?: string }>} rows
+ * @param {Array<string>} universityIds - ids in display order
+ * @returns {Array<{ university_id: string, distance_meters: unknown, source: string }>}
+ */
+export function ensureAllUniversityRows(rows, universityIds) {
+  const existing = Array.isArray(rows) ? rows : [];
+  const ids = Array.isArray(universityIds) ? universityIds : [];
+  const present = new Set(
+    existing.map((r) => r?.university_id).filter((id) => typeof id === 'string' && id),
+  );
+  const out = [...existing];
+  for (const id of ids) {
+    if (typeof id !== 'string' || !id || present.has(id)) continue;
+    present.add(id);
+    out.push({ university_id: id, distance_meters: '', source: 'landlord' });
+  }
+  return out;
+}
