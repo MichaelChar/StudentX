@@ -1,157 +1,168 @@
-# Runbook — the Cloudflare Cache Rule for anon `/property/*`
+# Runbook — Cloudflare Cache Rule for anonymous pages
 
-Issue #130. This is the dashboard half of edge caching; the repo half is the
-two canary checks (`cf-cache-status-hit`, `cf-cache-authed-not-hit`) in
-`synthetic-en-listing`.
+**Issue:** [#130](https://github.com/MichaelChar/StudentX/issues/130) · **Related:** [#131](https://github.com/MichaelChar/StudentX/issues/131), [#67](https://github.com/MichaelChar/StudentX/issues/67) (closed)
 
-## Why a rule at all
+> **This is a dashboard change.** It cannot be committed. The repo half —
+> correct `Cache-Control` per route, `Vary: Cookie`, and a canary that
+> notices when caching stops working — is done; this is the switch that
+> makes it take effect.
 
-**Worker responses on a custom domain bypass Cloudflare's CDN cache. A
-`Cache-Control` header alone changes nothing.** This was verified the hard way
-in #261, where marking the login shells `public, s-maxage=300` produced
-identical TTFB and no `cf-cache-status`, and was reverted. The only mechanism
-that makes Cloudflare cache this app's HTML is a Cache Rule.
+## Why a rule is needed at all
 
-Without one, every anonymous pageview executes the Worker and queries
-Supabase. With one, a repeat anonymous hit is served at the edge and the
-Worker never runs — roughly 230ms → 40ms.
-
-## The rule
-
-**Caching → Cache Rules →** the existing rule named something like
-*"Cache anon listing detail (Set-Cookie override)"* → **Edit**.
-
-Rename it to **`Cache anon /property/* (edge)`**.
-
-### Expression
+**Cloudflare does not cache HTML by default, whatever `Cache-Control` says.**
+Only a Cache Rule marking a path eligible will do it. That is why every
+public page correctly advertises `public, s-maxage=300,
+stale-while-revalidate=86400` and yet, measured on prod 2026-09-10:
 
 ```
-starts_with(http.request.uri.path, "/property")
-and not http.request.uri.path contains "/landlord"
+$ curl -sI https://studentx.uk/property/thessaloniki | grep cf-cache-status
+(nothing — on repeated requests)
+```
+
+No `cf-cache-status` header at all means the response never entered the
+cache. Every anonymous page render is currently hitting the Worker.
+
+Note this is **not** the same as the `Set-Cookie` problem fixed in #511 —
+that was a second blocker sitting behind this one. Both had to go.
+
+## What the origin already does (verified prod, 2026-09-10)
+
+| path | `Cache-Control` |
+|---|---|
+| `/`, `/about`, `/admissions`, `/gigs`, `/resources` | `public, s-maxage=300, …` |
+| `/property`, `/property/:city`, `/about`, `/quiz`, `/results` | `public, s-maxage=300, …` |
+| `/property/:city/listing/:id` | `public…` anon · `private, no-store` with `sb-access-token` |
+| `/property/:city/landlord/**`, `/property/:city/landlords/:id` | `private, no-cache, no-store` |
+| `/student/**`, `/admin` | `private, no-cache, no-store` |
+| `/claim/:token` | `private, no-store` **(fixed in this PR — was public)** |
+
+**This matters for how the rule is written.** The origin is already the
+authority on what may be cached, so the rule should defer to it rather
+than re-encode the route tree — which is exactly how the current rule
+drifted (it matches `/property/listing/*`, a path that has not existed
+since listings moved to `/property/:city/listing/:id`, so it has been
+caching a 301 rather than a page).
+
+## The change
+
+Cloudflare dashboard → **Caching → Cache Rules** → edit the existing
+*"Cache anon listing detail (Set-Cookie override)"* rule.
+
+### 1. Expression
+
+```
+http.request.method eq "GET"
 and not http.cookie contains "sb-access-token"
+and not http.request.uri.path contains "/landlord"
+and not starts_with(http.request.uri.path, "/student")
+and not starts_with(http.request.uri.path, "/admin")
+and not starts_with(http.request.uri.path, "/claim")
+and not starts_with(http.request.uri.path, "/api/")
+and (
+  http.request.uri.path eq "/"
+  or starts_with(http.request.uri.path, "/about")
+  or starts_with(http.request.uri.path, "/admissions")
+  or starts_with(http.request.uri.path, "/gigs")
+  or starts_with(http.request.uri.path, "/resources")
+  or starts_with(http.request.uri.path, "/property")
+)
 ```
 
-### Action
+Notes on the shape:
 
-- **Cache eligibility:** Eligible for cache
-- **Edge TTL:** *Use cache-control header if present, bypass if not*
+- `contains "/landlord"` rather than a city-specific prefix, so it keeps
+  working when a second city goes live. It also covers
+  `/property/:city/landlords/:id` (the public landlord profile), which the
+  origin marks private.
+- No `/en/*` or `/el/*` branches. Those 301 to unprefixed paths (#158), and
+  caching a redirect is what the current rule accidentally does.
+- The exclusions are **belt-and-braces**, not the safety mechanism. The
+  origin's own `Cache-Control` is, via the next setting.
 
-That Edge TTL setting is load-bearing and is the reason this is safe rather
-than merely careful: anything the origin marks `private, no-cache, no-store`
-is **bypassed automatically**, whatever the expression matched. The clauses
-below are defence in depth on top of it, not the only thing standing between
-you and a leak.
+### 2. Settings — the one that actually matters
 
-## Why this expression differs from the one in issue #130
+| setting | value |
+|---|---|
+| Cache eligibility | **Eligible for cache** |
+| Edge TTL | **Use cache-control header if present** |
+| Browser TTL | Respect origin |
 
-The version in the issue body was written before several things changed. Do
-not paste it; it has two real defects and two dead clauses.
+**Do not set a fixed Edge TTL.** "Use cache-control header if present" is
+what makes a `private, no-store` response stay uncached even when its path
+matched the expression. With a fixed TTL, a rule-matching path would be
+cached regardless of what the origin said — which turns every exclusion
+above into the only thing standing between a private page and a shared
+cache, and one typo into a session leak.
 
-1. **It hardcodes `thessaloniki` in the landlord exclusion.** `SUPPORTED_CITIES`
-   now holds seven slugs (thessaloniki, athens, larissa, heraklion, nicosia,
-   london, dublin). `/property/athens/landlord/dashboard` would not have been
-   excluded. The Edge TTL setting would still have bypassed it on the private
-   header, so this was latent rather than live — but relying on the header
-   alone is precisely the pattern that produced #130's `/claim` scare.
-   `contains "/landlord"` is city-agnostic and cannot rot this way.
-2. **It cites `Set-Cookie: NEXT_LOCALE` as a blocker.** Gone — #511 removed
-   `localeCookie` for exactly this reason. Prod returns zero `Set-Cookie`
-   headers on `/property/thessaloniki`. Verify before trusting:
-   `curl -sI https://studentx.uk/property/thessaloniki | grep -ic set-cookie`
-   → `0`.
-3. **The `/en/property` clauses are dead.** #158 made every `/en/*` path 301 to
-   its unprefixed equivalent. Harmless but noise.
-4. **`contains "/landlord"` also excludes `/property/<city>/landlords/<id>`** —
-   the PUBLIC landlord profile — because "landlords" contains "landlord". That
-   is a deliberate trade: a small missed caching opportunity in exchange for an
-   exclusion that cannot be defeated by a new city slug. Revisit only if those
-   profiles become a traffic surface.
+## Verify
 
-## What is being cached, and why it is safe
-
-Audited 2026-09-11. Every route under `/property` that the rule can match:
-
-| Route | Reads auth? | Safe to cache anon? |
-|---|---|---|
-| `/property` (hub) | no | yes |
-| `/property/[city]` | no | yes |
-| `/property/[city]/about`, `/quiz` | no | yes |
-| `/property/[city]/results` | no | yes — see note |
-| `/property/[city]/landlords/[id]` | no | excluded by `/landlord` substring |
-| `/property/[city]/listing/[id]` | **yes** | yes — triple-guarded |
-| `/property/[city]/landlord/**` | yes | excluded, and private-headered |
-
-**The listing page is the only auth-varying route in the set**, and it has
-three independent guards:
-
-1. The rule's `not http.cookie contains "sb-access-token"` — an authed request
-   never matches, so it is never served from cache.
-2. `middleware.js` stamps `private, no-cache, no-store, must-revalidate` per
-   request when that cookie is present, so even a matched request would not be
-   stored.
-3. `Vary: Cookie` (set in `next.config.mjs`, not middleware — Next's response
-   pipeline tends to replace middleware-set `Vary`) so the CDN keys anon and
-   authed separately.
-
-`/claim/[token]` is **not** under `/property` and is additionally pinned to
-private headers (#130's other half). It cannot be matched by this rule.
-
-**Note on `/results`.** It is auth-invariant, so caching is safe. The cache
-key includes the query string, so filtered searches each become their own
-entry and long-tail combinations will mostly `MISS` — that costs nothing, it
-just means the win is concentrated on the unfiltered entry that navigation
-links to. No reason to exclude it.
-
-## Verification
-
-Run immediately after saving the rule.
+**1. Anonymous pages start reporting cache status.** Repeat each twice —
+the first request warms it.
 
 ```bash
-# 1. Anon: second hit must be a HIT.
-curl -sI https://studentx.uk/property/thessaloniki/listing/0106002 | grep -iE 'cache-control|cf-cache-status'
-curl -sI https://studentx.uk/property/thessaloniki/listing/0106002 | grep -iE 'cache-control|cf-cache-status'
+for p in / /property /property/thessaloniki /property/thessaloniki/results; do
+  curl -sI "https://studentx.uk$p" -o /dev/null -w "%{url_effective} "
+  curl -sI "https://studentx.uk$p" | grep -i cf-cache-status
+done
 ```
+
+Expect `cf-cache-status: HIT` on the second fetch (`MISS` then `HIT` is
+normal; `DYNAMIC` means the rule did not match).
+
+**2. Authenticated requests are still not cached.**
 
 ```bash
-# 2. Authed: must NEVER be a HIT, and must be private. This is the leak check.
-curl -sI -H 'Cookie: sb-access-token=verification-stub' https://studentx.uk/property/thessaloniki/listing/0106002 | grep -iE 'cache-control|cf-cache-status'
+curl -sI -H "Cookie: sb-access-token=stub" \
+  https://studentx.uk/property/thessaloniki/listing/0106002 \
+  | grep -iE "cf-cache-status|cache-control"
 ```
+
+Expect `private, no-cache, no-store` and **not** `HIT`.
+
+**3. Private surfaces stay out.**
 
 ```bash
-# 3. Landlord surface: must not be publicly cached.
-curl -sI https://studentx.uk/property/thessaloniki/landlord/dashboard | grep -iE 'cache-control|cf-cache-status'
+for p in /student/login /property/thessaloniki/landlord/login /claim/test123; do
+  printf "%s " "$p"
+  curl -sI "https://studentx.uk$p" | grep -i cf-cache-status || echo "(no cache status — correct)"
+done
 ```
 
-```bash
-# 4. Claim tokens: must not be cached at any layer.
-curl -sI https://studentx.uk/claim/any-token | grep -iE 'cache-control|cf-cache-status'
-```
+## The canary picks it up automatically
 
-Expected:
+`/api/cron/synthetic-en-listing` already has a **`cf-cache-status-hit`**
+check, added for #130/#131. It warms the edge with a global `fetch` (not
+the service binding, which bypasses the CDN) and asserts a repeat fetch
+reports `HIT`.
 
-| | `cache-control` | `cf-cache-status` |
-|---|---|---|
-| 1 (anon, 2nd) | `public, s-maxage=300, …` | **`HIT`** |
-| 2 (authed) | `private, no-cache, no-store, …` | anything **except** `HIT` |
-| 3 (landlord) | `private, no-cache, …` | anything except `HIT` |
-| 4 (claim) | `private, no-cache, …` | anything except `HIT` |
+**Today it silently skips**, because it treats an absent
+`cf-cache-status` header as "not behind a CDN" rather than a failure —
+which is precisely the state prod is in. Once this rule is live the header
+appears and the check goes live with it, so a future rule regression
+alerts within 15 minutes instead of going unnoticed the way the current
+drift did.
 
-Successive requests can land on different PoPs, so a `MISS` on step 1 is worth
-one retry before treating it as a failure.
+That transition is the tell: **if the canary is still reporting
+`cf-cache-status-hit` as skipped an hour after you save the rule, the rule
+is not matching.**
 
-## After it is live
+### The other half: `cf-cache-authed-not-hit`
 
-- The `cf-cache-status-hit` canary check stops skipping and starts asserting.
-  A long run of `skipped` on it means the rule is not matching — that state is
-  what hid #130 for months.
-- `cf-cache-authed-not-hit` becomes the session-leak guard. If it ever fires,
-  **disable the rule first, diagnose second** — it means signed-in users are
-  being served anonymous bodies.
-- Watch for 24h before treating the change as settled (#130's acceptance
-  criteria).
+`cf-cache-status-hit` proves the anon body **is** cached. It says nothing
+about who else can be served it, and that is the failure with consequences.
 
-## Rollback
+If this rule is ever widened, reordered, or loses its `not http.cookie
+contains "sb-access-token"` clause, Cloudflare starts answering authed
+requests from the anon entry. The origin is never consulted — so
+`en-listing-authed-cache` and `en-listing-vary-cookie`, which can only see
+origin responses, both keep passing while a signed-in student is handed the
+anonymous, contact-info-gated body (#67).
 
-Set the rule to **Disabled** in the dashboard. No deploy required, effective in
-seconds. The site returns to executing the Worker for every request — slower,
-and exactly what it did before this change.
+`cf-cache-authed-not-hit` warms the edge **anonymously**, then fetches the
+same URL carrying the synthetic auth cookie and fails if the response reports
+`cf-cache-status: HIT`. It skips on the same inconclusive conditions as its
+sibling, so like `cf-cache-status-hit` it only becomes meaningful once this
+rule is live.
+
+**If it ever fires, disable the rule first and diagnose second.** It does not
+mean caching is misconfigured; it means sessions are leaking.
