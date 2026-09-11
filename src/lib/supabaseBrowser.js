@@ -22,9 +22,11 @@ const LOCK_ACQUIRE_TIMEOUT_MS = 5000;
  * This delegates to the library's own `navigatorLock` (so we keep its
  * orphaned-lock steal-recovery and the spec edge cases) but forces a finite
  * acquire bound. A wedged lock now fails fast / self-heals instead of hanging.
- * Because there is no lockfile in this repo (each deploy resolves `@supabase/*`
- * to "latest matching"), pinning the bound in our own code keeps it guaranteed
- * across version drift. On a recent auth-js — whose default is already 5 s with
+ * (The comment here used to say there was no lockfile in this repo. There is —
+ * package-lock.json is committed — and as of #521 `@supabase/supabase-js` is
+ * also pinned exactly, because three versions were measured and all wedge the
+ * same way. Keeping the bound in our own code is still worth it: it is one
+ * fewer thing that changes meaning on an upgrade.) On a recent auth-js — whose default is already 5 s with
  * steal-recovery — this is effectively a no-op.
  */
 function boundedAuthLock(name, acquireTimeout, fn) {
@@ -42,6 +44,58 @@ function boundedAuthLock(name, acquireTimeout, fn) {
   // Everything else is capped at our finite bound.
   const bound = acquireTimeout === 0 ? 0 : LOCK_ACQUIRE_TIMEOUT_MS;
   return navigatorLock(name, bound, fn);
+}
+
+/*
+  Read the persisted session straight out of storage, bypassing gotrue.
+
+  WHY THIS EXISTS (#521). getSession() takes the `sb-<ref>-auth-token`
+  Navigator lock. We reproduced a holder that takes that lock and NEVER
+  releases it — three samples over 6.5s showed the same client holding it
+  with nothing pending, while every caller timed out. Pinning did not help:
+  supabase-js 2.95.0, 2.101.0 and 2.105.0 all behave the same.
+
+  The read path does not need the lock. gotrue serialises because a refresh
+  may WRITE; simply reading an unexpired token is safe to do directly, and
+  removes the hot path from behind a mutex that can wedge.
+
+  DELIBERATELY CONSERVATIVE. This depends on supabase's storage format, which
+  is exactly the kind of thing that changes silently on upgrade. So every
+  deviation — missing key, unparseable JSON, wrong shape, expired, missing
+  expiry — returns null and the caller falls back to getSession() as before.
+  A format change degrades to today's behaviour rather than breaking auth.
+
+  EXPIRY IS REQUIRED, not optional: a token with no readable expiry is
+  treated as unusable. Returning a possibly-expired token would trade a
+  hang for silent 401s, which is worse — at least a hang is visible.
+*/
+const EXPIRY_SKEW_SECONDS = 60;
+
+export function readPersistedSession() {
+  try {
+    if (typeof window === 'undefined' || !window.localStorage) return null;
+    const url = process.env.NEXT_PUBLIC_SUPABASE_URL;
+    if (!url) return null;
+
+    // Matches supabase-js's default storageKey: sb-<project-ref>-auth-token.
+    const ref = new URL(url).hostname.split('.')[0];
+    const raw = window.localStorage.getItem(`sb-${ref}-auth-token`);
+    if (!raw) return null;
+
+    const parsed = JSON.parse(raw);
+    const token = parsed?.access_token;
+    const expiresAt = parsed?.expires_at;
+    if (typeof token !== 'string' || !token) return null;
+    if (typeof expiresAt !== 'number') return null;
+
+    // Refresh slightly early so we never hand out a token about to expire.
+    const now = Math.floor(Date.now() / 1000);
+    if (expiresAt - EXPIRY_SKEW_SECONDS <= now) return null;
+
+    return token;
+  } catch {
+    return null;
+  }
 }
 
 /**

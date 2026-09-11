@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { getSupabaseBrowser, readPersistedSession } from '@/lib/supabaseBrowser';
 
 /*
   Hard ceiling on resolving a session, independent of the lock-acquire bound
@@ -40,6 +40,23 @@ function withTimeout(promise, label) {
  * @returns {Promise<string>} the token, or '' when none could be resolved
  */
 export async function resolveAccessToken(supabase) {
+  /*
+    FAST PATH — read the persisted token directly, no lock (#521).
+
+    getSession() takes gotrue's auth lock, and we reproduced a holder that
+    never releases it. Reading an unexpired token out of storage needs no
+    lock at all: gotrue serialises because a refresh may WRITE, and this only
+    reads. Pinning did not help (2.95.0 / 2.101.0 / 2.105.0 all wedge), so
+    taking the read off that path is the fix that actually addresses it.
+
+    readPersistedSession returns null for anything it is not certain about —
+    missing key, bad JSON, wrong shape, expired, no readable expiry — so the
+    slow path below still runs whenever the fast one cannot answer, including
+    if supabase changes its storage format.
+  */
+  const cached = readPersistedSession();
+  if (cached) return cached;
+
   try {
     const { data } = await withTimeout(supabase.auth.getSession(), 'getSession');
     let session = data?.session ?? null;
