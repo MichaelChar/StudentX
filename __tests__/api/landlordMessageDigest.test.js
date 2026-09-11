@@ -91,6 +91,24 @@ describe('landlord-message-digest route', () => {
     const res = await POST(makeReq());
     expect(await res.json()).toMatchObject({ processed: 1, emailsSent: 1, alreadyClaimed: 0 });
     expect(send).toHaveBeenCalledTimes(1);
+    expect(send.mock.calls[0][0].from).toBe('StudentX <alerts@studentx.uk>');
+  });
+
+  it('personalizes From from the landlord given name', async () => {
+    pendingRows = [
+      {
+        inquiry_id: 'iq1',
+        landlord_email: 'landlord@example.com',
+        landlord_name: 'Kostas Dimitriou',
+        unread_count: 1,
+        student_display_name: 'Sam',
+      },
+    ];
+    const res = await POST(makeReq());
+    expect(res.status).toBe(200);
+    expect(send.mock.calls[0][0].from).toBe(
+      '"StudentX loves Kostas" <alerts@studentx.uk>',
+    );
   });
 
   it('does not send when the claim was already taken by another tick', async () => {

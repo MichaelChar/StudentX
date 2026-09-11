@@ -1,9 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 import { getResend } from '@/lib/resend';
+import { opsFromAddress } from '@/lib/emailFrom';
 import { normalizeMultiLine, codepointLength } from '@/lib/textNormalize';
-
-const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
 // Fixed reason set — must mirror the radio options in ReportListingModal.js
 // and the `report.reason*` keys in en.json. Anything outside this set is a
@@ -254,7 +253,7 @@ export async function POST(request) {
 
   try {
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: opsFromAddress(),
       to: recipient,
       subject: `Listing report — ${listingId} — ${reasonLabel}`,
       text: lines.join('\n'),

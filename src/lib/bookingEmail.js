@@ -6,9 +6,8 @@
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
+import { fromAddressFor, opsFromAddress } from '@/lib/emailFrom';
 import { formatMoney } from '@/lib/formatMoney';
-
-const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
 function safe(s) {
   return String(s ?? '')
@@ -87,7 +86,7 @@ export async function sendBookingRequestEmail({
     const detailUrl = `${appUrl}/property/thessaloniki/landlord/reservations/${bookingId}`;
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: fromAddressFor(landlord.name),
       to: landlord.email,
       replyTo: studentEmail || undefined,
       subject: `New booking request — ${label}`,
@@ -127,7 +126,7 @@ export async function sendBookingReminderEmail({
     const detailUrl = `${appUrl}/property/thessaloniki/landlord/reservations/${bookingId}`;
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: fromAddressFor(landlord.name),
       to: landlord.email,
       subject: `Reminder: booking request waiting — ${label}`,
       html: `
@@ -164,7 +163,7 @@ export async function sendBookingAcceptedEmail({
     const detailUrl = `${appUrl}/student/account/bookings/${bookingId}`;
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: fromAddressFor(studentName),
       to: studentEmail,
       subject: `Booking accepted — ${label}`,
       html: `
@@ -202,7 +201,7 @@ export async function sendBookingDeclinedEmail({
     const appUrl = appBase();
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: fromAddressFor(studentName),
       to: studentEmail,
       subject: `Booking declined — ${label}`,
       html: `
@@ -240,7 +239,7 @@ export async function sendMoveInPromptEmail({
     const detailUrl = `${appUrl}/student/account/bookings/${bookingId}`;
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: fromAddressFor(studentName),
       to: studentEmail,
       subject: `How was move-in? — ${label}`,
       html: `
@@ -295,7 +294,7 @@ export async function sendMoveInProblemOpsEmail({
     const detailUrl = `${appUrl}/student/account/bookings/${bookingId}`;
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: opsFromAddress(),
       to: recipient,
       replyTo: studentEmail || undefined,
       subject: `Move-in problem reported — ${label}`,

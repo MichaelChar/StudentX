@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getResend } from '@/lib/resend';
+import { opsFromAddress } from '@/lib/emailFrom';
 import { isCronAuthorized } from '../auth';
 
 // Synthetic uptime check guarding against the regression class fixed in PR #48
@@ -670,7 +671,7 @@ async function checkCronScheduleDrift() {
 
 async function sendAlert({ to, subject, lines }) {
   const resend = getResend();
-  const from = process.env.RESEND_FROM_EMAIL || 'StudentX Alerts <alerts@studentx.uk>';
+  const from = process.env.RESEND_FROM_EMAIL || opsFromAddress();
   await resend.emails.send({
     from,
     to,
