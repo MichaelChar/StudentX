@@ -490,7 +490,11 @@ the header of that file for why it checks the emitted bundle rather than
 
 **Live in production.** `studentx.uk` is verified in Resend (DKIM/SPF/DMARC
 records on the CF zone) and `RESEND_API_KEY` is set as a Worker secret.
-The mailbox is always `alerts@studentx.uk`. The display name is built by
+The mailbox is always `michael@studentx.uk` — the only address registered to
+send in Resend (2026-09-11). It lives in one constant, `FROM_EMAIL` in
+`src/lib/emailFrom.js`. **An unregistered sender fails silently**: every send
+is wrapped in try/catch so the user-facing action still succeeds, so a wrong
+value here surfaces nowhere a person would look. The display name is built by
 `src/lib/emailFrom.js` and **splits by audience**:
 
 - **Student / landlord mail** — `fromAddressFor(name)` gives
@@ -503,7 +507,7 @@ The mailbox is always `alerts@studentx.uk`. The display name is built by
   column on nothing.
 
 Display names never affect SPF/DKIM/DMARC — the mailbox is unchanged.
-Outbound paths sending from `alerts@studentx.uk`:
+Outbound paths sending from `michael@studentx.uk`:
 
 - Synthetic check alerts (`/api/cron/synthetic-en-listing`)
 - Landlord message digest (`/api/cron/landlord-message-digest`)

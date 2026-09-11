@@ -2,8 +2,8 @@
  * Personalized From display name.
  *
  * Inbox clients show the display-name half of `From: "StudentX loves Maria"
- * <alerts@studentx.uk>`. The address stays `alerts@studentx.uk` so SPF/DKIM/
- * DMARC are unchanged. Gmail/Apple Mail will still ignore this and show the
+ * <michael@studentx.uk>`. Only the DISPLAY NAME is personalised — the mailbox
+ * is constant, so SPF/DKIM/DMARC are unaffected by any of this. Gmail/Apple Mail will still ignore this and show the
  * saved contact name if the recipient already has that address in Contacts.
  *
  * First name only: inboxes truncate, and a full Greek name overflows the
@@ -12,7 +12,17 @@
  * `StudentX loves undefined`.
  */
 
-export const FROM_EMAIL = 'alerts@studentx.uk';
+/*
+  The mailbox every outbound path sends from.
+
+  `michael@studentx.uk`, not `alerts@` — it is the only address registered to
+  send in Resend (confirmed 2026-09-11). An unregistered sender is rejected at
+  send time, and every send in this codebase is wrapped in try/catch so the
+  user-facing action still succeeds — which means a wrong value here fails
+  SILENTLY, with no error surfaced anywhere a person would look. That is why
+  this is a single constant rather than a literal repeated per call site.
+*/
+export const FROM_EMAIL = 'michael@studentx.uk';
 export const FROM_BRAND = 'StudentX';
 
 const TITLES = new Set([
@@ -63,7 +73,7 @@ function quoteDisplayName(name) {
 /**
  * @param {string | null | undefined} recipientName
  * @param {string} [email]
- * @returns {string} RFC 5322 mailbox, e.g. `"StudentX loves Maria" <alerts@studentx.uk>`
+ * @returns {string} RFC 5322 mailbox, e.g. `"StudentX loves Maria" <michael@studentx.uk>`
  */
 export function fromAddressFor(recipientName, email = FROM_EMAIL) {
   const first = firstName(recipientName);
