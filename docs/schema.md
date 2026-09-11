@@ -278,9 +278,17 @@ City-scoped university reference points for landlord-authored distances.
 | `city_slug` | TEXT | NOT NULL | Matches `SUPPORTED_CITIES` |
 | `name` | TEXT | NOT NULL | Full display name |
 | `short_name` | TEXT | NOT NULL | Card label (AUTH, UoM, IHU) |
-| `sort_order` | INTEGER | NOT NULL, DEFAULT 0 | Dropdown order |
+| `sort_order` | INTEGER | NOT NULL, DEFAULT 0 | Display order |
+| `lat` | DOUBLE PRECISION | nullable | Campus latitude (119) |
+| `lng` | DOUBLE PRECISION | nullable | Campus longitude (119) |
 
 **RLS:** public SELECT; writes via migration/seed only.
+
+`lat`/`lng` are the **fallback** position for distance measurement, used only
+for a university with no `faculties` rows — prod holds faculties for AUTH
+only, so UoM and IHU are measured from these. Where faculty rows exist the
+nearest campus wins. Nullable on purpose: a university without coordinates
+reports no distance rather than blocking the insert.
 
 ### `listing_university_distances` (migration 066; `source` in 102)
 
@@ -291,8 +299,8 @@ Landlord-reported metres from a listing to each university (not OSRM;
 |--------|------|-------------|-------------|
 | `listing_id` | TEXT | PK (composite), FK → listings ON DELETE CASCADE | Listing |
 | `university_id` | TEXT | PK (composite), FK → universities ON DELETE CASCADE | University |
-| `distance_meters` | INTEGER | NOT NULL, CHECK 1..50000 | Self-reported metres |
-| `source` | TEXT | NOT NULL, DEFAULT `landlord`, CHECK IN (`landlord`, `computed`) | Typed vs map-pin prefill (102) |
+| `distance_meters` | INTEGER | NOT NULL, CHECK 1..50000 | Metres from the listing's pin |
+| `source` | TEXT | NOT NULL, DEFAULT `landlord`, CHECK IN (`landlord`, `computed`) | Always `computed` since #542 — the wizard step is read-only and measures from the map pin. `landlord` rows are pre-#542 hand-typed values, re-measured the next time that listing's step is opened |
 | `updated_at` | TIMESTAMPTZ | NOT NULL, DEFAULT now() | Last update |
 
 **Index:** `idx_lud_university_id` on `university_id`
