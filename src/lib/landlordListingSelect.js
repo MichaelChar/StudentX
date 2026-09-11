@@ -28,7 +28,8 @@ export const LANDLORD_LISTING_SELECT = `
   location ( location_id, address, neighborhood, lat, lng ),
   property_types ( property_type_id, name ),
   listing_amenities ( amenities ( amenity_id, name ) ),
-  property_verifications ( verification_id, method, status, verified_at, checklist_json, notes, created_at )
+  property_verifications ( verification_id, method, status, verified_at, checklist_json, notes, created_at ),
+  bookings ( count )
 `;
 
 // Pre-migration fallback: identical to LANDLORD_LISTING_SELECT minus columns
@@ -54,6 +55,29 @@ export const LANDLORD_LISTING_SELECT_FALLBACK = `
   property_types ( property_type_id, name ),
   listing_amenities ( amenities ( amenity_id, name ) )
 `;
+
+/**
+ * Whether a listing has any bookings, from the `bookings ( count )` embed.
+ *
+ * Drives the disabled state on Delete (#519): `bookings` is the one FK that
+ * RESTRICTs rather than cascades — that history must survive — so deleting
+ * such a listing is refused with a 409. Showing an enabled button that always
+ * fails is worse than showing a disabled one that explains itself.
+ *
+ * Defaults to FALSE when the embed is absent, which matters: the
+ * pre-migration fallback select omits it, and PostgREST would drop it on a
+ * relationship change. False means the button stays enabled and the landlord
+ * gets the 409 with its explanation — the previous behaviour, which is a safe
+ * floor. Defaulting to true would hide Delete from listings that can be
+ * deleted, and no error would ever tell them why.
+ *
+ * @param {{ bookings?: Array<{ count?: number }> }} row
+ */
+export function listingHasBookings(row) {
+  const embed = row?.bookings;
+  if (!Array.isArray(embed) || embed.length === 0) return false;
+  return Number(embed[0]?.count) > 0;
+}
 
 /**
  * Fetch a landlord's own listings (newest first), with the pre-migration

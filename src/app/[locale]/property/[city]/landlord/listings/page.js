@@ -18,6 +18,7 @@ import Pill from '@/components/ui/Pill';
 import ConfirmDialog from '@/components/ui/ConfirmDialog';
 import StatusLadder from '@/components/listing-wizard/StatusLadder';
 import { deriveListingLadder, flagsForDisableToggle } from '@/lib/listingGoLive';
+import { listingHasBookings } from '@/lib/landlordListingSelect';
 import {
   hasPendingPropertyVerification,
   isPropertyVerified,
@@ -339,6 +340,7 @@ export default function LandlordListingsPage() {
                   listing={listing}
                   busy={busyId === listing.listing_id}
                   isVerified={isVerified}
+                  hasBookings={listingHasBookings(listing)}
                   onDelete={() => setConfirmTarget(listing)}
                   onDuplicate={() => performDuplicate(listing.listing_id)}
                   onToggleDisable={() => performToggleDisable(listing)}
@@ -430,6 +432,7 @@ function ListingRow({
   listing,
   busy,
   isVerified,
+  hasBookings,
   onDelete,
   onDuplicate,
   onToggleDisable,
@@ -573,11 +576,26 @@ function ListingRow({
             {busy ? tPv('requesting') : tPv('requestCta')}
           </button>
         )}
+        {/*
+          Delete is disabled once a listing has bookings (#519).
+
+          `bookings` is the one FK that RESTRICTs rather than cascades — that
+          history has to survive — so the API refuses with a 409. An enabled
+          button that always fails is worse than a disabled one that says why,
+          and the title names PAUSE, which is what the landlord actually wants
+          here (#205).
+
+          The 409 handling in performDelete stays as the backstop: this flag
+          comes from a `bookings ( count )` embed that the pre-migration
+          fallback select omits, so it can legitimately be false on a listing
+          that does have bookings. Belt and braces, in that order.
+        */}
         <button
           type="button"
           onClick={onDelete}
-          disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-control border border-magenta/40 text-magenta hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
+          disabled={busy || hasBookings}
+          title={hasBookings ? t('deleteHasBookings') : undefined}
+          className="label-caps px-3 py-1.5 rounded-control border border-magenta/40 text-magenta hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {busy ? t('deleting') : t('delete')}
         </button>
