@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useParams } from 'next/navigation';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 import { Link, useRouter } from '@/i18n/navigation';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
@@ -40,20 +40,36 @@ export default function LandlordReservationDetailPage() {
 
   const [booking, setBooking] = useState(null);
   const [firstContactAt, setFirstContactAt] = useState(null);
+  const accessToken = useAccessToken();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [acting, setActing] = useState(false);
 
+  /*
+    useAccessToken, NOT supabase.auth.getSession() — same fix as
+    StudentBookingDetail, same reason.
+
+    getSession() here with a bare `return` on empty left `loading` true
+    forever: the reservation rendered its heading and nothing else, no error,
+    no retry. The e2e landlord-accept journey failed on it INTERMITTENTLY,
+    which is the worse shape — the student-side equivalent failed every time
+    and was easy to find, this one only sometimes.
+
+    useAccessToken's docstring explains it: getSession() "can deadlock on the
+    navigator.locks-backed auth storage if a prior auth op didn't release",
+    and it retries via refreshSession() when the cached session is missing.
+  */
   const load = useCallback(async () => {
-    const supabase = getSupabaseBrowser();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) return;
+    // null = still resolving; '' = signed out. Only '' is terminal.
+    if (accessToken == null) return;
+    if (!accessToken) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch(`/api/bookings/${bookingId}`, {
-        headers: { Authorization: `Bearer ${session.access_token}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       if (!res.ok) {
         setError(t('loadError'));
@@ -68,7 +84,7 @@ export default function LandlordReservationDetailPage() {
     } finally {
       setLoading(false);
     }
-  }, [bookingId, t]);
+  }, [bookingId, t, accessToken]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount
@@ -79,16 +95,12 @@ export default function LandlordReservationDetailPage() {
     setActing(true);
     setError('');
     try {
-      const supabase = getSupabaseBrowser();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!accessToken) return;
       const res = await fetch(`/api/bookings/${bookingId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ action }),
       });

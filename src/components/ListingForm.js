@@ -142,7 +142,34 @@ export default function ListingForm({
   const fileInputRef = useRef(null);
   const [userId, setUserId] = useState('anon');
   // Paste-import step 0 only on brand-new listings (no edit payload).
-  const includeImport = !listingIdProp;
+  /*
+    FROZEN ON MOUNT — do not turn this back into `!listingIdProp`.
+
+    It used to be derived live, and that silently SKIPPED THE UNIVERSITIES
+    STEP on the create path:
+
+      - the wizard page holds `draftId` in state and passes it as
+        `listingId`, so `listingIdProp` is null until the first draft save;
+      - `saveDraftQuiet()` runs when advancing off the `property` step, which
+        sets `draftId` — so `listingIdProp` becomes truthy mid-wizard;
+      - `includeImport` flipped to false, STEPS went from 8 entries to 7,
+        and `step` is an INDEX. Index 3 stopped meaning 'universities' and
+        started meaning 'price'.
+
+    The user went Property → Continue → and landed on Price, never seeing
+    Universities. The progress indicator jumped from "Step 3 of 8" to
+    "Step 4 of 7" in the same click.
+
+    Worse, university distances are REQUIRED (errors.universitiesRequired),
+    and `prefillDistances()` only fires when ADVANCING INTO that step
+    (handleNext) — so on the create path it never ran either. The listing
+    reached Review failing validation for a step the wizard had skipped.
+
+    Freezing keeps STEPS stable for the lifetime of the form, which is the
+    invariant the index-based `step` already assumed. Found by the e2e
+    landlord-wizard journey the first time it was ever executed end to end.
+  */
+  const [includeImport] = useState(() => !listingIdProp);
   const STEPS = useMemo(
     () => (includeImport ? ['import', ...MAIN_STEPS] : MAIN_STEPS),
     [includeImport],

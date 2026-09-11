@@ -94,11 +94,11 @@ test.describe('Landlord listing wizard', () => {
       progress indicator), but a step added or removed will break them again
       by design rather than by accident.
     */
-    await expect(page.getByText(/Step 1 of 8/i)).toBeVisible({ timeout: 30_000 });
+    await expect(page.getByText(/Step 1 of 8/i).first()).toBeVisible({ timeout: 30_000 });
     // Skip the paste-a-description step to reach Address.
     await page.getByRole('button', { name: /Start from scratch/i }).click();
     // Address — what used to be step 1, now step 2 behind the import step.
-    await expect(page.getByText(/Step 2 of 8/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 2 of 8/i).first()).toBeVisible({ timeout: 15_000 });
 
     // --- Step 1: Address — coords not typeable ---
     expect(await page.locator('input[name="lat"], input#lat').count()).toBe(0);
@@ -119,24 +119,41 @@ test.describe('Landlord listing wizard', () => {
       }
     });
 
+    /*
+      Place the pin by clicking the map.
+
+      AddressMap's DraggableMarker registers useMapEvents({ click }), so a
+      plain map click does set coords — the approach was right. What was
+      wrong is HOW the click was issued: `page.mouse.click(box.x + …)` uses
+      VIEWPORT coordinates, and `toBeVisible()` does not mean "in viewport"
+      — only that the element has a box and isn't hidden. On the address
+      step the map sits below the fold, so the click landed somewhere else
+      entirely and no pin was ever set.
+
+      `locator.click({ position })` is relative to the element and scrolls
+      it into view first, which is the whole difference.
+    */
     const map = page.locator('.leaflet-container').first();
     await expect(map).toBeVisible({ timeout: 20_000 });
+    await map.scrollIntoViewIfNeeded();
     const box = await map.boundingBox();
     expect(box).toBeTruthy();
-    await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
+    await map.click({
+      position: { x: Math.round(box.width / 2), y: Math.round(box.height / 2) },
+    });
 
     await expect(page.getByText(/Pin set/i)).toBeVisible({ timeout: 15_000 });
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 2: Property ---
-    await expect(page.getByText(/Step 3 of 8/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 3 of 8/i).first()).toBeVisible({ timeout: 15_000 });
     await page.locator('#wiz-type').selectOption({ label: 'Studio' }).catch(async () => {
       await page.locator('#wiz-type').selectOption({ index: 1 });
     });
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 3: Universities — empty rows must block ---
-    await expect(page.getByText(/Step 4 of 8/i)).toBeVisible({ timeout: 20_000 });
+    await expect(page.getByText(/Step 4 of 8/i).first()).toBeVisible({ timeout: 20_000 });
     // Wait for auto-prefill attempt, then strip rows down to exactly one so
     // the "+ Add university" regression assertions below start from a known
     // state.
@@ -196,8 +213,11 @@ test.describe('Landlord listing wizard', () => {
     }
 
     await page.getByRole('button', { name: /Continue/i }).click();
+    // `.first()` — the copy appears twice on this step (the inline hint and
+    // the validation error), so a bare getByText trips strict mode. The
+    // assertion is "the requirement is stated", not "stated exactly once".
     await expect(
-      page.getByText(/Add distances for at least 2 universities|at least 2/i),
+      page.getByText(/Add distances for at least 2 universities|at least 2/i).first(),
     ).toBeVisible({ timeout: 10_000 });
 
     // Recover with two distances via prefill or manual add.
@@ -231,24 +251,26 @@ test.describe('Landlord listing wizard', () => {
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 4: Price ---
-    await expect(page.getByText(/Step 5 of 8/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 5 of 8/i).first()).toBeVisible({ timeout: 15_000 });
     const price = page.locator('input[type="number"]').first();
     if (await price.count()) await price.fill('450');
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 5: Availability ---
-    await expect(page.getByText(/Step 6 of 8/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 6 of 8/i).first()).toBeVisible({ timeout: 15_000 });
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 6: Photos (soft continue with zero) ---
-    await expect(page.getByText(/Step 7 of 8/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 7 of 8/i).first()).toBeVisible({ timeout: 15_000 });
     await page.getByRole('button', { name: /Continue/i }).click();
 
     // --- Step 7: Review — <5 photos blocks submit ---
-    await expect(page.getByText(/Step 8 of 8/i)).toBeVisible({ timeout: 15_000 });
+    await expect(page.getByText(/Step 8 of 8/i).first()).toBeVisible({ timeout: 15_000 });
     await page.getByRole('button', { name: /Submit|Publish|Create/i }).click();
     await expect(
-      page.getByText(/Add at least 5 photos before submitting|at least 5 photos/i),
+      // `.first()` for the same reason as the universities gate above: the
+      // requirement appears as both an inline hint and a validation error.
+      page.getByText(/Add at least 5 photos before submitting|at least 5 photos/i).first(),
     ).toBeVisible({ timeout: 10_000 });
   });
 });
