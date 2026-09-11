@@ -145,3 +145,24 @@ drift did.
 That transition is the tell: **if the canary is still reporting
 `cf-cache-status-hit` as skipped an hour after you save the rule, the rule
 is not matching.**
+
+### The other half: `cf-cache-authed-not-hit`
+
+`cf-cache-status-hit` proves the anon body **is** cached. It says nothing
+about who else can be served it, and that is the failure with consequences.
+
+If this rule is ever widened, reordered, or loses its `not http.cookie
+contains "sb-access-token"` clause, Cloudflare starts answering authed
+requests from the anon entry. The origin is never consulted — so
+`en-listing-authed-cache` and `en-listing-vary-cookie`, which can only see
+origin responses, both keep passing while a signed-in student is handed the
+anonymous, contact-info-gated body (#67).
+
+`cf-cache-authed-not-hit` warms the edge **anonymously**, then fetches the
+same URL carrying the synthetic auth cookie and fails if the response reports
+`cf-cache-status: HIT`. It skips on the same inconclusive conditions as its
+sibling, so like `cf-cache-status-hit` it only becomes meaningful once this
+rule is live.
+
+**If it ever fires, disable the rule first and diagnose second.** It does not
+mean caching is misconfigured; it means sessions are leaking.
