@@ -630,7 +630,7 @@ Ordered. Each item is roughly one PR. `→` lists the files it lands in.
 - **P1** Title row + `Share` / `Save`, gallery mosaic (1 large + 2×2,
   `Show all photos` pill) → `ListingGallery.js`
 - **P2** Lightbox restyle + history entry → `ListingLightbox.js`
-- **P3** Sticky sub-nav (`Photos · Amenities · Reviews · Location`)
+- **P3** Sticky sub-nav (`Photos · Amenities · Reviews · Location`) — ❌ skipped, see Feature 28
 - **P4** Reorder PDP to Airbnb's section order (§2) → `listing/[id]/page.js`
 - **P5** `OVERVIEW` + `HIGHLIGHTS` sections (icon + title + subtitle rows)
 - **P6** *Where you'll sleep* paged card row
@@ -1358,19 +1358,51 @@ untagged hosts.
 
 **Supersedes:** backlog item **P2**.
 
-### ⏳ Feature 28 — Sticky sub-nav — **DEFER to Feature 34**
+### ❌ Feature 28 — Sticky sub-nav — **SKIP** (logged 2026-09-11)
 
-`Photos · Amenities · Reviews · Location` anchor bar. Not built now.
+Not built. Feature 34 (reviews) is **SKIP**, so the specified bar
+`Photos · Amenities · Reviews · Location` cannot exist as specified.
 
-Reason: its usefulness scales with page length. Without reviews the bar
-carries three links on a page traversable in two scroll flicks. It becomes
-worthwhile once the full PDP stack and Feature 34 land.
+This entry previously carried an hourglass deferring to Feature 34 — a
+deferral to a feature that is itself skipped, which is why it was the only
+remaining `⏳` without a date. Feature 34's own knock-on table had already recorded this as
+**Dropped**; only the heading was stale.
 
-Deferring also avoids tuning scroll offsets twice — the sticky-header offset
-and the interaction with the sticky booking card both need re-tuning every
-time a section is added.
+**Both original deferral reasons were re-checked on 2026-09-11.**
 
-**Supersedes:** backlog item **P3** (moved to the Feature 34 phase).
+*"Three links on a page traversable in two scroll flicks"* — **expired.**
+Measured against production, Chrome, all three live listings:
+
+| Listing | Desktop (1440×900) | Mobile (375×812) |
+|---|---|---|
+| 0106001 | 4502px — **5.00** viewports | 6539px — **8.05** viewports |
+| 0106002 | 4797px — **5.33** viewports | 6660px — **8.20** viewports |
+| 0106003 | 4491px — **4.99** viewports | 6359px — **7.83** viewports |
+
+Amenities sits ~3.2 viewports down on desktop (y≈2889); *Where you'll be* at
+y≈2451. Those are real jump targets. The PDP stack that was being waited for
+(Features 36, 37, 38, 47, 58, 59, similar listings) has landed.
+
+*"Don't tune scroll offsets twice"* — **weaker, not gone.** The desktop
+booking card (`lg:sticky lg:top-20`) and the mobile chromeless hero + booking
+bar are in production, so a sub-nav needs a one-time offset pass against
+those rather than repeated re-tuning. That makes the build not free; it is no
+longer a reason to wait.
+
+**Skipped anyway, and the decisive reason is neither of the above.** Mobile
+already carries two sticky layers — Feature 59's booking bar and Feature 56's
+tab bar — on a PDP that Feature 58 deliberately made **chromeless**. A sticky
+sub-nav becomes the top chrome as soon as the hero scrolls away, re-adding
+exactly what Feature 58 removed. That is reversing a shipped design decision,
+not completing parity.
+
+Desktop is the weaker case for skipping: there is a header for it to sit
+under, and ~5 viewports is genuinely long. **If jump links are ever wanted,
+open them as a new desktop-only, three-item feature** — not as Feature 28,
+whose middle link cannot exist. Reopen as an explicit product call, not as
+parity leftovers.
+
+**Supersedes:** backlog item **P3** (skipped with this entry).
 
 ### ✅ Feature 29 — Listing highlights — **BUILD, 3 fixed rows**
 
@@ -1542,7 +1574,7 @@ review counts.
 |---|---|---|
 | **19** Card badge slot | `Verified` now, review tiers "once Feature 34 ships" | ✅ **Confirmed** — `Verified` is permanent, no tiers ever arrive |
 | **21** Card rating slot | Slot reserved for a star rating | ❌ **Dropped** — slot un-reserved, the title row is built without it |
-| **28** Sticky sub-nav | "Defer to Feature 34" | ❌ **Dropped** — not built at all |
+| **28** Sticky sub-nav | "Defer to Feature 34" | ❌ **Dropped** — not built at all (confirmed 2026-09-11; measurements in Feature 28) |
 
 ---
 
