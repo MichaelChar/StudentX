@@ -1184,7 +1184,8 @@
           "bio": "About",
           "homeUniversity": "Home university",
           "receivingUniversity": "Receiving university"
-        }
+        },
+        "retry": "Try again"
       }
     },
     "search": {
@@ -1421,7 +1422,8 @@
       "waitHours": "{hours, plural, one {They have # hour left to reply} other {They have # hours left to reply}}",
       "waitLapsed": "This request has run out of time",
       "waitLapsedBody": "We'll close it shortly. You can send a new request any time.",
-      "waitBody": "You won't be charged unless they accept."
+      "waitBody": "You won't be charged unless they accept.",
+      "retry": "Try again"
     },
     "chat": {
       "title": "Conversation",

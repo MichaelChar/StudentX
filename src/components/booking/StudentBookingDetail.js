@@ -70,6 +70,17 @@ export default function StudentBookingDetail({ bookingId }) {
     // null = still resolving; '' = signed out. Only '' is terminal.
     if (accessToken == null) return;
     if (!accessToken) {
+      /*
+        '' means the client could not resolve a session — NOT that the user is
+        signed out. This page is server-guarded by requireStudent, so reaching
+        it at all means the server accepted the session; only the browser
+        failed to see it (#521).
+
+        Surfacing loadError rather than falling through to `notFound` matters:
+        the booking exists, and "Booking not found" sends the user looking for
+        a problem that isn't there.
+      */
+      setError(t('loadError'));
       setLoading(false);
       return;
     }
@@ -137,7 +148,25 @@ export default function StudentBookingDetail({ bookingId }) {
   if (!booking) {
     return (
       <Card tone="parchment" className="p-12 text-center">
-        <p className="font-display text-xl text-night/60">{t('notFound')}</p>
+        {/* An error means "we could not load it", which is a different thing
+            from "it does not exist" — and the only one worth retrying. */}
+        <p className="font-display text-xl text-night/60">
+          {error || t('notFound')}
+        </p>
+        {error && (
+          <Button
+            variant="secondary"
+            size="sm"
+            className="mt-4"
+            onClick={() => {
+              setError('');
+              setLoading(true);
+              load();
+            }}
+          >
+            {t('retry')}
+          </Button>
+        )}
         <Link
           href="/student/account/bookings"
           className="label-caps text-blue mt-4 inline-block"
