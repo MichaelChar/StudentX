@@ -472,7 +472,7 @@
         },
         "universities": {
           "title": "Universities & commute",
-          "lede": "At least two universities. Prefill from the pin, then adjust if needed."
+          "lede": "How far this listing is from each university in the city."
         },
         "price": {
           "title": "Price & terms",
@@ -529,19 +529,12 @@
         "amenitiesLabel": "Amenities"
       },
       "universities": {
-        "lede": "Every university is listed and prefilled from your map pin. Adjust any number you disagree with.",
-        "minRequired": "At least {count} universities are required.",
-        "pinNote": "If a distance looks wrong, check the location pin on the Address step — every number here is measured from it.",
-        "prefill": "Prefill from pin",
-        "prefilling": "Computing…",
-        "add": "+ Add university",
-        "metresPlaceholder": "e.g. 1200",
-        "metresLabel": "Distance in metres",
-        "unit": "metres",
-        "sourceComputed": "Computed",
-        "sourceLandlord": "Yours",
-        "remove": "Remove this university",
-        "empty": "No universities yet — use Prefill or add rows."
+        "lede": "Measured from your map pin, for every university in the city. Nothing to fill in here.",
+        "pinNote": "📍 If a distance looks wrong, check the location pin on the Address step. Otherwise just continue — these numbers are ready as they are.",
+        "computing": "Measuring from your pin…",
+        "distance": "{metres} m",
+        "unmeasured": "Not measured",
+        "empty": "We couldn't measure from your pin. Check the location on the Address step."
       },
       "price": {
         "rentLabel": "Monthly rent ({symbol})",
@@ -638,12 +631,11 @@
         "neighborhoodRequired": "Choose a neighbourhood",
         "coordsRequired": "Place the map pin — coordinates are required",
         "propertyTypeRequired": "Choose a property type",
-        "universitiesRequired": "Add distances for at least {count} universities",
+        "universitiesRequired": "We couldn't measure distances from your pin — check the location on the Address step.",
         "durationPair": "Maximum stay must be greater than or equal to minimum stay",
         "availableRange": "Available-until must be on or after available-from",
         "blackoutRange": "Each blackout end date must be on or after its start",
-        "photosRequired": "Add at least {count} photos before submitting",
-        "prefillFailed": "Could not prefill university distances. Try again or enter them manually."
+        "photosRequired": "Add at least {count} photos before submitting"
       },
       "sections": {
         "heading": "Edit your listing",

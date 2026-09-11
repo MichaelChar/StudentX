@@ -15,7 +15,6 @@ import {
   validateRequiredCoords,
 } from '@/lib/listingWizardRules';
 import {
-  MIN_UNIVERSITY_DISTANCES,
   mergePrefillUniversityDistances,
   ensureAllUniversityRows,
 } from '@/lib/universityDistances';
@@ -162,7 +161,7 @@ export default function ListingForm({
     "Step 4 of 7" in the same click.
 
     Worse, university distances are REQUIRED (errors.universitiesRequired),
-    and `prefillDistances()` only fires when ADVANCING INTO that step
+    and `ensureUniversityRows()` only fires when ADVANCING INTO that step
     (handleNext) — so on the create path it never ran either. The listing
     reached Review failing validation for a step the wizard had skipped.
 
@@ -519,7 +518,7 @@ export default function ListingForm({
     }
     if (key === 'universities') {
       const v = validateUniversityDistancesMandatory(form.university_distances);
-      if (!v.ok) return t('errors.universitiesRequired', { count: MIN_UNIVERSITY_DISTANCES });
+      if (!v.ok) return t('errors.universitiesRequired');
       return null;
     }
     if (key === 'price') {
@@ -564,9 +563,7 @@ export default function ListingForm({
         form.university_distances,
       );
       if (!unis.ok) {
-        return t('errors.universitiesRequired', {
-          count: MIN_UNIVERSITY_DISTANCES,
-        });
+        return t('errors.universitiesRequired');
       }
       return null;
     }
@@ -653,26 +650,23 @@ export default function ListingForm({
   }
 
   /**
-   * Prefill distances from the map pin.
-   * @param {Array|undefined} existingOverride - when adding a row, pass the
-   *   post-add rows so we don't merge against a stale React state snapshot.
-   * @param {number|undefined} maxRowsOverride - row cap for the merge. Defaults
-   *   to every university in the city (Prefill fills the whole list); "+ Add
-   *   university" passes its own row count so one click adds exactly one uni.
-   * @param {{ silent?: boolean }} [opts] - `silent` suppresses the error banner
-   *   for the automatic prefill that runs on entering the step: the landlord
-   *   did not ask for it, so a missing pin or an OSRM hiccup should leave the
-   *   rows editable rather than shout at them.
+   * Measure every university from the map pin.
+   *
+   * The universities step is read-only, so this is the ONLY writer of
+   * `university_distances` — no landlord-typed value to preserve, which is why
+   * it rebuilds the list from the pin rather than merging into what is stored.
+   * A listing edited before the step went read-only can therefore still be
+   * carrying hand-typed metres; re-measuring replaces them, which is the point.
+   *
+   * Silent by design: the landlord did not ask for this, so a missing pin or an
+   * OSRM hiccup leaves the step saying so instead of raising an error banner
+   * over a step they cannot act on. The Address step already gates on coords.
    */
-  async function prefillDistances(existingOverride, maxRowsOverride, opts = {}) {
-    const silent = opts.silent === true;
+  async function ensureUniversityRows() {
+    const universityIds = (universities || []).map((u) => u.university_id);
     const coords = validateRequiredCoords(form.lat, form.lng);
-    if (!coords.ok) {
-      if (!silent) setError(t('errors.coordsRequired'));
-      return;
-    }
+    if (!coords.ok) return;
     setPrefillLoading(true);
-    if (!silent) setError('');
     try {
       const token =
         accessToken ||
@@ -686,73 +680,24 @@ export default function ListingForm({
         },
         body: JSON.stringify({ lat: coords.lat, lng: coords.lng }),
       });
-      if (!res.ok) {
-        const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || t('errors.prefillFailed'));
-      }
+      if (!res.ok) return;
       const { distances } = await res.json();
-      // Keep landlord-adjusted rows with real values; fill empty (incl. newly
-      // added unis) and refresh source=computed from the pin.
-      const existing =
-        existingOverride !== undefined
-          ? existingOverride
-          : form.university_distances || [];
-      const maxRows =
-        typeof maxRowsOverride === 'number'
-          ? maxRowsOverride
-          : universities.length || 3;
-      const next = mergePrefillUniversityDistances(
-        existing,
+      const measured = mergePrefillUniversityDistances(
+        [],
         distances || [],
-        maxRows,
+        universityIds.length || 3,
       );
-      setField('university_distances', next);
-    } catch (err) {
-      if (!silent) setError(err.message || t('errors.prefillFailed'));
+      // A university OSRM could not reach still gets a row, so the step shows
+      // the full list and names what is missing rather than hiding it.
+      setField(
+        'university_distances',
+        ensureAllUniversityRows(measured, universityIds),
+      );
+    } catch {
+      // Leave whatever is stored; the step renders its own "not measured" copy.
     } finally {
       setPrefillLoading(false);
     }
-  }
-
-  /**
-   * Entering the universities step: show every city university up front and
-   * fill the numbers from the map pin, so the landlord's job is to correct a
-   * prefilled list rather than to build one. Landlord-typed values survive —
-   * mergePrefillUniversityDistances only refreshes computed/empty rows.
-   */
-  async function ensureUniversityRows() {
-    const withAll = ensureAllUniversityRows(
-      form.university_distances || [],
-      (universities || []).map((u) => u.university_id),
-    );
-    setField('university_distances', withAll);
-    await prefillDistances(withAll, withAll.length, { silent: true });
-  }
-
-  /**
-   * "+ Add university": pick the next free uni and immediately compute its
-   * distance from the pin (same merge path as Prefill from pin).
-   */
-  async function addUniversityRow() {
-    const rows = form.university_distances || [];
-    const taken = new Set(rows.map((d) => d.university_id));
-    const nextUni = (universities || []).find((u) => !taken.has(u.university_id));
-    if (!nextUni) return;
-
-    const newRows = [
-      ...rows,
-      {
-        university_id: nextUni.university_id,
-        distance_meters: '',
-        source: 'landlord',
-      },
-    ];
-    // Show the row immediately; prefill fills metres (and flips source) when
-    // the pin API succeeds. Pass newRows so merge sees the empty shell even
-    // though setState has not flushed yet, and cap the merge at newRows.length
-    // so "+ Add university" adds one uni rather than every remaining one.
-    setField('university_distances', newRows);
-    await prefillDistances(newRows, newRows.length);
   }
 
   /**
@@ -833,11 +778,8 @@ export default function ListingForm({
       {key === 'universities' && (
         <StepUniversities
           form={form}
-          setField={setField}
           universities={universities}
           prefillLoading={prefillLoading}
-          onPrefill={() => prefillDistances()}
-          onAddUniversity={addUniversityRow}
         />
       )}
       {key === 'price' && (
