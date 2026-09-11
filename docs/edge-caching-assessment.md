@@ -113,12 +113,19 @@ HTTP/2 301                    ← no cf-cache-status even here
 location: /property/thessaloniki/listing/0106002
 ```
 
-Issue #130 already contains the corrected expression. One of the two blockers
-it lists is **no longer real**: it cites next-intl's `Set-Cookie: NEXT_LOCALE`
-as defeating the cache, and #511 removed `localeCookie` for precisely this
-reason. Prod now returns zero `Set-Cookie` headers on `/property/thessaloniki`.
-So #130 is closer to done than its body suggests, and its body should be
-updated when it is picked up.
+**The expression to use lives in `docs/runbooks/cloudflare-cache-rule.md`, not
+in issue #130's body.** The issue body predates that runbook and has three
+defects: it hardcodes `thessaloniki` in the landlord exclusion (while
+`SUPPORTED_CITIES` now holds seven slugs), it cites next-intl's
+`Set-Cookie: NEXT_LOCALE` as a blocker (gone — #511 removed `localeCookie`,
+and prod now returns zero `Set-Cookie` on `/property/thessaloniki`), and its
+`/en/*` clauses are dead (#158 301s those to unprefixed). The runbook's
+version is city-agnostic, covers `/`, `/about`, `/admissions`, `/gigs` and
+`/resources` alongside `/property`, and pins the Edge TTL setting that makes
+the whole thing safe. #130's body should be updated when it is picked up.
+
+So #130 is closer to done than its body suggests — but read the runbook, not
+the issue.
 
 **Safety already in place.** The pieces that make this safe were built
 deliberately and are load-bearing:
