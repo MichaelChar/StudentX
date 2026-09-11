@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from 'react';
 import { useTranslations } from 'next-intl';
-import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
+import { useAccessToken } from '@/lib/useAccessToken';
 import { Link } from '@/i18n/navigation';
 
 import Button from '@/components/ui/Button';
@@ -39,6 +39,7 @@ function formatDate(iso) {
  */
 export default function StudentBookingDetail({ bookingId }) {
   const t = useTranslations('student.bookings');
+  const accessToken = useAccessToken();
   const [booking, setBooking] = useState(null);
   const [events, setEvents] = useState([]);
   const [inquiryId, setInquiryId] = useState(null);
@@ -51,16 +52,31 @@ export default function StudentBookingDetail({ bookingId }) {
   const [reportOpen, setReportOpen] = useState(false);
   const [problemText, setProblemText] = useState('');
 
+  /*
+    useAccessToken, NOT supabase.auth.getSession() (#519-adjacent).
+
+    This component used to call getSession() here and bail with a bare
+    `return` when it came back empty — leaving `loading` true forever, so
+    the page rendered its heading and nothing else, with no error and no
+    retry. The e2e booking journey hit exactly that: the browser never even
+    issued the /api/bookings request.
+
+    useAccessToken's own docstring says why: getSession() "can deadlock on
+    the navigator.locks-backed auth storage if a prior auth op didn't
+    release". It also falls back to refreshSession() when the cached session
+    is missing or stale, which is the case that was silently failing here.
+  */
   const load = useCallback(async () => {
-    const supabase = getSupabaseBrowser();
-    const {
-      data: { session },
-    } = await supabase.auth.getSession();
-    if (!session) return;
+    // null = still resolving; '' = signed out. Only '' is terminal.
+    if (accessToken == null) return;
+    if (!accessToken) {
+      setLoading(false);
+      return;
+    }
 
     try {
       const res = await fetch(`/api/bookings/${bookingId}`, {
-        headers: { Authorization: `Bearer ${session.access_token}` },
+        headers: { Authorization: `Bearer ${accessToken}` },
       });
       if (!res.ok) {
         setError(t('loadError'));
@@ -78,7 +94,7 @@ export default function StudentBookingDetail({ bookingId }) {
     } finally {
       setLoading(false);
     }
-  }, [bookingId, t]);
+  }, [bookingId, t, accessToken]);
 
   useEffect(() => {
     // eslint-disable-next-line react-hooks/set-state-in-effect -- fetch-on-mount
@@ -89,16 +105,12 @@ export default function StudentBookingDetail({ bookingId }) {
     setActing(true);
     setError('');
     try {
-      const supabase = getSupabaseBrowser();
-      const {
-        data: { session },
-      } = await supabase.auth.getSession();
-      if (!session) return;
+      if (!accessToken) return false;
       const res = await fetch(`/api/bookings/${bookingId}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${accessToken}`,
         },
         body: JSON.stringify({ action, ...extra }),
       });
