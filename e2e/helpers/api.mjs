@@ -246,9 +246,28 @@ export async function deleteFixtureListing(landlordToken, listingId) {
     `/api/landlord/listings/${listingId}`,
     { method: 'DELETE', token: landlordToken },
   );
-  // 404 is fine (already gone). Other failures are logged but do not throw —
-  // cleanup must not fail the suite after the assertion already ran.
-  if (!res.ok && status !== 404) {
+  /*
+    404 is fine (already gone).
+
+    409 LISTING_HAS_BOOKINGS is EXPECTED, not a failure (#519): a listing with
+    bookings cannot be deleted through the API by design, because `bookings`
+    is the one FK that RESTRICTs rather than cascades — that history has to
+    survive. Every booking journey creates exactly such a fixture, so this
+    fired on every run and printed a red-looking line that was really the API
+    working correctly. globalTeardown removes those with the service role,
+    deleting the booking rows first.
+
+    Logging it anyway, quietly, because "cleanup did nothing here" is still
+    worth being able to see when chasing a leak.
+
+    Anything else is a real failure and still gets warned about — but none of
+    it throws: cleanup must not fail the suite after the assertion has run.
+  */
+  if (status === 409 && data?.error_code === 'LISTING_HAS_BOOKINGS') {
+    console.log(
+      `[e2e cleanup] ${listingId} has bookings — left for globalTeardown (expected).`,
+    );
+  } else if (!res.ok && status !== 404) {
     console.warn(
       `[e2e cleanup] DELETE listing ${listingId} failed (${status}):`,
       data,

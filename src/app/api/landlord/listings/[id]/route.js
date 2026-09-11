@@ -370,6 +370,34 @@ export async function DELETE(request, { params }) {
     .eq('landlord_id', landlordId);
 
   if (error) {
+    /*
+      A listing with bookings CANNOT be deleted, and that is correct (#519).
+
+      Every FK referencing `listings` is ON DELETE CASCADE except `bookings`,
+      which is RESTRICT — cascading through it would destroy financial and
+      dispute history. So the constraint stays; what was wrong was the
+      handling. Postgres raised 23503 and this route mapped every error to a
+      bare 500 "Failed to delete listing", which tells the landlord nothing
+      and is the wrong status: the request was understood and refused, not
+      broken.
+
+      Narrow on purpose. ONLY 23503 becomes a 409; anything else still
+      returns 500. Collapsing every failure into one code is what hid this
+      for as long as it hid.
+
+      The landlord almost always wants PAUSE here anyway — "room filled, may
+      reopen" is exactly what #205 was built for — so the error code lets the
+      UI offer that instead of a dead end.
+    */
+    if (error.code === '23503') {
+      return NextResponse.json(
+        {
+          error_code: 'LISTING_HAS_BOOKINGS',
+          error: 'This listing has bookings and cannot be deleted. Pause it instead.',
+        },
+        { status: 409 },
+      );
+    }
     console.error('Failed to delete listing:', error);
     return NextResponse.json({ error: 'Failed to delete listing' }, { status: 500 });
   }
