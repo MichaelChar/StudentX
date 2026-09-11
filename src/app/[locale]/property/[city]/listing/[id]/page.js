@@ -6,7 +6,11 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 
-import { getListingForRender, getSimilarListings } from '@/lib/listingForRender';
+import {
+  getListingForRender,
+  getSimilarCandidates,
+  rankSimilarCandidates,
+} from '@/lib/listingForRender';
 import { requireStudent } from '@/lib/requireStudent';
 
 import ListingGallery from '@/components/listing/ListingGallery';
@@ -82,13 +86,34 @@ export default async function ListingPage({ params, searchParams }) {
     };
   })();
 
-  const auth = await requireStudent();
+  /*
+    All three reads fire together. They used to be three serial awaits, which
+    on an uncached PDP render (the whole [locale] tree is force-dynamic) meant
+    stacking a full Supabase round-trip per step before the first byte — the
+    measured cost was a 1.0-1.8s TTFB.
+
+    None of them actually depends on another:
+      - requireStudent() reads the auth cookie, and short-circuits with no
+        round-trip at all when there isn't one (the guest path).
+      - getListingForRender(id) needs only the route param.
+      - getSimilarCandidates(id) needs only the route param too — ranking is
+        what needs the resolved listing, and that happens below, in memory.
+
+    notFound() still runs before anything reads `listing`; the candidate query
+    is simply already in flight by then. That wastes one query on a 404, which
+    is the right trade against paying a serial hop on every real pageview.
+  */
+  const [auth, listing, similarCandidates] = await Promise.all([
+    requireStudent(),
+    getListingForRender(id),
+    getSimilarCandidates(id),
+  ]);
+
   const isAuthed = auth && auth.kind !== 'wrong-role';
 
-  const listing = await getListingForRender(id);
   if (!listing) notFound();
 
-  const similarListings = await getSimilarListings(listing);
+  const similarListings = rankSimilarCandidates(similarCandidates, listing);
 
   const t = await getTranslations({ locale, namespace: 'propylaea.listing' });
   const tListing = await getTranslations({ locale, namespace: 'listing' });
