@@ -212,12 +212,25 @@ Conventions still in force:
    classes (`DOQueueHandler`, `DOShardedTagCache`, `BucketCachePurge`) that
    Cloudflare requires at module top level.
 
-3. **The locale page tree is force-dynamic — do not re-add prerendering/ISR.**
-   Prerendered pages caused intermittent Cloudflare error 1101 ("cross-request
-   I/O") in prod; fixed in #316 by making the `[locale]` tree fully dynamic.
-   Re-enabling ISR/prerendering requires first wiring OpenNext's R2 incremental
-   cache (available on `@opennextjs/cloudflare` ≥ 1.20 — which we now run, but
-   the R2 cache is NOT configured). Without it, the 1101s come back.
+3. **Prerendering is ON, and what keeps it safe is `open-next.config.ts` —
+   not `force-dynamic`.** Prerendered pages once caused intermittent Cloudflare
+   error 1101 ("cross-request I/O") in prod, because with no incremental cache
+   configured they fell back to Next's in-memory response cache, which shares a
+   render stream across requests in the same isolate. #316's first fix was a
+   blanket `force-dynamic` on the `[locale]` tree; **that is no longer how it
+   works.** The durable fix is the `staticAssetsIncrementalCache` +
+   `enableCacheInterception` config, and `[locale]/layout.js` now has
+   `generateStaticParams` again. Only admin/claim pages still set
+   `force-dynamic`. **If you change or remove that cache config, re-apply
+   `force-dynamic`** — the header comments in `open-next.config.ts` and
+   `[locale]/layout.js` both say so, and they are the authoritative pair.
+
+   The incremental cache is read-only (build-time). OpenNext's **R2** cache
+   would make it writable, i.e. add runtime revalidation (ISR) — but no route
+   currently wants that, and R2 is NOT the fix for slow pages. Read
+   `docs/edge-caching-assessment.md` before acting on any "wire up R2" idea;
+   it distinguishes this cache from Cloudflare's CDN cache, which is the layer
+   that actually serves HTML without running the Worker (issue #130).
 
 ## Maps
 
