@@ -60,6 +60,9 @@ describe('sendGigInquiryEmail — marking email_sent (#503)', () => {
     await sendGigInquiryEmail(ARGS);
 
     expect(send).toHaveBeenCalledTimes(1);
+    expect(send.mock.calls[0][0].from).toBe(
+      '"StudentX loves Michael" <alerts@studentx.uk>',
+    );
     expect(rpc).toHaveBeenCalledWith('mark_gig_inquiry_email_sent', {
       p_inquiry_id: ARGS.inquiryId,
     });

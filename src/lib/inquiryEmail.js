@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
+import { fromAddressFor } from '@/lib/emailFrom';
 import { inquiryEmailHtml, inquiryEmailSubject } from '@/templates/email/inquiry';
 
 function getServiceSupabase() {
@@ -10,8 +11,6 @@ function getServiceSupabase() {
     process.env.SUPABASE_SERVICE_ROLE_KEY,
   );
 }
-
-const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
 /**
  * Sends the landlord notification email for a new inquiry. Extracted from
@@ -74,7 +73,7 @@ export async function sendLandlordInquiryEmail({
     const listingSummary = [location?.address, location?.neighborhood].filter(Boolean).join(' · ');
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: fromAddressFor(landlord.name),
       to: landlord.email,
       replyTo: studentEmail,
       subject: inquiryEmailSubject(studentName, listingSummary),

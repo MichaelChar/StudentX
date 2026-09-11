@@ -1,6 +1,7 @@
 import { createClient } from '@supabase/supabase-js';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
+import { fromAddressFor } from '@/lib/emailFrom';
 import {
   studentMessageDigestHtml,
   studentMessageDigestSubject,
@@ -24,7 +25,7 @@ function getServiceSupabase() {
 // to absorb a burst of landlord messages into a single email.
 const MIN_INTERVAL = '4 minutes 30 seconds';
 
-const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
+
 
 /**
  * Per-message student digest. Returns a result object (never throws for
@@ -98,7 +99,7 @@ export async function runStudentMessageDigest() {
       }
 
       await resend.emails.send({
-        from: FROM_ADDRESS,
+        from: fromAddressFor(row.student_name),
         to: row.student_email,
         subject: studentMessageDigestSubject(
           row.landlord_display_name,

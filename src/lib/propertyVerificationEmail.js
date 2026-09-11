@@ -7,9 +7,8 @@
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
+import { fromAddressFor } from '@/lib/emailFrom';
 import { formatPropertyVerificationDate } from '@/lib/propertyVerification';
-
-const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
 function safe(s) {
   return String(s ?? '')
@@ -86,7 +85,7 @@ export async function sendPropertyVerificationApprovedEmail({
       method === 'video_call' ? 'video call' : method?.replace(/_/g, ' ') || 'verification';
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: fromAddressFor(landlord.name),
       to: landlord.email,
       subject: `Property verified — ${label}`,
       html: `
@@ -132,7 +131,7 @@ export async function sendPropertyVerificationRejectedEmail({
     const listingsUrl = `${appUrl}/property/thessaloniki/landlord/listings`;
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: fromAddressFor(landlord.name),
       to: landlord.email,
       subject: `Property verification not approved — ${label}`,
       html: `

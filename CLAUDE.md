@@ -480,6 +480,11 @@ the header of that file for why it checks the emitted bundle rather than
 
 **Live in production.** `studentx.uk` is verified in Resend (DKIM/SPF/DMARC
 records on the CF zone) and `RESEND_API_KEY` is set as a Worker secret.
+The mailbox is always `alerts@studentx.uk`. The display name is built by
+`src/lib/emailFrom.js`: `StudentX loves {first name}` when we have a usable
+given name for the recipient, otherwise `StudentX`. Ops/admin mail uses
+`OPS_DISPLAY_NAME` (wrangler var). Changing the display name does not
+affect SPF/DKIM/DMARC.
 Outbound paths sending from `alerts@studentx.uk`:
 
 - Synthetic check alerts (`/api/cron/synthetic-en-listing`)

@@ -91,6 +91,24 @@ describe('student-message-digest route', () => {
     const res = await POST(makeReq());
     expect(await res.json()).toMatchObject({ processed: 1, emailsSent: 1, alreadyClaimed: 0 });
     expect(send).toHaveBeenCalledTimes(1);
+    expect(send.mock.calls[0][0].from).toBe('StudentX <alerts@studentx.uk>');
+  });
+
+  it('personalizes From from the student given name', async () => {
+    pendingRows = [
+      {
+        inquiry_id: 'iq1',
+        student_email: 'student@example.com',
+        student_name: 'Maria Papadopoulos',
+        unread_count: 1,
+        landlord_display_name: 'Pat',
+      },
+    ];
+    const res = await POST(makeReq());
+    expect(res.status).toBe(200);
+    expect(send.mock.calls[0][0].from).toBe(
+      '"StudentX loves Maria" <alerts@studentx.uk>',
+    );
   });
 
   it('does not send when the claim was already taken by another tick', async () => {

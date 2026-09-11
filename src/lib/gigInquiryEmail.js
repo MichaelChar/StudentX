@@ -2,6 +2,7 @@ import { createClient } from '@supabase/supabase-js';
 import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
+import { opsFromAddress } from '@/lib/emailFrom';
 
 // Mirrors inquiryEmail.js. The anon client CANNOT write gig_inquiries:
 // the table has RLS on with INSERT and SELECT policies only, so an update
@@ -14,8 +15,6 @@ function getServiceSupabase() {
     process.env.SUPABASE_SERVICE_ROLE_KEY,
   );
 }
-
-const FROM_ADDRESS = 'StudentX <alerts@studentx.uk>';
 
 // Where gig interest lands until an employer self-serve portal exists. Falls
 // back to the synthetic-alert inbox so a misconfig surfaces somewhere real
@@ -70,7 +69,7 @@ export async function sendGigInquiryEmail({
     const safe = (s) => String(s ?? '').replace(/</g, '&lt;').replace(/>/g, '&gt;');
 
     await getResend().emails.send({
-      from: FROM_ADDRESS,
+      from: opsFromAddress(),
       to,
       replyTo: studentEmail || undefined,
       subject: `New gig interest: ${gig?.title ?? 'Holiday gig'}`,

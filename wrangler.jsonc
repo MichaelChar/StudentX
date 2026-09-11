@@ -101,7 +101,10 @@
     // to /api/cron/synthetic-en-listing, which fetches /en/listing/<id> and
     // emails alerts on locale-marker mismatches. See docs/runbooks/synthetic-en-listing.md.
     "SYNTHETIC_LISTING_ID": "0106002",
-    "SYNTHETIC_ALERT_EMAIL": "michaeltubehd007@gmail.com"
+    "SYNTHETIC_ALERT_EMAIL": "michaeltubehd007@gmail.com",
+    // First name used in `StudentX loves {name}` on ops/admin mail
+    // (listing reports, gig interest, synthetic alerts, move-in problems).
+    "OPS_DISPLAY_NAME": "Michael"
   },
   // Cron triggers. Dispatched via cf/worker-entry.mjs's `scheduled` handler,
   // which maps each cron expression to a route and invokes OpenNext fetch
