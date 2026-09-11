@@ -47,21 +47,42 @@ describe('fromAddressFor', () => {
   });
 });
 
+/*
+  Ops mail is plain `StudentX`, deliberately.
+
+  The personalised form is for student/landlord mail. Ops mail is read while
+  something is wrong — the sender column is how you triage it, and the
+  recipient is the operator, so "StudentX loves Michael" on an outage alert
+  spends that column on branding aimed at the reader themselves.
+
+  These pin it as a decision rather than an accident: an unquoted, unadorned
+  mailbox, and no env var reaching into it.
+*/
 describe('opsFromAddress', () => {
-  const original = process.env.OPS_DISPLAY_NAME;
-
-  afterEach(() => {
-    if (original === undefined) delete process.env.OPS_DISPLAY_NAME;
-    else process.env.OPS_DISPLAY_NAME = original;
+  it('is plain StudentX, never personalised', () => {
+    expect(opsFromAddress()).toBe('StudentX <alerts@studentx.uk>');
   });
 
-  it('defaults to Michael, the live ops inbox owner', () => {
-    delete process.env.OPS_DISPLAY_NAME;
-    expect(opsFromAddress()).toBe('"StudentX loves Michael" <alerts@studentx.uk>');
+  it('needs no quoting — a bare atom display name', () => {
+    // `StudentX` is a single RFC 5322 atext atom, so quoting it would be
+    // legal but noisy. Asserted so a future change to quoteDisplayName that
+    // over-quotes gets caught here.
+    expect(opsFromAddress()).not.toContain('"');
   });
 
-  it('honours OPS_DISPLAY_NAME', () => {
+  it('ignores OPS_DISPLAY_NAME, which no longer exists', () => {
+    // Regression guard: the var was removed from wrangler.jsonc. If someone
+    // re-adds the lookup, this fails rather than silently personalising
+    // outage alerts again.
     process.env.OPS_DISPLAY_NAME = 'Alex';
-    expect(opsFromAddress()).toBe('"StudentX loves Alex" <alerts@studentx.uk>');
+    try {
+      expect(opsFromAddress()).toBe('StudentX <alerts@studentx.uk>');
+    } finally {
+      delete process.env.OPS_DISPLAY_NAME;
+    }
+  });
+
+  it('honours a custom mailbox while staying plain', () => {
+    expect(opsFromAddress('ops@studentx.uk')).toBe('StudentX <ops@studentx.uk>');
   });
 });

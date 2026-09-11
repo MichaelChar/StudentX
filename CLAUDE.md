@@ -491,10 +491,18 @@ the header of that file for why it checks the emitted bundle rather than
 **Live in production.** `studentx.uk` is verified in Resend (DKIM/SPF/DMARC
 records on the CF zone) and `RESEND_API_KEY` is set as a Worker secret.
 The mailbox is always `alerts@studentx.uk`. The display name is built by
-`src/lib/emailFrom.js`: `StudentX loves {first name}` when we have a usable
-given name for the recipient, otherwise `StudentX`. Ops/admin mail uses
-`OPS_DISPLAY_NAME` (wrangler var). Changing the display name does not
-affect SPF/DKIM/DMARC.
+`src/lib/emailFrom.js` and **splits by audience**:
+
+- **Student / landlord mail** — `fromAddressFor(name)` gives
+  `StudentX loves {first name}` when there is a usable given name, otherwise
+  plain `StudentX`. Warmth is the point.
+- **Ops / admin mail** — `opsFromAddress()` is always plain `StudentX`.
+  Synthetic-check alerts, listing reports, gig interest and move-in problems
+  are read while something is wrong; the sender column is how you triage
+  them, and the recipient IS the operator, so personalising it spends that
+  column on nothing.
+
+Display names never affect SPF/DKIM/DMARC — the mailbox is unchanged.
 Outbound paths sending from `alerts@studentx.uk`:
 
 - Synthetic check alerts (`/api/cron/synthetic-en-listing`)
