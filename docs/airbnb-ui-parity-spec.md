@@ -1213,13 +1213,21 @@ in Feature 17) and put **`Verified`** in it.
 among the amenity pills — promote it to the overlay.
 
 Rationale: Airbnb's `Guest favorite` / `Top guest favorite` tiers are derived
-from review data that does not exist yet (Feature 34), and `New place to stay`
-would apply to every listing, making it meaningless. Verification is a signal
-StudentX *has*, and for a student about to commit a deposit it is arguably
-stronger than a popularity badge.
+from review data that does not exist **and is not planned** (Feature 34 is
+SKIP), and `New place to stay` would apply to every listing, making it
+meaningless. Verification is a signal StudentX *has*, and for a student about
+to commit a deposit it is arguably stronger than a popularity badge.
 
-**Review-derived tiers are added to this same slot once Feature 34 ships** —
-the slot, not the badge, is what is being built now.
+**No review-derived tiers will ever be added to this slot.** This entry
+previously said they would arrive when Feature 34 shipped. Feature 34 is SKIP,
+and its knock-on table records `Verified` as permanent — *"no tiers ever
+arrive"* (confirmed 2026-09-11). `Verified` in the overlay is the finished state, not a
+placeholder holding space for something later.
+
+Shipped as specified: `PropertyVerifiedBadge` renders in the photo overlay
+(`absolute top-3 left-3`) in `ListingCard.js`, not down among the amenity
+pills. This stays `◐` because the scope is still partial — the slot is built,
+the review tiers are skipped — not because anything is unfinished.
 
 **Supersedes:** the badge half of backlog item **S10**.
 
@@ -1237,18 +1245,24 @@ opinion.
 
 **Supersedes:** the host-label half of backlog item **S10**.
 
-### ◐ Feature 21 — Card star rating — **SLOT RESERVED, renders nothing yet**
+### ❌ Feature 21 — Card star rating — **SKIP** (logged 2026-09-11)
 
-Build the card title row with Airbnb's right-aligned rating slot
-(`★ 4.67 (312)`) accounted for in the layout, rendering **nothing** until
-Feature 34 (reviews) ships. Switching it on then is a data change, not a
-layout change.
+Not built, and the slot was never reserved either. Feature 34 (reviews) is
+**SKIP**, so there is no rating to render — now or later.
 
-Nothing honest fills it in the meantime — response time is the only
-comparable signal and `responseTimeBucket` already renders it lower in the
-card as a sentence.
+This entry previously reserved layout space for a star rating that rendered
+nothing, and pointed at Feature 34 as the thing it waited on. Feature 34's knock-on table had already
+recorded it as **Dropped** — *"slot un-reserved, the title row is built
+without it"* — and `ListingCard.js` agrees: no rating, star or reserved slot
+anywhere in the title row (verified against the source, 2026-09-11). Only the
+heading was stale.
 
-**Depends on:** Feature 34.
+Nothing honest fills it. Response time is the only comparable signal, and
+`responseTimeBucket` already renders it lower in the card as a sentence.
+
+Same class of leftover as Feature 28 — a live-looking pointer at a skipped
+feature. If a star rating ever exists it is a new feature with new data, not
+this reserved slot.
 
 ### ❌ Feature 22 — Extended-stay discount — **SKIP**
 
@@ -1573,7 +1587,7 @@ review counts.
 | Feature | Recorded as | Now |
 |---|---|---|
 | **19** Card badge slot | `Verified` now, review tiers "once Feature 34 ships" | ✅ **Confirmed** — `Verified` is permanent, no tiers ever arrive |
-| **21** Card rating slot | Slot reserved for a star rating | ❌ **Dropped** — slot un-reserved, the title row is built without it |
+| **21** Card rating slot | Slot reserved for a star rating | ❌ **Dropped** — slot un-reserved, the title row is built without it (confirmed 2026-09-11) |
 | **28** Sticky sub-nav | "Defer to Feature 34" | ❌ **Dropped** — not built at all (confirmed 2026-09-11; measurements in Feature 28) |
 
 ---
