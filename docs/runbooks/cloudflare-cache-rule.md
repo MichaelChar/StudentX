@@ -43,7 +43,28 @@ drifted (it matches `/property/listing/*`, a path that has not existed
 since listings moved to `/property/:city/listing/:id`, so it has been
 caching a 301 rather than a page).
 
-## The change
+## Two ways to apply it
+
+**Script (preferred).** `scripts/cf-cache-rule.sh` applies exactly the
+expression and settings below via the Cloudflare API. Dry-run by default —
+it prints the current rule and the proposed one and changes nothing until
+`--apply`. Prefer it over the dashboard: the expression is what protects
+`/student`, `/admin`, `/claim` and every landlord surface, and retyping it by
+hand makes a typo a session leak rather than a broken build.
+
+```bash
+export CF_API_TOKEN=...             # Zone→Cache Rules→Edit + Zone→Zone→Read, studentx.uk only
+./scripts/cf-cache-rule.sh          # show current vs proposed
+./scripts/cf-cache-rule.sh --apply  # write it
+./scripts/cf-cache-rule.sh --disable  # rollback
+```
+
+Note `wrangler` cannot do this — it has no cache-rules command, and its OAuth
+token carries `zone:read` but no rulesets write scope. A purpose-scoped API
+token is required either way.
+
+**Dashboard.** The equivalent by hand, and the reference for what the script
+writes.
 
 Cloudflare dashboard → **Caching → Cache Rules** → edit the existing
 *"Cache anon listing detail (Set-Cookie override)"* rule.
