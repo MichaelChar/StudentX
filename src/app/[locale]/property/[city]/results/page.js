@@ -4,10 +4,13 @@ import { searchListings } from '@/lib/listingSearch';
 import { parseBoundsParams, boundsToParams } from '@/lib/mapBounds';
 import { todayYmd } from '@/lib/dateRange';
 import {
+  buildFilterParams,
   buildListingsQuery,
   initialFiltersFromParams,
   initialPageFromParams,
 } from '@/lib/resultsQuery';
+import { fetchFaculties, fetchNeighborhoods } from '@/lib/referenceData';
+import { fetchPriceDistribution } from '@/lib/priceDistribution';
 import ResultsClient from './ResultsClient';
 
 /*
@@ -68,12 +71,29 @@ export default async function ResultsPage({ params, searchParams }) {
   const filters = initialFiltersFromParams(urlParams);
   const bounds = parseBoundsParams(urlParams).bounds ?? null;
   const page = initialPageFromParams(urlParams);
+  const today = todayYmd();
   const query = buildListingsQuery({
     filters,
     bounds,
     page,
-    today: todayYmd(),
+    today,
     boundsToParams,
+  });
+
+  /*
+    The budget histogram's query. Built with the SAME helper and the SAME
+    injected clock the client uses, and deliberately WITHOUT budget — the
+    histogram keeps above-budget supply visible behind the marker (#218), so
+    the distribution must not collapse to the in-budget slice.
+
+    Handed down as `initialDistributionQuery` so the client can compare it
+    against its own before deciding whether to fetch, exactly as `initialQuery`
+    already works for the listings themselves. If the two ever disagree the
+    client simply fetches and we are back to the old behaviour.
+  */
+  const distributionQuery = buildFilterParams(filters, {
+    includeBudget: false,
+    today,
   });
 
   /*
@@ -82,19 +102,55 @@ export default async function ResultsPage({ params, searchParams }) {
     the old client-only behaviour — a brief skeleton, then results — instead of
     turning a transient Supabase hiccup into a 500 on a browsing page.
   */
-  let initialData = null;
-  try {
-    const { status, body } = await searchListings(query);
-    if (status === 200) initialData = body;
-    else console.warn('results SSR search returned', status, body?.error);
-  } catch (err) {
-    console.error('results SSR search failed:', err?.message || err);
-  }
+  /*
+    All four reads fire together, and none of them is allowed to fail the page.
+
+    The three joining `searchListings` here used to be fetched by the CLIENT,
+    after hydration, in a waterfall. Measured on prod: hydration finished at
+    636ms, /api/faculties and /api/neighborhoods started at 805ms, and
+    /api/listings/price-distribution did not start until 1549ms — queued behind
+    them — finishing at ~2.5s. In the browser those two took 1487ms and 964ms
+    against 170-360ms when curled directly, so the cost was the waterfall, not
+    the queries. For roughly 150 bytes: nine neighbourhood strings, thirteen
+    faculties and a handful of prices, all of which this component is already
+    connected to Supabase to read.
+
+    A failure is NOT fatal for any of the four. The client refetches whenever
+    its query differs from what was served, so a null simply restores the old
+    client-fetch behaviour — a brief skeleton, then data — rather than turning
+    a transient Supabase hiccup into a 500 on a browsing page.
+  */
+  const settle = (label, promise) =>
+    promise.then(
+      ({ status, body }) => {
+        if (status === 200) return body;
+        console.warn(`results SSR ${label} returned`, status, body?.error);
+        return null;
+      },
+      (err) => {
+        console.error(`results SSR ${label} failed:`, err?.message || err);
+        return null;
+      },
+    );
+
+  const [initialData, facultiesBody, neighborhoodsBody, distributionBody] =
+    await Promise.all([
+      settle('search', searchListings(query)),
+      settle('faculties', fetchFaculties()),
+      settle('neighborhoods', fetchNeighborhoods()),
+      settle('price-distribution', fetchPriceDistribution(distributionQuery)),
+    ]);
 
   return (
     <ResultsClient
       initialData={initialData}
       initialQuery={initialData ? query.toString() : null}
+      initialFaculties={facultiesBody?.faculties ?? null}
+      initialNeighborhoods={neighborhoodsBody?.neighborhoods ?? null}
+      initialPriceDistribution={distributionBody?.prices ?? null}
+      initialDistributionQuery={
+        distributionBody ? distributionQuery.toString() : null
+      }
     />
   );
 }

@@ -140,7 +140,14 @@ const ListingsMap = dynamic(() => import('@/components/ListingsMap'), {
 });
 
 
-function ResultsContent({ initialData, initialQuery }) {
+function ResultsContent({
+  initialData,
+  initialQuery,
+  initialFaculties,
+  initialNeighborhoods,
+  initialPriceDistribution,
+  initialDistributionQuery,
+}) {
   const t = useTranslations('propylaea.results');
   const locale = useLocale();
   const tSort = useTranslations('propylaea.results');
@@ -185,8 +192,15 @@ function ResultsContent({ initialData, initialQuery }) {
   const [viewMode, setViewMode] = useState(
     searchParams.get('view') === 'map' ? 'map' : 'list'
   );
-  const [neighborhoodOptions, setNeighborhoodOptions] = useState([]);
-  const [priceDistribution, setPriceDistribution] = useState([]);
+  const [neighborhoodOptions, setNeighborhoodOptions] = useState(
+    () => initialNeighborhoods ?? [],
+  );
+  const [priceDistribution, setPriceDistribution] = useState(
+    () => initialPriceDistribution ?? [],
+  );
+  // The distribution query the histogram is currently showing, seeded from the
+  // server render so the mount-time refetch is skipped. See fetchDistribution.
+  const servedDistributionQueryRef = useRef(initialDistributionQuery ?? null);
   // Feature 7: the sidebar is gone, so every non-chip filter lives in here.
   const [filtersOpen, setFiltersOpen] = useState(false);
   // Feature 9: `Show N places`, refreshed on every toggle before Apply.
@@ -243,13 +257,22 @@ function ResultsContent({ initialData, initialQuery }) {
   const [filters, setFilters] = useState(() => initialFiltersFromParams(searchParams));
 
   /*
-    Faculties for the commute chip. Fetched once — the list is static reference
-    data (13 rows) and /api/faculties is cached for a day. Failure leaves the
-    array empty, which the chip renders as a loading line rather than an empty
-    popover.
+    Faculties for the commute chip — static reference data, 13 rows.
+
+    Seeded from the server render. This used to always fetch on mount, which
+    put it in a post-hydration waterfall alongside neighbourhoods and the price
+    histogram: ~2.5s before the filter UI was usable, for about 150 bytes total
+    (see the header comment on the results server component).
+
+    The fetch stays as the fallback for when the server read failed — a null
+    prop, not an empty array, is what distinguishes "the server had nothing to
+    say" from "the server says there are none". Failure here leaves the array
+    empty, which the chip renders as a loading line rather than an empty
+    popover — the behaviour this had before.
   */
-  const [faculties, setFaculties] = useState([]);
+  const [faculties, setFaculties] = useState(() => initialFaculties ?? []);
   useEffect(() => {
+    if (initialFaculties) return;
     let cancelled = false;
     (async () => {
       try {
@@ -264,14 +287,16 @@ function ResultsContent({ initialData, initialQuery }) {
     return () => {
       cancelled = true;
     };
-  }, []);
+  }, [initialFaculties]);
 
+  // Neighbourhood facet — same deal: server-seeded, fetch only as fallback.
   useEffect(() => {
+    if (initialNeighborhoods) return;
     fetch('/api/neighborhoods')
       .then((r) => r.json())
       .then((d) => setNeighborhoodOptions(d.neighborhoods || []))
       .catch(() => {});
-  }, []);
+  }, [initialNeighborhoods]);
 
   // Price distribution for the budget histogram — reflects the student's
   // current search EXCEPT budget (issue #218). Budget stays a purely
@@ -284,9 +309,18 @@ function ResultsContent({ initialData, initialQuery }) {
     try {
       const params = buildFilterParams(filters, { includeBudget: false });
       const qs = params.toString();
+      /*
+        Skip the query the histogram is ALREADY showing — on first mount that
+        is the one the server rendered, which is what takes this fetch out of
+        the post-hydration waterfall. Same mechanism as servedQueryRef for the
+        listings grid. A mismatch just falls through and fetches, so the worst
+        case is the behaviour this had before.
+      */
+      if (qs === servedDistributionQueryRef.current) return;
       const res = await fetch(`/api/listings/price-distribution${qs ? `?${qs}` : ''}`);
       if (!res.ok) return; // keep the last good distribution on error
       const d = await res.json();
+      servedDistributionQueryRef.current = qs;
       setPriceDistribution(Array.isArray(d.prices) ? d.prices : []);
     } catch {
       // Network error — keep the last good distribution.
@@ -1121,7 +1155,14 @@ const DEALBREAKER_LABEL_KEYS = {
   lands, so above-budget supply is visible. Pure presentation — all bucketing
   happens in the helper.
 */
-export default function ResultsClient({ initialData, initialQuery }) {
+export default function ResultsClient({
+  initialData,
+  initialQuery,
+  initialFaculties,
+  initialNeighborhoods,
+  initialPriceDistribution,
+  initialDistributionQuery,
+}) {
   return (
     <Suspense
       fallback={
@@ -1135,7 +1176,14 @@ export default function ResultsClient({ initialData, initialQuery }) {
         </div>
       }
     >
-      <ResultsContent initialData={initialData} initialQuery={initialQuery} />
+      <ResultsContent
+        initialData={initialData}
+        initialQuery={initialQuery}
+        initialFaculties={initialFaculties}
+        initialNeighborhoods={initialNeighborhoods}
+        initialPriceDistribution={initialPriceDistribution}
+        initialDistributionQuery={initialDistributionQuery}
+      />
     </Suspense>
   );
 }
