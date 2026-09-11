@@ -154,17 +154,33 @@ test.describe('Landlord listing wizard', () => {
 
     // --- Step 3: Universities — empty rows must block ---
     await expect(page.getByText(/Step 4 of 8/i).first()).toBeVisible({ timeout: 20_000 });
-    // Wait for auto-prefill attempt, then strip rows down to exactly one so
-    // the "+ Add university" regression assertions below start from a known
-    // state.
-    await page.waitForTimeout(2000);
+
+    // --- (PR #534) Entering the step lists EVERY university, each prefilled
+    // from the pin. It used to prefill only when the row list was empty, so a
+    // resumed draft showed whatever was saved and the rest had to be found
+    // via "+ Add university".
+    const uniRows = page.locator('#university-distance-rows > div');
+    await expect(
+      page.getByRole('button', { name: 'Prefill from pin' }),
+    ).toBeEnabled({ timeout: 20_000 });
+    await expect(uniRows).toHaveCount(STUB_UNIVERSITY_DISTANCES.length);
+    for (let i = 0; i < STUB_UNIVERSITY_DISTANCES.length; i += 1) {
+      const row = uniRows.nth(i);
+      await expect(row.locator('input[type="number"][aria-label]')).not.toHaveValue('');
+      await expect(row.getByText('Computed', { exact: true })).toBeVisible();
+    }
+    // The "wrong number? check your pin" note is on the step.
+    await expect(page.getByText(/check the location pin/i).first()).toBeVisible();
+
+    // Strip rows down to exactly one so the "+ Add university" regression
+    // assertions below start from a known state.
+    await page.waitForTimeout(500);
     for (let i = 0; i < 6; i += 1) {
       const remove = page.getByRole('button', { name: /Remove/i });
       if ((await remove.count()) <= 1) break;
       await remove.first().click();
       await page.waitForTimeout(150);
     }
-    const uniRows = page.locator('#university-distance-rows > div');
     await expect(uniRows).toHaveCount(1);
 
     // --- Regression (PR #381): "+ Add university" must add exactly ONE
