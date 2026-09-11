@@ -62,7 +62,7 @@ describe('sendGigInquiryEmail — marking email_sent (#503)', () => {
     expect(send).toHaveBeenCalledTimes(1);
     // Gig interest goes to the ops inbox, not to a student — so the sender is
     // plain `StudentX`, not the `StudentX loves {name}` form.
-    expect(send.mock.calls[0][0].from).toBe('StudentX <alerts@studentx.uk>');
+    expect(send.mock.calls[0][0].from).toBe('StudentX <michael@studentx.uk>');
     expect(rpc).toHaveBeenCalledWith('mark_gig_inquiry_email_sent', {
       p_inquiry_id: ARGS.inquiryId,
     });

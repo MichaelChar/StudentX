@@ -91,7 +91,7 @@ describe('student-message-digest route', () => {
     const res = await POST(makeReq());
     expect(await res.json()).toMatchObject({ processed: 1, emailsSent: 1, alreadyClaimed: 0 });
     expect(send).toHaveBeenCalledTimes(1);
-    expect(send.mock.calls[0][0].from).toBe('StudentX <alerts@studentx.uk>');
+    expect(send.mock.calls[0][0].from).toBe('StudentX <michael@studentx.uk>');
   });
 
   it('personalizes From from the student given name', async () => {
@@ -107,7 +107,7 @@ describe('student-message-digest route', () => {
     const res = await POST(makeReq());
     expect(res.status).toBe(200);
     expect(send.mock.calls[0][0].from).toBe(
-      '"StudentX loves Maria" <alerts@studentx.uk>',
+      '"StudentX loves Maria" <michael@studentx.uk>',
     );
   });
 

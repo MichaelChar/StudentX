@@ -52,7 +52,7 @@ describe('POST /api/listings/report — durable rate limit (#219)', () => {
     expect(send).toHaveBeenCalledTimes(1);
     // A listing report is ops mail — read while triaging abuse, so the sender
     // stays plain and scannable rather than personalised.
-    expect(send.mock.calls[0][0].from).toBe('StudentX <alerts@studentx.uk>');
+    expect(send.mock.calls[0][0].from).toBe('StudentX <michael@studentx.uk>');
     expect(rpc).toHaveBeenCalledWith(
       'check_listing_report_rate_limit',
       expect.objectContaining({ p_listing_id: '1234567' }),

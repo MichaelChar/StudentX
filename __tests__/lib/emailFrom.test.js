@@ -31,18 +31,18 @@ describe('firstName', () => {
 describe('fromAddressFor', () => {
   it('personalizes when a first name is available', () => {
     expect(fromAddressFor('Maria Papadopoulos')).toBe(
-      '"StudentX loves Maria" <alerts@studentx.uk>',
+      '"StudentX loves Maria" <michael@studentx.uk>',
     );
   });
 
   it('falls back to the brand when the name is unusable', () => {
-    expect(fromAddressFor('')).toBe('StudentX <alerts@studentx.uk>');
-    expect(fromAddressFor(undefined)).toBe('StudentX <alerts@studentx.uk>');
+    expect(fromAddressFor('')).toBe('StudentX <michael@studentx.uk>');
+    expect(fromAddressFor(undefined)).toBe('StudentX <michael@studentx.uk>');
   });
 
   it('does not let quotes or angle brackets into the display name', () => {
     expect(fromAddressFor('Mar"ia <admin>')).toBe(
-      '"StudentX loves Maria" <alerts@studentx.uk>',
+      '"StudentX loves Maria" <michael@studentx.uk>',
     );
   });
 });
@@ -60,7 +60,7 @@ describe('fromAddressFor', () => {
 */
 describe('opsFromAddress', () => {
   it('is plain StudentX, never personalised', () => {
-    expect(opsFromAddress()).toBe('StudentX <alerts@studentx.uk>');
+    expect(opsFromAddress()).toBe('StudentX <michael@studentx.uk>');
   });
 
   it('needs no quoting — a bare atom display name', () => {
@@ -76,7 +76,7 @@ describe('opsFromAddress', () => {
     // outage alerts again.
     process.env.OPS_DISPLAY_NAME = 'Alex';
     try {
-      expect(opsFromAddress()).toBe('StudentX <alerts@studentx.uk>');
+      expect(opsFromAddress()).toBe('StudentX <michael@studentx.uk>');
     } finally {
       delete process.env.OPS_DISPLAY_NAME;
     }
