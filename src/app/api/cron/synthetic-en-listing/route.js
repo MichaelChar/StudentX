@@ -7,6 +7,7 @@ import { DEFAULT_CITY } from '@/lib/cityRoutes';
 import { getSupabase } from '@/lib/supabase';
 import { computeUniversityDistances } from '@/lib/computeUniversityDistances';
 import { MAX_DISTANCE_METERS } from '@/lib/universityDistances';
+import { CARTO_TILE_URL } from '@/lib/mapTiles';
 
 // Synthetic uptime check guarding against the regression class fixed in PR #48
 // (see issue #49 + docs/runbooks/synthetic-en-listing.md). Originally just
@@ -652,6 +653,101 @@ async function checkNoMissingMessage(appUrl) {
 */
 const CHUNK_FETCH_BUDGET = 40;
 
+/*
+  The basemap URL is KEYED and WELL-FORMED and STILL WRONG.
+
+  `carto-tile-key` proves the key reached the client bundle. It cannot prove
+  the URL points at a style that exists, because it matches on host + ?key=
+  — and so does `scripts/check-build-output.mjs`. A wrong style slug passes
+  both and blanks all four Leaflet surfaces: no console error the build would
+  surface, no failing test, nothing in the page HTML to notice.
+
+  Not hypothetical. CARTO serves Positron at BOTH /light_all/... and
+  /rastertiles/light_all/..., so the short form looks like the general shape
+  of a tile URL. Voyager exists only under rastertiles/, and the short form
+  404s — a swap written that way sat in the working tree and would have
+  shipped blank maps (fixed in #554 before it did).
+
+  One tile, fetched from the same constant the maps render with.
+*/
+
+// A real tile: Thessaloniki city centre at z12, the zoom the results map
+// opens on. Any existing tile proves the style slug; this one also fails
+// loudly if CARTO ever drops European coverage.
+const TILE_PROBE = { z: 12, x: 2321, y: 1513 };
+
+/**
+ * Turn a Leaflet tile TEMPLATE into one concrete, fetchable URL.
+ * `{s}` subdomain, `{z}/{x}/{y}` the probe tile, `{r}` the retina suffix
+ * (empty — 1x is the cheaper request and proves the same thing).
+ *
+ * @param {string} template
+ * @returns {string}
+ */
+export function tileProbeUrl(template) {
+  return String(template || '')
+    .replace('{s}', 'a')
+    .replace('{z}', String(TILE_PROBE.z))
+    .replace('{x}', String(TILE_PROBE.x))
+    .replace('{y}', String(TILE_PROBE.y))
+    .replace('{r}', '');
+}
+
+export async function checkCartoTileReachable({ fetchImpl = fetch, template = CARTO_TILE_URL } = {}) {
+  const name = 'carto-tile-reachable';
+  const url = tileProbeUrl(template);
+  if (!/^https?:\/\//.test(url) || url.includes('{')) {
+    return { name, ok: false, reason: `tile URL did not resolve to a fetchable URL: ${url}` };
+  }
+  try {
+    const res = await fetchImpl(url, { signal: AbortSignal.timeout(8000) });
+
+    /*
+      404 is OUR bug: the path names a style CARTO does not serve.
+      403/401 is CARTO'S policy — the key is domain-restricted, and a
+      server-side fetch carries no Referer. That has never rejected us
+      (verified 2026-09-12), but if CARTO tightens it, that is not the
+      failure class this check exists for, so it reports inconclusive
+      rather than paging someone about a working map.
+    */
+    if (res.status === 404 || res.status === 410) {
+      return {
+        name,
+        ok: false,
+        reason:
+          `tile 404 at ${url.split('?')[0]} — the style slug does not exist. ` +
+          `CARTO serves Voyager only under rastertiles/ (the short /voyager/ form 404s). ` +
+          `Every map on the site is blank. See src/lib/mapTiles.js.`,
+      };
+    }
+    if (res.status === 401 || res.status === 403) {
+      return { name, ok: true, skipped: true, reason: `skipped: CARTO ${res.status} (key/referer policy, not a bad slug)` };
+    }
+    if (res.status !== 200) {
+      return { name, ok: true, skipped: true, reason: `skipped: CARTO ${res.status}` };
+    }
+
+    const type = res.headers?.get?.('content-type') || '';
+    if (!type.startsWith('image/')) {
+      return {
+        name,
+        ok: false,
+        reason: `tile returned 200 but content-type ${type || '(none)'} — not an image`,
+      };
+    }
+    return { name, ok: true };
+  } catch (err) {
+    return (
+      skipIfInconclusiveError(name, err) || {
+        name,
+        ok: true,
+        skipped: true,
+        reason: `skipped: ${err?.name || 'Error'} reaching CARTO`,
+      }
+    );
+  }
+}
+
 async function checkCartoTileKey(appUrl) {
   const name = 'carto-tile-key';
   const pageUrl = `${appUrl}/property/thessaloniki/results`;
@@ -1067,6 +1163,7 @@ export async function runSyntheticEnListing() {
   }
   additional.push(await checkCronScheduleDrift());
   additional.push(await checkCartoTileKey(appUrl));
+  additional.push(await checkCartoTileReachable());
   for (const r of additional) {
     checks.push(r);
     if (!r.ok) failures.push(r);

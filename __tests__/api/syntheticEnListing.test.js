@@ -9,6 +9,8 @@ import {
   evaluateAuthedCacheStatus,
   evaluateUniversityDistanceCoverage,
   checkUniversityDistanceCoverage,
+  tileProbeUrl,
+  checkCartoTileReachable,
 } from '@/app/api/cron/synthetic-en-listing/route';
 import { MAX_DISTANCE_METERS } from '@/lib/universityDistances';
 
@@ -617,5 +619,105 @@ describe('coverage failure reason is actionable on its own (alert body)', () => 
     expect(reason).toMatch(/measured auth 362m/);
     // The fix is in the alert, not one runbook lookup away.
     expect(reason).toMatch(/faculties rows or universities\.lat\/lng/);
+  });
+});
+
+/*
+  A keyed, well-formed, 404-ing tile URL passes both existing guards
+  (`carto-tile-key` and scripts/check-build-output.mjs match on host + ?key=)
+  and blanks every map. That exact URL sat in the working tree before #554.
+*/
+const KEYED_TEMPLATE = 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=abc';
+
+function tileResponse({ status = 200, contentType = 'image/png' } = {}) {
+  return {
+    status,
+    headers: { get: (h) => (h.toLowerCase() === 'content-type' ? contentType : null) },
+  };
+}
+
+describe('tileProbeUrl', () => {
+  it('resolves every Leaflet placeholder and keeps the key', () => {
+    const url = tileProbeUrl(KEYED_TEMPLATE);
+    expect(url).not.toMatch(/[{}]/);
+    expect(url).toMatch(/^https:\/\/a\.basemaps\.cartocdn\.com\/rastertiles\/voyager\/12\/\d+\/\d+\.png\?key=abc$/);
+  });
+
+  it('drops {r} rather than requesting a retina tile', () => {
+    expect(tileProbeUrl(KEYED_TEMPLATE)).not.toContain('@2x');
+  });
+
+  it('survives an unkeyed template (no key configured locally)', () => {
+    const url = tileProbeUrl('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png');
+    expect(url).not.toMatch(/[{}]/);
+  });
+});
+
+describe('checkCartoTileReachable', () => {
+  it('passes on an image 200', async () => {
+    const r = await checkCartoTileReachable({
+      template: KEYED_TEMPLATE,
+      fetchImpl: async () => tileResponse(),
+    });
+    expect(r).toEqual({ name: 'carto-tile-reachable', ok: true });
+  });
+
+  it('FAILS on 404 — the wrong-slug class, and names the rastertiles/ trap', async () => {
+    const r = await checkCartoTileReachable({
+      template: 'https://{s}.basemaps.cartocdn.com/voyager/{z}/{x}/{y}{r}.png?key=abc',
+      fetchImpl: async () => tileResponse({ status: 404, contentType: 'text/html' }),
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/style slug does not exist/);
+    expect(r.reason).toMatch(/rastertiles\//);
+    expect(r.reason).toMatch(/Every map on the site is blank/);
+  });
+
+  it('fails a 200 that is not an image (an HTML error page)', async () => {
+    const r = await checkCartoTileReachable({
+      template: KEYED_TEMPLATE,
+      fetchImpl: async () => tileResponse({ contentType: 'text/html' }),
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/not an image/);
+  });
+
+  it('SKIPS a 403 — CARTO key/referer policy is not the failure this watches', async () => {
+    const r = await checkCartoTileReachable({
+      template: KEYED_TEMPLATE,
+      fetchImpl: async () => tileResponse({ status: 403 }),
+    });
+    expect(r.ok).toBe(true);
+    expect(r.skipped).toBe(true);
+    expect(r.reason).toMatch(/key\/referer policy/);
+  });
+
+  it('skips a CARTO 5xx rather than paging about their outage', async () => {
+    const r = await checkCartoTileReachable({
+      template: KEYED_TEMPLATE,
+      fetchImpl: async () => tileResponse({ status: 503 }),
+    });
+    expect(r).toMatchObject({ ok: true, skipped: true });
+  });
+
+  it('skips a timeout', async () => {
+    const err = new Error('aborted');
+    err.name = 'TimeoutError';
+    const r = await checkCartoTileReachable({
+      template: KEYED_TEMPLATE,
+      fetchImpl: async () => {
+        throw err;
+      },
+    });
+    expect(r).toMatchObject({ ok: true, skipped: true });
+  });
+
+  it('fails a template that never resolves to a URL', async () => {
+    const r = await checkCartoTileReachable({
+      template: '/{z}/{x}/{y}.png',
+      fetchImpl: async () => tileResponse(),
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/did not resolve/);
   });
 });
