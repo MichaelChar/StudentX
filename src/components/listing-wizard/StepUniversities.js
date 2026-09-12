@@ -1,6 +1,7 @@
 'use client';
 
 import { useTranslations } from 'next-intl';
+import { formatDistance } from '@/lib/formatDistance';
 
 /**
  * Universities & commute — read-only.
@@ -55,9 +56,7 @@ export default function StepUniversities({ form, universities, prefillLoading })
                 <span className="text-night/60"> — {row.university.name}</span>
               </span>
               <span className="text-sm text-night tabular-nums shrink-0">
-                {row.meters == null
-                  ? t('unmeasured')
-                  : t('distance', { metres: row.meters })}
+                {formatDistance(row.meters) ?? t('unmeasured')}
               </span>
             </li>
           ))}

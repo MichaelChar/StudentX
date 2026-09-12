@@ -163,9 +163,10 @@ test.describe('Landlord listing wizard', () => {
     await expect(uniRows).toHaveCount(STUB_UNIVERSITY_DISTANCES.length, {
       timeout: 20_000,
     });
+    // Rendered through formatDistance: metres under 1 km, km above it.
     await expect(uniRows.nth(0)).toContainText('800 m');
-    await expect(uniRows.nth(1)).toContainText('1500 m');
-    await expect(uniRows.nth(2)).toContainText('4200 m');
+    await expect(uniRows.nth(1)).toContainText('1.5 km');
+    await expect(uniRows.nth(2)).toContainText('4.2 km');
     await expect(page.locator('#university-distance-rows input')).toHaveCount(0);
     await expect(
       page.getByRole('button', {
