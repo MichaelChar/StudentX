@@ -51,6 +51,15 @@ Forbidden (must NOT be present):
 - This is the other half of the pair, and the only check that can observe a real session leak. `en-listing-authed-cache` and `en-listing-vary-cookie` prove the *origin* behaves; neither can see the CDN. If the Cache Rule is widened, reordered, or loses its `not http.cookie contains "sb-access-token"` clause, Cloudflare starts answering authed requests from the anon entry — the origin is never consulted, so every origin-side check stays green while a signed-in student receives the anonymous, contact-info-gated body.
 - A HIT here is the failure. Skips on the same inconclusive conditions as its sibling.
 
+**University-distance coverage (`university-distance-coverage`):**
+- Asserts that a pin in central Thessaloniki still produces a measured distance for **every** university in `DEFAULT_CITY` (`thessaloniki`).
+- The expected set is read from the `universities` table filtered by `city_slug`, not hardcoded. A newly added university that nobody gave coordinates to fails this check rather than being silently ignored.
+- Calls `computeUniversityDistances()` directly with the same two data sources `/api/landlord/compute-university-distances` uses (`faculties` + `universities.lat/lng`). It does **not** HTTP-call that route — the landlord endpoint requires a bearer token the cron does not have.
+- Fails when the measured set is missing any expected university, or when a distance is `<= 0` or above `MAX_DISTANCE_METERS` (50 km, the existing typo-guard ceiling in `src/lib/universityDistances.js`).
+- This is the check that would have caught the AUTH-only faculties hole: prod holds 13 faculty rows, all AUTH, so before migration 119 the wizard could only measure one university. After PR #542 made the universities step read-only, the "at least 2 distances" gate blocked every new listing at step 4. CI never saw it because `e2e/specs/06-landlord-wizard.spec.js` stubs that endpoint with all three. Fixed in PR #545; this canary is the production net.
+- Does not depend on a live listing. Skips only on the same inconclusive timeout/abort class as the other checks; a missing coordinate is a real failure.
+- Uses haversine (`useOsrm: false`) so a 15s public-OSRM round-trip cannot contend with the master tick's ~25s budget. The bug class is missing coordinates, not routing.
+
 Any failed assertion (or non-200, or fetch timeout) attempts to send an email via Resend to `SYNTHETIC_ALERT_EMAIL`.
 
 > **Status (2026-05-03):** Resend is verified for `studentx.uk` and `RESEND_API_KEY` is set as a Worker secret — the alert path is live. On failure the route emails `SYNTHETIC_ALERT_EMAIL` from `michael@studentx.uk` (the sender moved off `alerts@` on 2026-09-11 — it was never registered to send in Resend). Failures still surface in `wrangler tail` regardless. The route's email send is wrapped in try/catch, so a Resend hiccup doesn't break the check itself.
@@ -61,7 +70,7 @@ Every check fetches via the **service binding (`env.WORKER_SELF_REFERENCE`)** �
 
 To stay inside Worker resource limits, the route splits the checks into two waves:
 
-- **Lightweight checks** (API routes, static assets, redirects: `/api/listings/<id>`, `/api/landlord/listings`, `/og-default.png`, `/en` missing-message, `soft-404`) run **concurrently** via `Promise.all`. These don't render heavy SSR, so concurrent execution is fine.
+- **Lightweight checks** (API routes, static assets, redirects, and the university-distance coverage query: `/api/listings/<id>`, `/api/landlord/listings`, `/og-default.png`, `/en` missing-message, `soft-404`, `university-distance-coverage`) run **concurrently** via `Promise.all`. These don't render heavy SSR, so concurrent execution is fine.
 - **Heavy property-page locale checks** (`en-cityhub-locale`, `en-homepage-locale`, `en-quiz-locale`) and the listing-detail render run **sequentially** via the same service binding. These pages SSR WebGL components (HubBackground 240k particles, HubDiagram, StripeGradientMesh) and would exhaust the Worker CPU budget if rendered in parallel.
 
 > **Historical note (PR #133):** the three heavy property-page checks originally used global `fetch()` via the CDN to dodge SSR entirely, but that caused Worker self-fetch 522s whenever the CDN cache was cold (post-deploy, different edge PoP). Running them sequentially via the service binding sidesteps both the SSR resource pressure and the cold-cache 522. The trade-off is that genuine i18n regressions surface immediately (no CDN-TTL lag).
@@ -98,9 +107,10 @@ emails/day describing a deliberate ops action rather than an outage.
 **An empty public directory is a valid state, not an outage.** If every
 listing is awaiting video verification, the canary goes quiet on the
 listing-scoped checks and keeps guarding the rest (soft-404, og image,
-landlord-API auth, missing-message, the three property-page renders, cron
-drift). Step 2 also means a stale pin self-heals instead of silently
-degrading — the `0100006` failure mode described under Maintenance.
+landlord-API auth, missing-message, university-distance coverage, the
+three property-page renders, cron drift). Step 2 also means a stale pin
+self-heals instead of silently degrading — the `0100006` failure mode
+described under Maintenance.
 
 Secrets (set via `wrangler secret put`, not in `wrangler.jsonc`):
 
@@ -118,6 +128,10 @@ Body includes the failing check name, reason, and the first 500 chars of the ano
 - `forbidden EL marker present: <marker>` — Greek leaked onto the EN page. **i18n regression** — investigate `getTranslations` calls in any recently-changed server component.
 - `anon listing detail must serve public, s-maxage=...` — the middleware-set per-request cache header (PR #105) regressed for anon visitors. Either middleware.js stopped matching the path, or `next.config.mjs` re-introduced a static `private` rule that's overriding it. Run the curl commands in the [Manual cache-header probe](#manual-cache-header-probe) section to localise.
 - `authed listing detail returned public, s-maxage=... — session-leak risk` — **stop and investigate immediately**. The cookied request branch is now serving cacheable headers; if Cloudflare honours them, gated bodies will leak across users. Most likely cause: `next.config.mjs` got a static `public` rule for `/property/listing/*` (the same regression class the pre-PR-105 attempt was reverted for). Roll back the offending change or pin both static + middleware to private until investigated.
+- `measured set missing <ids>` — pin-to-university measurement did not cover every university in `DEFAULT_CITY`. Either a university has no `faculties` rows **and** no `universities.lat/lng` (the AUTH-only hole #545 fixed), or a newly added university was inserted without coordinates. Check `universities` for the missing ids and the `faculties.university` codes that should map onto them.
+- `implausible distance (must be 1..50000 m)` — a measured distance was `<= 0` or above the typo-guard ceiling. Usually a Null-Island coordinate (`lat`/`lng` stored as 0) or a swapped lat/lng. `MAX_DISTANCE_METERS` in `src/lib/universityDistances.js` is the same ceiling the landlord write path uses.
+- `expected at least 1 university in thessaloniki, got 0` — the `universities` table returned no rows for `DEFAULT_CITY`. Seed/data regression, not a measurement bug.
+- `universities lookup failed` / `faculties lookup failed` — the public SELECT against those tables failed. Check RLS and the Worker's `NEXT_PUBLIC_SUPABASE_*` vars.
 - `fetch threw: ...` — the Worker couldn't reach the public hostname. Could be a Worker outage or DNS issue.
 
 ## Maintenance

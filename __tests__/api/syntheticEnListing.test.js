@@ -7,7 +7,10 @@ import {
   resolveSyntheticListingId,
   evaluateVaryCookie,
   evaluateAuthedCacheStatus,
+  evaluateUniversityDistanceCoverage,
+  checkUniversityDistanceCoverage,
 } from '@/app/api/cron/synthetic-en-listing/route';
+import { MAX_DISTANCE_METERS } from '@/lib/universityDistances';
 
 // Cache-header regression guards. Pre-PR #105 the canary asserted
 // /en/property/listing/<id> must NEVER return public, s-maxage=... —
@@ -343,5 +346,243 @@ describe('evaluateAuthedCacheStatus (#130 session-leak guard)', () => {
     const { reason } = evaluateAuthedCacheStatus({ cacheStatus: 'HIT' });
     expect(reason).toMatch(/Disable the Cache Rule first/);
     expect(reason).toMatch(/sb-access-token/);
+  });
+});
+
+/*
+  Pin-to-university coverage (#545). The wizard's read-only universities
+  step gates on ≥2 measured distances. Prod's faculties table is AUTH-only,
+  so without universities.lat/lng the measured set is {auth} and every new
+  listing stuck at step 4 — which CI never saw, because the e2e spec stubs
+  the landlord endpoint with all three.
+*/
+const AUTH_ONLY_FACULTIES = [
+  { faculty_id: 'auth-law', university: 'AUTH', lat: 40.6301, lng: 22.9563 },
+];
+
+const CITY_UNIVERSITIES = [
+  { university_id: 'auth', city_slug: 'thessaloniki', lat: 40.6296719, lng: 22.9591469 },
+  { university_id: 'uom', city_slug: 'thessaloniki', lat: 40.6252099, lng: 22.9599727 },
+  { university_id: 'ihu', city_slug: 'thessaloniki', lat: 40.6575637, lng: 22.8108475 },
+];
+
+function stubSupabase({ universities, faculties, uniError = null, facError = null }) {
+  return {
+    from(table) {
+      const result =
+        table === 'universities'
+          ? { data: universities, error: uniError }
+          : { data: faculties, error: facError };
+      return { select: async () => result };
+    },
+  };
+}
+
+describe('evaluateUniversityDistanceCoverage', () => {
+  const okDistances = [
+    { university_id: 'auth', distance_meters: 800 },
+    { university_id: 'uom', distance_meters: 1500 },
+    { university_id: 'ihu', distance_meters: 12000 },
+  ];
+
+  it('passes when every expected university has a plausible distance', () => {
+    expect(
+      evaluateUniversityDistanceCoverage({
+        expectedIds: ['auth', 'uom', 'ihu'],
+        distances: okDistances,
+      }),
+    ).toEqual({ ok: true });
+  });
+
+  it('fails when the measured set is missing a university (the AUTH-only prod shape)', () => {
+    const result = evaluateUniversityDistanceCoverage({
+      expectedIds: ['auth', 'uom', 'ihu'],
+      distances: [{ university_id: 'auth', distance_meters: 800 }],
+    });
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/missing ihu, uom/);
+  });
+
+  it('fails a newly added university that nobody gave coordinates to', () => {
+    const result = evaluateUniversityDistanceCoverage({
+      expectedIds: ['auth', 'uom', 'ihu', 'newu'],
+      distances: okDistances,
+    });
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/missing newu/);
+  });
+
+  it('fails when a distance is <= 0', () => {
+    const result = evaluateUniversityDistanceCoverage({
+      expectedIds: ['auth', 'uom'],
+      distances: [
+        { university_id: 'auth', distance_meters: 800 },
+        { university_id: 'uom', distance_meters: 0 },
+      ],
+    });
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/implausible distance/);
+    expect(result.reason).toMatch(/uom=0/);
+  });
+
+  it(`fails when a distance exceeds MAX_DISTANCE_METERS (${MAX_DISTANCE_METERS})`, () => {
+    const result = evaluateUniversityDistanceCoverage({
+      expectedIds: ['auth', 'ihu'],
+      distances: [
+        { university_id: 'auth', distance_meters: 800 },
+        { university_id: 'ihu', distance_meters: MAX_DISTANCE_METERS + 1 },
+      ],
+    });
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/implausible distance/);
+    expect(result.reason).toMatch(String(MAX_DISTANCE_METERS + 1));
+  });
+
+  it('accepts a distance on the MAX_DISTANCE_METERS ceiling', () => {
+    expect(
+      evaluateUniversityDistanceCoverage({
+        expectedIds: ['auth'],
+        distances: [{ university_id: 'auth', distance_meters: MAX_DISTANCE_METERS }],
+      }),
+    ).toEqual({ ok: true });
+  });
+
+  it('fails when the city has no universities at all', () => {
+    const result = evaluateUniversityDistanceCoverage({
+      expectedIds: [],
+      distances: okDistances,
+    });
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/expected at least 1 university/);
+  });
+});
+
+describe('checkUniversityDistanceCoverage', () => {
+  it('covers AUTH + UoM + IHU from faculties + university coords (post-#545)', async () => {
+    const result = await checkUniversityDistanceCoverage({
+      supabase: stubSupabase({
+        universities: CITY_UNIVERSITIES,
+        faculties: AUTH_ONLY_FACULTIES,
+      }),
+    });
+    expect(result).toEqual({ name: 'university-distance-coverage', ok: true });
+  });
+
+  it('still covers every university when faculties is empty (centroid fallback)', async () => {
+    const result = await checkUniversityDistanceCoverage({
+      supabase: stubSupabase({
+        universities: CITY_UNIVERSITIES,
+        faculties: [],
+      }),
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it('fails the AUTH-only faculties shape that shipped in prod before #545', async () => {
+    const result = await checkUniversityDistanceCoverage({
+      supabase: stubSupabase({
+        universities: CITY_UNIVERSITIES.map((u) =>
+          u.university_id === 'auth' ? u : { ...u, lat: null, lng: null },
+        ),
+        faculties: AUTH_ONLY_FACULTIES,
+      }),
+    });
+    expect(result.name).toBe('university-distance-coverage');
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/missing ihu, uom/);
+  });
+
+  it('fails a newly added DEFAULT_CITY university with no coordinates', async () => {
+    const result = await checkUniversityDistanceCoverage({
+      supabase: stubSupabase({
+        universities: [
+          ...CITY_UNIVERSITIES,
+          { university_id: 'newu', city_slug: 'thessaloniki', lat: null, lng: null },
+        ],
+        faculties: AUTH_ONLY_FACULTIES,
+      }),
+    });
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/missing newu/);
+  });
+
+  it('does not require universities outside DEFAULT_CITY', async () => {
+    const result = await checkUniversityDistanceCoverage({
+      supabase: stubSupabase({
+        universities: [
+          ...CITY_UNIVERSITIES,
+          { university_id: 'uoa', city_slug: 'athens', lat: null, lng: null },
+        ],
+        faculties: AUTH_ONLY_FACULTIES,
+      }),
+    });
+    expect(result.ok).toBe(true);
+  });
+
+  it('passes faculties + universities rows into computeUniversityDistances', async () => {
+    let received;
+    const result = await checkUniversityDistanceCoverage({
+      supabase: stubSupabase({
+        universities: CITY_UNIVERSITIES,
+        faculties: AUTH_ONLY_FACULTIES,
+      }),
+      computeFn: async (origin, faculties, opts) => {
+        received = { origin, faculties, opts };
+        return CITY_UNIVERSITIES.map((u, i) => ({
+          university_id: u.university_id,
+          distance_meters: 1000 * (i + 1),
+        }));
+      },
+    });
+    expect(result.ok).toBe(true);
+    expect(received.origin).toEqual({ lat: 40.6301, lng: 22.9439 });
+    expect(received.faculties).toEqual(AUTH_ONLY_FACULTIES);
+    expect(received.opts.universities).toEqual(CITY_UNIVERSITIES);
+    expect(received.opts.useOsrm).toBe(false);
+  });
+
+  it('fails when the universities lookup errors', async () => {
+    const result = await checkUniversityDistanceCoverage({
+      supabase: stubSupabase({
+        universities: null,
+        faculties: AUTH_ONLY_FACULTIES,
+        uniError: { message: 'permission denied' },
+      }),
+    });
+    expect(result).toEqual({
+      name: 'university-distance-coverage',
+      ok: false,
+      reason: 'universities lookup failed: permission denied',
+    });
+  });
+
+  it('fails when the faculties lookup errors', async () => {
+    const result = await checkUniversityDistanceCoverage({
+      supabase: stubSupabase({
+        universities: CITY_UNIVERSITIES,
+        faculties: null,
+        facError: { message: 'schema cache' },
+      }),
+    });
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/faculties lookup failed: schema cache/);
+  });
+
+  it('skips on TimeoutError (same inconclusive class as the other checks)', async () => {
+    const err = new Error('aborted');
+    err.name = 'TimeoutError';
+    const result = await checkUniversityDistanceCoverage({
+      supabase: {
+        from() {
+          throw err;
+        },
+      },
+    });
+    expect(result).toEqual({
+      name: 'university-distance-coverage',
+      ok: true,
+      skipped: true,
+      reason: 'skipped: TimeoutError',
+    });
   });
 });

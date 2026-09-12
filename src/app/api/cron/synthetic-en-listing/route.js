@@ -3,6 +3,10 @@ import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getResend } from '@/lib/resend';
 import { opsFromAddress } from '@/lib/emailFrom';
 import { isCronAuthorized } from '../auth';
+import { DEFAULT_CITY } from '@/lib/cityRoutes';
+import { getSupabase } from '@/lib/supabase';
+import { computeUniversityDistances } from '@/lib/computeUniversityDistances';
+import { MAX_DISTANCE_METERS } from '@/lib/universityDistances';
 
 // Synthetic uptime check guarding against the regression class fixed in PR #48
 // (see issue #49 + docs/runbooks/synthetic-en-listing.md). Originally just
@@ -10,7 +14,8 @@ import { isCronAuthorized } from '../auth';
 // half was dropped when the site went English-only, #158); now also runs
 // several production-canary checks (listing API distance variety,
 // 404 status on missing listings, og-default.png served as PNG, no
-// MISSING_MESSAGE next-intl placeholders on /en).
+// MISSING_MESSAGE next-intl placeholders on /en, pin-to-university
+// coverage for every DEFAULT_CITY university).
 //
 // All assertions run independently; one failing does not block the others.
 // On any failure, emails SYNTHETIC_ALERT_EMAIL via Resend (if RESEND_API_KEY
@@ -36,6 +41,14 @@ const FETCH_TIMEOUT_MS = 15_000;
 // They run sequentially (one SSR at a time), so a longer per-fetch cap here
 // doesn't stack concurrent resource pressure.
 const HEAVY_PAGE_TIMEOUT_MS = 22_000;
+
+// Fixed pin in central Thessaloniki (same coords ListingsMap uses as the
+// city center). The exact metres don't matter — the check only asserts
+// every DEFAULT_CITY university is measurable and inside the typo-guard
+// ceiling. Calling /api/landlord/compute-university-distances would need
+// a landlord bearer token this cron does not have, so we invoke the same
+// helper with the same two data sources instead.
+const THESSALONIKI_CANARY_ORIGIN = { lat: 40.6301, lng: 22.9439 };
 
 const EN_MARKERS_REQUIRED = [
   '<html lang="en"',
@@ -307,6 +320,127 @@ export async function resolveSyntheticListingId(appUrl, { fetchImpl = fetchUrl }
 }
 
 // --- Additional smoke assertions (all soft-fail: append to `failures`) -----
+
+/*
+  Pin-to-university coverage (PR #545 / migration 119).
+
+  /api/landlord/compute-university-distances derives each university's
+  position from `faculties`, falling back to `universities.lat/lng` for
+  universities with no faculty rows. Prod holds 13 faculty rows, all AUTH,
+  so before 119 the wizard could only ever measure one university. After
+  PR #542 made the universities step read-only, the "at least 2 distances"
+  gate then blocked every new listing at step 4 — invisible to CI because
+  e2e stubs that endpoint with all three.
+
+  This check is the thing that would have caught it: it reads the expected
+  set from `universities` for DEFAULT_CITY (so a newly added university
+  nobody gave coordinates to fails, rather than a hardcoded ['auth','uom',
+  'ihu'] quietly ignoring it), loads the same two sources the landlord
+  route uses, and measures from a fixed central pin. Failures email
+  SYNTHETIC_ALERT_EMAIL like every other check in this file.
+
+  useOsrm is off on purpose. The bug class is missing coordinates, not
+  OSRM, and a 15s public-demo round-trip would contend with the master
+  tick's ~25s budget. Haversine is enough to prove a university is
+  locatable; MAX_DISTANCE_METERS is the same 50 km typo-guard the write
+  path already uses.
+*/
+export function evaluateUniversityDistanceCoverage({
+  expectedIds,
+  distances,
+  maxDistanceMeters = MAX_DISTANCE_METERS,
+}) {
+  const expected = [
+    ...new Set(
+      (expectedIds || []).filter((id) => typeof id === 'string' && id),
+    ),
+  ];
+  if (expected.length === 0) {
+    return {
+      ok: false,
+      reason: `expected at least 1 university in ${DEFAULT_CITY}, got 0`,
+    };
+  }
+
+  const measured = new Map();
+  for (const row of distances || []) {
+    if (!row?.university_id) continue;
+    measured.set(row.university_id, row.distance_meters);
+  }
+
+  const missing = expected.filter((id) => !measured.has(id)).sort();
+  if (missing.length > 0) {
+    const got = [...measured.keys()].sort().join(', ') || 'none';
+    return {
+      ok: false,
+      reason: `measured set missing ${missing.join(', ')} (expected ${expected.join(', ')}; measured ${got})`,
+    };
+  }
+
+  const bad = [];
+  for (const id of expected) {
+    const meters = Number(measured.get(id));
+    if (!Number.isFinite(meters) || meters <= 0 || meters > maxDistanceMeters) {
+      bad.push(`${id}=${measured.get(id)}`);
+    }
+  }
+  if (bad.length > 0) {
+    return {
+      ok: false,
+      reason: `implausible distance (must be 1..${maxDistanceMeters} m): ${bad.join(', ')}`,
+    };
+  }
+  return { ok: true };
+}
+
+export async function checkUniversityDistanceCoverage({
+  supabase,
+  computeFn = computeUniversityDistances,
+  origin = THESSALONIKI_CANARY_ORIGIN,
+} = {}) {
+  const name = 'university-distance-coverage';
+  try {
+    const client = supabase || getSupabase();
+    const [
+      { data: universities, error: uniError },
+      { data: faculties, error: facError },
+    ] = await Promise.all([
+      client.from('universities').select('university_id, city_slug, lat, lng'),
+      client.from('faculties').select('faculty_id, university, lat, lng'),
+    ]);
+
+    if (uniError) {
+      return {
+        name,
+        ok: false,
+        reason: `universities lookup failed: ${uniError.message}`,
+      };
+    }
+    if (facError) {
+      return {
+        name,
+        ok: false,
+        reason: `faculties lookup failed: ${facError.message}`,
+      };
+    }
+
+    const expectedIds = (universities || [])
+      .filter((u) => u?.city_slug === DEFAULT_CITY)
+      .map((u) => u.university_id);
+
+    const distances = await computeFn(origin, faculties || [], {
+      universities: universities || [],
+      useOsrm: false,
+    });
+
+    return { name, ...evaluateUniversityDistanceCoverage({ expectedIds, distances }) };
+  } catch (err) {
+    return (
+      skipIfInconclusiveError(name, err) ||
+      { name, ok: false, reason: `threw: ${err.message || err.name}` }
+    );
+  }
+}
 
 // Listing API returns ≥2 distinct walk_minutes values across faculty_distances.
 // Guards against transformListing dropping the field or the seed regressing
@@ -861,8 +995,9 @@ export async function runSyntheticEnListing() {
   // via service binding — fast and no resource pressure.
   //
   // The two listing-scoped checks skip when nothing is public — the rest
-  // (soft-404, og image, landlord-API auth, missing-message) don't need a
-  // listing and keep guarding their own regression classes regardless.
+  // (soft-404, og image, landlord-API auth, missing-message,
+  // university-distance-coverage) don't need a listing and keep guarding
+  // their own regression classes regardless.
   const additional = await Promise.all([
     skipListingChecks
       ? Promise.resolve({ name: 'listing-api-distances', ...listingSkip })
@@ -877,6 +1012,7 @@ export async function runSyntheticEnListing() {
     skipListingChecks
       ? Promise.resolve({ name: 'cf-cache-authed-not-hit', ...listingSkip })
       : checkCfCacheAuthedNotHit(appUrl, listingId),
+    checkUniversityDistanceCoverage(),
   ]);
 
   // Heavy property-page locale checks run sequentially via service binding.

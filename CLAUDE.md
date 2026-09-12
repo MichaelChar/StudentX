@@ -346,7 +346,10 @@ each soft-failing into a per-check report: listing-page content markers
 (`EN_MARKERS_REQUIRED` — update that constant whenever gate copy changes),
 listing-API distance sanity, soft-404 behaviour, og-image serving,
 landlord-API auth (401-not-5xx — guards the column-missing crash class
-fixed in PR #85), and a `MISSING_MESSAGE:` scan for missing en.json keys.
+fixed in PR #85), a `MISSING_MESSAGE:` scan for missing en.json keys, and
+pin-to-university coverage (`university-distance-coverage` — every
+`DEFAULT_CITY` university must be measurable from a central pin; guards
+the AUTH-only faculties hole #545 fixed).
 
 Failures email `SYNTHETIC_ALERT_EMAIL` via Resend (live in prod) and
 surface in `wrangler tail`.
