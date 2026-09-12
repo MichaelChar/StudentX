@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useSyncExternalStore } from 'r
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
 import { priceIconOptions, PIN_CLASS } from '@/lib/mapPriceIcon';
-import { CARTO_ATTRIBUTION, CARTO_POSITRON_URL } from '@/lib/mapTiles';
+import { CARTO_ATTRIBUTION, CARTO_TILE_URL } from '@/lib/mapTiles';
 import MapPinPopupCard from '@/components/property/MapPinPopupCard';
 import {
   getVisitedSnapshot,
@@ -269,12 +269,16 @@ export default function ListingsMap({
         scrollWheelZoom={false}
       >
         {/*
-          CartoDB Positron, not OSM default (parity Feature 11).
+          CartoDB Voyager, not OSM default (parity Feature 11 shipped
+          Positron; swapped to Voyager 2026-09-12).
 
           Airbnb's map is pale, desaturated and nearly label-free, so the map
           recedes and the price pins carry the attention. OSM default is the
-          opposite — saturated, densely labelled, every POI marked. Same
-          component, opposite impression.
+          opposite — saturated, densely labelled, every POI marked. Voyager
+          sits between the two: more street colour and labelling than
+          Positron, still far quieter than OSM. It reads better for a city
+          a student does not know yet, which is the trade taken here — the
+          pins stay the loudest thing on the map either way.
 
           The URL and its attribution live in `lib/mapTiles.js` — CARTO now
           requires an API key (#472), and a key duplicated across two tile
@@ -285,7 +289,7 @@ export default function ListingsMap({
           <img>, never through next/image, so a remotePattern is dead config
           — see that file's own header comment.
         */}
-        <TileLayer attribution={CARTO_ATTRIBUTION} url={CARTO_POSITRON_URL} />
+        <TileLayer attribution={CARTO_ATTRIBUTION} url={CARTO_TILE_URL} />
         <PopupViewportClamp />
         <MapViewportReporter onViewportChange={onViewportChange} />
         {/*

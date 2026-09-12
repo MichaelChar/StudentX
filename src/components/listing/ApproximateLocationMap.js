@@ -3,7 +3,7 @@
 import { MapContainer, TileLayer, Circle } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-import { CARTO_ATTRIBUTION, CARTO_POSITRON_URL } from '@/lib/mapTiles';
+import { CARTO_ATTRIBUTION, CARTO_TILE_URL } from '@/lib/mapTiles';
 
 /*
   ApproximateLocationMap — Feature 36 "Where you'll be".
@@ -61,7 +61,7 @@ const CIRCLE_PATH = {
 
 // Shared with ListingsMap via lib/mapTiles.js — see there for why the CARTO
 // key is public by necessity and why it must reach the BUILD environment.
-const TILE_URL = CARTO_POSITRON_URL;
+const TILE_URL = CARTO_TILE_URL;
 const TILE_ATTRIBUTION = CARTO_ATTRIBUTION;
 
 export default function ApproximateLocationMap({
