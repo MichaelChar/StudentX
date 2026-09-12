@@ -366,6 +366,12 @@ const CITY_UNIVERSITIES = [
   { university_id: 'ihu', city_slug: 'thessaloniki', lat: 40.6575637, lng: 22.8108475 },
 ];
 
+/*
+  Faithful enough to be worth asserting against: `select()` is awaitable on its
+  own AND chainable with `.eq()`, which filters the rows the way Postgres would.
+  The check filters `universities` by city server-side, so a stub that ignored
+  .eq would let a broken city filter pass its own test.
+*/
 function stubSupabase({ universities, faculties, uniError = null, facError = null }) {
   return {
     from(table) {
@@ -373,7 +379,16 @@ function stubSupabase({ universities, faculties, uniError = null, facError = nul
         table === 'universities'
           ? { data: universities, error: uniError }
           : { data: faculties, error: facError };
-      return { select: async () => result };
+      const builder = {
+        eq: (column, value) =>
+          Promise.resolve(
+            result.error
+              ? result
+              : { data: (result.data || []).filter((row) => row?.[column] === value), error: null },
+          ),
+        then: (resolve, reject) => Promise.resolve(result).then(resolve, reject),
+      };
+      return { select: () => builder };
     },
   };
 }
@@ -506,6 +521,9 @@ describe('checkUniversityDistanceCoverage', () => {
     expect(result.reason).toMatch(/missing newu/);
   });
 
+  // Proves the city filter, which now runs in Postgres: the stub applies .eq
+  // the way the database would, so a check that dropped the filter would see
+  // the Athens row in its expected set and fail.
   it('does not require universities outside DEFAULT_CITY', async () => {
     const result = await checkUniversityDistanceCoverage({
       supabase: stubSupabase({
@@ -584,5 +602,20 @@ describe('checkUniversityDistanceCoverage', () => {
       skipped: true,
       reason: 'skipped: TimeoutError',
     });
+  });
+});
+
+describe('coverage failure reason is actionable on its own (alert body)', () => {
+  it('names the metres it did measure and where a position comes from', () => {
+    const { reason } = evaluateUniversityDistanceCoverage({
+      expectedIds: ['auth', 'uom', 'ihu'],
+      distances: [{ university_id: 'auth', distance_meters: 362 }],
+    });
+    expect(reason).toMatch(/missing ihu, uom/);
+    // Metres, not just ids — "measured auth" alone does not say whether the
+    // one that did measure looks sane.
+    expect(reason).toMatch(/measured auth 362m/);
+    // The fix is in the alert, not one runbook lookup away.
+    expect(reason).toMatch(/faculties rows or universities\.lat\/lng/);
   });
 });
