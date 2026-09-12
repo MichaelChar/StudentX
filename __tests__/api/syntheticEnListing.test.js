@@ -7,6 +7,7 @@ import {
   resolveSyntheticListingId,
   evaluateVaryCookie,
   evaluateAuthedCacheStatus,
+  evaluateUniversityDistanceCoverage,
 } from '@/app/api/cron/synthetic-en-listing/route';
 
 // Cache-header regression guards. Pre-PR #105 the canary asserted
@@ -343,5 +344,79 @@ describe('evaluateAuthedCacheStatus (#130 session-leak guard)', () => {
     const { reason } = evaluateAuthedCacheStatus({ cacheStatus: 'HIT' });
     expect(reason).toMatch(/Disable the Cache Rule first/);
     expect(reason).toMatch(/sb-access-token/);
+  });
+});
+
+/*
+  Issue #549 — the check that would have caught the prod-only data gap of
+  PR #545: `faculties` held AUTH rows only, so prod could measure exactly one
+  university and the read-only wizard step (PR #542) refused to continue.
+  The e2e journey stubs the distance API, so nothing noticed.
+*/
+describe('evaluateUniversityDistanceCoverage (#549)', () => {
+  const ALL = ['auth', 'uom', 'ihu'];
+  const measuredAll = [
+    { university_id: 'auth', distance_meters: 520 },
+    { university_id: 'uom', distance_meters: 1826 },
+    { university_id: 'ihu', distance_meters: 15814 },
+  ];
+
+  it('passes when every university measured', () => {
+    expect(
+      evaluateUniversityDistanceCoverage({ universityIds: ALL, measured: measuredAll }),
+    ).toEqual({ name: 'university-distance-coverage', ok: true });
+  });
+
+  it('fails, naming the universities, when one cannot be measured', () => {
+    const r = evaluateUniversityDistanceCoverage({
+      universityIds: ALL,
+      measured: measuredAll.filter((d) => d.university_id === 'auth'),
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/no distance measurable for uom, ihu/);
+    expect(r.reason).toMatch(/measured 1\/3/);
+    // Points at the two places a position can come from.
+    expect(r.reason).toMatch(/faculties rows or universities\.lat\/lng/);
+  });
+
+  it('is the exact prod state that shipped the step-4 block', () => {
+    const r = evaluateUniversityDistanceCoverage({
+      universityIds: ALL,
+      measured: [{ university_id: 'auth', distance_meters: 520 }],
+    });
+    expect(r.ok).toBe(false);
+  });
+
+  it('fails a newly added university nobody gave coordinates to', () => {
+    const r = evaluateUniversityDistanceCoverage({
+      universityIds: [...ALL, 'newuni'],
+      measured: measuredAll,
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/newuni/);
+  });
+
+  it('fails a zero distance — the Null Island signature', () => {
+    const r = evaluateUniversityDistanceCoverage({
+      universityIds: ['auth'],
+      measured: [{ university_id: 'auth', distance_meters: 0 }],
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/out of range/);
+  });
+
+  it('fails a distance past the 50 km typo-guard ceiling', () => {
+    const r = evaluateUniversityDistanceCoverage({
+      universityIds: ['auth'],
+      measured: [{ university_id: 'auth', distance_meters: 4_500_000 }],
+    });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/out of range/);
+  });
+
+  it('fails when the universities table comes back empty', () => {
+    const r = evaluateUniversityDistanceCoverage({ universityIds: [], measured: [] });
+    expect(r.ok).toBe(false);
+    expect(r.reason).toMatch(/no universities configured/);
   });
 });

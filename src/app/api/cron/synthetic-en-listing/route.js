@@ -1,6 +1,10 @@
 import { NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getResend } from '@/lib/resend';
+import { getSupabase } from '@/lib/supabase';
+import { DEFAULT_CITY } from '@/lib/cityRoutes';
+import { computeUniversityDistances } from '@/lib/computeUniversityDistances';
+import { MAX_DISTANCE_METERS } from '@/lib/universityDistances';
 import { opsFromAddress } from '@/lib/emailFrom';
 import { isCronAuthorized } from '../auth';
 
@@ -762,6 +766,132 @@ async function checkCronScheduleDrift() {
   }
 }
 
+/*
+  Issue #549 — every university in the city must be MEASURABLE from a pin.
+
+  The landlord wizard's universities step is read-only: it shows one row per
+  city university, each measured from the listing's map pin, and the landlord
+  cannot type a number. So a university nothing can locate is not a cosmetic
+  gap — it shows as "Not measured", and if fewer than two universities measure,
+  the step's minimum refuses to let the listing continue (PR #542).
+
+  That is exactly what prod was in: `faculties` held 13 rows, all AUTH, and
+  university positions were derived from that table alone — so prod could
+  measure one university and new listings were stuck at step 4. Nothing caught
+  it, because e2e/specs/06-landlord-wizard.spec.js STUBS the distance API and
+  the unit tests pass their own fixtures in. Only a call against production
+  data could have seen it. Hence this check. Fixed in PR #545 (migration 119
+  put campus lat/lng on `universities` as the fallback for universities with
+  no faculty rows).
+
+  The expected set is READ FROM THE DATABASE rather than hardcoded, so a
+  university added later without coordinates fails the check instead of
+  quietly measuring as a shorter list.
+*/
+
+// Kamara, central Thessaloniki. Any origin in the city works — the check
+// asks "can every university be located from a pin", not "is this distance
+// right" — but a fixed point keeps the reported metres comparable run to run.
+const UNIVERSITY_CANARY_ORIGIN = { lat: 40.6321, lng: 22.9497 };
+
+/**
+ * Pure verdict for the university-distance coverage check.
+ *
+ * @param {{ universityIds: string[], measured: Array<{ university_id: string, distance_meters: number }> }} input
+ * @returns {{ ok: boolean, reason?: string }}
+ */
+export function evaluateUniversityDistanceCoverage({ universityIds, measured }) {
+  const name = 'university-distance-coverage';
+  const expected = Array.isArray(universityIds) ? universityIds : [];
+  if (expected.length === 0) {
+    return { name, ok: false, reason: `no universities configured for ${DEFAULT_CITY}` };
+  }
+
+  const byId = new Map(
+    (Array.isArray(measured) ? measured : []).map((d) => [d.university_id, d.distance_meters]),
+  );
+
+  const missing = expected.filter((id) => !byId.has(id));
+  if (missing.length > 0) {
+    return {
+      name,
+      ok: false,
+      reason:
+        `no distance measurable for ${missing.join(', ')} ` +
+        `(measured ${byId.size}/${expected.length}: ` +
+        `${[...byId].map(([id, m]) => `${id} ${m}m`).join(', ') || 'none'}). ` +
+        `Check that each has faculties rows or universities.lat/lng.`,
+    };
+  }
+
+  // Bounds, not plausibility: 0 means the row measured against Null Island or
+  // worse, and anything past the 50 km typo-guard ceiling would be rejected by
+  // parseUniversityDistances on write anyway.
+  const outOfRange = expected
+    .map((id) => [id, byId.get(id)])
+    .filter(([, m]) => !(Number.isFinite(m) && m > 0 && m <= MAX_DISTANCE_METERS));
+  if (outOfRange.length > 0) {
+    return {
+      name,
+      ok: false,
+      reason: `distance out of range (0 < m <= ${MAX_DISTANCE_METERS}): ${outOfRange
+        .map(([id, m]) => `${id} ${m}`)
+        .join(', ')}`,
+    };
+  }
+
+  return { name, ok: true };
+}
+
+async function checkUniversityDistanceCoverage() {
+  const name = 'university-distance-coverage';
+  try {
+    const supabase = getSupabase();
+    const [uniRes, facRes] = await Promise.all([
+      supabase
+        .from('universities')
+        .select('university_id, lat, lng')
+        .eq('city_slug', DEFAULT_CITY),
+      supabase.from('faculties').select('faculty_id, university, lat, lng'),
+    ]);
+
+    if (uniRes.error) {
+      return { name, ok: false, reason: `universities query failed: ${uniRes.error.message}` };
+    }
+    if (facRes.error) {
+      return { name, ok: false, reason: `faculties query failed: ${facRes.error.message}` };
+    }
+
+    const universities = uniRes.data || [];
+    /*
+      useOsrm:false deliberately. This asks whether every university has a
+      POSITION, which is a data question — routing them through the public
+      OSRM demo server every 15 minutes would add an external dependency whose
+      outage is not the failure we are watching for (computeUniversityDistances
+      falls back to haversine anyway, so the verdict would not change). The
+      straight-line numbers are enough to prove coverage.
+    */
+    const measured = await computeUniversityDistances(
+      UNIVERSITY_CANARY_ORIGIN,
+      facRes.data || [],
+      { universities, useOsrm: false },
+    );
+
+    return evaluateUniversityDistanceCoverage({
+      universityIds: universities.map((u) => u.university_id),
+      measured,
+    });
+  } catch (err) {
+    return (
+      skipIfInconclusiveError(name, err) || {
+        name,
+        ok: false,
+        reason: `threw: ${err?.message || err?.name || 'Error'}`,
+      }
+    );
+  }
+}
+
 async function sendAlert({ to, subject, lines }) {
   const resend = getResend();
   const from = process.env.RESEND_FROM_EMAIL || opsFromAddress();
@@ -914,6 +1044,7 @@ export async function runSyntheticEnListing() {
   }
   additional.push(await checkCronScheduleDrift());
   additional.push(await checkCartoTileKey(appUrl));
+  additional.push(await checkUniversityDistanceCoverage());
   for (const r of additional) {
     checks.push(r);
     if (!r.ok) failures.push(r);
