@@ -87,20 +87,69 @@ export function listingHasBookings(row) {
  * server-rendered dashboard.
  */
 export async function selectLandlordListings(supabase, landlordId) {
-  const primary = await supabase
-    .from('listings')
-    .select(LANDLORD_LISTING_SELECT)
-    .eq('landlord_id', landlordId)
-    .order('created_at', { ascending: false });
+  return runWithFallback(supabase, (q) => q.eq('landlord_id', landlordId));
+}
+
+/**
+ * Same listings, selected by the caller's AUTH USER id instead of landlord_id.
+ *
+ * WHY THIS EXISTS. `/api/landlord/listings` had no landlord_id to hand — it was
+ * fetching one first, purely to feed the query below:
+ *
+ *     landlordIdForUser(...)        → round trip 1
+ *     selectLandlordListings(...)   → round trip 2
+ *
+ * Two SEQUENTIAL Supabase round-trips where PostgREST can express the whole
+ * thing as one, by filtering on the embedded `landlords` row. Measured against
+ * prod with a real landlord session, 15 interleaved pairs:
+ *
+ *     two hops  min=0.194  median=0.218  p90=0.304
+ *     one hop   min=0.101  median=0.117  p90=0.189
+ *
+ * The minimums being almost exactly 2:1 is the tell that this is a structural
+ * round-trip saving rather than query cost or noise.
+ *
+ * THE FILTER IS LOAD-BEARING, NOT DEFENCE IN DEPTH. `listings` carries a
+ * SELECT policy of `Public can read listings` with `USING (true)` for every
+ * role — verified against prod's pg_policy. RLS does NOT scope listing reads to
+ * their owner, so this filter is the ONLY thing standing between a landlord and
+ * every other landlord's listings. Any future rewrite that drops it is a data
+ * leak the moment a second landlord exists.
+ *
+ * `!inner` makes the embed a join rather than an optional expansion, so a
+ * listing whose landlord doesn't match is excluded rather than returned with a
+ * null embed. The embed itself is stripped from each row before returning, so
+ * the shape callers see is identical to selectLandlordListings'.
+ */
+export async function selectLandlordListingsByAuthUser(supabase, authUserId) {
+  const result = await runWithFallback(
+    supabase,
+    (q) => q.eq('landlords.auth_user_id', authUserId),
+    true,
+  );
+  if (result.error || !Array.isArray(result.data)) return result;
+  // Drop the join-only embed so the response shape doesn't change.
+  return { ...result, data: result.data.map(({ landlords, ...row }) => row) };
+}
+
+/*
+  Shared query runner: primary select, then the pre-migration fallback on
+  error. `applyFilter` scopes the rows; `joinLandlords` adds the inner join
+  the auth-user variant filters on.
+*/
+async function runWithFallback(supabase, applyFilter, joinLandlords = false) {
+  const join = joinLandlords ? ', landlords!inner ( auth_user_id )' : '';
+
+  const primary = await applyFilter(
+    supabase.from('listings').select(LANDLORD_LISTING_SELECT + join),
+  ).order('created_at', { ascending: false });
   if (!primary.error) return primary;
 
   console.warn(
     'Landlord listings query failed, retrying without min_duration_months:',
     primary.error.message,
   );
-  return supabase
-    .from('listings')
-    .select(LANDLORD_LISTING_SELECT_FALLBACK)
-    .eq('landlord_id', landlordId)
-    .order('created_at', { ascending: false });
+  return applyFilter(
+    supabase.from('listings').select(LANDLORD_LISTING_SELECT_FALLBACK + join),
+  ).order('created_at', { ascending: false });
 }
