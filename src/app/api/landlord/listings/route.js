@@ -9,7 +9,7 @@ import {
 import { landlordIdForUser } from '@/lib/landlordAuth';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
 import { writeUniversityDistances } from '@/lib/universityDistances';
-import { selectLandlordListings } from '@/lib/landlordListingSelect';
+import { selectLandlordListingsByAuthUser } from '@/lib/landlordListingSelect';
 import { parseListingWriteBody } from '@/lib/landlordListingBody';
 
 
@@ -20,17 +20,47 @@ export async function GET(request) {
   const user = await getUserFromToken(token);
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-  const landlordId = await landlordIdForUser(getSupabaseWithToken(token), user.id);
-  if (!landlordId) {
-    return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
-  }
-
   const authedSupabase = getSupabaseWithToken(token);
-  const { data, error } = await selectLandlordListings(authedSupabase, landlordId);
+
+  /*
+    ONE round trip, not two. This used to fetch landlord_id first and then the
+    listings, sequentially, because the query needed the id. PostgREST can
+    express both as a single query by filtering on the embedded landlords row —
+    measured on prod with a real session, median 218ms → 117ms (15 interleaved
+    pairs; the min halves too, which is what marks it as a round-trip saving
+    rather than noise).
+
+    The dashboard deliberately keeps selectLandlordListings: requireLandlord()
+    has already fetched the landlord row there for the name and two other
+    queries, so it has the id in hand and the join would buy it nothing.
+  */
+  const { data, error } = await selectLandlordListingsByAuthUser(
+    authedSupabase,
+    user.id,
+  );
 
   if (error) {
     console.error('Failed to fetch landlord listings:', error);
     return NextResponse.json({ error: 'Failed to fetch listings' }, { status: 500 });
+  }
+
+  /*
+    Preserve the 404. An empty result is ambiguous — it means either "no
+    landlord profile" (orphaned auth user, which this route has always answered
+    with 404) or "a real landlord with no listings yet" (a legitimate 200 []).
+    The join cannot tell them apart, so disambiguate with the lookup we just
+    avoided — but ONLY on the empty path, which is the one request where there
+    is no payload to speed up anyway. Landlords with listings, the common case,
+    still pay a single round trip.
+
+    Without this the orphan case would silently become 200 [], and the listings
+    page would render an empty state instead of its error branch.
+  */
+  if (Array.isArray(data) && data.length === 0) {
+    const landlordId = await landlordIdForUser(authedSupabase, user.id);
+    if (!landlordId) {
+      return NextResponse.json({ error: 'Landlord profile not found' }, { status: 404 });
+    }
   }
 
   return NextResponse.json({ listings: data });
