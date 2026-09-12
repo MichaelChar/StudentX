@@ -6,10 +6,30 @@ serial queries) and #539 (results-page fetch waterfall). Those two fixed the
 the render entirely.
 
 **Conclusion up front: wiring OpenNext's R2 incremental cache would not measurably
-speed up any slow page on this site.** The lever is a Cloudflare Cache Rule —
-already tracked as issue #130, already partly written, and dashboard config
-rather than code. R2 is a real option for a different problem we do not
-currently have.
+speed up any slow page on this site.** That part held up. R2 is a real option
+for a different problem we do not currently have.
+
+> ### Correction, 2026-09-12 — the recommendation below was wrong
+>
+> The original version of this document said the lever was a Cloudflare Cache
+> Rule (#130). **It is not.** The rule was applied to prod exactly as specified,
+> correctly configured and enabled, and **no HTML response gained a
+> `cf-cache-status` header.** See "What applying it actually proved" below.
+>
+> The negative finding about R2 stands. The positive recommendation did not,
+> and it failed for a reason nothing in the repo had recorded: the Worker is
+> attached as a **custom domain**, so there is no origin fetch for the CDN to
+> cache.
+>
+> The substantive correction is that **the win we were chasing already exists.**
+> `/`, `/gigs`, `/resources` and `/property` are already served from OpenNext's
+> own cache at 81-104ms without running a render. The original measurements
+> treated an absent `cf-cache-status` as proof that nothing was cached, and
+> never checked `x-opennext-cache`. That single wrong header turned "already
+> solved for the cacheable pages" into "nothing is cached anywhere", and every
+> recommendation downstream inherited the error.
+>
+> Sections below are left as written, with the disproven ones marked.
 
 ## Two caches, routinely confused
 
@@ -89,7 +109,11 @@ static-assets cache + `enableCacheInterception` removed the shared-render-stream
 path that caused the 1101s. Only four files in the `[locale]` tree still set
 `force-dynamic`, all admin/claim. This document corrects that entry.
 
-## The actual lever: the Cloudflare Cache Rule (#130)
+## ⛔ DISPROVEN — "The actual lever: the Cloudflare Cache Rule (#130)"
+
+*Kept as written for the record. Everything in this section about how Cache
+Rules are evaluated is accurate; the conclusion that one would cache this
+app's HTML is not. See the correction at the top and the measurements below.*
 
 Worker responses on a custom domain bypass Cloudflare's CDN cache. A
 `Cache-Control` header alone changes nothing — this was verified the hard way
@@ -145,7 +169,7 @@ content before the rule widens.
 
 ## Options, ranked
 
-### 1. Fix the Cache Rule expression (#130) — recommended
+### 1. ⛔ Fix the Cache Rule expression (#130) — DISPROVEN, do not do this
 
 Dashboard change, no deploy. Anonymous hits on `/property/*` (hub, city
 landing, results, listing detail, about, quiz) start being served from the edge
@@ -190,16 +214,104 @@ cache, and moving parts to `open-next.config.ts`, in exchange for a capability
 (runtime revalidation) that nothing currently requests. Revisit only if option
 2 happens, or if content appears that must regenerate between deploys.
 
+## What applying it actually proved (2026-09-12)
+
+The rule was applied to prod via `scripts/cf-cache-rule.sh --apply`. Two
+surprises before the measurements even started:
+
+1. **The deployed expression was already correct.** Not the stale
+   `/property/listing/*` that #130 describes — the full GET / `sb-access-token`
+   / `/landlord` / `/student` / `/admin` / `/claim` / `/api/` version with the
+   allowlist. Someone had already fixed it.
+2. **The real misconfiguration was `edge_ttl: {"mode": "bypass_by_default"}`**,
+   which bypasses cache regardless of what the expression matched. So the only
+   change made was `bypass_by_default` → `respect_origin`.
+
+That change is correct. It changed nothing:
+
+| path | `x-opennext-cache` | `cf-cache-status` | median TTFB |
+|---|---|---|---|
+| `/` | **HIT** | none | 104ms |
+| `/gigs` | **HIT** | none | 81ms |
+| `/resources` | **HIT** | none | 82ms |
+| `/property` | **HIT** | none | 89ms |
+| `/property/thessaloniki` | none | none | 71ms |
+| `/property/thessaloniki/results` | none | none | 209ms |
+| `/property/thessaloniki/listing/0106002` | none | none | 222ms |
+| `/_next/static/chunks/*.js` | — | **HIT** | — |
+
+### Reading that table
+
+**No HTML response carries `cf-cache-status`, with a correct and enabled rule.**
+Static assets do. So the zone's cache works — this is not a rule-syntax problem
+and no further expression tuning will fix it.
+
+The explanation that fits every row is the attachment model. `wrangler.jsonc`:
+
+```json
+{ "pattern": "studentx.uk", "custom_domain": true }
+```
+
+On a Workers **custom domain** the Worker is the terminus. Cache Rules
+configure how Cloudflare caches responses *from an origin*, and there is no
+origin fetch here to cache. Static assets are the exception because Workers
+Static Assets caches those itself, which is exactly why they are the only rows
+with `cf-cache-status`.
+
+That mechanism is inference from the measurements, not something Cloudflare
+told us — but it is the only explanation consistent with "zone caches assets,
+never HTML, regardless of rule". The decisive test would be moving off
+`custom_domain`, which is not worth doing for this.
+
+**And the win was already there.** Four surfaces serve from OpenNext's cache at
+81-104ms without running a render. The 2026-09-11 measurements missed this by
+treating an absent `cf-cache-status` as proof of no caching, without checking
+`x-opennext-cache`.
+
+### What is genuinely left
+
+Only two pages run a real render, and neither is a caching-config problem:
+
+- `/property/thessaloniki/results` — 209ms, dynamic on `searchParams`
+- `/property/thessaloniki/listing/0106002` — 222ms, dynamic on the auth cookie
+
+Both are already inside normal latency. Making either cacheable means the
+architectural change in option 2 — and *that* is the only path on which R2
+ever becomes relevant.
+
+*(A one-off 723ms median on `/results` was recorded mid-investigation and did
+not reproduce: an interleaved A/B of 12 pairs put plain and cache-busted
+requests at 209ms vs 210ms. Occasional multi-second outliers on any dynamic
+page are cold isolates.)*
+
+## Two canary checks are now permanently inconclusive
+
+`cf-cache-status-hit` and `cf-cache-authed-not-hit` both skip when no
+`cf-cache-status` header is present, which is now known to be the permanent
+state for HTML. **They will skip forever, and that is correct behaviour, not a
+fault.** Do not "fix" them into failing — a skip is the honest report for a
+check whose precondition cannot be met.
+
+They stay because they cost nothing and would become meaningful the moment the
+attachment model changes. `docs/runbooks/synthetic-en-listing.md` records the
+same note.
+
 ## Recommendation
 
-Do #130. Measure. Only then decide whether the PDP rework in option 2 is worth
-its risk — and let that decision, not this one, be what pulls R2 in.
+**Do nothing further on edge caching.** The cacheable pages are cached and fast
+(81-104ms); the uncacheable ones are dynamic by construction and already at
+~210ms. There is no configuration change left that would help.
+
+If page load becomes a priority again, the next real lever is option 2 — moving
+the PDP's auth gate off the server render so the page becomes prerenderable —
+and R2 follows from that decision rather than preceding it. Weigh it against the
+risk noted there: the gated-contact-info boundary is a business-model surface,
+not a perf detail.
 
 ## Open question for a human
 
-Whether the Cache Rule should cover `/property/[city]/results`. The rule keys
-on full URL including query string, so a filtered search is a distinct entry
-and long-tail combinations would mostly miss. The hub, city landing and listing
-detail are the high-value entries; results may be better excluded to keep the
-cache from filling with single-use keys. Worth deciding deliberately rather
-than inheriting from a `starts_with(/property)` prefix.
+Whether `/property/thessaloniki/results` at ~210ms is worth any further work at
+all. It is four parallel Supabase queries behind a dynamic render. The obvious
+next step would be caching common filter combinations, but the unfiltered entry
+is already the fast path and the long tail is genuinely per-user. Probably
+leave it.

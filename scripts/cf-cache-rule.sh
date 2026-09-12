@@ -2,6 +2,13 @@
 #
 # Apply the anon-page Cache Rule described in docs/runbooks/cloudflare-cache-rule.md.
 #
+# READ THIS FIRST. Applying this rule does NOT make the app's HTML edge-cached.
+# It was applied to prod on 2026-09-12 and no HTML response gained a
+# cf-cache-status header: the Worker is attached as a custom domain, so there is
+# no origin fetch for Cloudflare to cache. The script is correct and kept for
+# the day that changes (or for auditing/disabling the rule) — but if you are
+# here to speed up page loads, read docs/edge-caching-assessment.md instead.
+#
 # WHY THIS EXISTS. The rule is the one piece of the edge-caching setup that
 # cannot be committed — it lives in Cloudflare's config, not the repo. Doing it
 # by hand in the dashboard means the expression that actually protects
@@ -33,6 +40,7 @@
 set -euo pipefail
 
 ZONE_NAME="${ZONE_NAME:-studentx.uk}"
+SITE="https://${ZONE_NAME}"
 RULE_DESC="Cache anon public pages (edge)"
 API="https://api.cloudflare.com/client/v4"
 
@@ -169,13 +177,18 @@ fi
 
 echo "  done."
 echo
-echo "Now verify — the authed request is the one that matters:"
+echo "Verify (the authed request is the one that matters). Annotations are kept"
+echo "OFF the command lines: zsh does not treat # as a comment interactively, so"
+echo "a pasted trailing comment becomes grep filenames."
 echo
-echo "  curl -sI https://studentx.uk/property/thessaloniki/listing/0106002 | grep -i cf-cache-status"
-echo "  curl -sI https://studentx.uk/property/thessaloniki/listing/0106002 | grep -i cf-cache-status   # expect HIT"
+echo "  1) anon, run twice — second should report HIT if HTML is cacheable at all:"
+echo "     curl -sI $SITE/property/thessaloniki/listing/0106002 | grep -i cf-cache-status"
 echo
-echo "  curl -sI -H 'Cookie: sb-access-token=stub' \\"
-echo "    https://studentx.uk/property/thessaloniki/listing/0106002 \\"
-echo "    | grep -iE 'cf-cache-status|cache-control'   # expect private/no-store, NOT HIT"
+echo "  2) authed — must be private/no-store and must NOT be HIT:"
+echo "     curl -sI -H 'Cookie: sb-access-token=stub' $SITE/property/thessaloniki/listing/0106002 | grep -iE 'cf-cache-status|cache-control'"
 echo
-echo "If that last one says HIT, run: $0 --disable"
+echo "If (2) ever reports HIT, roll back immediately:  $0 --disable"
+echo
+echo "NOTE: as of 2026-09-12, (1) returns NO cf-cache-status on this zone. The"
+echo "Worker is attached as a custom domain, so Cache Rules do not cache its"
+echo "HTML. See docs/edge-caching-assessment.md. That is expected, not a fault."
