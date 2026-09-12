@@ -60,6 +60,12 @@ Forbidden (must NOT be present):
 - Does not depend on a live listing. Skips only on the same inconclusive timeout/abort class as the other checks; a missing coordinate is a real failure.
 - Uses haversine (`useOsrm: false`) so a 15s public-OSRM round-trip cannot contend with the master tick's ~25s budget. The bug class is missing coordinates, not routing.
 
+**Basemap tile reachability (`carto-tile-reachable`):**
+- Fetches ONE real tile (Thessaloniki centre, z12) from the same `CARTO_TILE_URL` the maps render with, and asserts `200` + an `image/*` content-type.
+- **This is a different failure from `carto-tile-key`.** That check proves the API key reached the client bundle; it matches on host + `?key=`, and so does `scripts/check-build-output.mjs`. A URL that is keyed, well-formed and points at a style CARTO does not serve passes both — and blanks all four Leaflet surfaces with no console error, no failing test and nothing in the page HTML to notice.
+- Not hypothetical: CARTO serves Positron at both `/light_all/...` and `/rastertiles/light_all/...`, so the short form looks like the general shape of a tile URL. Voyager exists **only** under `rastertiles/`; the short `/voyager/` form 404s. A swap written that way sat in the working tree and would have shipped blank maps (caught in #554 before it did).
+- **404/410 is a hard failure** — that is our bug, a style slug that does not exist. **401/403 skips**: the key is domain-restricted and a server-side fetch carries no `Referer`; that has never been rejected (verified 2026-09-12), but if CARTO tightens the policy it is not this check's failure class and should not page anyone about a working map. Other non-200s and timeouts skip like everywhere else.
+
 Any failed assertion (or non-200, or fetch timeout) attempts to send an email via Resend to `SYNTHETIC_ALERT_EMAIL`.
 
 > **Status (2026-05-03):** Resend is verified for `studentx.uk` and `RESEND_API_KEY` is set as a Worker secret — the alert path is live. On failure the route emails `SYNTHETIC_ALERT_EMAIL` from `michael@studentx.uk` (the sender moved off `alerts@` on 2026-09-11 — it was never registered to send in Resend). Failures still surface in `wrangler tail` regardless. The route's email send is wrapped in try/catch, so a Resend hiccup doesn't break the check itself.
@@ -132,6 +138,8 @@ Body includes the failing check name, reason, and the first 500 chars of the ano
 - `implausible distance (must be 1..50000 m)` — a measured distance was `<= 0` or above the typo-guard ceiling. Usually a Null-Island coordinate (`lat`/`lng` stored as 0) or a swapped lat/lng. `MAX_DISTANCE_METERS` in `src/lib/universityDistances.js` is the same ceiling the landlord write path uses.
 - `expected at least 1 university in thessaloniki, got 0` — the `universities` table returned no rows for `DEFAULT_CITY`. Seed/data regression, not a measurement bug.
 - `universities lookup failed` / `faculties lookup failed` — the public SELECT against those tables failed. Check RLS and the Worker's `NEXT_PUBLIC_SUPABASE_*` vars.
+- `tile 404 at <url> — the style slug does not exist` — **every map on the site is blank right now.** The basemap URL in `src/lib/mapTiles.js` names a CARTO style that isn't served. Almost always the `rastertiles/` prefix: Voyager exists only at `rastertiles/voyager`, while Positron answers at both `/light_all/` and `/rastertiles/light_all/`, which is what makes the short form look correct. Fix the constant; `carto-tile-key` and the build guard will NOT catch this class.
+- `tile returned 200 but content-type ...` — CARTO answered with something that isn't an image, usually an HTML error or consent page. Check the key and the account's status.
 - `fetch threw: ...` — the Worker couldn't reach the public hostname. Could be a Worker outage or DNS issue.
 
 ## Maintenance

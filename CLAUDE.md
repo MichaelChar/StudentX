@@ -350,7 +350,9 @@ landlord-API auth (401-not-5xx — guards the column-missing crash class
 fixed in PR #85), a `MISSING_MESSAGE:` scan for missing en.json keys, and
 pin-to-university coverage (`university-distance-coverage` — every
 `DEFAULT_CITY` university must be measurable from a central pin; guards
-the AUTH-only faculties hole #545 fixed).
+the AUTH-only faculties hole #545 fixed), and basemap tile reachability
+(`carto-tile-reachable` — one real tile must return an image; a keyed but
+wrong style slug blanks every map and passes every other guard).
 
 Failures email `SYNTHETIC_ALERT_EMAIL` via Resend (live in prod) and
 surface in `wrangler tail`.
