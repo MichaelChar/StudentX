@@ -1,3 +1,37 @@
+> ## ⛔ SUPERSEDED — the premise in this runbook is disproven
+>
+> **A Cloudflare Cache Rule cannot cache this app's HTML.** The rule below was
+> applied to prod on 2026-09-12 exactly as written, correctly configured and
+> enabled, and **no HTML response gained a `cf-cache-status` header.** The
+> procedure is kept because it is accurate *as a procedure* — and because
+> knowing it does not work is worth more than a deleted file.
+>
+> **Read `docs/edge-caching-assessment.md` first.** The short version:
+>
+> - The Worker is attached as a **custom domain** (`wrangler.jsonc`:
+>   `{"pattern": "studentx.uk", "custom_domain": true}`). The Worker *is* the
+>   terminus, so there is no origin response for the CDN to store. Cache Rules
+>   configure how Cloudflare caches origin fetches; there isn't one.
+> - This is not a zone problem: static assets under `/_next/static/` **do**
+>   return `cf-cache-status: HIT`, because Workers Static Assets caches those
+>   itself.
+> - **The win already exists elsewhere.** `/`, `/gigs`, `/resources` and
+>   `/property` serve from OpenNext's own cache (`x-opennext-cache: HIT`) at
+>   81-104ms TTFB. It was there all along under a different header — reading
+>   `cf-cache-status` as the only proof of caching is what hid it.
+> - The pages a rule could never have helped anyway — `/results` (reads
+>   `searchParams`) and `/listing/[id]` (reads the auth cookie) — are dynamic
+>   by construction. They need the architectural change in the assessment, not
+>   a caching config.
+>
+> **The applied rule is harmless and has been left in place.** Authed requests
+> still return `private, no-cache, no-store` with no cache status, verified
+> after the change. `respect_origin` is the more correct setting should the
+> attachment model ever change.
+>
+> Do not spend more time on Cache Rules for HTML without first disproving the
+> custom-domain explanation above.
+
 # Runbook — Cloudflare Cache Rule for anonymous pages
 
 **Issue:** [#130](https://github.com/MichaelChar/StudentX/issues/130) · **Related:** [#131](https://github.com/MichaelChar/StudentX/issues/131), [#67](https://github.com/MichaelChar/StudentX/issues/67) (closed)
