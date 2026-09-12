@@ -151,7 +151,10 @@ unrankable or a dead nav item. Wide blast radius, and mistakes here are silent.
 >
 > Replace the ranking that SuperLandlord priority provided with:
 > verified → listing completeness → landlord response time
-> (`/api/landlord/response-time` already computes the last one).
+> (`getLandlordResponseTime` in `src/lib/landlordResponseTime.js` already
+> computes the last one; the `refresh-response-times` cron keeps
+> `landlords.avg_response_ms` warm. The `/api/landlord/response-time` HTTP
+> route that used to wrap it was deleted as dead code — nothing fetched it.)
 >
 > Remove the tier-gated photo cap in `src/components/ListingForm.js`; make it a
 > uniform cap of 20 for everyone.
