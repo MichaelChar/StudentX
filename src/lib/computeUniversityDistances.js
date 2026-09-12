@@ -143,6 +143,9 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
   const useOsrm = opts.useOsrm !== false;
   const fetchImpl = opts.fetchImpl || fetch;
 
+  // faculty index → OSRM metres, for the destinations OSRM could route to.
+  const routed = new Map();
+
   if (useOsrm) {
     try {
       const coordsParts = [
@@ -165,29 +168,59 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
         const table = await res.json();
         if (table?.code === 'Ok' && Array.isArray(table.distances?.[0])) {
           const row = table.distances[0];
-          const pairs = usable
-            .map((f, i) => {
-              const d = row[i];
-              if (d == null || !Number.isFinite(Number(d))) return null;
-              return {
-                university_id: f.university_id,
-                distance_meters: Number(d),
-              };
-            })
-            .filter(Boolean);
-          if (pairs.length > 0) return collapseNearestPerUniversity(pairs);
+          usable.forEach((_, i) => {
+            const d = row[i];
+            if (d == null || !Number.isFinite(Number(d))) return;
+            routed.set(i, Number(d));
+          });
         }
       }
     } catch {
-      // fall through to haversine
+      // fall through to haversine for everything
     }
   }
 
-  // Fallback: straight-line metres. Same unit the listing stores, and still
-  // source=computed — the landlord cannot type over either one.
-  const pairs = usable.map((f) => ({
-    university_id: f.university_id,
-    distance_meters: haversineMeters(lat, lng, f.lat, f.lng),
-  }));
+  /*
+    PER-UNIVERSITY, NOT PER-TABLE (the hole this closes).
+
+    OSRM can return a table where SOME destinations are null — a campus point
+    with no routable way near it, typically. This used to drop those rows and
+    return whatever routed, because `pairs.length > 0` was enough to skip the
+    haversine fallback entirely. One unroutable campus therefore made a
+    university silently vanish from the result: the wizard rendered it as
+    "Not measured", and below two measured universities the step refused to
+    continue — all with the canary green, since the canary measures with
+    useOsrm:false and never sees OSRM's nulls.
+
+    So the decision is made per university:
+      - any routable campus  → the nearest ROUTED distance (ignore that
+        university's haversine values, which are always shorter and would
+        win a naive min())
+      - none routable        → the nearest straight-line distance
+
+    Both are reported as source='computed'. A result can therefore mix routed
+    and straight-line rows; that is the intended trade. A straight-line number
+    is an understatement of the walk, but it is a measurement the student can
+    reason about, and it beats the alternative of showing nothing for a
+    university that plainly exists.
+  */
+  const byUniversity = new Map();
+  usable.forEach((f, i) => {
+    const entry = byUniversity.get(f.university_id) || { routed: [], straight: [] };
+    if (routed.has(i)) entry.routed.push(routed.get(i));
+    else entry.straight.push(haversineMeters(lat, lng, f.lat, f.lng));
+    byUniversity.set(f.university_id, entry);
+  });
+
+  const pairs = [];
+  for (const [universityId, entry] of byUniversity) {
+    const candidates = entry.routed.length > 0 ? entry.routed : entry.straight;
+    if (candidates.length === 0) continue;
+    pairs.push({
+      university_id: universityId,
+      distance_meters: Math.min(...candidates),
+    });
+  }
+
   return collapseNearestPerUniversity(pairs);
 }

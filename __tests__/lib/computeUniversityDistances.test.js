@@ -116,4 +116,95 @@ describe('computeUniversityDistances', () => {
       }),
     ).toEqual([]);
   });
+
+  /*
+    OSRM returning a PARTIAL table is the hole. It used to drop every
+    destination it could not route and return the rest, because a non-empty
+    result skipped the haversine fallback outright — so one unroutable campus
+    made a university vanish, the wizard showed "Not measured", and the
+    canary stayed green because it measures with useOsrm:false.
+  */
+  function osrmStub(distancesRow) {
+    return async () => ({
+      ok: true,
+      json: async () => ({ code: 'Ok', distances: [distancesRow] }),
+    });
+  }
+
+  const FACULTIES = [
+    { faculty_id: 'a1', university: 'AUTH', lat: 40.63, lng: 22.95 },
+    { faculty_id: 'u1', university: 'UoM', lat: 40.625, lng: 22.96 },
+  ];
+  const ORIGIN = { lat: 40.63, lng: 22.94 };
+
+  it('keeps a university OSRM could not route, measured straight-line', async () => {
+    const out = await computeUniversityDistances(ORIGIN, FACULTIES, {
+      fetchImpl: osrmStub([1234, null]),
+    });
+    const ids = out.map((r) => r.university_id).sort();
+    expect(ids).toEqual(['auth', 'uom']);
+    // auth came from OSRM verbatim; uom fell back to its own straight line.
+    expect(out.find((r) => r.university_id === 'auth').distance_meters).toBe(1234);
+    const uom = out.find((r) => r.university_id === 'uom').distance_meters;
+    expect(uom).toBe(haversineMeters(ORIGIN.lat, ORIGIN.lng, 40.625, 22.96));
+    expect(out.every((r) => r.source === 'computed')).toBe(true);
+  });
+
+  it('prefers the routed campus over a shorter straight line within one university', async () => {
+    const twoCampuses = [
+      { faculty_id: 'a1', university: 'AUTH', lat: 40.63, lng: 22.95 },
+      // Nearer the origin in a straight line, but unroutable in the stub.
+      { faculty_id: 'a2', university: 'AUTH', lat: 40.63, lng: 22.941 },
+    ];
+    const out = await computeUniversityDistances(ORIGIN, twoCampuses, {
+      fetchImpl: osrmStub([1234, null]),
+    });
+    expect(out).toHaveLength(1);
+    // Not the ~85m straight line to the unroutable campus — a min() across
+    // both methods would have picked that and understated the walk.
+    expect(out[0].distance_meters).toBe(1234);
+  });
+
+  it('uses haversine for everything when the whole table is null', async () => {
+    const out = await computeUniversityDistances(ORIGIN, FACULTIES, {
+      fetchImpl: osrmStub([null, null]),
+    });
+    expect(out.map((r) => r.university_id).sort()).toEqual(['auth', 'uom']);
+    expect(out.find((r) => r.university_id === 'auth').distance_meters).toBe(
+      haversineMeters(ORIGIN.lat, ORIGIN.lng, 40.63, 22.95),
+    );
+  });
+
+  it('uses OSRM values when every destination routes', async () => {
+    const out = await computeUniversityDistances(ORIGIN, FACULTIES, {
+      fetchImpl: osrmStub([900, 1800]),
+    });
+    expect(out).toEqual([
+      { university_id: 'auth', distance_meters: 900, source: 'computed' },
+      { university_id: 'uom', distance_meters: 1800, source: 'computed' },
+    ]);
+  });
+
+  it('falls back to haversine when the OSRM call itself throws', async () => {
+    const out = await computeUniversityDistances(ORIGIN, FACULTIES, {
+      fetchImpl: async () => {
+        throw new Error('network');
+      },
+    });
+    expect(out.map((r) => r.university_id).sort()).toEqual(['auth', 'uom']);
+  });
+
+  it('still covers a faculty-less university when OSRM routes only faculties', async () => {
+    // auth has a faculty row, uom does not — uom's position comes from
+    // migration 119's universities.lat/lng. OSRM nulls the uom destination.
+    const out = await computeUniversityDistances(
+      ORIGIN,
+      [FACULTIES[0]],
+      {
+        universities: [{ university_id: 'uom', lat: 40.6252099, lng: 22.9599727 }],
+        fetchImpl: osrmStub([1500, null]),
+      },
+    );
+    expect(out.map((r) => r.university_id).sort()).toEqual(['auth', 'uom']);
+  });
 });
