@@ -370,10 +370,20 @@ export function evaluateUniversityDistanceCoverage({
 
   const missing = expected.filter((id) => !measured.has(id)).sort();
   if (missing.length > 0) {
-    const got = [...measured.keys()].sort().join(', ') || 'none';
+    // Metres and the remediation line go in the REASON, not just the runbook:
+    // this string is the body of an alert email, and whoever reads it at 2am
+    // should not have to open a doc to learn where a position comes from.
+    const got =
+      [...measured.keys()]
+        .sort()
+        .map((id) => `${id} ${measured.get(id)}m`)
+        .join(', ') || 'none';
     return {
       ok: false,
-      reason: `measured set missing ${missing.join(', ')} (expected ${expected.join(', ')}; measured ${got})`,
+      reason:
+        `measured set missing ${missing.join(', ')} ` +
+        `(expected ${expected.join(', ')}; measured ${got}). ` +
+        `Each needs either faculties rows or universities.lat/lng.`,
     };
   }
 
@@ -405,7 +415,16 @@ export async function checkUniversityDistanceCoverage({
       { data: universities, error: uniError },
       { data: faculties, error: facError },
     ] = await Promise.all([
-      client.from('universities').select('university_id, city_slug, lat, lng'),
+      /*
+        Filtered in Postgres, not in JS. Today it saves nothing (three rows),
+        but it keeps the set we MEASURE identical to the set we EXPECT — a
+        second city's universities would otherwise be measured from the
+        Thessaloniki pin and thrown away.
+      */
+      client
+        .from('universities')
+        .select('university_id, city_slug, lat, lng')
+        .eq('city_slug', DEFAULT_CITY),
       client.from('faculties').select('faculty_id, university, lat, lng'),
     ]);
 
@@ -424,9 +443,7 @@ export async function checkUniversityDistanceCoverage({
       };
     }
 
-    const expectedIds = (universities || [])
-      .filter((u) => u?.city_slug === DEFAULT_CITY)
-      .map((u) => u.university_id);
+    const expectedIds = (universities || []).map((u) => u.university_id);
 
     const distances = await computeFn(origin, faculties || [], {
       universities: universities || [],
