@@ -1,5 +1,5 @@
 import { createClient } from '@supabase/supabase-js';
-import { getSupabase } from '@/lib/supabase';
+import { getSupabaseAsService } from '@/lib/supabaseServer';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { fromAddressFor } from '@/lib/emailFrom';
@@ -32,9 +32,26 @@ export async function sendLandlordInquiryEmail({
   facultyId = null,
 }) {
   try {
-    const supabase = getSupabase();
+    /*
+      SERVICE ROLE, NOT ANON — this is load-bearing, not a preference.
 
-    const { data: listing } = await supabase
+      This query selects `landlords ( … email )`. Migration 065 revoked the
+      blanket anon SELECT on `landlords` and granted back only the 7 public
+      catalog columns; `email` is deliberately not among them. So the anon
+      client gets `42501 permission denied for table landlords`, PostgREST
+      returns no row, and the `!landlord?.email` guard below turns that into a
+      silent early return.
+
+      That is exactly what happened from 2026-07-03 until this fix: every send
+      in this file stopped delivering and nothing surfaced it, because these
+      helpers are best-effort by contract and swallow their own failures.
+
+      If you change this back to getSupabase(), the emails stop again and no
+      test or alert will tell you.
+    */
+    const supabase = getSupabaseAsService();
+
+    const { data: listing, error: listingError } = await supabase
       .from('listings')
       .select(`
         listing_id,
@@ -44,6 +61,12 @@ export async function sendLandlordInquiryEmail({
       `)
       .eq('listing_id', listingId)
       .single();
+
+    // Surface the failure instead of swallowing it. A discarded error here is
+    // what made the 2026-07-03 breakage look like "no landlord email on file".
+    if (listingError) {
+      console.error('inquiryEmail: listing/landlord load failed:', listingError.message);
+    }
 
     const landlord = Array.isArray(listing?.landlords) ? listing.landlords[0] : listing?.landlords;
     const location = Array.isArray(listing?.location) ? listing.location[0] : listing?.location;
