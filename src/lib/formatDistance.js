@@ -1,9 +1,10 @@
 /**
- * Formats a landlord-reported distance in metres for display.
+ * Formats a listing-to-university distance in metres for display.
  *
- * Rounds deliberately. The underlying number is typed by a landlord into a free
- * text field — it is an estimate, not a measurement — so rendering "1,247 m"
- * would imply a precision nobody ever had. Under a kilometre we round to the
+ * Rounds deliberately — still. The number is now measured from the listing's
+ * map pin rather than typed by the landlord (#542), but the pin is placed by
+ * hand and the route is OSRM's walking path to one campus point, so "1,247 m"
+ * would claim a precision neither input has. Under a kilometre we round to the
  * nearest 50 m; at or above, one decimal place of km.
  *
  *   450   → "450 m"

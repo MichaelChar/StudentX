@@ -513,10 +513,12 @@ export default async function ListingPage({ params, searchParams }) {
           {/* Availability calendar */}
           <AvailabilityCalendar listingId={listing.listing_id} />
 
-          {/* Distance to universities — every university the landlord filled
-              in, nearest first (sorted in transformListing). The caption is
-              deliberate: this number is typed by the landlord, not measured by
-              us, and the copy should not imply otherwise. */}
+          {/* Distance to universities — every university in the city, nearest
+              first (sorted in transformListing). Measured from the listing's
+              map pin since #542, which is what the caption now says; before
+              that the landlord typed these and the caption said so. Rows still
+              reading source='landlord' are pre-#542 and are re-measured the
+              next time that listing's wizard step is opened. */}
           {listing.university_distances?.length > 0 && (
             <section className="mb-10">
               <p className="label-caps text-night/80 mb-1">

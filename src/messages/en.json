@@ -532,7 +532,6 @@
         "lede": "Measured from your map pin, for every university in the city. Nothing to fill in here.",
         "pinNote": "📍 If a distance looks wrong, check the location pin on the Address step. Otherwise just continue — these numbers are ready as they are.",
         "computing": "Measuring from your pin…",
-        "distance": "{metres} m",
         "unmeasured": "Not measured",
         "empty": "We couldn't measure from your pin. Check the location on the Address step."
       },
@@ -893,7 +892,7 @@
       "descriptionEnglish": "Description",
       "amenitiesEnglish": "Amenities",
       "universityDistancesEnglish": "Distance to universities",
-      "universityDistancesSource": "Listed by the landlord",
+      "universityDistancesSource": "Measured from this listing's location",
       "responseWithinHour": "Usually replies within an hour",
       "responseWithinDay": "Usually replies within a day",
       "responseWithin2Days": "Usually replies within 2 days",
