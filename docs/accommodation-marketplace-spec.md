@@ -743,8 +743,11 @@ subscription branch of the Stripe webhook, tier-gated photo limits.
 
 **Replace:** SuperLandlord ranking priority disappears with the paid tier, so
 default sort needs rebuilding. Proposal: availability fit → video-verified →
-listing completeness → landlord response time (already computed at
-`/api/landlord/response-time`). Ranking should reward the signals that predict a
+listing completeness → landlord response time (already computed by
+`getLandlordResponseTime` in `src/lib/landlordResponseTime.js`, and cached on
+`landlords.avg_response_ms` by the `refresh-response-times` cron — the HTTP
+route that once wrapped it was deleted as dead code). Ranking should reward the
+signals that predict a
 good booking, and you already collect all of them.
 
 **Timing (D7): do it first, not last.** There are no paying landlords, so there
