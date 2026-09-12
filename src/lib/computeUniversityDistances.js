@@ -1,5 +1,5 @@
 /**
- * Prefill landlord university distances from listing lat/lng.
+ * Measure a listing's distance to each university from its lat/lng.
  *
  * Reuses the same OSRM foot /table + metre annotation that
  * recomputeDistances uses for faculty_distances, then collapses
@@ -7,6 +7,18 @@
  *
  * University short codes on faculties (AUTH / UoM / IHU) map onto
  * universities.university_id (auth / uom / ihu).
+ *
+ * TWO POSITION SOURCES, IN THIS ORDER (migration 119)
+ * ---------------------------------------------------
+ * 1. `faculties` — preferred. Nearest campus beats a centroid for a
+ *    university taught across many sites (AUTH has 13, out to Thermi).
+ * 2. `universities.lat/lng` — for universities with no faculty rows.
+ *    Prod holds faculties for AUTH only, so without this UoM and IHU are
+ *    simply unmeasurable and the landlord wizard's read-only step has
+ *    nothing to show for them.
+ *
+ * A university present in both is measured from its faculties; the
+ * university row's own coordinates are never consulted for it.
  */
 
 const OSRM_BASE = 'https://router.project-osrm.org';
@@ -20,7 +32,8 @@ const UNI_CODE_TO_ID = {
 
 /**
  * Haversine distance in metres — used as a fallback when OSRM is
- * unreachable so the wizard still prefills something adjustable.
+ * unreachable, so the wizard still shows a measurement rather than
+ * "Not measured" for every university.
  */
 export function haversineMeters(lat1, lng1, lat2, lng2) {
   const R = 6371000;
@@ -77,7 +90,9 @@ export function collapseNearestPerUniversity(rows) {
  *
  * @param {{ lat: number, lng: number }} origin
  * @param {Array<{ faculty_id: string, university: string, lat: number, lng: number }>} faculties
- * @param {{ fetchImpl?: typeof fetch, useOsrm?: boolean }} [opts]
+ * @param {{ fetchImpl?: typeof fetch, useOsrm?: boolean, universities?: Array<{ university_id: string, lat: unknown, lng: unknown }> }} [opts]
+ *   `universities` carries the migration-119 fallback coordinates; a university
+ *   with faculty rows ignores them.
  * @returns {Promise<Array<{ university_id: string, distance_meters: number, source: 'computed' }>>}
  */
 export async function computeUniversityDistances(origin, faculties, opts = {}) {
@@ -100,6 +115,28 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
         Number.isFinite(f.lat) &&
         Number.isFinite(f.lng),
     );
+
+  // Universities with no faculty row of their own, measured from the campus
+  // point on `universities` instead. Keyed as a pseudo-faculty so they ride the
+  // same OSRM table call rather than a second round trip.
+  const covered = new Set(usable.map((f) => f.university_id));
+  for (const u of opts.universities || []) {
+    const id = u?.university_id;
+    if (typeof id !== 'string' || !id || covered.has(id)) continue;
+    // Number(null) is 0, so a row with no coordinates would otherwise be
+    // measured against Null Island and reported as a real distance.
+    if (u.lat == null || u.lng == null || u.lat === '' || u.lng === '') continue;
+    const uLat = Number(u.lat);
+    const uLng = Number(u.lng);
+    if (!Number.isFinite(uLat) || !Number.isFinite(uLng)) continue;
+    covered.add(id);
+    usable.push({
+      faculty_id: `university:${id}`,
+      university_id: id,
+      lat: uLat,
+      lng: uLng,
+    });
+  }
 
   if (usable.length === 0) return [];
 
@@ -146,8 +183,8 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
     }
   }
 
-  // Fallback: straight-line metres. Same unit the landlord form stores;
-  // labelled source=computed so the landlord knows they may adjust.
+  // Fallback: straight-line metres. Same unit the listing stores, and still
+  // source=computed — the landlord cannot type over either one.
   const pairs = usable.map((f) => ({
     university_id: f.university_id,
     distance_meters: haversineMeters(lat, lng, f.lat, f.lng),

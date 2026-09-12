@@ -34,18 +34,34 @@ export async function POST(request) {
     the route 500 in any environment without that secret.
   */
   const supabase = getSupabaseWithToken(token);
-  const { data: faculties, error } = await supabase
-    .from('faculties')
-    .select('faculty_id, university, lat, lng');
+  const [
+    { data: faculties, error },
+    { data: universities, error: uniError },
+  ] = await Promise.all([
+    supabase.from('faculties').select('faculty_id, university, lat, lng'),
+    /*
+      Migration 119 put campus coordinates on `universities` because prod's
+      `faculties` holds AUTH rows only — without these, UoM and IHU cannot be
+      measured at all and the wizard's read-only step shows nothing for them.
+      Faculties still win where they exist (nearest campus beats a centroid).
+    */
+    supabase.from('universities').select('university_id, lat, lng'),
+  ]);
 
   if (error) {
     console.error('[compute-university-distances] faculties:', error);
     return NextResponse.json({ error: 'Failed to load faculties' }, { status: 500 });
   }
+  // Soft-fail: a university lookup that breaks costs precision on the
+  // faculty-less universities, not the whole prefill.
+  if (uniError) {
+    console.error('[compute-university-distances] universities:', uniError);
+  }
 
   const distances = await computeUniversityDistances(
     { lat, lng },
     faculties || [],
+    { universities: universities || [] },
   );
 
   return NextResponse.json({ distances });
