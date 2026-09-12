@@ -22,9 +22,9 @@ import { listingIdsBlockedInRange } from "@/lib/bookingBlocks";
  * them. `Show N places` has to match what /api/listings will actually return
  * for the same query string, not what the histogram plots.
  *
- * Do not overload /api/listings/count. That endpoint is the unfiltered
- * landing-page total (no listing_status clause, no filters) and other
- * callers depend on that shape.
+ * Do not overload /api/listings/count. That endpoint is the landing-page
+ * total: same `listing_status = 'active'` clause as here, but no filters and
+ * no query string, and its callers depend on that shape.
  *
  * Response is `{ count }` only — no rows, no listing payload. When every
  * active filter is expressible in PostgREST we use `{ count: 'exact',
