@@ -39,9 +39,10 @@ Around that core sit the monetizing / retention surfaces:
 - **Email:** Resend (`resend@^4`) — live in prod, see Email section.
 - **Payments:** Stripe (`stripe@^22`) — landlord plans + verified-tier upgrades.
 - **Maps:** Leaflet + `react-leaflet@^5`; topojson + d3-geo for region shapes.
-  Tiles are **CARTO Positron** (`light_all`) on the results map and the PDP's
-  "Where you'll be"; plain OSM on `/gigs` and the wizard's address picker.
-  CARTO needs an API key — see Maps below.
+  Tiles are **CARTO Voyager** (`rastertiles/voyager` — the `rastertiles/`
+  prefix is required; the short `/voyager/` form 404s) on the results map and
+  the PDP's "Where you'll be"; plain OSM on `/gigs` and the wizard's address
+  picker. CARTO needs an API key — see Maps below.
 - **CSS:** Tailwind v4 (`tailwindcss@^4` + `@tailwindcss/postcss`).
 - **Hosting:** Cloudflare Workers via OpenNext (`@opennextjs/cloudflare@^1.20`),
   `wrangler@^4`. Live on `https://studentx.uk` **only** — `workers_dev` is

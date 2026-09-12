@@ -1,5 +1,5 @@
 /*
-  CARTO Positron basemap tiles — the one definition, shared by the two
+  CARTO Voyager basemap tiles — the one definition, shared by the two
   surfaces that use them: the results map (`ListingsMap`) and the PDP's
   "Where you'll be" (`ApproximateLocationMap`).
 
@@ -42,9 +42,16 @@ const CARTO_KEY = process.env.NEXT_PUBLIC_CARTO_KEY;
   retina — CARTO cites that extra request as one of raster's costs against
   vector. See the Maps section of CLAUDE.md for why moving to vector is a
   library migration rather than a URL change.
+
+  THE `rastertiles/` PREFIX IS LOAD-BEARING. Positron is served at BOTH
+  `/light_all/...` and `/rastertiles/light_all/...`, so the short form looks
+  like the general shape of a CARTO tile URL. It is not: Voyager exists only
+  under `rastertiles/`, and `/voyager/{z}/{x}/{y}.png` returns 404 — a grid of
+  blank tiles on all four map surfaces, with no console error a passing build
+  would surface. Verified 2026-09-12 against the live CDN, 1x and @2x.
 */
-export const CARTO_POSITRON_URL =
-  `https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png` +
+export const CARTO_TILE_URL =
+  `https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png` +
   (CARTO_KEY ? `?key=${CARTO_KEY}` : '');
 
 /*

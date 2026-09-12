@@ -22,7 +22,7 @@ const projectRoot = path.dirname(fileURLToPath(import.meta.url));
 //     covered by 'unsafe-inline'.
 //   - img-src: static.wixstatic.com (listing photos), Supabase storage
 //     (uploaded photos), *.tile.openstreetmap.org (legacy map tiles),
-//     *.basemaps.cartocdn.com (CartoDB Positron tiles — parity Feature 11),
+//     *.basemaps.cartocdn.com (CartoDB Voyager tiles — parity Feature 11),
 //     unpkg.com (Leaflet marker PNGs), assets.bergeinsatz.ch (Holiday Gigs
 //     seed photos); all listed below.
 //
