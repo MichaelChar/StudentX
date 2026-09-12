@@ -4,7 +4,7 @@
  * Best-effort: never throw to the caller.
  */
 
-import { getSupabase } from '@/lib/supabase';
+import { getSupabaseAsService } from '@/lib/supabaseServer';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { fromAddressFor } from '@/lib/emailFrom';
@@ -23,8 +23,25 @@ function appBase() {
 }
 
 async function loadListingLandlord(listingId) {
-  const supabase = getSupabase();
-  const { data: listing } = await supabase
+  /*
+    SERVICE ROLE, NOT ANON — this is load-bearing, not a preference.
+
+    This query selects `landlords ( … email )`. Migration 065 (#bce085a) revoked
+    the blanket anon SELECT on `landlords` and granted back only the 7 public
+    catalog columns; `email` is deliberately not among them. So the anon client
+    gets `42501 permission denied for table landlords` for this select, PostgREST
+    returns no row, and the `!landlord?.email` guard below turns that into a
+    silent early return.
+
+    That is exactly what happened between 2026-07-03 and the fix: every send in
+    this file stopped delivering, and nothing surfaced it, because these helpers
+    are best-effort by contract and swallow their own failures.
+
+    If you change this back to getSupabase(), these emails stop again and no test
+    or alert will tell you.
+  */
+  const supabase = getSupabaseAsService();
+  const { data: listing, error: listingError } = await supabase
     .from('listings')
     .select(`
       listing_id,
@@ -34,6 +51,13 @@ async function loadListingLandlord(listingId) {
     `)
     .eq('listing_id', listingId)
     .single();
+
+  // Surface the failure instead of swallowing it. The 2026-07-03 outage was
+  // invisible precisely because this error was discarded and the missing row
+  // then looked like "landlord has no email on file".
+  if (listingError) {
+    console.error('propertyVerificationEmail: listing/landlord load failed:', listingError.message);
+  }
 
   const landlord = Array.isArray(listing?.landlords)
     ? listing.landlords[0]
