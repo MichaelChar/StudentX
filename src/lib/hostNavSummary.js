@@ -14,9 +14,11 @@
  * a number, is not a trade worth making.
  *
  * ON THE WINDOW. The view count is a rolling 30 days, not a calendar month —
- * that is what `/api/landlord/analytics` and the tile it replaces have always
- * measured. The label says "last 30 days" rather than inheriting the old
- * tile's "Views this month", which was simply wrong about its own query.
+ * that is what the old `/api/landlord/analytics` route and the tile it replaced
+ * always measured. (That route was deleted once this replaced its last caller;
+ * the window is kept for continuity with the numbers landlords already knew.)
+ * The label says "last 30 days" rather than inheriting the old tile's
+ * "Views this month", which was simply wrong about its own query.
  */
 
 /** Rolling window for the view count, in days. */
