@@ -29,19 +29,10 @@ import { CARTO_TILE_URL } from '@/lib/mapTiles';
 
 const DEFAULT_LISTING_ID = '0106002';
 // 15s gives Supabase cold starts (off-peak hours) room to complete the
-// 9-table listing query. Heavy WebGL page renders get a longer cap below
-// (HEAVY_PAGE_TIMEOUT_MS). The master tick shares a ~25s budget across
+// 9-table listing query. The master tick shares a ~25s budget across
 // concurrent due jobs; this canary may time out under load — that is an
 // accepted W9 risk (log line surfaces it; digests still complete).
 const FETCH_TIMEOUT_MS = 15_000;
-// The three heavy property-page checks SSR WebGL components (HubBackground
-// 240k particles, HubDiagram, StripeGradientMesh) via the self service
-// binding — a fresh render every run, no CDN cache to lean on. On a cold
-// isolate that legitimately exceeds the 15s default and tripped the
-// "aborted due to timeout" alerts on en-cityhub-locale / en-quiz-locale.
-// They run sequentially (one SSR at a time), so a longer per-fetch cap here
-// doesn't stack concurrent resource pressure.
-const HEAVY_PAGE_TIMEOUT_MS = 22_000;
 
 // Fixed pin in central Thessaloniki (same coords ListingsMap uses as the
 // city center). The exact metres don't matter — the check only asserts
@@ -51,10 +42,25 @@ const HEAVY_PAGE_TIMEOUT_MS = 22_000;
 // helper with the same two data sources instead.
 const THESSALONIKI_CANARY_ORIGIN = { lat: 40.6301, lng: 22.9439 };
 
-const EN_MARKERS_REQUIRED = [
-  '<html lang="en"',
-  'Sign in to message this landlord',
-];
+// What the listing-detail check requires in the rendered HTML.
+//
+// BOTH markers are deliberately things next-intl CANNOT fake. The previous
+// version asserted a string of gate copy ('Sign in to message this landlord')
+// and that was not a test of anything: next-intl serialises the whole en.json
+// catalog into every page's RSC payload, so ANY message string is present on
+// EVERY page regardless of what rendered — /property's hub copy and the
+// landlord-login copy both appear in the PDP's HTML. The marker could only
+// ever fail when the KEY WAS DELETED, which is exactly what #370 did on
+// 2026-08-01, leaving this check red for six weeks while telling us nothing
+// about whether the page worked.
+//
+// So: an attribute on <html> (set by the layout, not translatable) and a
+// data attribute the PDP root carries only when it has actually rendered the
+// listing we asked for. See the comment at that attribute in
+// [locale]/property/[city]/listing/[id]/page.js.
+function requiredListingMarkers(listingId) {
+  return ['<html lang="en"', `data-listing-id="${listingId}"`];
+}
 
 // Cloudflare "couldn't reach origin"-class status codes. The synthetic
 // invokes the Worker via a service binding (env.WORKER_SELF_REFERENCE),
@@ -75,7 +81,7 @@ const INCONCLUSIVE_CF_5XX = new Set([520, 522, 523, 524]);
 // timeout/abort. That's the Worker self-fetch hiccup that otherwise surfaces
 // as an INCONCLUSIVE_CF_5XX status; when the self-fetch never resolves it
 // aborts instead ("The operation was aborted due to timeout"). The
-// page-render checks (checkEnLocale) and cf-cache-status-hit already skip
+// listing-detail render check and cf-cache-status-hit already skip
 // this class; the API/asset checks below share this helper so a transient
 // origin timeout doesn't page us with a false positive (the 2026-07-07
 // listing-api-distances alert, healthy 30s before and after).
@@ -149,7 +155,7 @@ async function fetchListingHtml(url, { cookie } = {}) {
 // silently lose the perf win and want to know within 15 min.
 const PUBLIC_CACHE_RE = /public,\s*s-maxage=/i;
 
-export function evaluateBody({ status, body }) {
+export function evaluateBody({ status, body }, listingId) {
   // Cloudflare "couldn't reach origin"-class 5xx (520/522/523/524) is
   // treated as inconclusive — see INCONCLUSIVE_CF_5XX above for the
   // full rationale. 522 is the classic self-fetch loop; 523 fired the
@@ -162,9 +168,9 @@ export function evaluateBody({ status, body }) {
   if (status !== 200) {
     return { ok: false, reason: `non-200 status: ${status}` };
   }
-  for (const marker of EN_MARKERS_REQUIRED) {
+  for (const marker of requiredListingMarkers(listingId)) {
     if (!body.includes(marker)) {
-      return { ok: false, reason: `missing required EN marker: ${marker}` };
+      return { ok: false, reason: `missing required marker: ${marker}` };
     }
   }
   return { ok: true };
@@ -936,27 +942,6 @@ async function checkCfCacheAuthedNotHit(appUrl, listingId) {
 // Page-render check: assert at least one expected EN marker is present
 // (forgiving against copy tweaks). The Greek-leak half was dropped when the
 // site went English-only (#158).
-async function checkEnLocale({ name, url, anyEnMarker, timeoutMs }) {
-  try {
-    const res = await fetchUrl(url, { timeoutMs });
-    // CF "couldn't reach origin"-class 5xx (see INCONCLUSIVE_CF_5XX).
-    // Inconclusive — can't check markers, but not a regression.
-    if (INCONCLUSIVE_CF_5XX.has(res.status)) {
-      return { name, ok: true, skipped: true, reason: `skipped: Cloudflare ${res.status}` };
-    }
-    if (res.status !== 200) {
-      return { name, ok: false, reason: `expected 200, got ${res.status} from ${url}` };
-    }
-    const body = await res.text();
-    const hasEn = anyEnMarker.some((m) => body.includes(m));
-    if (!hasEn) {
-      return { name, ok: false, reason: `missing all EN markers: ${anyEnMarker.join(', ')}` };
-    }
-    return { name, ok: true };
-  } catch (err) {
-    return { name, ok: false, reason: `fetch threw: ${err.message || err.name}` };
-  }
-}
 
 // The cron expressions we INTEND Cloudflare to have registered. MUST stay in
 // sync with wrangler.jsonc `triggers.crons` (and cf/worker-entry.mjs
@@ -1060,7 +1045,7 @@ export async function runSyntheticEnListing() {
   } else {
     try {
       const fetched = await fetchListingHtml(enListingUrl);
-      record('en-listing-locale', evaluateBody(fetched));
+      record('en-listing-locale', evaluateBody(fetched, listingId));
       record(
         'en-listing-anon-cache',
         evaluateAnonCacheHeader({ status: fetched.status, cacheControl: fetched.cacheControl }),
@@ -1128,39 +1113,27 @@ export async function runSyntheticEnListing() {
     checkUniversityDistanceCoverage(),
   ]);
 
-  // Heavy property-page locale checks run sequentially via service binding.
-  // These pages SSR WebGL components (HubBackground, StripeGradientMesh) that
-  // are too resource-intensive to render concurrently. Sequential keeps each
-  // render within the Worker's CPU budget. Previously these used global fetch
-  // (CDN path) to avoid SSR, but that caused Worker self-fetch 522s whenever
-  // the CDN cache was cold (post-deploy, different edge PoP).
-  const heavyPageChecks = [
-    {
-      name: 'en-cityhub-locale',
-      url: `${appUrl}/property`,
-      anyEnMarker: [
-        'Hover over your city',
-        'Global students empowered',
-        'Curated student housing',
-      ],
-      timeoutMs: HEAVY_PAGE_TIMEOUT_MS,
-    },
-    {
-      name: 'en-homepage-locale',
-      url: `${appUrl}/property/thessaloniki`,
-      anyEnMarker: ['Take the quiz', 'See all listings', 'How it works'],
-      timeoutMs: HEAVY_PAGE_TIMEOUT_MS,
-    },
-    {
-      name: 'en-quiz-locale',
-      url: `${appUrl}/property/thessaloniki/quiz`,
-      anyEnMarker: ['One minute', "That's it"],
-      timeoutMs: HEAVY_PAGE_TIMEOUT_MS,
-    },
-  ];
-  for (const check of heavyPageChecks) {
-    additional.push(await checkEnLocale(check));
-  }
+  /*
+    The three heavy property-page locale checks (en-cityhub-locale,
+    en-homepage-locale, en-quiz-locale) were REMOVED, deliberately.
+
+    They asserted that one of a few English strings appeared in /property,
+    /property/thessaloniki and /property/thessaloniki/quiz. next-intl
+    serialises the entire en.json catalog into every page's RSC payload, so
+    those strings were present whatever the page did — a check that cannot
+    fail except by someone deleting the key. They were not weak signal, they
+    were no signal.
+
+    Each also fetched a page that SSRs WebGL components (HubBackground's 240k
+    particles, HubDiagram, StripeGradientMesh) with a 22s timeout, run
+    sequentially, inside a master tick with a ~25s total budget. They were the
+    most expensive thing in this file and the reason it kept tripping
+    "aborted due to timeout" alerts.
+
+    If locale regressions need covering again, assert something next-intl
+    cannot inline — a rendered attribute, as en-listing-locale now does — and
+    not page copy.
+  */
   additional.push(await checkCronScheduleDrift());
   additional.push(await checkCartoTileKey(appUrl));
   additional.push(await checkCartoTileReachable());

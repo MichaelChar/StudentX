@@ -184,7 +184,26 @@ export default async function ListingPage({ params, searchParams }) {
       before the bar it was clearing disappeared, leaving the last section
       under the bar between 640 and 768px.
     */
-    <div className="mx-auto max-w-6xl px-5 pt-8 pb-28 md:py-12">
+    <div
+      className="mx-auto max-w-6xl px-5 pt-8 pb-28 md:py-12"
+      /*
+        The synthetic canary's contract with this page (issue #49). It asserts
+        this attribute carries the listing id it asked for, which is true only
+        if the PDP actually rendered that listing.
+
+        It used to assert a string of gate copy instead, and that silently
+        stopped testing anything: next-intl serialises the WHOLE en.json
+        catalog into every page's RSC payload, so any message string matches on
+        every page whether or not the component rendered. The marker only ever
+        failed when a KEY WAS DELETED — which is what happened in #370, leaving
+        the check red for six weeks while proving nothing either way.
+
+        Keep it. Removing it turns the canary's main assertion into a no-op
+        again, and nothing else on this page is both unique to it and absent
+        from the inlined catalog.
+      */
+      data-listing-id={listing.listing_id}
+    >
       {isAuthed && <ViewTracker listingId={listing.listing_id} />}
       {/* Local-only "you have looked at this" record, driving the visited map
           pin on the results page (parity Feature 12). Unconditional, unlike

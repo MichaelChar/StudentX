@@ -29,24 +29,55 @@ import { MAX_DISTANCE_METERS } from '@/lib/universityDistances';
 const PRIVATE_CC = 'private, no-cache, no-store, must-revalidate';
 const PUBLIC_CC = 'public, s-maxage=300, stale-while-revalidate=86400';
 
-const VALID_BODY = '<html lang="en"><body>Sign in to message this landlord</body></html>';
-const MISSING_MARKER_BODY = '<html lang="en"><body>Welcome</body></html>';
+// The canary's listing id is threaded into the marker, so the fixtures carry
+// one too. CANARY_ID matches DEFAULT_LISTING_ID in the route.
+const CANARY_ID = '0106002';
+const VALID_BODY =
+  `<html lang="en"><body><div data-listing-id="${CANARY_ID}">…</div></body></html>`;
+// Renders, but a DIFFERENT listing — the case a plain "did the page 200?"
+// check cannot see.
+const WRONG_LISTING_BODY =
+  '<html lang="en"><body><div data-listing-id="0106001">…</div></body></html>';
+// 200, English, and full of catalog copy — but the PDP root never rendered.
+// This is the shape the OLD gate-copy marker passed on, because next-intl
+// inlines the whole en.json catalog into every page's RSC payload.
+const CATALOG_ONLY_BODY =
+  '<html lang="en"><body>Sign in to view this listing — Take the quiz</body></html>';
 
 describe('evaluateBody', () => {
-  it('passes on 200 + English markers', () => {
-    expect(evaluateBody({ status: 200, body: VALID_BODY })).toEqual({ ok: true });
+  it('passes on 200 + the rendered PDP markers', () => {
+    expect(evaluateBody({ status: 200, body: VALID_BODY }, CANARY_ID)).toEqual({ ok: true });
   });
 
   it('fails when status is non-200', () => {
-    const result = evaluateBody({ status: 500, body: VALID_BODY });
+    const result = evaluateBody({ status: 500, body: VALID_BODY }, CANARY_ID);
     expect(result.ok).toBe(false);
     expect(result.reason).toMatch(/non-200/);
   });
 
-  it('fails when a required English marker is missing', () => {
-    const result = evaluateBody({ status: 200, body: MISSING_MARKER_BODY });
+  it('fails when the lang attribute is missing', () => {
+    const result = evaluateBody(
+      { status: 200, body: `<html><body><div data-listing-id="${CANARY_ID}"></div></body></html>` },
+      CANARY_ID,
+    );
     expect(result.ok).toBe(false);
-    expect(result.reason).toMatch(/missing required EN marker/);
+    expect(result.reason).toMatch(/missing required marker/);
+  });
+
+  // The regression that mattered: for six weeks (#370 → 2026-09-13) this check
+  // asserted a string of gate copy, which next-intl inlines into EVERY page's
+  // payload. A body like this one — English, 200, catalog copy present, PDP
+  // root absent — passed the old check. It must fail now.
+  it('fails when only the inlined message catalog is present, not the PDP', () => {
+    const result = evaluateBody({ status: 200, body: CATALOG_ONLY_BODY }, CANARY_ID);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/data-listing-id/);
+  });
+
+  it('fails when the page rendered a DIFFERENT listing', () => {
+    const result = evaluateBody({ status: 200, body: WRONG_LISTING_BODY }, CANARY_ID);
+    expect(result.ok).toBe(false);
+    expect(result.reason).toMatch(/data-listing-id="0106002"/);
   });
 
   // Cloudflare "couldn't reach origin"-class 5xx is treated as inconclusive
@@ -57,7 +88,7 @@ describe('evaluateBody', () => {
   describe('inconclusive CF 5xx → skipped', () => {
     for (const status of [520, 522, 523, 524]) {
       it(`treats ${status} as inconclusive`, () => {
-        const result = evaluateBody({ status, body: '' });
+        const result = evaluateBody({ status, body: '' }, CANARY_ID);
         expect(result.ok).toBe(true);
         expect(result.skipped).toBe(true);
         expect(result.reason).toMatch(new RegExp(`Cloudflare ${status}`));
@@ -65,13 +96,13 @@ describe('evaluateBody', () => {
     }
 
     it('still fails on 521 (real outage signal)', () => {
-      const result = evaluateBody({ status: 521, body: '' });
+      const result = evaluateBody({ status: 521, body: '' }, CANARY_ID);
       expect(result.ok).toBe(false);
       expect(result.reason).toMatch(/non-200 status: 521/);
     });
 
     it('still fails on generic 500 (app-level error)', () => {
-      const result = evaluateBody({ status: 500, body: '' });
+      const result = evaluateBody({ status: 500, body: '' }, CANARY_ID);
       expect(result.ok).toBe(false);
       expect(result.reason).toMatch(/non-200 status: 500/);
     });
