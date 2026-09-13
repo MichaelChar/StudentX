@@ -1,0 +1,83 @@
+-- 123: listings SELECT policy — stop drafts being world-readable (#555).
+-- This is the working version. 120 was the first attempt; see its header for
+-- the trap, and 122 for the helper this depends on.
+--
+-- BEFORE: "Public can read listings" was `USING (true)` for every role. The
+-- anon key ships in the client bundle by design, so any draft a landlord
+-- saved — address, price, photos, description — was readable straight from
+-- PostgREST before the landlord was ready and before an admin approved it:
+--
+--   curl -H "apikey: <public anon key>" \
+--     "https://<project>.supabase.co/rest/v1/listings?select=*"
+--
+-- `listing_status` DEFAULTS to 'disabled' (migration 104) and only
+-- /api/admin/listing-go-live sets 'active', so that gate governed what the
+-- app rendered and nothing at all about what the key could read.
+--
+-- Three arms, in descending order of how often they fire:
+--
+--   1. listing_status = 'active' — the public directory. Short-circuits for
+--      effectively every public read. Confirmed on prod with EXPLAIN ANALYZE
+--      as anon: the owner arm's InitPlan shows "never executed", so arms 2
+--      and 3 cost nothing on the hot path.
+--
+--   2. flags->'admin_live_approved' = 'true'::jsonb — issue #205. Paused
+--      listings are soft-hidden, NOT 404'd: a landlord who hits Pause is
+--      saying "not right now", not "gone", so getListingForRender
+--      deliberately omits the `active` pin and uses this flag to tell "was
+--      publicly live, now paused" (renders, noindex) from "never was public"
+--      (404). It reads via the ANON client, so without this arm every paused
+--      listing's page would 404 and every link a student already has would
+--      break. admin_live_approved is safe as a public-visibility
+--      discriminator because only /api/admin/listing-go-live stamps it and
+--      nothing landlord-reachable can.
+--
+--   3. the landlord's own rows at any status — so the dashboard, the wizard
+--      and getHostGoLiveInputs' cross-tab go-live banner still see drafts.
+--      Via current_landlord_id() (122), not an inline subselect: see 120.
+--
+-- WHY `flags->'x' = 'true'::jsonb` AND NOT `(flags->>'x')::boolean`
+--
+-- The obvious cast form is wrong in both directions, verified on this
+-- database before applying:
+--
+--   ('{"admin_live_approved": "yes"}'::jsonb->>'admin_live_approved')::boolean
+--     => TRUE.  Postgres accepts yes/y/t/on/1 as boolean true, so a stray
+--        string would make a never-approved listing publicly readable — the
+--        exact leak this migration exists to close.
+--
+--   ('{"admin_live_approved": {}}'::jsonb->>'admin_live_approved')::boolean
+--     => ERROR 22P02 invalid input syntax for type boolean: "{}".
+--        An error inside an RLS policy aborts the whole query rather than
+--        hiding one row, so one malformed flags value would 500 every public
+--        listing read on the site.
+--
+-- Comparing jsonb-to-jsonb has neither failure mode, needs no COALESCE (a
+-- NULL flags column yields NULL, which RLS treats as not-visible), and is
+-- exact parity with the JS discriminator `flags?.admin_live_approved === true`
+-- — a JSON string "true" is NOT equal to a JSON boolean true, which is what
+-- every reader in src/ already assumes.
+--
+-- Admin routes and every system-side read (bookingService, the digest crons,
+-- the claim flow, pendingMigrate) use the service role and bypass RLS
+-- regardless. Verified: listings.relforcerowsecurity = false, so the
+-- SECURITY DEFINER functions that read listings — start_inquiry_authenticated,
+-- mark_messages_read, both get_pending_*_notifications — are unaffected too.
+--
+-- VERIFIED ON PROD after applying, with a real transient draft row and real
+-- HTTP requests (the row was deleted afterwards):
+--   anon list           -> 3 active ids, draft absent
+--   anon by-id          -> []
+--   landlord JWT        -> 4 ids, draft included
+--   /api/landlord/listings (live site, landlord token) -> 4
+--   /listing/<draft>    -> 404
+--   paused listing      -> still visible to anon (rehearsed in a rolled-back
+--                          transaction, since prod has no paused row)
+--   a DIFFERENT signed-in user -> draft absent
+
+alter policy "Public can read listings" on public.listings
+using (
+  listing_status = 'active'
+  or flags->'admin_live_approved' = 'true'::jsonb
+  or landlord_id = (select public.current_landlord_id())
+);
