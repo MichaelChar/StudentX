@@ -77,9 +77,11 @@ Every check fetches via the **service binding (`env.WORKER_SELF_REFERENCE`)** �
 To stay inside Worker resource limits, the route splits the checks into two waves:
 
 - **Lightweight checks** (API routes, static assets, redirects, and the university-distance coverage query: `/api/listings/<id>`, `/api/landlord/listings`, `/og-default.png`, `/en` missing-message, `soft-404`, `university-distance-coverage`) run **concurrently** via `Promise.all`. These don't render heavy SSR, so concurrent execution is fine.
-- **Heavy property-page locale checks** (`en-cityhub-locale`, `en-homepage-locale`, `en-quiz-locale`) and the listing-detail render run **sequentially** via the same service binding. These pages SSR WebGL components (HubBackground 240k particles, HubDiagram, StripeGradientMesh) and would exhaust the Worker CPU budget if rendered in parallel.
+- **The listing-detail render** runs on its own via the service binding.
 
-> **Historical note (PR #133):** the three heavy property-page checks originally used global `fetch()` via the CDN to dodge SSR entirely, but that caused Worker self-fetch 522s whenever the CDN cache was cold (post-deploy, different edge PoP). Running them sequentially via the service binding sidesteps both the SSR resource pressure and the cold-cache 522. The trade-off is that genuine i18n regressions surface immediately (no CDN-TTL lag).
+> **The three heavy property-page locale checks (`en-cityhub-locale`, `en-homepage-locale`, `en-quiz-locale`) were removed on 2026-09-13.** They asserted that one of a few English strings appeared in `/property`, `/property/thessaloniki` and `/property/thessaloniki/quiz`. next-intl serialises the entire `en.json` catalog into every page's RSC payload, so those strings were present whatever the page did — the check could not fail except by someone deleting the key. They were not weak signal, they were no signal, and each paid a 22s timeout to SSR WebGL components (HubBackground's 240k particles, HubDiagram, StripeGradientMesh) sequentially inside a master tick with a ~25s total budget. They were the most expensive thing in the file and the reason it kept tripping "aborted due to timeout" alerts.
+>
+> If locale coverage is wanted again, assert something next-intl cannot inline — a rendered attribute, the way `en-listing-locale` now does — not page copy.
 
 ## Configuration
 
@@ -144,10 +146,12 @@ Body includes the failing check name, reason, and the first 500 chars of the ano
 
 ## Maintenance
 
-**Marker strings change with copy edits.** If you edit `student.gate.title` in either locale's messages file, update the constants at the top of [`src/app/api/cron/synthetic-en-listing/route.js`](../../src/app/api/cron/synthetic-en-listing/route.js):
+**Markers are render attributes, not copy — keep it that way.** `requiredListingMarkers()` in [`src/app/api/cron/synthetic-en-listing/route.js`](../../src/app/api/cron/synthetic-en-listing/route.js) asserts two things in the listing HTML:
 
-- `EN_MARKERS_REQUIRED` — must be a unique string from the EN gate copy
-- `EL_MARKERS_FORBIDDEN` — must be a unique string from the EL gate copy that has no English equivalent
+- `<html lang="en"` — set by `[locale]/layout.js`, not translatable
+- `data-listing-id="<the probed id>"` — on the PDP root in [`[locale]/property/[city]/listing/[id]/page.js`](../../src/app/[locale]/property/[city]/listing/[id]/page.js), present only when that listing actually rendered
+
+Copy edits therefore no longer touch this file, which is the point. **Do not replace these with message strings.** next-intl inlines the full `en.json` catalog into every page's RSC payload: `/property`'s hub copy and the landlord-login copy are both present in the PDP's HTML, so a copy marker matches on every page regardless of what rendered, and can only fail when a key is deleted. That is what happened — #370 removed `student.gate.guestTitle` on 2026-08-01 and `en-listing-locale` alerted every 15 minutes until 2026-09-13 while never having tested the page. The unit tests cover this directly: a body that is 200, English and full of catalog copy but missing the PDP root must fail.
 
 **Stable listing ID.** `0106002` is the default. It no longer *has* to stay published — the resolver falls back to any live listing and then to skipping (see [Which listing gets probed](#which-listing-gets-probed)) — but keeping it pointed at a stable, published listing gives the most consistent signal. The old `0100006` seed ID was retired when prod was reseeded to the `01060xx` scheme, which silently 404'd the API probe (and skipped the four listing-page checks as inconclusive 522s); that class of silent degradation is what step 2 of the resolver now heals. When repinning, confirm the new ID returns 200 from `/api/listings/<id>` with ≥2 distinct `walk_minutes` first.
 

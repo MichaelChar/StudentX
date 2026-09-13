@@ -343,8 +343,13 @@ Runbook: `docs/runbooks/synthetic-en-listing.md` — read it before editing
 the canary; it documents every check.
 
 `/api/cron/synthetic-en-listing` runs independent canaries every 15 min,
-each soft-failing into a per-check report: listing-page content markers
-(`EN_MARKERS_REQUIRED` — update that constant whenever gate copy changes),
+each soft-failing into a per-check report: listing-page render markers
+(`requiredListingMarkers()` — `<html lang>` plus the PDP root's
+`data-listing-id`. **Never assert page copy here**: next-intl inlines the
+whole `en.json` catalog into every page's RSC payload, so any message string
+matches on every page whether or not the component rendered. The old
+copy-based marker was red for six weeks after #370 deleted its key while
+proving nothing either way),
 listing-API distance sanity, soft-404 behaviour, og-image serving,
 landlord-API auth (401-not-5xx — guards the column-missing crash class
 fixed in PR #85), a `MISSING_MESSAGE:` scan for missing en.json keys, and
