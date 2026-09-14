@@ -1,3 +1,5 @@
+import RouteMessages from '@/components/RouteMessages';
+import { PROPERTY_PUBLIC_NAMESPACES } from '@/lib/pickMessages';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
 // Default canonical for /property routes. The root [locale]/layout.js sets a
@@ -22,6 +24,17 @@ export function generateMetadata() {
   };
 }
 
-export default function PropertyLayout({ children }) {
-  return children;
+// Covers /property, every /property/[city] route, AND the landlord dashboard
+// beneath it — landlord nests its own provider with the namespaces it needs
+// (see property/[city]/landlord/layout.js). That means landlord pages carry
+// this set too without using it; accepted, because the alternative is a
+// route-group restructure of the whole directory to make the two siblings,
+// for ~15 KB on an authenticated page that already loads a listing wizard.
+export default async function PropertyLayout({ children, params }) {
+  const { locale } = await params;
+  return (
+    <RouteMessages locale={locale} namespaces={PROPERTY_PUBLIC_NAMESPACES}>
+      {children}
+    </RouteMessages>
+  );
 }

@@ -1,3 +1,5 @@
+import RouteMessages from '@/components/RouteMessages';
+import { GIGS_NAMESPACES } from '@/lib/pickMessages';
 import { getTranslations } from 'next-intl/server';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
@@ -14,6 +16,11 @@ export async function generateMetadata({ params }) {
   };
 }
 
-export default function GigsLayout({ children }) {
-  return children;
+export default async function GigsLayout({ children, params }) {
+  const { locale } = await params;
+  return (
+    <RouteMessages locale={locale} namespaces={GIGS_NAMESPACES}>
+      {children}
+    </RouteMessages>
+  );
 }

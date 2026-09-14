@@ -3,7 +3,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
-import { pickMessages, CLIENT_NAMESPACES } from '@/lib/pickMessages';
+import { pickMessages, ROOT_NAMESPACES } from '@/lib/pickMessages';
 import Navbar from '@/components/Navbar';
 import MobileBarSpacer from '@/components/MobileBarSpacer';
 import SessionSync from '@/components/SessionSync';
@@ -94,9 +94,13 @@ export default async function LocaleLayout({ children, params }) {
   }
 
   setRequestLocale(locale);
-  // Ship only the namespaces client components use to the browser (#260);
-  // server components still read the full catalog via getTranslations().
-  const messages = pickMessages(await getMessages(), CLIENT_NAMESPACES);
+  // Only the namespaces the ALWAYS-MOUNTED chrome needs — Navbar,
+  // FavoritesProvider, GigFavoritesProvider (#564). Every other namespace is
+  // scoped to its route tree by a RouteMessages provider in that tree's
+  // layout. This set is paid by every page and duplicated beneath every one
+  // of those providers, so it stays at four paths / ~2.7 KB; server
+  // components still read the full catalog via getTranslations().
+  const messages = pickMessages(await getMessages(), ROOT_NAMESPACES);
 
   return (
     <html
