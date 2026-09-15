@@ -166,17 +166,17 @@ export async function POST(request) {
     so it MUST see every one of their listings whatever its status. Drafts,
     submitted-awaiting-review and admin-revoked rows all still occupy an id.
 
-    It used to run on the anon client and worked only because `listings` has a
-    SELECT policy of USING (true) — i.e. the whole table is world-readable.
-    Issue #555 proposes replacing that policy, and under any owner-scoped
-    version the anon client (auth.uid() is null) would stop seeing this
-    landlord's non-public rows. The max would then be computed from a subset:
-    a landlord holding only drafts gets an empty result and mints …001 on top
-    of an existing draft, and the create/duplicate 500s on a unique violation.
-    The second listing a never-live landlord creates would always fail.
+    It used to run on the anon client, which worked only while `listings` had
+    a SELECT policy of USING (true). Migration 123 (#555) replaced that: anon
+    now sees only rows that are `active` or carry `flags.admin_live_approved`,
+    because auth.uid() is null so the owner arm never fires. On the anon
+    client the max would be computed from a subset — a landlord holding only
+    drafts gets an empty result and mints …001 on top of an existing draft,
+    and the create/duplicate 500s on a unique violation. The second listing a
+    never-live landlord creates would always fail.
 
     Service role is the right client for minting a unique key regardless of
-    that change: a uniqueness computation that cannot see every row is wrong.
+    the policy: a uniqueness computation that cannot see every row is wrong.
     `landlordId` is already derived from the authenticated user, so the .eq()
     below is what scopes it.
   */

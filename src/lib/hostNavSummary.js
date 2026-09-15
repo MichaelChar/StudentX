@@ -101,11 +101,12 @@ export function hasWaiting(summary) {
  *
  * so a token-scoped client already sees exactly this landlord's rows and
  * nothing else. The sibling landlord routes resolve `landlord_id` first
- * because they need it to filter `listings` — which is world-readable
- * ("Public can read listings", qual `true`) and therefore scopes nothing. We
- * never touch `listings`, so we never need the id, and dropping that step
- * takes the service-role key out of the path for chrome that renders on every
- * landlord page.
+ * because they need it to filter `listings`, whose SELECT policy does NOT
+ * scope rows to their owner: since migration 123 (#555) it returns every
+ * `active` or once-approved listing to any caller, plus the caller's own rows
+ * at any status. We never touch `listings`, so we never need the id, and
+ * dropping that step takes the service-role key out of the path for chrome
+ * that renders on every landlord page.
  *
  * A student calling this sees their OWN pending inquiries and bookings, via
  * the student-side policies on the same tables. That is their own data, and
@@ -146,10 +147,11 @@ export async function getHostNavSummary(supabase, { now } = {}) {
  *
  * Fetched here rather than on the Listings page because the banner appears on
  * Listings AND Messages, and this summary is the one request every landlord
- * page already makes. It is the only part that needs `listings`, which is
- * world-readable ("Public can read listings", qual `true`) and therefore
- * scopes nothing — so this is the one query in the module that must be
- * filtered by landlord_id explicitly.
+ * page already makes. It is the only part that needs `listings`, and it must
+ * be filtered by landlord_id explicitly: the SELECT policy (migration 123,
+ * #555) hides other landlords' drafts but still returns their `active` and
+ * paused listings to any caller. Without the .eq() the banner would weigh
+ * every public listing on the site as if it were this landlord's.
  *
  * Selects the minimum: three listing columns plus the verification rows the
  * gate reads. The full landlord listing select carries photos, amenities and
