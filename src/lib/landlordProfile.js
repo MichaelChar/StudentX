@@ -115,12 +115,14 @@ export const getLandlordProfile = cache(async (landlordId) => {
     // Newest first (listing_id's per-landlord sequence increases with
     // recency — see the LLLLNNN format in docs/schema.md).
     /*
-      ACTIVE ONLY. This filter was missing, and `listings` is world-readable
-      ("Public can read listings", qual `true`), so RLS was never going to
-      supply it — a landlord with a draft or a disabled listing had it shown on
-      their public profile alongside the live ones. Every listing in the
-      database is currently active, so nothing was actually leaking yet; the
-      code path was simply wrong and would have leaked on the first draft.
+      ACTIVE ONLY. This filter was once missing while `listings` was
+      `USING (true)`, so a landlord's drafts and disabled listings would have
+      shown on their public profile. Migration 123 (#555) now hides drafts from
+      this anon client — but it still admits PAUSED listings, via the
+      `flags.admin_live_approved` arm that keeps #205's soft-hidden listing
+      pages working. So RLS still cannot supply "active only": without this
+      .eq() a landlord's paused listings appear on their public profile as if
+      available. The filter stays necessary; only the reason changed.
 
       It is also what Feature 49's addendum means by the ACTIVE LISTINGS stat:
       "count of listing_status = 'active' for the landlord".

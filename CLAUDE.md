@@ -437,7 +437,27 @@ surface in `wrangler tail`.
 - **RLS guards every user-touching table.** Server code uses
   `getSupabaseWithToken(token)` (token-scoped) for any read that should
   honour the caller's permissions; the unscoped `getSupabase()` anon client
-  is fine for already-public reads.
+  is fine for already-public reads — and ONLY those. A system-side read that
+  must see non-public rows (emails, id minting) needs `getSupabaseAsService()`;
+  #559 and #560 were anon reads that silently worked only while a policy was
+  wide open.
+- **`listings` SELECT does NOT scope rows to their owner** (migration 123,
+  #555). It admits a row when `listing_status = 'active'`, OR
+  `flags->'admin_live_approved' = 'true'::jsonb` (#205's paused listings), OR
+  `landlord_id = current_landlord_id()`. So RLS keeps other landlords' drafts
+  private, but still returns everyone's live and paused listings to any
+  caller. **Every "my listings" query must keep its explicit `landlord_id`
+  filter** — the policy does not make it redundant.
+- **An RLS policy obeys the QUERYING role's column grants.** A `USING` clause
+  that reads another table fails with `42501` if that role can't SELECT the
+  column — it errors the whole query rather than hiding a row. Migration 120
+  took the public directory down this way (anon can't read
+  `landlords.auth_user_id`, revoked in 065). Put such lookups in a
+  `SECURITY DEFINER` function keyed on `auth.uid()` (see
+  `current_landlord_id()`, 122), and **rehearse every policy change as each
+  role** — `begin; alter policy …; set local role anon; select …; rollback;`
+  — since `ALTER POLICY` is transactional. Never cast JSONB to boolean in a
+  policy: `'yes'::boolean` is true and `'{}'` raises 22P02.
 - **Auth helpers** (`src/lib/requireStudent.js`):
   `requireStudent()` returns `{ student, user, supabase, token }`,
   `{ kind: 'wrong-role' }` (signed in, but not as a student), or `null`.

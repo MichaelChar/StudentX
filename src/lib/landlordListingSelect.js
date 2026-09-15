@@ -109,12 +109,14 @@ export async function selectLandlordListings(supabase, landlordId) {
  * The minimums being almost exactly 2:1 is the tell that this is a structural
  * round-trip saving rather than query cost or noise.
  *
- * THE FILTER IS LOAD-BEARING, NOT DEFENCE IN DEPTH. `listings` carries a
- * SELECT policy of `Public can read listings` with `USING (true)` for every
- * role — verified against prod's pg_policy. RLS does NOT scope listing reads to
- * their owner, so this filter is the ONLY thing standing between a landlord and
- * every other landlord's listings. Any future rewrite that drops it is a data
- * leak the moment a second landlord exists.
+ * THE FILTER IS LOAD-BEARING, NOT DEFENCE IN DEPTH — even after #555.
+ * Migration 123 narrowed `Public can read listings` from `USING (true)`, but it
+ * still does NOT scope reads to their owner. It admits a row when it is
+ * `active`, OR carries `flags.admin_live_approved`, OR belongs to the caller.
+ * So RLS now keeps other landlords' DRAFTS out, and still hands every caller
+ * every other landlord's live and paused listings. Drop this filter and a
+ * landlord's dashboard lists the whole site's public inventory as their own.
+ * Do not read the policy as having made this redundant.
  *
  * `!inner` makes the embed a join rather than an optional expansion, so a
  * listing whose landlord doesn't match is excluded rather than returned with a
