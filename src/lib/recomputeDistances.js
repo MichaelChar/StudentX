@@ -17,7 +17,7 @@
 // Routing goes to FOOT_ROUTING_BASE — see src/lib/footRouting.js for why it
 // is not the public OSRM demo (car-only, whatever the URL says).
 
-import { FOOT_ROUTING_BASE } from '@/lib/footRouting';
+import { FOOT_ROUTING_BASE, logFootRouting } from '@/lib/footRouting';
 
 const WALK_M_PER_MIN = 83;       // 5 km/h walking pace
 const BUS_M_PER_MIN = 250;       // ~15 km/h average bus speed incl. stops
@@ -174,11 +174,13 @@ export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
     `&annotations=distance`;
 
   let table;
+  const startedAt = Date.now();
   try {
     const res = await fetch(tableUrl, {
       headers: { 'user-agent': 'StudentX-recompute-distances/1.0' },
       signal: AbortSignal.timeout(OSRM_TIMEOUT_MS),
     });
+    logFootRouting('recompute', coordsParts.length, res.status, startedAt);
     if (!res.ok) {
       const body = await res.text().catch(() => '');
       console.error(
@@ -188,6 +190,7 @@ export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
     }
     table = await res.json();
   } catch (err) {
+    logFootRouting('recompute', coordsParts.length, err.name || 'error', startedAt);
     console.error('[recomputeMissingDistances] OSRM /table threw:', err);
     return { ok: false, reason: `OSRM /table fetch: ${err.message || err.name || 'unknown'}` };
   }

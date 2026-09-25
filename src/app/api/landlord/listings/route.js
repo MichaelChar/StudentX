@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import {
   extractToken,
@@ -293,14 +293,21 @@ export async function POST(request) {
     }
   }
 
-  try {
-    await recomputeMissingDistances({
-      listingIds: [listingId],
-      supabase: getSupabaseAsService(),
-    });
-  } catch (err) {
-    console.error('[landlord/listings POST] inline distance recompute failed:', err);
-  }
+  // After the response, not before it: the recompute calls the shared FOSSGIS
+  // router, which is usually ~0.3s but can hold a request for seconds when its
+  // rate limiter is busy. The landlord's save shouldn't wait on it. OpenNext
+  // wires after() to the Worker's ctx.waitUntil, and the daily
+  // recompute-distances cron refills any pair this misses.
+  after(async () => {
+    try {
+      await recomputeMissingDistances({
+        listingIds: [listingId],
+        supabase: getSupabaseAsService(),
+      });
+    } catch (err) {
+      console.error('[landlord/listings POST] deferred distance recompute failed:', err);
+    }
+  });
 
   return NextResponse.json({ listing_id: listingId }, { status: 201 });
 }
