@@ -52,7 +52,12 @@ export const RECEIVING_FACULTIES = Object.freeze([
   { id: 'auth-economics', label: 'Faculty of Social & Economic Sciences', university: 'auth' },
   { id: 'auth-education', label: 'Faculty of Education', university: 'auth' },
   { id: 'auth-engineering', label: 'Faculty of Engineering', university: 'auth' },
-  { id: 'auth-fine-arts', label: 'Faculty of Fine Arts', university: 'auth' },
+  // Fine Arts is split by department (migration 125): its four departments
+  // sit on three sites up to ~12 km apart.
+  { id: 'auth-fine-arts-drama', label: 'Fine Arts – Drama', university: 'auth' },
+  { id: 'auth-fine-arts-film', label: 'Fine Arts – Film', university: 'auth' },
+  { id: 'auth-fine-arts-music', label: 'Fine Arts – Music Studies', university: 'auth' },
+  { id: 'auth-fine-arts-visual', label: 'Fine Arts – Visual & Applied Arts', university: 'auth' },
   { id: 'auth-law', label: 'Faculty of Law', university: 'auth' },
   { id: 'auth-pe', label: 'Faculty of Physical Education & Sport Sciences', university: 'auth' },
   { id: 'auth-philosophy', label: 'Faculty of Philosophy', university: 'auth' },

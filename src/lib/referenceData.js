@@ -22,7 +22,7 @@ import { getSupabase } from '@/lib/supabase';
   would be silly. Each route re-wraps in one line.
 */
 
-/** Faculties for the commute chip. Static reference data — 13 rows. */
+/** Faculties for the commute chip. Static reference data. */
 export async function fetchFaculties() {
   try {
     const { data, error } = await getSupabase()
