@@ -127,9 +127,10 @@ export function transformListing(row, { precise = false } = {}) {
       // intentionally public — it's a photo the landlord uploads for display.
       profile_photo_url: row.landlords?.profile_photo_url ?? null,
     },
-    // Landlord-reported metres to each university in the city. Distinct from
-    // faculty_distances below: university granularity, metres not minutes, and
-    // typed by the landlord rather than computed by OSRM (migration 066).
+    // Metres to each university in the city. Distinct from faculty_distances
+    // below: university granularity, metres not minutes. The wizard prefills
+    // them from the pin via computeUniversityDistances (source 'computed');
+    // the landlord may override (source 'landlord'). Migration 066.
     // Sorted nearest-first here so every consumer — card, detail page, map
     // popup — gets the same order without repeating the sort.
     university_distances: (row.listing_university_distances ?? [])

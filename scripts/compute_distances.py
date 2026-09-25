@@ -22,11 +22,14 @@ Environment variables required:
                         access to faculty_distances)
 
 OSRM notes:
-    - Uses the public OSRM demo server (router.project-osrm.org) over HTTPS
-    - We pull *distances* (not durations) from the foot profile and convert
-      to minutes ourselves, because the public demo's foot duration is
-      broken — it returns car-speed durations regardless of profile.
-      Distances are real road distances and are correct.
+    - Uses FOSSGIS's foot graph (routing.openstreetmap.de/routed-foot),
+      NOT the public OSRM demo (router.project-osrm.org). The demo serves
+      the car graph only and ignores the profile in the URL, so its "foot"
+      distances were driving routes — one-ways obeyed, pedestrian streets
+      and stairs skipped — and ran 15-140% long in central Thessaloniki.
+      Keep in sync with src/lib/footRouting.js.
+    - We pull *distances* (not durations) and convert to minutes with the
+      pace model below, so rows match the Worker's recomputeDistances.js.
     - Pace model (Thessaloniki city averages):
           walking:  5 km/h  =>  83 m/min
           transit:  ~15 km/h average bus speed (in-vehicle, with stops)
@@ -60,7 +63,7 @@ except ImportError:
 # Constants
 # ---------------------------------------------------------------------------
 
-OSRM_BASE = "https://router.project-osrm.org"
+OSRM_BASE = "https://routing.openstreetmap.de/routed-foot"
 REQUEST_DELAY = 1.1  # seconds between OSRM requests (rate limiting)
 OSRM_TIMEOUT = 15  # seconds per HTTP request
 MAX_RETRIES = 3  # retry failed OSRM requests
@@ -182,9 +185,8 @@ def osrm_route_distance_m(origin_lng: float, origin_lat: float,
                           dest_lng: float, dest_lat: float) -> float | None:
     """
     Query OSRM for the foot-profile *route distance* in metres.
-    We deliberately ignore OSRM's duration here — the public demo's foot
-    profile returns car-speed durations (long-standing demo data issue).
-    Distances are real road distances and reliable.
+    Only the distance is used; minutes come from the pace model so this
+    script and the Worker's recomputeDistances.js agree.
     Returns None on failure. Retries on timeout.
     OSRM expects coordinates as lng,lat.
     """

@@ -21,7 +21,8 @@
  * university row's own coordinates are never consulted for it.
  */
 
-const OSRM_BASE = 'https://router.project-osrm.org';
+import { FOOT_ROUTING_BASE } from '@/lib/footRouting';
+
 const OSRM_TIMEOUT_MS = 15_000;
 
 const UNI_CODE_TO_ID = {
@@ -155,7 +156,7 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
       const sourcesParam = '0';
       const destinationsParam = usable.map((_, i) => i + 1).join(';');
       const tableUrl =
-        `${OSRM_BASE}/table/v1/foot/${coordsParts.join(';')}` +
+        `${FOOT_ROUTING_BASE}/table/v1/foot/${coordsParts.join(';')}` +
         `?sources=${sourcesParam}` +
         `&destinations=${destinationsParam}` +
         `&annotations=distance`;
