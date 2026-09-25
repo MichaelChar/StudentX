@@ -21,7 +21,7 @@
  * university row's own coordinates are never consulted for it.
  */
 
-import { FOOT_ROUTING_BASE } from '@/lib/footRouting';
+import { FOOT_ROUTING_BASE, logFootRouting } from '@/lib/footRouting';
 
 const OSRM_TIMEOUT_MS = 15_000;
 
@@ -148,6 +148,7 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
   const routed = new Map();
 
   if (useOsrm) {
+    const startedAt = Date.now();
     try {
       const coordsParts = [
         `${lng},${lat}`,
@@ -165,6 +166,7 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
         headers: { 'user-agent': 'StudentX-landlord-wizard/1.0' },
         signal: AbortSignal.timeout(OSRM_TIMEOUT_MS),
       });
+      logFootRouting('wizard', coordsParts.length, res.status, startedAt);
       if (res.ok) {
         const table = await res.json();
         if (table?.code === 'Ok' && Array.isArray(table.distances?.[0])) {
@@ -176,8 +178,9 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
           });
         }
       }
-    } catch {
+    } catch (err) {
       // fall through to haversine for everything
+      logFootRouting('wizard', usable.length + 1, err?.name || 'error', startedAt);
     }
   }
 

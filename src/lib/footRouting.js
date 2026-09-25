@@ -14,3 +14,20 @@
  * the `routed-foot` graph prefix; callers append `/table/v1/foot/...`.
  */
 export const FOOT_ROUTING_BASE = 'https://routing.openstreetmap.de/routed-foot';
+
+/**
+ * One log line per router call, in the cron's `key=value` style, so real
+ * latency is readable in `wrangler tail` rather than inferred from ad-hoc
+ * tests. `outcome` is the HTTP status, or the error name (e.g. TimeoutError)
+ * when the fetch threw.
+ *
+ * Why it's worth logging: the server's rate limiter HOLDS requests rather than
+ * rejecting them. Spaced calls measured ~0.3s on 2026-09-25, but calls a second
+ * or so apart were held for 6–9s. That was a test artefact then; this line is
+ * how to tell whether production ever hits it.
+ */
+export function logFootRouting(caller, coords, outcome, startedAt) {
+  console.log(
+    `[foot-routing] caller=${caller} coords=${coords} outcome=${outcome} durationMs=${Date.now() - startedAt}`,
+  );
+}
