@@ -185,6 +185,20 @@ describe('computeUniversityDistances', () => {
     ]);
   });
 
+  it('routes on a real foot graph, not the car-only OSRM demo', async () => {
+    // router.project-osrm.org ignores /foot/ and returns driving routes —
+    // every stored "walk" was a car route until this moved (see footRouting.js).
+    let requested = null;
+    await computeUniversityDistances(ORIGIN, FACULTIES, {
+      fetchImpl: async (url) => {
+        requested = url;
+        return osrmStub([900, 1800])();
+      },
+    });
+    expect(requested.startsWith('https://routing.openstreetmap.de/routed-foot/table/v1/foot/')).toBe(true);
+    expect(requested).not.toContain('router.project-osrm.org');
+  });
+
   it('falls back to haversine when the OSRM call itself throws', async () => {
     const out = await computeUniversityDistances(ORIGIN, FACULTIES, {
       fetchImpl: async () => {

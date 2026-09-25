@@ -13,15 +13,20 @@
 //
 // Callers pass a Supabase client: the cron route passes a service-role
 // client; landlord listing routes pass their token-scoped client.
+//
+// Routing goes to FOOT_ROUTING_BASE — see src/lib/footRouting.js for why it
+// is not the public OSRM demo (car-only, whatever the URL says).
+
+import { FOOT_ROUTING_BASE } from '@/lib/footRouting';
 
 const WALK_M_PER_MIN = 83;       // 5 km/h walking pace
 const BUS_M_PER_MIN = 250;       // ~15 km/h average bus speed incl. stops
 const BUS_OVERHEAD_MIN = 5;      // avg wait + walk-to/from-stop
 
-const OSRM_BASE = 'https://router.project-osrm.org';
 const OSRM_TIMEOUT_MS = 15_000;
 
-// OSRM /table imposes a per-call coordinate limit (~100 on the public demo).
+// OSRM /table imposes a per-call coordinate limit (100 on the stock server
+// config; kept as our cap regardless of what a given host allows).
 // With ~50 listings and ~13 faculties we're at 63 points worst case for a
 // full sweep. Single-listing calls from create/edit are always 1 + 13 = 14.
 const OSRM_MAX_COORDS = 100;
@@ -163,7 +168,7 @@ export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
   const destinationsParam = faculties.map((_, i) => listings.length + i).join(';');
 
   const tableUrl =
-    `${OSRM_BASE}/table/v1/foot/${coordsParts.join(';')}` +
+    `${FOOT_ROUTING_BASE}/table/v1/foot/${coordsParts.join(';')}` +
     `?sources=${sourcesParam}` +
     `&destinations=${destinationsParam}` +
     `&annotations=distance`;

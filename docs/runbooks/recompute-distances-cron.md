@@ -19,7 +19,9 @@ route:
 3. Computes the set of MISSING pairs — pairs whose listing has a
    non-null lat/lng but for which no `faculty_distances` row exists.
 4. If the set is empty, returns `{ok: true, computed: 0, ...}` and exits.
-5. Otherwise hits OSRM
+5. Otherwise hits the FOSSGIS foot router (`FOOT_ROUTING_BASE` in
+   `src/lib/footRouting.js` — **not** the public OSRM demo, which is
+   car-only whatever the URL's profile says)
    `/table/v1/foot/{coords}?sources={listings}&destinations={faculties}&annotations=distance`
    ONCE for the full distance matrix. Coords are the listing points
    followed by the faculty points; sources are the listing indexes,
@@ -110,8 +112,8 @@ prefixed `[recompute-distances]`. The route always returns JSON; the
 | `[recompute-distances] failed to fetch listings:` then 500 | Supabase read of `listings`/`location` failed (network, RLS regression on `location`, etc.). | Check the Supabase project status and the Worker's `NEXT_PUBLIC_SUPABASE_*` vars. |
 | `[recompute-distances] failed to fetch faculties:` | Same as above for the `faculties` table. | Same. |
 | `[recompute-distances] failed to fetch existing pairs:` | PostgREST page read of `faculty_distances` failed. | Same. |
-| `[recompute-distances] OSRM /table HTTP <code>:` | Public OSRM demo returned non-2xx (rate limit, outage, etc.). | Re-run manually or wait for the next tick — the route is idempotent, so retrying is safe. |
-| `[recompute-distances] OSRM /table threw: <name> <message>` | Network error or 15s timeout. | Same. |
+| `[recompute-distances] OSRM /table HTTP <code>:` | The FOSSGIS foot router returned non-2xx (rate limit, outage, etc.). | Re-run manually or wait for the next tick — the route is idempotent, so retrying is safe. |
+| `[recompute-distances] OSRM /table threw: <name> <message>` | Network error or 15s timeout. Multi-destination tables that include the far campuses (Thermi, IHU) measured ~9s on 2026-09-25, so the timeout has ~6s of headroom. | Same. |
 | `[recompute-distances] OSRM /table unexpected payload: <code>` | OSRM returned a non-`Ok` code (`NoSegment`, etc.). | Inspect the listings — usually means a coordinate fell off the OSM road graph. Fix the lat/lng or unpublish the listing. |
 | `[recompute-distances] coord count <N> exceeds OSRM /table limit 100` and 500 | Listings + faculties together exceed the OSRM /table limit. | Add batching (see "OSRM coord-count limit" below). |
 | `[recompute-distances] upsert failed:` | Write to `faculty_distances` rejected (constraint violation, conn drop, etc.). | Inspect the error; the route is idempotent so a retry is safe. |
@@ -123,8 +125,9 @@ this one is structural.
 
 ## OSRM coord-count limit (~100)
 
-OSRM's `/table` endpoint accepts a single coordinate list and the public
-demo enforces a soft limit around 100 points. We pass
+OSRM's `/table` endpoint accepts a single coordinate list; the stock
+server config caps it at 100 points, and we keep that cap whatever the
+current host allows. We pass
 `listings.length + faculties.length` coordinates per call.
 
 Current scale: ~50 listings × 13 faculties = **63 coordinates per call**,
