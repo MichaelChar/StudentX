@@ -67,7 +67,7 @@ that was a second blocker sitting behind this one. Both had to go.
 | `/property`, `/property/:city`, `/about`, `/quiz`, `/results` | `public, s-maxage=300, …` |
 | `/property/:city/listing/:id` | `public…` anon · `private, no-store` with `sb-access-token` |
 | `/property/:city/landlord/**`, `/property/:city/landlords/:id` | `private, no-cache, no-store` |
-| `/student/**`, `/admin` | `private, no-cache, no-store` |
+| `/student/**`, `/admin`, `/login`, `/signup` | `private, no-cache, no-store` |
 | `/claim/:token` | `private, no-store` **(fixed in this PR — was public)** |
 
 **This matters for how the rule is written.** The origin is already the
@@ -177,7 +177,7 @@ Expect `private, no-cache, no-store` and **not** `HIT`.
 **3. Private surfaces stay out.**
 
 ```bash
-for p in /student/login /property/thessaloniki/landlord/login /claim/test123; do
+for p in /login /signup /claim/test123; do
   printf "%s " "$p"
   curl -sI "https://studentx.uk$p" | grep -i cf-cache-status || echo "(no cache status — correct)"
 done

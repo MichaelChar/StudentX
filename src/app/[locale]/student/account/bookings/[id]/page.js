@@ -22,7 +22,7 @@ export default async function StudentBookingDetailPage({ params }) {
       loginParams.set('roleConflict', auth.conflict_role);
       if (auth.email) loginParams.set('email', auth.email);
     }
-    redirect(`/student/login?${loginParams.toString()}`);
+    redirect(`/login?${loginParams.toString()}`);
   }
 
   const t = await getTranslations({ locale, namespace: 'student.bookings' });

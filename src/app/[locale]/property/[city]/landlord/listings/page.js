@@ -112,7 +112,7 @@ export default function LandlordListingsPage() {
       if (!accessToken) {
         setBusyId(null);
         setConfirmTarget(null);
-        router.replace('/property/thessaloniki/landlord/login');
+        router.replace('/login');
         return;
       }
       const res = await fetch(`/api/landlord/listings/${listingId}`, {
@@ -218,7 +218,7 @@ export default function LandlordListingsPage() {
     setBusyId(listingId);
     try {
       if (!accessToken) {
-        router.replace('/property/thessaloniki/landlord/login');
+        router.replace('/login');
         return;
       }
       const res = await fetch(

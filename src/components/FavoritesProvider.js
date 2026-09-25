@@ -10,7 +10,6 @@ import {
   useMemo,
 } from 'react';
 import { useTranslations } from 'next-intl';
-import { Link } from '@/i18n/navigation';
 import { useAccessToken } from '@/lib/useAccessToken';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
@@ -185,6 +184,8 @@ function FavoriteAuthGate({ open, onClose }) {
       : '';
   const safeNext = safeNextPath(raw);
   const nextQuery = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
+  // Student-only gate, so the signup's account-type choice arrives preselected.
+  const signupHref = `/signup?type=student${safeNext ? `&next=${encodeURIComponent(safeNext)}` : ''}`;
 
   return (
     <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
@@ -209,23 +210,14 @@ function FavoriteAuthGate({ open, onClose }) {
         <p className="text-night/70 leading-relaxed mb-8">{tFav('gateBody')}</p>
 
         <div className="space-y-3">
-          <Button href={`/student/signup${nextQuery}`} className="w-full">
+          <Button href={signupHref} className="w-full">
             {t('signUp')}
           </Button>
-          <Button href={`/student/login${nextQuery}`} variant="secondary" className="w-full">
+          <Button href={`/login${nextQuery}`} variant="secondary" className="w-full">
             {t('signIn')}
           </Button>
         </div>
 
-        <p className="mt-6 text-sm text-night/50">
-          {t('landlordHint')}{' '}
-          <Link
-            href="/property/thessaloniki/landlord/login"
-            className="text-blue hover:text-night font-medium"
-          >
-            {t('landlordLink')} →
-          </Link>
-        </p>
       </Card>
     </div>
   );

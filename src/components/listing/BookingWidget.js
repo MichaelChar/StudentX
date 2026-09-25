@@ -195,7 +195,7 @@ export default function BookingWidget({ listing, nextPath,
     // Gate at request-to-book: signed-out → login with next= back here.
     if (!accessToken) {
       const next = nextPath || `/property/thessaloniki/listing/${listing.listing_id}`;
-      router.push(`/student/login?next=${encodeURIComponent(next)}`);
+      router.push(`/login?next=${encodeURIComponent(next)}`);
       return;
     }
 

@@ -18,7 +18,7 @@ export default function LandlordOnboardingPage() {
       const supabase = getSupabaseBrowser();
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        router.replace('/property/thessaloniki/landlord/login');
+        router.replace('/login');
         return;
       }
       if (!session.user.email_confirmed_at) {

@@ -431,15 +431,12 @@ export async function establishBrowserSession(page, credentials, opts = {}) {
     faithful path, and a future auth regression is worth being able to test
     both ways without rewriting the helper.
   */
-  const role0 = opts.role || 'student';
   if (process.env.E2E_LOGIN_VIA_UI) {
     await loginViaUi(page, {
       email: credentials.email,
       password: credentials.password,
-      loginPath:
-        role0 === 'landlord'
-          ? '/property/thessaloniki/landlord/login'
-          : '/student/login',
+      // One sign-in page for both roles; bootstrap routes by account.
+      loginPath: '/login',
     });
     return;
   }
@@ -497,10 +494,7 @@ export async function establishBrowserSession(page, credentials, opts = {}) {
     await loginViaUi(page, {
       email: credentials.email,
       password: credentials.password,
-      loginPath:
-        role === 'landlord'
-          ? '/property/thessaloniki/landlord/login'
-          : '/student/login',
+      loginPath: '/login',
     });
   }
 

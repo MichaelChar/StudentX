@@ -77,11 +77,11 @@ function groupsFor({ role, t, city, accountHref, messagesHref }) {
 
   return [
     [
-      { href: '/student/signup', label: t('signUp') },
-      { href: '/student/login', label: t('logIn') },
+      { href: '/signup', label: t('signUp') },
+      { href: '/login', label: t('logIn') },
     ],
     studyGroup(t),
-    [{ href: `/property/${city}/landlord/signup`, label: t('becomeAHost') }],
+    [{ href: '/signup?type=landlord', label: t('becomeAHost') }],
   ];
 }
 
