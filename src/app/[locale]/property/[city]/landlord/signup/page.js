@@ -5,6 +5,7 @@ import { useRouter, Link } from '@/i18n/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
+import { normalizeSingleLine } from '@/lib/textNormalize';
 import { useLocale, useTranslations } from 'next-intl';
 
 import AuthShell from '@/components/landlord/AuthShell';
@@ -50,6 +51,19 @@ export default function LandlordSignupPage() {
 
     if (password.length < 8) {
       setError(t('passwordTooShort'));
+      return;
+    }
+    // Mirror the profile POST's name rules BEFORE signUp. Once signUp has
+    // created the auth user, a 400 from the POST strands it with no landlord
+    // row (the email can't sign up again). Same normalizer as the server, so
+    // the two checks cannot disagree. `required` alone lets "   " through.
+    const cleanName = normalizeSingleLine(name);
+    if (!cleanName) {
+      setError(t('nameRequired'));
+      return;
+    }
+    if (cleanName.length > 80) {
+      setError(t('nameTooLong'));
       return;
     }
 
@@ -105,6 +119,10 @@ export default function LandlordSignupPage() {
           if (res.status === 409 && body?.error === 'role_conflict') {
             setError(t('roleConflict'));
             setConflictRole(body?.conflict_role || 'student');
+          } else if (body?.error === 'name_required') {
+            setError(t('nameRequired'));
+          } else if (body?.error === 'name_too_long') {
+            setError(t('nameTooLong'));
           } else {
             setError(body?.error || t('profileCreateFailed'));
           }
@@ -131,6 +149,7 @@ export default function LandlordSignupPage() {
           value={name}
           onChange={setName}
           placeholder={t('namePlaceholder')}
+          maxLength={80}
         />
         <FormField
           id="email"

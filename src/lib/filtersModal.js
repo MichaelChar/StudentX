@@ -20,6 +20,13 @@ export const HISTOGRAM_MIN = 250;
 export const HISTOGRAM_MAX = 1200;
 export const HISTOGRAM_BUCKETS = 12;
 
+// Below this many priced listings the 12-bar chart stops being a
+// distribution: each listing is its own bucket, every non-empty bar hits
+// 100% height, and the result reads as a rendering fault (three solid black
+// blocks at 3 listings). resolveHistogram reports 'sparse' instead, and the
+// modal states the price range in words.
+export const HISTOGRAM_MIN_LISTINGS = 8;
+
 // Feature 7 approved chip-row length. The modal shows this many amenity
 // chips, with the rest behind "Show more". Caller supplies order.
 export const AMENITY_PREVIEW_COUNT = 10;
@@ -167,6 +174,11 @@ export function isBucketInRange(bucket, minPrice, maxPrice) {
  *
  * The modal never fetches; this just turns whatever was passed into
  * bars, or into an empty/pending state.
+ *
+ * Raw prices below HISTOGRAM_MIN_LISTINGS resolve to 'sparse' with the
+ * actual { min, max } so the caller can say the range in words. Pre-bucketed
+ * input carries no exact prices, so it never goes sparse — bucket edges are
+ * not prices, and quoting them as a range would be wrong.
  */
 export function resolveHistogram(distribution) {
   if (distribution == null) return { status: 'pending', buckets: [] };
@@ -177,9 +189,16 @@ export function resolveHistogram(distribution) {
   const first = distribution[0];
   let buckets;
   if (typeof first === 'number') {
-    const listings = distribution
-      .filter((n) => typeof n === 'number' && Number.isFinite(n))
-      .map((monthly_price) => ({ monthly_price }));
+    const prices = distribution.filter((n) => typeof n === 'number' && Number.isFinite(n));
+    if (prices.length === 0) return { status: 'empty', buckets: [] };
+    if (prices.length < HISTOGRAM_MIN_LISTINGS) {
+      return {
+        status: 'sparse',
+        buckets: [],
+        range: { min: Math.min(...prices), max: Math.max(...prices) },
+      };
+    }
+    const listings = prices.map((monthly_price) => ({ monthly_price }));
     buckets = buildPriceHistogram(listings, {
       min: HISTOGRAM_MIN,
       max: HISTOGRAM_MAX,
