@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
 import ProfilePhotoSettings from '@/components/landlord/ProfilePhotoSettings';
+import DisplayNameSettings from '@/components/landlord/DisplayNameSettings';
 
 /*
   Propylaea landlord settings page.
@@ -19,7 +20,8 @@ export default function LandlordSettingsPage() {
 
   return (
     <LandlordShell eyebrow={t('eyebrow')} title={t('title')}>
-      <div className="max-w-xl">
+      <div className="max-w-xl flex flex-col gap-6">
+        <DisplayNameSettings />
         <ProfilePhotoSettings />
       </div>
     </LandlordShell>

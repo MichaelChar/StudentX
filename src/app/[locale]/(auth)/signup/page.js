@@ -7,6 +7,7 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
 import { safeNextPath } from '@/lib/safeNext';
+import { normalizeSingleLine } from '@/lib/textNormalize';
 import { postLoginDestination } from '@/lib/postLoginDestination';
 import { uploadLandlordPhoto, validateProfilePhoto } from '@/lib/uploadLandlordPhoto';
 import { useLocale, useTranslations } from 'next-intl';
@@ -74,7 +75,7 @@ function SignupInner() {
     });
   }
 
-  async function signUpStudent(supabase, siteUrl) {
+  async function signUpStudent(supabase, siteUrl, cleanName) {
     const { data: authData, error: authError } = await withTimeout(
       // 8 s: healthy auth legs finish <1 s; bounds a hung flow instead of a
       // 15 s freeze (#264).
@@ -85,7 +86,7 @@ function SignupInner() {
           emailRedirectTo: `${siteUrl}/${locale}/student/login`,
           // role: 'student' makes migration 029's trigger create the students
           // row at signup, and is what bootstrap reads for a row-less account.
-          data: { display_name: name, role: 'student' },
+          data: { display_name: cleanName, role: 'student' },
         },
       }),
       8000,
@@ -120,7 +121,7 @@ function SignupInner() {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${session.access_token}`,
         },
-        body: JSON.stringify({ display_name: name, preferred_locale: 'en' }),
+        body: JSON.stringify({ display_name: cleanName, preferred_locale: 'en' }),
       }),
       8000,
     );
@@ -141,7 +142,7 @@ function SignupInner() {
     else router.push(destination);
   }
 
-  async function signUpLandlord(supabase, siteUrl) {
+  async function signUpLandlord(supabase, siteUrl, cleanName) {
     const { data: authData, error: authError } = await withTimeout(
       supabase.auth.signUp({
         email,
@@ -151,7 +152,7 @@ function SignupInner() {
           // Not read by any trigger (029 only acts on 'student'). It marks the
           // account as a landlord for bootstrap, and carries the name to the
           // first sign-in when there is no session now to create the row with.
-          data: { display_name: name, role: 'landlord' },
+          data: { display_name: cleanName, role: 'landlord' },
         },
       }),
       8000,
@@ -181,7 +182,9 @@ function SignupInner() {
             Authorization: `Bearer ${session.access_token}`,
           },
           body: JSON.stringify(
-            profilePhotoUrl ? { name, profile_photo_url: profilePhotoUrl } : { name },
+            profilePhotoUrl
+              ? { name: cleanName, profile_photo_url: profilePhotoUrl }
+              : { name: cleanName },
           ),
         }),
         8000,
@@ -192,6 +195,10 @@ function SignupInner() {
         if (res.status === 409 && body?.error === 'role_conflict') {
           setError(t('roleConflictStudent'));
           setConflict(true);
+        } else if (body?.error === 'name_required') {
+          setError(t('nameRequired'));
+        } else if (body?.error === 'name_too_long') {
+          setError(t('nameTooLong'));
         } else {
           setError(body?.error || t('profileCreateFailed'));
         }
@@ -215,13 +222,27 @@ function SignupInner() {
       setError(t('passwordTooShort'));
       return;
     }
+    // Check the name BEFORE signUp, with the same normalizer and limit the
+    // profile routes apply. Once signUp has created the auth user, a 400 from
+    // the profile POST strands it with no row (the email can't sign up
+    // again). `required` alone lets "   " through. A landlord's name is
+    // public ("Listed by …"); a student's display_name has the same rule.
+    const cleanName = normalizeSingleLine(name);
+    if (!cleanName) {
+      setError(t('nameRequired'));
+      return;
+    }
+    if (cleanName.length > 80) {
+      setError(t('nameTooLong'));
+      return;
+    }
 
     setLoading(true);
     try {
       const supabase = getSupabaseBrowser();
       const siteUrl = window.location.origin;
-      if (accountType === 'landlord') await signUpLandlord(supabase, siteUrl);
-      else await signUpStudent(supabase, siteUrl);
+      if (accountType === 'landlord') await signUpLandlord(supabase, siteUrl, cleanName);
+      else await signUpStudent(supabase, siteUrl, cleanName);
     } catch (err) {
       setError(err.message || t('genericError'));
     } finally {
@@ -292,6 +313,7 @@ function SignupInner() {
           value={name}
           onChange={setName}
           placeholder={t('namePlaceholder')}
+          maxLength={80}
         />
         <FormField
           id="email"

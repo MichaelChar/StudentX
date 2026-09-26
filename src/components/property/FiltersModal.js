@@ -108,8 +108,22 @@ function PriceHistogram({
   maxPrice,
   emptyLabel,
   barLabel,
+  sparseLabel,
 }) {
   const { status, buckets } = histogram;
+
+  // Too few listings to chart (see HISTOGRAM_MIN_LISTINGS): say the range.
+  if (status === 'sparse') {
+    return (
+      <p className="text-sm text-night/60 font-sans">
+        {sparseLabel({
+          min: formatMoney(Math.round(histogram.range.min)),
+          max: formatMoney(Math.round(histogram.range.max)),
+          same: histogram.range.min === histogram.range.max ? 'yes' : 'no',
+        })}
+      </p>
+    );
+  }
 
   if (status === 'pending') {
     // Hand-rolled rather than <Skeleton>: that primitive is a rounded
@@ -322,6 +336,7 @@ export default function FiltersModal({
               maxPrice={filters.maxPrice}
               emptyLabel={t('priceHistogramEmpty')}
               barLabel={(values) => t('priceHistogramBarLabel', values)}
+              sparseLabel={(values) => t('priceHistogramSparse', values)}
             />
             <div className="mt-5 grid grid-cols-2 gap-3">
               <div>

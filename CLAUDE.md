@@ -233,6 +233,17 @@ Conventions still in force:
    it distinguishes this cache from Cloudflare's CDN cache, which is the layer
    that actually serves HTML without running the Worker (issue #130).
 
+4. **`experimental.prefetchInlining: false` in `next.config.mjs` is an
+   invariant.** Next 16.3 defaults it on; OpenNext's cache interceptor then
+   answers every segment prefetch (`next-router-segment-prefetch: /_tree`)
+   with the full page payload, the client rejects it and re-requests forever.
+   Pages render fine, so nothing looks broken — it showed up only as 20–160
+   background requests/second per open tab, running ~12 weeks from the
+   2026-07-04 prerendering restore. If you touch this flag, the cache config,
+   or upgrade Next/OpenNext, re-measure: count requests in the 6 s after `load`
+   on `/gigs` (desktop) and `/about` (mobile) under `npm run preview`. Healthy
+   is single digits.
+
 ## Maps
 
 Four surfaces mount Leaflet: the results map (`ListingsMap.js`), the PDP's

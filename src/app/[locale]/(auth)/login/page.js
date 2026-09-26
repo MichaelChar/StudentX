@@ -7,6 +7,7 @@ import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
 import { safeNextPath } from '@/lib/safeNext';
+import { normalizeSingleLine } from '@/lib/textNormalize';
 import { reportLoginTiming } from '@/lib/reportClientError';
 import { postLoginDestination, STUDENT_HOME, LANDLORD_HOME } from '@/lib/postLoginDestination';
 import { useTranslations } from 'next-intl';
@@ -61,6 +62,11 @@ function LoginInner() {
   // the user gets a moving signal instead of a frozen "Signing in…" string.
   const [stage, setStage] = useState('');
   const loading = stage !== '';
+  // Set when a row-less landlord account needs a name before its landlords
+  // row can be created (see completeLandlordProfile). Holds the live session;
+  // the page swaps the sign-in form for a one-field name form.
+  const [pendingLandlord, setPendingLandlord] = useState(null);
+  const [landlordName, setLandlordName] = useState('');
 
   // Warm the Cloudflare Worker isolate while the user is typing, so the login
   // POST doesn't pay cold-start latency on top of the Supabase round-trip. Also
@@ -78,8 +84,10 @@ function LoginInner() {
   // create or claim it before entering the dashboard, which would otherwise
   // bounce them straight back here. POST /api/landlord/profile is idempotent —
   // it returns an existing row, links an unclaimed one, or inserts.
-  // Returns an error message key, or null on success.
-  async function completeLandlordProfile(session) {
+  //
+  // Returns null on success, 'needsName' when the route refused the name, or
+  // an error message key.
+  async function completeLandlordProfile(session, name) {
     try {
       const res = await withTimeout(
         fetch('/api/landlord/profile', {
@@ -88,19 +96,65 @@ function LoginInner() {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${session.access_token}`,
           },
-          // Name captured at signup (user_metadata.display_name). Absent for
-          // accounts created before the unified signup — the route then falls
-          // back to the email prefix, editable later in Settings.
-          body: JSON.stringify({ name: session.user?.user_metadata?.display_name || '' }),
+          // The name typed on the name form, else the one captured at signup
+          // (user_metadata.display_name). Accounts from before the unified
+          // signup have none; the route requires one (a landlord's name is
+          // public and is never derived from the email), so they get asked.
+          body: JSON.stringify({
+            name: name ?? session.user?.user_metadata?.display_name ?? '',
+          }),
         }),
         8000,
       );
       if (res.ok) return null;
+      if (res.status === 400) {
+        const body = await res.json().catch(() => ({}));
+        if (body?.error === 'name_required' || body?.error === 'name_too_long') return 'needsName';
+      }
       // 403 = link_orphan_landlord refused because the email is unconfirmed
       // (migration 112).
       return res.status === 403 ? 'landlordSetupUnconfirmed' : 'landlordSetupFailed';
     } catch {
       return 'landlordSetupFailed';
+    }
+  }
+
+  function goHome(role) {
+    const destination = postLoginDestination(role, safeNext);
+    if (destination === safeNext) {
+      // Client-side navigation (#258) reuses the JS already in memory; the
+      // native router accepts the query strings the i18n one rejects.
+      nativeRouter.push(destination);
+    } else {
+      router.push(destination);
+    }
+  }
+
+  async function handleNameSubmit(e) {
+    e.preventDefault();
+    setError('');
+    // Same normalizer and limit as the profile route, so the two can't disagree.
+    const cleanName = normalizeSingleLine(landlordName);
+    if (!cleanName) {
+      setError(t('nameRequired'));
+      return;
+    }
+    if (cleanName.length > 80) {
+      setError(t('nameTooLong'));
+      return;
+    }
+    setStage('redirect');
+    try {
+      const failureKey = await completeLandlordProfile(pendingLandlord, cleanName);
+      if (failureKey) {
+        setError(t(failureKey === 'needsName' ? 'nameRequired' : failureKey));
+        setStage('');
+        return;
+      }
+      goHome('landlord');
+    } catch (err) {
+      setError(err.message || t('genericError'));
+      setStage('');
     }
   }
 
@@ -200,6 +254,14 @@ function LoginInner() {
           let role = detected;
           if (role === 'landlord-incomplete') {
             const failureKey = await completeLandlordProfile(session);
+            if (failureKey === 'needsName') {
+              // Stay signed in and ask. Signing out here would lock these
+              // accounts out for good — the name is the only thing missing.
+              emit({ stage: 'landlord-name', role });
+              setLandlordName(session.user?.user_metadata?.display_name || '');
+              setPendingLandlord(session);
+              return;
+            }
             if (failureKey) {
               emit({ error: true, stage: 'landlord-profile', role });
               await signOutSafely(supabase);
@@ -211,14 +273,7 @@ function LoginInner() {
 
           setStage('redirect');
           emit({ role });
-          const destination = postLoginDestination(role === 'landlord' ? 'landlord' : 'student', safeNext);
-          if (destination === safeNext) {
-            // Client-side navigation (#258) reuses the JS already in memory;
-            // the native router accepts the query strings the i18n one rejects.
-            nativeRouter.push(destination);
-          } else {
-            router.push(destination);
-          }
+          goHome(role === 'landlord' ? 'landlord' : 'student');
           return;
         } catch (err) {
           lastErr = err;
@@ -231,6 +286,32 @@ function LoginInner() {
     } finally {
       setStage('');
     }
+  }
+
+  if (pendingLandlord) {
+    return (
+      <AuthShell eyebrow="Sign in" title={t('landlordNameTitle')} subtitle={t('landlordNameBody')}>
+        <form onSubmit={handleNameSubmit} className="space-y-5">
+          <FormField
+            label={t('landlordNameLabel')}
+            id="landlord-name"
+            required
+            value={landlordName}
+            onChange={setLandlordName}
+            placeholder={t('landlordNamePlaceholder')}
+            maxLength={80}
+          />
+          {error && (
+            <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2">
+              {error}
+            </p>
+          )}
+          <Button variant="primary" type="submit" disabled={loading} className="w-full">
+            {loading ? t('landlordNameSubmitting') : t('landlordNameSubmit')}
+          </Button>
+        </form>
+      </AuthShell>
+    );
   }
 
   return (

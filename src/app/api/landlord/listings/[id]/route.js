@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse, after } from 'next/server';
 import { getSupabase } from '@/lib/supabase';
 import {
   extractToken,
@@ -8,6 +8,7 @@ import {
 } from '@/lib/supabaseServer';
 import { landlordIdForUser } from '@/lib/landlordAuth';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
+import { coordsChanged, remeasureUniversityDistances } from '@/lib/listingPinMove';
 import { writeUniversityDistances } from '@/lib/universityDistances';
 import { parseListingWriteBody } from '@/lib/landlordListingBody';
 import {
@@ -115,7 +116,7 @@ export async function PATCH(request, { params }) {
 
   const { data: existing, error: fetchError } = await authedSupabase
     .from('listings')
-    .select('listing_id, rent_id, location_id, flags')
+    .select('listing_id, rent_id, location_id, flags, location ( lat, lng )')
     .eq('listing_id', id)
     .eq('landlord_id', landlordId)
     .single();
@@ -183,6 +184,20 @@ export async function PATCH(request, { params }) {
     if (locationError) {
       console.error('Failed to update location:', locationError);
       return NextResponse.json({ error: 'Failed to update listing' }, { status: 500 });
+    }
+  }
+
+  // A moved pin invalidates both distance tables (see src/lib/listingPinMove.js).
+  // The walk-time rows go now, so no request after this one reads the old
+  // numbers. The recompute below refills them, with the daily cron as backstop.
+  const pinMoved = coordsChanged(existing.location, d);
+  if (pinMoved) {
+    const { error: clearError } = await getSupabaseAsService()
+      .from('faculty_distances')
+      .delete()
+      .eq('listing_id', id);
+    if (clearError) {
+      console.error('[landlord/listings PATCH] failed to clear moved-pin distances:', clearError);
     }
   }
 
@@ -336,14 +351,41 @@ export async function PATCH(request, { params }) {
     }
   }
 
-  try {
-    await recomputeMissingDistances({
-      listingIds: [id],
-      supabase: getSupabaseAsService(),
-    });
-  } catch (err) {
-    console.error('[landlord/listings PATCH] inline distance recompute failed:', err);
-  }
+  // After the response, not before it: the recompute calls the shared FOSSGIS
+  // router, which is usually ~0.3s but can hold a request for seconds when its
+  // rate limiter is busy. The landlord's save shouldn't wait on it. OpenNext
+  // wires after() to the Worker's ctx.waitUntil, and the daily
+  // recompute-distances cron refills any pair this misses.
+  after(async () => {
+    const service = getSupabaseAsService();
+    // Universities first. The two router calls run back to back and FOSSGIS
+    // can hold the second one, so the table with no cron backstop goes first.
+    // Faculty pairs left missing are refilled by the daily recompute-distances
+    // cron.
+    if (pinMoved) {
+      try {
+        const result = await remeasureUniversityDistances({
+          supabase: service,
+          listingId: id,
+          lat: d.lat,
+          lng: d.lng,
+        });
+        if (!result.ok) {
+          console.error('[landlord/listings PATCH] moved-pin university re-measure skipped:', result.reason);
+        }
+      } catch (err) {
+        console.error('[landlord/listings PATCH] moved-pin university re-measure failed:', err);
+      }
+    }
+    try {
+      await recomputeMissingDistances({
+        listingIds: [id],
+        supabase: service,
+      });
+    } catch (err) {
+      console.error('[landlord/listings PATCH] deferred distance recompute failed:', err);
+    }
+  });
 
   return NextResponse.json({ listing_id: id });
 }

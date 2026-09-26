@@ -12,6 +12,7 @@ export default function FormField({
   required,
   placeholder,
   rightAction,
+  maxLength,
 }) {
   return (
     <div>
@@ -28,6 +29,7 @@ export default function FormField({
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
+        maxLength={maxLength}
         className="w-full border border-night/15 bg-white rounded-control px-3 py-2.5 text-sm text-night focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/10"
       />
     </div>

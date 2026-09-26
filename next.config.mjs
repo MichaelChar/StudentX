@@ -152,6 +152,21 @@ const nextConfig = {
   turbopack: {
     root: projectRoot,
   },
+  experimental: {
+    // LOAD-BEARING — do not remove without re-measuring. Next 16.3 turned
+    // prefetch inlining on by default, and OpenNext's cache interceptor
+    // (enableCacheInterception in open-next.config.ts) answers every segment
+    // prefetch with the FULL page payload whenever this flag is truthy — it
+    // deliberately skips the per-segment data the build already stored. The
+    // client asks for `/_tree`, cannot use a whole page as one, discards it and
+    // asks again: an unbounded loop, 20–160 requests/second per open tab on
+    // prod, for any page showing a Link to a prerendered route (the mobile tab
+    // bar's "Log in" made that nearly every mobile page). With inlining off,
+    // each segment request is served from the static-assets cache as intended.
+    // Verify with a request count after `load`, not by eye — the pages render
+    // fine either way. See the PR that added this for the measurements.
+    prefetchInlining: false,
+  },
   async headers() {
     return [
       {

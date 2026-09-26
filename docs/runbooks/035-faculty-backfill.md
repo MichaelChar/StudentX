@@ -95,4 +95,5 @@ The 9 AUTH backfill rows already existed pre-035, so they have no rollback — l
 ## Notes
 
 - The migration's coordinates for the 9 backfilled AUTH rows match production exactly. They look heavily duplicated (many rows share `40.6301, 22.9563` for the main quadrangle and `40.5584, 23.0093` for the Thermi-area satellite faculties), but that is the live data, not a typo.
+- **Superseded by migration 124.** The duplication was a placeholder, not a campus centroid: those coordinates (and both landmarks, which were off by ~100–600 m) were replaced with OpenStreetMap building centroids. The coordinate table above is historical.
 - The two landmark coordinates were chosen to match the real geographic features: AUTH Central Library on the main campus quadrangle, AHEPA University Hospital adjacent to the medical campus on Stilponos Kyriakidi.
