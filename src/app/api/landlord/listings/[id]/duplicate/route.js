@@ -6,7 +6,7 @@ import {
   getSupabaseAsService,
 } from '@/lib/supabaseServer';
 import { landlordIdForUser } from '@/lib/landlordAuth';
-import { writeUniversityDistances } from '@/lib/universityDistances';
+import { sharedMeasuredFrom, writeUniversityDistances } from '@/lib/universityDistances';
 
 
 /**
@@ -41,7 +41,7 @@ export async function POST(request, { params }) {
       rent ( monthly_price, currency, bills_included, deposit ),
       location ( address, neighborhood, lat, lng ),
       listing_amenities ( amenity_id ),
-      listing_university_distances ( university_id, distance_meters, source )
+      listing_university_distances ( university_id, distance_meters, source, measured_from_lat, measured_from_lng )
     `)
     .eq('listing_id', id)
     .eq('landlord_id', landlordId)
@@ -227,7 +227,14 @@ async function duplicateFrom(src, { landlordId, authedSupabase, supabase }) {
     source: r.source === 'computed' ? 'computed' : 'landlord',
   }));
   if (uniRows.length > 0) {
-    await writeUniversityDistances(authedSupabase, listingId, uniRows);
+    // The copy sits on the same pin as its source, so the source's stamp
+    // (migration 126) is still true for it.
+    await writeUniversityDistances(
+      authedSupabase,
+      listingId,
+      uniRows,
+      sharedMeasuredFrom(src.listing_university_distances),
+    );
   }
 
   return NextResponse.json({ listing_id: listingId }, { status: 201 });

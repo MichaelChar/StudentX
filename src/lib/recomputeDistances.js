@@ -1,6 +1,13 @@
-// Computes any missing rows in `faculty_distances` for the given listings (or
-// every listing if `listingIds` is omitted) and upserts them. Idempotent — only
-// fills gaps, so a fully-populated DB is a no-op (cheap DB read, no OSRM call).
+// Computes any missing OR stale rows in `faculty_distances` for the given
+// listings (or every listing if `listingIds` is omitted) and upserts them.
+// Idempotent: a fully-populated, up-to-date DB is a no-op (cheap DB read, no
+// OSRM call).
+//
+// Stale (migration 126): each row records the listing pin and faculty point it
+// was measured between. A row whose stamps don't match the CURRENT coordinates
+// (the pin moved, the faculty moved, or it predates the stamps) is re-measured
+// like a missing one. That makes this job the one place that heals a stale
+// distance, whichever writer caused it.
 //
 // Used by:
 //   1. /api/cron/recompute-distances   — full sweep, daily at 09:15 UTC.
@@ -18,6 +25,7 @@
 // is not the public OSRM demo (car-only, whatever the URL says).
 
 import { FOOT_ROUTING_BASE, logFootRouting } from '@/lib/footRouting';
+import { coordsChanged } from '@/lib/coordsChanged';
 
 const WALK_M_PER_MIN = 83;       // 5 km/h walking pace
 const BUS_M_PER_MIN = 250;       // ~15 km/h average bus speed incl. stops
@@ -37,6 +45,23 @@ function distanceToMinutes(distanceM) {
   const walk = Math.max(1, Math.ceil(distanceM / WALK_M_PER_MIN));
   const transit = Math.ceil(distanceM / BUS_M_PER_MIN) + BUS_OVERHEAD_MIN;
   return { walk, transit };
+}
+
+// A row is stale when its stamped endpoints aren't the current listing pin and
+// faculty point. Unstamped rows (pre-126) are stale too: nothing vouches for
+// them.
+function isStale(row, listing, faculty) {
+  if (row.measured_from_lat == null || row.measured_to_lat == null) return true;
+  return (
+    coordsChanged(
+      { lat: row.measured_from_lat, lng: row.measured_from_lng },
+      { lat: listing.lat, lng: listing.lng },
+    ) ||
+    coordsChanged(
+      { lat: row.measured_to_lat, lng: row.measured_to_lng },
+      { lat: faculty.lat, lng: faculty.lng },
+    )
+  );
 }
 
 export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
@@ -99,14 +124,15 @@ export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
   }
 
   // 2. Pull existing pairs for the listings we're considering and figure out
-  //    what's missing. Page through to avoid Supabase's default 1000-row cap.
-  const existingPairs = new Set();
+  //    what's missing or stale. Page through to avoid Supabase's default
+  //    1000-row cap.
+  const existingPairs = new Map();
   let from = 0;
   const PAGE = 1000;
   while (true) {
     let pageQuery = supabase
       .from('faculty_distances')
-      .select('listing_id, faculty_id')
+      .select('listing_id, faculty_id, measured_from_lat, measured_from_lng, measured_to_lat, measured_to_lng')
       .range(from, from + PAGE - 1);
     if (Array.isArray(listingIds) && listingIds.length > 0) {
       pageQuery = pageQuery.in('listing_id', listingIds);
@@ -118,18 +144,24 @@ export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
     }
     if (!pageRows || pageRows.length === 0) break;
     for (const row of pageRows) {
-      existingPairs.add(`${row.listing_id}|${row.faculty_id}`);
+      existingPairs.set(`${row.listing_id}|${row.faculty_id}`, row);
     }
     if (pageRows.length < PAGE) break;
     from += PAGE;
   }
 
-  // 3. Build the list of missing (listing, faculty) pairs.
+  // 3. Build the list of (listing, faculty) pairs to measure: absent, or
+  //    stamped with coordinates that are no longer current.
   const missing = [];
+  let stale = 0;
   for (const l of listings) {
     for (const f of faculties) {
-      if (!existingPairs.has(`${l.listing_id}|${f.faculty_id}`)) {
+      const row = existingPairs.get(`${l.listing_id}|${f.faculty_id}`);
+      if (!row) {
         missing.push({ listing: l, faculty: f });
+      } else if (isStale(row, l, f)) {
+        missing.push({ listing: l, faculty: f });
+        stale++;
       }
     }
   }
@@ -224,6 +256,10 @@ export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
       faculty_id: faculty.faculty_id,
       walk_minutes: walk,
       transit_minutes: transit,
+      measured_from_lat: listing.lat,
+      measured_from_lng: listing.lng,
+      measured_to_lat: faculty.lat,
+      measured_to_lng: faculty.lng,
     });
   }
 
@@ -237,21 +273,21 @@ export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
       ok: true,
       computed: 0,
       missingBefore: missing.length,
+      stale,
       listings: listings.length,
       faculties: faculties.length,
       unroutable,
     };
   }
 
-  // 6. UPSERT with ignoreDuplicates so a pair that snuck in between our fetch
-  //    and our write (e.g. a concurrent manual script run) is silently kept —
-  //    we only ever fill in the gaps. PK is (listing_id, faculty_id) per
-  //    migration 001.
+  // 6. UPSERT, overwriting on conflict. Stale rows exist precisely so they can
+  //    be replaced, and every row written here is measured from the CURRENT
+  //    coordinates, so replacing a concurrent writer's row is harmless. PK is
+  //    (listing_id, faculty_id) per migration 001.
   const { error: upsertErr } = await supabase
     .from('faculty_distances')
     .upsert(rows, {
       onConflict: 'listing_id,faculty_id',
-      ignoreDuplicates: true,
     });
 
   if (upsertErr) {
@@ -263,6 +299,7 @@ export async function recomputeMissingDistances({ listingIds, supabase } = {}) {
     ok: true,
     computed: rows.length,
     missingBefore: missing.length,
+    stale,
     listings: listings.length,
     faculties: faculties.length,
     unroutable,

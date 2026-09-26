@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { isCronAuthorized } from '../auth';
 import { isJobDue } from '../cadence';
 import { runRecomputeDistances } from '../jobs/recomputeDistances';
+import { runHealUniversityDistances } from '../jobs/healUniversityDistances';
 import { runMessageDigest } from '../jobs/messageDigest';
 import { runSyntheticEnListing } from '../synthetic-en-listing/route';
 import { runBookingExpiry } from '../jobs/bookingExpiry';
@@ -30,6 +31,14 @@ export const CRON_JOBS = [
     name: 'recompute-distances',
     cadence: 'daily@09:15',
     handler: runRecomputeDistances,
+  },
+  // Re-measures university distances whose stamped pin isn't the current one
+  // (migration 126). A different minute from recompute-distances, so the two
+  // never send router calls in the same tick.
+  {
+    name: 'heal-university-distances',
+    cadence: 'daily@09:45',
+    handler: runHealUniversityDistances,
   },
   {
     name: 'message-digest',

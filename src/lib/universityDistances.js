@@ -233,14 +233,41 @@ export function parseUniversityDistances(input, validIds, opts = {}) {
 }
 
 /**
+ * The pin a set of stored rows was measured from (migration 126 stamps), or
+ * null when the rows are unstamped or disagree. Rows are always written
+ * together, so they normally share one stamp.
+ *
+ * @param {Array<{ measured_from_lat?: unknown, measured_from_lng?: unknown }>} rows
+ * @returns {{ lat: number, lng: number } | null}
+ */
+export function sharedMeasuredFrom(rows) {
+  if (!Array.isArray(rows) || rows.length === 0) return null;
+  const [first] = rows;
+  if (first?.measured_from_lat == null || first?.measured_from_lng == null) return null;
+  const lat = Number(first.measured_from_lat);
+  const lng = Number(first.measured_from_lng);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  const agree = rows.every(
+    (r) => Number(r?.measured_from_lat) === lat && Number(r?.measured_from_lng) === lng,
+  );
+  return agree ? { lat, lng } : null;
+}
+
+/**
  * Replace a listing's distance rows wholesale (delete-then-insert).
  *
  * Writes listing_id, university_id, distance_meters, and source
  * ('computed' from map-pin prefill, 'landlord' when typed/edited).
  *
+ * `measuredFrom` is the pin the rows were measured from (migration 126). Pass
+ * it only when it's KNOWN. Omitted, the rows are stored unstamped, which the
+ * heal-university-distances cron treats as stale and re-measures. An unknown
+ * origin is safe; a guessed one could vouch for stale rows.
+ *
+ * @param {{ lat: number, lng: number } | null} [measuredFrom]
  * @returns {Promise<{ error: string|null }>}
  */
-export async function writeUniversityDistances(supabase, listingId, rows) {
+export async function writeUniversityDistances(supabase, listingId, rows, measuredFrom = null) {
   const { error: deleteError } = await supabase
     .from('listing_university_distances')
     .delete()
@@ -257,6 +284,8 @@ export async function writeUniversityDistances(supabase, listingId, rows) {
         university_id: r.university_id,
         distance_meters: r.distance_meters,
         source: r.source === 'computed' ? 'computed' : 'landlord',
+        measured_from_lat: measuredFrom ? measuredFrom.lat : null,
+        measured_from_lng: measuredFrom ? measuredFrom.lng : null,
       })),
     );
 

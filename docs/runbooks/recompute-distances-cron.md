@@ -16,8 +16,12 @@ route:
 2. Pulls every existing `(listing_id, faculty_id)` pair from
    `faculty_distances` (paged through 1000-row chunks to avoid the
    PostgREST default cap).
-3. Computes the set of MISSING pairs — pairs whose listing has a
-   non-null lat/lng but for which no `faculty_distances` row exists.
+3. Computes the set of pairs to measure: MISSING pairs (the listing has a
+   non-null lat/lng but no `faculty_distances` row exists) and STALE pairs
+   (migration 126: the row's `measured_from_*` / `measured_to_*` stamps aren't
+   the listing's current pin and the faculty's current point, or are NULL).
+   Stale rows are overwritten, so a moved pin or a moved faculty heals here
+   with no hand-run backfill.
 4. If the set is empty, returns `{ok: true, computed: 0, ...}` and exits.
 5. Otherwise hits the FOSSGIS foot router (`FOOT_ROUTING_BASE` in
    `src/lib/footRouting.js` — **not** the public OSRM demo, which is
