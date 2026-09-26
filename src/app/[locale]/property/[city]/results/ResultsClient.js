@@ -756,7 +756,7 @@ function ResultsContent({
           /student/ausom, which the two-tab logged-out bar does not carry.
         */}
         <div className="pr-24 sm:pr-0">
-          <p className="label-caps text-yellow">{t('eyebrow')}</p>
+          <p className="label-caps text-night/70">{t('eyebrow')}</p>
           <h1 className="mt-2 font-display text-3xl md:text-4xl text-night leading-tight">
             {/*
               When a map box is what emptied the grid, the generic

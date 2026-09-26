@@ -131,9 +131,9 @@ export default function DirectoryCarousel() {
       {/* Header: bilingual accent + view-all, with pager arrows on sm+ */}
       <div className="flex items-end justify-between gap-4 mb-8">
         <div>
-          <p className="label-caps text-yellow mb-2">{t('eyebrow')}</p>
+          <p className="label-caps text-night/70 mb-2">{t('eyebrow')}</p>
           <h2 className="font-display text-3xl md:text-4xl text-night leading-tight">
-            {t('title')} <span className="italic text-yellow">{t('titleItalic')}</span>
+            {t('title')} <span className="italic text-blue">{t('titleItalic')}</span>
           </h2>
         </div>
         <div className="flex items-center gap-3 shrink-0">

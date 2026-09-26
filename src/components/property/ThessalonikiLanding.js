@@ -108,17 +108,17 @@ export default function ThessalonikiLanding() {
 
       {/* How it works */}
       <section className="mx-auto max-w-6xl px-5 py-20 md:py-28">
-        <p className="label-caps text-yellow mb-5">{t('howEyebrow')}</p>
+        <p className="label-caps text-night/70 mb-5">{t('howEyebrow')}</p>
         <h2 className="font-display text-3xl md:text-5xl text-night leading-tight max-w-3xl">
           {t('howTitle')}{' '}
-          <span className="italic text-yellow">{t('howTitleItalic')}</span>
+          <span className="italic text-blue">{t('howTitleItalic')}</span>
         </h2>
 
         <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-10">
           {steps.map((step) => (
             <div key={step.numeral} className="relative">
               <span
-                className="font-display text-5xl text-yellow block leading-none mb-5"
+                className="font-display text-5xl text-blue block leading-none mb-5"
                 aria-hidden="true"
               >
                 {step.numeral}
@@ -146,7 +146,7 @@ export default function ThessalonikiLanding() {
 function StatTile({ value, label }) {
   return (
     <Card tone="parchment" border={false} className="px-6 py-8">
-      <p className="font-display text-5xl md:text-6xl text-yellow leading-none">
+      <p className="font-display text-5xl md:text-6xl text-blue leading-none">
         {value}
       </p>
       <p className="mt-4 label-caps text-night/60">{label}</p>
