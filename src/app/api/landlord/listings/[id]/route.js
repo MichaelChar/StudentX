@@ -98,6 +98,35 @@ export async function GET(request, { params }) {
   return NextResponse.json({ listing: data, blackouts });
 }
 
+/**
+ * Re-measure both distance tables from a moved pin. Runs in after().
+ *
+ * Universities go first. The two router calls run back to back and FOSSGIS
+ * can hold the second, so the table with no cron backstop gets the first slot.
+ * Faculty pairs left missing are refilled by the daily recompute-distances cron.
+ */
+async function refreshDistancesAfterPinMove(id, lat, lng) {
+  const service = getSupabaseAsService();
+  try {
+    const result = await remeasureUniversityDistances({
+      supabase: service,
+      listingId: id,
+      lat,
+      lng,
+    });
+    if (!result.ok) {
+      console.error('[landlord/listings PATCH] moved-pin university re-measure skipped:', result.reason);
+    }
+  } catch (err) {
+    console.error('[landlord/listings PATCH] moved-pin university re-measure failed:', err);
+  }
+  try {
+    await recomputeMissingDistances({ listingIds: [id], supabase: service });
+  } catch (err) {
+    console.error('[landlord/listings PATCH] moved-pin distance recompute failed:', err);
+  }
+}
+
 export async function PATCH(request, { params }) {
   const token = extractToken(request);
   if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -189,7 +218,14 @@ export async function PATCH(request, { params }) {
 
   // A moved pin invalidates both distance tables (see src/lib/listingPinMove.js).
   // The walk-time rows go now, so no request after this one reads the old
-  // numbers. The recompute below refills them, with the daily cron as backstop.
+  // numbers.
+  //
+  // The re-measure is registered HERE, not at the end of the handler. The new
+  // pin is already committed, and the handler can still return early below
+  // (bad property type, a failed listings UPDATE). after() runs even for an
+  // error response, but only if it was registered. If it isn't, no later save
+  // counts as a move (the stored pin already matches), so the distances would
+  // never be re-measured.
   const pinMoved = coordsChanged(existing.location, d);
   if (pinMoved) {
     const { error: clearError } = await getSupabaseAsService()
@@ -199,6 +235,7 @@ export async function PATCH(request, { params }) {
     if (clearError) {
       console.error('[landlord/listings PATCH] failed to clear moved-pin distances:', clearError);
     }
+    after(() => refreshDistancesAfterPinMove(id, d.lat, d.lng));
   }
 
   let propertyTypeId;
@@ -355,37 +392,20 @@ export async function PATCH(request, { params }) {
   // router, which is usually ~0.3s but can hold a request for seconds when its
   // rate limiter is busy. The landlord's save shouldn't wait on it. OpenNext
   // wires after() to the Worker's ctx.waitUntil, and the daily
-  // recompute-distances cron refills any pair this misses.
-  after(async () => {
-    const service = getSupabaseAsService();
-    // Universities first. The two router calls run back to back and FOSSGIS
-    // can hold the second one, so the table with no cron backstop goes first.
-    // Faculty pairs left missing are refilled by the daily recompute-distances
-    // cron.
-    if (pinMoved) {
+  // recompute-distances cron refills any pair this misses. A moved pin already
+  // registered its own refresh above, which includes this recompute.
+  if (!pinMoved) {
+    after(async () => {
       try {
-        const result = await remeasureUniversityDistances({
-          supabase: service,
-          listingId: id,
-          lat: d.lat,
-          lng: d.lng,
+        await recomputeMissingDistances({
+          listingIds: [id],
+          supabase: getSupabaseAsService(),
         });
-        if (!result.ok) {
-          console.error('[landlord/listings PATCH] moved-pin university re-measure skipped:', result.reason);
-        }
       } catch (err) {
-        console.error('[landlord/listings PATCH] moved-pin university re-measure failed:', err);
+        console.error('[landlord/listings PATCH] deferred distance recompute failed:', err);
       }
-    }
-    try {
-      await recomputeMissingDistances({
-        listingIds: [id],
-        supabase: service,
-      });
-    } catch (err) {
-      console.error('[landlord/listings PATCH] deferred distance recompute failed:', err);
-    }
-  });
+    });
+  }
 
   return NextResponse.json({ listing_id: id });
 }

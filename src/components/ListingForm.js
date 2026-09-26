@@ -18,6 +18,7 @@ import {
   mergePrefillUniversityDistances,
   ensureAllUniversityRows,
 } from '@/lib/universityDistances';
+import { coordsChanged } from '@/lib/coordsChanged';
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
 import StatusLadder from '@/components/listing-wizard/StatusLadder';
@@ -140,6 +141,24 @@ export default function ListingForm({
   const tLegacy = useTranslations('landlord.listingForm');
 
   const fileInputRef = useRef(null);
+  /*
+    The pin that form.university_distances were measured from. It is seeded
+    with the loaded listing's pin (the server keeps stored rows in step with
+    it, see src/lib/listingPinMove.js) and updated by ensureUniversityRows.
+    null means nothing has been measured yet; the universities step prefills
+    on entry.
+
+    Why it's needed: every save sends form.university_distances, and the
+    server rewrites them. Without re-measuring on a pin move, the save after a
+    move sends the PRE-move distances back and undoes the server's re-measure.
+  */
+  const measuredFromRef = useRef(
+    validateRequiredCoords(initialValues.lat, initialValues.lng).ok
+      ? { lat: Number(initialValues.lat), lng: Number(initialValues.lng) }
+      : null,
+  );
+  // Drops out-of-order responses when the pin moves again mid-measure.
+  const measureSeqRef = useRef(0);
   const [userId, setUserId] = useState('anon');
   // Paste-import step 0 only on brand-new listings (no edit payload).
   /*
@@ -666,6 +685,7 @@ export default function ListingForm({
     const universityIds = (universities || []).map((u) => u.university_id);
     const coords = validateRequiredCoords(form.lat, form.lng);
     if (!coords.ok) return;
+    const seq = ++measureSeqRef.current;
     setPrefillLoading(true);
     try {
       const token =
@@ -682,6 +702,8 @@ export default function ListingForm({
       });
       if (!res.ok) return;
       const { distances } = await res.json();
+      // A newer measurement (the pin moved again) owns the rows now.
+      if (seq !== measureSeqRef.current) return;
       const measured = mergePrefillUniversityDistances(
         [],
         distances || [],
@@ -693,12 +715,31 @@ export default function ListingForm({
         'university_distances',
         ensureAllUniversityRows(measured, universityIds),
       );
+      measuredFromRef.current = { lat: coords.lat, lng: coords.lng };
     } catch {
       // Leave whatever is stored; the step renders its own "not measured" copy.
     } finally {
       setPrefillLoading(false);
     }
   }
+
+  /*
+    Re-measure when the pin moves away from where the current rows were
+    measured. Debounced so a drag or a burst of geocode results is one router
+    call, not several: FOSSGIS holds requests that arrive close together.
+  */
+  useEffect(() => {
+    const from = measuredFromRef.current;
+    if (!from || !coordsChanged(from, { lat: form.lat, lng: form.lng })) return;
+    if (!validateRequiredCoords(form.lat, form.lng).ok) return;
+    const timer = setTimeout(() => {
+      void ensureUniversityRows();
+    }, 600);
+    return () => clearTimeout(timer);
+    // ensureUniversityRows is recreated each render and reads `form` from its
+    // closure. The timer calls this render's copy, which has these coords.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [form.lat, form.lng]);
 
   /**
    * Section list: one panel open at a time. Opening the universities panel
