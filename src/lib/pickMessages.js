@@ -145,6 +145,11 @@ export const ADMIN_NAMESPACES = withRoot('admin');
 
 export const GIGS_NAMESPACES = withRoot('gigs', 'propylaea.gallery');
 
+// The unified /login and /signup pages, shared by students and landlords. They
+// live in the (auth) route group so neither the student nor the landlord tree's
+// catalog has to ship with them.
+export const AUTH_NAMESPACES = withRoot('auth', 'student.oauth');
+
 // Every per-route set, for the completeness test. Keys are the route
 // directory under src/app/[locale]; `exclude` marks a subtree that provides
 // its own set below this one.
@@ -155,4 +160,5 @@ export const ROUTE_NAMESPACE_SETS = [
   { dir: 'student', namespaces: STUDENT_NAMESPACES },
   { dir: 'admin', namespaces: ADMIN_NAMESPACES },
   { dir: 'gigs', namespaces: GIGS_NAMESPACES },
+  { dir: '(auth)', namespaces: AUTH_NAMESPACES },
 ];

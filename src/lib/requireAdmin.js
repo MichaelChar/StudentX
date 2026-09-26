@@ -36,7 +36,7 @@ export function isAdminEmail(email) {
  *
  * Page usage:
  *   const admin = await requireAdmin();
- *   if (!admin) redirect(`/property/thessaloniki/landlord/login?next=${...}`);
+ *   if (!admin) redirect(`/login?next=${...}`);
  *   if (admin.kind === 'not-admin') return <NotAuthorized email={admin.email} />;
  *
  * Wrapped in React.cache() so a layout + page share one round-trip, like the

@@ -1,5 +1,4 @@
 import { getTranslations } from 'next-intl/server';
-import { Link } from '@/i18n/navigation';
 import Card from '@/components/ui/Card';
 import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
@@ -31,6 +30,8 @@ export default async function AuthGate({ next, locale, mode = 'guest' }) {
   const cookiePresent = await hasAuthCookie();
   const safeNext = safeNextPath(next);
   const nextQuery = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
+  // Student-only gate, so the signup's account-type choice arrives preselected.
+  const signupHref = `/signup?type=student${safeNext ? `&next=${encodeURIComponent(safeNext)}` : ''}`;
 
   const isWrongRole = mode === 'wrong-role';
 
@@ -62,7 +63,7 @@ export default async function AuthGate({ next, locale, mode = 'guest' }) {
 
           {isWrongRole ? (
             <div className="space-y-3">
-              <Button href={`/student/signup${nextQuery}`} className="w-full">
+              <Button href={signupHref} className="w-full">
                 {t('wrongRoleSwitch')}
               </Button>
               <Button href="/property/thessaloniki/landlord/dashboard" variant="secondary" className="w-full">
@@ -71,26 +72,15 @@ export default async function AuthGate({ next, locale, mode = 'guest' }) {
             </div>
           ) : (
             <div className="space-y-3">
-              <Button href={`/student/signup${nextQuery}`} className="w-full">
+              <Button href={signupHref} className="w-full">
                 {t('signUp')}
               </Button>
-              <Button href={`/student/login${nextQuery}`} variant="secondary" className="w-full">
+              <Button href={`/login${nextQuery}`} variant="secondary" className="w-full">
                 {t('signIn')}
               </Button>
             </div>
           )}
 
-          {!isWrongRole && (
-            <p className="mt-8 text-sm text-night/50">
-              {t('landlordHint')}{' '}
-              <Link
-                href="/property/thessaloniki/landlord/login"
-                className="text-blue hover:text-night font-medium"
-              >
-                {t('landlordLink')} →
-              </Link>
-            </p>
-          )}
         </div>
       </Card>
     </div>

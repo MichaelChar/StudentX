@@ -197,6 +197,17 @@ const nextConfig = {
         source: '/student/:path*',
         headers: PRIVATE_CACHE_HEADERS,
       },
+      // The unified /login and /signup pages sit outside both trees above
+      // but are the same kind of surface — keep them on the private rule the
+      // old /student/login and landlord login pages had (see #261 below).
+      {
+        source: '/login',
+        headers: PRIVATE_CACHE_HEADERS,
+      },
+      {
+        source: '/signup',
+        headers: PRIVATE_CACHE_HEADERS,
+      },
       /*
         /claim/:token — token-scoped, NEVER cacheable (#130).
 
@@ -248,7 +259,7 @@ const nextConfig = {
       // those paths now 301 to their unprefixed equivalent.
       {
         source:
-          '/((?!api|_next|property/[^/]+/landlord|property/[^/]+/listing|student|claim|.*\\..*).*)',
+          '/((?!api|_next|property/[^/]+/landlord|property/[^/]+/listing|student|claim|login$|signup$|.*\\..*).*)',
         headers: PUBLIC_CACHE_HEADERS,
       },
     ];
@@ -278,6 +289,18 @@ const nextConfig = {
       // (bookmarked /landlord with no trailing path) needs an explicit
       // sibling rule, otherwise the destination keeps the literal `:path*`
       // placeholder and the user lands on a broken URL.
+      // One sign-in and one signup page for students and landlords. The four
+      // retired pages 301 here; Next carries the incoming query string
+      // (?next=, ?email=, ?roleConflict=) across. The landlord signup adds
+      // ?type=landlord so the account-type choice arrives preselected. These
+      // sit ABOVE /landlord/:path* so a bookmarked /landlord/login is one hop,
+      // not two.
+      { source: '/student/login', destination: '/login', permanent: true },
+      { source: '/student/signup', destination: '/signup', permanent: true },
+      { source: '/property/:city/landlord/login', destination: '/login', permanent: true },
+      { source: '/property/:city/landlord/signup', destination: '/signup?type=landlord', permanent: true },
+      { source: '/landlord/login', destination: '/login', permanent: true },
+      { source: '/landlord/signup', destination: '/signup?type=landlord', permanent: true },
       { source: '/landlord', destination: '/property/thessaloniki/landlord', permanent: true },
       { source: '/landlord/:path*', destination: '/property/thessaloniki/landlord/:path*', permanent: true },
       // Resources hub replaced the /student squares+video hub (docs/resources-hub-spec.md).

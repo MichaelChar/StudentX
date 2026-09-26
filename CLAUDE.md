@@ -474,6 +474,15 @@ surface in `wrangler tail`.
   `{ kind: 'wrong-role' }` (signed in, but not as a student), or `null`.
   Wrapped in `React.cache()` so layout + page share one round-trip.
   `requireLandlord()` mirrors it for landlord-side surfaces.
+- **One `/login` and one `/signup` for both roles** (the four old per-role
+  pages 301 there via `next.config.mjs`). `/api/auth/bootstrap` detects the
+  role server-side — landlords row, then students row, then for a row-less
+  account: unclaimed landlord row by email, then `user_metadata.role`.
+  **Never provision a students row for a row-less account that lacks
+  `user_metadata.role = 'student'`** — that is a half-created landlord, and
+  `prevent_dual_role` (036) would make the wrong role permanent. Signup's
+  account-type choice is required with no default for the same reason.
+  One email is still one role; only the door was merged.
 
 ## Environment variables — READ THIS BEFORE ADDING ONE
 

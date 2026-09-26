@@ -74,7 +74,7 @@ export default function VerifyEmailPage() {
 
         <p className="text-sm text-night/60">
           <Link
-            href="/property/thessaloniki/landlord/login"
+            href="/login"
             className="text-blue font-medium hover:text-night"
           >
             {t('backToLogin')} →

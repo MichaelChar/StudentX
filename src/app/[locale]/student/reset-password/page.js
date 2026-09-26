@@ -88,7 +88,7 @@ export default function StudentResetPasswordPage() {
       >
         <p className="text-sm">
           <Link
-            href="/student/login"
+            href="/login"
             className="text-blue font-medium hover:text-night"
           >
             {t('goToLogin')} →

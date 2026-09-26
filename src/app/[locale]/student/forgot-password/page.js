@@ -44,7 +44,7 @@ export default function StudentForgotPasswordPage() {
       >
         <p className="text-sm">
           <Link
-            href="/student/login"
+            href="/login"
             className="text-blue font-medium hover:text-night"
           >
             {t('backToLogin')} →
@@ -83,7 +83,7 @@ export default function StudentForgotPasswordPage() {
 
       <p className="mt-8 text-sm text-night/60">
         <Link
-          href="/student/login"
+          href="/login"
           className="text-blue font-medium hover:text-night"
         >
           {t('backToLogin')} →

@@ -40,7 +40,7 @@ export default function ForgotPasswordPage() {
       <AuthShell eyebrow="Reset link sent" title={t('successTitle')} subtitle={t('successMessage')}>
         <p className="text-sm">
           <Link
-            href="/property/thessaloniki/landlord/login"
+            href="/login"
             className="text-blue font-medium hover:text-night"
           >
             {t('backToLogin')} →
@@ -74,7 +74,7 @@ export default function ForgotPasswordPage() {
 
       <p className="mt-8 text-sm text-night/60">
         <Link
-          href="/property/thessaloniki/landlord/login"
+          href="/login"
           className="text-blue font-medium hover:text-night"
         >
           {t('backToLogin')} →
