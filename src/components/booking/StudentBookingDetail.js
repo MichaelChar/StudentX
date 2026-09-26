@@ -261,7 +261,7 @@ export default function StudentBookingDetail({ bookingId }) {
 
         {moveInMeta.can_respond && (
           <div className="mt-8 rounded-card border border-night/10 bg-parchment p-5 md:p-6">
-            <p className="label-caps text-yellow mb-2">{t('moveInPromptEyebrow')}</p>
+            <p className="label-caps text-night/70 mb-2">{t('moveInPromptEyebrow')}</p>
             <h3 className="font-display text-2xl text-night mb-2">
               {t('moveInPromptTitle')}
             </h3>

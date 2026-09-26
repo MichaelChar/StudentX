@@ -115,7 +115,7 @@ export default function LandlordVerificationPage() {
         ) : latestRequest?.status === 'pending' ? (
           /* Pending review */
           <Card tone="parchment" className="px-6 py-5">
-            <p className="label-caps text-yellow mb-1">Under review</p>
+            <p className="label-caps text-night/70 mb-1">Under review</p>
             <p className="font-display text-lg text-night mb-1">
               Your ID is being reviewed
             </p>
