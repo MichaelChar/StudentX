@@ -42,6 +42,9 @@ jobs:
       - name: Run Claude Code Review
         id: claude-review
         uses: anthropics/claude-code-action@v1
+        env:
+          # See (1) in the claude_args comment below.
+          CLAUDE_CODE_DISABLE_BACKGROUND_TASKS: '1'
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           plugin_marketplaces: 'https://github.com/anthropics/claude-code.git'
@@ -54,24 +57,27 @@ jobs:
           # #397 all reviewed cleanly and posted nothing. The write scopes granted in
           # #55 were the other half of this; they are useless on their own.
           prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment'
-          # `--allowedTools` is load-bearing twice over; without it most runs from
-          # 2026-09-13 on were hollow — green in ~20 s, nothing posted.
+          # Two things kept this job green-but-hollow from 2026-09-13 (~20 s, nothing
+          # posted). Both were read off the `Report review run` step on #581.
           #
-          # 1. The plugin's `allowed-tools` frontmatter grants its `gh` commands to
-          #    the top-level agent only. Its steps 1-5 run in subagents, which fall
-          #    back to the session's permissions — and headless, an unlisted Bash
-          #    call is denied, not prompted. The step-1 eligibility agent could not
-          #    run `gh pr view`, and the command stopped there ("If any condition is
-          #    true, stop and do not proceed").
-          # 2. In agent mode the action installs the `github_inline_comment` MCP
-          #    server ONLY when its tool is listed here (install-mcp-server.ts). The
-          #    plugin posts every finding through that tool, so a review that found
-          #    something had nowhere to put it — #570's 9-minute review posted nothing.
+          # 1. Background subagents. The plugin fans out to subagents, which now run
+          #    in the background by default; the top-level agent then ends its turn
+          #    to "wait for both before proceeding". The action's SDK loop stops at
+          #    the first `result` message (run-claude-sdk.ts), so the session ends
+          #    there, reported as success. CLAUDE_CODE_DISABLE_BACKGROUND_TASKS
+          #    keeps every subagent in the foreground, so the turn only ends when
+          #    the review is done.
+          # 2. Tool permissions. Headless, an unlisted tool is denied, not
+          #    prompted. `Skill` is how the model invokes the plugin's command —
+          #    #581 was denied it and improvised the steps instead. And in agent
+          #    mode the action installs the `github_inline_comment` MCP server ONLY
+          #    when its tool is listed here (install-mcp-server.ts); the plugin
+          #    posts every finding through it.
           #
-          # This mirrors the plugin's own frontmatter list, plus the read-only tools
-          # its subagents use on the checkout.
+          # The rest mirrors the plugin's own `allowed-tools` frontmatter, plus the
+          # read-only tools its subagents use on the checkout.
           claude_args: |
-            --allowedTools "Read,Grep,Glob,Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),mcp__github_inline_comment__create_inline_comment"
+            --allowedTools "Skill,Read,Grep,Glob,Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),mcp__github_inline_comment__create_inline_comment"
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
