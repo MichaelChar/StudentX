@@ -12,11 +12,10 @@ on:
 
 jobs:
   claude-review:
-    # Optional: Filter by PR author
-    # if: |
-    #   github.event.pull_request.user.login == 'external-contributor' ||
-    #   github.event.pull_request.user.login == 'new-developer' ||
-    #   github.event.pull_request.author_association == 'FIRST_TIME_CONTRIBUTOR'
+    # The plugin stops at its step 1 on a draft without posting anything, which
+    # the guard below would (correctly) call a hollow run. Skip drafts outright;
+    # `ready_for_review` starts the review when the PR is un-drafted.
+    if: github.event.pull_request.draft == false
 
     runs-on: ubuntu-latest
     permissions:
@@ -35,6 +34,11 @@ jobs:
         with:
           fetch-depth: 1
 
+      # Lower bound for the guard below: only comments created after this count
+      # as this run's review.
+      - name: Mark review start
+        run: echo "REVIEW_STARTED=$(date -u +%Y-%m-%dT%H:%M:%SZ)" >> "$GITHUB_ENV"
+
       - name: Run Claude Code Review
         id: claude-review
         uses: anthropics/claude-code-action@v1
@@ -50,47 +54,39 @@ jobs:
           # #397 all reviewed cleanly and posted nothing. The write scopes granted in
           # #55 were the other half of this; they are useless on their own.
           prompt: '/code-review:code-review ${{ github.repository }}/pull/${{ github.event.pull_request.number }} --comment'
+          # `--allowedTools` is load-bearing twice over; without it most runs from
+          # 2026-09-13 on were hollow — green in ~20 s, nothing posted.
+          #
+          # 1. The plugin's `allowed-tools` frontmatter grants its `gh` commands to
+          #    the top-level agent only. Its steps 1-5 run in subagents, which fall
+          #    back to the session's permissions — and headless, an unlisted Bash
+          #    call is denied, not prompted. The step-1 eligibility agent could not
+          #    run `gh pr view`, and the command stopped there ("If any condition is
+          #    true, stop and do not proceed").
+          # 2. In agent mode the action installs the `github_inline_comment` MCP
+          #    server ONLY when its tool is listed here (install-mcp-server.ts). The
+          #    plugin posts every finding through that tool, so a review that found
+          #    something had nowhere to put it — #570's 9-minute review posted nothing.
+          #
+          # This mirrors the plugin's own frontmatter list, plus the read-only tools
+          # its subagents use on the checkout.
+          claude_args: |
+            --allowedTools "Read,Grep,Glob,Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),mcp__github_inline_comment__create_inline_comment"
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
       # The action pipes the SDK stream through a sanitiser ("full output hidden
-      # for security"), so a failed review surfaces only `is_error:true` with no
-      # reason. That is the state this workflow sat in from 2026-08-18 onward: red
-      # on every PR, zero signal, nothing in the log to act on. This step runs only
-      # when the review step failed and prints the failure reason alone — the result
-      # envelope's error fields, including the error string itself, which is what
-      # separates a rejected token from an exhausted subscription quota
-      # (anthropics/claude-code-action#1613). It never prints the review body —
-      # that is what the sanitiser exists to protect.
-      - name: Explain review failure
-        if: always() && steps.claude-review.outcome == 'failure'
-        env:
-          EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
-        run: |
-          set -uo pipefail
-          FILE="${EXECUTION_FILE:-}"
-          [ -n "$FILE" ] || FILE="${RUNNER_TEMP}/claude-execution-output.json"
-
-          echo "::group::Result envelope"
-          if [ -f "$FILE" ]; then
-            jq -s '[.. | objects | select(.type? == "result")] | last
-                   | {subtype, is_error, terminal_reason, api_error_status,
-                      num_turns, duration_ms, total_cost_usd,
-                      error: ((.result // "") | tostring | .[0:300])}' "$FILE" \
-              || echo "could not parse $FILE"
-          else
-            echo "no execution output at $FILE"
-          fi
-          echo "::endgroup::"
-
-      # A green check on this job does not by itself mean a review happened. When a
-      # PR edits this file the action refuses to run — "the workflow file must exist
-      # and have identical content to the version on the repository's default
-      # branch" — and exits *success* without invoking Claude. Same class of silent
-      # no-op as the read-only scopes fixed in #55: the review is skipped, and the
-      # check is green. Annotate it rather than leave it invisible.
-      - name: Flag a review that never ran
-        if: always() && steps.claude-review.outcome == 'success'
+      # for security"), so the log carries only the result envelope's counters —
+      # a run that stopped early and one that reviewed look the same apart from
+      # num_turns. This step prints enough of the execution file to say WHY a run
+      # ended where it did: which tools were available, every tool call (name plus
+      # a short summary of its input), each permission denial, and the model's
+      # final message. It deliberately omits tool RESULTS (file contents, command
+      # output), which is where anything sensitive would be, and what the
+      # sanitiser exists to protect. The repo is public, so this log is too; the
+      # final message is the review summary that gets posted to the PR anyway.
+      - name: Report review run
+        if: always() && steps.claude-review.outcome != 'skipped'
         env:
           EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
         run: |
@@ -98,5 +94,96 @@ jobs:
           FILE="${EXECUTION_FILE:-}"
           [ -n "$FILE" ] || FILE="${RUNNER_TEMP}/claude-execution-output.json"
           if [ ! -f "$FILE" ]; then
-            echo "::warning title=No review ran::The action exited without invoking Claude — most often because this PR edits .github/workflows/claude-code-review.yml, which the action requires to match main. This job is green but nothing was reviewed."
+            echo "no execution output at $FILE"
+            exit 0
           fi
+          msgs() { jq -c 'if type == "array" then .[] else . end' "$FILE"; }
+
+          echo "::group::Session"
+          msgs | jq -r 'select(.type == "system" and .subtype == "init")
+            | "model: \(.model)\npermissionMode: \(.permissionMode)",
+              "plugins: \([.plugins[]?.name] | join(", "))",
+              "mcp servers: \([.mcp_servers[]? | "\(.name)=\(.status)"] | join(", "))",
+              "mcp tools: \([.tools[]? | select(startswith("mcp__"))] | join(", "))",
+              "code-review command loaded: \([.slash_commands[]? | select(test("code-review"))] | length > 0)"'
+          echo "::endgroup::"
+
+          echo "::group::Tool calls (main = top-level agent, sub = subagent)"
+          msgs | jq -r 'select(.type == "assistant") | .parent_tool_use_id as $p
+            | .message.content[]? | select(.type == "tool_use")
+            | "\(if $p then " sub" else "main" end)  \(.name)  \(.input
+                | if .command then .command
+                  elif .subagent_type or .description then "[\(.subagent_type // "")\(if .model then "/" + .model else "" end)] \(.description // "")"
+                  elif .path then "\(.path):\(.line // "") confirmed=\(.confirmed // false)"
+                  elif .file_path then .file_path
+                  elif .pattern then .pattern
+                  else "" end
+                | tostring | gsub("\n"; " ") | .[0:200])"'
+          echo "::endgroup::"
+
+          echo "::group::Result"
+          msgs | jq -r 'select(.type == "result")
+            | "subtype=\(.subtype) is_error=\(.is_error) num_turns=\(.num_turns) duration_ms=\(.duration_ms) total_cost_usd=\(.total_cost_usd) terminal_reason=\(.terminal_reason // "") api_error_status=\(.api_error_status // "")",
+              "permission denials: \(.permission_denials // [] | length)",
+              (.permission_denials // [] | .[] | "  denied \(.tool_name): \(.tool_input | (.command // .) | tostring | gsub("\n"; " ") | .[0:200])"),
+              "--- final message ---",
+              ((.result // "") | tostring | .[0:4000])'
+          echo "::endgroup::"
+
+      # A green check must mean a review reached the PR. The plugin always posts
+      # when it finishes with `--comment` — inline comments, or "No issues found"
+      # — so a successful run that posted nothing stopped early, and is failed
+      # here with the final message (printed above) as the reason. That is the
+      # state this job sat in, green, from 2026-09-13 to 2026-09-26.
+      #
+      # Two non-failures:
+      # - The action refuses to run on a PR that edits this file (it must match
+      #   main's copy) and exits success without invoking Claude. Nothing can be
+      #   reviewed there, by design; warn rather than fail every such PR.
+      # - The plugin reviews a PR once: step 1 stops if Claude already commented.
+      #   A later push with an earlier review on the PR is a notice, not a failure.
+      - name: Require a posted review
+        if: always() && steps.claude-review.outcome == 'success'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+          EXECUTION_FILE: ${{ steps.claude-review.outputs.execution_file }}
+        run: |
+          set -euo pipefail
+          FILE="${EXECUTION_FILE:-}"
+          [ -n "$FILE" ] || FILE="${RUNNER_TEMP}/claude-execution-output.json"
+          if [ ! -f "$FILE" ]; then
+            echo "::warning title=No review ran::The action exited without invoking Claude — most often because this PR edits .github/workflows/claude-code-review.yml, which the action requires to match main. This job is green but nothing was reviewed."
+            exit 0
+          fi
+
+          # claude[bot] when the action mints its app token; github-actions[bot]
+          # if the workflow is ever given `github_token` instead.
+          BOT='(.user.login == "claude[bot]" or .user.login == "github-actions[bot]")'
+          review_comments() { # $1 = jq condition on created_at
+            {
+              gh api --paginate "repos/$REPO/issues/$PR/comments" \
+                --jq ".[] | select($BOT)
+                          | select(.body | startswith(\"## Code review\"))
+                          | select($1) | .html_url"
+              gh api --paginate "repos/$REPO/pulls/$PR/comments" \
+                --jq ".[] | select($BOT) | select($1) | .html_url"
+            } | sort -u
+          }
+
+          posted=$(review_comments ".created_at >= \"$REVIEW_STARTED\"")
+          if [ -n "$posted" ]; then
+            echo "Review posted ($(echo "$posted" | wc -l | tr -d ' ') comment(s)):"
+            echo "$posted"
+            exit 0
+          fi
+
+          earlier=$(review_comments ".created_at < \"$REVIEW_STARTED\"")
+          if [ -n "$earlier" ]; then
+            echo "::notice title=Already reviewed::This run posted nothing, and the PR already carries a Claude review — the plugin reviews a PR once and stops at its step 1 on later pushes. Earlier review: $(echo "$earlier" | head -1)"
+            exit 0
+          fi
+
+          echo "::error title=Hollow review::Claude ran and exited success but posted no review comment on this PR. See the 'Report review run' step for its final message, tool calls and permission denials."
+          exit 1
