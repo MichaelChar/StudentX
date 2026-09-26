@@ -157,6 +157,18 @@ segment is implicit). Visiting an unsupported city slug 404s via
 `notFound()` in `[locale]/property/[city]/layout.js`; the allowlist is
 `SUPPORTED_CITIES` in `src/lib/cityRoutes.js` (PR #113).
 
+**Unknown URLs go through `[locale]/[...rest]/page.js`**, which only calls
+`notFound()`, so they get the branded `[locale]/not-found.js` inside the site
+chrome with a 404. Without it they skipped the `[locale]` tree entirely and got
+Next's bare page with no `<html lang>`. `src/app/not-found.js` is only the
+fallback for what that can't catch (`/api/*`, dotted paths, a `notFound()` in
+`[locale]/layout.js`), and it supplies its own `<html>` because the root layout
+is a pass-through. **Gotcha when checking a 404 with `curl`:** every runtime
+`notFound()` on this site (`/property/atlantis`, a missing listing, the
+catch-all) serves `<html id="__next_error__">` with an empty body and the right
+status. Next renders the not-found UI client-side from the inlined RSC payload.
+That's framework behaviour, not a broken page, so judge it in a browser.
+
 Old single-city URLs (`/property/results`, `/property/landlord/login`,
 etc.) 301 to their `/property/thessaloniki/...` equivalents via the
 middleware. Pre-`/property` legacy paths (`/results`, `/listing/:id`,
