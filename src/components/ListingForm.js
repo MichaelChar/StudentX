@@ -79,6 +79,9 @@ function emptyForm(initial = {}) {
     additional_rules: '',
     amenity_ids: [],
     university_distances: [],
+    // Pin the university_distances rows were measured from (migration 126),
+    // sent back on save so the server can stamp them. null = unknown.
+    university_distances_origin: null,
     monthly_price: '',
     bills_included: false,
     deposit: '',
@@ -715,6 +718,7 @@ export default function ListingForm({
         'university_distances',
         ensureAllUniversityRows(measured, universityIds),
       );
+      setField('university_distances_origin', { lat: coords.lat, lng: coords.lng });
       measuredFromRef.current = { lat: coords.lat, lng: coords.lng };
     } catch {
       // Leave whatever is stored; the step renders its own "not measured" copy.

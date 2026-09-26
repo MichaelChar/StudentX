@@ -335,7 +335,8 @@ Registry jobs (`CRON_JOBS` in `/api/cron/tick`):
 
 | Job name | Cadence | Purpose |
 |---|---|---|
-| `recompute-distances` | `daily@09:15` | Heal missing `faculty_distances` rows (PR #60). |
+| `recompute-distances` | `daily@09:15` | Heal missing or stale `faculty_distances` rows (PR #60, stale since 126). |
+| `heal-university-distances` | `daily@09:45` | Re-measure computed `listing_university_distances` whose stamp isn't the current pin (126). |
 | `message-digest` | `5m` | Landlord + student per-message digests (merged). |
 | `synthetic-en-listing` | `15m` | Synthetic uptime/regression canaries (issue #49). |
 
@@ -445,6 +446,16 @@ surface in `wrangler tail`.
   listing × faculty pair). `scripts/compute_distances.py` is the manual
   populator; the `recompute-distances` cron runs the same pace model from
   inside the Worker to heal newly-added/edited listings.
+- **Distance rows are stamped with their endpoints (migration 126).**
+  `faculty_distances` records the listing pin and faculty point it was measured
+  between (`measured_from_*`, `measured_to_*`); `listing_university_distances`
+  records the pin (`measured_from_*`). A row whose stamp isn't the CURRENT
+  coordinates is stale, and the `recompute-distances` and
+  `heal-university-distances` cron jobs re-measure it, whichever writer
+  caused it. **Any new writer must stamp with the coordinates it actually
+  measured from, or leave the stamp NULL** (NULL means "unverified" and gets
+  re-measured). Never stamp with a guess: a wrong stamp vouches for a stale
+  distance and hides it from the healer.
 - **RLS guards every user-touching table.** Server code uses
   `getSupabaseWithToken(token)` (token-scoped) for any read that should
   honour the caller's permissions; the unscoped `getSupabase()` anon client

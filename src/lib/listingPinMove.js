@@ -19,13 +19,14 @@
  * (remeasureUniversityDistances).
  */
 
+import { coordsChanged } from '@/lib/coordsChanged';
 import { computeUniversityDistances } from '@/lib/computeUniversityDistances';
 import {
   MIN_UNIVERSITY_DISTANCES,
   writeUniversityDistances,
 } from '@/lib/universityDistances';
 
-export { coordsChanged } from '@/lib/coordsChanged';
+export { coordsChanged };
 
 /**
  * Re-measure a listing's university distances from its (new) pin and replace
@@ -68,7 +69,84 @@ export async function remeasureUniversityDistances({
     return { ok: false, reason: `only ${measured.length} universities measured; kept existing rows` };
   }
 
-  const { error } = await writeUniversityDistances(supabase, listingId, measured);
+  const { error } = await writeUniversityDistances(supabase, listingId, measured, { lat, lng });
   if (error) return { ok: false, reason: `write: ${error}` };
   return { ok: true, written: measured.length };
+}
+
+/*
+  FOSSGIS asks for at most 1 request/second, and its limiter HOLDS requests
+  that arrive closer together (6–9 s, measured 2026-09-25). Sequential
+  re-measures are spaced so each call lands in its own second.
+*/
+const ROUTER_SPACING_MS = 1100;
+
+/**
+ * Re-measure listings whose computed university distances no longer match
+ * their pin (migration 126 stamps). The cron counterpart of the PATCH route's
+ * pin-move refresh: it heals whatever that path missed, plus rows written
+ * before the stamps existed.
+ *
+ * Only listings whose rows are ALL source='computed' are touched. A row a
+ * landlord typed is theirs; re-measuring would silently replace it.
+ *
+ * @param {{ supabase: object, limit?: number, spacingMs?: number, remeasureImpl?: typeof remeasureUniversityDistances }} args
+ *   `supabase` must be a service-role client.
+ */
+export async function healStaleUniversityDistances({
+  supabase,
+  limit = 5,
+  spacingMs = ROUTER_SPACING_MS,
+  remeasureImpl = remeasureUniversityDistances,
+}) {
+  const { data, error } = await supabase
+    .from('listings')
+    .select(
+      'listing_id, location!inner ( lat, lng ), listing_university_distances ( source, measured_from_lat, measured_from_lng )',
+    );
+  if (error) return { ok: false, reason: `fetch listings: ${error.message}` };
+
+  const stale = [];
+  let skippedLandlordRows = 0;
+  for (const row of data || []) {
+    const lat = Number(row.location?.lat);
+    const lng = Number(row.location?.lng);
+    const rows = row.listing_university_distances || [];
+    if (!Number.isFinite(lat) || !Number.isFinite(lng) || rows.length === 0) continue;
+    const isStale = rows.some(
+      (r) =>
+        r.measured_from_lat == null ||
+        coordsChanged({ lat: r.measured_from_lat, lng: r.measured_from_lng }, { lat, lng }),
+    );
+    if (!isStale) continue;
+    if (rows.some((r) => r.source !== 'computed')) {
+      skippedLandlordRows++;
+      continue;
+    }
+    stale.push({ listingId: row.listing_id, lat, lng });
+  }
+
+  const batch = stale.slice(0, limit);
+  let healed = 0;
+  const failed = [];
+  for (let i = 0; i < batch.length; i++) {
+    if (i > 0 && spacingMs > 0) await new Promise((r) => setTimeout(r, spacingMs));
+    const { listingId, lat, lng } = batch[i];
+    try {
+      const result = await remeasureImpl({ supabase, listingId, lat, lng });
+      if (result.ok) healed++;
+      else failed.push(`${listingId}: ${result.reason}`);
+    } catch (err) {
+      failed.push(`${listingId}: ${err?.message || err}`);
+    }
+  }
+
+  return {
+    ok: failed.length === 0,
+    stale: stale.length,
+    healed,
+    failed,
+    remaining: stale.length - batch.length,
+    skippedLandlordRows,
+  };
 }

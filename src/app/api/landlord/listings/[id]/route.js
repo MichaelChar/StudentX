@@ -28,7 +28,7 @@ const SINGLE_LISTING_SELECT = `
   location ( location_id, address, neighborhood, lat, lng ),
   property_types ( property_type_id, name ),
   listing_amenities ( amenities ( amenity_id, name ) ),
-  listing_university_distances ( university_id, distance_meters, source ),
+  listing_university_distances ( university_id, distance_meters, source, measured_from_lat, measured_from_lng ),
   property_verifications ( verification_id, method, status, verified_at, checklist_json, notes, created_at )
 `;
 
@@ -357,6 +357,7 @@ export async function PATCH(request, { params }) {
       authedSupabase,
       id,
       d.universityDistanceRows,
+      d.universityDistanceOrigin,
     );
     if (distanceError) {
       console.error('Failed to update university distances:', distanceError);
