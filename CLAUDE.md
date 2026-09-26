@@ -609,10 +609,18 @@ for why the gate can be legitimately red).
 **`claude-review` gotchas** (`claude-code-review.yml`, the `code-review`
 plugin under `claude-code-action@v1`):
 
-- **The `claude_args --allowedTools` list is load-bearing.** Without it the
-  plugin's subagents are denied their `gh` calls headless, and the action never
-  installs the inline-comment MCP server — the job went green in ~20 s with
-  nothing posted from 2026-09-13 to 2026-09-26 (#579).
+- **Subagents must run in the foreground.** If the plugin's subagents run in
+  the background, the top-level agent ends its turn to wait. The action stops
+  at that first result and reports success — green in ~15 s, nothing posted
+  (#581, fixed by #582). `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` is set through
+  the action's `settings` input, **not** a step `env:`. The action's run step
+  declares its own env map, which shadows the caller's, so a step `env:` never
+  reaches Claude.
+- **The `claude_args --allowedTools` list is load-bearing.** Headless, an
+  unlisted tool that needs permission is denied, not prompted. `Skill` is how
+  the plugin command is invoked. The action installs the inline-comment MCP
+  server only when its tool is listed, and every finding is posted through it
+  (#579, #582).
 - **Green means a review reached the PR.** The `Require a posted review` step
   fails a run that exits success without a Claude comment; read the
   `Report review run` step for the model's final message and permission
