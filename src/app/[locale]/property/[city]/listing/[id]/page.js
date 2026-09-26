@@ -11,8 +11,6 @@ import {
   getSimilarCandidates,
   rankSimilarCandidates,
 } from '@/lib/listingForRender';
-import { requireStudent } from '@/lib/requireStudent';
-
 import ListingGallery from '@/components/listing/ListingGallery';
 import BookingWidget from '@/components/listing/BookingWidget';
 import AvailabilityCalendar from '@/components/listing/AvailabilityCalendar';
@@ -87,14 +85,12 @@ export default async function ListingPage({ params, searchParams }) {
   })();
 
   /*
-    All three reads fire together. They used to be three serial awaits, which
-    on an uncached PDP render (the whole [locale] tree is force-dynamic) meant
+    Both reads fire together. They used to be serial awaits, which on an
+    uncached PDP render (the whole [locale] tree is force-dynamic) meant
     stacking a full Supabase round-trip per step before the first byte — the
     measured cost was a 1.0-1.8s TTFB.
 
-    None of them actually depends on another:
-      - requireStudent() reads the auth cookie, and short-circuits with no
-        round-trip at all when there isn't one (the guest path).
+    Neither depends on the other:
       - getListingForRender(id) needs only the route param.
       - getSimilarCandidates(id) needs only the route param too — ranking is
         what needs the resolved listing, and that happens below, in memory.
@@ -103,13 +99,10 @@ export default async function ListingPage({ params, searchParams }) {
     is simply already in flight by then. That wastes one query on a 404, which
     is the right trade against paying a serial hop on every real pageview.
   */
-  const [auth, listing, similarCandidates] = await Promise.all([
-    requireStudent(),
+  const [listing, similarCandidates] = await Promise.all([
     getListingForRender(id),
     getSimilarCandidates(id),
   ]);
-
-  const isAuthed = auth && auth.kind !== 'wrong-role';
 
   if (!listing) notFound();
 
@@ -204,10 +197,10 @@ export default async function ListingPage({ params, searchParams }) {
       */
       data-listing-id={listing.listing_id}
     >
-      {isAuthed && <ViewTracker listingId={listing.listing_id} />}
+      <ViewTracker listingId={listing.listing_id} />
       {/* Local-only "you have looked at this" record, driving the visited map
-          pin on the results page (parity Feature 12). Unconditional, unlike
-          ViewTracker above — see the component for why the two are separate. */}
+          pin on the results page (parity Feature 12). Also unconditional —
+          see the component for why the two are separate despite that. */}
       <VisitedTracker listingId={listing.listing_id} />
 
       {/* Back link — server-rendered Link. Threads the prior /results
