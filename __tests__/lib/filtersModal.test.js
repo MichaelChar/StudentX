@@ -4,6 +4,7 @@ import {
   DURATION_MONTHS,
   EMPTY_VALUE,
   HISTOGRAM_BUCKETS,
+  HISTOGRAM_MIN_LISTINGS,
   clearFilters,
   hasActiveFilters,
   isBucketInRange,
@@ -182,9 +183,39 @@ describe('resolveHistogram', () => {
   });
 
   it('buckets a raw prices array onto the results-page axis', () => {
-    const result = resolveHistogram([300, 400, 400, 2000]);
+    const prices = [300, 400, 400, 450, 500, 550, 600, 2000];
+    expect(prices.length).toBeGreaterThanOrEqual(HISTOGRAM_MIN_LISTINGS);
+    const result = resolveHistogram(prices);
     expect(result.status).toBe('ready');
     expect(result.buckets).toHaveLength(HISTOGRAM_BUCKETS);
-    expect(result.buckets.reduce((sum, b) => sum + b.count, 0)).toBe(4);
+    expect(result.buckets.reduce((sum, b) => sum + b.count, 0)).toBe(prices.length);
+  });
+
+  // Three listings drew three full-height night bars in prod — one listing
+  // per bucket makes every bar the peak. Too few to chart: report the range.
+  it('is sparse with the real price range below the listing threshold', () => {
+    expect(resolveHistogram([500, 450, 600])).toEqual({
+      status: 'sparse',
+      buckets: [],
+      range: { min: 450, max: 600 },
+    });
+  });
+
+  it('is sparse with min === max for a single price', () => {
+    expect(resolveHistogram([450]).range).toEqual({ min: 450, max: 450 });
+  });
+
+  it('ignores non-finite entries when counting toward the threshold', () => {
+    const result = resolveHistogram([450, NaN, null, 600]);
+    expect(result.status).toBe('sparse');
+    expect(result.range).toEqual({ min: 450, max: 600 });
+  });
+
+  it('is empty, not sparse, when no entry is a usable price', () => {
+    expect(resolveHistogram([NaN, Infinity])).toEqual({ status: 'empty', buckets: [] });
+  });
+
+  it('never goes sparse for pre-bucketed input — edges are not prices', () => {
+    expect(resolveHistogram([{ from: 400, to: 480, count: 1 }]).status).toBe('ready');
   });
 });

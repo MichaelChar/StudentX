@@ -444,14 +444,14 @@ export default async function ListingPage({ params, searchParams }) {
                   )
                 }
               />
-              <BilingualField
-                english={t('depositEnglish')}
-                value={
-                  listing.deposit != null && listing.deposit > 0
-                    ? formatMoney(listing.deposit, listing.currency)
-                    : '—'
-                }
-              />
+              {/* Optional facts render only when the landlord supplied them.
+                  A grid of "—" cells read as a broken page, not as "unknown". */}
+              {listing.deposit != null && listing.deposit > 0 && (
+                <BilingualField
+                  english={t('depositEnglish')}
+                  value={formatMoney(listing.deposit, listing.currency)}
+                />
+              )}
               <BilingualField
                 english={t('typeEnglish')}
                 value={formatPropertyType(listing.property_type, locale)}
@@ -464,30 +464,38 @@ export default async function ListingPage({ params, searchParams }) {
                     : tListing('billsNotIncluded')
                 }
               />
-              <BilingualField
-                english={t('minDurationEnglish')}
-                value={
-                  listing.min_duration_months != null
-                    ? t('minDurationValue', { n: listing.min_duration_months })
-                    : '—'
-                }
-              />
-              <BilingualField
-                english={t('sqmEnglish')}
-                value={listing.sqm != null ? t('sqmValue', { n: listing.sqm }) : '—'}
-              />
-              <BilingualField
-                english={t('floorEnglish')}
-                value={listing.floor != null ? String(listing.floor) : '—'}
-              />
-              <BilingualField
-                english={t('bedroomsEnglish')}
-                value={listing.bedrooms != null ? String(listing.bedrooms) : '—'}
-              />
-              <BilingualField
-                english={t('bathroomsEnglish')}
-                value={listing.bathrooms != null ? String(listing.bathrooms) : '—'}
-              />
+              {listing.min_duration_months != null && (
+                <BilingualField
+                  english={t('minDurationEnglish')}
+                  value={t('minDurationValue', { n: listing.min_duration_months })}
+                />
+              )}
+              {listing.sqm != null && (
+                <BilingualField
+                  english={t('sqmEnglish')}
+                  value={t('sqmValue', { n: listing.sqm })}
+                />
+              )}
+              {listing.floor != null && (
+                <BilingualField
+                  english={t('floorEnglish')}
+                  // The wizard stores the ground floor as 0 (StepProperty's
+                  // floor select); a bare "0" reads as a data error.
+                  value={listing.floor === 0 ? t('floorGround') : String(listing.floor)}
+                />
+              )}
+              {listing.bedrooms != null && (
+                <BilingualField
+                  english={t('bedroomsEnglish')}
+                  value={String(listing.bedrooms)}
+                />
+              )}
+              {listing.bathrooms != null && (
+                <BilingualField
+                  english={t('bathroomsEnglish')}
+                  value={String(listing.bathrooms)}
+                />
+              )}
             </dl>
           </Card>
 
@@ -497,7 +505,9 @@ export default async function ListingPage({ params, searchParams }) {
               <p className="label-caps text-night/80 mb-4">
                 {t('descriptionEnglish')}
               </p>
-              <p className="text-night/80 leading-relaxed text-lg font-sans">
+              {/* whitespace-pre-line keeps the landlord's line breaks (their
+                  "* " bullet lists) while still collapsing runs of spaces. */}
+              <p className="text-night/80 leading-relaxed text-lg font-sans whitespace-pre-line">
                 {listing.description}
               </p>
             </section>

@@ -4,9 +4,26 @@ import {
   extractToken,
   getUserFromToken,
   getSupabaseWithToken,
+  getSupabaseAsService,
   cleanupFreshOrphanAuthUser,
 } from '@/lib/supabaseServer';
 import { normalizeSingleLine } from '@/lib/textNormalize';
+
+// `landlords.name` is PUBLIC — students see it as "Listed by …" on every card,
+// the PDP and the landlord profile. It must never be derived from the email:
+// the old `email.split('@')[0]` fallback published the local part of a
+// landlord's address and read like a username.
+const NAME_MAX_LENGTH = 80;
+
+function landlordName(value) {
+  // normalizeSingleLine String()s its input, so {} would be stored as
+  // "[object Object]" and 42 as "42". Only a string is a name.
+  if (typeof value !== 'string') return { ok: false, error: 'name_required' };
+  const name = normalizeSingleLine(value);
+  if (!name) return { ok: false, error: 'name_required' };
+  if (name.length > NAME_MAX_LENGTH) return { ok: false, error: 'name_too_long' };
+  return { ok: true, value: name };
+}
 
 export async function GET(request) {
   const token = extractToken(request);
@@ -73,14 +90,47 @@ export async function PATCH(request) {
     updates.profile_photo_url = photoRes.value;
   }
 
+  // Public display name — Settings → Display name. Same rules as signup.
+  if (body.name !== undefined) {
+    const nameRes = landlordName(body.name);
+    if (!nameRes.ok) {
+      return NextResponse.json({ error: nameRes.error }, { status: 400 });
+    }
+    updates.name = nameRes.value;
+  }
+
   if (Object.keys(updates).length === 0) {
     return NextResponse.json({ error: 'No updatable fields supplied' }, { status: 400 });
   }
 
-  // RLS UPDATE policy on landlords requires auth_user_id = auth.uid(),
-  // so we use the user-token client (not the anon service client).
-  const authedSupabase = getSupabaseWithToken(token);
-  const { data: landlord, error } = await authedSupabase
+  /*
+    Which client writes depends on the columns, because migration 108 made
+    column GRANTS the gate on this table:
+
+    - preferred_locale / profile_photo_url are granted UPDATE to
+      `authenticated`, so they go through the caller's own token and the
+      "update their own record" RLS policy, as before.
+    - `name` is deliberately NOT granted. Granting it would let any landlord
+      JWT set its public name straight through PostgREST, skipping
+      landlordName() — blank names, 10 000 characters, "StudentX Team". So the
+      route stays the only way in: the name write uses the service role,
+      scoped by `user.id`, which comes from the verified JWT and never from
+      the body. Same pattern as the landlord listing routes.
+
+    One UPDATE either way, so a request carrying name + photo cannot half-apply.
+  */
+  let writer;
+  if (updates.name !== undefined) {
+    try {
+      writer = getSupabaseAsService();
+    } catch (err) {
+      console.error('Landlord name update needs the service role:', err);
+      return NextResponse.json({ error: 'Failed to update profile' }, { status: 500 });
+    }
+  } else {
+    writer = getSupabaseWithToken(token);
+  }
+  const { data: landlord, error } = await writer
     .from('landlords')
     .update(updates)
     .eq('auth_user_id', user.id)
@@ -175,10 +225,13 @@ export async function POST(request) {
   const nextId = String(maxId + 1).padStart(4, '0');
 
   const body = await request.json().catch(() => ({}));
-  // Normalize the supplied name; fall back to the email-prefix when missing
-  // or empty after normalization. Email is owned by Supabase auth so it's
-  // already trimmed and lowercased upstream.
-  const name = normalizeSingleLine(body.name) || user.email.split('@')[0];
+  // A name is required — see landlordName(). The signup form always sends
+  // one; a missing name is a client bug, not something to paper over.
+  const nameRes = landlordName(body.name);
+  if (!nameRes.ok) {
+    return NextResponse.json({ error: nameRes.error }, { status: 400 });
+  }
+  const name = nameRes.value;
 
   // Optional avatar captured on the signup form. Validate it points at our own
   // bucket (same rule as PATCH) rather than storing an arbitrary URL; absent is
