@@ -9,6 +9,7 @@ import MobileBarSpacer from '@/components/MobileBarSpacer';
 import SessionSync from '@/components/SessionSync';
 import FavoritesProvider from '@/components/FavoritesProvider';
 import GigFavoritesProvider from '@/components/GigFavoritesProvider';
+import { HeaderSlotProvider } from '@/components/HeaderSlot';
 import '../globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
@@ -112,14 +113,18 @@ export default async function LocaleLayout({ children, params }) {
           <SessionSync />
           <FavoritesProvider>
             <GigFavoritesProvider>
-              <Navbar />
-              <main className="flex-1">
-                {children}
-                {/* Bottom clearance for the mobile tab bar. A component, not
-                    padding, because the bar is absent on the chromeless
-                    listing page and the room must go with it. */}
-                <MobileBarSpacer />
-              </main>
+              {/* Shared by the header and the page so a page can portal into
+                  the header — see HeaderSlot. */}
+              <HeaderSlotProvider>
+                <Navbar />
+                <main className="flex-1">
+                  {children}
+                  {/* Bottom clearance for the mobile tab bar. A component, not
+                      padding, because the bar is absent on the chromeless
+                      listing page and the room must go with it. */}
+                  <MobileBarSpacer />
+                </main>
+              </HeaderSlotProvider>
             </GigFavoritesProvider>
           </FavoritesProvider>
         </NextIntlClientProvider>

@@ -68,8 +68,8 @@ const NOTES_CSS = `
 .notes-content { min-width: 0; }
 
 /* ---- Table of contents ---- */
-.notes-sidebar { position: sticky; top: 12px; z-index: 5; }
-@media (min-width: 900px) { .notes-sidebar { top: 24px; } }
+.notes-sidebar { position: sticky; top: calc(var(--header-h) + 12px); z-index: 5; }
+@media (min-width: 900px) { .notes-sidebar { top: calc(var(--header-h) + 24px); } }
 .notes-toc-heading {
   font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em;
   color: rgba(10, 37, 64, 0.4); margin: 0 0 12px;
@@ -102,6 +102,9 @@ const NOTES_CSS = `
 /* ---- Sections ---- */
 .notes-section { scroll-margin-top: 96px; padding-bottom: 40px; border-bottom: 1px solid var(--notes-line); margin-bottom: 40px; }
 .notes-section:last-child { border-bottom: none; margin-bottom: 0; }
+/* Desktop: no chip strip above the content, only the global header, which
+   html { scroll-padding-top } already clears — 96px here would stack on it. */
+@media (min-width: 900px) { .notes-section { scroll-margin-top: 24px; } }
 .notes-section-title {
   font-family: var(--font-display, var(--font-sans));
   font-weight: 600; font-size: 22px; letter-spacing: -0.015em; line-height: 1.2;

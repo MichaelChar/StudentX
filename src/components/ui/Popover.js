@@ -97,6 +97,11 @@ export default function Popover({
   onOpenChange,
   role,
   className = '',
+  // The root is the panel's positioning context by default. Pass a class list
+  // WITHOUT `relative` to anchor the panel to the nearest positioned ancestor
+  // instead — HeaderSearch does this so its date panel spans the whole search
+  // bar rather than shrink-wrapping to one narrow segment.
+  rootClassName = 'relative inline-flex',
   ...rest
 }) {
   const reduced = useReducedMotion();
@@ -160,7 +165,7 @@ export default function Popover({
   }
 
   return (
-    <div ref={rootRef} className="relative inline-flex" onBlur={handleBlur}>
+    <div ref={rootRef} className={rootClassName} onBlur={handleBlur}>
       {triggerNode}
       <AnimatePresence>
         {isOpen ? (

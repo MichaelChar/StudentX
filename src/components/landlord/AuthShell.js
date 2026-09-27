@@ -7,7 +7,7 @@
 */
 export default function AuthShell({ eyebrow, title, subtitle, children }) {
   return (
-    <main className="min-h-screen bg-stone flex items-center justify-center p-6 md:p-10">
+    <main className="min-h-[calc(100vh-var(--header-h))] bg-stone flex items-center justify-center p-6 md:p-10">
       <div className="w-full max-w-sm">
         {eyebrow && <p className="label-caps text-night/70 mb-3">{eyebrow}</p>}
         {title && (

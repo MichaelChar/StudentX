@@ -31,7 +31,7 @@ export default function LandlordOnboardingPage() {
   }, [router]);
 
   return (
-    <div className="min-h-screen flex items-center justify-center">
+    <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center">
       <div className="space-y-4 w-full max-w-md px-4">
         <Skeleton variant="text" width={192} height={32} className="mx-auto" />
         <Skeleton variant="card" height={128} />

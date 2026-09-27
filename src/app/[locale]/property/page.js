@@ -55,7 +55,7 @@ export default async function PropertyHubPage({ params }) {
     <div
       style={{
         position: 'relative',
-        minHeight: 'calc(100vh - 64px)',
+        minHeight: 'calc(100vh - var(--header-h))',
         background: '#ffffff',
         backgroundImage:
           'radial-gradient(ellipse at 80% 20%, #ffe7d6 0%, #ffffff 40%), radial-gradient(ellipse at 20% 90%, #ece7ff 0%, #ffffff 50%)',

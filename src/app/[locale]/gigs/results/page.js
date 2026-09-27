@@ -150,7 +150,7 @@ function GigsResultsInner() {
   const fromQuery = searchParams.toString();
 
   return (
-    <div className="min-h-screen bg-stone">
+    <div className="min-h-[calc(100vh-var(--header-h))] bg-stone">
       <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
         <div className="mb-6 flex items-center justify-between gap-4">
           <h1 className="font-display text-3xl text-night">{t('title')}</h1>
@@ -161,7 +161,7 @@ function GigsResultsInner() {
 
         <div className="grid grid-cols-1 gap-6 lg:grid-cols-[280px_1fr]">
           {/* Filters */}
-          <aside className="space-y-6 lg:sticky lg:top-6 lg:self-start">
+          <aside className="space-y-6 lg:sticky lg:top-[calc(var(--header-h)+1.5rem)] lg:self-start">
             <div>
               <p className="label-caps mb-2 text-night/50">{t('payType')}</p>
               <div className="grid grid-cols-2 gap-2">

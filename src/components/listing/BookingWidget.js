@@ -239,7 +239,7 @@ export default function BookingWidget({ listing, nextPath,
           it used before. 80px clears the site header so the card does not
           slide under it as the page scrolls.
         */}
-        <div className="lg:sticky lg:top-20">
+        <div className="lg:sticky lg:top-[calc(var(--header-h)+1.5rem)]">
           <Card tone="white" className="p-6">
             <p className="font-display text-3xl text-blue">
               {listing.monthly_price != null ? (

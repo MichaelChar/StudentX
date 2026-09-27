@@ -73,7 +73,7 @@ export default function ClaimClient({ token, landlord, listings }) {
 
   if (result?.already || result?.ok) {
     return (
-      <div className="min-h-screen grid place-items-center p-6">
+      <div className="min-h-[calc(100vh-var(--header-h))] grid place-items-center p-6">
         <div className="max-w-md text-center">
           <h1 className="font-display text-2xl font-bold text-night mb-2">You are live 🎉</h1>
           <p className="text-night/60">

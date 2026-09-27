@@ -42,7 +42,7 @@ export default function AdminMetricsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center">
         <p className="text-night/50">Loading metrics…</p>
       </div>
     );
@@ -50,7 +50,7 @@ export default function AdminMetricsPage() {
 
   if (error) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center">
         <p className="text-magenta bg-parchment border border-night/10 rounded-control px-6 py-4">{error}</p>
       </div>
     );
