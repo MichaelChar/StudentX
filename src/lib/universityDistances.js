@@ -254,10 +254,16 @@ export function sharedMeasuredFrom(rows) {
 }
 
 /**
- * Replace a listing's distance rows wholesale (delete-then-insert).
+ * Replace a listing's distance rows wholesale, atomically.
  *
  * Writes listing_id, university_id, distance_meters, and source
  * ('computed' from map-pin prefill, 'landlord' when typed/edited).
+ *
+ * One RPC, replace_listing_university_distances (migration 127): the delete and
+ * insert share a transaction, so a failed insert keeps the old rows instead of
+ * leaving the listing with none, and a per-listing lock stops two writers
+ * interleaving. It's SECURITY INVOKER, so the caller's RLS still decides which
+ * listings it may write. An empty `rows` clears the listing's rows, as before.
  *
  * `measuredFrom` is the pin the rows were measured from (migration 126). Pass
  * it only when it's KNOWN. Omitted, the rows are stored unstamped, which the
@@ -268,28 +274,17 @@ export function sharedMeasuredFrom(rows) {
  * @returns {Promise<{ error: string|null }>}
  */
 export async function writeUniversityDistances(supabase, listingId, rows, measuredFrom = null) {
-  const { error: deleteError } = await supabase
-    .from('listing_university_distances')
-    .delete()
-    .eq('listing_id', listingId);
-
-  if (deleteError) return { error: deleteError.message };
-  if (rows.length === 0) return { error: null };
-
-  const { error: insertError } = await supabase
-    .from('listing_university_distances')
-    .insert(
-      rows.map((r) => ({
-        listing_id: listingId,
-        university_id: r.university_id,
-        distance_meters: r.distance_meters,
-        source: r.source === 'computed' ? 'computed' : 'landlord',
-        measured_from_lat: measuredFrom ? measuredFrom.lat : null,
-        measured_from_lng: measuredFrom ? measuredFrom.lng : null,
-      })),
-    );
-
-  return { error: insertError ? insertError.message : null };
+  const { error } = await supabase.rpc('replace_listing_university_distances', {
+    p_listing_id: listingId,
+    p_rows: rows.map((r) => ({
+      university_id: r.university_id,
+      distance_meters: r.distance_meters,
+      source: r.source === 'computed' ? 'computed' : 'landlord',
+      measured_from_lat: measuredFrom ? measuredFrom.lat : null,
+      measured_from_lng: measuredFrom ? measuredFrom.lng : null,
+    })),
+  });
+  return { error: error ? error.message : null };
 }
 
 /**

@@ -34,21 +34,14 @@ describe('remeasureUniversityDistances', () => {
         if (table === 'universities') {
           return { select: async () => ({ data: universities, error: null }) };
         }
-        if (table === 'listing_university_distances') {
-          return {
-            delete: () => ({
-              eq: async (_col, id) => {
-                writes.deleted = id;
-                return { error: null };
-              },
-            }),
-            insert: async (rows) => {
-              writes.inserted = rows;
-              return { error: null };
-            },
-          };
-        }
         throw new Error(`unexpected table ${table}`);
+      },
+      // writeUniversityDistances replaces the rows in one atomic RPC (127).
+      rpc: async (name, args) => {
+        if (name !== 'replace_listing_university_distances') throw new Error(`unexpected rpc ${name}`);
+        writes.deleted = args.p_listing_id;
+        writes.inserted = args.p_rows;
+        return { error: null };
       },
     };
     return { supabase, writes };

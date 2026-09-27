@@ -182,31 +182,52 @@ describe('sharedMeasuredFrom', () => {
   });
 });
 
-describe('writeUniversityDistances stamps', () => {
-  function client() {
-    const writes = {};
+describe('writeUniversityDistances', () => {
+  function client({ error = null } = {}) {
+    const calls = { rpc: [], from: 0 };
     return {
-      writes,
-      from: () => ({
-        delete: () => ({ eq: async () => ({ error: null }) }),
-        insert: async (rows) => {
-          writes.rows = rows;
-          return { error: null };
-        },
-      }),
+      calls,
+      rpc: async (name, args) => {
+        calls.rpc.push({ name, args });
+        return { error };
+      },
+      from: () => {
+        calls.from++;
+        throw new Error('must not write the table directly');
+      },
     };
   }
   const ROWS = [{ university_id: 'auth', distance_meters: 678, source: 'computed' }];
 
+  it('replaces the rows in ONE atomic RPC (migration 127), never delete-then-insert', async () => {
+    const c = client();
+    const result = await writeUniversityDistances(c, '0106003', ROWS, PIN);
+    expect(result).toEqual({ error: null });
+    expect(c.calls.from).toBe(0);
+    expect(c.calls.rpc).toHaveLength(1);
+    expect(c.calls.rpc[0].name).toBe('replace_listing_university_distances');
+    expect(c.calls.rpc[0].args.p_listing_id).toBe('0106003');
+  });
+
   it('stamps rows with a known origin', async () => {
     const c = client();
     await writeUniversityDistances(c, '0106003', ROWS, PIN);
-    expect(c.writes.rows[0]).toMatchObject({ measured_from_lat: PIN.lat, measured_from_lng: PIN.lng });
+    expect(c.calls.rpc[0].args.p_rows[0]).toMatchObject({
+      university_id: 'auth', distance_meters: 678, source: 'computed',
+      measured_from_lat: PIN.lat, measured_from_lng: PIN.lng,
+    });
   });
 
   it('leaves rows unstamped when the origin is unknown, so the cron re-measures them', async () => {
     const c = client();
     await writeUniversityDistances(c, '0106003', ROWS);
-    expect(c.writes.rows[0]).toMatchObject({ measured_from_lat: null, measured_from_lng: null });
+    expect(c.calls.rpc[0].args.p_rows[0]).toMatchObject({ measured_from_lat: null, measured_from_lng: null });
+  });
+
+  it('surfaces the RPC error (the old rows are kept server-side)', async () => {
+    const c = client({ error: { message: 'new row violates check constraint' } });
+    expect(await writeUniversityDistances(c, '0106003', ROWS, PIN)).toEqual({
+      error: 'new row violates check constraint',
+    });
   });
 });
