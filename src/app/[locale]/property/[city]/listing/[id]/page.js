@@ -298,8 +298,9 @@ export default async function ListingPage({ params, searchParams }) {
         profile gate both are. Their `z-50` became "50 inside a context worth
         1", and lost to anything at the ROOT worth more than 1.
 
-        What that broke, on DESKTOP: the floating account pill is `z-50` at the
-        root, so it painted over an open modal's scrim and stayed clickable
+        What that broke, on DESKTOP: the floating account pill was `z-50` at
+        the root (it now lives in the global header, `z-40`, below the modal
+        layer), so it painted over an open modal's scrim and stayed clickable
         through it. Verified by toggling this one property with both overlays
         open — at the pill's coordinates the topmost element flips between the
         pill's button and the modal's scrim.

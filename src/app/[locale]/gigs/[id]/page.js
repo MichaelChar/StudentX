@@ -59,7 +59,7 @@ export default async function GigDetailPage({ params }) {
     : null;
 
   return (
-    <div className="min-h-screen bg-stone">
+    <div className="min-h-[calc(100vh-var(--header-h))] bg-stone">
       <div className="mx-auto max-w-4xl px-4 py-8 sm:px-6 lg:px-8">
         <Link href="/gigs/results" className="text-sm text-blue hover:underline">
           ← {t('back')}
@@ -116,7 +116,7 @@ export default async function GigDetailPage({ params }) {
             )}
           </article>
 
-          <aside className="lg:sticky lg:top-6 lg:self-start space-y-4">
+          <aside className="lg:sticky lg:top-[calc(var(--header-h)+1.5rem)] lg:self-start space-y-4">
             <GigFavoriteButton gigId={gig.gig_id} withLabel className="w-full justify-center" />
             <GigInquiryForm gigId={gig.gig_id} />
           </aside>

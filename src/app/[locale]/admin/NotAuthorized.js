@@ -4,7 +4,7 @@
 // chrome before the check.
 export default function NotAuthorized({ email }) {
   return (
-    <div className="min-h-screen flex items-center justify-center p-6">
+    <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center p-6">
       <div className="max-w-md text-center">
         <h1 className="font-display text-2xl font-bold text-night mb-2">Not authorised</h1>
         <p className="text-night/60">

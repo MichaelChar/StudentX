@@ -14,6 +14,7 @@ import Icon from '@/components/ui/Icon';
 import Chip from '@/components/ui/Chip';
 import FiltersModal from '@/components/property/FiltersModal';
 import HeaderSearch from '@/components/property/HeaderSearch';
+import { HeaderSlot } from '@/components/HeaderSlot';
 import DateRangePicker from '@/components/property/DateRangePicker';
 import SearchThisAreaButton from '@/components/property/SearchThisAreaButton';
 import MapAreaEmptyState from '@/components/property/MapAreaEmptyState';
@@ -732,7 +733,7 @@ function ResultsContent({
     : 0;
 
   return (
-    <div className="mx-auto max-w-7xl px-5 py-10 md:py-14">
+    <div className="mx-auto max-w-7xl px-5 pt-6 pb-10 md:pt-8 md:pb-14">
       {loaderVisible && (
         <BauhausLoader
           mode="overlay"
@@ -742,20 +743,10 @@ function ResultsContent({
       )}
       {/* Header row */}
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 mb-10">
-        {/*
-          `pr-24` below `sm` keeps the title clear of the floating account pill
-          (`AccountMenu`, fixed top-11 right-5). At 375px the pill occupies
-          x 275–355 and this h1 ran to x=350, so `3 listings in Thessaloniki`
-          had its last word sitting under a blurred pill. 96px of padding wraps
-          it a word earlier instead.
-
-          Dropped at `sm`, where the row turns horizontal and the title block
-          stops spanning the full width. Founder's call (2026-09-04): reserve
-          space per page rather than shrink or drop the pill on mobile — the
-          pill's panel is still the only route to /resources, /gigs and
-          /student/ausom, which the two-tab logged-out bar does not carry.
-        */}
-        <div className="pr-24 sm:pr-0">
+        {/* No right padding any more: the account pill lives in the global
+            header now instead of floating over this title (it used to need
+            pr-24 below `sm`). */}
+        <div>
           <p className="label-caps text-night/70">{t('eyebrow')}</p>
           <h1 className="mt-2 font-display text-3xl md:text-4xl text-night leading-tight">
             {/*
@@ -820,17 +811,22 @@ function ResultsContent({
 
         Dates commit straight into `filters`, so the grid, the histogram and the
         live count all refetch through the same path as every other filter.
+
+        From `md` the pill sits in the global header (Feature 2's "header
+        pill"), portalled so it keeps this component's state. Below `md` the
+        header is a bare brand strip, so the pill stays here in the page. Two
+        instances, one visible at a time; both drive the same `filters`.
       */}
-      <div className="mb-6">
-        <HeaderSearch
-          collapsed
-          city={city}
-          dates={{
+      {(() => {
+        const searchProps = {
+          collapsed: true,
+          city,
+          dates: {
             moveIn: filters.moveIn,
             moveOut: filters.moveOut,
             flexDays: filters.flexDays || 0,
-          }}
-          onDatesChange={(next) =>
+          },
+          onDatesChange: (next) =>
             setFilters((p) => ({
               ...p,
               moveIn: next.moveIn,
@@ -839,13 +835,22 @@ function ResultsContent({
               // A picked range supersedes the legacy single-date param; leaving
               // it set would keep narrowing the query behind the student's back.
               availableFrom: next.moveIn ? '' : p.availableFrom,
-            }))
-          }
-          renderDatePanel={({ value, onChange }) => (
+            })),
+          renderDatePanel: ({ value, onChange }) => (
             <DateRangePicker value={value} onChange={onChange} />
-          )}
-        />
-      </div>
+          ),
+        };
+        return (
+          <>
+            <HeaderSlot>
+              <HeaderSearch {...searchProps} />
+            </HeaderSlot>
+            <div className="mb-6 md:hidden">
+              <HeaderSearch {...searchProps} />
+            </div>
+          </>
+        );
+      })()}
 
       {/*
         Feature 7 — the chip row replaces the sidebar entirely. Ten amenities
@@ -933,7 +938,7 @@ function ResultsContent({
           {/* Same reasoning as the desktop column: mounted through `loading` so
               a search cannot reset the student's viewport. */}
           {viewMode === 'map' && !error && (
-            <div style={{ height: '70vh', minHeight: 420 }} className="relative lg:hidden mb-6 rounded-card overflow-hidden border border-night/10">
+            <div style={{ height: '70vh', minHeight: 420 }} className="relative isolate lg:hidden mb-6 rounded-card overflow-hidden border border-night/10">
               <ListingsMap
                 listings={listings}
                 hoveredListingId={hoveredListingId}
@@ -1066,15 +1071,16 @@ function ResultsContent({
         </div>
 
         {/*
-          The sticky map column. `h-[calc(100vh-3rem)]` with `top-6` keeps it
-          exactly one viewport tall with the page's own gutter above it, so it
-          never scrolls internally against the page.
+          The sticky map column. It pins 1.5rem below the global header
+          (`--header-h`) and is one viewport minus the header and both gutters
+          tall, so it never scrolls internally against the page and never
+          slides under the header.
 
           Known limitation, accepted per Feature 11: at current inventory this
           is 38% of the viewport holding three pins. Structurally correct, not
           yet doing useful work — it earns its space as listings grow.
         */}
-        <aside className="hidden lg:block lg:sticky lg:top-6 lg:h-[calc(100vh-3rem)]">
+        <aside className="hidden lg:block lg:sticky lg:top-[calc(var(--header-h)+1.5rem)] lg:h-[calc(100vh-var(--header-h)-3rem)]">
           {/*
             Mounted through `loading`, NOT gated on it.
 

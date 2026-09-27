@@ -123,6 +123,27 @@
   --default-transition-timing-function: var(--ease-parity);
 }
 
+/*
+  Global header height (Navbar). Sticky from `md`, where it is 72px, so every
+  other sticky element (results map, booking card, gigs asides, notes TOC)
+  offsets by this instead of a bare top-6 / top-20 that would slide under it.
+  Below `md` the bar is a plain 56px strip that scrolls away with the page —
+  the bottom tab bar is the mobile navigation (parity §8.2) — so the offset is
+  0 there. `scroll-padding-top` gives every in-page anchor the same clearance
+  without per-section scroll-margin edits.
+*/
+:root {
+  --header-h: 0px;
+}
+@media (min-width: 768px) {
+  :root {
+    --header-h: 72px;
+  }
+}
+html {
+  scroll-padding-top: var(--header-h);
+}
+
 body {
   background: var(--color-stone);
   color: var(--color-night);

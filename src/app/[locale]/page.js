@@ -22,7 +22,7 @@ export default async function HomePage({ params }) {
       <section
         className="bg-stone"
         style={{
-          minHeight: '100dvh',
+          minHeight: 'calc(100dvh - var(--header-h))',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
