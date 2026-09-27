@@ -81,11 +81,11 @@ vi.mock('@/lib/listingGoLive', () => ({
 }));
 vi.mock('@/lib/listingPinMove', async (importOriginal) => ({
   ...(await importOriginal()),
-  remeasureUniversityDistances: vi.fn(async () => ({ ok: true, written: 3 })),
+  refreshDistancesFromPin: vi.fn(async () => ({ ok: true })),
 }));
 
 const { PATCH } = await import('@/app/api/landlord/listings/[id]/route');
-const { remeasureUniversityDistances } = await import('@/lib/listingPinMove');
+const { refreshDistancesFromPin } = await import('@/lib/listingPinMove');
 const { recomputeMissingDistances } = await import('@/lib/recomputeDistances');
 
 function patch(body) {
@@ -118,20 +118,21 @@ describe('PATCH pin move', () => {
     expect(afterCallbacks).toHaveLength(1);
 
     await runAfterCallbacks();
-    expect(remeasureUniversityDistances).toHaveBeenCalledWith(
+    expect(refreshDistancesFromPin).toHaveBeenCalledWith(
       expect.objectContaining({ listingId: '0106003', lat: 40.64, lng: 22.94 }),
     );
-    expect(recomputeMissingDistances).toHaveBeenCalledTimes(1);
   });
 
-  it('re-measures once on a successful move, without a second recompute', async () => {
+  it('refreshes both tables from ONE router call on a move (finding 4)', async () => {
     const res = await patch({ lat: 40.64, lng: 22.94 });
 
     expect(res.status).toBe(200);
     expect(afterCallbacks).toHaveLength(1);
     await runAfterCallbacks();
-    expect(remeasureUniversityDistances).toHaveBeenCalledTimes(1);
-    expect(recomputeMissingDistances).toHaveBeenCalledTimes(1);
+    expect(refreshDistancesFromPin).toHaveBeenCalledTimes(1);
+    // The separate recompute used to follow straight behind the re-measure:
+    // a second router call that FOSSGIS holds. A move no longer makes it.
+    expect(recomputeMissingDistances).not.toHaveBeenCalled();
   });
 
   it('leaves distances alone when the pin did not move', async () => {
@@ -140,7 +141,7 @@ describe('PATCH pin move', () => {
     expect(res.status).toBe(200);
     expect(facultyDistanceDeletes).toEqual([]);
     await runAfterCallbacks();
-    expect(remeasureUniversityDistances).not.toHaveBeenCalled();
+    expect(refreshDistancesFromPin).not.toHaveBeenCalled();
     // The gap-filling recompute still runs, as before.
     expect(recomputeMissingDistances).toHaveBeenCalledTimes(1);
   });

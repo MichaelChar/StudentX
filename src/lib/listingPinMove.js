@@ -14,13 +14,14 @@
  *
  * The PATCH route is the only writer that changes an existing listing's
  * coordinates, so it detects the move (coordsChanged), deletes the walk-time
- * rows at once (a gap is better than a wrong number; the recompute and the
- * daily cron refill it), and re-measures the universities after the response
- * (remeasureUniversityDistances).
+ * rows at once (a gap is better than a wrong number; the daily cron is the
+ * backstop), and re-measures both tables after the response from ONE router
+ * call (refreshDistancesFromPin).
  */
 
 import { coordsChanged } from '@/lib/coordsChanged';
-import { computeUniversityDistances } from '@/lib/computeUniversityDistances';
+import { computeUniversityDistances, measurePin } from '@/lib/computeUniversityDistances';
+import { distanceToMinutes } from '@/lib/recomputeDistances';
 import {
   MIN_UNIVERSITY_DISTANCES,
   writeUniversityDistances,
@@ -48,6 +49,83 @@ export async function remeasureUniversityDistances({
   lng,
   computeImpl = computeUniversityDistances,
 }) {
+  const targets = await loadMeasureTargets(supabase, '[remeasureUniversityDistances]');
+  if (targets.error) return { ok: false, reason: targets.error };
+
+  const measured = await computeImpl({ lat, lng }, targets.faculties, {
+    universities: targets.universities,
+  });
+  return writeMeasuredUniversities(supabase, listingId, measured, { lat, lng });
+}
+
+/**
+ * Re-measure BOTH distance tables for a moved pin from a single router call
+ * (measurePin). This is what the PATCH route runs after a pin move.
+ *
+ * University rows follow remeasureUniversityDistances' rules (kept if too few
+ * come back). Walk times are upserted for every faculty the router reached,
+ * stamped (migration 126). A faculty it didn't reach stays missing for the
+ * recompute-distances cron: never a straight-line guess, as in
+ * recomputeDistances.
+ *
+ * @param {{ supabase: object, listingId: string, lat: number, lng: number, measureImpl?: typeof measurePin }} args
+ *   `supabase` must be a service-role client (faculty_distances writes are
+ *   service-only, migrations 050/055).
+ */
+export async function refreshDistancesFromPin({
+  supabase,
+  listingId,
+  lat,
+  lng,
+  measureImpl = measurePin,
+}) {
+  const targets = await loadMeasureTargets(supabase, '[refreshDistancesFromPin]');
+  if (targets.error) return { ok: false, reason: targets.error };
+
+  const { universities: measured, facultyMetres } = await measureImpl(
+    { lat, lng },
+    targets.faculties,
+    { universities: targets.universities, caller: 'pin-move' },
+  );
+
+  const universities = await writeMeasuredUniversities(supabase, listingId, measured, { lat, lng });
+
+  const byId = new Map(targets.faculties.map((f) => [f.faculty_id, f]));
+  const rows = [];
+  for (const [facultyId, metres] of facultyMetres) {
+    const faculty = byId.get(facultyId);
+    if (!faculty) continue;
+    const { walk, transit } = distanceToMinutes(metres);
+    rows.push({
+      listing_id: listingId,
+      faculty_id: facultyId,
+      walk_minutes: walk,
+      transit_minutes: transit,
+      measured_from_lat: lat,
+      measured_from_lng: lng,
+      measured_to_lat: Number(faculty.lat),
+      measured_to_lng: Number(faculty.lng),
+    });
+  }
+  let facultyError = null;
+  if (rows.length > 0) {
+    const { error } = await supabase
+      .from('faculty_distances')
+      .upsert(rows, { onConflict: 'listing_id,faculty_id' });
+    if (error) facultyError = error.message;
+  }
+
+  return {
+    ok: universities.ok && !facultyError,
+    universities,
+    faculties: facultyError ? { ok: false, reason: `write: ${facultyError}` } : { ok: true, written: rows.length },
+  };
+}
+
+// The destinations both tables are measured to. A universities read error is
+// soft, as in /api/landlord/compute-university-distances: it costs the
+// faculty-less universities, and the minimum check catches the rest.
+async function loadMeasureTargets(supabase, tag) {
   const [
     { data: faculties, error: facultiesError },
     { data: universities, error: universitiesError },
@@ -55,21 +133,16 @@ export async function remeasureUniversityDistances({
     supabase.from('faculties').select('faculty_id, university, lat, lng'),
     supabase.from('universities').select('university_id, lat, lng'),
   ]);
-  if (facultiesError) return { ok: false, reason: `faculties: ${facultiesError.message}` };
-  if (universitiesError) {
-    // Soft, as in /api/landlord/compute-university-distances: costs the
-    // faculty-less universities, and the length check below catches the rest.
-    console.error('[remeasureUniversityDistances] universities:', universitiesError);
-  }
+  if (facultiesError) return { error: `faculties: ${facultiesError.message}` };
+  if (universitiesError) console.error(`${tag} universities:`, universitiesError);
+  return { faculties: faculties || [], universities: universities || [] };
+}
 
-  const measured = await computeImpl({ lat, lng }, faculties || [], {
-    universities: universities || [],
-  });
+async function writeMeasuredUniversities(supabase, listingId, measured, measuredFrom) {
   if (measured.length < MIN_UNIVERSITY_DISTANCES) {
     return { ok: false, reason: `only ${measured.length} universities measured; kept existing rows` };
   }
-
-  const { error } = await writeUniversityDistances(supabase, listingId, measured, { lat, lng });
+  const { error } = await writeUniversityDistances(supabase, listingId, measured, measuredFrom);
   if (error) return { ok: false, reason: `write: ${error}` };
   return { ok: true, written: measured.length };
 }

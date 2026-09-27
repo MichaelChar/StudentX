@@ -1,9 +1,10 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
 import {
   haversineMeters,
   universityCodeToId,
   collapseNearestPerUniversity,
   computeUniversityDistances,
+  measurePin,
 } from '@/lib/computeUniversityDistances';
 
 describe('universityCodeToId', () => {
@@ -220,5 +221,47 @@ describe('computeUniversityDistances', () => {
       },
     );
     expect(out.map((r) => r.university_id).sort()).toEqual(['auth', 'uom']);
+  });
+});
+
+describe('measurePin (finding 4: one router call for both tables)', () => {
+  const FACS = [
+    { faculty_id: 'a1', university: 'AUTH', lat: 40.63, lng: 22.95 },
+    { faculty_id: 'a2', university: 'AUTH', lat: 40.631, lng: 22.951 },
+    { faculty_id: 'x1', university: 'Unknown College', lat: 40.64, lng: 22.94 },
+  ];
+  const UNIS = [{ university_id: 'uom', lat: 40.625, lng: 22.96 }];
+  const ORIGIN = { lat: 40.63, lng: 22.94 };
+
+  it('makes exactly one call and returns routed metres per faculty alongside the university result', async () => {
+    const fetchImpl = vi.fn(async () => ({
+      ok: true,
+      status: 200,
+      // destinations: a1, a2, x1, then the uom pseudo-faculty
+      json: async () => ({ code: 'Ok', distances: [[900, null, 1200, 1500]] }),
+    }));
+
+    const { universities, facultyMetres } = await measurePin(ORIGIN, FACS, { fetchImpl, universities: UNIS });
+
+    expect(fetchImpl).toHaveBeenCalledTimes(1);
+    // Routed faculties only: a2 was unreachable, so no straight-line guess for
+    // it. The uom pseudo-faculty isn't a faculty.
+    expect([...facultyMetres]).toEqual([['a1', 900], ['x1', 1200]]);
+    // An unmapped university code still gets a walk time, but no university row.
+    expect(universities).toEqual([
+      { university_id: 'auth', distance_meters: 900, source: 'computed' },
+      { university_id: 'uom', distance_meters: 1500, source: 'computed' },
+    ]);
+  });
+
+  it('computeUniversityDistances returns the same university result', async () => {
+    const fetchImpl = async () => ({
+      ok: true,
+      status: 200,
+      json: async () => ({ code: 'Ok', distances: [[900, null, 1200, 1500]] }),
+    });
+    const viaWrapper = await computeUniversityDistances(ORIGIN, FACS, { fetchImpl, universities: UNIS });
+    const { universities } = await measurePin(ORIGIN, FACS, { fetchImpl, universities: UNIS });
+    expect(viaWrapper).toEqual(universities);
   });
 });

@@ -41,7 +41,7 @@ const OSRM_MAX_COORDS = 100;
 
 // distance_m -> (walk_minutes, transit_minutes) using the pace model above.
 // Mirrors compute_minutes() in scripts/compute_distances.py.
-function distanceToMinutes(distanceM) {
+export function distanceToMinutes(distanceM) {
   const walk = Math.max(1, Math.ceil(distanceM / WALK_M_PER_MIN));
   const transit = Math.ceil(distanceM / BUS_M_PER_MIN) + BUS_OVERHEAD_MIN;
   return { walk, transit };
