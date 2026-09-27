@@ -8,7 +8,7 @@ import {
 } from '@/lib/supabaseServer';
 import { landlordIdForUser } from '@/lib/landlordAuth';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
-import { coordsChanged, remeasureUniversityDistances } from '@/lib/listingPinMove';
+import { coordsChanged, refreshDistancesFromPin } from '@/lib/listingPinMove';
 import { writeUniversityDistances } from '@/lib/universityDistances';
 import { parseListingWriteBody } from '@/lib/landlordListingBody';
 import {
@@ -101,29 +101,23 @@ export async function GET(request, { params }) {
 /**
  * Re-measure both distance tables from a moved pin. Runs in after().
  *
- * Universities go first. The two router calls run back to back and FOSSGIS
- * can hold the second, so the table with no cron backstop gets the first slot.
- * Faculty pairs left missing are refilled by the daily recompute-distances cron.
+ * ONE router call serves both tables (refreshDistancesFromPin). It used to be
+ * two back to back, and FOSSGIS holds the second request of a pair. Faculty
+ * pairs it couldn't route stay missing for the daily recompute-distances cron.
  */
 async function refreshDistancesAfterPinMove(id, lat, lng) {
-  const service = getSupabaseAsService();
   try {
-    const result = await remeasureUniversityDistances({
-      supabase: service,
+    const result = await refreshDistancesFromPin({
+      supabase: getSupabaseAsService(),
       listingId: id,
       lat,
       lng,
     });
     if (!result.ok) {
-      console.error('[landlord/listings PATCH] moved-pin university re-measure skipped:', result.reason);
+      console.error('[landlord/listings PATCH] moved-pin refresh incomplete:', JSON.stringify(result));
     }
   } catch (err) {
-    console.error('[landlord/listings PATCH] moved-pin university re-measure failed:', err);
-  }
-  try {
-    await recomputeMissingDistances({ listingIds: [id], supabase: service });
-  } catch (err) {
-    console.error('[landlord/listings PATCH] moved-pin distance recompute failed:', err);
+    console.error('[landlord/listings PATCH] moved-pin refresh failed:', err);
   }
 }
 

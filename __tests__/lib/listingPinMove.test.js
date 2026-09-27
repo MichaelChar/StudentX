@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest';
-import { coordsChanged, remeasureUniversityDistances } from '@/lib/listingPinMove';
+import { coordsChanged, remeasureUniversityDistances, refreshDistancesFromPin } from '@/lib/listingPinMove';
 
 describe('coordsChanged', () => {
   const stored = { lat: '40.629410547318486', lng: '22.966596' }; // numeric comes back as text
@@ -90,5 +90,86 @@ describe('remeasureUniversityDistances', () => {
     expect(result).toEqual({ ok: false, reason: 'faculties: boom' });
     expect(computeImpl).not.toHaveBeenCalled();
     expect(writes.deleted).toBeNull();
+  });
+});
+
+describe('refreshDistancesFromPin', () => {
+  const FACULTIES = [
+    { faculty_id: 'auth-law', university: 'AUTH', lat: '40.63112', lng: '22.95678' },
+    { faculty_id: 'auth-library', university: 'AUTH', lat: '40.62961', lng: '22.95795' },
+  ];
+  function stub() {
+    const writes = { universities: null, faculties: null, upsertOpts: null };
+    const supabase = {
+      from(table) {
+        if (table === 'faculties') return { select: async () => ({ data: FACULTIES, error: null }) };
+        if (table === 'universities') return { select: async () => ({ data: [], error: null }) };
+        if (table === 'faculty_distances') {
+          return {
+            upsert: async (rows, opts) => {
+              writes.faculties = rows;
+              writes.upsertOpts = opts;
+              return { error: null };
+            },
+          };
+        }
+        throw new Error(`unexpected table ${table}`);
+      },
+      rpc: async (_name, args) => {
+        writes.universities = args.p_rows;
+        return { error: null };
+      },
+    };
+    return { supabase, writes };
+  }
+
+  it('writes both tables from ONE measurement, stamped with the new pin', async () => {
+    const { supabase, writes } = stub();
+    const measureImpl = vi.fn(async () => ({
+      universities: [
+        { university_id: 'auth', distance_meters: 899, source: 'computed' },
+        { university_id: 'uom', distance_meters: 1012, source: 'computed' },
+      ],
+      // auth-library unreachable: absent, left for the cron.
+      facultyMetres: new Map([['auth-law', 1201]]),
+    }));
+
+    const result = await refreshDistancesFromPin({
+      supabase, listingId: '0106003', lat: 40.6294, lng: 22.9666, measureImpl,
+    });
+
+    expect(measureImpl).toHaveBeenCalledTimes(1);
+    expect(measureImpl.mock.calls[0][2]).toMatchObject({ caller: 'pin-move' });
+    expect(result.ok).toBe(true);
+    expect(writes.universities.map((r) => [r.university_id, r.measured_from_lat])).toEqual([
+      ['auth', 40.6294], ['uom', 40.6294],
+    ]);
+    // Same pace model as recomputeDistances: 1201 m -> 15 min walk, 10 min bus.
+    expect(writes.faculties).toEqual([{
+      listing_id: '0106003',
+      faculty_id: 'auth-law',
+      walk_minutes: 15,
+      transit_minutes: 10,
+      measured_from_lat: 40.6294,
+      measured_from_lng: 22.9666,
+      measured_to_lat: 40.63112,
+      measured_to_lng: 22.95678,
+    }]);
+    expect(writes.upsertOpts.ignoreDuplicates).not.toBe(true);
+  });
+
+  it('keeps university rows below the minimum but still writes the walk times', async () => {
+    const { supabase, writes } = stub();
+    const result = await refreshDistancesFromPin({
+      supabase, listingId: '0106003', lat: 40.6294, lng: 22.9666,
+      measureImpl: async () => ({
+        universities: [{ university_id: 'auth', distance_meters: 899, source: 'computed' }],
+        facultyMetres: new Map([['auth-law', 1201]]),
+      }),
+    });
+    expect(result.ok).toBe(false);
+    expect(result.universities.ok).toBe(false);
+    expect(writes.universities).toBeNull();
+    expect(writes.faculties).toHaveLength(1);
   });
 });
