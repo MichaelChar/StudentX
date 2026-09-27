@@ -629,6 +629,30 @@ Only the build job and Cloudflare Workers Build are **required** to merge;
 the migration gate and review workflows are advisory (see Database section
 for why the gate can be legitimately red).
 
+**`claude-review` gotchas** (`claude-code-review.yml`, the `code-review`
+plugin under `claude-code-action@v1`):
+
+- **Subagents must run in the foreground.** If the plugin's subagents run in
+  the background, the top-level agent ends its turn to wait. The action stops
+  at that first result and reports success — green in ~15 s, nothing posted
+  (#581, fixed by #582). `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` is set through
+  the action's `settings` input, **not** a step `env:`. The action's run step
+  declares its own env map, which shadows the caller's, so a step `env:` never
+  reaches Claude.
+- **The `claude_args --allowedTools` list is load-bearing.** Headless, an
+  unlisted tool that needs permission is denied, not prompted. `Skill` is how
+  the plugin command is invoked. The action installs the inline-comment MCP
+  server only when its tool is listed, and every finding is posted through it
+  (#579, #582).
+- **Green means a review reached the PR.** The `Require a posted review` step
+  fails a run that exits success without a Claude comment; read the
+  `Report review run` step for the model's final message and permission
+  denials. A later push to an already-reviewed PR is a notice, not a failure —
+  the plugin reviews a PR once.
+- **A PR that edits this workflow is never reviewed by its own version.** The
+  action refuses to run a workflow that differs from `main`'s copy (a warning,
+  green job). Verify workflow changes on the first PR after merge.
+
 **Cloudflare Workers Build** runs on every push to `main` separately —
 configured in the Cloudflare dashboard, NOT under `.github/workflows/`. It
 runs `npm run cf:build` and deploys to the `studentx` Worker.
