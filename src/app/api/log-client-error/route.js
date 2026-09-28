@@ -25,6 +25,9 @@ const ALLOWED_CONTEXTS = new Set([
   // Per-stage login timing beacon (#265). Payload is a JSON stage map of
   // millisecond durations; logged here so it surfaces in `wrangler tail`.
   'login-timing',
+  // A render crash caught by [locale]/error.js. message = error.message,
+  // detail = Next's error digest (matches the server log line for that crash).
+  'render-error',
 ]);
 const MAX_MESSAGE = 500;
 const MAX_DETAIL = 200;

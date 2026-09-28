@@ -1,4 +1,5 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
+import { notFound } from 'next/navigation';
 import { Link } from '@/i18n/navigation';
 import { getSupabase } from '@/lib/supabase';
 import { transformGig } from '@/lib/transformGig';
@@ -32,16 +33,10 @@ export default async function GigDetailPage({ params }) {
     .eq('is_active', true)
     .maybeSingle();
 
-  if (!data) {
-    return (
-      <div className="mx-auto max-w-2xl px-6 py-20 text-center">
-        <p className="font-display text-2xl text-night">{t('notFound')}</p>
-        <Link href="/gigs" className="mt-4 inline-block text-blue hover:underline">
-          {t('browseAll')}
-        </Link>
-      </div>
-    );
-  }
+  // A real 404, not a 200 page that says "not found" (a soft 404 — indexed by
+  // search engines as a live page). The gig-specific copy lives in
+  // ./not-found.js, which notFound() renders with the 404 status.
+  if (!data) notFound();
 
   const gig = transformGig(data);
   const photos = (gig.photos || []).filter(
