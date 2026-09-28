@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Icon from '@/components/ui/Icon';
 import { useFavorites } from '@/components/FavoritesProvider';
@@ -22,6 +23,9 @@ export default function FavoriteButton({ listingId, withLabel = false, className
   const t = useTranslations('student.favorites');
   const { isFavorited, toggle } = useFavorites();
   const saved = isFavorited(listingId);
+  // Bumped on each SAVE click; keys the heart so the Feature 17 pop replays
+  // per save and never runs on mount (see .sx-heart-pop in globals.css).
+  const [popKey, setPopKey] = useState(0);
 
   const ariaLabel = saved ? t('removeAria') : t('saveAria');
 
@@ -29,6 +33,7 @@ export default function FavoriteButton({ listingId, withLabel = false, className
     // The card itself is a link; don't navigate when the heart is tapped.
     e.preventDefault();
     e.stopPropagation();
+    if (!saved) setPopKey((k) => k + 1);
     toggle(listingId);
   }
 
@@ -46,8 +51,9 @@ export default function FavoriteButton({ listingId, withLabel = false, className
         } ${className}`}
       >
         <Icon
+          key={popKey}
           name="heart"
-          className="w-4 h-4"
+          className={`w-4 h-4${popKey > 0 && saved ? ' sx-heart-pop' : ''}`}
           fill={saved ? 'currentColor' : 'none'}
         />
         {saved ? t('saved') : t('save')}
@@ -64,10 +70,11 @@ export default function FavoriteButton({ listingId, withLabel = false, className
       className={`${FLOATING_CONTROL} outline-magenta focus-visible:outline-magenta ${className}`}
     >
       <Icon
+        key={popKey}
         name="heart"
         className={`w-[18px] h-[18px] transition-colors ${
           saved ? 'text-magenta' : 'text-night/45'
-        }`}
+        }${popKey > 0 && saved ? ' sx-heart-pop' : ''}`}
         fill={saved ? 'currentColor' : 'none'}
       />
     </button>

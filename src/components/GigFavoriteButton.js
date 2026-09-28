@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import { useTranslations } from 'next-intl';
 import Icon from '@/components/ui/Icon';
 import { useGigFavorites } from '@/components/GigFavoritesProvider';
@@ -13,6 +14,9 @@ export default function GigFavoriteButton({ gigId, withLabel = false, className 
   const t = useTranslations('gigs.favorites');
   const { isFavorited, toggle } = useGigFavorites();
   const saved = isFavorited(gigId);
+  // Bumped on each SAVE click; keys the heart so the Feature 17 pop replays
+  // per save and never runs on mount (see .sx-heart-pop in globals.css).
+  const [popKey, setPopKey] = useState(0);
 
   const ariaLabel = saved ? t('removeAria') : t('saveAria');
 
@@ -20,6 +24,7 @@ export default function GigFavoriteButton({ gigId, withLabel = false, className 
     // The card itself is a link; don't navigate when the heart is tapped.
     e.preventDefault();
     e.stopPropagation();
+    if (!saved) setPopKey((k) => k + 1);
     toggle(gigId);
   }
 
@@ -36,7 +41,7 @@ export default function GigFavoriteButton({ gigId, withLabel = false, className 
             : 'border-night/20 text-night/70 hover:border-magenta hover:text-magenta active:bg-magenta/10'
         } ${className}`}
       >
-        <Icon name="heart" className="w-4 h-4" fill={saved ? 'currentColor' : 'none'} />
+        <Icon key={popKey} name="heart" className={`w-4 h-4${popKey > 0 && saved ? ' sx-heart-pop' : ''}`} fill={saved ? 'currentColor' : 'none'} />
         {saved ? t('saved') : t('save')}
       </button>
     );
@@ -52,7 +57,8 @@ export default function GigFavoriteButton({ gigId, withLabel = false, className 
     >
       <Icon
         name="heart"
-        className={`w-[18px] h-[18px] transition-colors ${saved ? 'text-magenta' : 'text-night/45'}`}
+        key={popKey}
+        className={`w-[18px] h-[18px] transition-colors ${saved ? 'text-magenta' : 'text-night/45'}${popKey > 0 && saved ? ' sx-heart-pop' : ''}`}
         fill={saved ? 'currentColor' : 'none'}
       />
     </button>

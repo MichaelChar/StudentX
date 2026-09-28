@@ -381,3 +381,28 @@ input[type="range"]::-moz-range-thumb {
 .leaflet-container {
   z-index: 0;
 }
+
+/*
+  Heart "pop" — parity Feature 17: activation "fills solid with a short scale
+  bounce". Until now the heart only cross-faded its colour. Transform-only per
+  F5's motion rule (transform + opacity + colour), on the parity easing.
+  FavoriteButton / GigFavoriteButton apply it only on a save click, keyed so
+  each save replays it — never on mount, so hearts already saved don't all pop
+  on page load.
+*/
+@keyframes sx-heart-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3); }
+  55% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+.sx-heart-pop {
+  animation: sx-heart-pop 340ms var(--ease-parity) both;
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sx-heart-pop {
+    animation: none;
+  }
+}
