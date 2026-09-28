@@ -144,6 +144,27 @@ html {
   scroll-padding-top: var(--header-h);
 }
 
+/*
+  iOS Safari zooms the whole page when a focused field's text is under 16px,
+  and leaves it zoomed after the keyboard closes. 30+ fields here are
+  text-sm / text-xs (landlord FormField, the wizard's inputClass, auth pages,
+  filters, booking, chat, search), so this is one rule rather than a per-site
+  sweep that the next new input would miss.
+
+  Scoped to touch devices by capability, not width: desktop keeps its 14px
+  design, while an iPad at 1024px — which zooms just the same — is covered.
+  Unlayered on purpose: it must beat Tailwind's `text-sm`, which lives in
+  @layer utilities; unlayered author CSS wins over any layer regardless of
+  specificity. `max()` leaves larger text alone.
+*/
+@media (hover: none) and (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]),
+  select,
+  textarea {
+    font-size: max(16px, 1em);
+  }
+}
+
 body {
   background: var(--color-stone);
   color: var(--color-night);

@@ -150,12 +150,15 @@ export default function ResourcesExplorer() {
           value={q}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search titles, descriptions or subjects..."
+          // Size as a class, not inline: an inline fontSize beats the
+          // touch-device 16px rule in globals.css, and at 14px iOS zooms the
+          // page on focus.
+          className="text-sm"
           style={{
             width: '100%',
             padding: '9px 12px',
             border: '1px solid rgba(10,37,64,0.15)',
             borderRadius: 8,
-            fontSize: 14,
             color: '#0a2540',
             background: '#fff',
           }}
