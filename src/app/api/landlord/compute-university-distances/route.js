@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { extractToken, getUserFromToken, getSupabaseWithToken } from '@/lib/supabaseServer';
 import { computeUniversityDistances } from '@/lib/computeUniversityDistances';
+import { loadMeasureTargets } from '@/lib/measureTargets';
 
 /**
  * Prefill university distances for the listing wizard from a lat/lng pin.
@@ -27,42 +28,20 @@ export async function POST(request) {
     return NextResponse.json({ error: 'lat and lng are required' }, { status: 400 });
   }
 
-  /*
-    `faculties` is fully public — RLS "Public can read faculties" (qual true)
-    and every column selected here is granted to anon and authenticated alike.
-    There is nothing for a service-role key to unlock, and using one here made
-    the route 500 in any environment without that secret.
-  */
-  const supabase = getSupabaseWithToken(token);
-  const [
-    { data: faculties, error },
-    { data: universities, error: uniError },
-  ] = await Promise.all([
-    supabase.from('faculties').select('faculty_id, university, lat, lng'),
-    /*
-      Migration 119 put campus coordinates on `universities` because prod's
-      `faculties` holds AUTH rows only — without these, UoM and IHU cannot be
-      measured at all and the wizard's read-only step shows nothing for them.
-      Faculties still win where they exist (nearest campus beats a centroid).
-    */
-    supabase.from('universities').select('university_id, lat, lng'),
-  ]);
-
-  if (error) {
-    console.error('[compute-university-distances] faculties:', error);
+  // Same loader as the server-side re-measures (src/lib/measureTargets.js), so
+  // the wizard and the server can't disagree about the same pin.
+  const targets = await loadMeasureTargets(
+    getSupabaseWithToken(token),
+    '[compute-university-distances]',
+  );
+  if (targets.error) {
+    console.error('[compute-university-distances]', targets.error);
     return NextResponse.json({ error: 'Failed to load faculties' }, { status: 500 });
   }
-  // Soft-fail: a university lookup that breaks costs precision on the
-  // faculty-less universities, not the whole prefill.
-  if (uniError) {
-    console.error('[compute-university-distances] universities:', uniError);
-  }
 
-  const distances = await computeUniversityDistances(
-    { lat, lng },
-    faculties || [],
-    { universities: universities || [] },
-  );
+  const distances = await computeUniversityDistances({ lat, lng }, targets.faculties, {
+    universities: targets.universities,
+  });
 
   return NextResponse.json({ distances });
 }
