@@ -22,6 +22,7 @@
 import { coordsChanged } from '@/lib/coordsChanged';
 import { computeUniversityDistances, measurePin } from '@/lib/computeUniversityDistances';
 import { distanceToMinutes } from '@/lib/recomputeDistances';
+import { loadMeasureTargets } from '@/lib/measureTargets';
 import {
   MIN_UNIVERSITY_DISTANCES,
   writeUniversityDistances,
@@ -120,22 +121,6 @@ export async function refreshDistancesFromPin({
     universities,
     faculties: facultyError ? { ok: false, reason: `write: ${facultyError}` } : { ok: true, written: rows.length },
   };
-}
-
-// The destinations both tables are measured to. A universities read error is
-// soft, as in /api/landlord/compute-university-distances: it costs the
-// faculty-less universities, and the minimum check catches the rest.
-async function loadMeasureTargets(supabase, tag) {
-  const [
-    { data: faculties, error: facultiesError },
-    { data: universities, error: universitiesError },
-  ] = await Promise.all([
-    supabase.from('faculties').select('faculty_id, university, lat, lng'),
-    supabase.from('universities').select('university_id, lat, lng'),
-  ]);
-  if (facultiesError) return { error: `faculties: ${facultiesError.message}` };
-  if (universitiesError) console.error(`${tag} universities:`, universitiesError);
-  return { faculties: faculties || [], universities: universities || [] };
 }
 
 async function writeMeasuredUniversities(supabase, listingId, measured, measuredFrom) {
