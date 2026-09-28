@@ -36,7 +36,9 @@ export async function uploadLandlordPhoto(file, userId) {
   const supabase = getSupabaseBrowser();
   // {uid}/ prefix satisfies the folder-scoped storage RLS policy.
   const path = `${userId}/avatar-${Date.now()}-${Math.random().toString(36).slice(2)}.${variants.ext}`;
-  const contentType = variants.ext === 'webp' ? 'image/webp' : 'image/jpeg';
+  // The type the browser actually encoded — never inferred from the extension
+  // (see imageResize: a PNG once shipped labelled image/jpeg).
+  const contentType = variants.mime;
   const { error } = await supabase.storage
     .from('landlord-photos')
     .upload(path, variants.card, { upsert: false, contentType });

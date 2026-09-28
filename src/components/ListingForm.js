@@ -390,7 +390,9 @@ export default function ListingForm({
       async function processOne(file) {
         const variants = await resizeToVariants(file);
         const stem = `${userId}/${Date.now()}-${Math.random().toString(36).slice(2)}`;
-        const contentType = variants.ext === 'webp' ? 'image/webp' : 'image/jpeg';
+        // The type the browser actually encoded — never inferred from the extension
+        // (see imageResize: a PNG once shipped labelled image/jpeg).
+        const contentType = variants.mime;
 
         async function uploadVariant(size, blob) {
           const path = `${stem}__${size}.${variants.ext}`;

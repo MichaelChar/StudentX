@@ -16,9 +16,18 @@ const VARIANT_LONGEST_EDGE = {
 
 const QUALITY = 0.82;
 
+// Extension for each type encode() can return. PNG is listed so that, in the
+// never-expected case of a canvas that encodes neither WebP nor JPEG, the file
+// is at least NAMED and TYPED as what it is instead of masquerading as .jpg.
+const EXT_FOR_MIME = {
+  'image/webp': 'webp',
+  'image/jpeg': 'jpg',
+  'image/png': 'png',
+};
+
 /**
  * @param {File} file - the user-selected image file
- * @returns {Promise<{ thumb: Blob, card: Blob, full: Blob, ext: 'webp' | 'jpg' }>}
+ * @returns {Promise<{ thumb: Blob, card: Blob, full: Blob, ext: 'webp' | 'jpg' | 'png', mime: string }>}
  */
 export async function resizeToVariants(file) {
   const bitmap = await createImageBitmap(file);
@@ -27,14 +36,16 @@ export async function resizeToVariants(file) {
     // for the others so a single source can't end up with mixed
     // extensions (which would defeat the suffix-swap variant URL scheme).
     const probe = await encode(bitmap, sizeFor(bitmap, VARIANT_LONGEST_EDGE.card));
-    const ext = probe.type === 'image/webp' ? 'webp' : 'jpg';
+    // `mime` is what the browser ACTUALLY produced; callers upload with it as
+    // the Content-Type, so the stored type can never disagree with the bytes.
     const mime = probe.type;
+    const ext = EXT_FOR_MIME[mime] || 'jpg';
     const card = probe;
     const [thumb, full] = await Promise.all([
       encode(bitmap, sizeFor(bitmap, VARIANT_LONGEST_EDGE.thumb), mime),
       encode(bitmap, sizeFor(bitmap, VARIANT_LONGEST_EDGE.full), mime),
     ]);
-    return { thumb, card, full, ext };
+    return { thumb, card, full, ext, mime };
   } finally {
     bitmap.close?.();
   }
@@ -61,10 +72,17 @@ async function encode(bitmap, { w, h }, preferredMime) {
   const ctx = canvas.getContext('2d');
   ctx.drawImage(bitmap, 0, 0, w, h);
 
-  // Prefer WebP; fall back to JPEG if the browser refuses.
+  // Prefer WebP; fall back to JPEG if the browser can't encode it.
+  //
+  // A browser that can't encode the requested type does NOT fail — per spec,
+  // canvas.toBlob / convertToBlob silently return PNG instead. The old check
+  // (`blob.type.startsWith('image/')`) accepted that PNG as the WebP result,
+  // so on such a browser (older Safari / iOS) every photo was stored as a
+  // ~750 KB PNG named `.jpg` and served as image/jpeg — listing 0106003's
+  // card photos were ~9.7 MB in total. Only the EXACT requested type counts.
   const tryMime = preferredMime || 'image/webp';
   const blob = await canvasToBlob(canvas, tryMime, QUALITY);
-  if (blob && blob.size > 0 && blob.type.startsWith('image/')) return blob;
+  if (blob && blob.size > 0 && blob.type === tryMime) return blob;
   return canvasToBlob(canvas, 'image/jpeg', QUALITY);
 }
 
