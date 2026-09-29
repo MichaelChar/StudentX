@@ -233,6 +233,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
               rows={4}
               maxLength={MESSAGE_MAX}
               required
+              className="text-[14.5px]"
               style={textareaStyle}
             />
             <div
@@ -261,6 +262,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
                   placeholder={t('proposedChangePlaceholder')}
                   rows={3}
                   maxLength={MESSAGE_MAX}
+                  className="text-[14.5px]"
                   style={{ ...textareaStyle, marginBottom: 16 }}
                 />
               </>
@@ -276,6 +278,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder={t('emailPlaceholder')}
+              className="text-[14.5px]"
               style={inputStyle}
             />
             <div style={{ margin: '6px 2px 18px', fontSize: 12.5, color: 'rgba(10,37,64,0.45)' }}>
@@ -361,7 +364,8 @@ const inputStyle = {
   border: '1px solid rgba(10,37,64,0.14)',
   borderRadius: 12,
   padding: '12px 14px',
-  fontSize: 14.5,
+  // No inline fontSize: it would beat the touch-device 16px rule in
+  // globals.css and let iOS zoom on focus. The 14.5px is a class on each field.
   fontFamily: 'var(--font-inter, system-ui, sans-serif)',
   color: INK,
   background: '#ffffff',
