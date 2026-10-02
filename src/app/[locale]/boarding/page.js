@@ -21,7 +21,7 @@ import {
   `searchParams` here — it would opt the route out of prerendering.
 
   Styled to the site, not the design file, where the two disagreed (founder's
-  call, 2026-10-02): Inter headings in the site's display style, flat 8px
+  call, 2026-10-02): headings in the site's display style, flat 8px
   buttons matching ui/Button's primary look, the site's own header, footer
   line and mobile tab bar.
 */

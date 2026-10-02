@@ -733,8 +733,12 @@ curl -X POST -H "x-cron-secret: $CRON_SECRET" \
   #d61f69 — magenta for TEXT.
   Legacy aliases (`navy`, `gray-dark`, `gray-light`, `font-heading`) still
   resolve via `globals.css` but new code should use the canonical tokens
-  (`night`, `parchment`, `blue`, `font-display`). Inter for both display and
-  body (Latin + Greek subsets, self-hosted via `next/font/google`).
+  (`night`, `parchment`, `blue`, `font-display`). **Plus Jakarta Sans** for
+  both display and body (since 2026-10-02; was Inter), self-hosted via
+  `next/font/google` in `[locale]/layout.js` as the font-neutral `--font-brand`.
+  Components use `font-sans` / `font-display` or `var(--font-sans|display)` —
+  **never a family name**, so a font swap stays a one-line change there. No
+  Greek subset exists for it; stray Greek glyphs fall back to system-ui.
 - **Text contrast is WCAG AA, measured — not eyeballed.** Muted text is
   `text-night/70` at the lightest (`/60` is 4.28:1 and fails). Magenta text is
   `text-magenta-ink`, never `text-magenta`. Yellow and magenta FILLS carry

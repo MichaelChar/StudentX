@@ -84,16 +84,14 @@ Common opacities: text-muted `rgba(10,37,64,0.45)`, subtext `rgba(10,37,64,0.6)`
 borders `rgba(10,37,64,0.12)`, hairlines `rgba(10,37,64,0.06)`.
 
 ### Fonts
-- **Inter** (display + body) and **Inter Tight** (large labels), via
-  `next/font/google` in `src/app/[locale]/layout.js`:
-  ```js
-  const inter = Inter({ subsets: ['latin','greek'], variable: '--font-inter', weight: ['400','500','600','700'], display: 'swap' });
-  const interTight = Inter_Tight({ subsets: ['latin'], variable: '--font-inter-tight', weight: ['400','500','600','700'], display: 'swap' });
-  ```
-  Exposed as CSS vars `--font-inter` / `--font-inter-tight`, wired into
-  `--font-sans` / `--font-display`. Headings get `letter-spacing: -0.02em`.
-  `HubButton` labels use `var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)`.
-- Body defaults: `font-feature-settings: "ss01","cv11"`. Selection + focus
+- **Plus Jakarta Sans** (display + body; since 2026-10-02 — it replaced Inter
+  and Inter Tight), via `next/font/google` in `src/app/[locale]/layout.js`,
+  exposed as the font-neutral CSS var `--font-brand` and wired into
+  `--font-sans` / `--font-display`. Headings are untracked (`letter-spacing: 0`).
+- **Never name a family.** Inline styles use `var(--font-display)` (labels,
+  headings — e.g. `HubButton`) or `var(--font-sans)`; classes use `font-sans` /
+  `font-display`. A family name anywhere else won't follow the next swap.
+- Selection + focus
   rings are iris (`#6058F7`), focus `outline-offset: 2px; border-radius: 4px`.
 
 ### Spacing & layout (from the ausom pages)

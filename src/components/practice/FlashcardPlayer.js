@@ -72,7 +72,7 @@ function AnswerButton({ children, onClick }) {
         padding: '18px 24px',
         background: ACCENT,
         color: '#ffffff',
-        fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+        fontFamily: 'var(--font-display)',
         fontWeight: 600,
         fontSize: 17,
         letterSpacing: '-0.01em',
@@ -97,7 +97,7 @@ function OutroVideo({ outro, videoLabel }) {
       {outro.title && (
         <h3
           style={{
-            fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+            fontFamily: 'var(--font-display)',
             fontWeight: 600,
             fontSize: 18,
             letterSpacing: '-0.01em',
@@ -233,7 +233,7 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
           >
             <h2
               style={{
-                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontFamily: 'var(--font-display)',
                 fontWeight: 600,
                 fontSize: 22,
                 letterSpacing: '-0.01em',
@@ -266,7 +266,7 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
           <div style={{ marginBottom: 10 }}>
             <span
               style={{
-                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontFamily: 'var(--font-display)',
                 fontWeight: 600,
                 fontSize: 14,
                 letterSpacing: '-0.01em',
@@ -298,7 +298,7 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
 
         <h2
           style={{
-            fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+            fontFamily: 'var(--font-display)',
             fontWeight: 600,
             fontSize: 22,
             letterSpacing: '-0.01em',

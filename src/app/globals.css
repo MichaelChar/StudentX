@@ -2,7 +2,7 @@
 
 /*
   StudentX design tokens — Stripe-modern palette.
-  Iris primary, navy ink, white canvas, orange/magenta accents, Inter type.
+  Iris primary, navy ink, white canvas, orange/magenta accents, Plus Jakarta Sans.
 */
 :root {
   /* Primary tokens */
@@ -113,11 +113,14 @@
   --color-gray-dark: var(--color-text);
   --color-gray-light: var(--color-gray-light);
 
-  /* Type — Inter for both display and body (Latin + Greek) */
-  --font-sans: var(--font-inter), system-ui, sans-serif;
-  --font-display: var(--font-inter), system-ui, sans-serif;
+  /* Type — one face for display and body. `--font-brand` is set by next/font
+     in [locale]/layout.js (Plus Jakarta Sans since 2026-10-02). Components
+     reference `--font-sans` / `--font-display`, never a family name, so a
+     font swap is one line in layout.js. */
+  --font-sans: var(--font-brand), system-ui, sans-serif;
+  --font-display: var(--font-brand), system-ui, sans-serif;
   /* Legacy alias kept for any component still using font-heading */
-  --font-heading: var(--font-inter), system-ui, sans-serif;
+  --font-heading: var(--font-brand), system-ui, sans-serif;
 
   /* Geometry — generates rounded-card / rounded-photo / rounded-pill /
      rounded-control / rounded-modal. Tailwind's own radius scale
@@ -191,13 +194,18 @@ body {
   background: var(--color-stone);
   color: var(--color-night);
   font-family: var(--font-sans, system-ui, sans-serif);
-  font-feature-settings: "ss01", "cv11"; /* humanist numerals where available */
+  /* No font-feature-settings: the old "ss01", "cv11" were Inter's alternates
+     and render identically in Plus Jakarta Sans (measured 2026-10-02). */
 }
 
-/* Display typography — Inter at tighter tracking for headings */
+/* Display typography. Untracked: Inter wanted -0.02em, but Plus Jakarta Sans
+   at that setting closes its word spaces ("roomin2bedroom" on listing
+   titles). 0 is the "heading spacing loosened" variant the founder chose from
+   the 2026-10-02 previews. Unlayered, so it outranks `tracking-*` utilities on
+   headings — that was already true at -0.02em. */
 h1, h2, h3, h4, h5, h6, .font-display {
   font-family: var(--font-display);
-  letter-spacing: -0.02em;
+  letter-spacing: 0;
 }
 
 /*

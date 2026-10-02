@@ -1,4 +1,4 @@
-import { Inter, Inter_Tight } from 'next/font/google';
+import { Plus_Jakarta_Sans } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -19,21 +19,19 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 // file tree but next-intl injects 'en' silently with `localePrefix:
 // 'never'`.
 
-// Inter — display + body face. Greek subset retained because the dormant
-// inquiry/digest email templates still have Greek STRINGS branches
-// (regression-guard tests pin them). Dropping the subset can wait for
-// the follow-up template-strip PR.
-const inter = Inter({
-  subsets: ['latin', 'greek'],
-  variable: '--font-inter',
-  weight: ['400', '500', '600', '700'],
-  display: 'swap',
-});
-
-const interTight = Inter_Tight({
+// The site typeface — display AND body — is Plus Jakarta Sans (founder's
+// call, 2026-10-02; it replaced Inter + Inter Tight). It is exposed as
+// `--font-brand`, a deliberately font-neutral name: globals.css builds
+// `--font-sans` / `--font-display` on it, and nothing else may name a family,
+// so the next swap is this one block. Variable font (no `weight` list) — one
+// file covers every weight the site uses.
+//
+// No Greek subset exists for this family. The site is English-only; any
+// stray Greek glyph (e.g. α/β in a practice question) falls back per-glyph to
+// system-ui through the stack in globals.css.
+const brandFont = Plus_Jakarta_Sans({
   subsets: ['latin'],
-  variable: '--font-inter-tight',
-  weight: ['400', '500', '600', '700'],
+  variable: '--font-brand',
   display: 'swap',
 });
 
@@ -106,7 +104,7 @@ export default async function LocaleLayout({ children, params }) {
   return (
     <html
       lang={locale}
-      className={`${inter.variable} ${interTight.variable} h-full antialiased`}
+      className={`${brandFont.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans bg-stone text-night">
         <NextIntlClientProvider locale={locale} messages={messages}>
