@@ -217,7 +217,7 @@ function LandlordLoginInner() {
           rightAction={
             <Link
               href="/property/thessaloniki/landlord/forgot-password"
-              className="label-caps text-blue hover:text-night"
+              className="text-sm font-medium text-blue hover:text-night"
             >
               {t('forgotPassword')}
             </Link>

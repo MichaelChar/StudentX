@@ -257,7 +257,7 @@ function StudentLoginInner() {
           rightAction={
             <Link
               href="/student/forgot-password"
-              className="label-caps text-blue hover:text-night"
+              className="text-sm font-medium text-blue hover:text-night"
             >
               {t('forgotPassword')}
             </Link>
@@ -281,7 +281,7 @@ function StudentLoginInner() {
 
       <div className="my-6 flex items-center gap-3">
         <span className="h-px flex-1 bg-night/10" />
-        <span className="label-caps text-night/40">{t('or')}</span>
+        <span className="text-sm text-night/50">{t('or')}</span>
         <span className="h-px flex-1 bg-night/10" />
       </div>
 

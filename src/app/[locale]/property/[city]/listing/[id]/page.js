@@ -219,7 +219,7 @@ export default async function ListingPage({ params, searchParams }) {
           once the tab bar and the account pill come off. */}
       <Link
         href={backHref}
-        className="hidden md:inline-flex items-center gap-2 label-caps text-night/60 hover:text-blue transition-colors mb-8"
+        className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-night/60 hover:text-blue transition-colors mb-8"
       >
         <Icon name="chevronRight" className="w-3.5 h-3.5 rotate-180" />
         {t('back')}
@@ -402,7 +402,7 @@ export default async function ListingPage({ params, searchParams }) {
                 size={48}
               />
               <span className="leading-tight">
-                <span className="label-caps text-night/50 block">
+                <span className="text-sm text-night/60 block">
                   {t('listedBy')}
                 </span>
                 <span className="font-display text-xl text-night group-hover:text-blue transition-colors">
@@ -561,7 +561,7 @@ export default async function ListingPage({ params, searchParams }) {
                 {listing.university_distances.map((u) => (
                   <div key={u.university_id}>
                     {/* Not label-caps: it would uppercase "UoM" to "UOM". */}
-                    <dt className="text-[0.7rem] font-semibold tracking-[0.18em] text-night/50">
+                    <dt className="text-sm text-night/60">
                       {u.short_name}
                     </dt>
                     <dd className="font-display text-2xl text-night">
@@ -774,7 +774,7 @@ function BilingualField({ english, value }) {
   return (
     <div>
       <dt>
-        <span className="label-caps text-night/80 block">
+        <span className="text-sm text-night/60 block">
           {english}
         </span>
       </dt>
