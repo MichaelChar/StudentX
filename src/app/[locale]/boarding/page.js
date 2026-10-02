@@ -1,5 +1,4 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
-import { Newsreader } from 'next/font/google';
 import { HeaderSlot } from '@/components/HeaderSlot';
 import { CalLoader, CalButton } from '@/components/boarding/CalBooking';
 import Portrait from '@/components/boarding/Portrait';
@@ -21,28 +20,26 @@ import {
   passed down as props, so no client message namespace is needed. Do not read
   `searchParams` here — it would opt the route out of prerendering.
 
-  Headings use Newsreader, as in the approved design; the rest of the site is
-  Inter throughout. Loaded here so the face ships on this route only.
+  Styled to the site, not the design file, where the two disagreed (founder's
+  call, 2026-10-02): Inter headings in the site's display style, flat 8px
+  buttons matching ui/Button's primary look, the site's own header, footer
+  line and mobile tab bar.
 */
-
-const newsreader = Newsreader({
-  subsets: ['latin'],
-  axes: ['opsz'],
-  display: 'swap',
-});
 
 const MUTED = 'text-[#5c6b80]';
 const WRAP = 'mx-auto w-full max-w-[1120px] px-5';
-const DISPLAY = `${newsreader.className} font-[560] tracking-[-0.03em] leading-[1.08]`;
+const DISPLAY = 'font-display leading-[1.08]';
 const H2 = `${DISPLAY} mb-4 text-[clamp(2rem,3.6vw,3.15rem)]`;
 const LABEL = 'mb-2.5 text-[13px] font-bold tracking-[0.02em] text-blue';
+// Mirrors ui/Button (primary, md). Not that component itself: it renders
+// next-intl's <Link>, and these are external links with a click intercept.
 const BTN =
-  'inline-flex items-center justify-center gap-2 rounded-full px-5 py-[13px] ' +
-  'text-[15px] font-semibold leading-[1.65] no-underline cursor-pointer ' +
-  'transition-[background-color,transform] duration-150 ease-out hover:-translate-y-px ' +
+  'inline-flex items-center justify-center gap-2 rounded-control px-5 py-3 ' +
+  'text-sm font-sans font-semibold leading-normal no-underline cursor-pointer border ' +
+  'transition-[background-color,border-color,color] ' +
   'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue';
-const BTN_PRIMARY = `${BTN} bg-blue text-white shadow-[0_8px_20px_rgba(99,91,255,0.28)] hover:bg-[#4f46e5]`;
-const BTN_ON_BLUE = `${BTN} bg-white text-night hover:bg-parchment`;
+const BTN_PRIMARY = `${BTN} bg-blue text-white border-blue hover:bg-blue/90 active:bg-blue/80`;
+const BTN_ON_BLUE = `${BTN} bg-white text-night border-white hover:bg-parchment`;
 const SPLIT = 'grid items-center gap-12';
 const PANEL = 'rounded-[28px] bg-parchment p-9';
 
@@ -165,7 +162,7 @@ export default async function BoardingPage({ params }) {
           <ol className="mt-7 grid gap-[18px] min-[980px]:grid-cols-3">
             {steps.map((step) => (
               <li key={step.n} className="rounded-3xl bg-blue px-[22px] pt-6 pb-[22px] text-white">
-                <span className={`${newsreader.className} mb-[18px] block text-[2.4rem] leading-none`}>
+                <span className="mb-[18px] block font-display text-[2.4rem] leading-none">
                   {step.n}
                 </span>
                 <h3 className="mb-2 text-[1.15rem] font-bold">{step.title}</h3>
@@ -189,13 +186,13 @@ export default async function BoardingPage({ params }) {
             </div>
             <div>
               <CalButton className={BTN_ON_BLUE}>{t('close.cta')}</CalButton>
-              <p className={`mt-3 text-[13.5px] ${MUTED}`}>
+              <p className="mt-3 text-[13.5px] text-white/80">
                 {t('close.emailLead')}{' '}
                 <a href={`mailto:${CONTACT_EMAIL}`} className="text-white underline">
                   {CONTACT_EMAIL}
                 </a>
               </p>
-              <p className={`mt-1.5 text-[13.5px] ${MUTED}`}>
+              <p className="mt-1.5 text-[13.5px] text-white/80">
                 {t('close.phoneLead')}{' '}
                 <a
                   href={WHATSAPP_URL}
@@ -219,7 +216,7 @@ export default async function BoardingPage({ params }) {
       {/* Mobile sticky CTA. Sits above the site's bottom tab bar (< md),
           which is fixed at the foot of every page. */}
       <div className="fixed inset-x-3 bottom-[calc(4rem+env(safe-area-inset-bottom)+12px)] z-30 md:bottom-3 min-[980px]:hidden">
-        <CalButton className={`${BTN_PRIMARY} w-full shadow-[0_10px_30px_rgba(10,37,64,0.2)]`}>
+        <CalButton className={`${BTN_PRIMARY} w-full`}>
           {t('headerCta')}
         </CalButton>
       </div>
