@@ -163,7 +163,7 @@ function GigsResultsInner() {
           {/* Filters */}
           <aside className="space-y-6 lg:sticky lg:top-[calc(var(--header-h)+1.5rem)] lg:self-start">
             <div>
-              <p className="label-caps mb-2 text-night/50">{t('payType')}</p>
+              <p className="label-caps mb-2 text-night/70">{t('payType')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {['paid', 'unpaid'].map((opt) => (
                   <button
@@ -185,8 +185,8 @@ function GigsResultsInner() {
             {/* Pay histogram — paid only */}
             {pay === 'paid' && histogram.length > 0 && histPeak > 0 && (
               <div>
-                <p className="label-caps mb-1 text-night/50">{t('payDistribution')}</p>
-                <p className="mb-2 text-xs text-night/40">{t('payDistributionHint')}</p>
+                <p className="label-caps mb-1 text-night/70">{t('payDistribution')}</p>
+                <p className="mb-2 text-xs text-night/70">{t('payDistributionHint')}</p>
                 <div className="flex h-20 items-end gap-1">
                   {/*
                     `rounded-t-[2px]`, not a geometry token. A chart bar has no
@@ -210,7 +210,7 @@ function GigsResultsInner() {
             )}
 
             <div>
-              <p className="label-caps mb-2 text-night/50">{t('country')}</p>
+              <p className="label-caps mb-2 text-night/70">{t('country')}</p>
               <div className="flex flex-wrap gap-2">
                 {countryOptions.map((c) => (
                   <button
@@ -230,7 +230,7 @@ function GigsResultsInner() {
             </div>
 
             <div>
-              <label className="label-caps mb-2 block text-night/50" htmlFor="available_from">
+              <label className="label-caps mb-2 block text-night/70" htmlFor="available_from">
                 {t('availability')}
               </label>
               <input
@@ -243,7 +243,7 @@ function GigsResultsInner() {
             </div>
 
             <div>
-              <label className="label-caps mb-2 block text-night/50" htmlFor="min_duration">
+              <label className="label-caps mb-2 block text-night/70" htmlFor="min_duration">
                 {t('duration')}
               </label>
               <select
@@ -275,7 +275,7 @@ function GigsResultsInner() {
           {/* Results */}
           <main>
             <div className="mb-4 flex items-center justify-between gap-4">
-              <p className="text-sm text-night/60">
+              <p className="text-sm text-night/70">
                 {loading ? t('loading') : t('resultCount', { count: gigs.length })}
               </p>
               <div className="inline-flex rounded-card border border-night/15 bg-white p-0.5">
@@ -285,7 +285,7 @@ function GigsResultsInner() {
                     type="button"
                     onClick={() => setViewMode(mode)}
                     className={`rounded-control px-3 py-1.5 text-sm font-medium transition-colors ${
-                      viewMode === mode ? 'bg-blue text-white' : 'text-night/60 hover:text-night active:text-night/80'
+                      viewMode === mode ? 'bg-blue text-white' : 'text-night/70 hover:text-night active:text-night/80'
                     }`}
                   >
                     {t(mode)}
@@ -311,7 +311,7 @@ function GigsResultsInner() {
             ) : gigs.length === 0 ? (
               <div className="rounded-card border border-night/10 bg-white p-10 text-center">
                 <p className="font-display text-xl text-night">{t('noResults')}</p>
-                <p className="mt-1 text-sm text-night/50">{t('noResultsHint')}</p>
+                <p className="mt-1 text-sm text-night/70">{t('noResultsHint')}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 xl:grid-cols-3">

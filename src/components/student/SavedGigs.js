@@ -24,7 +24,7 @@ export default function SavedGigs({ gigs }) {
     return (
       <Card tone="parchment" className="p-12 text-center">
         <Icon name="heart" className="w-12 h-12 mx-auto text-night/30 mb-3" />
-        <p className="font-display text-xl text-night/60 mb-5">{t('empty')}</p>
+        <p className="font-display text-xl text-night/70 mb-5">{t('empty')}</p>
         <Button href="/gigs">
           {t('browse')}
         </Button>

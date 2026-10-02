@@ -115,7 +115,7 @@ function PriceHistogram({
   // Too few listings to chart (see HISTOGRAM_MIN_LISTINGS): say the range.
   if (status === 'sparse') {
     return (
-      <p className="text-sm text-night/60 font-sans">
+      <p className="text-sm text-night/70 font-sans">
         {sparseLabel({
           min: formatMoney(Math.round(histogram.range.min)),
           max: formatMoney(Math.round(histogram.range.max)),
@@ -145,7 +145,7 @@ function PriceHistogram({
 
   if (status === 'empty') {
     return (
-      <p className="text-[11px] text-night/40 font-sans">{emptyLabel}</p>
+      <p className="text-[11px] text-night/70 font-sans">{emptyLabel}</p>
     );
   }
 
@@ -342,13 +342,13 @@ export default function FiltersModal({
               <div>
                 <label
                   htmlFor={minId}
-                  className="text-xs font-sans text-night/50"
+                  className="text-xs font-sans text-night/70"
                 >
                   {t('priceMin')}
                 </label>
                 <div className="relative mt-1.5">
                   <span
-                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-night/50"
+                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-night/70"
                     aria-hidden="true"
                   >
                     {symbol}
@@ -369,13 +369,13 @@ export default function FiltersModal({
               <div>
                 <label
                   htmlFor={maxId}
-                  className="text-xs font-sans text-night/50"
+                  className="text-xs font-sans text-night/70"
                 >
                   {t('priceMax')}
                 </label>
                 <div className="relative mt-1.5">
                   <span
-                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-night/50"
+                    className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-sm text-night/70"
                     aria-hidden="true"
                   >
                     {symbol}

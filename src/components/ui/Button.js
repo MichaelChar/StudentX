@@ -61,7 +61,7 @@ const LOOKS = {
   // variant and the error text in landlord/reservations. Deliberately not a new
   // red: the palette is not being extended.
   destructive:
-    'bg-transparent text-magenta border border-magenta/40 hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10',
+    'bg-transparent text-magenta-ink border border-magenta/40 hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10',
 };
 
 /*

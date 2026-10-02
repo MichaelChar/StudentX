@@ -52,7 +52,7 @@ export default function VerifyEmailPage() {
     <AuthShell eyebrow="Verify email" title={t('title')} subtitle={t('message')}>
       <div className="space-y-5">
         {error && (
-          <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2">
+          <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-3 py-2">
             {error}
           </p>
         )}
@@ -72,7 +72,7 @@ export default function VerifyEmailPage() {
           </Button>
         )}
 
-        <p className="text-sm text-night/60">
+        <p className="text-sm text-night/70">
           <Link
             href="/login"
             className="text-blue font-medium hover:text-night"

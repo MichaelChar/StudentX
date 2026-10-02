@@ -166,7 +166,7 @@ function MonthGrid({
             <div
               key={name}
               role="columnheader"
-              className="text-center label-caps text-night/40 py-1"
+              className="text-center label-caps text-night/70 py-1"
             >
               {name}
             </div>
@@ -454,7 +454,7 @@ export default function DateRangePicker({
       </div>
 
       <div className="mt-4 flex items-center justify-between gap-3 min-h-8">
-        <p className="text-sm font-sans text-night/60">
+        <p className="text-sm font-sans text-night/70">
           {durationText}
         </p>
         {hasDates ? (

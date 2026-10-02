@@ -38,7 +38,7 @@ export default function Field({
 
   return (
     <div className={`flex flex-col gap-0.5 ${className}`} {...rest}>
-      {text && <span className="label-caps text-night/50">{text}</span>}
+      {text && <span className="label-caps text-night/70">{text}</span>}
       <div className={`mt-1 text-night leading-snug ${SIZES[size] || SIZES.lg}`}>
         {children}
       </div>

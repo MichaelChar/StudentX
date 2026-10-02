@@ -245,22 +245,22 @@ export default function BookingWidget({ listing, nextPath,
               {listing.monthly_price != null ? (
                 <>
                   {formatMoney(listing.monthly_price, listing.currency)}
-                  <span className="text-base text-night/50">/mo</span>
+                  <span className="text-base text-night/70">/mo</span>
                 </>
               ) : (
-                <span className="text-base text-night/50">
+                <span className="text-base text-night/70">
                   {tListing('priceOnRequest')}
                 </span>
               )}
             </p>
-            <p className="mt-2 text-sm text-night/60 leading-relaxed">
+            <p className="mt-2 text-sm text-night/70 leading-relaxed">
               {t('tagline')}
             </p>
 
             {done ? (
               <div className="mt-5 space-y-3">
                 <p className="font-display text-xl text-night">{t('successTitle')}</p>
-                <p className="text-sm text-night/60">{t('successBody')}</p>
+                <p className="text-sm text-night/70">{t('successBody')}</p>
               </div>
             ) : (
               <div className="mt-5 space-y-4">
@@ -310,7 +310,7 @@ export default function BookingWidget({ listing, nextPath,
 
                   {cost && (
                     <div className="rounded-card border border-night/10 bg-parchment p-4 space-y-2 text-sm">
-                      <p className="label-caps text-night/60">{t('costTitle')}</p>
+                      <p className="label-caps text-night/70">{t('costTitle')}</p>
                       <div className="flex justify-between text-night">
                         <span>
                           {t('costRentLine', {
@@ -322,7 +322,7 @@ export default function BookingWidget({ listing, nextPath,
                           {formatMoney(cost.total_rent, listing.currency)}
                         </span>
                       </div>
-                      <p className="pt-1 text-night/50 text-xs leading-relaxed">
+                      <p className="pt-1 text-night/70 text-xs leading-relaxed">
                         {t('noCharge')}
                       </p>
                     </div>
@@ -330,7 +330,7 @@ export default function BookingWidget({ listing, nextPath,
 
                   {/* Display-only cancellation tiers. */}
                   <div className="rounded-card border border-night/10 bg-parchment p-4 space-y-2">
-                    <p className="label-caps text-night/60">{t('cancellationEnglish')}</p>
+                    <p className="label-caps text-night/70">{t('cancellationEnglish')}</p>
                     <ul className="space-y-1.5 text-sm text-night/70 font-sans leading-snug">
                       {CANCELLATION_TIERS.map((tier) => (
                         <li key={tier.id}>{t(CANCELLATION_COPY_KEY[tier.id])}</li>
@@ -341,7 +341,7 @@ export default function BookingWidget({ listing, nextPath,
                   {error && (
                     <p
                       role="alert"
-                      className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2"
+                      className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-3 py-2"
                     >
                       {error}
                     </p>
@@ -367,7 +367,7 @@ export default function BookingWidget({ listing, nextPath,
                     explains how the deposit is held, which is a different
                     question from "does pressing this take my money".
                   */}
-                  <p className="mt-2 text-center text-xs text-night/50">
+                  <p className="mt-2 text-center text-xs text-night/70">
                     {t('noChargeYet')}
                   </p>
                 </form>
@@ -430,10 +430,10 @@ export default function BookingWidget({ listing, nextPath,
             {listing.monthly_price != null ? (
               <>
                 {formatMoney(listing.monthly_price, listing.currency)}
-                <span className="text-sm text-night/50">/mo</span>
+                <span className="text-sm text-night/70">/mo</span>
               </>
             ) : (
-              <span className="text-sm text-night/50">{tListing('priceOnRequest')}</span>
+              <span className="text-sm text-night/70">{tListing('priceOnRequest')}</span>
             )}
           </p>
           {/*
@@ -444,7 +444,7 @@ export default function BookingWidget({ listing, nextPath,
             on every listing. Beside the money is where the hesitation is
             anyway.
           */}
-          <p className="mt-0.5 truncate text-xs text-night/50">
+          <p className="mt-0.5 truncate text-xs text-night/70">
             {t('noChargeYet')}
           </p>
         </div>

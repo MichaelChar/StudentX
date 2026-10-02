@@ -70,7 +70,7 @@ const STATES = {
   // Ink fill. Reads as "on" without spending the brand colour.
   on: 'bg-night text-stone hover:bg-night/90 active:bg-night/80',
   // Quiet. Hover AND pressed — four-state rule; property's toggle only had hover.
-  off: 'bg-transparent text-night/60 hover:text-night hover:bg-parchment active:bg-night/10 active:text-night/80',
+  off: 'bg-transparent text-night/70 hover:text-night hover:bg-parchment active:bg-night/10 active:text-night/80',
 };
 
 export default function SegmentedControl({

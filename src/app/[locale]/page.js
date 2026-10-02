@@ -10,6 +10,7 @@ export default async function HomePage({ params }) {
   const buttons = [
     { id: 'directory', label: t('directory'), href: '/property' },
     { id: 'admissions', label: t('admissions'), href: '/admissions' },
+    { id: 'boarding',  label: t('boarding'),  href: '/boarding' },
     { id: 'services',  label: t('services'),  href: '/resources' },
     { id: 'gigs',      label: t('holidayGigs'), href: '/gigs' },
     { id: 'blog',      label: t('blog'),      href: 'https://blog.studentx.uk', external: true },
@@ -48,7 +49,7 @@ export default async function HomePage({ params }) {
         <div
           style={{
             fontSize: 12,
-            color: 'rgba(10,37,64,0.45)',
+            color: 'rgba(10,37,64,0.7)',
             letterSpacing: '0.3px',
           }}
         >

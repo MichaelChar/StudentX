@@ -85,10 +85,10 @@ export default function StepImport({
           spellCheck={false}
         />
         <div className="mt-1.5 flex justify-between gap-3">
-          <p className="text-xs text-night/50">{t('textareaTip')}</p>
+          <p className="text-xs text-night/70">{t('textareaTip')}</p>
           <span
             className={`text-xs tabular-nums shrink-0 ${
-              overCap ? 'text-magenta' : 'text-night/40'
+              overCap ? 'text-magenta-ink' : 'text-night/70'
             }`}
           >
             {Math.min(charCount, PASTE_MAX_LENGTH)}
@@ -99,7 +99,7 @@ export default function StepImport({
       </div>
 
       {localError && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3">
           {localError}
         </p>
       )}
@@ -132,7 +132,7 @@ export default function StepImport({
               </ul>
             </>
           )}
-          <p className="text-xs text-night/50">{t('suggestionNote')}</p>
+          <p className="text-xs text-night/70">{t('suggestionNote')}</p>
         </Card>
       )}
 

@@ -51,12 +51,12 @@ export default function EditorSection({
         <span className="min-w-0 flex-1">
           <span className="block font-display text-lg text-night">{title}</span>
           {summary ? (
-            <span className="mt-0.5 block truncate text-sm text-night/50">{summary}</span>
+            <span className="mt-0.5 block truncate text-sm text-night/70">{summary}</span>
           ) : null}
         </span>
 
         {incomplete && incompleteLabel ? (
-          <span className="inline-flex shrink-0 items-center gap-1.5 label-caps text-magenta">
+          <span className="inline-flex shrink-0 items-center gap-1.5 label-caps text-magenta-ink">
             <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-magenta" />
             {incompleteLabel}
           </span>
@@ -65,7 +65,7 @@ export default function EditorSection({
         <Icon
           name="chevronDown"
           aria-hidden="true"
-          className={`w-4 h-4 shrink-0 text-night/40 transition-transform ${
+          className={`w-4 h-4 shrink-0 text-night/60 transition-transform ${
             open ? 'rotate-180' : ''
           }`}
         />

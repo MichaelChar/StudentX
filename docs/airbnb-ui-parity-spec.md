@@ -1586,6 +1586,23 @@ formatter).
 > `.label-caps` definition in `globals.css`; other surfaces follow it as they
 > are touched.
 
+> **AMENDED 2026-10-02 (founder) — colour layer, for WCAG AA only.** The
+> palette's identity is unchanged; three values move because they failed AA as
+> TEXT, measured on the rendered site:
+>
+> - **Iris `#635BFF` → `#6058F7`** (3% darker). Small iris text on parchment
+>   was 4.32:1; it is now 4.56:1 (4.96:1 on white). Indistinguishable by eye;
+>   the logo PNG stays `#635BFF`.
+> - **`magenta-ink` `#d61f69` for magenta TEXT.** `#ff5fa2` text was 2.83:1 on
+>   white, 2.60:1 on parchment — and it is the error colour. Fills, borders,
+>   tints and icons keep `magenta`.
+> - **Muted text floor is `night/70` (5.9:1).** `/60` measured 4.28:1 and
+>   everything below it worse; ~400 sites moved. Exempt and kept: disabled /
+>   unavailable UI, decorative icons, and large text or icon-only controls,
+>   which need 3:1 (`/60` or above).
+> - **Accent fills carry night text.** White on yellow (VERIFIED, 1.51:1) and on
+>   magenta (pending, 2.83:1) failed; night gives 10.3:1 and 5.48:1.
+
 ### ❌ Feature 34 — Review system — **SKIP**
 
 No `reviews` table, no post-stay prompt, no PDP reviews section, no host

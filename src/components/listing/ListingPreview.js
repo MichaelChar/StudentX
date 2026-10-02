@@ -89,7 +89,7 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
       <div className="sticky top-0 z-10 flex items-center justify-between gap-4 border-b border-night/10 bg-blue px-5 py-3 text-white">
         <div className="flex items-center gap-2.5 min-w-0">
           <Icon name="search" className="w-4 h-4 shrink-0" />
-          <p className="label-caps text-white/90 truncate">{t('previewBanner')}</p>
+          <p className="label-caps text-white truncate">{t('previewBanner')}</p>
         </div>
         <button
           ref={closeBtnRef}
@@ -127,14 +127,14 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
             {/* Hero stripe — neighborhood, title, address */}
             <div className="flex flex-col md:flex-row md:items-start gap-5 mb-8">
               <div className="flex-1">
-                <p className="label-caps text-night/50">
+                <p className="label-caps text-night/70">
                   {neighborhood ? `${neighborhood} · Thessaloniki` : 'Thessaloniki'}
                 </p>
                 <h1 className="mt-1 font-display text-4xl md:text-5xl text-night leading-tight text-balance">
                   {headline}
                 </h1>
                 {address && (
-                  <p className="mt-2 label-caps text-night/60">{address}</p>
+                  <p className="mt-2 label-caps text-night/70">{address}</p>
                 )}
               </div>
             </div>
@@ -148,10 +148,10 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
                     hasPrice ? (
                       <>
                         {formatMoney(monthlyPrice)}
-                        <span className="text-base text-night/50">/mo</span>
+                        <span className="text-base text-night/70">/mo</span>
                       </>
                     ) : (
-                      <span className="text-base text-night/50">—</span>
+                      <span className="text-base text-night/70">—</span>
                     )
                   }
                 />
@@ -205,10 +205,10 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
                   {hasPrice ? (
                     <>
                       {formatMoney(monthlyPrice)}
-                      <span className="text-base text-night/50">/mo</span>
+                      <span className="text-base text-night/70">/mo</span>
                     </>
                   ) : (
-                    <span className="text-base text-night/50">—</span>
+                    <span className="text-base text-night/70">—</span>
                   )}
                 </p>
                 <p className="mt-5 text-night/70 text-sm leading-relaxed">
@@ -219,12 +219,12 @@ export default function ListingPreview({ form, amenities = [], onClose }) {
                     type="button"
                     disabled
                     aria-disabled="true"
-                    className="w-full justify-center inline-flex items-center bg-yellow text-white font-display font-semibold px-6 py-3 rounded-control opacity-60 cursor-not-allowed"
+                    className="w-full justify-center inline-flex items-center bg-yellow text-night font-display font-semibold px-6 py-3 rounded-control opacity-60 cursor-not-allowed"
                   >
                     {t('previewInquire')}
                   </button>
                 </div>
-                <p className="mt-3 label-caps text-night/50 text-center">
+                <p className="mt-3 label-caps text-night/70 text-center">
                   {t('previewInquireNote')}
                 </p>
               </Card>

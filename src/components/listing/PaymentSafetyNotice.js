@@ -13,7 +13,7 @@ import Icon from '@/components/ui/Icon';
   Placement: directly under "Message host" inside MeetYourHost's Card.
   That is why this is not itself a Card, not a bordered parchment box,
   and not a Pill. Those three are the second-card stack the spec forbids
-  — the error-callout pattern used on BookingWidget (`text-magenta
+  — the error-callout pattern used on BookingWidget (`text-magenta-ink
   bg-parchment border … rounded-control`) is a mini-card, and a pending
   Pill is a shouty uppercase chip. Either would read as a new surface
   glued to the host card.

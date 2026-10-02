@@ -11,7 +11,7 @@ const money = (v) => {
 
 function PhotoStrip({ photos }) {
   const urls = (Array.isArray(photos) ? photos : []).map((p) => p?.url).filter(Boolean);
-  if (!urls.length) return <div className="h-40 bg-parchment rounded-photo grid place-items-center text-night/30 text-sm">No photos</div>;
+  if (!urls.length) return <div className="h-40 bg-parchment rounded-photo grid place-items-center text-night/70 text-sm">No photos</div>;
   return (
     <div className="flex gap-2 overflow-x-auto pb-1">
       {urls.map((u, i) => (
@@ -76,7 +76,7 @@ export default function ClaimClient({ token, landlord, listings }) {
       <div className="min-h-[calc(100vh-var(--header-h))] grid place-items-center p-6">
         <div className="max-w-md text-center">
           <h1 className="font-display text-2xl font-bold text-night mb-2">You are live 🎉</h1>
-          <p className="text-night/60">
+          <p className="text-night/70">
             {result.already
               ? 'Your listings have already been published to StudentX.'
               : `Published ${result.published?.length ?? 0} listing(s) to StudentX.`}
@@ -89,12 +89,12 @@ export default function ClaimClient({ token, landlord, listings }) {
   return (
     <div className="max-w-2xl mx-auto px-4 py-10">
       <h1 className="font-display text-2xl font-bold text-night mb-1">Claim your StudentX listings</h1>
-      <p className="text-night/60 mb-6">
+      <p className="text-night/70 mb-6">
         Review the details below and publish them to the StudentX directory. You can edit anything before publishing.
       </p>
 
       <section className="border border-night/10 rounded-card p-4 mb-6">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Your contact details</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">Your contact details</h2>
         <div className="grid sm:grid-cols-3 gap-2">
           {['display_name', 'phone', 'email'].map((f) => (
             <input
@@ -108,10 +108,10 @@ export default function ClaimClient({ token, landlord, listings }) {
         </div>
       </section>
 
-      {result?.error && <p className="text-sm bg-parchment text-magenta rounded-control px-3 py-2 mb-4">{result.error}</p>}
+      {result?.error && <p className="text-sm bg-parchment text-magenta-ink rounded-control px-3 py-2 mb-4">{result.error}</p>}
 
       {claimable.length === 0 ? (
-        <p className="text-night/50">There are no listings waiting to be published.</p>
+        <p className="text-night/70">There are no listings waiting to be published.</p>
       ) : (
         claimable.map((l) => (
           <div key={l.id} className="border border-night/10 rounded-card p-4 mb-4">
@@ -155,7 +155,7 @@ export default function ClaimClient({ token, landlord, listings }) {
               value={edits[l.id].description}
               onChange={(e) => setListingField(l.id, 'description', e.target.value)}
             />
-            {l.price_eur_month != null && <p className="text-xs text-night/40 mt-1">Current: {money(l.price_eur_month)}</p>}
+            {l.price_eur_month != null && <p className="text-xs text-night/70 mt-1">Current: {money(l.price_eur_month)}</p>}
           </div>
         ))
       )}

@@ -13,7 +13,7 @@ import Lightbox from './Lightbox';
 import ReportIssueModal from './ReportIssueModal';
 import { PrimaryButton, TextButton } from './PlayerButton';
 
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const COLUMN = 560;
 
 /* ---------- attempt construction (pure, never mutates the loaded JSON) ---------- */
@@ -146,7 +146,7 @@ function BackRow({ href, onClick, label }) {
     gap: 6,
     fontSize: 13,
     fontWeight: 600,
-    color: 'rgba(10,37,64,0.45)',
+    color: 'rgba(10,37,64,0.7)',
     textDecoration: 'none',
     background: 'none',
     border: 'none',
@@ -246,7 +246,7 @@ function ResumeBanner({ current, total, onContinue, onStartOver, t }) {
       >
         {t('resume.title')}
       </h2>
-      <p style={{ margin: '0 0 18px', fontSize: 14.5, lineHeight: 1.5, color: 'rgba(10,37,64,0.6)' }}>
+      <p style={{ margin: '0 0 18px', fontSize: 14.5, lineHeight: 1.5, color: 'rgba(10,37,64,0.7)' }}>
         {t('resume.description', { current, total })}
       </p>
       <div style={{ display: 'flex', alignItems: 'center', gap: 14, flexWrap: 'wrap' }}>
@@ -567,7 +567,7 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
                 fontWeight: 600,
                 fontSize: 14,
                 letterSpacing: '-0.01em',
-                color: 'rgba(10,37,64,0.55)',
+                color: 'rgba(10,37,64,0.7)',
               }}
             >
               {t('progress', { current: current + 1, total })}

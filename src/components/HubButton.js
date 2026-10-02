@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const INK = '#0a2540';
 
 function ArrowUpRight({ style }) {
@@ -116,7 +116,7 @@ export default function HubButton({ label, subtext, href, external = false, comi
       <div>
         <div style={labelStyle}>{label}</div>
         {subtext && (
-          <div style={{ marginTop: 5, fontSize: 13.5, lineHeight: 1.4, color: 'rgba(10,37,64,0.6)' }}>
+          <div style={{ marginTop: 5, fontSize: 13.5, lineHeight: 1.4, color: 'rgba(10,37,64,0.7)' }}>
             {subtext}
           </div>
         )}

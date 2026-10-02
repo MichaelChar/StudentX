@@ -45,8 +45,8 @@ export default function GigFavoriteButton({ gigId, withLabel = false, className 
         aria-label={ariaLabel}
         className={`inline-flex items-center gap-2 rounded-control border px-4 py-2.5 font-sans font-medium text-sm transition-colors ${
           saved
-            ? 'border-magenta bg-magenta/5 text-magenta'
-            : 'border-night/20 text-night/70 hover:border-magenta hover:text-magenta active:bg-magenta/10'
+            ? 'border-magenta bg-magenta/5 text-magenta-ink'
+            : 'border-night/20 text-night/70 hover:border-magenta hover:text-magenta-ink active:bg-magenta/10'
         } ${className}`}
       >
         <Icon key={popKey}
@@ -68,7 +68,7 @@ export default function GigFavoriteButton({ gigId, withLabel = false, className 
         name="heart"
         key={popKey}
           onAnimationEnd={() => setPopping(false)}
-        className={`w-[18px] h-[18px] transition-colors ${saved ? 'text-magenta' : 'text-night/45'}${popping && saved ? ' sx-heart-pop' : ''}`}
+        className={`w-[18px] h-[18px] transition-colors ${saved ? 'text-magenta' : 'text-night/60'}${popping && saved ? ' sx-heart-pop' : ''}`}
         fill={saved ? 'currentColor' : 'none'}
       />
     </button>

@@ -128,7 +128,7 @@ export default function ProfilePhotoSettings() {
   return (
     <Card tone="parchment" className="px-6 py-6">
       <h2 className="font-display text-xl text-night mb-1">{t('photoTitle')}</h2>
-      <p className="text-sm text-night/60 mb-5">{t('photoDescription')}</p>
+      <p className="text-sm text-night/70 mb-5">{t('photoDescription')}</p>
 
       <div className="flex items-center gap-5">
         {shownUrl ? (
@@ -155,7 +155,7 @@ export default function ProfilePhotoSettings() {
           />
           <label
             htmlFor="settings-photo"
-            className={`inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-night/10 rounded-control text-sm text-night/60 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors ${
+            className={`inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-night/10 rounded-control text-sm text-night/70 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors ${
               saving || loading ? 'opacity-50 pointer-events-none' : ''
             }`}
           >
@@ -169,16 +169,16 @@ export default function ProfilePhotoSettings() {
             <button
               type="button"
               onClick={handleRemove}
-              className="text-sm text-night/50 hover:text-magenta active:text-magenta/80 transition-colors text-left"
+              className="text-sm text-night/70 hover:text-magenta-ink active:text-magenta-ink/80 transition-colors text-left"
             >
               {t('photoRemove')}
             </button>
           )}
-          <p className="text-xs text-night/40">{t('photoHelp')}</p>
+          <p className="text-xs text-night/70">{t('photoHelp')}</p>
         </div>
       </div>
 
-      {error && <p className="text-sm text-magenta mt-3">{error}</p>}
+      {error && <p className="text-sm text-magenta-ink mt-3">{error}</p>}
       {status && <p className="text-sm text-jade mt-3">{status}</p>}
     </Card>
   );

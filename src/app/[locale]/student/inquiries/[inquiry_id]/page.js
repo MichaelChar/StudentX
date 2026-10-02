@@ -60,7 +60,7 @@ export default async function StudentInquiryThreadPage({ params }) {
     <div className="mx-auto max-w-3xl px-5 py-10 md:py-14">
       <Link
         href="/student/account"
-        className="inline-flex items-center gap-2 label-caps text-night/60 hover:text-blue transition-colors mb-6"
+        className="inline-flex items-center gap-2 label-caps text-night/70 hover:text-blue transition-colors mb-6"
       >
         <Icon name="chevronRight" className="w-3.5 h-3.5 rotate-180" />
         {t('backToAccount')}
@@ -71,7 +71,7 @@ export default async function StudentInquiryThreadPage({ params }) {
         <h1 className="font-display text-2xl md:text-3xl text-night leading-tight mb-1">
           {location?.address || `#${inquiry.listing_id}`}
         </h1>
-        <p className="text-night/60">
+        <p className="text-night/70">
           {[
             location?.neighborhood,
             rent?.monthly_price != null
@@ -81,7 +81,7 @@ export default async function StudentInquiryThreadPage({ params }) {
             .filter(Boolean)
             .join(' · ')}
         </p>
-        <p className="mt-3 text-sm text-night/50">{t('withLandlord')}</p>
+        <p className="mt-3 text-sm text-night/70">{t('withLandlord')}</p>
       </header>
 
       <ChatThread

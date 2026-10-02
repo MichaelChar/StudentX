@@ -112,7 +112,7 @@ export default function ReportListingModal({ listingId }) {
       <button
         type="button"
         onClick={() => setOpen(true)}
-        className="inline-flex items-center gap-1.5 label-caps text-night/40 hover:text-magenta active:text-magenta/80 transition-colors"
+        className="inline-flex items-center gap-1.5 label-caps text-night/70 hover:text-magenta-ink active:text-magenta-ink/80 transition-colors"
       >
         <Icon name="shield" className="w-3.5 h-3.5" />
         {t('trigger')}
@@ -130,7 +130,7 @@ export default function ReportListingModal({ listingId }) {
             <h2 id={titleId} className="font-display text-2xl text-night leading-tight">
               {t('title')}
             </h2>
-            <p className="mt-1 text-sm text-night/60">{t('subtitle')}</p>
+            <p className="mt-1 text-sm text-night/70">{t('subtitle')}</p>
           </div>
           <IconButton
             label={t('closeAriaLabel')}
@@ -149,7 +149,7 @@ export default function ReportListingModal({ listingId }) {
               <Icon name="check" className="w-5 h-5 text-blue" />
               {t('successTitle')}
             </p>
-            <p className="mt-2 text-sm text-night/60">{t('successBody')}</p>
+            <p className="mt-2 text-sm text-night/70">{t('successBody')}</p>
             <Button
               type="button"
               variant="primary"
@@ -236,7 +236,7 @@ export default function ReportListingModal({ listingId }) {
             {error && (
               <p
                 role="alert"
-                className="rounded-control border border-night/10 bg-parchment px-3 py-2 text-sm text-magenta"
+                className="rounded-control border border-night/10 bg-parchment px-3 py-2 text-sm text-magenta-ink"
               >
                 {error}
               </p>

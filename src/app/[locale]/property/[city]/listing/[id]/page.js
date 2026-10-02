@@ -219,7 +219,7 @@ export default async function ListingPage({ params, searchParams }) {
           once the tab bar and the account pill come off. */}
       <Link
         href={backHref}
-        className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-night/60 hover:text-blue transition-colors mb-8"
+        className="hidden md:inline-flex items-center gap-2 text-sm font-medium text-night/70 hover:text-blue transition-colors mb-8"
       >
         <Icon name="chevronRight" className="w-3.5 h-3.5 rotate-180" />
         {t('back')}
@@ -323,7 +323,7 @@ export default async function ListingPage({ params, searchParams }) {
           {/* Hero stripe — address */}
           <div className="flex flex-col md:flex-row md:items-start gap-5 mb-8">
             <div className="flex-1">
-              <p className="label-caps text-night/50 text-center md:text-left">
+              <p className="label-caps text-night/70 text-center md:text-left">
                 {listing.neighborhood} &middot; Thessaloniki
               </p>
               <h1 className="mt-1 font-display text-3xl sm:text-4xl md:text-5xl text-night leading-tight text-balance text-center md:text-left">
@@ -338,7 +338,7 @@ export default async function ListingPage({ params, searchParams }) {
               */}
               {listing.address && (
                 <p
-                  className="mt-2 label-caps text-night/60 text-center md:text-left"
+                  className="mt-2 label-caps text-night/70 text-center md:text-left"
                   aria-label={t('streetAddressA11y')}
                 >
                   {listing.address}
@@ -402,7 +402,7 @@ export default async function ListingPage({ params, searchParams }) {
                 size={48}
               />
               <span className="leading-tight">
-                <span className="text-sm text-night/60 block">
+                <span className="text-sm text-night/70 block">
                   {t('listedBy')}
                 </span>
                 <span className="font-display text-xl text-night group-hover:text-blue transition-colors">
@@ -436,10 +436,10 @@ export default async function ListingPage({ params, searchParams }) {
                   listing.monthly_price != null ? (
                     <>
                       {formatMoney(listing.monthly_price, listing.currency)}
-                      <span className="text-base text-night/50">/mo</span>
+                      <span className="text-base text-night/70">/mo</span>
                     </>
                   ) : (
-                    <span className="text-base text-night/50">
+                    <span className="text-base text-night/70">
                       {tListing('priceOnRequest')}
                     </span>
                   )
@@ -554,14 +554,14 @@ export default async function ListingPage({ params, searchParams }) {
               <p className="label-caps text-night/80 mb-1">
                 {t('universityDistancesEnglish')}
               </p>
-              <p className="text-sm text-night/50 mb-4">
+              <p className="text-sm text-night/70 mb-4">
                 {t('universityDistancesSource')}
               </p>
               <dl className="flex flex-wrap gap-x-10 gap-y-4">
                 {listing.university_distances.map((u) => (
                   <div key={u.university_id}>
                     {/* Not label-caps: it would uppercase "UoM" to "UOM". */}
-                    <dt className="text-sm text-night/60">
+                    <dt className="text-sm text-night/70">
                       {u.short_name}
                     </dt>
                     <dd className="font-display text-2xl text-night">
@@ -774,7 +774,7 @@ function BilingualField({ english, value }) {
   return (
     <div>
       <dt>
-        <span className="text-sm text-night/60 block">
+        <span className="text-sm text-night/70 block">
           {english}
         </span>
       </dt>

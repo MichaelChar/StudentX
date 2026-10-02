@@ -43,7 +43,7 @@ export default async function AccountChrome({ locale, student, active, children 
         </div>
       </div>
       <h1 className="font-display text-3xl md:text-4xl text-night mb-1">{t('heading')}</h1>
-      <p className="text-night/60 mb-8">{student.display_name} · {student.email}</p>
+      <p className="text-night/70 mb-8">{student.display_name} · {student.email}</p>
 
       <nav className="flex gap-1 border-b border-night/10 mb-8">
         {tabs.map((tab) => (
@@ -54,7 +54,7 @@ export default async function AccountChrome({ locale, student, active, children 
             className={`px-4 py-2.5 text-sm font-medium -mb-px border-b-2 transition-colors ${
               active === tab.id
                 ? 'border-blue text-blue'
-                : 'border-transparent text-night/55 hover:text-night'
+                : 'border-transparent text-night/70 hover:text-night'
             }`}
           >
             {tab.label}

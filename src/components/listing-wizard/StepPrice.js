@@ -102,7 +102,7 @@ export default function StepPrice({
               </option>
             ))}
           </select>
-          <p className="mt-1 text-xs text-night/50">{t('minDurationTip')}</p>
+          <p className="mt-1 text-xs text-night/70">{t('minDurationTip')}</p>
         </div>
         <div>
           <label className={labelClass} htmlFor="wiz-max-dur">
@@ -121,7 +121,7 @@ export default function StepPrice({
               </option>
             ))}
           </select>
-          <p className="mt-1 text-xs text-night/50">{t('maxDurationTip')}</p>
+          <p className="mt-1 text-xs text-night/70">{t('maxDurationTip')}</p>
         </div>
       </div>
     </div>

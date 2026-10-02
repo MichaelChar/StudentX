@@ -43,7 +43,7 @@ export default function RootNotFound() {
           <h1 style={{ fontSize: 32, margin: '0 0 16px' }}>{t.title}</h1>
           <p style={{ opacity: 0.7, margin: '0 0 32px' }}>{t.body}</p>
           {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- full load on purpose: this page owns <html>, the destination's comes from [locale]/layout.js */}
-          <a href="/" style={{ color: '#635BFF', fontWeight: 600 }}>
+          <a href="/" style={{ color: '#6058F7', fontWeight: 600 }}>
             {t.cta}
           </a>
         </main>

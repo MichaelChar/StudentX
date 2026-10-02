@@ -174,7 +174,7 @@ export default function AccountMenu({
                 >
                   <span>{item.label}</span>
                   {item.badge && unreadCount > 0 && (
-                    <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-magenta px-1.5 py-0.5 text-[0.65rem] font-semibold text-white">
+                    <span className="inline-flex min-w-5 items-center justify-center rounded-full bg-magenta px-1.5 py-0.5 text-[0.65rem] font-semibold text-night">
                       {unreadCount > 99 ? '99+' : unreadCount}
                     </span>
                   )}

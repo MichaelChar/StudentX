@@ -78,7 +78,7 @@ export default function GigInquiryForm({ gigId }) {
   return (
     <form onSubmit={onSubmit} className="rounded-card border border-night/10 bg-white p-5">
       <h3 className="font-display text-xl text-night">{t('heading')}</h3>
-      <p className="mt-1 text-sm text-night/55">{t('subheading')}</p>
+      <p className="mt-1 text-sm text-night/70">{t('subheading')}</p>
       <textarea
         value={message}
         onChange={(e) => setMessage(e.target.value)}
@@ -87,7 +87,7 @@ export default function GigInquiryForm({ gigId }) {
         maxLength={4000}
         className="mt-3 w-full rounded-control border border-night/15 px-3 py-2 text-sm text-night focus-visible:border-blue focus-visible:ring-2 focus-visible:ring-blue/20"
       />
-      {error && <p className="mt-2 text-sm text-magenta">{error}</p>}
+      {error && <p className="mt-2 text-sm text-magenta-ink">{error}</p>}
       <button
         type="submit"
         disabled={status === 'submitting'}

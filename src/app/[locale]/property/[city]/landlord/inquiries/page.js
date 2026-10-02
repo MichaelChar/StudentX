@@ -115,7 +115,7 @@ export default function LandlordInquiriesPage() {
   return (
     <LandlordShell eyebrow={t('paneHeading')} title={t('title')}>
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -143,7 +143,7 @@ export default function LandlordInquiriesPage() {
                 onChange={(e) => setQuery(e.target.value)}
                 placeholder={t('searchPlaceholder')}
                 className="w-full rounded-control border border-night/15 bg-stone py-2 pl-9 pr-3 text-sm
-                           text-night placeholder:text-night/40
+                           text-night placeholder:text-night/70
                            focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
               />
             </label>
@@ -204,7 +204,7 @@ export default function LandlordInquiriesPage() {
               ))}
             </div>
           ) : visible.length === 0 ? (
-            <p className="p-6 text-sm text-night/50">
+            <p className="p-6 text-sm text-night/70">
               {inquiries.length === 0 ? t('emptyList') : t('emptySearch')}
             </p>
           ) : (
@@ -241,7 +241,7 @@ export default function LandlordInquiriesPage() {
                   <p className="font-display text-lg text-night truncate">
                     {selected.student_name || '—'}
                   </p>
-                  <p className="text-xs text-night/50 truncate">
+                  <p className="text-xs text-night/70 truncate">
                     {selected.listings?.location?.address}
                   </p>
                 </div>
@@ -257,7 +257,7 @@ export default function LandlordInquiriesPage() {
             <div className="p-10 text-center">
               <Icon name="message" className="w-10 h-10 mx-auto text-night/20 mb-3" />
               <p className="font-display text-xl text-night/70">{t('pickThread')}</p>
-              <p className="text-sm text-night/50 mt-1">{t('pickThreadBody')}</p>
+              <p className="text-sm text-night/70 mt-1">{t('pickThreadBody')}</p>
             </div>
           )}
         </Card>
@@ -266,12 +266,12 @@ export default function LandlordInquiriesPage() {
         {panelOpen ? (
           <Card tone="parchment" className="p-5 hidden xl:block">
             <div className="flex items-start justify-between gap-3 mb-3">
-              <p className="label-caps text-night/60">{t('reservationHeading')}</p>
+              <p className="label-caps text-night/70">{t('reservationHeading')}</p>
               <button
                 type="button"
                 onClick={() => setPanelOpen(false)}
                 aria-label={t('closePanel')}
-                className="p-1 -m-1 text-night/40 hover:text-night transition-colors rounded-control
+                className="p-1 -m-1 text-night/60 hover:text-night transition-colors rounded-control
                            focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2"
               >
                 <Icon name="x" className="w-4 h-4" />
@@ -282,7 +282,7 @@ export default function LandlordInquiriesPage() {
               is `expired`, so no conversation has a reservation attached. Said
               plainly rather than rendered as an empty frame.
             */}
-            <p className="text-sm text-night/50">{t('reservationNone')}</p>
+            <p className="text-sm text-night/70">{t('reservationNone')}</p>
           </Card>
         ) : (
           <button
@@ -338,12 +338,12 @@ function ThreadRow({ inquiry, active, onSelect }) {
           <span className="min-w-0 flex-1 truncate font-display text-base text-night">
             {inquiry.student_name || '—'}
           </span>
-          <span className="shrink-0 text-xs text-night/40">{date}</span>
+          <span className="shrink-0 text-xs text-night/70">{date}</span>
         </span>
-        <span className="mt-0.5 block truncate text-sm text-night/60">
+        <span className="mt-0.5 block truncate text-sm text-night/70">
           {inquiry.message}
         </span>
-        <span className="mt-0.5 block truncate text-xs text-night/40">
+        <span className="mt-0.5 block truncate text-xs text-night/70">
           {inquiry.listings?.location?.address}
         </span>
       </span>

@@ -7,12 +7,12 @@ import { Link, useRouter } from '@/i18n/navigation';
 const STATUS_BADGE = {
   open: 'bg-parchment text-blue border-night/10',
   accepted: 'bg-parchment text-jade border-night/10',
-  rejected: 'bg-parchment text-magenta border-night/10',
-  resolved: 'bg-night/5 text-night/60 border-night/15',
+  rejected: 'bg-parchment text-magenta-ink border-night/10',
+  resolved: 'bg-night/5 text-night/70 border-night/15',
 };
 
 const KIND_BADGE = {
-  error: 'bg-parchment text-magenta border-night/10',
+  error: 'bg-parchment text-magenta-ink border-night/10',
   edit: 'bg-yellow/20 text-night border-night/10',
 };
 
@@ -57,7 +57,7 @@ export default function ReportsTable({
 
   const filterPill = (active) =>
     `text-sm px-3 py-1.5 rounded-control border transition-colors ${
-      active ? 'bg-night text-white border-night' : 'border-night/15 text-night/60 hover:border-night/40'
+      active ? 'bg-night text-white border-night' : 'border-night/15 text-night/70 hover:border-night/40'
     }`;
 
   return (
@@ -65,7 +65,7 @@ export default function ReportsTable({
       {/* Filters — pure links, so filtering is server-side (no client state). */}
       <div className="space-y-3 mb-6">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="text-xs font-semibold uppercase tracking-wide text-night/40 mr-1">
+          <span className="text-xs font-semibold uppercase tracking-wide text-night/70 mr-1">
             {t('filterStatus')}
           </span>
           {statuses.map((s) => (
@@ -76,7 +76,7 @@ export default function ReportsTable({
         </div>
         {subjects.length > 0 && (
           <div className="flex flex-wrap items-center gap-2">
-            <span className="text-xs font-semibold uppercase tracking-wide text-night/40 mr-1">
+            <span className="text-xs font-semibold uppercase tracking-wide text-night/70 mr-1">
               {t('filterSubject')}
             </span>
             <Link href={subjectHref(null)} className={filterPill(!activeSubject)}>
@@ -93,13 +93,13 @@ export default function ReportsTable({
 
       {reports.length === 0 ? (
         <div className="text-center py-16 border-2 border-dashed border-night/15 rounded-card">
-          <p className="text-night/50">{t('empty', { status: t(`status.${activeStatus}`).toLowerCase() })}</p>
+          <p className="text-night/70">{t('empty', { status: t(`status.${activeStatus}`).toLowerCase() })}</p>
         </div>
       ) : (
         <div className="border border-night/10 rounded-card overflow-hidden bg-white">
           <table className="w-full text-sm">
             <thead className="bg-parchment">
-              <tr className="text-left text-night/55">
+              <tr className="text-left text-night/70">
                 <th className="px-4 py-3 font-semibold">{t('columns.date')}</th>
                 <th className="px-4 py-3 font-semibold">{t('columns.subject')}</th>
                 <th className="px-4 py-3 font-semibold">{t('columns.test')}</th>
@@ -167,7 +167,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
         <td className="px-4 py-3">
           <Badge className={STATUS_BADGE[report.status] || ''}>{t(`status.${report.status}`)}</Badge>
         </td>
-        <td className="px-4 py-3 text-night/60 max-w-xs truncate">{preview}</td>
+        <td className="px-4 py-3 text-night/70 max-w-xs truncate">{preview}</td>
       </tr>
       {expanded && (
         <tr className="bg-parchment/40">
@@ -204,7 +204,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                 />
               </Field>
 
-              {error && <p className="text-sm text-magenta">{error}</p>}
+              {error && <p className="text-sm text-magenta-ink">{error}</p>}
 
               <div className="flex flex-wrap items-center gap-2">
                 <button
@@ -219,7 +219,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
                   type="button"
                   onClick={() => act('rejected')}
                   disabled={isPending}
-                  className="px-4 py-2 rounded-control border border-magenta/40 text-magenta text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
+                  className="px-4 py-2 rounded-control border border-magenta/40 text-magenta-ink text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
                 >
                   {t('actions.reject')}
                 </button>
@@ -249,7 +249,7 @@ function ReportRow({ report, expanded, onToggle, updateReport }) {
 function Field({ label, children }) {
   return (
     <div>
-      <p className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-1">{label}</p>
+      <p className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-1">{label}</p>
       {children}
     </div>
   );

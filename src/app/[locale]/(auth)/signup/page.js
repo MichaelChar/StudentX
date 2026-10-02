@@ -295,14 +295,14 @@ function SignupInner() {
                     />
                     {t(type === 'student' ? 'typeStudent' : 'typeLandlord')}
                   </span>
-                  <span className="text-xs text-night/55 leading-snug">
+                  <span className="text-xs text-night/70 leading-snug">
                     {t(type === 'student' ? 'typeStudentHint' : 'typeLandlordHint')}
                   </span>
                 </label>
               );
             })}
           </div>
-          <p className="mt-2 text-xs text-night/50">{t('typePermanent')}</p>
+          <p className="mt-2 text-xs text-night/70">{t('typePermanent')}</p>
         </fieldset>
 
         <FormField
@@ -364,20 +364,20 @@ function SignupInner() {
                 />
                 <label
                   htmlFor="photo"
-                  className="inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-night/10 rounded-control text-sm text-night/60 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors"
+                  className="inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-night/10 rounded-control text-sm text-night/70 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors"
                 >
                   {photoPreview ? t('photoReplace') : t('photoChoose')}
                 </label>
-                <p className="text-xs text-night/40 mt-1.5">{t('photoHelp')}</p>
+                <p className="text-xs text-night/70 mt-1.5">{t('photoHelp')}</p>
               </div>
             </div>
-            {photoError && <p className="text-sm text-magenta mt-2">{photoError}</p>}
+            {photoError && <p className="text-sm text-magenta-ink mt-2">{photoError}</p>}
           </div>
         )}
 
         {error && (
           <div className="space-y-2">
-            <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2">
+            <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-3 py-2">
               {error}
             </p>
             {conflict && (
@@ -402,14 +402,14 @@ function SignupInner() {
         <>
           <div className="my-6 flex items-center gap-3">
             <span className="h-px flex-1 bg-night/10" />
-            <span className="text-sm text-night/50">{t('or')}</span>
+            <span className="text-sm text-night/70">{t('or')}</span>
             <span className="h-px flex-1 bg-night/10" />
           </div>
           <OAuthProviders context="signup" />
         </>
       )}
 
-      <p className="mt-8 text-sm text-night/60">
+      <p className="mt-8 text-sm text-night/70">
         {t('haveAccount')}{' '}
         <Link href={loginHref} className="text-blue font-medium hover:text-night">
           {t('loginLink')} →

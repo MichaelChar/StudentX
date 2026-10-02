@@ -4,7 +4,7 @@ import Link from 'next/link';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const INK = '#0a2540';
 
 export function generateMetadata() {
@@ -98,7 +98,7 @@ function AboutContent() {
             gap: 6,
             fontSize: 13,
             fontWeight: 600,
-            color: 'rgba(10,37,64,0.45)',
+            color: 'rgba(10,37,64,0.7)',
             textDecoration: 'none',
             letterSpacing: '-0.1px',
           }}
@@ -149,7 +149,7 @@ function AboutContent() {
           textAlign: 'center',
           padding: '32px 24px 48px',
           fontSize: 12,
-          color: 'rgba(10,37,64,0.35)',
+          color: 'rgba(10,37,64,0.7)',
           letterSpacing: '0.3px',
         }}
       >

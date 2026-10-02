@@ -33,7 +33,7 @@ export default function StepPhotos({
     <div className="space-y-5">
       <div>
         <p className="text-sm text-night/70">{t('lede', { min: MIN_PHOTOS, max: PHOTO_LIMIT })}</p>
-        <p className="mt-1 text-xs text-night/50">
+        <p className="mt-1 text-xs text-night/70">
           {t('count', { current: total, min: MIN_PHOTOS, max: PHOTO_LIMIT })}
         </p>
       </div>
@@ -97,7 +97,7 @@ export default function StepPhotos({
                     }
                   />
                   {i === 0 && (
-                    <span className="absolute top-2 left-2 bg-yellow text-white text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded-control">
+                    <span className="absolute top-2 left-2 bg-yellow text-night text-xs font-semibold uppercase tracking-wider px-2 py-1 rounded-control">
                       {t('main')}
                     </span>
                   )}
@@ -134,14 +134,14 @@ export default function StepPhotos({
             })}
           </div>
           {photos.length > 1 && (
-            <p className="text-xs text-night/50">{t('reorderHint')}</p>
+            <p className="text-xs text-night/70">{t('reorderHint')}</p>
           )}
         </>
       )}
 
       {external.length > 0 && (
         <div>
-          <p className="text-xs font-medium text-night/60 mb-2">
+          <p className="text-xs font-medium text-night/70 mb-2">
             {t('imported', { count: external.length })}
           </p>
           <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
@@ -177,18 +177,18 @@ export default function StepPhotos({
           />
           <label
             htmlFor="wizard-photo-upload"
-            className={`inline-flex items-center gap-2 px-4 py-2.5 border border-dashed border-night/20 rounded-control text-sm text-night/60 hover:border-blue hover:text-night cursor-pointer transition-colors ${
+            className={`inline-flex items-center gap-2 px-4 py-2.5 border border-dashed border-night/20 rounded-control text-sm text-night/70 hover:border-blue hover:text-night cursor-pointer transition-colors ${
               uploading ? 'opacity-50 pointer-events-none' : ''
             }`}
           >
             <Icon name="plus" className="w-4 h-4" />
             {uploading ? t('uploading') : t('addPhotos')}
           </label>
-          <p className="mt-1.5 text-xs text-night/50">{t('hint')}</p>
+          <p className="mt-1.5 text-xs text-night/70">{t('hint')}</p>
         </div>
       )}
 
-      {photoError && <p className="text-sm text-magenta">{photoError}</p>}
+      {photoError && <p className="text-sm text-magenta-ink">{photoError}</p>}
 
       <div>
         <label className={labelClass} htmlFor="wiz-video">
@@ -202,7 +202,7 @@ export default function StepPhotos({
           className={inputClass}
           placeholder={t('videoPlaceholder')}
         />
-        <p className="mt-1 text-xs text-night/50">{t('videoTip')}</p>
+        <p className="mt-1 text-xs text-night/70">{t('videoTip')}</p>
       </div>
     </div>
   );

@@ -153,7 +153,7 @@ async function Headline({ locale }) {
       <h1 className="font-display text-4xl md:text-5xl text-night leading-tight mt-2">
         {count === 0 ? t('headingNone') : t('headingWaiting', { count })}
       </h1>
-      <p className="text-night/60 mt-3">
+      <p className="text-night/70 mt-3">
         {count === 0
           ? t('headingNoneBody')
           : longestWait && t('longestWait', { duration: longestWait })}
@@ -268,7 +268,7 @@ async function ReservationsSection({ locale }) {
       seeAll={{ href: '/property/thessaloniki/landlord/reservations', label: t('reservationsSeeAll') }}
     >
       {stays.length === 0 ? (
-        <p className="text-night/50 text-sm py-2">{t('reservationsEmpty')}</p>
+        <p className="text-night/70 text-sm py-2">{t('reservationsEmpty')}</p>
       ) : (
         stays.map((b) => {
           const listing = byId.get(b.listing_id);

@@ -140,18 +140,18 @@ export default function CommuteFilterChip({
         {t('commuteHeading')}
       </p>
 
-      <p id={facultyLabelId} className="px-2 pb-1 label-caps text-night/45">
+      <p id={facultyLabelId} className="px-2 pb-1 label-caps text-night/70">
         {t('commuteFacultyLabel')}
       </p>
 
       {loading ? (
-        <p className="px-2 py-2 text-sm text-night/50">{t('commuteLoading')}</p>
+        <p className="px-2 py-2 text-sm text-night/70">{t('commuteLoading')}</p>
       ) : (
         <div role="group" aria-labelledby={facultyLabelId}>
           {groups.map((group, i) => (
             <div key={group.university || `uni-${i}`}>
               {group.university ? (
-                <p className="px-2 pt-1.5 pb-0.5 label-caps text-night/45">
+                <p className="px-2 pt-1.5 pb-0.5 label-caps text-night/70">
                   {group.university}
                 </p>
               ) : null}
@@ -182,7 +182,7 @@ export default function CommuteFilterChip({
       <Divider decorative className="my-2" />
 
       <div className="px-2">
-        <p className="pb-1.5 label-caps text-night/45">
+        <p className="pb-1.5 label-caps text-night/70">
           {t('commuteMaxWalkLabel')}
         </p>
         <SegmentedControl
@@ -197,7 +197,7 @@ export default function CommuteFilterChip({
           className="w-full [&>button]:flex-1"
         />
         {hasFaculty ? null : (
-          <p className="mt-1.5 text-xs text-night/50">
+          <p className="mt-1.5 text-xs text-night/70">
             {t('commutePickFacultyFirst')}
           </p>
         )}

@@ -41,9 +41,9 @@ export default function StepUniversities({ form, universities, prefillLoading })
       </p>
 
       {prefillLoading && shown.length === 0 ? (
-        <p className="text-sm text-night/50">{t('computing')}</p>
+        <p className="text-sm text-night/70">{t('computing')}</p>
       ) : shown.length === 0 ? (
-        <p className="text-sm text-night/50">{t('empty')}</p>
+        <p className="text-sm text-night/70">{t('empty')}</p>
       ) : (
         <ul id="university-distance-rows" className="divide-y divide-night/10">
           {shown.map((row) => (
@@ -53,7 +53,7 @@ export default function StepUniversities({ form, universities, prefillLoading })
             >
               <span className="text-sm text-night">
                 <span className="font-medium">{row.university.short_name}</span>
-                <span className="text-night/60"> — {row.university.name}</span>
+                <span className="text-night/70"> — {row.university.name}</span>
               </span>
               <span className="text-sm text-night tabular-nums shrink-0">
                 {formatDistance(row.meters) ?? t('unmeasured')}

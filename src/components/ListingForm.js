@@ -895,13 +895,13 @@ export default function ListingForm({
             <h2 className="font-display text-2xl text-night">
               {t('sections.heading')}
             </h2>
-            <p className="mt-1 text-sm text-night/60">{t('sections.lede')}</p>
+            <p className="mt-1 text-sm text-night/70">{t('sections.lede')}</p>
             {/*
               Says how much is outstanding, never how much is finished.
               "4 of 6 done" invites a landlord to feel satisfied at 4; the
               number that matters is the one still blocking go-live.
             */}
-            <p className="mt-3 label-caps text-night/50">
+            <p className="mt-3 label-caps text-night/70">
               {progress.incomplete === 0
                 ? t('sections.progressAllDone')
                 : t('sections.progress', { incomplete: progress.incomplete })}
@@ -933,11 +933,11 @@ export default function ListingForm({
           </div>
 
           {error && (
-            <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
+            <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3">
               {error}
             </p>
           )}
-          {saveHint && !error && <p className="text-xs text-night/50">{saveHint}</p>}
+          {saveHint && !error && <p className="text-xs text-night/70">{saveHint}</p>}
 
           <div className="flex flex-col sm:flex-row gap-2 sm:items-center sm:justify-end">
             <Button type="button" variant="outline" onClick={() => setShowPreview(true)}>
@@ -980,7 +980,7 @@ export default function ListingForm({
 
         {/* Step progress */}
         <div>
-          <p className="label-caps text-night/50 mb-2">
+          <p className="label-caps text-night/70 mb-2">
             {t('stepOf', { current: step + 1, total: STEPS.length })}
           </p>
           <div className="flex gap-1">
@@ -996,7 +996,7 @@ export default function ListingForm({
           <h2 className="mt-4 font-display text-2xl text-night">
             {t(`steps.${stepKey}.title`)}
           </h2>
-          <p className="mt-1 text-sm text-night/60">
+          <p className="mt-1 text-sm text-night/70">
             {t(`steps.${stepKey}.lede`)}
           </p>
         </div>
@@ -1021,14 +1021,14 @@ export default function ListingForm({
                     ))}
                   </ul>
                 )}
-                <p className="text-xs text-night/50">
+                <p className="text-xs text-night/70">
                   {t('paste.bannerTip')}
                 </p>
               </div>
               <button
                 type="button"
                 onClick={() => setShowImportBanner(false)}
-                className="p-1 text-night/40 hover:text-night active:text-night/80 transition-colors rounded-control shrink-0"
+                className="p-1 text-night/60 hover:text-night active:text-night/80 transition-colors rounded-control shrink-0"
                 aria-label={t('paste.dismissBanner')}
               >
                 <Icon name="x" className="w-4 h-4" />
@@ -1042,12 +1042,12 @@ export default function ListingForm({
         </Card>
 
         {error && (
-          <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
+          <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3">
             {error}
           </p>
         )}
         {saveHint && !error && (
-          <p className="text-xs text-night/50">{saveHint}</p>
+          <p className="text-xs text-night/70">{saveHint}</p>
         )}
 
         {/* Import step owns its own primary/secondary CTAs */}

@@ -33,8 +33,8 @@
   Button, not here.
 */
 const VARIANTS = {
-  verified: 'bg-yellow text-white border-yellow',
-  pending: 'bg-magenta text-white border-magenta',
+  verified: 'bg-yellow text-night border-yellow',
+  pending: 'bg-magenta text-night border-magenta',
   amenity: 'bg-parchment text-night border-parchment',
   info: 'bg-blue text-white border-blue',
 };

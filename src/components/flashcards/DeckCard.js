@@ -8,7 +8,7 @@ import { isDownloaded, markDownloaded } from '@/lib/flashcards/progress';
 // a navigation link: top-right chip is a download arrow (flips to a green
 // check once downloaded), and the metadata row shows an APKG badge plus
 // card count / size / updated date instead of a kind badge + question count.
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const INK = '#0a2540';
 const GREEN = '#1E8A6C';
 
@@ -89,7 +89,7 @@ export default function DeckCard({ subject, deckId, href, title, metaLabel, down
     alignItems: 'center',
     justifyContent: 'center',
     background: 'rgba(10,37,64,0.06)',
-    color: 'rgba(10,37,64,0.55)',
+    color: 'rgba(10,37,64,0.7)',
     fontSize: 11,
     fontWeight: 600,
     letterSpacing: '0.06em',
@@ -138,7 +138,7 @@ export default function DeckCard({ subject, deckId, href, title, metaLabel, down
           }}
         >
           <span style={badgeStyle}>APKG</span>
-          <span style={{ fontSize: 13.5, lineHeight: 1.4, color: 'rgba(10,37,64,0.6)' }}>
+          <span style={{ fontSize: 13.5, lineHeight: 1.4, color: 'rgba(10,37,64,0.7)' }}>
             {metaLabel}
           </span>
           {downloaded && (

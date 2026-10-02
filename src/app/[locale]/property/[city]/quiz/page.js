@@ -81,7 +81,7 @@ export default function QuizPage() {
         {stepIndicators.map((s, idx) => (
           <li key={s.num} className="flex items-center gap-6">
             <span
-              className={`label-caps ${s.active ? 'text-blue' : 'text-night/30'}`}
+              className={`label-caps ${s.active ? 'text-blue' : 'text-night/70'}`}
             >
               {s.num} · {s.label}
             </span>
@@ -158,7 +158,7 @@ function BudgetStep({ t, budget, setBudget }) {
         <p className="font-display text-5xl md:text-6xl text-blue leading-none">
           {formatMoney(budget)}
         </p>
-        <p className="mt-3 label-caps text-night/50">{t('budgetPerMonth')}</p>
+        <p className="mt-3 label-caps text-night/70">{t('budgetPerMonth')}</p>
       </div>
 
       <div className="mt-10">
@@ -172,7 +172,7 @@ function BudgetStep({ t, budget, setBudget }) {
           className="w-full"
           aria-label={t('budgetQuestion')}
         />
-        <div className="flex justify-between mt-2 text-xs text-night/40">
+        <div className="flex justify-between mt-2 text-xs text-night/70">
           <span>{formatMoney(BUDGET_MIN)}</span>
           <span>{formatMoney(BUDGET_MAX)}</span>
         </div>
@@ -223,7 +223,7 @@ function DealbreakersStep({ t, dealbreakers, onToggle }) {
       <h2 className="mt-5 font-display text-2xl md:text-3xl text-night leading-tight">
         {t('dealbreakersQuestion')}
       </h2>
-      <p className="mt-3 text-night/60 text-sm">{t('dealbreakersHint')}</p>
+      <p className="mt-3 text-night/70 text-sm">{t('dealbreakersHint')}</p>
 
       <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-3">
         {DEALBREAKERS.map((opt) => {

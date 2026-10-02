@@ -33,11 +33,11 @@ export default function StepReview({
       <p className="text-sm text-night/70 leading-relaxed">{t('lede')}</p>
 
       <Card tone="parchment" className="p-5 space-y-3">
-        <p className="label-caps text-night/50">{t('summaryLabel')}</p>
+        <p className="label-caps text-night/70">{t('summaryLabel')}</p>
         <h3 className="font-display text-2xl text-night">
           {form.title || t('untitled')}
         </h3>
-        <p className="text-sm text-night/60">
+        <p className="text-sm text-night/70">
           {[form.address, form.neighborhood].filter(Boolean).join(' · ')}
         </p>
         <div className="flex flex-wrap gap-2">
@@ -54,10 +54,10 @@ export default function StepReview({
           )}
         </div>
         {amenityNames.length > 0 && (
-          <p className="text-xs text-night/50">{amenityNames.join(' · ')}</p>
+          <p className="text-xs text-night/70">{amenityNames.join(' · ')}</p>
         )}
         {(form.university_distances || []).length > 0 && (
-          <ul className="text-xs text-night/60 space-y-0.5">
+          <ul className="text-xs text-night/70 space-y-0.5">
             {(form.university_distances || []).map((row) => {
               const u = universities.find(
                 (x) => x.university_id === row.university_id,
@@ -74,7 +74,7 @@ export default function StepReview({
       </Card>
 
       <Card tone="white" className="p-5 space-y-2">
-        <p className="label-caps text-night/50 mb-2">{t('checklistLabel')}</p>
+        <p className="label-caps text-night/70 mb-2">{t('checklistLabel')}</p>
         <CheckItem ok={checklist.address} label={t('checkAddress')} />
         <CheckItem ok={checklist.coords} label={t('checkCoords')} />
         <CheckItem ok={checklist.property} label={t('checkProperty')} />
@@ -97,8 +97,8 @@ export default function StepReview({
 
 function CheckItem({ ok, label }) {
   return (
-    <p className={`text-sm ${ok ? 'text-night' : 'text-night/40'}`}>
-      <span className={ok ? 'text-blue' : 'text-night/30'}>
+    <p className={`text-sm ${ok ? 'text-night' : 'text-night/70'}`}>
+      <span className={ok ? 'text-blue' : 'text-night/60'}>
         {ok ? '✓' : '○'}
       </span>{' '}
       {label}

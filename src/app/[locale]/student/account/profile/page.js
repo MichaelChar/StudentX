@@ -48,7 +48,7 @@ export default async function StudentProfilePage({ params }) {
     <AccountChrome locale={locale} student={student} active="profile">
       <section>
         <h2 className="font-display text-2xl text-night mb-2">{t('title')}</h2>
-        <p className="text-night/60 mb-6 font-sans text-sm md:text-base max-w-2xl">
+        <p className="text-night/70 mb-6 font-sans text-sm md:text-base max-w-2xl">
           {t('lede')}
         </p>
         <StudentProfileEditor initialStudent={student} />

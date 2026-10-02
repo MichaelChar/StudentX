@@ -42,7 +42,7 @@ export default function ListingHighlights({ rows }) {
               </p>
             ) : null}
             {row.subtitle ? (
-              <p className="font-sans text-sm leading-snug text-night/60">
+              <p className="font-sans text-sm leading-snug text-night/70">
                 {row.subtitle}
               </p>
             ) : null}

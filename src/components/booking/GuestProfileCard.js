@@ -34,8 +34,8 @@ export default function GuestProfileCard({ student }) {
   if (!student) {
     return (
       <Card tone="parchment" className="p-6">
-        <p className="label-caps text-night/60 mb-2">{t('eyebrow')}</p>
-        <p className="font-display text-xl text-night/60">{t('unknown')}</p>
+        <p className="label-caps text-night/70 mb-2">{t('eyebrow')}</p>
+        <p className="font-display text-xl text-night/70">{t('unknown')}</p>
       </Card>
     );
   }
@@ -54,7 +54,7 @@ export default function GuestProfileCard({ student }) {
 
   return (
     <Card tone="parchment" className="p-6 md:p-8">
-      <p className="label-caps text-night/60 mb-4">{t('eyebrow')}</p>
+      <p className="label-caps text-night/70 mb-4">{t('eyebrow')}</p>
 
       <div className="flex items-start gap-4 mb-6">
         <span
@@ -68,7 +68,7 @@ export default function GuestProfileCard({ student }) {
             {student.display_name || t('unknown')}
           </h3>
           {memberSince && (
-            <p className="text-sm text-night/60 mt-1 font-sans">
+            <p className="text-sm text-night/70 mt-1 font-sans">
               {t('memberSince', { date: memberSince })}
             </p>
           )}
@@ -92,7 +92,7 @@ export default function GuestProfileCard({ student }) {
 
       {student.bio && (
         <div>
-          <p className="label-caps text-night/50 mb-2">{t('bio')}</p>
+          <p className="label-caps text-night/70 mb-2">{t('bio')}</p>
           <p className="font-sans text-sm text-night/80 leading-relaxed whitespace-pre-wrap">
             {student.bio}
           </p>
@@ -105,7 +105,7 @@ export default function GuestProfileCard({ student }) {
 function ProfileField({ label, value }) {
   return (
     <div>
-      <dt className="label-caps text-night/50">{label}</dt>
+      <dt className="label-caps text-night/70">{label}</dt>
       <dd className="mt-1 font-display text-lg text-night">{value}</dd>
     </div>
   );

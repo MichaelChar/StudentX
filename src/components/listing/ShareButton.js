@@ -126,7 +126,7 @@ export default function ShareButton({
     status === 'copied'
       ? 'border-blue bg-blue/5 text-blue'
       : status === 'failed'
-        ? 'border-magenta bg-magenta/5 text-magenta'
+        ? 'border-magenta bg-magenta/5 text-magenta-ink'
         : 'border-night/20 text-night/70 hover:border-blue hover:text-blue active:bg-blue/10';
 
   /*
@@ -150,7 +150,7 @@ export default function ShareButton({
         <Icon
           name={status === 'copied' ? 'check' : 'share'}
           className={`w-[18px] h-[18px] transition-colors ${
-            status === 'failed' ? 'text-magenta' : 'text-night/70'
+            status === 'failed' ? 'text-magenta-ink' : 'text-night/70'
           }`}
         />
         <span className="sr-only" role="status" aria-live="polite" aria-atomic="true">

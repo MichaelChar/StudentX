@@ -6,7 +6,7 @@ import useModalA11y from '@/lib/useModalA11y';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { PrimaryButton } from './PlayerButton';
 
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const INK = '#0a2540';
 const MESSAGE_MIN = 5;
 const MESSAGE_MAX = 2000;
@@ -153,7 +153,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
             >
               {t('successTitle')}
             </h2>
-            <p style={{ margin: '0 0 20px', fontSize: 14.5, lineHeight: 1.55, color: 'rgba(10,37,64,0.6)' }}>
+            <p style={{ margin: '0 0 20px', fontSize: 14.5, lineHeight: 1.55, color: 'rgba(10,37,64,0.7)' }}>
               {t('successBody')}
             </p>
             <PrimaryButton onClick={onClose}>{t('done')}</PrimaryButton>
@@ -242,7 +242,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
                 justifyContent: 'space-between',
                 margin: '6px 2px 16px',
                 fontSize: 12.5,
-                color: 'rgba(10,37,64,0.45)',
+                color: 'rgba(10,37,64,0.7)',
               }}
             >
               <span>{t('messageHint')}</span>
@@ -281,7 +281,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
               className="text-[14.5px]"
               style={inputStyle}
             />
-            <div style={{ margin: '6px 2px 18px', fontSize: 12.5, color: 'rgba(10,37,64,0.45)' }}>
+            <div style={{ margin: '6px 2px 18px', fontSize: 12.5, color: 'rgba(10,37,64,0.7)' }}>
               {t('emailHint')}
             </div>
 

@@ -131,12 +131,12 @@ export default function LandlordVerificationPage() {
           /* Rejected — allow re-upload */
           <div className="space-y-6">
             <div className="rounded-card border border-night/10 bg-parchment px-6 py-4">
-              <p className="label-caps text-magenta mb-1">Rejected</p>
-              <p className="font-display text-base text-magenta mb-1">
+              <p className="label-caps text-magenta-ink mb-1">Rejected</p>
+              <p className="font-display text-base text-magenta-ink mb-1">
                 Previous submission rejected
               </p>
               {latestRequest.review_notes && (
-                <p className="text-sm text-magenta">{latestRequest.review_notes}</p>
+                <p className="text-sm text-magenta-ink">{latestRequest.review_notes}</p>
               )}
             </div>
             <UploadForm
@@ -187,9 +187,9 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
     <form onSubmit={onSubmit} className="space-y-5">
       <div>
         <label className="label-caps text-night/70 mb-2 block">
-          Government-issued ID <span className="text-magenta normal-case">*</span>
+          Government-issued ID <span className="text-magenta-ink normal-case">*</span>
         </label>
-        <p className="text-xs text-night/50 mb-3">
+        <p className="text-xs text-night/70 mb-3">
           Passport, national ID card, or driver&apos;s license. JPEG, PNG, or PDF · max 10 MB.
         </p>
         <div
@@ -197,7 +197,7 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
           className={`cursor-pointer rounded-card border-2 border-dashed px-6 py-8 text-center transition-colors ${
             file
               ? 'border-blue/40 bg-blue/5 text-blue'
-              : 'border-night/15 hover:border-yellow/60 bg-parchment text-night/60'
+              : 'border-night/15 hover:border-yellow/60 bg-parchment text-night/70'
           }`}
         >
           <input
@@ -211,21 +211,21 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
             <div>
               <Icon name="check" className="w-8 h-8 mx-auto text-blue mb-2" />
               <p className="text-sm font-medium text-night">{file.name}</p>
-              <p className="text-xs text-night/50 mt-1">
+              <p className="text-xs text-night/70 mt-1">
                 {(file.size / 1024 / 1024).toFixed(2)} MB · click to change
               </p>
             </div>
           ) : (
             <div>
               <Icon name="plus" className="w-8 h-8 mx-auto text-night/40 mb-2" />
-              <p className="text-sm text-night/60">Click to select a file</p>
+              <p className="text-sm text-night/70">Click to select a file</p>
             </div>
           )}
         </div>
       </div>
 
       {submitError && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-3 py-2">
           {submitError}
         </p>
       )}
@@ -239,7 +239,7 @@ function UploadForm({ file, setFile, fileInputRef, submitting, submitError, subm
         {submitting ? 'Submitting…' : 'Submit for verification'}
       </Button>
 
-      <p className="text-xs text-night/50 text-center">
+      <p className="text-xs text-night/70 text-center">
         Your document is stored securely and only reviewed by our team.
       </p>
     </form>

@@ -38,7 +38,7 @@ export default function MapPinPopupCard({ listing }) {
       </div>
       <div className="pt-3">
         {listing.neighborhood ? (
-          <p className="label-caps text-night/50">{listing.neighborhood}</p>
+          <p className="label-caps text-night/70">{listing.neighborhood}</p>
         ) : null}
         <h3 className="mt-1.5 font-display text-2xl leading-tight text-night line-clamp-2">
           {title}
@@ -47,10 +47,10 @@ export default function MapPinPopupCard({ listing }) {
           {listing.monthly_price != null ? (
             <>
               {formatMoney(listing.monthly_price, listing.currency)}
-              <span className="text-sm text-night/50">{tCard('perMonth')}</span>
+              <span className="text-sm text-night/70">{tCard('perMonth')}</span>
             </>
           ) : (
-            <span className="text-sm text-night/50">{tCard('priceOnRequest')}</span>
+            <span className="text-sm text-night/70">{tCard('priceOnRequest')}</span>
           )}
         </p>
       </div>
