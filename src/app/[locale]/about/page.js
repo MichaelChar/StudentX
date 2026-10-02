@@ -45,7 +45,7 @@ function Section({ eyebrow, heading, children, style }) {
         <h2
           style={{
             margin: '0 0 20px',
-            fontFamily: 'var(--font-inter-tight, system-ui, sans-serif)',
+            fontFamily: 'var(--font-display)',
             fontWeight: 700,
             fontSize: 'clamp(24px, 4vw, 36px)',
             letterSpacing: '-0.5px',
@@ -112,7 +112,7 @@ function AboutContent() {
         <h1
           style={{
             margin: '0 0 32px',
-            fontFamily: 'var(--font-inter-tight, system-ui, sans-serif)',
+            fontFamily: 'var(--font-display)',
             fontWeight: 700,
             fontSize: 'clamp(32px, 6vw, 52px)',
             letterSpacing: '-1px',

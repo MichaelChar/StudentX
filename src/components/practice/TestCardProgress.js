@@ -38,7 +38,7 @@ export default function TestCardProgress({ subject, testId }) {
     borderRadius: 999,
     display: 'inline-flex',
     alignItems: 'center',
-    fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+    fontFamily: 'var(--font-display)',
     fontSize: 11.5,
     fontWeight: 600,
     letterSpacing: '0.01em',

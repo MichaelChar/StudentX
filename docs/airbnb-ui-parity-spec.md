@@ -1603,6 +1603,16 @@ formatter).
 > - **Accent fills carry night text.** White on yellow (VERIFIED, 1.51:1) and on
 >   magenta (pending, 2.83:1) failed; night gives 10.3:1 and 5.48:1.
 
+> **AMENDED 2026-10-02 (founder) — F1 font swap: Plus Jakarta Sans.** Chosen
+> from side-by-side renders of the live pages (Inter, Figtree, Plus Jakarta
+> Sans, Geist, system font). Replaces Inter AND Inter Tight everywhere;
+> headings are untracked (`letter-spacing: 0` — Jakarta at Inter's -0.02em
+> closes its word spaces), and the Inter-only `ss01`/`cv11` features are gone.
+> The font is reached only through `--font-brand` → `--font-sans` /
+> `--font-display`. Unaffected: the Cal.com booking popup (cross-origin iframe,
+> keeps Cal's font), email templates (mail clients don't load web fonts), and
+> the bare root `not-found.js` fallback (system font by design).
+
 ### ❌ Feature 34 — Review system — **SKIP**
 
 No `reviews` table, no post-stay prompt, no PDP reviews section, no host

@@ -138,7 +138,7 @@ function McqCard({ question, onNext, isLast }) {
 
       <h2
         style={{
-          fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+          fontFamily: 'var(--font-display)',
           fontWeight: 600,
           fontSize: 22,
           letterSpacing: '-0.01em',
@@ -211,7 +211,7 @@ function McqCard({ question, onNext, isLast }) {
                   justifyContent: 'center',
                   background: badgeBg,
                   color: badgeColor,
-                  fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                  fontFamily: 'var(--font-display)',
                   fontSize: 13.5,
                   fontWeight: 700,
                   transition: 'background 160ms ease, color 160ms ease',
@@ -330,7 +330,7 @@ function LongAnswerCard({ question, onNext, isLast }) {
 
       <h2
         style={{
-          fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+          fontFamily: 'var(--font-display)',
           fontWeight: 600,
           fontSize: 22,
           letterSpacing: '-0.01em',
@@ -435,7 +435,7 @@ function ScoreScreen({ score, mcqTotal, total, onRestart }) {
       >
         <span
           style={{
-            fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+            fontFamily: 'var(--font-display)',
             fontSize: 28,
             fontWeight: 700,
             color: ACCENT,
@@ -448,7 +448,7 @@ function ScoreScreen({ score, mcqTotal, total, onRestart }) {
 
       <h2
         style={{
-          fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+          fontFamily: 'var(--font-display)',
           fontWeight: 600,
           fontSize: 26,
           color: INK,

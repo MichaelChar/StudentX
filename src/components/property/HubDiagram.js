@@ -40,7 +40,8 @@ const T = {
   xColor: '#ff5fa2',
   inputBg: 'rgba(99,91,255,0.04)',
   inputBorder: 'rgba(99,91,255,0.22)',
-  font: '"Inter", "Helvetica Neue", system-ui, sans-serif',
+  // The site face via its token, never a family name (see globals.css).
+  font: 'var(--font-sans)',
 };
 
 const VB_W = 1180;
@@ -639,7 +640,7 @@ export default function HubDiagram() {
                 fill={T.nodeText}
                 fontSize={13}
                 fontWeight={400}
-                fontFamily={T.font}
+                style={{ fontFamily: T.font }}
               >
                 StudentX
               </text>
@@ -683,7 +684,7 @@ export default function HubDiagram() {
                     fill={T.nodeText}
                     fontSize={13}
                     fontWeight={active ? 600 : 400}
-                    fontFamily={T.font}
+                    style={{ fontFamily: T.font }}
                   >
                     {cn.name}
                   </text>
@@ -736,7 +737,7 @@ export default function HubDiagram() {
                     fill={isSoon ? T.nodeSoonText : T.nodeText}
                     fontSize={13}
                     fontWeight={active ? 600 : 400}
-                    fontFamily={T.font}
+                    style={{ fontFamily: T.font }}
                     fontStyle={isSoon ? 'italic' : 'normal'}
                   >
                     {city.name}

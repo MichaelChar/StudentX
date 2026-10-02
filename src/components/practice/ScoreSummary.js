@@ -59,7 +59,7 @@ function WrongRow({ position, stem, onClick, t }) {
           justifyContent: 'center',
           background: 'rgba(220,38,38,0.10)',
           color: DANGER,
-          fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+          fontFamily: 'var(--font-display)',
           fontSize: 13,
           fontWeight: 700,
         }}
@@ -126,7 +126,7 @@ function PreviousAttempts({ attempts, t }) {
             <span style={{ fontSize: 14, color: 'rgba(10,37,64,0.7)' }}>{row.date}</span>
             <span
               style={{
-                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontFamily: 'var(--font-display)',
                 fontSize: 14.5,
                 fontWeight: 600,
                 color: INK,
@@ -168,7 +168,7 @@ export default function ScoreSummary({
     <div>
       <h1
         style={{
-          fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+          fontFamily: 'var(--font-display)',
           fontWeight: 600,
           fontSize: 30,
           letterSpacing: '-0.02em',
@@ -200,7 +200,7 @@ export default function ScoreSummary({
           <>
             <span
               style={{
-                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontFamily: 'var(--font-display)',
                 fontWeight: 700,
                 fontSize: 40,
                 letterSpacing: '-0.02em',
@@ -217,7 +217,7 @@ export default function ScoreSummary({
           <>
             <span
               style={{
-                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontFamily: 'var(--font-display)',
                 fontWeight: 700,
                 fontSize: 40,
                 letterSpacing: '-0.02em',
@@ -254,7 +254,7 @@ export default function ScoreSummary({
               <span style={{ fontSize: 14.5, color: INK }}>{prettifyTopic(row.topic)}</span>
               <span
                 style={{
-                  fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                  fontFamily: 'var(--font-display)',
                   fontSize: 14.5,
                   fontWeight: 600,
                   color: row.correct === row.total ? '#0f7a3d' : 'rgba(10,37,64,0.6)',
@@ -299,7 +299,7 @@ export default function ScoreSummary({
 }
 
 const sectionHeading = {
-  fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+  fontFamily: 'var(--font-display)',
   fontWeight: 600,
   fontSize: 16,
   letterSpacing: '-0.01em',

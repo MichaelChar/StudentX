@@ -143,7 +143,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
           <div style={{ padding: '12px 0 4px' }}>
             <h2
               style={{
-                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontFamily: 'var(--font-display)',
                 fontWeight: 600,
                 fontSize: 20,
                 letterSpacing: '-0.01em',
@@ -162,7 +162,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
           <form onSubmit={handleSubmit}>
             <h2
               style={{
-                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontFamily: 'var(--font-display)',
                 fontWeight: 600,
                 fontSize: 20,
                 letterSpacing: '-0.01em',
@@ -204,7 +204,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
                       borderRadius: 11,
                       padding: '10px 12px',
                       cursor: 'pointer',
-                      fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                      fontFamily: 'var(--font-display)',
                       fontWeight: 600,
                       fontSize: 14,
                       letterSpacing: '-0.01em',
@@ -327,7 +327,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
                   padding: '14px 24px',
                   background: ACCENT,
                   color: '#ffffff',
-                  fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                  fontFamily: 'var(--font-display)',
                   fontWeight: 600,
                   fontSize: 15.5,
                   letterSpacing: '-0.01em',
@@ -350,7 +350,7 @@ export default function ReportIssueModal({ subject, testId, questionId, testVers
 const labelStyle = {
   display: 'block',
   marginBottom: 6,
-  fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+  fontFamily: 'var(--font-display)',
   fontWeight: 600,
   fontSize: 13.5,
   letterSpacing: '-0.01em',
@@ -366,7 +366,7 @@ const inputStyle = {
   padding: '12px 14px',
   // No inline fontSize: it would beat the touch-device 16px rule in
   // globals.css and let iOS zoom on focus. The 14.5px is a class on each field.
-  fontFamily: 'var(--font-inter, system-ui, sans-serif)',
+  fontFamily: 'var(--font-sans)',
   color: INK,
   background: '#ffffff',
   // No `outline: 'none'` — inline styles beat the stylesheet, so it would
