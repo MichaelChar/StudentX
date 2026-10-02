@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import Icon from '@/components/ui/Icon';
 
 /*
   Avatar — circular portrait with an initials fallback.
@@ -74,8 +75,12 @@ export default function Avatar({
           onError={() => setFailedSrc(src)}
           className="w-full h-full object-cover"
         />
-      ) : (
+      ) : initials ? (
         <span aria-hidden="true">{initials}</span>
+      ) : (
+        // No photo and no name (the logged-out account pill): a person glyph,
+        // as Airbnb does. An empty parchment disc read as a failed image.
+        <Icon name="user" aria-hidden="true" className="w-[55%] h-[55%] text-night/45" strokeWidth={1.75} />
       )}
     </span>
   );
