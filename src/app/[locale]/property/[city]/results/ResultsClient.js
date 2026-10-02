@@ -128,7 +128,7 @@ function MapLoadingFallback() {
   return (
     <div className="relative h-full w-full">
       <Skeleton variant="card" className="absolute inset-0 h-full w-full" />
-      <span className="absolute inset-0 flex items-center justify-center text-night/40 text-sm">
+      <span className="absolute inset-0 flex items-center justify-center text-night/70 text-sm">
         Loading map…
       </span>
     </div>
@@ -783,7 +783,7 @@ function ResultsContent({
               className={`text-sm font-medium px-3 py-2 flex items-center gap-1.5 transition-colors ${
                 viewMode === 'list'
                   ? 'bg-night text-white'
-                  : 'text-night/60 hover:text-night active:text-night/80'
+                  : 'text-night/70 hover:text-night active:text-night/80'
               }`}
             >
               <Icon name="list" className="w-4 h-4" /> {t('viewList')}
@@ -794,7 +794,7 @@ function ResultsContent({
               className={`text-sm font-medium px-3 py-2 flex items-center gap-1.5 transition-colors ${
                 viewMode === 'map'
                   ? 'bg-night text-white'
-                  : 'text-night/60 hover:text-night active:text-night/80'
+                  : 'text-night/70 hover:text-night active:text-night/80'
               }`}
             >
               <Icon name="map" className="w-4 h-4" /> {t('viewMap')}
@@ -1032,7 +1032,7 @@ function ResultsContent({
                   <p className="font-display text-2xl text-night mb-2">
                     {t('commuteEmptyTitle', { minutes: filters.maxWalkMinutes })}
                   </p>
-                  <p className="text-night/60 mb-6">
+                  <p className="text-night/70 mb-6">
                     {t('commuteEmptyBody', {
                       faculty:
                         faculties.find((f) => f.id === filters.facultyId)?.name
@@ -1056,7 +1056,7 @@ function ResultsContent({
                   <p className="font-display text-2xl text-night mb-2">
                     No matches yet.
                   </p>
-                  <p className="text-night/60 mb-6">
+                  <p className="text-night/70 mb-6">
                     Try widening your budget or selecting more neighborhoods.
                   </p>
                   <Link

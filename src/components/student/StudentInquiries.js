@@ -63,7 +63,7 @@ export async function InquiriesSection({ locale }) {
 
   if (error) {
     return (
-      <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
+      <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3">
         {t('loadError')}
       </p>
     );
@@ -73,7 +73,7 @@ export async function InquiriesSection({ locale }) {
     return (
       <Card tone="parchment" className="p-12 text-center">
         <Icon name="message" className="w-12 h-12 mx-auto text-night/30 mb-3" />
-        <p className="font-display text-xl text-night/60 mb-5">{t('empty')}</p>
+        <p className="font-display text-xl text-night/70 mb-5">{t('empty')}</p>
         <Button href="/property/thessaloniki/results">
           {t('emptyCta')}
         </Button>
@@ -119,22 +119,22 @@ export async function InquiriesSection({ locale }) {
                     {unread > 0 && (
                       <span
                         aria-label={t('unread', { count: unread })}
-                        className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-yellow text-white text-[11px] font-sans font-semibold px-1.5"
+                        className="inline-flex items-center justify-center min-w-5 h-5 rounded-full bg-yellow text-night text-[11px] font-sans font-semibold px-1.5"
                       >
                         {unread}
                       </span>
                     )}
                   </div>
-                  {neighborhood && <p className="label-caps text-night/50">{neighborhood}</p>}
+                  {neighborhood && <p className="label-caps text-night/70">{neighborhood}</p>}
                 </div>
                 <div className="text-right shrink-0">
                   {price != null && (
                     <p className="font-display text-xl text-blue">
                       {formatMoney(price, rent?.currency)}
-                      <span className="text-xs text-night/50">/mo</span>
+                      <span className="text-xs text-night/70">/mo</span>
                     </p>
                   )}
-                  <p className="mt-1 label-caps text-night/40">
+                  <p className="mt-1 label-caps text-night/70">
                     {lastWhen ? t('lastMessageAt', { when: lastWhen }) : t('lastMessageNever')}
                   </p>
                 </div>

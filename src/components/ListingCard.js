@@ -93,7 +93,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
 
       {/* Body — sits directly on the page, ~12px under the photo */}
       <div className="pt-3">
-        <p className="text-sm text-night/60">
+        <p className="text-sm text-night/70">
           {listing.neighborhood} &middot; Thessaloniki
         </p>
 
@@ -108,7 +108,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
             2026-10-02 type amendment, caps are for eyebrows and badges only
             (and uppercasing would turn "1.6 km UoM" into "1.6 KM UOM"). */}
         {nearestUniversities.length > 0 && (
-          <p className="mt-1 flex items-center gap-1.5 text-sm text-night/60">
+          <p className="mt-1 flex items-center gap-1.5 text-sm text-night/70">
             <Icon name="map-pin" className="w-3 h-3 shrink-0 text-night/35" />
             <span className="truncate">
               {nearestUniversities
@@ -122,19 +122,19 @@ export default function ListingCard({ listing, fromQuery = '' }) {
         </h3>
 
         <div className="mt-4 flex items-baseline justify-between gap-3">
-          <span className="text-sm text-night/60">
+          <span className="text-sm text-night/70">
             {formatPropertyType(listing.property_type, locale)}
           </span>
           <span className="font-display text-xl text-blue">
             {listing.monthly_price != null ? (
               <>
                 {formatMoney(listing.monthly_price, listing.currency)}
-                <span className="text-sm text-night/50">
+                <span className="text-sm text-night/70">
                   {tCard('perMonth')}
                 </span>
               </>
             ) : (
-              <span className="text-sm text-night/50">
+              <span className="text-sm text-night/70">
                 {tCard('priceOnRequest')}
               </span>
             )}
@@ -150,7 +150,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
         {/* Factual host response band — no badge, no superlative. Omitted
             when avg is null, stale, or slower than two days. */}
         {responseLabelKey && (
-          <p className="mt-3 text-sm text-night/55 font-sans leading-snug">
+          <p className="mt-3 text-sm text-night/70 font-sans leading-snug">
             {tCard(responseLabelKey)}
           </p>
         )}
@@ -167,7 +167,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
               photoUrl={listing.landlord?.profile_photo_url}
               size={28}
             />
-            <span className="text-[13px] text-night/60 truncate group-hover/landlord:text-blue transition-colors">
+            <span className="text-[13px] text-night/70 truncate group-hover/landlord:text-blue transition-colors">
               {tCard('listedBy', { name: landlordName })}
             </span>
           </Link>

@@ -141,7 +141,7 @@ function StatTile({ value, label }) {
       <p className="font-display text-5xl md:text-6xl text-blue leading-none">
         {value}
       </p>
-      <p className="mt-4 label-caps text-night/60">{label}</p>
+      <p className="mt-4 label-caps text-night/70">{label}</p>
     </Card>
   );
 }

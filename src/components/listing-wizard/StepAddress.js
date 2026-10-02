@@ -151,8 +151,8 @@ export default function StepAddress({
           placeholder={t('titlePlaceholder')}
         />
         <div className="mt-1.5 flex justify-between gap-3">
-          <p className="text-xs text-night/50">{t('titleHint')}</p>
-          <span className="text-xs text-night/40 tabular-nums shrink-0">
+          <p className="text-xs text-night/70">{t('titleHint')}</p>
+          <span className="text-xs text-night/70 tabular-nums shrink-0">
             {codepointLength(form.title)}/{TITLE_MAX_LENGTH}
           </span>
         </div>
@@ -178,10 +178,10 @@ export default function StepAddress({
           />
         </div>
         {searching && (
-          <p className="mt-1.5 text-xs text-night/50">{t('searching')}</p>
+          <p className="mt-1.5 text-xs text-night/70">{t('searching')}</p>
         )}
         {searchError && (
-          <p className="mt-1.5 text-xs text-magenta">{searchError}</p>
+          <p className="mt-1.5 text-xs text-magenta-ink">{searchError}</p>
         )}
         {suggestions.length > 0 && (
           <ul className="absolute z-20 mt-1 w-full bg-white border border-night/10 rounded-card shadow-sm max-h-56 overflow-auto">
@@ -247,7 +247,7 @@ export default function StepAddress({
 
       <div>
         <p className={labelClass}>{t('mapLabel')}</p>
-        <p className="text-xs text-night/50 mb-2">{t('mapHint')}</p>
+        <p className="text-xs text-night/70 mb-2">{t('mapHint')}</p>
         <AddressMap
           lat={Number.isFinite(lat) ? lat : NaN}
           lng={Number.isFinite(lng) ? lng : NaN}
@@ -255,7 +255,7 @@ export default function StepAddress({
         />
         {Number.isFinite(lat) && Number.isFinite(lng) ? (
           <Card tone="parchment" border={false} className="mt-2 px-3 py-2">
-            <p className="text-xs text-night/60 tabular-nums">
+            <p className="text-xs text-night/70 tabular-nums">
               {t('coordsSet', {
                 lat: lat.toFixed(5),
                 lng: lng.toFixed(5),
@@ -263,7 +263,7 @@ export default function StepAddress({
             </p>
           </Card>
         ) : (
-          <p className="mt-2 text-xs text-night/50">{t('coordsRequired')}</p>
+          <p className="mt-2 text-xs text-night/70">{t('coordsRequired')}</p>
         )}
       </div>
     </div>

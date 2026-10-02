@@ -177,7 +177,7 @@ export default function ResourcesExplorer() {
                   style={{
                     fontSize: 11,
                     fontWeight: 600,
-                    color: 'rgba(10,37,64,0.4)',
+                    color: 'rgba(10,37,64,0.7)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.4px',
                   }}
@@ -208,8 +208,8 @@ export default function ResourcesExplorer() {
                             fontSize: 13,
                             fontWeight: 600,
                             whiteSpace: 'nowrap',
-                            border: `1px solid ${active ? '#635BFF' : 'rgba(10,37,64,0.12)'}`,
-                            background: active ? '#635BFF' : '#ffffff',
+                            border: `1px solid ${active ? '#6058F7' : 'rgba(10,37,64,0.12)'}`,
+                            background: active ? '#6058F7' : '#ffffff',
                             color: active ? '#ffffff' : '#0a2540',
                             cursor: 'pointer',
                           }}
@@ -256,7 +256,7 @@ export default function ResourcesExplorer() {
                 style={{
                   fontSize: 11,
                   fontWeight: 600,
-                  color: 'rgba(10,37,64,0.4)',
+                  color: 'rgba(10,37,64,0.7)',
                   textTransform: 'uppercase',
                   letterSpacing: '0.4px',
                 }}
@@ -282,8 +282,8 @@ export default function ResourcesExplorer() {
                         fontSize: 13,
                         fontWeight: 600,
                         whiteSpace: 'nowrap',
-                        border: `1px solid ${active ? '#635BFF' : 'rgba(10,37,64,0.12)'}`,
-                        background: active ? '#635BFF' : '#ffffff',
+                        border: `1px solid ${active ? '#6058F7' : 'rgba(10,37,64,0.12)'}`,
+                        background: active ? '#6058F7' : '#ffffff',
                         color: active ? '#ffffff' : '#0a2540',
                         cursor: 'pointer',
                       }}
@@ -299,7 +299,7 @@ export default function ResourcesExplorer() {
       </div>
 
       {showingRelaxed && (
-        <p style={{ fontSize: 13, color: 'rgba(10,37,64,0.55)', marginBottom: 16 }}>
+        <p style={{ fontSize: 13, color: 'rgba(10,37,64,0.7)', marginBottom: 16 }}>
           No exact matches
           {hasActiveSearch
             ? hasActiveFacetFilters
@@ -326,7 +326,7 @@ export default function ResourcesExplorer() {
                   style={{
                     fontSize: 11,
                     fontWeight: 600,
-                    color: 'rgba(10,37,64,0.4)',
+                    color: 'rgba(10,37,64,0.7)',
                     textTransform: 'uppercase',
                     letterSpacing: '0.4px',
                     margin: '12px 0 6px',
@@ -378,7 +378,7 @@ function ResourceCardBody({ resource, meta }) {
           fontWeight: 700,
           letterSpacing: '0.3px',
           textTransform: 'uppercase',
-          color: '#635BFF',
+          color: '#6058F7',
           marginBottom: 8,
         }}
       >
@@ -389,7 +389,7 @@ function ResourceCardBody({ resource, meta }) {
         {resource.description}
       </p>
       {meta && (
-        <p style={{ fontSize: 12, color: 'rgba(10,37,64,0.4)', marginTop: 10, marginBottom: 0 }}>{meta}</p>
+        <p style={{ fontSize: 12, color: 'rgba(10,37,64,0.7)', marginTop: 10, marginBottom: 0 }}>{meta}</p>
       )}
     </>
   );

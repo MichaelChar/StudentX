@@ -72,7 +72,7 @@ export default function LandlordListingCard({
           {title}
         </p>
         {subtitle ? (
-          <p className="mt-0.5 text-sm text-night/50">{subtitle}</p>
+          <p className="mt-0.5 text-sm text-night/70">{subtitle}</p>
         ) : null}
       </div>
     </Link>

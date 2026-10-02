@@ -142,8 +142,8 @@ export default function StudentProfileForm({
     <Card tone={compact ? 'parchment' : 'white'} className={compact ? 'p-4' : 'p-6 md:p-8'}>
       <div className="mb-6">
         <div className="flex items-baseline justify-between gap-3 mb-2">
-          <p className="label-caps text-night/60">{t('completenessLabel')}</p>
-          <p className="text-sm font-sans text-night/60">
+          <p className="label-caps text-night/70">{t('completenessLabel')}</p>
+          <p className="text-sm font-sans text-night/70">
             {t('completenessCount', { filled: filledCount, total: totalCount })}
           </p>
         </div>
@@ -164,14 +164,14 @@ export default function StudentProfileForm({
           />
         </div>
         {missing.length > 0 && (
-          <p className="mt-2 text-sm text-night/60 font-sans">{t('completenessHint')}</p>
+          <p className="mt-2 text-sm text-night/70 font-sans">{t('completenessHint')}</p>
         )}
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
         {showDisplayName && (
           <label className="block">
-            <span className="label-caps text-night/60">{t('displayName')}</span>
+            <span className="label-caps text-night/70">{t('displayName')}</span>
             <input
               type="text"
               value={form.display_name}
@@ -183,7 +183,7 @@ export default function StudentProfileForm({
         )}
 
         <label className="block">
-          <span className="label-caps text-night/60">{t('dateOfBirth')}</span>
+          <span className="label-caps text-night/70">{t('dateOfBirth')}</span>
           <input
             type="date"
             value={form.date_of_birth}
@@ -193,7 +193,7 @@ export default function StudentProfileForm({
         </label>
 
         <label className="block">
-          <span className="label-caps text-night/60">{t('gender')}</span>
+          <span className="label-caps text-night/70">{t('gender')}</span>
           <select
             value={form.gender}
             onChange={(e) => setField('gender', e.target.value)}
@@ -209,7 +209,7 @@ export default function StudentProfileForm({
         </label>
 
         <label className="block">
-          <span className="label-caps text-night/60">{t('bio')}</span>
+          <span className="label-caps text-night/70">{t('bio')}</span>
           <textarea
             rows={compact ? 3 : 4}
             maxLength={BIO_MAX_CHARS}
@@ -218,7 +218,7 @@ export default function StudentProfileForm({
             placeholder={t('bioPlaceholder')}
             className={`${INPUT_CLS} resize-none`}
           />
-          <span className="mt-1 block text-xs text-night/50 font-sans">
+          <span className="mt-1 block text-xs text-night/70 font-sans">
             {t('bioCount', {
               n: form.bio.length,
               max: BIO_MAX_CHARS,
@@ -227,7 +227,7 @@ export default function StudentProfileForm({
         </label>
 
         <label className="block">
-          <span className="label-caps text-night/60">{t('homeUniversity')}</span>
+          <span className="label-caps text-night/70">{t('homeUniversity')}</span>
           <input
             type="text"
             value={form.home_university}
@@ -238,7 +238,7 @@ export default function StudentProfileForm({
         </label>
 
         <label className="block">
-          <span className="label-caps text-night/60">{t('receivingUniversity')}</span>
+          <span className="label-caps text-night/70">{t('receivingUniversity')}</span>
           <input
             type="text"
             value={form.receiving_university}
@@ -251,13 +251,13 @@ export default function StudentProfileForm({
         {error && (
           <p
             role="alert"
-            className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2"
+            className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-3 py-2"
           >
             {error}
           </p>
         )}
         {status && !error && (
-          <p className="text-sm text-night/60 font-sans" role="status">
+          <p className="text-sm text-night/70 font-sans" role="status">
             {status}
           </p>
         )}

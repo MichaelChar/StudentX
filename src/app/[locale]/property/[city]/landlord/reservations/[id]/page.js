@@ -143,7 +143,7 @@ export default function LandlordReservationDetailPage() {
         <Card tone="parchment" className="p-12 text-center">
           {/* "Could not load" is a different thing from "does not exist", and
               the only one of the two worth offering a retry for. */}
-          <p className="font-display text-xl text-night/60">
+          <p className="font-display text-xl text-night/70">
             {error || t('notFound')}
           </p>
           {error && (
@@ -221,14 +221,14 @@ export default function LandlordReservationDetailPage() {
       actions={
         <Link
           href="/property/thessaloniki/landlord/reservations"
-          className="label-caps text-night/60 hover:text-blue"
+          className="label-caps text-night/70 hover:text-blue"
         >
           ← {t('back')}
         </Link>
       }
     >
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -236,7 +236,7 @@ export default function LandlordReservationDetailPage() {
       <Card tone="white" className="p-6 md:p-8 mb-6">
         <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
           <div>
-            <p className="label-caps text-night/50">{label}</p>
+            <p className="label-caps text-night/70">{label}</p>
             <h2 className="font-display text-2xl md:text-3xl text-night mt-1">
               {student?.display_name || t('unknownStudent')}
             </h2>
@@ -319,7 +319,7 @@ export default function LandlordReservationDetailPage() {
       </div>
 
       <Card tone="parchment" className="p-6">
-        <p className="label-caps text-night/60 mb-4">{t('timeline')}</p>
+        <p className="label-caps text-night/70 mb-4">{t('timeline')}</p>
         <ul className="space-y-3">
           {timelineRows.map((row) => (
             <li
@@ -329,7 +329,7 @@ export default function LandlordReservationDetailPage() {
               <Icon name="check" className="w-4 h-4 text-blue mt-0.5 shrink-0" />
               <span>
                 <span className="font-medium text-night">{row.label}</span>
-                <span className="text-night/50"> · {row.value}</span>
+                <span className="text-night/70"> · {row.value}</span>
               </span>
             </li>
           ))}
@@ -342,7 +342,7 @@ export default function LandlordReservationDetailPage() {
 function DetailField({ label, value, info, infoAria }) {
   return (
     <div>
-      <dt className="label-caps text-night/50 flex items-center gap-1.5">
+      <dt className="label-caps text-night/70 flex items-center gap-1.5">
         <span>{label}</span>
         {info ? (
           <span className="relative group inline-flex">

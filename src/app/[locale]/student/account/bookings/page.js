@@ -86,7 +86,7 @@ async function BookingsSection({ locale }) {
 
   if (error) {
     return (
-      <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
+      <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3">
         {t('loadError')}
       </p>
     );
@@ -97,7 +97,7 @@ async function BookingsSection({ locale }) {
     return (
       <Card tone="parchment" className="p-12 text-center">
         <Icon name="calendar" className="w-12 h-12 mx-auto text-night/30 mb-3" />
-        <p className="font-display text-xl text-night/60 mb-5">{t('empty')}</p>
+        <p className="font-display text-xl text-night/70 mb-5">{t('empty')}</p>
         <Button href="/property/thessaloniki/results">
           {t('emptyCta')}
         </Button>
@@ -122,9 +122,9 @@ async function BookingsSection({ locale }) {
     <div className="space-y-10">
       {groups.map((state) => (
         <div key={state}>
-          <h3 className="label-caps text-night/50 mb-3">
+          <h3 className="label-caps text-night/70 mb-3">
             {t(`group_${state}`)}
-            <span className="ml-2 text-night/30">{byState[state].length}</span>
+            <span className="ml-2 text-night/70">{byState[state].length}</span>
           </h3>
           <ul className="space-y-3">
             {byState[state].map((booking) => (

@@ -43,7 +43,7 @@ export function subscriptionWelcomeHtml({ landlordName, tierName, verificationUr
               </p>
               <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
                 <tr>
-                  <td style="background:#635BFF;border-radius:8px;padding:0;">
+                  <td style="background:#6058F7;border-radius:8px;padding:0;">
                     <a href="${verificationUrl}" style="display:inline-block;padding:12px 28px;font-family:'Source Sans 3','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:14px;font-weight:700;color:#ffffff;text-decoration:none;">Upload ID</a>
                   </td>
                 </tr>

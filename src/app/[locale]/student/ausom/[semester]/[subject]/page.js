@@ -45,7 +45,7 @@ export default async function SubjectPage({ params }) {
             gap: 6,
             fontSize: 13,
             fontWeight: 600,
-            color: 'rgba(10,37,64,0.45)',
+            color: 'rgba(10,37,64,0.7)',
             textDecoration: 'none',
             letterSpacing: '-0.1px',
           }}
@@ -82,7 +82,7 @@ export default async function SubjectPage({ params }) {
               style={{
                 fontSize: 15,
                 lineHeight: 1.5,
-                color: 'rgba(10,37,64,0.6)',
+                color: 'rgba(10,37,64,0.7)',
                 margin: 0,
               }}
             >

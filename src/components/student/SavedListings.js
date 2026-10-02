@@ -45,7 +45,7 @@ export default function SavedListings({ listings }) {
       <div className="py-16 text-center">
         <Icon name="heart" className="mx-auto mb-4 h-10 w-10 text-night/25" />
         <p className="font-display text-xl text-night mb-1">{t('empty')}</p>
-        <p className="text-sm text-night/55 mb-6">{t('emptyBody')}</p>
+        <p className="text-sm text-night/70 mb-6">{t('emptyBody')}</p>
         <Button href="/property/thessaloniki/results" variant="primary">
           {t('emptyCta')}
         </Button>
@@ -60,7 +60,7 @@ export default function SavedListings({ listings }) {
         above says WHAT this is; this line says how much of it there is, which
         is the thing a student returning to their shortlist actually wants.
       */}
-      <p className="mb-4 text-sm text-night/55">
+      <p className="mb-4 text-sm text-night/70">
         {t('panelTitleCount', { count: visible.length })}
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">

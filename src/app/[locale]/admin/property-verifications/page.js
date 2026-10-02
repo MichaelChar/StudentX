@@ -123,7 +123,7 @@ export default function AdminPropertyVerificationsPage() {
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center">
-        <p className="text-night/50">{t('loading')}</p>
+        <p className="text-night/70">{t('loading')}</p>
       </div>
     );
   }
@@ -131,7 +131,7 @@ export default function AdminPropertyVerificationsPage() {
   if (error && requests.length === 0) {
     return (
       <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center px-4">
-        <p className="text-magenta bg-parchment border border-night/10 rounded-card px-6 py-4">
+        <p className="text-magenta-ink bg-parchment border border-night/10 rounded-card px-6 py-4">
           {error}
         </p>
       </div>
@@ -142,7 +142,7 @@ export default function AdminPropertyVerificationsPage() {
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <p className="label-caps text-night/50 mb-1">{t('eyebrow')}</p>
+          <p className="label-caps text-night/70 mb-1">{t('eyebrow')}</p>
           <h1 className="font-display text-2xl font-bold text-night">{t('title')}</h1>
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -154,7 +154,7 @@ export default function AdminPropertyVerificationsPage() {
               className={`text-sm px-3 py-1.5 rounded-control border transition-colors capitalize ${
                 statusFilter === s
                   ? 'bg-night text-white border-night'
-                  : 'border-night/15 text-night/60 hover:border-night/40 active:bg-night/10'
+                  : 'border-night/15 text-night/70 hover:border-night/40 active:bg-night/10'
               }`}
             >
               {t(`status.${s}`)}
@@ -164,14 +164,14 @@ export default function AdminPropertyVerificationsPage() {
       </div>
 
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
 
       {requests.length === 0 ? (
         <div className="text-center py-16 border-2 border-dashed border-night/15 rounded-card">
-          <p className="text-night/50">{t('empty', { status: t(`status.${statusFilter}`) })}</p>
+          <p className="text-night/70">{t('empty', { status: t(`status.${statusFilter}`) })}</p>
         </div>
       ) : (
         <div className="space-y-5">
@@ -191,7 +191,7 @@ export default function AdminPropertyVerificationsPage() {
                       </span>
                       <StatusBadge status={req.status} t={t} />
                     </div>
-                    <p className="text-xs text-night/50 mb-1">
+                    <p className="text-xs text-night/70 mb-1">
                       {req.address}
                       {req.neighborhood ? ` · ${req.neighborhood}` : ''}
                       {req.monthly_price != null
@@ -208,7 +208,7 @@ export default function AdminPropertyVerificationsPage() {
                         {t('phoneLine', { phone: req.landlord_phone })}
                       </p>
                     )}
-                    <p className="text-xs text-night/40 mt-2">
+                    <p className="text-xs text-night/70 mt-2">
                       {t('submitted', {
                         date: new Date(req.created_at).toLocaleDateString('en-GB', {
                           day: 'numeric',
@@ -218,7 +218,7 @@ export default function AdminPropertyVerificationsPage() {
                       })}
                     </p>
                     {req.verified_at && (
-                      <p className="text-xs text-night/40">
+                      <p className="text-xs text-night/70">
                         {t('reviewed', {
                           date: new Date(req.verified_at).toLocaleDateString('en-GB', {
                             day: 'numeric',
@@ -229,7 +229,7 @@ export default function AdminPropertyVerificationsPage() {
                       </p>
                     )}
                     {req.notes && req.status !== 'pending' && (
-                      <p className="text-sm text-night/60 mt-1 italic">{req.notes}</p>
+                      <p className="text-sm text-night/70 mt-1 italic">{req.notes}</p>
                     )}
                   </div>
 
@@ -249,7 +249,7 @@ export default function AdminPropertyVerificationsPage() {
                 {expanded && req.status === 'pending' && (
                   <div className="mt-5 pt-5 border-t border-night/10 grid grid-cols-1 lg:grid-cols-2 gap-6">
                     <div>
-                      <p className="label-caps text-night/50 mb-3">{t('listingPhotos')}</p>
+                      <p className="label-caps text-night/70 mb-3">{t('listingPhotos')}</p>
                       {photos.length === 0 ? (
                         <div className="aspect-[4/3] rounded-photo bg-parchment flex items-center justify-center">
                           <Icon name="photo" className="w-10 h-10 text-night/20" />
@@ -285,7 +285,7 @@ export default function AdminPropertyVerificationsPage() {
                     </div>
 
                     <div className="space-y-4">
-                      <p className="label-caps text-night/50">{t('checklistTitle')}</p>
+                      <p className="label-caps text-night/70">{t('checklistTitle')}</p>
                       <ul className="space-y-2">
                         {PROPERTY_VERIFICATION_CHECKLIST.map((key) => (
                           <li key={key}>
@@ -305,7 +305,7 @@ export default function AdminPropertyVerificationsPage() {
                       </ul>
 
                       <div>
-                        <label className="label-caps text-night/50 mb-2 block">
+                        <label className="label-caps text-night/70 mb-2 block">
                           {t('notesLabel')}
                         </label>
                         <textarea
@@ -366,7 +366,7 @@ function StatusBadge({ status, t }) {
   const styles = {
     pending: 'bg-yellow/20 text-night border-yellow/40',
     approved: 'bg-blue/10 text-blue border-blue/30',
-    rejected: 'bg-parchment text-magenta border-night/10',
+    rejected: 'bg-parchment text-magenta-ink border-night/10',
   };
   return (
     <span

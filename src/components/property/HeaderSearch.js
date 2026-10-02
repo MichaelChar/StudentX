@@ -86,8 +86,8 @@ function SegmentButton({ label, value, placeholder, onClick, expanded }) {
       className="flex-1 min-w-0 rounded-full px-6 py-3 text-left transition-colors
                  hover:bg-parchment active:bg-parchment/70"
     >
-      <span className="block label-caps text-night/60">{label}</span>
-      <span className={`block truncate text-sm ${value ? 'text-night' : 'text-night/40'}`}>
+      <span className="block label-caps text-night/70">{label}</span>
+      <span className={`block truncate text-sm ${value ? 'text-night' : 'text-night/70'}`}>
         {value || placeholder}
       </span>
     </button>
@@ -137,7 +137,7 @@ export default function HeaderSearch({
       >
         <span className="text-sm text-night">{cityName}</span>
         <span aria-hidden="true" className="h-4 w-px bg-night/15" />
-        <span className="text-sm text-night/60">{dateLabel || t('addDates')}</span>
+        <span className="text-sm text-night/70">{dateLabel || t('addDates')}</span>
         <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-blue text-white">
           <Icon name="search" className="h-4 w-4" />
         </span>
@@ -163,7 +163,7 @@ export default function HeaderSearch({
       >
         {COUNTRIES.map((country) => (
           <div key={country.code} role="none" className="mb-2 last:mb-0">
-            <p className="px-3 py-1.5 label-caps text-night/45">
+            <p className="px-3 py-1.5 label-caps text-night/70">
               {country.flag} {country.name}
             </p>
             {country.cities.map((c) => (
@@ -183,7 +183,7 @@ export default function HeaderSearch({
                 <span className="min-w-0">
                   <span className="block truncate text-sm text-night">{c.name}</span>
                   {c.status !== 'live' && (
-                    <span className="block label-caps text-night/40">{t('comingSoon')}</span>
+                    <span className="block label-caps text-night/70">{t('comingSoon')}</span>
                   )}
                 </span>
               </button>

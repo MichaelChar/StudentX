@@ -30,7 +30,7 @@ export async function generateMetadata({ params }) {
 const NOTES_CSS = `
 .notes-page {
   --notes-ink: var(--color-night, #0a2540);
-  --notes-blue: var(--color-blue, #635BFF);
+  --notes-blue: var(--color-blue, #6058F7);
   --notes-surface: var(--color-parchment, #f6f4ff);
   --notes-line: rgba(10, 37, 64, 0.1);
   --notes-muted: rgba(10, 37, 64, 0.62);

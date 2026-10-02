@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { Link } from '@/i18n/navigation';
 
 const INK = '#0a2540';
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const COLUMN = 560;
 
 const SUCCESS = {
@@ -27,7 +27,7 @@ function BackButton({ href, onClick }) {
     gap: 6,
     fontSize: 13,
     fontWeight: 600,
-    color: 'rgba(10,37,64,0.45)',
+    color: 'rgba(10,37,64,0.7)',
     textDecoration: 'none',
     background: 'none',
     border: 'none',
@@ -70,7 +70,7 @@ function ProgressBar({ current, total }) {
         style={{
           fontSize: 13,
           fontWeight: 600,
-          color: 'rgba(10,37,64,0.45)',
+          color: 'rgba(10,37,64,0.7)',
           whiteSpace: 'nowrap',
           letterSpacing: '-0.02em',
         }}
@@ -282,7 +282,7 @@ function McqCard({ question, onNext, isLast }) {
               fontWeight: 700,
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
-              color: 'rgba(10,37,64,0.45)',
+              color: 'rgba(10,37,64,0.7)',
             }}
           >
             Explanation
@@ -316,7 +316,7 @@ function LongAnswerCard({ question, onNext, isLast }) {
             padding: '0 11px',
             borderRadius: 999,
             background: 'rgba(10,37,64,0.06)',
-            color: 'rgba(10,37,64,0.50)',
+            color: 'rgba(10,37,64,0.7)',
             fontSize: 11,
             fontWeight: 600,
             letterSpacing: '0.06em',
@@ -378,7 +378,7 @@ function LongAnswerCard({ question, onNext, isLast }) {
               fontWeight: 700,
               letterSpacing: '0.06em',
               textTransform: 'uppercase',
-              color: 'rgba(10,37,64,0.45)',
+              color: 'rgba(10,37,64,0.7)',
             }}
           >
             Mark scheme
@@ -406,7 +406,7 @@ function LongAnswerCard({ question, onNext, isLast }) {
           style={{
             marginTop: 14,
             fontSize: 13,
-            color: 'rgba(10,37,64,0.40)',
+            color: 'rgba(10,37,64,0.7)',
             textAlign: 'center',
           }}
         >
@@ -458,7 +458,7 @@ function ScoreScreen({ score, mcqTotal, total, onRestart }) {
       >
         {score} / {mcqTotal} MCQ correct
       </h2>
-      <p style={{ fontSize: 14, color: 'rgba(10,37,64,0.50)', margin: '0 0 32px' }}>
+      <p style={{ fontSize: 14, color: 'rgba(10,37,64,0.7)', margin: '0 0 32px' }}>
         {total - mcqTotal} long-answer questions reviewed
       </p>
 

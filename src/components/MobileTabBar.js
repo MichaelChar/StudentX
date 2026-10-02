@@ -36,7 +36,7 @@ export default function MobileTabBar({ tabs, ariaLabel }) {
           className={`flex flex-1 flex-col items-center justify-center gap-1 px-1 py-2.5
                       transition-colors
                       focus-visible:outline-2 focus-visible:outline-yellow focus-visible:outline-offset-2
-                      ${tab.active ? 'text-night' : 'text-night/50 hover:text-night'}`}
+                      ${tab.active ? 'text-night' : 'text-night/70 hover:text-night'}`}
         >
           <span className="relative inline-flex">
             <Icon name={tab.icon} className="h-5 w-5" aria-hidden="true" />

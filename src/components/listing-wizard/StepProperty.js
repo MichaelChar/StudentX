@@ -154,7 +154,7 @@ export default function StepProperty({
           className={`${inputClass} resize-none`}
           placeholder={t('descriptionPlaceholder')}
         />
-        <p className="mt-1.5 text-xs text-night/50">{t('descriptionTip')}</p>
+        <p className="mt-1.5 text-xs text-night/70">{t('descriptionTip')}</p>
       </div>
 
       <fieldset>

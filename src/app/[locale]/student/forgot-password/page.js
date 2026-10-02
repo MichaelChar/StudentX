@@ -73,7 +73,7 @@ export default function StudentForgotPasswordPage() {
         />
 
         {error && (
-          <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2">
+          <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-3 py-2">
             {error}
           </p>
         )}
@@ -81,7 +81,7 @@ export default function StudentForgotPasswordPage() {
         <Button variant="primary" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
       </form>
 
-      <p className="mt-8 text-sm text-night/60">
+      <p className="mt-8 text-sm text-night/70">
         <Link
           href="/student/login"
           className="text-blue font-medium hover:text-night"

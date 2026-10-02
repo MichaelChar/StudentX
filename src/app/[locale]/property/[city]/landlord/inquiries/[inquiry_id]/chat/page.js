@@ -99,7 +99,7 @@ export default function LandlordInquiryChatPage() {
     <LandlordShell eyebrow={t('listingLabel')} title={titleAddr || t('title')}>
       <Link
         href="/property/thessaloniki/landlord/inquiries"
-        className="inline-flex items-center gap-2 label-caps text-night/60 hover:text-blue transition-colors mb-6"
+        className="inline-flex items-center gap-2 label-caps text-night/70 hover:text-blue transition-colors mb-6"
       >
         <Icon name="chevronRight" className="w-3.5 h-3.5 rotate-180" />
         {t('backToInbox')}
@@ -108,7 +108,7 @@ export default function LandlordInquiryChatPage() {
       {state.loading ? (
         <Skeleton variant="card" height="60vh" />
       ) : state.error || !inquiry ? (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3">
           {state.error || t('loadError')}
         </p>
       ) : (
@@ -124,7 +124,7 @@ export default function LandlordInquiryChatPage() {
                 .filter(Boolean)
                 .join(' · ')}
             </p>
-            <p className="mt-2 text-sm text-night/60">
+            <p className="mt-2 text-sm text-night/70">
               {t('withStudent')} — {inquiry.student_name}{' · '}
               <a href={`mailto:${inquiry.student_email}`} className="text-blue hover:text-night">
                 {inquiry.student_email}

@@ -14,8 +14,8 @@ const LOOKS = {
     'bg-blue text-white border-2 border-night shadow-[4px_4px_0_0_#0a2540] ' +
     'hover:shadow-[2px_2px_0_0_#0a2540] hover:translate-x-[2px] hover:translate-y-[2px]',
   invert:
-    'bg-white text-night border-2 border-night shadow-[4px_4px_0_0_#635BFF] ' +
-    'hover:shadow-[2px_2px_0_0_#635BFF] hover:translate-x-[2px] hover:translate-y-[2px]',
+    'bg-white text-night border-2 border-night shadow-[4px_4px_0_0_#6058F7] ' +
+    'hover:shadow-[2px_2px_0_0_#6058F7] hover:translate-x-[2px] hover:translate-y-[2px]',
 };
 
 const SIZES = {

@@ -5,7 +5,7 @@ import Image from 'next/image';
 import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
 import Icon from './ui/Icon';
 
-const IRIS = '#635BFF';
+const IRIS = '#6058F7';
 
 // Scroll-driven homepage hero: a prepared landscape illustration (white canvas)
 // is shown in full on a white stage with the StudentX wordmark + a scroll cue

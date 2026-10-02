@@ -208,7 +208,7 @@ export default function ChatThread({
         className="flex-1 overflow-y-auto px-5 py-6 space-y-3 min-h-[400px] max-h-[60vh]"
       >
         {messages.length === 0 ? (
-          <p className="text-center text-night/40 italic py-12">{t('empty')}</p>
+          <p className="text-center text-night/70 italic py-12">{t('empty')}</p>
         ) : (
           messages.map((m) => (
             <MessageBubble
@@ -250,7 +250,7 @@ export default function ChatThread({
       </form>
 
       {error && (
-        <p role="alert" className="px-4 pb-3 text-xs text-magenta">
+        <p role="alert" className="px-4 pb-3 text-xs text-magenta-ink">
           {error}
         </p>
       )}
@@ -271,7 +271,7 @@ function MessageBubble({ message, isSelf, youLabel, otherLabel }) {
 
   return (
     <div className={`flex flex-col ${align}`}>
-      <span className="label-caps text-night/40 mb-1">{senderLabel} · {formatTime(message.created_at)}</span>
+      <span className="label-caps text-night/70 mb-1">{senderLabel} · {formatTime(message.created_at)}</span>
       <div className={`max-w-[80%] rounded-control px-3.5 py-2.5 text-sm leading-relaxed whitespace-pre-wrap ${bubble}`}>
         {message.body}
       </div>

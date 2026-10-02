@@ -53,18 +53,18 @@ export default async function AdmissionsPage({ params }) {
       {/* Guarantee — directly below the fold. This is the whole proposition. */}
       <section className="bg-blue text-white">
         <div className="mx-auto max-w-4xl px-5 py-20 md:py-24 text-center">
-          <p className="font-display text-xs uppercase tracking-[0.2em] text-white/60">
+          <p className="font-display text-xs uppercase tracking-[0.2em] text-white">
             {t('guarantee.heading')}
           </p>
           <p className="mt-6 font-display text-2xl md:text-4xl leading-[1.2]">
             {t('guarantee.promise')}
           </p>
-          <p className="mt-6 text-base md:text-lg leading-relaxed text-white/80 max-w-2xl mx-auto">
+          <p className="mt-6 text-base md:text-lg leading-relaxed text-white max-w-2xl mx-auto">
             {t('guarantee.detail')}
           </p>
           <Link
             href="/admissions/terms"
-            className="mt-6 inline-block text-sm underline underline-offset-4 text-white/70 hover:text-white"
+            className="mt-6 inline-block text-sm underline underline-offset-4 text-white hover:text-white"
           >
             {t('guarantee.termsLinkLabel')}
           </Link>
@@ -89,7 +89,7 @@ export default async function AdmissionsPage({ params }) {
             <h2 className="font-display text-2xl md:text-3xl text-night">{t('who.notForHeading')}</h2>
             <ul className="mt-6 space-y-4">
               {[1, 2].map((n) => (
-                <li key={n} className="flex gap-3 text-night/60 leading-relaxed">
+                <li key={n} className="flex gap-3 text-night/70 leading-relaxed">
                   <span aria-hidden="true" className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-night/25" />
                   {t(`who.notFor${n}`)}
                 </li>
@@ -103,7 +103,7 @@ export default async function AdmissionsPage({ params }) {
       <section id="how-it-works" className="bg-parchment scroll-mt-8">
         <div className="mx-auto max-w-5xl px-5 py-20 md:py-24">
           <h2 className="font-display text-3xl md:text-4xl text-night">{t('steps.heading')}</h2>
-          <p className="mt-3 text-night/60 text-lg">{t('steps.subhead')}</p>
+          <p className="mt-3 text-night/70 text-lg">{t('steps.subhead')}</p>
 
           <ol className="mt-12 grid gap-8 sm:grid-cols-2">
             {steps.map((step) => (
@@ -131,7 +131,7 @@ export default async function AdmissionsPage({ params }) {
               </div>
             ))}
           </div>
-          <p className="mt-8 text-xs text-night/45 leading-relaxed max-w-2xl">
+          <p className="mt-8 text-xs text-night/70 leading-relaxed max-w-2xl">
             {t('proof.disclaimer')}
           </p>
         </div>
@@ -169,7 +169,7 @@ export default async function AdmissionsPage({ params }) {
             <CtaButton look="invert">{t('cta.buttonLabel')}</CtaButton>
           </div>
           {/* mailto: silently no-ops without a configured mail client — show the address. */}
-          <p className="mt-6 text-sm text-white/50">
+          <p className="mt-6 text-sm text-white/70">
             {t('cta.emailFallbackNote', { email: CONTACT_EMAIL })}
           </p>
         </div>

@@ -14,7 +14,7 @@ import { prettifyTopic } from '@/lib/practice/format';
 // without relying on colour alone.
 
 const INK = '#0a2540';
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 
 const SUCCESS = { text: '#0f7a3d', bg: 'rgba(22,163,74,0.10)', border: 'rgba(22,163,74,0.45)', solid: '#16a34a' };
 const DANGER = { text: '#b42318', bg: 'rgba(220,38,38,0.08)', border: 'rgba(220,38,38,0.45)', solid: '#dc2626' };
@@ -113,7 +113,7 @@ export default function QuestionCard({ question, chosen, locked, onSelect, onZoo
               style={{
                 margin: '8px 0 0',
                 fontSize: 12.5,
-                color: 'rgba(10,37,64,0.5)',
+                color: 'rgba(10,37,64,0.7)',
               }}
             >
               {question.imageCaption}

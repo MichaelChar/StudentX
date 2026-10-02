@@ -71,7 +71,7 @@ export default async function GigDetailPage({ params }) {
 
         <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
           <article>
-            <p className="label-caps text-night/50">
+            <p className="label-caps text-night/70">
               {gig.country_flag ? `${gig.country_flag} ` : ''}
               {[gig.city, gig.country_name].filter(Boolean).join(' · ')}
             </p>
@@ -82,11 +82,11 @@ export default async function GigDetailPage({ params }) {
 
             <div className="mt-6 flex flex-wrap gap-6 border-y border-night/10 py-5">
               <div>
-                <p className="label-caps text-night/45">{t('starts')}</p>
+                <p className="label-caps text-night/70">{t('starts')}</p>
                 <p className="mt-1 text-night">{startDate || '—'}</p>
               </div>
               <div>
-                <p className="label-caps text-night/45">{t('duration')}</p>
+                <p className="label-caps text-night/70">{t('duration')}</p>
                 <p className="mt-1 text-night">
                   {gig.min_duration_weeks != null
                     ? t('weeks', { weeks: gig.min_duration_weeks })
@@ -94,7 +94,7 @@ export default async function GigDetailPage({ params }) {
                 </p>
               </div>
               <div>
-                <p className="label-caps text-night/45">{t('pay')}</p>
+                <p className="label-caps text-night/70">{t('pay')}</p>
                 <p className="mt-1 font-display text-xl text-blue">
                   {pay || (gig.is_paid ? t('payOnApplication') : t('unpaid'))}
                 </p>

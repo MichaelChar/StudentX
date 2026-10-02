@@ -106,7 +106,7 @@ export default function DisplayNameSettings() {
   return (
     <Card tone="parchment" className="px-6 py-6">
       <h2 className="font-display text-xl text-night mb-1">{t('nameTitle')}</h2>
-      <p className="text-sm text-night/60 mb-5">{t('nameDescription')}</p>
+      <p className="text-sm text-night/70 mb-5">{t('nameDescription')}</p>
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-4">
         <FormField
@@ -128,7 +128,7 @@ export default function DisplayNameSettings() {
         </div>
       </form>
 
-      {error && <p className="text-sm text-magenta mt-3">{error}</p>}
+      {error && <p className="text-sm text-magenta-ink mt-3">{error}</p>}
       {status && <p className="text-sm text-jade mt-3">{status}</p>}
     </Card>
   );

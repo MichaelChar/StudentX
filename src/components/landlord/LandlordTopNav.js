@@ -40,7 +40,7 @@ function ItemLabel({ item }) {
 
 function tabClass(active) {
   return `relative flex items-center text-sm font-medium transition-[color] ${FOCUS} ${
-    active ? 'text-night' : 'text-night/60 hover:text-night'
+    active ? 'text-night' : 'text-night/70 hover:text-night'
   }`;
 }
 
@@ -106,7 +106,7 @@ export default function LandlordTopNav({
           {viewsValue != null ? (
             <div className="hidden text-right leading-none lg:block">
               <div className="font-display text-xl text-night">{viewsValue}</div>
-              <div className="label-caps mt-1 text-night/50">{viewsLabel}</div>
+              <div className="label-caps mt-1 text-night/70">{viewsLabel}</div>
             </div>
           ) : null}
           {trailing}

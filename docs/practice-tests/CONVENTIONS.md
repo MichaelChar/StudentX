@@ -63,7 +63,7 @@
 ### Colors (`src/app/globals.css`)
 | Token | Value | Use |
 |---|---|---|
-| `--color-blue` (iris) | `#635BFF` | primary / CTAs / active accent |
+| `--color-blue` (iris) | `#6058F7` | primary / CTAs / active accent |
 | `--color-night` (ink) | `#0a2540` | text / dark surfaces |
 | `--color-stone` | `#ffffff` | page background (canvas) |
 | `--color-parchment` | `#f6f4ff` | card/input surface (light iris tint) |
@@ -71,7 +71,7 @@
 | `--color-yellow` | `#ffcb57` | accent / ornament / `verified` pill |
 | `--color-iris-soft` | `#ece7ff` | section backgrounds |
 | `--color-peach-soft` | `#ffe7d6` | gradient stop |
-| `--gradient-brand` | `linear-gradient(120deg,#635BFF 0%,#ff5fa2 50%,#ffcb57 100%)` | wordmark / hero / `.bg-brand` |
+| `--gradient-brand` | `linear-gradient(120deg,#6058F7 0%,#ff5fa2 50%,#ffcb57 100%)` | wordmark / hero / `.bg-brand` |
 
 Legacy aliases (`--color-navy`, `--color-midnight`, `--color-ink`,
 `--color-text`, `--color-white`, `--color-gray-light`) all point at the above.
@@ -79,7 +79,7 @@ Tailwind utilities exposed: `bg-stone`, `text-night`, `bg-parchment`,
 `bg-blue`, `text-white`, `bg-yellow`, `bg-magenta`, etc.
 
 The hub pages use **literal hex values inline** rather than tokens —
-ink `#0a2540` (often as `rgba(10,37,64,α)`), iris `#635BFF`, white `#ffffff`.
+ink `#0a2540` (often as `rgba(10,37,64,α)`), iris `#6058F7`, white `#ffffff`.
 Common opacities: text-muted `rgba(10,37,64,0.45)`, subtext `rgba(10,37,64,0.6)`,
 borders `rgba(10,37,64,0.12)`, hairlines `rgba(10,37,64,0.06)`.
 
@@ -94,7 +94,7 @@ borders `rgba(10,37,64,0.12)`, hairlines `rgba(10,37,64,0.06)`.
   `--font-sans` / `--font-display`. Headings get `letter-spacing: -0.02em`.
   `HubButton` labels use `var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)`.
 - Body defaults: `font-feature-settings: "ss01","cv11"`. Selection + focus
-  rings are iris (`#635BFF`), focus `outline-offset: 2px; border-radius: 4px`.
+  rings are iris (`#6058F7`), focus `outline-offset: 2px; border-radius: 4px`.
 
 ### Spacing & layout (from the ausom pages)
 - Centered single column. Hub page max-width **480px**; subject list page

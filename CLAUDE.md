@@ -726,13 +726,22 @@ curl -X POST -H "x-cron-secret: $CRON_SECRET" \
   only when the file needs hooks, browser APIs, or event handlers.
 - **Path alias `@/...`** maps to `src/...` (e.g. `@/lib/requireStudent`).
 - **Tailwind v4** with a Stripe-style iris palette (tokens in
-  `src/app/globals.css`): `blue` #635BFF (primary / CTAs / logo), `night`
-  #0a2540 (ink / dark surfaces), `stone` #fff (canvas), `parchment` #f6f4ff
-  (cards / surfaces), plus accents `magenta` #ff5fa2 and `yellow` #ffcb57.
+  `src/app/globals.css`): `blue` #6058F7 (primary / CTAs; was #635BFF until
+  2026-10-02, which the logo PNG still is), `night` #0a2540 (ink / dark
+  surfaces), `stone` #fff (canvas), `parchment` #f6f4ff (cards / surfaces),
+  plus accents `magenta` #ff5fa2 and `yellow` #ffcb57, and `magenta-ink`
+  #d61f69 — magenta for TEXT.
   Legacy aliases (`navy`, `gray-dark`, `gray-light`, `font-heading`) still
   resolve via `globals.css` but new code should use the canonical tokens
   (`night`, `parchment`, `blue`, `font-display`). Inter for both display and
   body (Latin + Greek subsets, self-hosted via `next/font/google`).
+- **Text contrast is WCAG AA, measured — not eyeballed.** Muted text is
+  `text-night/70` at the lightest (`/60` is 4.28:1 and fails). Magenta text is
+  `text-magenta-ink`, never `text-magenta`. Yellow and magenta FILLS carry
+  `text-night`, never white. Small iris text is fine on white and parchment;
+  white text on `bg-blue` must be solid `text-white`. Exempt: disabled UI,
+  decorative icons; large text and icon-only controls need 3:1. Rationale and
+  numbers: the 2026-10-02 colour amendment in `docs/airbnb-ui-parity-spec.md`.
 - **next-intl** for all user-visible strings — no hardcoded copy in
   components. The single catalog is `src/messages/en.json`; a missing key
   fires the `missing-message` synthetic canary in prod.

@@ -53,7 +53,7 @@ export default async function LandlordProfilePage({ params }) {
       {/* Back to the directory */}
       <Link
         href="/property/thessaloniki/results"
-        className="inline-flex items-center gap-2 label-caps text-night/60 hover:text-blue transition-colors mb-8"
+        className="inline-flex items-center gap-2 label-caps text-night/70 hover:text-blue transition-colors mb-8"
       >
         <Icon name="chevronRight" className="w-3.5 h-3.5 rotate-180" />
         {t('back')}
@@ -90,7 +90,7 @@ export default async function LandlordProfilePage({ params }) {
           ))}
         </div>
       ) : (
-        <p className="text-night/60 text-lg font-sans">{t('emptyState')}</p>
+        <p className="text-night/70 text-lg font-sans">{t('emptyState')}</p>
       )}
     </div>
   );

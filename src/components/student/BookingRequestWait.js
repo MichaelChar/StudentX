@@ -42,9 +42,9 @@ export default function BookingRequestWait({
           className={`w-5 h-5 shrink-0 mt-0.5 ${urgent || lapsed ? 'text-magenta' : 'text-night/40'}`}
         />
         <div className="min-w-0">
-          <p className="label-caps text-night/60">{heading}</p>
+          <p className="label-caps text-night/70">{heading}</p>
           <p className="mt-1 font-display text-lg text-night">{waitLine}</p>
-          {body ? <p className="mt-1 text-sm text-night/60">{body}</p> : null}
+          {body ? <p className="mt-1 text-sm text-night/70">{body}</p> : null}
           {/*
             The landlord's typical speed, shown HERE rather than on the idle
             booking card. #458 removed a response-time line from that card
@@ -53,7 +53,7 @@ export default function BookingRequestWait({
             a question the student is actually asking.
           */}
           {typicallyLine ? (
-            <p className="mt-2 text-sm text-night/50">{typicallyLine}</p>
+            <p className="mt-2 text-sm text-night/70">{typicallyLine}</p>
           ) : null}
         </div>
       </div>

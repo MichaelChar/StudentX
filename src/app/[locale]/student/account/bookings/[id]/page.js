@@ -33,7 +33,7 @@ export default async function StudentBookingDetailPage({ params }) {
       <div className="mb-6">
         <Link
           href="/student/account/bookings"
-          className="label-caps text-night/60 hover:text-blue"
+          className="label-caps text-night/70 hover:text-blue"
         >
           ← {t('back')}
         </Link>

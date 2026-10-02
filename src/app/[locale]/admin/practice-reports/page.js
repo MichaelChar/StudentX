@@ -66,7 +66,7 @@ export default async function PracticeReportsPage({ params, searchParams }) {
     <div className="max-w-5xl mx-auto px-4 py-10">
       <div className="mb-8">
         <h1 className="font-display text-2xl font-bold text-night">{t('title')}</h1>
-        <p className="text-sm text-night/55 mt-1">{t('subtitle')}</p>
+        <p className="text-sm text-night/70 mt-1">{t('subtitle')}</p>
       </div>
 
       <ReportsTable

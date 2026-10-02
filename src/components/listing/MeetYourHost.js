@@ -99,7 +99,7 @@ export default function MeetYourHost({
               ) : null}
             </div>
             {showResponse ? (
-              <p className="mt-1.5 font-sans text-sm leading-snug text-night/60">
+              <p className="mt-1.5 font-sans text-sm leading-snug text-night/70">
                 {responseLabel}
               </p>
             ) : null}

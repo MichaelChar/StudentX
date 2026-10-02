@@ -10,7 +10,7 @@ import { getProgressStore } from '@/lib/practice/progress';
 // pass — and for never-attempted tests — it renders nothing; once mounted it
 // hydrates with the best score + attempt count from the progress store.
 const INK = '#0a2540';
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 
 export default function TestCardProgress({ subject, testId }) {
   const t = useTranslations('student.practice');
@@ -58,7 +58,7 @@ export default function TestCardProgress({ subject, testId }) {
       <span style={{ ...pill, background: 'rgba(99,91,255,0.12)', color: ACCENT }}>
         {t('bestScore', { percent: stats.best })}
       </span>
-      <span style={{ ...pill, background: 'rgba(10,37,64,0.06)', color: 'rgba(10,37,64,0.6)' }}>
+      <span style={{ ...pill, background: 'rgba(10,37,64,0.06)', color: 'rgba(10,37,64,0.7)' }}>
         {t('attemptCount', { count: stats.count })}
       </span>
     </div>

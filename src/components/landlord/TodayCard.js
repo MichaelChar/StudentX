@@ -47,10 +47,10 @@ export default function TodayCard({
       <div className="flex items-center gap-4">
         {media ? <div className="shrink-0">{media}</div> : null}
         <div className="min-w-0 flex-1">
-          {eyebrow ? <p className="label-caps text-night/50">{eyebrow}</p> : null}
+          {eyebrow ? <p className="label-caps text-night/70">{eyebrow}</p> : null}
           <p className="font-display text-lg text-night line-clamp-2">{title}</p>
           {subtitle ? (
-            <p className="mt-0.5 truncate text-sm text-night/50">{subtitle}</p>
+            <p className="mt-0.5 truncate text-sm text-night/70">{subtitle}</p>
           ) : null}
         </div>
         {actionLabel ? (

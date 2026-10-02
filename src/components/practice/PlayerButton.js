@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const INK = '#0a2540';
 
 // Iris-fill CTA (Next question / See results / Retry test) — same lift + shadow
@@ -54,7 +54,7 @@ export function TextButton({ children, onClick, ariaLabel }) {
         background: 'none',
         border: 'none',
         padding: 4,
-        color: 'rgba(10,37,64,0.55)',
+        color: 'rgba(10,37,64,0.7)',
         fontSize: 13.5,
         fontWeight: 600,
         cursor: 'pointer',
