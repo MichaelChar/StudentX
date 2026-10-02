@@ -200,21 +200,21 @@ export default function LandlordSignupPage() {
               />
               <label
                 htmlFor="photo"
-                className="inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-night/10 rounded-control text-sm text-night/60 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors"
+                className="inline-flex items-center gap-2 px-4 py-2 border-2 border-dashed border-night/10 rounded-control text-sm text-night/70 hover:border-yellow/60 hover:text-night cursor-pointer transition-colors"
               >
                 {photoPreview ? t('photoReplace') : t('photoChoose')}
               </label>
-              <p className="text-xs text-night/40 mt-1.5">{t('photoHelp')}</p>
+              <p className="text-xs text-night/70 mt-1.5">{t('photoHelp')}</p>
             </div>
           </div>
           {photoError && (
-            <p className="text-sm text-magenta mt-2">{photoError}</p>
+            <p className="text-sm text-magenta-ink mt-2">{photoError}</p>
           )}
         </div>
 
         {error && (
           <div className="space-y-2">
-            <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-3 py-2">
+            <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-3 py-2">
               {error}
             </p>
             {conflictRole === 'student' && (
@@ -231,7 +231,7 @@ export default function LandlordSignupPage() {
         <Button variant="primary" type="submit" disabled={loading} className="w-full">{loading ? t('submitting') : t('submit')}</Button>
       </form>
 
-      <p className="mt-8 text-sm text-night/60">
+      <p className="mt-8 text-sm text-night/70">
         {t('haveAccount')}{' '}
         <Link
           href="/property/thessaloniki/landlord/login"

@@ -217,7 +217,7 @@ function FavoriteAuthGate({ open, onClose }) {
           </Button>
         </div>
 
-        <p className="mt-6 text-sm text-night/50">
+        <p className="mt-6 text-sm text-night/70">
           {t('landlordHint')}{' '}
           <Link
             href="/property/thessaloniki/landlord/login"

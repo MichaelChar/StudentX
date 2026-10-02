@@ -23,19 +23,19 @@ const money = (v) => {
 };
 
 const STATUS_STYLES = {
-  pending: 'bg-parchment text-night/60',
+  pending: 'bg-parchment text-night/70',
   assigned: 'bg-blue/10 text-blue',
   needs_manual_entry: 'bg-yellow/30 text-night/70',
-  error: 'bg-parchment text-magenta',
+  error: 'bg-parchment text-magenta-ink',
   published: 'bg-parchment text-jade',
   claim_sent: 'bg-blue/10 text-blue',
   claimed: 'bg-parchment text-jade',
-  archived: 'bg-parchment text-night/40',
+  archived: 'bg-parchment text-night/70',
 };
 
 function Badge({ status }) {
   return (
-    <span className={`text-[11px] rounded-full px-2 py-0.5 ${STATUS_STYLES[status] || 'bg-parchment text-night/60'}`}>
+    <span className={`text-[11px] rounded-full px-2 py-0.5 ${STATUS_STYLES[status] || 'bg-parchment text-night/70'}`}>
       {status}
     </span>
   );
@@ -49,11 +49,11 @@ function ListingRow({ listing, landlords, onAssign }) {
         // eslint-disable-next-line @next/next/no-img-element
         <img src={cover} alt="" className="w-12 h-12 rounded-photo object-cover bg-parchment" />
       ) : (
-        <div className="w-12 h-12 rounded-photo bg-parchment grid place-items-center text-[10px] text-night/30">no photo</div>
+        <div className="w-12 h-12 rounded-photo bg-parchment grid place-items-center text-[10px] text-night/70">no photo</div>
       )}
       <div className="flex-1 min-w-0">
         <p className="text-sm text-night truncate">{listing.address || listing.source_url || listing.id}</p>
-        <p className="text-xs text-night/50">
+        <p className="text-xs text-night/70">
           {[listing.neighborhood, listing.property_type, money(listing.price_eur_month)].filter(Boolean).join(' · ')}
         </p>
       </div>
@@ -146,7 +146,7 @@ function LandlordCard({ landlord, listings, onChanged, setMsg }) {
       )}
       <div>
         {listings.length === 0 ? (
-          <p className="text-xs text-night/40 py-2 border-t border-night/5">No listings assigned yet.</p>
+          <p className="text-xs text-night/70 py-2 border-t border-night/5">No listings assigned yet.</p>
         ) : (
           listings.map((l) => <ListingRow key={l.id} listing={l} landlords={[]} />)
         )}
@@ -245,7 +245,7 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
       {msg && <p className="text-sm text-night/70 bg-parchment rounded-control px-3 py-2 mb-4">{msg}</p>}
 
       <section className="border border-night/10 rounded-card p-4 mb-6">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Ingest from a URL</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">Ingest from a URL</h2>
         <div className="flex gap-2 mb-3">
           <input
             className="flex-1 text-sm border border-night/10 rounded-control px-3 py-2"
@@ -270,7 +270,7 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
       </section>
 
       <section className="border border-night/10 rounded-card p-4 mb-6">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">New pending landlord</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">New pending landlord</h2>
         <div className="grid grid-cols-2 gap-2 mb-3">
           {['display_name', 'phone', 'email', 'notes'].map((f) => (
             <input
@@ -289,14 +289,14 @@ export default function DashboardClient({ initialLandlords, initialListings }) {
 
       {unassigned.length > 0 && (
         <section className="border border-night/10 rounded-card p-4 mb-6">
-          <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-1">Unassigned listings</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-1">Unassigned listings</h2>
           {unassigned.map((l) => (
             <ListingRow key={l.id} listing={l} landlords={landlords} onAssign={assign} />
           ))}
         </section>
       )}
 
-      <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">
+      <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">
         Landlords ({landlords.length})
       </h2>
       {landlords.map((l) => (

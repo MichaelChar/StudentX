@@ -21,7 +21,7 @@ export default async function ResourcesPage({ params }) {
           gap: 6,
           fontSize: 13,
           fontWeight: 600,
-          color: 'rgba(10,37,64,0.45)',
+          color: 'rgba(10,37,64,0.7)',
           textDecoration: 'none',
           letterSpacing: '-0.1px',
           marginBottom: 24,
@@ -31,7 +31,7 @@ export default async function ResourcesPage({ params }) {
       </Link>
 
       <h1 style={{ fontSize: 26, fontWeight: 800, margin: '0 0 6px' }}>Student Resources</h1>
-      <p style={{ fontSize: 14.5, color: 'rgba(10,37,64,0.55)', margin: '0 0 24px' }}>
+      <p style={{ fontSize: 14.5, color: 'rgba(10,37,64,0.7)', margin: '0 0 24px' }}>
         Practice tests, flashcard decks, and more — filter to find what you need.
       </p>
 

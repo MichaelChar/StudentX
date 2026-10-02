@@ -6,7 +6,7 @@ import { Link } from '@/i18n/navigation';
 // Sibling of HubButton in the same "Stripe-modern" family — identical radius,
 // shadows, hover lift and tokens, extended with a kind badge + question count.
 // Mock exams render with an iris-tinted surface so they read as distinct.
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const INK = '#0a2540';
 
 function ArrowUpRight({ style }) {
@@ -113,7 +113,7 @@ export default function TestCard({ href, title, kind, kindLabel, countLabel }) {
           }}
         >
           <span style={badgeStyle}>{kindLabel}</span>
-          <span style={{ fontSize: 13.5, lineHeight: 1.4, color: 'rgba(10,37,64,0.6)' }}>
+          <span style={{ fontSize: 13.5, lineHeight: 1.4, color: 'rgba(10,37,64,0.7)' }}>
             {countLabel}
           </span>
         </div>

@@ -67,7 +67,7 @@ export default function StatusLadder({
                     ? 'bg-blue text-white'
                     : showDone
                       ? 'bg-blue/10 text-blue'
-                      : 'bg-parchment text-night/40'
+                      : 'bg-parchment text-night/70'
                 }`}
                 aria-current={active ? 'step' : undefined}
               >

@@ -12,7 +12,7 @@ import CtaButton from './CtaButton';
   creation failed, JS disabled, and the pre-hydration server HTML. Never
   remove it — without it a WebGL failure yields a blank rectangle.
 
-  Iris #635BFF as 0..1 floats for the shader's uColor uniform.
+  Iris #6058F7 as 0..1 floats for the shader's uColor uniform.
 */
 const IRIS_RGB = [0.388, 0.357, 1.0];
 

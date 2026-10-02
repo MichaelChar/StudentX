@@ -77,7 +77,7 @@ export default async function StudentBookingCard({ booking, locale }) {
               <div className="min-w-0">
                 <p className="font-display text-xl text-night truncate">{title}</p>
                 {neighborhood && (
-                  <p className="label-caps text-night/50 mt-0.5">{neighborhood}</p>
+                  <p className="label-caps text-night/70 mt-0.5">{neighborhood}</p>
                 )}
               </div>
               <Pill variant={bookingStateVariant(booking.state)}>
@@ -93,7 +93,7 @@ export default async function StudentBookingCard({ booking, locale }) {
             {waitMessage && (
               <p
                 className={`text-sm mb-1 ${
-                  wait.urgent || wait.lapsed ? 'text-magenta' : 'text-night/60'
+                  wait.urgent || wait.lapsed ? 'text-magenta-ink' : 'text-night/70'
                 }`}
               >
                 {t(waitMessage.key, waitMessage.params)}
@@ -102,24 +102,24 @@ export default async function StudentBookingCard({ booking, locale }) {
 
             <dl className="grid grid-cols-2 sm:grid-cols-4 gap-3 mt-3 text-sm">
               <div>
-                <dt className="label-caps text-night/50">{t('colMoveIn')}</dt>
+                <dt className="label-caps text-night/70">{t('colMoveIn')}</dt>
                 <dd className="mt-0.5 text-night">{formatDate(booking.move_in)}</dd>
               </div>
               <div>
-                <dt className="label-caps text-night/50">{t('colMoveOut')}</dt>
+                <dt className="label-caps text-night/70">{t('colMoveOut')}</dt>
                 <dd className="mt-0.5 text-night">{formatDate(booking.move_out)}</dd>
               </div>
               <div>
-                <dt className="label-caps text-night/50">{t('colDuration')}</dt>
+                <dt className="label-caps text-night/70">{t('colDuration')}</dt>
                 <dd className="mt-0.5 text-night">
                   {months != null ? t('durationMonths', { n: months }) : '—'}
                 </dd>
               </div>
               <div>
-                <dt className="label-caps text-night/50">{t('colRent')}</dt>
+                <dt className="label-caps text-night/70">{t('colRent')}</dt>
                 <dd className="mt-0.5 font-display text-lg text-blue">
                   {formatMoney(booking.monthly_rent)}
-                  <span className="text-xs text-night/50 font-sans">/mo</span>
+                  <span className="text-xs text-night/70 font-sans">/mo</span>
                 </dd>
               </div>
             </dl>

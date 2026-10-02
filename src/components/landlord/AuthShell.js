@@ -16,7 +16,7 @@ export default function AuthShell({ eyebrow, title, subtitle, children }) {
           </h1>
         )}
         {subtitle && (
-          <p className="mt-3 text-night/60 text-base leading-relaxed">
+          <p className="mt-3 text-night/70 text-base leading-relaxed">
             {subtitle}
           </p>
         )}

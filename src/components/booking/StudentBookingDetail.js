@@ -150,7 +150,7 @@ export default function StudentBookingDetail({ bookingId }) {
       <Card tone="parchment" className="p-12 text-center">
         {/* An error means "we could not load it", which is a different thing
             from "it does not exist" — and the only one worth retrying. */}
-        <p className="font-display text-xl text-night/60">
+        <p className="font-display text-xl text-night/70">
           {error || t('notFound')}
         </p>
         {error && (
@@ -192,7 +192,7 @@ export default function StudentBookingDetail({ bookingId }) {
   return (
     <>
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -200,7 +200,7 @@ export default function StudentBookingDetail({ bookingId }) {
       <Card tone="white" className="p-6 md:p-8 mb-6">
         <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
           <div>
-            <p className="label-caps text-night/50">{t('detailEyebrow')}</p>
+            <p className="label-caps text-night/70">{t('detailEyebrow')}</p>
             {listingHref ? (
               <Link
                 href={listingHref}
@@ -214,7 +214,7 @@ export default function StudentBookingDetail({ bookingId }) {
               </h2>
             )}
             {loc?.neighborhood && (
-              <p className="text-sm text-night/60 mt-1">{loc.neighborhood}</p>
+              <p className="text-sm text-night/70 mt-1">{loc.neighborhood}</p>
             )}
           </div>
           <Pill variant={bookingStateVariant(booking.state)}>
@@ -249,7 +249,7 @@ export default function StudentBookingDetail({ bookingId }) {
         </dl>
 
         <div className="mt-6">
-          <p className="label-caps text-night/50 mb-2">{t('cancellationPolicy')}</p>
+          <p className="label-caps text-night/70 mb-2">{t('cancellationPolicy')}</p>
           <ul className="space-y-1 text-sm text-night/70 font-sans list-disc pl-5">
             {CANCELLATION_TIERS.map((tier) => (
               <li key={tier.id}>{t(CANCELLATION_COPY_KEY[tier.id])}</li>
@@ -257,7 +257,7 @@ export default function StudentBookingDetail({ bookingId }) {
           </ul>
         </div>
 
-        <p className="mt-6 text-sm text-night/50">{t('offlineNote')}</p>
+        <p className="mt-6 text-sm text-night/70">{t('offlineNote')}</p>
 
         {moveInMeta.can_respond && (
           <div className="mt-8 rounded-card border border-night/10 bg-parchment p-5 md:p-6">
@@ -286,11 +286,11 @@ export default function StudentBookingDetail({ bookingId }) {
         )}
 
         {booking.state === 'moved_in' && (
-          <p className="mt-6 text-sm text-night/60 font-sans">{t('moveInConfirmedNote')}</p>
+          <p className="mt-6 text-sm text-night/70 font-sans">{t('moveInConfirmedNote')}</p>
         )}
 
         {booking.state === 'disputed' && (
-          <p className="mt-6 text-sm text-night/60 font-sans">{t('moveInDisputedNote')}</p>
+          <p className="mt-6 text-sm text-night/70 font-sans">{t('moveInDisputedNote')}</p>
         )}
 
         <div className="mt-8 flex flex-wrap gap-3">
@@ -318,7 +318,7 @@ export default function StudentBookingDetail({ bookingId }) {
 
       {events.length > 0 && (
         <Card tone="parchment" className="p-6">
-          <p className="label-caps text-night/60 mb-4">{t('timeline')}</p>
+          <p className="label-caps text-night/70 mb-4">{t('timeline')}</p>
           <ul className="space-y-3">
             {events.map((ev) => (
               <li
@@ -333,7 +333,7 @@ export default function StudentBookingDetail({ bookingId }) {
                       : ev.to_state}
                     {ev.metadata?.kind ? ` (${ev.metadata.kind})` : ''}
                   </span>
-                  <span className="text-night/50">
+                  <span className="text-night/70">
                     {' '}
                     · {ev.actor} · {formatDate(ev.created_at)}
                   </span>
@@ -382,7 +382,7 @@ export default function StudentBookingDetail({ bookingId }) {
               {t('reportProblemBody')}
             </p>
             <label className="block mt-4">
-              <span className="label-caps text-night/50">{t('reportProblemLabel')}</span>
+              <span className="label-caps text-night/70">{t('reportProblemLabel')}</span>
               <textarea
                 value={problemText}
                 onChange={(e) => setProblemText(e.target.value)}
@@ -427,7 +427,7 @@ export default function StudentBookingDetail({ bookingId }) {
 function DetailField({ label, value }) {
   return (
     <div>
-      <dt className="label-caps text-night/50">{label}</dt>
+      <dt className="label-caps text-night/70">{label}</dt>
       <dd className="mt-1 font-display text-xl text-night">{value}</dd>
     </div>
   );

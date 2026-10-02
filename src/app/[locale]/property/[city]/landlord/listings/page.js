@@ -276,7 +276,7 @@ export default function LandlordListingsPage() {
       }
     >
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -302,7 +302,7 @@ export default function LandlordListingsPage() {
             show which listings are earning; the heading says how many at a
             glance without repeating a chip on every card.
           */}
-          <p className="label-caps text-night/50 mb-4">
+          <p className="label-caps text-night/70 mb-4">
             {t('gridCount', listingsSummary(listings))}
           </p>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-8">
@@ -515,8 +515,8 @@ function ListingRow({
               <Pill variant="pending">{tPv('statusPending')}</Pill>
             )}
           </div>
-          <p className="text-xs text-night/50 mb-1 truncate">{address}</p>
-          <p className="label-caps text-night/50">
+          <p className="text-xs text-night/70 mb-1 truncate">{address}</p>
+          <p className="label-caps text-night/70">
             {neighborhood}
             {listing.property_types?.name && <> · {listing.property_types.name}</>}
             {price != null && (
@@ -524,10 +524,10 @@ function ListingRow({
             )}
           </p>
           {pendingPv && (
-            <p className="mt-2 text-sm text-night/60">{tPv('pendingHint')}</p>
+            <p className="mt-2 text-sm text-night/70">{tPv('pendingHint')}</p>
           )}
           {!propertyVerified && !pendingPv && rejectedPv?.notes && (
-            <p className="mt-2 text-sm text-magenta">
+            <p className="mt-2 text-sm text-magenta-ink">
               {tPv('rejectedHint', { notes: rejectedPv.notes })}
             </p>
           )}
@@ -540,13 +540,13 @@ function ListingRow({
         <Link
           href={`/property/thessaloniki/listing/${listing.listing_id}`}
           target="_blank"
-          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/70 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors"
         >
           {t('view')}
         </Link>
         <Link
           href={`/property/thessaloniki/landlord/listings/${listing.listing_id}/edit`}
-          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/70 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors"
         >
           {t('edit')}
         </Link>
@@ -554,7 +554,7 @@ function ListingRow({
           type="button"
           onClick={onDuplicate}
           disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors disabled:opacity-50"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/70 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors disabled:opacity-50"
         >
           {t('duplicate')}
         </button>
@@ -562,7 +562,7 @@ function ListingRow({
           type="button"
           onClick={onToggleDisable}
           disabled={busy}
-          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/60 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors disabled:opacity-50"
+          className="label-caps px-3 py-1.5 rounded-control border border-night/20 text-night/70 hover:border-blue hover:text-blue active:bg-blue/10 transition-colors disabled:opacity-50"
         >
           {disabled ? t('enable') : t('disable')}
         </button>
@@ -595,7 +595,7 @@ function ListingRow({
           onClick={onDelete}
           disabled={busy || hasBookings}
           title={hasBookings ? t('deleteHasBookings') : undefined}
-          className="label-caps px-3 py-1.5 rounded-control border border-magenta/40 text-magenta hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="label-caps px-3 py-1.5 rounded-control border border-magenta/40 text-magenta-ink hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           {busy ? t('deleting') : t('delete')}
         </button>

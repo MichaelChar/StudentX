@@ -80,7 +80,7 @@ export default function AdminVerificationsPage() {
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center">
-        <p className="text-night/50">Loading…</p>
+        <p className="text-night/70">Loading…</p>
       </div>
     );
   }
@@ -88,7 +88,7 @@ export default function AdminVerificationsPage() {
   if (error) {
     return (
       <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center">
-        <p className="text-magenta bg-parchment border border-night/10 rounded-control px-6 py-4">{error}</p>
+        <p className="text-magenta-ink bg-parchment border border-night/10 rounded-control px-6 py-4">{error}</p>
       </div>
     );
   }
@@ -103,7 +103,7 @@ export default function AdminVerificationsPage() {
               key={s}
               onClick={() => handleFilterChange(s)}
               className={`text-sm px-3 py-1.5 rounded-control border transition-colors capitalize ${
-                statusFilter === s ? 'bg-night text-white border-night' : 'border-night/10 text-night/60 hover:border-night/40 active:bg-night/10'
+                statusFilter === s ? 'bg-night text-white border-night' : 'border-night/10 text-night/70 hover:border-night/40 active:bg-night/10'
               }`}
             >
               {s}
@@ -114,7 +114,7 @@ export default function AdminVerificationsPage() {
 
       {requests.length === 0 ? (
         <div className="text-center py-16 border-2 border-dashed border-night/10 rounded-card">
-          <p className="text-night/50">No {statusFilter} verification requests.</p>
+          <p className="text-night/70">No {statusFilter} verification requests.</p>
         </div>
       ) : (
         <div className="space-y-5">
@@ -126,16 +126,16 @@ export default function AdminVerificationsPage() {
                     <span className="font-display font-semibold text-night">{req.landlord_name}</span>
                     <StatusBadge status={req.status} />
                   </div>
-                  <p className="text-xs text-night/50 mb-1">
+                  <p className="text-xs text-night/70 mb-1">
                     Submitted {new Date(req.submitted_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                   </p>
                   {req.reviewed_at && (
-                    <p className="text-xs text-night/40">
+                    <p className="text-xs text-night/70">
                       Reviewed {new Date(req.reviewed_at).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })}
                     </p>
                   )}
                   {req.review_notes && (
-                    <p className="text-sm text-night/60 mt-1 italic">{req.review_notes}</p>
+                    <p className="text-sm text-night/70 mt-1 italic">{req.review_notes}</p>
                   )}
                 </div>
 
@@ -171,7 +171,7 @@ export default function AdminVerificationsPage() {
                     <button
                       onClick={() => handleAction(req.id, 'reject')}
                       disabled={!!actionStates[req.id]}
-                      className="px-4 py-2 rounded-control border border-magenta/40 text-magenta text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
+                      className="px-4 py-2 rounded-control border border-magenta/40 text-magenta-ink text-sm font-semibold hover:bg-magenta/[0.06] hover:border-magenta active:bg-magenta/10 transition-colors disabled:opacity-50"
                     >
                       {actionStates[req.id] === 'rejecting' ? 'Rejecting…' : 'Reject'}
                     </button>
@@ -190,7 +190,7 @@ function StatusBadge({ status }) {
   const styles = {
     pending: 'bg-yellow/20 text-night border-night/10',
     approved: 'bg-parchment text-jade border-night/10',
-    rejected: 'bg-parchment text-magenta border-night/10',
+    rejected: 'bg-parchment text-magenta-ink border-night/10',
   };
   return (
     <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border capitalize ${styles[status] || ''}`}>

@@ -32,7 +32,7 @@ export default async function GigsChoicePage({ params }) {
         <h1 className="font-display" style={{ fontSize: 34, color: '#0a2540', letterSpacing: '-0.5px', margin: 0 }}>
           {t('title')}
         </h1>
-        <p style={{ marginTop: 10, fontSize: 15, lineHeight: 1.5, color: 'rgba(10,37,64,0.6)' }}>
+        <p style={{ marginTop: 10, fontSize: 15, lineHeight: 1.5, color: 'rgba(10,37,64,0.7)' }}>
           {t('subtitle')}
         </p>
       </div>
@@ -43,7 +43,7 @@ export default async function GigsChoicePage({ params }) {
         ))}
       </div>
 
-      <Link href="/" style={{ fontSize: 13, color: 'rgba(10,37,64,0.5)', textDecoration: 'none' }}>
+      <Link href="/" style={{ fontSize: 13, color: 'rgba(10,37,64,0.7)', textDecoration: 'none' }}>
         ← {t('back')}
       </Link>
     </section>

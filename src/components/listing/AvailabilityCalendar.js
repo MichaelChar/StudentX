@@ -114,7 +114,7 @@ export default function AvailabilityCalendar({ listingId }) {
 
       <div className="grid grid-cols-7 gap-1 text-center mb-2">
         {WEEKDAYS.map((d) => (
-          <span key={d} className="label-caps text-night/40 py-1">
+          <span key={d} className="label-caps text-night/70 py-1">
             {d}
           </span>
         ))}
@@ -147,7 +147,7 @@ export default function AvailabilityCalendar({ listingId }) {
         })}
       </div>
 
-      <ul className="mt-4 flex flex-wrap gap-4 text-sm text-night/60">
+      <ul className="mt-4 flex flex-wrap gap-4 text-sm text-night/70">
         <Legend swatch="bg-parchment border border-night/10" label={t('state_available')} />
         <Legend swatch="bg-yellow/30" label={t('state_pending')} />
         <Legend swatch="bg-night" label={t('state_booked')} />

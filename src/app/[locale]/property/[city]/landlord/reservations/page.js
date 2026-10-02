@@ -81,7 +81,7 @@ export default function LandlordReservationsPage() {
   return (
     <LandlordShell eyebrow={t('eyebrow')} title={t('title')}>
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
@@ -109,7 +109,7 @@ export default function LandlordReservationsPage() {
               }`}
             >
               {t(`tab_${key}`)}
-              <span className={`ml-2 ${active ? 'text-yellow' : 'text-night/40'}`}>
+              <span className={`ml-2 ${active ? 'text-yellow' : 'text-night/70'}`}>
                 {count}
               </span>
             </button>
@@ -126,22 +126,22 @@ export default function LandlordReservationsPage() {
       ) : filtered.length === 0 ? (
         <Card tone="parchment" className="p-12 text-center">
           <Icon name="calendar" className="w-12 h-12 mx-auto text-night/30 mb-3" />
-          <p className="font-display text-xl text-night/60">{t('empty')}</p>
+          <p className="font-display text-xl text-night/70">{t('empty')}</p>
         </Card>
       ) : (
         <div className="overflow-x-auto rounded-card border border-night/10 bg-white">
           <table className="w-full text-left text-sm">
             <thead>
               <tr className="border-b border-night/10 bg-parchment">
-                <th className="label-caps text-night/60 px-4 py-3 font-normal">{t('colStatus')}</th>
-                <th className="label-caps text-night/60 px-4 py-3 font-normal">{t('colStudent')}</th>
-                <th className="label-caps text-night/60 px-4 py-3 font-normal">{t('colRequested')}</th>
-                <th className="label-caps text-night/60 px-4 py-3 font-normal">{t('colListing')}</th>
-                <th className="label-caps text-night/60 px-4 py-3 font-normal">{t('colMoveIn')}</th>
-                <th className="label-caps text-night/60 px-4 py-3 font-normal">{t('colMoveOut')}</th>
-                <th className="label-caps text-night/60 px-4 py-3 font-normal">{t('colRent')}</th>
-                <th className="label-caps text-night/60 px-4 py-3 font-normal">{t('colDuration')}</th>
-                <th className="label-caps text-night/60 px-4 py-3 font-normal">{t('colDetails')}</th>
+                <th className="label-caps text-night/70 px-4 py-3 font-normal">{t('colStatus')}</th>
+                <th className="label-caps text-night/70 px-4 py-3 font-normal">{t('colStudent')}</th>
+                <th className="label-caps text-night/70 px-4 py-3 font-normal">{t('colRequested')}</th>
+                <th className="label-caps text-night/70 px-4 py-3 font-normal">{t('colListing')}</th>
+                <th className="label-caps text-night/70 px-4 py-3 font-normal">{t('colMoveIn')}</th>
+                <th className="label-caps text-night/70 px-4 py-3 font-normal">{t('colMoveOut')}</th>
+                <th className="label-caps text-night/70 px-4 py-3 font-normal">{t('colRent')}</th>
+                <th className="label-caps text-night/70 px-4 py-3 font-normal">{t('colDuration')}</th>
+                <th className="label-caps text-night/70 px-4 py-3 font-normal">{t('colDetails')}</th>
               </tr>
             </thead>
             <tbody>

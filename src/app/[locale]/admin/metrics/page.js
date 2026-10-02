@@ -43,7 +43,7 @@ export default function AdminMetricsPage() {
   if (loading) {
     return (
       <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center">
-        <p className="text-night/50">Loading metrics…</p>
+        <p className="text-night/70">Loading metrics…</p>
       </div>
     );
   }
@@ -51,7 +51,7 @@ export default function AdminMetricsPage() {
   if (error) {
     return (
       <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center">
-        <p className="text-magenta bg-parchment border border-night/10 rounded-control px-6 py-4">{error}</p>
+        <p className="text-magenta-ink bg-parchment border border-night/10 rounded-control px-6 py-4">{error}</p>
       </div>
     );
   }
@@ -69,13 +69,13 @@ export default function AdminMetricsPage() {
       <div className="flex items-center justify-between mb-8">
         <h1 className="font-display text-2xl font-bold text-night">Internal Metrics</h1>
         {cached && (
-          <span className="text-xs text-night/40 bg-parchment rounded-full px-3 py-1">cached</span>
+          <span className="text-xs text-night/70 bg-parchment rounded-full px-3 py-1">cached</span>
         )}
       </div>
 
       {/* Revenue KPIs */}
       <section className="mb-8">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Revenue</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">Revenue</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <KpiCard label="MRR" value={metrics.mrrFormatted} />
           <KpiCard label="ARR" value={metrics.arrFormatted} />
@@ -86,7 +86,7 @@ export default function AdminMetricsPage() {
 
       {/* Landlord KPIs */}
       <section className="mb-8">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Landlords</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">Landlords</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <KpiCard label="Total" value={metrics.totalLandlords} />
           <KpiCard label="Paid" value={metrics.paidLandlords} />
@@ -101,7 +101,7 @@ export default function AdminMetricsPage() {
 
       {/* Churn & Listings */}
       <section className="mb-8">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Retention & Listings</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">Retention & Listings</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <KpiCard
             label="Monthly Churn"
@@ -116,7 +116,7 @@ export default function AdminMetricsPage() {
 
       {/* Inquiries */}
       <section className="mb-8">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Inquiries</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">Inquiries</h2>
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <KpiCard label="This Month" value={metrics.inquiriesThisMonth} />
           <KpiCard label="Last Month" value={metrics.inquiriesLastMonth} />
@@ -130,7 +130,7 @@ export default function AdminMetricsPage() {
 
       {/* Tier Breakdown */}
       <section>
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Tier Breakdown</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">Tier Breakdown</h2>
         <div className="border border-night/10 rounded-card overflow-hidden">
           <table className="w-full text-sm">
             <thead className="bg-parchment">
@@ -151,7 +151,7 @@ export default function AdminMetricsPage() {
                   <tr className="hover:bg-parchment">
                     <td className="px-4 py-3 text-night">Starter (Free)</td>
                     <td className="px-4 py-3 text-right font-mono text-night">{count}</td>
-                    <td className="px-4 py-3 text-right text-night/50">{share}%</td>
+                    <td className="px-4 py-3 text-right text-night/70">{share}%</td>
                   </tr>
                 );
               })()}
@@ -167,7 +167,7 @@ export default function AdminMetricsPage() {
                     <tr key={planId} className="hover:bg-parchment">
                       <td className="px-4 py-3 text-night capitalize">{label}</td>
                       <td className="px-4 py-3 text-right font-mono text-night">{count}</td>
-                      <td className="px-4 py-3 text-right text-night/50">{share}%</td>
+                      <td className="px-4 py-3 text-right text-night/70">{share}%</td>
                     </tr>
                   );
                 })}
@@ -182,7 +182,7 @@ export default function AdminMetricsPage() {
 function KpiCard({ label, value, trend, note }) {
   return (
     <div className="bg-parchment border border-night/5 rounded-card p-4">
-      <p className="text-xs text-night/50 mb-1">{label}</p>
+      <p className="text-xs text-night/70 mb-1">{label}</p>
       <div className="flex items-end gap-2">
         <p className="font-display text-xl font-bold text-night">{value}</p>
         {/*
@@ -209,7 +209,7 @@ function KpiCard({ label, value, trend, note }) {
         {trend === 'up' && <span className="text-xs text-green-600 mb-0.5">↑</span>}
         {trend === 'down' && <span className="text-xs text-red-500 mb-0.5">↓</span>}
       </div>
-      {note && <p className="text-[11px] text-night/30 mt-0.5">{note}</p>}
+      {note && <p className="text-[11px] text-night/70 mt-0.5">{note}</p>}
     </div>
   );
 }

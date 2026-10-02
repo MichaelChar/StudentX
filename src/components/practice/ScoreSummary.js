@@ -10,7 +10,7 @@ import { PrimaryButton } from './PlayerButton';
 // by the parent via onReview). "Retry test" rebuilds a fresh shuffled attempt.
 
 const INK = '#0a2540';
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const DANGER = '#dc2626';
 
 function topicBreakdown(questions, answers) {
@@ -123,7 +123,7 @@ function PreviousAttempts({ attempts, t }) {
               background: '#ffffff',
             }}
           >
-            <span style={{ fontSize: 14, color: 'rgba(10,37,64,0.6)' }}>{row.date}</span>
+            <span style={{ fontSize: 14, color: 'rgba(10,37,64,0.7)' }}>{row.date}</span>
             <span
               style={{
                 fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
@@ -209,7 +209,7 @@ export default function ScoreSummary({
             >
               {t('results.percent', { percent })}
             </span>
-            <span style={{ fontSize: 13.5, lineHeight: 1.45, color: 'rgba(10,37,64,0.55)' }}>
+            <span style={{ fontSize: 13.5, lineHeight: 1.45, color: 'rgba(10,37,64,0.7)' }}>
               {t('results.negativeMarking')}
             </span>
           </>
@@ -226,7 +226,7 @@ export default function ScoreSummary({
             >
               {t('results.scoreValue', { score, total })}
             </span>
-            <span style={{ fontSize: 18, fontWeight: 600, color: 'rgba(10,37,64,0.55)' }}>
+            <span style={{ fontSize: 18, fontWeight: 600, color: 'rgba(10,37,64,0.7)' }}>
               {t('results.percent', { percent })}
             </span>
           </>
@@ -271,7 +271,7 @@ export default function ScoreSummary({
       <section style={{ marginTop: 28 }}>
         <h2 style={sectionHeading}>{t('results.reviewMistakes')}</h2>
         {wrong.length === 0 ? (
-          <p style={{ margin: 0, fontSize: 14.5, color: 'rgba(10,37,64,0.6)' }}>
+          <p style={{ margin: 0, fontSize: 14.5, color: 'rgba(10,37,64,0.7)' }}>
             {t('results.allCorrect')}
           </p>
         ) : (

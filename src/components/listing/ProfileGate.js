@@ -68,7 +68,7 @@ export default function ProfileGate({
         </IconButton>
       </div>
       {description != null && description !== '' ? (
-        <p className="text-sm text-night/60 leading-relaxed">{description}</p>
+        <p className="text-sm text-night/70 leading-relaxed">{description}</p>
       ) : null}
       <StudentProfileForm
         initialStudent={initialStudent}

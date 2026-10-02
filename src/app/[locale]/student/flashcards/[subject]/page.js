@@ -39,7 +39,7 @@ export default async function FlashcardsSubjectPage({ params }) {
             gap: 6,
             fontSize: 13,
             fontWeight: 600,
-            color: 'rgba(10,37,64,0.45)',
+            color: 'rgba(10,37,64,0.7)',
             textDecoration: 'none',
             letterSpacing: '-0.1px',
           }}
@@ -72,7 +72,7 @@ export default async function FlashcardsSubjectPage({ params }) {
           </h1>
 
           {index.decks.length === 0 ? (
-            <p style={{ fontSize: 15, lineHeight: 1.5, color: 'rgba(10,37,64,0.6)', margin: 0 }}>
+            <p style={{ fontSize: 15, lineHeight: 1.5, color: 'rgba(10,37,64,0.7)', margin: 0 }}>
               {t('emptyState')}
             </p>
           ) : (
@@ -98,7 +98,7 @@ export default async function FlashcardsSubjectPage({ params }) {
               marginTop: 32,
               fontSize: 12.5,
               lineHeight: 1.5,
-              color: 'rgba(10,37,64,0.45)',
+              color: 'rgba(10,37,64,0.7)',
             }}
           >
             <a href="https://apps.ankiweb.net/" target="_blank" rel="noopener noreferrer" style={{ color: 'inherit' }}>

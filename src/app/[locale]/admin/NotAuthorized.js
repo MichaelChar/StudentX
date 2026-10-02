@@ -7,10 +7,10 @@ export default function NotAuthorized({ email }) {
     <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center p-6">
       <div className="max-w-md text-center">
         <h1 className="font-display text-2xl font-bold text-night mb-2">Not authorised</h1>
-        <p className="text-night/60">
+        <p className="text-night/70">
           {email ? <strong>{email}</strong> : 'This account'} is signed in but is not on the admin allowlist.
         </p>
-        <p className="text-night/40 text-sm mt-3">
+        <p className="text-night/70 text-sm mt-3">
           Add the address to the ADMIN_EMAILS Worker secret to grant access.
         </p>
       </div>

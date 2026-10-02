@@ -15,7 +15,7 @@ import { PrimaryButton, TextButton } from './PlayerButton';
 // that reveals the answer from `explanation`. Kept deliberately separate so the
 // scored player stays untouched.
 
-const ACCENT = '#635BFF';
+const ACCENT = '#6058F7';
 const INK = '#0a2540';
 const COLUMN = 560;
 
@@ -29,7 +29,7 @@ function BackRow({ href, label }) {
         gap: 6,
         fontSize: 13,
         fontWeight: 600,
-        color: 'rgba(10,37,64,0.45)',
+        color: 'rgba(10,37,64,0.7)',
         textDecoration: 'none',
         letterSpacing: '-0.1px',
       }}
@@ -110,7 +110,7 @@ function OutroVideo({ outro, videoLabel }) {
         </h3>
       )}
       {outro.description && (
-        <p style={{ margin: '0 0 14px', fontSize: 14, lineHeight: 1.5, color: 'rgba(10,37,64,0.6)' }}>
+        <p style={{ margin: '0 0 14px', fontSize: 14, lineHeight: 1.5, color: 'rgba(10,37,64,0.7)' }}>
           {outro.description}
         </p>
       )}
@@ -243,7 +243,7 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
             >
               {t('flashcard.completeTitle')}
             </h2>
-            <p style={{ margin: '0 0 20px', fontSize: 15, lineHeight: 1.5, color: 'rgba(10,37,64,0.6)' }}>
+            <p style={{ margin: '0 0 20px', fontSize: 15, lineHeight: 1.5, color: 'rgba(10,37,64,0.7)' }}>
               {t('flashcard.completeBody', { total })}
             </p>
             <div style={{ display: 'flex', justifyContent: 'center', gap: 14, flexWrap: 'wrap' }}>
@@ -270,7 +270,7 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
                 fontWeight: 600,
                 fontSize: 14,
                 letterSpacing: '-0.01em',
-                color: 'rgba(10,37,64,0.55)',
+                color: 'rgba(10,37,64,0.7)',
               }}
             >
               {t('flashcard.cardProgress', { current: current + 1, total })}
@@ -335,7 +335,7 @@ export default function FlashcardPlayer({ test, subject, onReportIssue }) {
               />
             </button>
             {q.imageCaption && (
-              <figcaption style={{ margin: '10px 0 0', fontSize: 12.5, color: 'rgba(10,37,64,0.5)' }}>
+              <figcaption style={{ margin: '10px 0 0', fontSize: 12.5, color: 'rgba(10,37,64,0.7)' }}>
                 {q.imageCaption}
               </figcaption>
             )}

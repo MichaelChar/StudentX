@@ -81,7 +81,7 @@ export default async function AuthGate({ next, locale, mode = 'guest' }) {
           )}
 
           {!isWrongRole && (
-            <p className="mt-8 text-sm text-night/50">
+            <p className="mt-8 text-sm text-night/70">
               {t('landlordHint')}{' '}
               <Link
                 href="/property/thessaloniki/landlord/login"

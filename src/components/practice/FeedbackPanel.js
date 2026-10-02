@@ -117,7 +117,7 @@ export default function FeedbackPanel({ explanation, result, onZoom, t }) {
             </figcaption>
           )}
           {source && (
-            <p style={{ margin: '6px 0 0', fontSize: 12.5, color: 'rgba(10,37,64,0.5)' }}>
+            <p style={{ margin: '6px 0 0', fontSize: 12.5, color: 'rgba(10,37,64,0.7)' }}>
               {source}
             </p>
           )}

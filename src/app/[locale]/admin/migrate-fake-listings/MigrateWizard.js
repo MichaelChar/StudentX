@@ -97,13 +97,13 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
           ← Dashboard
         </Link>
       </div>
-      <p className="text-sm text-night/50 mb-6">
+      <p className="text-sm text-night/70 mb-6">
         Move seed/fake listings into the pending pipeline and remove them from the public directory. Protected owners
         (michaelcharlesg) are never shown here and can never be deleted. Safe to re-run.
       </p>
 
       <section className="border border-night/10 rounded-card p-4 mb-6">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/40 mb-3">Create pending landlords</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-night/70 mb-3">Create pending landlords</h2>
         <div className="grid sm:grid-cols-2 gap-3">
           {['a', 'b'].map((slot) => (
             <div key={slot} className="flex gap-2">
@@ -119,14 +119,14 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
             </div>
           ))}
         </div>
-        <p className="text-xs text-night/40 mt-2">{pendingLandlords.length} pending landlord(s) available to assign.</p>
+        <p className="text-xs text-night/70 mt-2">{pendingLandlords.length} pending landlord(s) available to assign.</p>
       </section>
 
       {summary && (
         <div className="text-sm rounded-control px-3 py-2 mb-4 bg-parchment text-jade">
           {summary.migrated} migrated, {summary.skipped} skipped, {summary.errors} errors.
           {summary.errorDetail?.length > 0 && (
-            <ul className="mt-1 list-disc pl-5 text-magenta">
+            <ul className="mt-1 list-disc pl-5 text-magenta-ink">
               {summary.errorDetail.map((e, i) => (
                 <li key={i}>{e}</li>
               ))}
@@ -137,13 +137,13 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
       {msg && <p className="text-sm text-night/70 bg-parchment rounded-control px-3 py-2 mb-4">{msg}</p>}
 
       <section className="border border-night/10 rounded-card overflow-hidden mb-6">
-        <div className="grid grid-cols-[auto_1fr_auto] gap-3 items-center bg-parchment px-4 py-2 text-xs font-semibold text-night/50">
+        <div className="grid grid-cols-[auto_1fr_auto] gap-3 items-center bg-parchment px-4 py-2 text-xs font-semibold text-night/70">
           <span>Cover</span>
           <span>Listing</span>
           <span>Assign to</span>
         </div>
         {candidates.length === 0 ? (
-          <p className="px-4 py-6 text-sm text-night/40">No fake listings left to migrate.</p>
+          <p className="px-4 py-6 text-sm text-night/70">No fake listings left to migrate.</p>
         ) : (
           candidates.map((c) => (
             <div key={c.listing_id} className="grid grid-cols-[auto_1fr_auto] gap-3 items-center px-4 py-2 border-t border-night/5">
@@ -151,13 +151,13 @@ export default function MigrateWizard({ initialCandidates = [], initialPendingLa
                 // eslint-disable-next-line @next/next/no-img-element
                 <img src={c.cover} alt="" className="w-14 h-14 rounded-photo object-cover bg-parchment" />
               ) : (
-                <div className="w-14 h-14 rounded-photo bg-parchment grid place-items-center text-[10px] text-night/30">none</div>
+                <div className="w-14 h-14 rounded-photo bg-parchment grid place-items-center text-[10px] text-night/70">none</div>
               )}
               <div className="min-w-0">
                 <p className="text-sm text-night truncate">
-                  {c.title} <span className="text-night/30">({c.listing_id})</span>
+                  {c.title} <span className="text-night/70">({c.listing_id})</span>
                 </p>
-                <p className="text-xs text-night/50">
+                <p className="text-xs text-night/70">
                   {[c.neighborhood, c.property_type, money(c.price_eur_month), c.sqm ? `${c.sqm}m²` : null]
                     .filter(Boolean)
                     .join(' · ')}

@@ -39,7 +39,7 @@ export default function ActionRequiredBanner({ title, body, href, ctaLabel }) {
         <Icon name="shield" className="w-5 h-5 shrink-0 text-magenta" aria-hidden="true" />
         <div className="min-w-0 flex-1">
           <p className="font-display text-base text-night">{title}</p>
-          {body ? <p className="mt-0.5 text-sm text-night/60">{body}</p> : null}
+          {body ? <p className="mt-0.5 text-sm text-night/70">{body}</p> : null}
         </div>
         {href && ctaLabel ? (
           <span className="hidden sm:inline-flex shrink-0 items-center gap-1 label-caps text-blue">

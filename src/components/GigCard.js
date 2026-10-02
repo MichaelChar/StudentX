@@ -73,7 +73,7 @@ export default function GigCard({ gig, fromQuery = '' }) {
 
       {/* Body */}
       <div className="pt-3">
-        <p className="label-caps text-night/50">
+        <p className="label-caps text-night/70">
           {gig.country_flag ? `${gig.country_flag} ` : ''}
           {[gig.city, gig.country_name].filter(Boolean).join(' · ')}
         </p>
@@ -81,18 +81,18 @@ export default function GigCard({ gig, fromQuery = '' }) {
           {gig.title}
         </h3>
         {gig.employer_name && (
-          <p className="mt-1 text-sm text-night/60 line-clamp-1">{gig.employer_name}</p>
+          <p className="mt-1 text-sm text-night/70 line-clamp-1">{gig.employer_name}</p>
         )}
 
         <div className="mt-4 flex items-baseline justify-between gap-3">
-          <span className="label-caps text-night/60">
+          <span className="label-caps text-night/70">
             {startDate ? t('startsFrom', { date: startDate }) : ''}
           </span>
           <span className="font-display text-xl text-blue">
             {pay ? (
               pay
             ) : (
-              <span className="text-sm text-night/50">
+              <span className="text-sm text-night/70">
                 {gig.is_paid ? t('payOnApplication') : t('unpaid')}
               </span>
             )}

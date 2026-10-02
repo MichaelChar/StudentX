@@ -113,7 +113,7 @@ export default function BauhausLoader({
 
         <div
           className={`mt-9 min-h-[22px] text-center text-sm ${
-            dim ? 'text-night/60' : 'text-night'
+            dim ? 'text-night/70' : 'text-night'
           }`}
         >
           {status}

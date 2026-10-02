@@ -47,13 +47,13 @@ const APPROXIMATE_ZOOM = 15;
 const FALLBACK_RADIUS_METERS = 200;
 
 /*
-  Token `blue` (#635BFF) as a hex, not `var(--color-blue)`. Leaflet
+  Token `blue` (#6058F7) as a hex, not `var(--color-blue)`. Leaflet
   writes stroke/fill as SVG presentation attributes, which do not
   resolve CSS custom properties.
 */
 const CIRCLE_PATH = {
-  color: '#635BFF',
-  fillColor: '#635BFF',
+  color: '#6058F7',
+  fillColor: '#6058F7',
   fillOpacity: 0.16,
   weight: 2,
   opacity: 0.85,
@@ -134,7 +134,7 @@ export default function ApproximateLocationMap({
       </div>
 
       {hasCaption ? (
-        <p className="mt-3 font-sans text-sm leading-snug text-night/60">
+        <p className="mt-3 font-sans text-sm leading-snug text-night/70">
           {caption}
         </p>
       ) : null}

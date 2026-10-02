@@ -71,7 +71,7 @@ export default function StepAvailability({
             onChange={(e) => setField('available_to', e.target.value)}
             className={inputClass}
           />
-          <p className="mt-1 text-xs text-night/50">{t('availableToTip')}</p>
+          <p className="mt-1 text-xs text-night/70">{t('availableToTip')}</p>
         </div>
       </div>
 
@@ -82,10 +82,10 @@ export default function StepAvailability({
             {t('addBlackout')}
           </Button>
         </div>
-        <p className="text-xs text-night/50 mb-3">{t('blackoutsTip')}</p>
+        <p className="text-xs text-night/70 mb-3">{t('blackoutsTip')}</p>
 
         {blackouts.length === 0 ? (
-          <p className="text-sm text-night/50">{t('blackoutsEmpty')}</p>
+          <p className="text-sm text-night/70">{t('blackoutsEmpty')}</p>
         ) : (
           <div className="space-y-2">
             {blackouts.map((b, i) => (
@@ -111,7 +111,7 @@ export default function StepAvailability({
                 <button
                   type="button"
                   onClick={() => removeBlackout(i)}
-                  className="p-2 text-night/40 hover:text-night active:text-night/80 transition-colors rounded-control"
+                  className="p-2 text-night/60 hover:text-night active:text-night/80 transition-colors rounded-control"
                   aria-label={t('removeBlackout')}
                 >
                   <Icon name="x" className="w-4 h-4" />

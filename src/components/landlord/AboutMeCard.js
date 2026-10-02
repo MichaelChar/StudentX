@@ -32,7 +32,7 @@ function Stat({ value, label }) {
   return (
     <div className="min-w-0">
       <p className="font-display text-2xl leading-tight text-night">{value}</p>
-      <p className="mt-1 label-caps text-night/50">{label}</p>
+      <p className="mt-1 label-caps text-night/70">{label}</p>
     </div>
   );
 }
@@ -73,7 +73,7 @@ export default function AboutMeCard({
               {name}
             </Heading>
             {location ? (
-              <p className="mt-1.5 font-normal text-night/60">{location}</p>
+              <p className="mt-1.5 font-normal text-night/70">{location}</p>
             ) : null}
           </div>
 

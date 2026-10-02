@@ -104,9 +104,9 @@ export default function AdminListingGoLivePage() {
     <div className="max-w-4xl mx-auto px-4 py-10">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <p className="label-caps text-night/50 mb-1">{t('eyebrow')}</p>
+          <p className="label-caps text-night/70 mb-1">{t('eyebrow')}</p>
           <h1 className="font-display text-2xl font-bold text-night">{t('title')}</h1>
-          <p className="text-sm text-night/60 mt-1 max-w-xl">{t('lede')}</p>
+          <p className="text-sm text-night/70 mt-1 max-w-xl">{t('lede')}</p>
         </div>
         <div className="flex gap-2 flex-wrap">
           {FILTERS.map((f) => (
@@ -117,7 +117,7 @@ export default function AdminListingGoLivePage() {
               className={`text-sm px-3 py-1.5 rounded-control border transition-colors capitalize ${
                 filter === f
                   ? 'bg-night text-white border-night'
-                  : 'border-night/10 text-night/60 hover:border-night/40 active:bg-night/10'
+                  : 'border-night/10 text-night/70 hover:border-night/40 active:bg-night/10'
               }`}
             >
               {t(`filter.${f}`)}
@@ -127,16 +127,16 @@ export default function AdminListingGoLivePage() {
       </div>
 
       {error && (
-        <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
+        <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3 mb-6">
           {error}
         </p>
       )}
 
       {loading ? (
-        <p className="text-night/50">{t('loading')}</p>
+        <p className="text-night/70">{t('loading')}</p>
       ) : listings.length === 0 ? (
         <div className="text-center py-16 border-2 border-dashed border-night/10 rounded-card">
-          <p className="text-night/50">{t('empty', { filter })}</p>
+          <p className="text-night/70">{t('empty', { filter })}</p>
         </div>
       ) : (
         <div className="space-y-4">
@@ -153,7 +153,7 @@ export default function AdminListingGoLivePage() {
                       </p>
                       <StatusPill live={isLive} t={t} />
                     </div>
-                    <p className="text-xs text-night/50 mb-1">
+                    <p className="text-xs text-night/70 mb-1">
                       {row.listing_id}
                       {row.address ? ` · ${row.address}` : ''}
                       {row.neighborhood ? ` · ${row.neighborhood}` : ''}
@@ -173,7 +173,7 @@ export default function AdminListingGoLivePage() {
                       <GateChip ok={row.video_verified} label={t('gateVideo')} />
                     </ul>
                     {!row.can_go_live && !isLive && row.missing?.length > 0 && (
-                      <p className="mt-2 text-xs text-night/50">
+                      <p className="mt-2 text-xs text-night/70">
                         {t('missingPrefix')}{' '}
                         {row.missing
                           .map((m) => MISSING_LABELS[m] || m)
@@ -224,7 +224,7 @@ function StatusPill({ live, t }) {
       className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
         live
           ? 'bg-parchment text-jade border-night/10'
-          : 'bg-parchment text-night/60 border-night/15'
+          : 'bg-parchment text-night/70 border-night/15'
       }`}
     >
       {live ? t('statusLive') : t('statusOffline')}
@@ -238,7 +238,7 @@ function GateChip({ ok, label }) {
       className={`px-2 py-1 rounded-card border ${
         ok
           ? 'bg-parchment text-jade border-night/10'
-          : 'bg-parchment text-night/50 border-night/10'
+          : 'bg-parchment text-night/70 border-night/10'
       }`}
     >
       {ok ? '✓' : '○'} {label}

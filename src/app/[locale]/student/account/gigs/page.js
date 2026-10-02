@@ -92,7 +92,7 @@ async function SavedGigsSection({ locale }) {
 
   if (error) {
     return (
-      <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
+      <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3">
         {tFav('loadError')}
       </p>
     );
@@ -130,7 +130,7 @@ async function InterestsSection({ locale }) {
 
   if (error) {
     return (
-      <p className="text-sm text-magenta bg-parchment border border-night/10 rounded-control px-4 py-3">
+      <p className="text-sm text-magenta-ink bg-parchment border border-night/10 rounded-control px-4 py-3">
         {t('loadError')}
       </p>
     );
@@ -140,7 +140,7 @@ async function InterestsSection({ locale }) {
     return (
       <Card tone="parchment" className="p-12 text-center">
         <Icon name="message" className="w-12 h-12 mx-auto text-night/30 mb-3" />
-        <p className="font-display text-xl text-night/60 mb-5">{t('gigsInterestsEmpty')}</p>
+        <p className="font-display text-xl text-night/70 mb-5">{t('gigsInterestsEmpty')}</p>
         <Button href="/gigs">
           {t('gigsInterestsCta')}
         </Button>
@@ -163,7 +163,7 @@ async function InterestsSection({ locale }) {
                 <div className="min-w-0 flex-1">
                   <p className="font-display text-xl text-night truncate">{title}</p>
                   {(gig?.employer_name || place) && (
-                    <p className="label-caps text-night/50">
+                    <p className="label-caps text-night/70">
                       {[gig?.employer_name, place].filter(Boolean).join(' · ')}
                     </p>
                   )}
@@ -180,7 +180,7 @@ async function InterestsSection({ locale }) {
               )}
 
               <div className="flex items-center justify-between gap-2">
-                <p className="label-caps text-night/40">{t('interestSentOn', { when: sentWhen })}</p>
+                <p className="label-caps text-night/70">{t('interestSentOn', { when: sentWhen })}</p>
                 {gig?.gig_id && (
                   <Link
                     href={`/gigs/${gig.gig_id}`}
