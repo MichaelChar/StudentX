@@ -657,6 +657,17 @@ plugin under `claude-code-action@v1`):
 configured in the Cloudflare dashboard, NOT under `.github/workflows/`. It
 runs `npm run cf:build` and deploys to the `studentx` Worker.
 
+**Merging several PRs back-to-back can leave prod on an OLDER merge.** Each
+push to `main` starts its own build, and whichever deploy finishes last wins —
+not the newest commit. On 2026-10-02 #590, #587, #588 and #589 were merged
+within a minute; prod stayed on #587's merge, so #588 and #589 were merged but
+not live 30 minutes later, while every check on `main` read green. After
+merging a batch, **verify prod serves the newest change** (a marker unique to
+the last PR) instead of trusting the checks; if it doesn't, retry the latest
+`main` build in the Cloudflare dashboard, or merge one more PR to trigger a
+fresh build of the head commit. Merging one PR at a time and waiting for its
+deploy avoids it.
+
 ## Sub-agent worktrees
 
 `.claude/worktrees/` is gitignored (PR #53). Parallel agents work in isolated
