@@ -1566,16 +1566,17 @@ required by the ported structure regardless of palette), **F9** (carousel /
 sheet libraries), **F11** (four-state interactives), **F12** (money
 formatter).
 
-> **AMENDED 2026-10-02 (founder) — "middle path" on F3 and F6.** Identity is
+> **AMENDED 2026-10-02 (founder) — F6 reopened, F3 stays cancelled.** Identity is
 > still unchanged: Inter, iris, night, parchment, `font-display` and the
 > `label-caps` class all stay, and so does the colour layer (prices stay iris;
 > the mobile gradient CTA stays, per the 2026-09-04 call). What reopens is
-> hierarchy and density, which the 2026-08-07 decision had bundled with
-> identity:
+> density, which the 2026-08-07 decision had bundled with identity:
 >
-> - **Smaller titles, weight 500.** Card title 24px → 17px; PDP `h1` 48px →
->   28px mobile / 32px desktop; fact values 24px → 18px. "Bold" is
->   `font-medium` (500) — the weight discipline §1.1 left open.
+> - **Title sizes stay as they were (F3 stays cancelled).** A smaller scale
+>   (card 17px, PDP `h1` 28/32px, facts 18px, all at weight 500) was built and
+>   screenshotted the same day; the founder judged the titles too small and
+>   kept the originals — card title 24px, PDP `h1` 30/36/48px, fact values
+>   24px, all Inter Regular (400). Don't re-propose the smaller scale.
 > - **`label-caps` for eyebrows and badges only.** Card meta, form labels,
 >   inline links, buttons (Share / Save) and dividers move to sentence case.
 >   Section eyebrows on the PDP, the auth-page eyebrow and status pills keep it.

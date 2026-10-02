@@ -117,7 +117,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
             </span>
           </p>
         )}
-        <h3 className="mt-1.5 font-display text-[17px] font-medium text-night leading-snug line-clamp-2">
+        <h3 className="mt-1.5 font-display text-2xl text-night leading-tight line-clamp-2">
           {listing.title || listing.neighborhood}
         </h3>
 
@@ -125,7 +125,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
           <span className="text-sm text-night/60">
             {formatPropertyType(listing.property_type, locale)}
           </span>
-          <span className="font-display text-[17px] font-medium text-blue">
+          <span className="font-display text-xl text-blue">
             {listing.monthly_price != null ? (
               <>
                 {formatMoney(listing.monthly_price, listing.currency)}

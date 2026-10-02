@@ -326,7 +326,7 @@ export default async function ListingPage({ params, searchParams }) {
               <p className="label-caps text-night/50 text-center md:text-left">
                 {listing.neighborhood} &middot; Thessaloniki
               </p>
-              <h1 className="mt-1 font-display text-[28px] md:text-[32px] font-medium text-night leading-tight text-balance text-center md:text-left">
+              <h1 className="mt-1 font-display text-3xl sm:text-4xl md:text-5xl text-night leading-tight text-balance text-center md:text-left">
                 {listing.title || listing.neighborhood}
               </h1>
               {/*
@@ -405,7 +405,7 @@ export default async function ListingPage({ params, searchParams }) {
                 <span className="text-sm text-night/60 block">
                   {t('listedBy')}
                 </span>
-                <span className="font-display text-lg font-medium text-night group-hover:text-blue transition-colors">
+                <span className="font-display text-xl text-night group-hover:text-blue transition-colors">
                   {listing.landlord.name}
                 </span>
               </span>
@@ -564,7 +564,7 @@ export default async function ListingPage({ params, searchParams }) {
                     <dt className="text-sm text-night/60">
                       {u.short_name}
                     </dt>
-                    <dd className="font-display text-lg font-medium text-night">
+                    <dd className="font-display text-2xl text-night">
                       {formatDistance(u.distance_meters)}
                     </dd>
                   </div>
@@ -778,7 +778,7 @@ function BilingualField({ english, value }) {
           {english}
         </span>
       </dt>
-      <dd className="mt-1 font-display text-lg font-medium text-night leading-snug">
+      <dd className="mt-2 font-display text-2xl text-night leading-tight">
         {value}
       </dd>
     </div>
