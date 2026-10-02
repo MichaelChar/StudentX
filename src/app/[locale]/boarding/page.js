@@ -26,7 +26,8 @@ import {
   line and mobile tab bar.
 */
 
-const MUTED = 'text-[#5c6b80]';
+// Muted body copy: the site's AA token for secondary text (#577), not a hex.
+const MUTED = 'text-night/70';
 const WRAP = 'mx-auto w-full max-w-[1120px] px-5';
 const DISPLAY = 'font-display leading-[1.08]';
 const H2 = `${DISPLAY} mb-4 text-[clamp(2rem,3.6vw,3.15rem)]`;
@@ -37,9 +38,14 @@ const BTN =
   'inline-flex items-center justify-center gap-2 rounded-control px-5 py-3 ' +
   'text-sm font-sans font-semibold leading-normal no-underline cursor-pointer border ' +
   'transition-[background-color,border-color,color] ' +
-  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue';
+  'focus-visible:outline-2 focus-visible:outline-offset-2';
+// Ring colour comes from the site-wide iris default in globals.css; the
+// variants below override it only where the ring would sit on blue.
 const BTN_PRIMARY = `${BTN} bg-blue text-white border-blue hover:bg-blue/90 active:bg-blue/80`;
-const BTN_ON_BLUE = `${BTN} bg-white text-night border-white hover:bg-parchment`;
+// On the blue closing panel the ring sits on blue, so it is white — the
+// site's pattern for dark surfaces (AdmissionsHero, ListingLightbox).
+const BTN_ON_BLUE = `${BTN} bg-white text-night border-white hover:bg-parchment outline-white focus-visible:outline-white`;
+const LINK_ON_BLUE = 'text-white underline outline-white focus-visible:outline-white';
 const SPLIT = 'grid items-center gap-12';
 const PANEL = 'rounded-[28px] bg-parchment p-9';
 
@@ -165,8 +171,8 @@ export default async function BoardingPage({ params }) {
                 <span className="mb-[18px] block font-display text-[2.4rem] leading-none">
                   {step.n}
                 </span>
-                <h3 className="mb-2 text-[1.15rem] font-bold">{step.title}</h3>
-                <p className="text-[15px] text-white/80">{step.body}</p>
+                <h3 className="mb-2 font-display text-xl">{step.title}</h3>
+                <p className="text-[15px] text-white">{step.body}</p>
               </li>
             ))}
           </ol>
@@ -178,27 +184,27 @@ export default async function BoardingPage({ params }) {
         <div className={WRAP}>
           <div className="grid items-end gap-6 rounded-[32px] bg-blue px-[22px] py-8 text-white min-[980px]:grid-cols-[1.4fr_0.8fr] min-[980px]:px-12 min-[980px]:py-14">
             <div>
-              <p className="mb-3.5 inline-flex items-center gap-2 text-xs font-bold tracking-[0.02em] text-white before:h-[7px] before:w-[7px] before:rounded-full before:bg-blue before:shadow-[0_0_0_4px_#ece7ff] before:content-['']">
+              <p className="mb-3.5 inline-flex items-center gap-2 text-xs font-bold tracking-[0.02em] text-white before:h-[7px] before:w-[7px] before:rounded-full before:bg-blue before:shadow-[0_0_0_4px_var(--color-iris-soft)] before:content-['']">
                 {t('close.label')}
               </p>
               <h2 className={`${H2} text-white`}>{t('close.heading')}</h2>
-              <p className="max-w-[36rem] text-white/80">{t('close.body')}</p>
+              <p className="max-w-[36rem] text-white">{t('close.body')}</p>
             </div>
             <div>
               <CalButton className={BTN_ON_BLUE}>{t('close.cta')}</CalButton>
-              <p className="mt-3 text-[13.5px] text-white/80">
+              <p className="mt-3 text-[13.5px] text-white">
                 {t('close.emailLead')}{' '}
-                <a href={`mailto:${CONTACT_EMAIL}`} className="text-white underline">
+                <a href={`mailto:${CONTACT_EMAIL}`} className={LINK_ON_BLUE}>
                   {CONTACT_EMAIL}
                 </a>
               </p>
-              <p className="mt-1.5 text-[13.5px] text-white/80">
+              <p className="mt-1.5 text-[13.5px] text-white">
                 {t('close.phoneLead')}{' '}
                 <a
                   href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-white underline"
+                  className={LINK_ON_BLUE}
                 >
                   {PHONE_DISPLAY}
                 </a>
@@ -209,14 +215,16 @@ export default async function BoardingPage({ params }) {
       </section>
 
       {/* Footer — the site's own copyright line (home, /about). */}
-      <div className="px-6 pt-8 pb-12 text-center text-xs tracking-[0.3px] text-night/35">
+      <div className="px-6 pt-8 pb-12 text-center text-xs tracking-[0.3px] text-night/70">
         {t('copyright', { year: new Date().getFullYear() })}
       </div>
 
       {/* Mobile sticky CTA. Sits above the site's bottom tab bar (< md),
           which is fixed at the foot of every page. */}
       <div className="fixed inset-x-3 bottom-[calc(4rem+env(safe-area-inset-bottom)+12px)] z-30 md:bottom-3 min-[980px]:hidden">
-        <CalButton className={`${BTN_PRIMARY} w-full`}>
+        {/* Night ring: this bar floats over the blue step cards and closing
+            panel too, where an iris ring would vanish (night on blue 3.3:1). */}
+        <CalButton className={`${BTN_PRIMARY} w-full outline-night focus-visible:outline-night`}>
           {t('headerCta')}
         </CalButton>
       </div>

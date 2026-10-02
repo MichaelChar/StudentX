@@ -149,7 +149,7 @@ function AboutContent() {
           textAlign: 'center',
           padding: '32px 24px 48px',
           fontSize: 12,
-          color: 'rgba(10,37,64,0.35)',
+          color: 'rgba(10,37,64,0.7)',
           letterSpacing: '0.3px',
         }}
       >
