@@ -49,7 +49,7 @@ export default async function HomePage({ params }) {
         <div
           style={{
             fontSize: 12,
-            color: 'rgba(10,37,64,0.45)',
+            color: 'rgba(10,37,64,0.7)',
             letterSpacing: '0.3px',
           }}
         >
