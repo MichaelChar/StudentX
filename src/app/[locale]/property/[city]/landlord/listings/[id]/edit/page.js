@@ -7,6 +7,7 @@ import { useSearchParams } from 'next/navigation';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { useAccessToken } from '@/lib/useAccessToken';
 import ListingForm from '@/components/ListingForm';
+import { sharedMeasuredFrom } from '@/lib/universityDistances';
 import { useTranslations } from 'next-intl';
 
 import LandlordShell from '@/components/landlord/LandlordShell';
@@ -95,6 +96,11 @@ export default function EditListingPage() {
             distance_meters: String(ud.distance_meters),
             source: ud.source === 'computed' ? 'computed' : 'landlord',
           })) || [],
+        // Echoed back on save so the rows keep their stamp (migration 126).
+        // null (unstamped or mixed) makes the heal cron re-measure them.
+        university_distances_origin: sharedMeasuredFrom(
+          listing.listing_university_distances,
+        ),
         photos: listing.photos || [],
         external_photo_urls: listing.external_photo_urls || [],
         blackouts: (blackouts || []).map((b) => ({

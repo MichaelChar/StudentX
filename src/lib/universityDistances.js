@@ -233,34 +233,58 @@ export function parseUniversityDistances(input, validIds, opts = {}) {
 }
 
 /**
- * Replace a listing's distance rows wholesale (delete-then-insert).
+ * The pin a set of stored rows was measured from (migration 126 stamps), or
+ * null when the rows are unstamped or disagree. Rows are always written
+ * together, so they normally share one stamp.
+ *
+ * @param {Array<{ measured_from_lat?: unknown, measured_from_lng?: unknown }>} rows
+ * @returns {{ lat: number, lng: number } | null}
+ */
+export function sharedMeasuredFrom(rows) {
+  if (!Array.isArray(rows) || rows.length === 0) return null;
+  const [first] = rows;
+  if (first?.measured_from_lat == null || first?.measured_from_lng == null) return null;
+  const lat = Number(first.measured_from_lat);
+  const lng = Number(first.measured_from_lng);
+  if (!Number.isFinite(lat) || !Number.isFinite(lng)) return null;
+  const agree = rows.every(
+    (r) => Number(r?.measured_from_lat) === lat && Number(r?.measured_from_lng) === lng,
+  );
+  return agree ? { lat, lng } : null;
+}
+
+/**
+ * Replace a listing's distance rows wholesale, atomically.
  *
  * Writes listing_id, university_id, distance_meters, and source
  * ('computed' from map-pin prefill, 'landlord' when typed/edited).
  *
+ * One RPC, replace_listing_university_distances (migration 127): the delete and
+ * insert share a transaction, so a failed insert keeps the old rows instead of
+ * leaving the listing with none, and a per-listing lock stops two writers
+ * interleaving. It's SECURITY INVOKER, so the caller's RLS still decides which
+ * listings it may write. An empty `rows` clears the listing's rows, as before.
+ *
+ * `measuredFrom` is the pin the rows were measured from (migration 126). Pass
+ * it only when it's KNOWN. Omitted, the rows are stored unstamped, which the
+ * heal-university-distances cron treats as stale and re-measures. An unknown
+ * origin is safe; a guessed one could vouch for stale rows.
+ *
+ * @param {{ lat: number, lng: number } | null} [measuredFrom]
  * @returns {Promise<{ error: string|null }>}
  */
-export async function writeUniversityDistances(supabase, listingId, rows) {
-  const { error: deleteError } = await supabase
-    .from('listing_university_distances')
-    .delete()
-    .eq('listing_id', listingId);
-
-  if (deleteError) return { error: deleteError.message };
-  if (rows.length === 0) return { error: null };
-
-  const { error: insertError } = await supabase
-    .from('listing_university_distances')
-    .insert(
-      rows.map((r) => ({
-        listing_id: listingId,
-        university_id: r.university_id,
-        distance_meters: r.distance_meters,
-        source: r.source === 'computed' ? 'computed' : 'landlord',
-      })),
-    );
-
-  return { error: insertError ? insertError.message : null };
+export async function writeUniversityDistances(supabase, listingId, rows, measuredFrom = null) {
+  const { error } = await supabase.rpc('replace_listing_university_distances', {
+    p_listing_id: listingId,
+    p_rows: rows.map((r) => ({
+      university_id: r.university_id,
+      distance_meters: r.distance_meters,
+      source: r.source === 'computed' ? 'computed' : 'landlord',
+      measured_from_lat: measuredFrom ? measuredFrom.lat : null,
+      measured_from_lng: measuredFrom ? measuredFrom.lng : null,
+    })),
+  });
+  return { error: error ? error.message : null };
 }
 
 /**

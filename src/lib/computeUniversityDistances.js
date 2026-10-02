@@ -97,12 +97,40 @@ export function collapseNearestPerUniversity(rows) {
  * @returns {Promise<Array<{ university_id: string, distance_meters: number, source: 'computed' }>>}
  */
 export async function computeUniversityDistances(origin, faculties, opts = {}) {
+  return (await measurePin(origin, faculties, opts)).universities;
+}
+
+/**
+ * One OSRM /table call from a pin to every faculty (plus the migration-119
+ * university fallback points), returning BOTH what it measured:
+ *
+ *   universities  - the per-university result computeUniversityDistances
+ *                   returns (nearest campus, haversine fallback per university)
+ *   facultyMetres - Map faculty_id -> routed metres, for faculty_distances.
+ *                   Routed only: a faculty OSRM couldn't reach is absent,
+ *                   never a straight-line guess, as in recomputeDistances.
+ *
+ * A pin move needs both tables re-measured from the same pin to the same
+ * points. Asking once instead of twice matters because FOSSGIS holds a second
+ * request that arrives right behind the first.
+ *
+ * @param {{ lat: number, lng: number }} origin
+ * @param {Array<{ faculty_id: string, university: string, lat: number, lng: number }>} faculties
+ * @param {{ fetchImpl?: typeof fetch, useOsrm?: boolean, universities?: Array<{ university_id: string, lat: unknown, lng: unknown }>, caller?: string }} [opts]
+ * @returns {Promise<{ universities: Array<{ university_id: string, distance_meters: number, source: 'computed' }>, facultyMetres: Map<string, number> }>}
+ */
+export async function measurePin(origin, faculties, opts = {}) {
+  const facultyMetres = new Map();
   const lat = Number(origin?.lat);
   const lng = Number(origin?.lng);
   if (!Number.isFinite(lat) || !Number.isFinite(lng)) {
-    return [];
+    return { universities: [], facultyMetres };
   }
 
+  // Every faculty with coordinates is a destination, so each gets a walk time.
+  // A faculty whose university code doesn't map (university_id null) still
+  // rides the call for faculty_distances, but plays no part in the university
+  // result below.
   const usable = (faculties || [])
     .map((f) => ({
       faculty_id: f.faculty_id,
@@ -110,17 +138,12 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
       lat: Number(f.lat),
       lng: Number(f.lng),
     }))
-    .filter(
-      (f) =>
-        f.university_id &&
-        Number.isFinite(f.lat) &&
-        Number.isFinite(f.lng),
-    );
+    .filter((f) => Number.isFinite(f.lat) && Number.isFinite(f.lng));
 
   // Universities with no faculty row of their own, measured from the campus
   // point on `universities` instead. Keyed as a pseudo-faculty so they ride the
   // same OSRM table call rather than a second round trip.
-  const covered = new Set(usable.map((f) => f.university_id));
+  const covered = new Set(usable.map((f) => f.university_id).filter(Boolean));
   for (const u of opts.universities || []) {
     const id = u?.university_id;
     if (typeof id !== 'string' || !id || covered.has(id)) continue;
@@ -136,10 +159,11 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
       university_id: id,
       lat: uLat,
       lng: uLng,
+      pseudo: true,
     });
   }
 
-  if (usable.length === 0) return [];
+  if (usable.length === 0) return { universities: [], facultyMetres };
 
   const useOsrm = opts.useOsrm !== false;
   const fetchImpl = opts.fetchImpl || fetch;
@@ -166,7 +190,7 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
         headers: { 'user-agent': 'StudentX-landlord-wizard/1.0' },
         signal: AbortSignal.timeout(OSRM_TIMEOUT_MS),
       });
-      logFootRouting('wizard', coordsParts.length, res.status, startedAt);
+      logFootRouting(opts.caller || 'wizard', coordsParts.length, res.status, startedAt);
       if (res.ok) {
         const table = await res.json();
         if (table?.code === 'Ok' && Array.isArray(table.distances?.[0])) {
@@ -180,7 +204,7 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
       }
     } catch (err) {
       // fall through to haversine for everything
-      logFootRouting('wizard', usable.length + 1, err?.name || 'error', startedAt);
+      logFootRouting(opts.caller || 'wizard', usable.length + 1, err?.name || 'error', startedAt);
     }
   }
 
@@ -208,8 +232,13 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
     reason about, and it beats the alternative of showing nothing for a
     university that plainly exists.
   */
+  usable.forEach((f, i) => {
+    if (!f.pseudo && routed.has(i)) facultyMetres.set(f.faculty_id, routed.get(i));
+  });
+
   const byUniversity = new Map();
   usable.forEach((f, i) => {
+    if (!f.university_id) return;
     const entry = byUniversity.get(f.university_id) || { routed: [], straight: [] };
     if (routed.has(i)) entry.routed.push(routed.get(i));
     else entry.straight.push(haversineMeters(lat, lng, f.lat, f.lng));
@@ -226,5 +255,5 @@ export async function computeUniversityDistances(origin, faculties, opts = {}) {
     });
   }
 
-  return collapseNearestPerUniversity(pairs);
+  return { universities: collapseNearestPerUniversity(pairs), facultyMetres };
 }

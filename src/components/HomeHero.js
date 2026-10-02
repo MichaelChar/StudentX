@@ -17,8 +17,9 @@ const IRIS = '#635BFF';
 // artwork's own canvas is white, the contained letterboxing is invisible — the
 // whole image is always visible with no crop, on every screen size.
 //
-// The outer track is 200vh; the inner stage is sticky and 100vh, so the image
-// stays pinned for the first ~100vh of scroll. scrollYProgress runs 0→1 over
+// The outer track is 200vh; the inner stage is sticky and one viewport minus
+// the global header (`--header-h`) tall, pinned just below the header, so the
+// image stays pinned for the first ~100vh of scroll. scrollYProgress runs 0→1 over
 // the full track and the sticky stage releases at progress 0.5, so the logo
 // fade completes by then for a clean hand-off into the buttons section.
 export default function HomeHero() {
@@ -39,7 +40,7 @@ export default function HomeHero() {
   // handling already in globals.css (Bauhaus loader).
   if (prefersReduced) {
     return (
-      <section className="relative h-screen overflow-hidden bg-stone">
+      <section className="relative h-[calc(100vh-var(--header-h))] overflow-hidden bg-stone">
         <Image
           src="/home-hero.webp"
           alt=""
@@ -67,7 +68,10 @@ export default function HomeHero() {
 
   return (
     <section ref={targetRef} className="relative h-[200vh]">
-      <div className="sticky top-0 h-screen overflow-hidden bg-stone">
+      {/* Pins below the global header (`--header-h`: 72px from md, 0 below
+          where the header scrolls away) and is that much shorter, so the
+          header never covers the top of the frame. */}
+      <div className="sticky top-[var(--header-h)] h-[calc(100vh-var(--header-h))] overflow-hidden bg-stone">
         <motion.div style={{ scale: photoScale }} className="absolute inset-0">
           <Image
             src="/home-hero.webp"

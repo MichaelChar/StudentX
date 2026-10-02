@@ -1,6 +1,14 @@
 {
+  "errorPage": {
+    "eyebrow": "Something went wrong",
+    "title": "This page didn't load",
+    "body": "Something broke on our side, not yours. Try again, or head back to the listings.",
+    "retry": "Try again",
+    "home": "Back to listings"
+  },
   "nav": {
     "home": "Home",
+    "homeAria": "StudentX home",
     "browse": "Browse",
     "about": "About",
     "landlords": "Landlords",
@@ -1709,6 +1717,61 @@
       "placeholder": "The full terms of the admissions guarantee — eligibility, the definition of an agreed target school, programme requirements, and the refund process — are being finalised and will be published here before the programme opens to applicants. Until then, everything that would appear here is covered explicitly in writing before you pay anything.",
       "backLabel": "Back to admissions"
     }
+  },
+  "boarding": {
+    "meta": {
+      "title": "Swiss boarding school placement",
+      "description": "Ask Michael about affordable Swiss boarding school options. IB graduate, 43/45, now a second-year medical student in Europe, working directly with the school."
+    },
+    "headerCta": "Hop on a free 15min call",
+    "hero": {
+      "headline": "ask me anything about value Swiss boarding school options",
+      "body": "I graduated from Swiss boarding school last year with 43/45 in my IB leaving exams, and I’m working with my previous school to market and recruit new students. Right now, I’m a second year medical student studying in Greece",
+      "cta": "Book a free 15-min chat",
+      "photoAlt": "Michael"
+    },
+    "chips": {
+      "c1Title": "43/45 bilingual IB Diploma with 4 HLs",
+      "c1Body": "Class of 2025",
+      "c2Title": "2nd year EU medical student",
+      "c2Body": "Studying in Aristotle University, Thessaloniki, Greece",
+      "c3Title": "School Ambassador",
+      "c3Body": "I’m working with my previous school to market and recruit new students"
+    },
+    "pathway": {
+      "label": "education is the biggest investment",
+      "heading": "The Pathway to European Education Starts in Switzerland.",
+      "body": "A Swiss education shows European integration. Together with an excellent teaching staff and a dedicated university counsellor, I am confident I can get your child into his university and degree of choice. I say this as a medical student studying in my first-choice university"
+    },
+    "truth": {
+      "label": "the uncomfortable truth",
+      "heading": "Most Swiss boarding school educations cost 6 figures per year",
+      "body": "That's why I am only interested in top value. With exceptional staff, a beautiful campus, and full support for your child"
+    },
+    "guide": {
+      "label": "meet your guide",
+      "heading": "My name is Michael",
+      "body": "I studied in Switzerland for an exceptional two years, and thoroughly enjoyed it. I graduated with a 43/45 bilingual IB Diploma (with 4 HLs), and I'm now a 2nd year EU medical student. I study in English at my first choice university, and have never been more content. Now, I work directly with my old school to recruit new students"
+    },
+    "steps": {
+      "label": "how it works",
+      "heading": "I stay with you for your child's entire boarding school education. Later down the line, I can also help get them into their European (English speaking) Medical School (or other university) of choice",
+      "s1Title": "Free 15min chat",
+      "s1Body": "No obligations. Just for us to get to know each other",
+      "s2Title": "We look at fit together",
+      "s2Body": "Together, we'll match your child's profile, goals, and timeline to a good value Swiss boarding school",
+      "s3Title": "Application and enrollment",
+      "s3Body": "I stay with you through the process, and can help your child after he gets into a perfect boarding school"
+    },
+    "close": {
+      "label": "fifteen minutes",
+      "heading": "Let's chat about your child's path",
+      "body": "No commitment, no pressure. Ask me anything. Admission, fees, or what boarding life is really like",
+      "cta": "Hop on a free call",
+      "emailLead": "Or email me at",
+      "phoneLead": "Or WhatsApp/ Viber me at"
+    },
+    "copyright": "© {year} StudentX"
   },
   "gigs": {
     "choice": {

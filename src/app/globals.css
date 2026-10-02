@@ -123,6 +123,51 @@
   --default-transition-timing-function: var(--ease-parity);
 }
 
+/*
+  Global header height (Navbar). Sticky from `md`, where it is 72px, so every
+  other sticky element (results map, booking card, gigs asides, notes TOC)
+  offsets by this instead of a bare top-6 / top-20 that would slide under it.
+  Below `md` the bar is a plain 56px strip that scrolls away with the page —
+  the bottom tab bar is the mobile navigation (parity §8.2) — so the offset is
+  0 there. `scroll-padding-top` gives every in-page anchor the same clearance
+  without per-section scroll-margin edits.
+*/
+:root {
+  --header-h: 0px;
+}
+@media (min-width: 768px) {
+  :root {
+    --header-h: 72px;
+  }
+}
+html {
+  scroll-padding-top: var(--header-h);
+}
+
+/*
+  iOS Safari zooms the whole page when a focused field's text is under 16px,
+  and leaves it zoomed after the keyboard closes. 30+ fields here are
+  text-sm / text-xs (landlord FormField, the wizard's inputClass, auth pages,
+  filters, booking, chat, search), so this is one rule rather than a per-site
+  sweep that the next new input would miss.
+
+  Scoped to touch devices by capability, not width: desktop keeps its 14px
+  design, while an iPad at 1024px — which zooms just the same — is covered.
+  Unlayered on purpose: it must beat Tailwind's `text-sm`, which lives in
+  @layer utilities; unlayered author CSS wins over any layer regardless of
+  specificity. It cannot beat an INLINE fontSize, so fields must size with a
+  class, never style={{ fontSize }} (ResourcesExplorer, ReportIssueModal and
+  HubDiagram were converted for exactly this). A flat 16px: no field is larger
+  today; `1em` would have meant the parent's size, not the field's own.
+*/
+@media (hover: none) and (pointer: coarse) {
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]):not([type="file"]):not([type="color"]),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
 body {
   background: var(--color-stone);
   color: var(--color-night);
@@ -210,7 +255,12 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
 }
 
-/* Small-caps label, used for bilingual Greek/English headers */
+/*
+  Uppercase tracked label. Since the 2026-10-02 type amendment (parity spec,
+  "Tokens — UNCHANGED" → AMENDED) it is for EYEBROWS AND BADGES ONLY: a short
+  label above a heading, a section label, a status pill. Card meta, form field
+  labels, inline links, buttons and dividers are sentence case.
+*/
 .label-caps {
   font-family: var(--font-sans);
   text-transform: uppercase;
@@ -359,4 +409,29 @@ input[type="range"]::-moz-range-thumb {
    outside that context and still paint above it. */
 .leaflet-container {
   z-index: 0;
+}
+
+/*
+  Heart "pop" — parity Feature 17: activation "fills solid with a short scale
+  bounce". Until now the heart only cross-faded its colour. Transform-only per
+  F5's motion rule (transform + opacity + colour), on the parity easing.
+  FavoriteButton / GigFavoriteButton apply it only on a save click, keyed so
+  each save replays it — never on mount, so hearts already saved don't all pop
+  on page load.
+*/
+@keyframes sx-heart-pop {
+  0% { transform: scale(1); }
+  30% { transform: scale(1.3); }
+  55% { transform: scale(0.9); }
+  100% { transform: scale(1); }
+}
+.sx-heart-pop {
+  animation: sx-heart-pop 340ms var(--ease-parity) both;
+  transform-origin: 50% 50%;
+  transform-box: fill-box;
+}
+@media (prefers-reduced-motion: reduce) {
+  .sx-heart-pop {
+    animation: none;
+  }
 }

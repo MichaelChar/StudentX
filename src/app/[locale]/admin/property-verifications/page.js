@@ -122,7 +122,7 @@ export default function AdminPropertyVerificationsPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center">
         <p className="text-night/50">{t('loading')}</p>
       </div>
     );
@@ -130,7 +130,7 @@ export default function AdminPropertyVerificationsPage() {
 
   if (error && requests.length === 0) {
     return (
-      <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="min-h-[calc(100vh-var(--header-h))] flex items-center justify-center px-4">
         <p className="text-magenta bg-parchment border border-night/10 rounded-card px-6 py-4">
           {error}
         </p>

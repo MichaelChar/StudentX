@@ -61,18 +61,10 @@ export default function ThessalonikiLanding() {
       {/* Hero — Stripe-style WebGL mesh gradient background */}
       <section className="relative overflow-hidden">
         <StripeGradientMesh />
-        {/*
-          `pt-24` rather than `pt-20` on mobile: the floating account pill
-          (`AccountMenu`, fixed top-11 right-5) ends at y=92, and at 80px of
-          padding the headline's first line started at y=80 and reached x=283
-          against the pill's left edge at x=275 — a small corner of
-          `Thessaloniki.` disappeared under it.
-
-          Padding rather than the `pr-24` used on results: this h1 is four
-          lines at 375px already, and reserving 96px on the right would push it
-          to five. Sixteen more pixels above it costs nothing by comparison.
-        */}
-        <div className="relative mx-auto max-w-6xl px-5 pt-24 pb-24 md:pt-28 md:pb-32">
+        {/* The account pill used to float over this hero (hence a pt-24
+            workaround on mobile); it lives in the global header now, which
+            sits above the section, so the headline needs no clearance. */}
+        <div className="relative mx-auto max-w-6xl px-5 pt-16 pb-24 md:pt-24 md:pb-32">
           <h1 className="font-display text-4xl md:text-6xl lg:text-[4.5rem] leading-[1.05] max-w-3xl text-night">
             {t('headline')}
           </h1>
@@ -108,17 +100,17 @@ export default function ThessalonikiLanding() {
 
       {/* How it works */}
       <section className="mx-auto max-w-6xl px-5 py-20 md:py-28">
-        <p className="label-caps text-yellow mb-5">{t('howEyebrow')}</p>
+        <p className="label-caps text-night/70 mb-5">{t('howEyebrow')}</p>
         <h2 className="font-display text-3xl md:text-5xl text-night leading-tight max-w-3xl">
           {t('howTitle')}{' '}
-          <span className="italic text-yellow">{t('howTitleItalic')}</span>
+          <span className="italic text-blue">{t('howTitleItalic')}</span>
         </h2>
 
         <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-10">
           {steps.map((step) => (
             <div key={step.numeral} className="relative">
               <span
-                className="font-display text-5xl text-yellow block leading-none mb-5"
+                className="font-display text-5xl text-blue block leading-none mb-5"
                 aria-hidden="true"
               >
                 {step.numeral}
@@ -146,7 +138,7 @@ export default function ThessalonikiLanding() {
 function StatTile({ value, label }) {
   return (
     <Card tone="parchment" border={false} className="px-6 py-8">
-      <p className="font-display text-5xl md:text-6xl text-yellow leading-none">
+      <p className="font-display text-5xl md:text-6xl text-blue leading-none">
         {value}
       </p>
       <p className="mt-4 label-caps text-night/60">{label}</p>

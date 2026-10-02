@@ -339,6 +339,12 @@ def main():
                 "faculty_id": fid,
                 "walk_minutes": walk,
                 "transit_minutes": transit,
+                # Endpoints this row was measured between (migration 126), so
+                # the recompute-distances cron can tell it's current.
+                "measured_from_lat": listing["lat"],
+                "measured_from_lng": listing["lng"],
+                "measured_to_lat": faculty["lat"],
+                "measured_to_lng": faculty["lng"],
             }).execute()
             print(f"  {label} — walk: {walk}min, transit: {transit}min")
         except Exception as e:

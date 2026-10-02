@@ -79,9 +79,12 @@ export function pickMessages(messages, paths) {
 }
 
 // Always mounted, so paid by every page: Navbar (nav), FavoritesProvider
-// (student.favorites, student.gate) and GigFavoritesProvider (gigs.favorites).
-// 2.7 KB raw. Keep it that way — see the header.
+// (student.favorites, student.gate), GigFavoritesProvider (gigs.favorites) and
+// the [locale] error boundary (errorPage — it replaces the whole route subtree,
+// per-route providers included, so only the root set is above it).
+// ~2.9 KB raw. Keep it that way — see the header.
 export const ROOT_NAMESPACES = [
+  'errorPage',
   'gigs.favorites',
   'nav',
   'student.favorites',

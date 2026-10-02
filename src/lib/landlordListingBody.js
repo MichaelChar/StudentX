@@ -189,6 +189,18 @@ export async function parseListingWriteBody(body, opts = {}) {
     };
   }
 
+  // The pin the client measured university_distances from (migration 126). An
+  // invalid or missing value is just unknown, never an error: the rows are then
+  // stored unstamped and the heal-university-distances cron re-measures them.
+  let universityDistanceOrigin = null;
+  if (universityDistanceRows !== undefined && body.university_distances_origin) {
+    const origin = validateRequiredCoords(
+      body.university_distances_origin.lat,
+      body.university_distances_origin.lng,
+    );
+    if (origin.ok) universityDistanceOrigin = { lat: origin.lat, lng: origin.lng };
+  }
+
   // Numeric helpers
   const numOrNull = (v) => {
     if (v === undefined) return undefined;
@@ -282,6 +294,7 @@ export async function parseListingWriteBody(body, opts = {}) {
       minDuration,
       maxDuration,
       universityDistanceRows,
+      universityDistanceOrigin,
       photos: uploadedPhotos,
       external_photo_urls: externalPhotos,
       property_type: body.property_type,

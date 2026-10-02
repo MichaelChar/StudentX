@@ -259,7 +259,7 @@ function SignupInner() {
     <AuthShell eyebrow="Sign up" title={t('title')} subtitle={t('subtitle')}>
       <form onSubmit={handleSubmit} className="space-y-5">
         <fieldset>
-          <legend className="label-caps text-night/70 mb-2">{t('typeLegend')}</legend>
+          <legend className="text-sm font-medium text-night/80 mb-2">{t('typeLegend')}</legend>
           <div className="grid grid-cols-2 gap-3">
             {TYPES.map((type) => {
               const selected = accountType === type;
@@ -402,7 +402,7 @@ function SignupInner() {
         <>
           <div className="my-6 flex items-center gap-3">
             <span className="h-px flex-1 bg-night/10" />
-            <span className="label-caps text-night/40">{t('or')}</span>
+            <span className="text-sm text-night/50">{t('or')}</span>
             <span className="h-px flex-1 bg-night/10" />
           </div>
           <OAuthProviders context="signup" />

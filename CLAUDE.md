@@ -157,6 +157,18 @@ segment is implicit). Visiting an unsupported city slug 404s via
 `notFound()` in `[locale]/property/[city]/layout.js`; the allowlist is
 `SUPPORTED_CITIES` in `src/lib/cityRoutes.js` (PR #113).
 
+**Unknown URLs go through `[locale]/[...rest]/page.js`**, which only calls
+`notFound()`, so they get the branded `[locale]/not-found.js` inside the site
+chrome with a 404. Without it they skipped the `[locale]` tree entirely and got
+Next's bare page with no `<html lang>`. `src/app/not-found.js` is only the
+fallback for what that can't catch (`/api/*`, dotted paths, a `notFound()` in
+`[locale]/layout.js`), and it supplies its own `<html>` because the root layout
+is a pass-through. **Gotcha when checking a 404 with `curl`:** every runtime
+`notFound()` on this site (`/property/atlantis`, a missing listing, the
+catch-all) serves `<html id="__next_error__">` with an empty body and the right
+status. Next renders the not-found UI client-side from the inlined RSC payload.
+That's framework behaviour, not a broken page, so judge it in a browser.
+
 Old single-city URLs (`/property/results`, `/property/landlord/login`,
 etc.) 301 to their `/property/thessaloniki/...` equivalents via the
 middleware. Pre-`/property` legacy paths (`/results`, `/listing/:id`,
@@ -335,7 +347,8 @@ Registry jobs (`CRON_JOBS` in `/api/cron/tick`):
 
 | Job name | Cadence | Purpose |
 |---|---|---|
-| `recompute-distances` | `daily@09:15` | Heal missing `faculty_distances` rows (PR #60). |
+| `recompute-distances` | `daily@09:15` | Heal missing or stale `faculty_distances` rows (PR #60, stale since 126). |
+| `heal-university-distances` | `daily@09:45` | Re-measure computed `listing_university_distances` whose stamp isn't the current pin (126). |
 | `message-digest` | `5m` | Landlord + student per-message digests (merged). |
 | `synthetic-en-listing` | `15m` | Synthetic uptime/regression canaries (issue #49). |
 
@@ -445,6 +458,16 @@ surface in `wrangler tail`.
   listing × faculty pair). `scripts/compute_distances.py` is the manual
   populator; the `recompute-distances` cron runs the same pace model from
   inside the Worker to heal newly-added/edited listings.
+- **Distance rows are stamped with their endpoints (migration 126).**
+  `faculty_distances` records the listing pin and faculty point it was measured
+  between (`measured_from_*`, `measured_to_*`); `listing_university_distances`
+  records the pin (`measured_from_*`). A row whose stamp isn't the CURRENT
+  coordinates is stale, and the `recompute-distances` and
+  `heal-university-distances` cron jobs re-measure it, whichever writer
+  caused it. **Any new writer must stamp with the coordinates it actually
+  measured from, or leave the stamp NULL** (NULL means "unverified" and gets
+  re-measured). Never stamp with a guess: a wrong stamp vouches for a stale
+  distance and hides it from the healer.
 - **RLS guards every user-touching table.** Server code uses
   `getSupabaseWithToken(token)` (token-scoped) for any read that should
   honour the caller's permissions; the unscoped `getSupabase()` anon client
@@ -615,9 +638,44 @@ Only the build job and Cloudflare Workers Build are **required** to merge;
 the migration gate and review workflows are advisory (see Database section
 for why the gate can be legitimately red).
 
+**`claude-review` gotchas** (`claude-code-review.yml`, the `code-review`
+plugin under `claude-code-action@v1`):
+
+- **Subagents must run in the foreground.** If the plugin's subagents run in
+  the background, the top-level agent ends its turn to wait. The action stops
+  at that first result and reports success — green in ~15 s, nothing posted
+  (#581, fixed by #582). `CLAUDE_CODE_DISABLE_BACKGROUND_TASKS` is set through
+  the action's `settings` input, **not** a step `env:`. The action's run step
+  declares its own env map, which shadows the caller's, so a step `env:` never
+  reaches Claude.
+- **The `claude_args --allowedTools` list is load-bearing.** Headless, an
+  unlisted tool that needs permission is denied, not prompted. `Skill` is how
+  the plugin command is invoked. The action installs the inline-comment MCP
+  server only when its tool is listed, and every finding is posted through it
+  (#579, #582).
+- **Green means a review reached the PR.** The `Require a posted review` step
+  fails a run that exits success without a Claude comment; read the
+  `Report review run` step for the model's final message and permission
+  denials. A later push to an already-reviewed PR is a notice, not a failure —
+  the plugin reviews a PR once.
+- **A PR that edits this workflow is never reviewed by its own version.** The
+  action refuses to run a workflow that differs from `main`'s copy (a warning,
+  green job). Verify workflow changes on the first PR after merge.
+
 **Cloudflare Workers Build** runs on every push to `main` separately —
 configured in the Cloudflare dashboard, NOT under `.github/workflows/`. It
 runs `npm run cf:build` and deploys to the `studentx` Worker.
+
+**Merging several PRs back-to-back can leave prod on an OLDER merge.** Each
+push to `main` starts its own build, and whichever deploy finishes last wins —
+not the newest commit. On 2026-10-02 #590, #587, #588 and #589 were merged
+within a minute; prod stayed on #587's merge, so #588 and #589 were merged but
+not live 30 minutes later, while every check on `main` read green. After
+merging a batch, **verify prod serves the newest change** (a marker unique to
+the last PR) instead of trusting the checks; if it doesn't, retry the latest
+`main` build in the Cloudflare dashboard, or merge one more PR to trigger a
+fresh build of the head commit. Merging one PR at a time and waiting for its
+deploy avoids it.
 
 ## Sub-agent worktrees
 

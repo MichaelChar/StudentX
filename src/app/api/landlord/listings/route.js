@@ -278,6 +278,7 @@ export async function POST(request) {
       authedSupabase,
       listingId,
       d.universityDistanceRows,
+      d.universityDistanceOrigin,
     );
     if (distanceError) {
       console.error('Failed to insert university distances:', distanceError);

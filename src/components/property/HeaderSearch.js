@@ -147,7 +147,7 @@ export default function HeaderSearch({
 
   return (
     <div
-      className={`inline-flex items-center gap-1 rounded-full border border-night/15 bg-stone
+      className={`relative inline-flex items-center gap-1 rounded-full border border-night/15 bg-stone
                   p-1.5 shadow-sm ${className}`}
     >
       <Popover
@@ -194,9 +194,23 @@ export default function HeaderSearch({
 
       <span aria-hidden="true" className="h-8 w-px shrink-0 bg-night/10" />
 
+      {/*
+        The date panel was `w-auto` inside Popover's own `relative` root, i.e.
+        shrink-to-fit against the ~110px "When" segment. The two-month grid is
+        `min-w-0`, so it collapsed to ~190px with the day numbers overlapping —
+        on prod, desktop and mobile alike. It now takes an explicit width (two
+        months from md, one below — DateRangePicker's own breakpoint) and
+        anchors to the whole bar (the `relative` above), so a wide panel stays
+        on screen on a phone instead of hanging off the segment's right edge.
+        From md it is CENTRED under the bar (left-1/2 with a -20rem margin; a
+        translate would fight Popover's motion transform): the bar is centred
+        in the header, and right-aligned the 40rem panel hung ~40–70px off
+        the left edge at iPad-portrait widths (768–900px).
+      */}
       <Popover
         placement="bottom-end"
-        className="w-auto p-4"
+        rootClassName="inline-flex"
+        className="w-[min(20rem,calc(100vw-2.5rem))] p-4 md:left-1/2 md:-ml-[20rem] md:w-[40rem]"
         trigger={
           <SegmentButton
             label={t('whenLabel')}

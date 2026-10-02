@@ -67,23 +67,48 @@ const SECURITY_HEADERS = [
           value: 'max-age=63072000; includeSubDomains; preload',
         },
       ]),
+  { key: 'Content-Security-Policy', value: buildCsp() },
+];
+
+/*
+  One policy, built in one place. The arguments widen it for a single route (see
+  BOARDING_SECURITY_HEADERS) without forking the whole list — a forked copy
+  would silently miss the next site-wide edit.
+*/
+function buildCsp({ scriptSrc = [], frameSrc = [] } = {}) {
+  return [
+    "default-src 'self'",
+    [`script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`, ...scriptSrc].join(' '),
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com https://assets.bergeinsatz.ch",
+    "font-src 'self' data: https://fonts.gstatic.com",
+    "connect-src 'self' https://ecluqurlfbvkxrnoyhaq.supabase.co wss://ecluqurlfbvkxrnoyhaq.supabase.co https://nominatim.openstreetmap.org",
+    // No frame-src anywhere else: it falls back to default-src 'self'.
+    ...(frameSrc.length ? [['frame-src', "'self'", ...frameSrc].join(' ')] : []),
+    "object-src 'none'",
+    "frame-ancestors 'none'",
+    "base-uri 'self'",
+    "form-action 'self'",
+    // HTTPS-only: omit in dev so http://localhost subresources/navigations
+    // aren't auto-upgraded to a port the dev server can't serve over TLS.
+    ...(isDev ? [] : ['upgrade-insecure-requests']),
+  ].join('; ');
+}
+
+/*
+  /boarding opens a Cal.com booking popup: app.cal.com serves embed.js, and
+  the booking iframe loads from cal.com (the embed's configured origin) or
+  app.cal.com. Allowed on this route ONLY — the rest of the site has no use
+  for third-party script or frames. Must come after the '/:path*' rule in
+  headers(): when two rules set the same key, the later one wins.
+*/
+const BOARDING_SECURITY_HEADERS = [
   {
     key: 'Content-Security-Policy',
-    value: [
-      "default-src 'self'",
-      `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
-      "style-src 'self' 'unsafe-inline'",
-      "img-src 'self' data: blob: https://static.wixstatic.com https://ecluqurlfbvkxrnoyhaq.supabase.co https://*.tile.openstreetmap.org https://*.basemaps.cartocdn.com https://unpkg.com https://assets.bergeinsatz.ch",
-      "font-src 'self' data: https://fonts.gstatic.com",
-      "connect-src 'self' https://ecluqurlfbvkxrnoyhaq.supabase.co wss://ecluqurlfbvkxrnoyhaq.supabase.co https://nominatim.openstreetmap.org",
-      "object-src 'none'",
-      "frame-ancestors 'none'",
-      "base-uri 'self'",
-      "form-action 'self'",
-      // HTTPS-only: omit in dev so http://localhost subresources/navigations
-      // aren't auto-upgraded to a port the dev server can't serve over TLS.
-      ...(isDev ? [] : ['upgrade-insecure-requests']),
-    ].join('; '),
+    value: buildCsp({
+      scriptSrc: ['https://app.cal.com'],
+      frameSrc: ['https://cal.com', 'https://app.cal.com'],
+    }),
   },
 ];
 
@@ -172,6 +197,10 @@ const nextConfig = {
       {
         source: '/:path*',
         headers: SECURITY_HEADERS,
+      },
+      {
+        source: '/boarding',
+        headers: BOARDING_SECURITY_HEADERS,
       },
       // Auth-bound surfaces stay private at the static-rule level.
       // /student/* and /property/[city]/landlord/* are per-session and

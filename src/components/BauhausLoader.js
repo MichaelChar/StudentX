@@ -67,7 +67,7 @@ export default function BauhausLoader({
       aria-label={ariaLabel || eyebrow}
     >
       <div className="flex flex-col items-center justify-center">
-        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-yellow">
+        <span className="text-[11px] font-semibold uppercase tracking-[0.2em] text-night/70">
           {eyebrow}
         </span>
 

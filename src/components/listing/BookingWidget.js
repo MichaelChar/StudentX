@@ -239,7 +239,7 @@ export default function BookingWidget({ listing, nextPath,
           it used before. 80px clears the site header so the card does not
           slide under it as the page scrolls.
         */}
-        <div className="lg:sticky lg:top-20">
+        <div className="lg:sticky lg:top-[calc(var(--header-h)+1.5rem)]">
           <Card tone="white" className="p-6">
             <p className="font-display text-3xl text-blue">
               {listing.monthly_price != null ? (
@@ -267,7 +267,7 @@ export default function BookingWidget({ listing, nextPath,
                 <form onSubmit={handleSubmit} className="space-y-4">
                   <div className="grid grid-cols-2 gap-3">
                     <label className="block">
-                      <span className="label-caps text-night/60">{t('moveIn')}</span>
+                      <span className="text-sm font-medium text-night/70">{t('moveIn')}</span>
                       <input
                         type="date"
                         required
@@ -277,7 +277,7 @@ export default function BookingWidget({ listing, nextPath,
                       />
                     </label>
                     <label className="block">
-                      <span className="label-caps text-night/60">{t('moveOut')}</span>
+                      <span className="text-sm font-medium text-night/70">{t('moveOut')}</span>
                       <input
                         type="date"
                         required
@@ -289,7 +289,7 @@ export default function BookingWidget({ listing, nextPath,
                   </div>
 
                   <label className="block">
-                    <span className="label-caps text-night/60">{t('message')}</span>
+                    <span className="text-sm font-medium text-night/70">{t('message')}</span>
                     <textarea
                       /*
                         Feature 37's "Message host" scrolls here and focuses

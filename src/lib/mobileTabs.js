@@ -112,7 +112,7 @@ export function activeTabKey(tabs, pathname) {
 
 /*
   The listing detail page, which is CHROMELESS below `md` — parity Features 58
-  and 59. Both the floating account pill and the bottom tab bar come off,
+  and 59. Both the global header and the bottom tab bar come off,
   leaving the photo running to all four edges with only the floating back arrow
   and the sticky booking bar on it.
 
@@ -129,7 +129,7 @@ export function activeTabKey(tabs, pathname) {
 const LISTING_PDP_RE = /^\/property\/[^/]+\/listing\/[^/]+\/?$/;
 
 /**
- * Does this route drop its mobile chrome (tab bar + account pill) below `md`?
+ * Does this route drop its mobile chrome (tab bar + global header) below `md`?
  *
  * @param {string|null|undefined} pathname
  * @returns {boolean}

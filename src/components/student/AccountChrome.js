@@ -23,7 +23,7 @@ export default async function AccountChrome({ locale, student, active, children 
   return (
     <div className="mx-auto max-w-3xl px-5 py-12 md:py-16">
       <div className="flex items-start justify-between gap-4 mb-2">
-        <p className="label-caps text-yellow">{t('eyebrow')}</p>
+        <p className="label-caps text-night/70">{t('eyebrow')}</p>
         <div className="flex items-center gap-4">
           {/*
             Browsing was previously only reachable from an empty state: a

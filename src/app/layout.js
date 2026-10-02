@@ -6,9 +6,10 @@
 // /en/* return Greek messages. Per next-intl's recommended structure for
 // `localePrefix: 'as-needed'`, the root layout is just a pass-through.
 //
-// Required to exist by Next.js even though every rendered route goes
-// through [locale]/layout.js (non-locale routes under src/app/property/*
-// and src/app/page.js are all redirects, so they never render HTML).
+// Required to exist by Next.js even though every page renders through
+// [locale]/layout.js — unknown URLs included, via [locale]/[...rest]. The
+// one thing rendered directly inside this pass-through is src/app/not-found.js,
+// which is why that file supplies its own <html>/<body>.
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
 export const metadata = {

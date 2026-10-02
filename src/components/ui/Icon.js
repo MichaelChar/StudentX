@@ -26,6 +26,7 @@ import {
   Shield,
   ShieldCheck,
   Star,
+  UserRound,
   X,
 } from 'lucide-react';
 
@@ -97,6 +98,9 @@ const ICONS = {
   x: X,
   euro: Euro,
   shieldCheck: ShieldCheck,
+  // Logged-out avatar in the account pill — Avatar's fallback when there is
+  // neither a photo nor a name to take initials from.
+  user: UserRound,
 };
 
 export default function Icon({

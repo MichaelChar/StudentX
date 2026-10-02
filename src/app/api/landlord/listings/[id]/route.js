@@ -8,7 +8,7 @@ import {
 } from '@/lib/supabaseServer';
 import { landlordIdForUser } from '@/lib/landlordAuth';
 import { recomputeMissingDistances } from '@/lib/recomputeDistances';
-import { coordsChanged, remeasureUniversityDistances } from '@/lib/listingPinMove';
+import { coordsChanged, refreshDistancesFromPin } from '@/lib/listingPinMove';
 import { writeUniversityDistances } from '@/lib/universityDistances';
 import { parseListingWriteBody } from '@/lib/landlordListingBody';
 import {
@@ -28,7 +28,7 @@ const SINGLE_LISTING_SELECT = `
   location ( location_id, address, neighborhood, lat, lng ),
   property_types ( property_type_id, name ),
   listing_amenities ( amenities ( amenity_id, name ) ),
-  listing_university_distances ( university_id, distance_meters, source ),
+  listing_university_distances ( university_id, distance_meters, source, measured_from_lat, measured_from_lng ),
   property_verifications ( verification_id, method, status, verified_at, checklist_json, notes, created_at )
 `;
 
@@ -96,6 +96,29 @@ export async function GET(request, { params }) {
   }
 
   return NextResponse.json({ listing: data, blackouts });
+}
+
+/**
+ * Re-measure both distance tables from a moved pin. Runs in after().
+ *
+ * ONE router call serves both tables (refreshDistancesFromPin). It used to be
+ * two back to back, and FOSSGIS holds the second request of a pair. Faculty
+ * pairs it couldn't route stay missing for the daily recompute-distances cron.
+ */
+async function refreshDistancesAfterPinMove(id, lat, lng) {
+  try {
+    const result = await refreshDistancesFromPin({
+      supabase: getSupabaseAsService(),
+      listingId: id,
+      lat,
+      lng,
+    });
+    if (!result.ok) {
+      console.error('[landlord/listings PATCH] moved-pin refresh incomplete:', JSON.stringify(result));
+    }
+  } catch (err) {
+    console.error('[landlord/listings PATCH] moved-pin refresh failed:', err);
+  }
 }
 
 export async function PATCH(request, { params }) {
@@ -189,7 +212,14 @@ export async function PATCH(request, { params }) {
 
   // A moved pin invalidates both distance tables (see src/lib/listingPinMove.js).
   // The walk-time rows go now, so no request after this one reads the old
-  // numbers. The recompute below refills them, with the daily cron as backstop.
+  // numbers.
+  //
+  // The re-measure is registered HERE, not at the end of the handler. The new
+  // pin is already committed, and the handler can still return early below
+  // (bad property type, a failed listings UPDATE). after() runs even for an
+  // error response, but only if it was registered. If it isn't, no later save
+  // counts as a move (the stored pin already matches), so the distances would
+  // never be re-measured.
   const pinMoved = coordsChanged(existing.location, d);
   if (pinMoved) {
     const { error: clearError } = await getSupabaseAsService()
@@ -199,6 +229,7 @@ export async function PATCH(request, { params }) {
     if (clearError) {
       console.error('[landlord/listings PATCH] failed to clear moved-pin distances:', clearError);
     }
+    after(() => refreshDistancesAfterPinMove(id, d.lat, d.lng));
   }
 
   let propertyTypeId;
@@ -320,6 +351,7 @@ export async function PATCH(request, { params }) {
       authedSupabase,
       id,
       d.universityDistanceRows,
+      d.universityDistanceOrigin,
     );
     if (distanceError) {
       console.error('Failed to update university distances:', distanceError);
@@ -355,37 +387,20 @@ export async function PATCH(request, { params }) {
   // router, which is usually ~0.3s but can hold a request for seconds when its
   // rate limiter is busy. The landlord's save shouldn't wait on it. OpenNext
   // wires after() to the Worker's ctx.waitUntil, and the daily
-  // recompute-distances cron refills any pair this misses.
-  after(async () => {
-    const service = getSupabaseAsService();
-    // Universities first. The two router calls run back to back and FOSSGIS
-    // can hold the second one, so the table with no cron backstop goes first.
-    // Faculty pairs left missing are refilled by the daily recompute-distances
-    // cron.
-    if (pinMoved) {
+  // recompute-distances cron refills any pair this misses. A moved pin already
+  // registered its own refresh above, which includes this recompute.
+  if (!pinMoved) {
+    after(async () => {
       try {
-        const result = await remeasureUniversityDistances({
-          supabase: service,
-          listingId: id,
-          lat: d.lat,
-          lng: d.lng,
+        await recomputeMissingDistances({
+          listingIds: [id],
+          supabase: getSupabaseAsService(),
         });
-        if (!result.ok) {
-          console.error('[landlord/listings PATCH] moved-pin university re-measure skipped:', result.reason);
-        }
       } catch (err) {
-        console.error('[landlord/listings PATCH] moved-pin university re-measure failed:', err);
+        console.error('[landlord/listings PATCH] deferred distance recompute failed:', err);
       }
-    }
-    try {
-      await recomputeMissingDistances({
-        listingIds: [id],
-        supabase: service,
-      });
-    } catch (err) {
-      console.error('[landlord/listings PATCH] deferred distance recompute failed:', err);
-    }
-  });
+    });
+  }
 
   return NextResponse.json({ listing_id: id });
 }

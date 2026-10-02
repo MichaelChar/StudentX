@@ -2,7 +2,9 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useTranslations } from 'next-intl';
-import { useRouter, usePathname } from '@/i18n/navigation';
+import Image from 'next/image';
+import { useRouter, usePathname, Link } from '@/i18n/navigation';
+import { HeaderSlotTarget } from './HeaderSlot';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
@@ -163,20 +165,61 @@ export default function Navbar() {
   // but they still need the mobile bar.
   if (pathname && LANDLORD_SHELL_RE.test(pathname)) return tabBar;
 
+  /*
+    The global header — brand, search slot, account. Parity Feature 3 fixes its
+    contents: logo + search + right-hand controls, no product tabs.
+
+    From `md` it is sticky (72px, `--header-h` in globals.css) with a blurred
+    backdrop. Below `md` it is a static 56px strip that scrolls away: the tab
+    bar is the mobile navigation (§8.2), but the account pill still has to
+    live somewhere — its panel is the only mobile route to /resources, /gigs
+    and /student/ausom for a logged-out visitor (founder's call, 2026-09-04) —
+    and a real bar is what stops it floating over page content.
+
+    The chromeless mobile PDP (Feature 58) hides the whole header below `md`.
+  */
   return (
     <>
       <TabTitleFlash count={unread.count} />
       {tabBar}
-      <AccountMenu
-        t={t}
-        authState={authState}
-        city={currentCity}
-        accountHref={accountHref}
-        messagesHref={messagesHref}
-        unreadCount={unread.count}
-        onSignOut={handleSignOut}
-        hideBelowMd={chromelessMobile}
-      />
+      {/* Height lives on <header> itself (border-box, border included) so it
+          is exactly `--header-h`; on the inner row it measured 73px and every
+          sticky offset overlapped the border by a pixel. */}
+      <header
+        className={`relative z-40 h-14 border-b border-night/10 bg-stone md:sticky md:top-0 md:h-[72px] md:bg-stone/85 md:backdrop-blur-md${
+          chromelessMobile ? ' hidden md:block' : ''
+        }`}
+      >
+        <div className="mx-auto flex h-full max-w-7xl items-center gap-6 px-5">
+          <Link
+            href="/"
+            aria-label={t('homeAria')}
+            className="shrink-0 rounded-control focus-visible:outline-offset-4"
+          >
+            <Image
+              src="/logo-tesla.svg"
+              alt=""
+              width={140}
+              height={20}
+              priority
+              className="h-4 w-auto md:h-5"
+            />
+          </Link>
+          {/* Filled by a page via <HeaderSlot> — the results search pill. */}
+          <HeaderSlotTarget className="hidden min-w-0 flex-1 justify-center md:flex" />
+          <div className="ml-auto shrink-0">
+            <AccountMenu
+              t={t}
+              authState={authState}
+              city={currentCity}
+              accountHref={accountHref}
+              messagesHref={messagesHref}
+              unreadCount={unread.count}
+              onSignOut={handleSignOut}
+            />
+          </div>
+        </div>
+      </header>
     </>
   );
 }
