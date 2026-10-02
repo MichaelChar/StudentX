@@ -104,9 +104,11 @@ function SearchBar({ search, setSearch, activeCity, searchedCity, t, mobile }) {
           outline: 'none',
           background: 'transparent',
           color: T.ink,
-          fontSize: mobile ? 16 : 13,
           fontFamily: 'inherit',
         }}
+        // Size as a class, not inline, so the touch-device 16px rule in
+        // globals.css can raise the desktop instance on an iPad (1024px+).
+        className={mobile ? 'text-base' : 'text-[13px]'}
       />
       {search && (
         <button
