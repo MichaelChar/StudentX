@@ -93,7 +93,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
 
       {/* Body — sits directly on the page, ~12px under the photo */}
       <div className="pt-3">
-        <p className="label-caps text-night/50">
+        <p className="text-sm text-night/60">
           {listing.neighborhood} &middot; Thessaloniki
         </p>
 
@@ -104,12 +104,11 @@ export default function ListingCard({ listing, fromQuery = '' }) {
             the rest are on the detail page. Renders nothing when the landlord
             left the field empty (no backfill exists, so that is common).
 
-            Deliberately NOT .label-caps despite sitting next to it: that class
-            uppercases, which turns "1.6 km UoM" into "1.6 KM UOM" — mangling
-            the unit and losing the universities' own casing. Size and tracking
-            are matched by hand so it still reads as the same family. */}
+            Sentence-case meta like the neighbourhood line above: since the
+            2026-10-02 type amendment, caps are for eyebrows and badges only
+            (and uppercasing would turn "1.6 km UoM" into "1.6 KM UOM"). */}
         {nearestUniversities.length > 0 && (
-          <p className="mt-1.5 flex items-center gap-1.5 text-[0.7rem] font-semibold tracking-[0.08em] text-night/55">
+          <p className="mt-1 flex items-center gap-1.5 text-sm text-night/60">
             <Icon name="map-pin" className="w-3 h-3 shrink-0 text-night/35" />
             <span className="truncate">
               {nearestUniversities
@@ -118,15 +117,15 @@ export default function ListingCard({ listing, fromQuery = '' }) {
             </span>
           </p>
         )}
-        <h3 className="mt-1.5 font-display text-2xl text-night leading-tight line-clamp-2">
+        <h3 className="mt-1.5 font-display text-[17px] font-medium text-night leading-snug line-clamp-2">
           {listing.title || listing.neighborhood}
         </h3>
 
         <div className="mt-4 flex items-baseline justify-between gap-3">
-          <span className="label-caps text-night/60">
+          <span className="text-sm text-night/60">
             {formatPropertyType(listing.property_type, locale)}
           </span>
-          <span className="font-display text-xl text-blue">
+          <span className="font-display text-[17px] font-medium text-blue">
             {listing.monthly_price != null ? (
               <>
                 {formatMoney(listing.monthly_price, listing.currency)}
@@ -168,7 +167,7 @@ export default function ListingCard({ listing, fromQuery = '' }) {
               photoUrl={listing.landlord?.profile_photo_url}
               size={28}
             />
-            <span className="label-caps text-night/55 truncate group-hover/landlord:text-blue transition-colors">
+            <span className="text-[13px] text-night/60 truncate group-hover/landlord:text-blue transition-colors">
               {tCard('listedBy', { name: landlordName })}
             </span>
           </Link>

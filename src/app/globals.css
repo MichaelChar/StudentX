@@ -255,7 +255,13 @@ input[type="range"]::-moz-range-thumb {
   cursor: pointer;
 }
 
-/* Small-caps label, used for bilingual Greek/English headers */
+/*
+  Uppercase tracked label. Since the 2026-10-02 type amendment (parity spec,
+  "Tokens — UNCHANGED" → AMENDED) it is for EYEBROWS AND BADGES ONLY: a short
+  label above a heading, a section label, a status pill. Card meta, form field
+  labels, inline links, buttons and dividers are sentence case. Titles use
+  weight 500 (font-medium), not 600/700 — Airbnb's weight discipline.
+*/
 .label-caps {
   font-family: var(--font-sans);
   text-transform: uppercase;

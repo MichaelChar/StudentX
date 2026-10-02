@@ -17,7 +17,7 @@ export default function FormField({
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <label htmlFor={id} className="label-caps text-night/70">
+        <label htmlFor={id} className="text-sm font-medium text-night/80">
           {label}
         </label>
         {rightAction}

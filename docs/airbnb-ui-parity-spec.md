@@ -1566,6 +1566,25 @@ required by the ported structure regardless of palette), **F9** (carousel /
 sheet libraries), **F11** (four-state interactives), **F12** (money
 formatter).
 
+> **AMENDED 2026-10-02 (founder) — "middle path" on F3 and F6.** Identity is
+> still unchanged: Inter, iris, night, parchment, `font-display` and the
+> `label-caps` class all stay, and so does the colour layer (prices stay iris;
+> the mobile gradient CTA stays, per the 2026-09-04 call). What reopens is
+> hierarchy and density, which the 2026-08-07 decision had bundled with
+> identity:
+>
+> - **Smaller titles, weight 500.** Card title 24px → 17px; PDP `h1` 48px →
+>   28px mobile / 32px desktop; fact values 24px → 18px. "Bold" is
+>   `font-medium` (500) — the weight discipline §1.1 left open.
+> - **`label-caps` for eyebrows and badges only.** Card meta, form labels,
+>   inline links, buttons (Share / Save) and dividers move to sentence case.
+>   Section eyebrows on the PDP, the auth-page eyebrow and status pills keep it.
+>
+> Applied first to the listing card, the PDP, the booking card's form labels,
+> and every `FormField` (10 auth/settings pages). The rule is recorded on the
+> `.label-caps` definition in `globals.css`; other surfaces follow it as they
+> are touched.
+
 ### ❌ Feature 34 — Review system — **SKIP**
 
 No `reviews` table, no post-stay prompt, no PDP reviews section, no host

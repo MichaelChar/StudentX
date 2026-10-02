@@ -165,7 +165,7 @@ export default function ShareButton({
       type="button"
       onClick={handleClick}
       aria-label={ariaLabel}
-      className={`inline-flex items-center gap-2 rounded-control border px-4 py-2.5 font-sans font-semibold uppercase tracking-[0.08em] text-xs transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${tone} ${className}`}
+      className={`inline-flex items-center gap-2 rounded-control border px-4 py-2.5 font-sans font-medium text-sm transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ${tone} ${className}`}
     >
       {/* `share` was added to Icon.js for this (Feature 42). It previously
           reused `message`, which is the inquiry glyph on this same page —

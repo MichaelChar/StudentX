@@ -780,7 +780,7 @@ function ResultsContent({
             <button
               onClick={() => setViewMode('list')}
               aria-pressed={viewMode === 'list'}
-              className={`label-caps px-3 py-2 flex items-center gap-1.5 transition-colors ${
+              className={`text-sm font-medium px-3 py-2 flex items-center gap-1.5 transition-colors ${
                 viewMode === 'list'
                   ? 'bg-night text-white'
                   : 'text-night/60 hover:text-night active:text-night/80'
@@ -791,7 +791,7 @@ function ResultsContent({
             <button
               onClick={() => setViewMode('map')}
               aria-pressed={viewMode === 'map'}
-              className={`label-caps px-3 py-2 flex items-center gap-1.5 transition-colors ${
+              className={`text-sm font-medium px-3 py-2 flex items-center gap-1.5 transition-colors ${
                 viewMode === 'map'
                   ? 'bg-night text-white'
                   : 'text-night/60 hover:text-night active:text-night/80'
@@ -1044,7 +1044,7 @@ function ResultsContent({
                     onClick={() =>
                       setFilters((p) => ({ ...p, maxWalkMinutes: null }))
                     }
-                    className="label-caps text-blue hover:text-night focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded-control"
+                    className="text-sm font-medium text-blue hover:text-night focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue rounded-control"
                   >
                     {t('commuteEmptyAction')} &rarr;
                   </button>
@@ -1061,7 +1061,7 @@ function ResultsContent({
                   </p>
                   <Link
                     href="/property/thessaloniki/quiz"
-                    className="label-caps text-blue hover:text-night"
+                    className="text-sm font-medium text-blue hover:text-night"
                   >
                     Retake the quiz →
                   </Link>
