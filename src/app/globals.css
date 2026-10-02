@@ -198,6 +198,24 @@ body {
      and render identically in Plus Jakarta Sans (measured 2026-10-02). */
 }
 
+/*
+  Word spacing for Plus Jakarta Sans. Its space is 0.17em against Inter's
+  0.28em, with near-identical glyph widths (~0.5em), so words ran together in
+  small text ("Log in" read as "Login"). +0.08em brings the gap to 0.25em —
+  ~90% of Inter's, the conventional proportion — and keeps Jakarta's tighter
+  character. Founder's call, 2026-10-02.
+
+  On EVERY element, not just body: word-spacing's em resolves to an absolute
+  length where it is declared and inherits as that length, so a body-only rule
+  would give a 48px heading the gap meant for 16px text. In @layer base so any
+  explicit word-spacing elsewhere still wins. Revisit if the font changes.
+*/
+@layer base {
+  *, ::before, ::after {
+    word-spacing: 0.08em;
+  }
+}
+
 /* Display typography. Untracked: Inter wanted -0.02em, but Plus Jakarta Sans
    at that setting closes its word spaces ("roomin2bedroom" on listing
    titles). 0 is the "heading spacing loosened" variant the founder chose from
