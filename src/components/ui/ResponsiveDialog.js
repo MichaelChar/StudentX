@@ -4,6 +4,7 @@ import { useSyncExternalStore } from 'react';
 
 import Modal from '@/components/ui/Modal';
 import BottomSheet from '@/components/ui/BottomSheet';
+import Sheet from '@/components/ui/Sheet';
 
 /*
   ResponsiveDialog — a centre modal on desktop, a bottom sheet on a phone.
@@ -58,6 +59,14 @@ function readIsDesktopOnServer() {
  * @param {boolean} props.open
  * @param {() => void} props.onClose
  * @param {'sm'|'md'|'lg'} [props.size] desktop width only; a sheet is full-width
+ * @param {object} [props.modalProps] extra props for the desktop Modal only
+ * @param {boolean} [props.draggable=true] phone shape only. Sheet's drag binds
+ *   the WHOLE panel (drag: 'y'), which captures vertical swipes — fine for a
+ *   short gate, wrong for content that scrolls. `false` renders a plain bottom
+ *   Sheet: no handle, no drag; Escape, backdrop and back still close it.
+ * @param {object} [props.sheetProps] extra props for the phone sheet only
+ *   For a caller whose frame differs by shape — FiltersModal keeps Feature 8's
+ *   fixed 568×640 panel on desktop, which would wreck a full-width sheet.
  * @param {React.ReactNode} props.children
  *   Everything else is spread onto the underlying dialog node, so
  *   `aria-labelledby` and friends work the same on both shapes.
@@ -66,6 +75,9 @@ export default function ResponsiveDialog({
   open,
   onClose,
   size = 'md',
+  modalProps,
+  sheetProps,
+  draggable = true,
   children,
   ...rest
 }) {
@@ -84,14 +96,21 @@ export default function ResponsiveDialog({
 
   if (isDesktop) {
     return (
-      <Modal open={open} onClose={onClose} size={size} {...rest}>
+      <Modal open={open} onClose={onClose} size={size} {...rest} {...modalProps}>
         {children}
       </Modal>
     );
   }
 
+  if (!draggable) {
+    return (
+      <Sheet open={open} onClose={onClose} side="bottom" {...rest} {...sheetProps}>
+        {children}
+      </Sheet>
+    );
+  }
   return (
-    <BottomSheet open={open} onClose={onClose} {...rest}>
+    <BottomSheet open={open} onClose={onClose} {...rest} {...sheetProps}>
       {children}
     </BottomSheet>
   );

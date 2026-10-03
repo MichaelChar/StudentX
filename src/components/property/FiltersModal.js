@@ -3,7 +3,7 @@
 import { useEffect, useId, useState } from 'react';
 import { useTranslations } from 'next-intl';
 
-import Modal from '@/components/ui/Modal';
+import ResponsiveDialog from '@/components/ui/ResponsiveDialog';
 import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
 import Divider from '@/components/ui/Divider';
@@ -34,7 +34,8 @@ import {
   sidebar, and the PR that deletes that sidebar is the one that renders
   this. Wiring it here would make both PRs unreviewable.
 
-  Built on the F8 Modal primitive, so focus trap, scroll lock, Escape
+  Built on ResponsiveDialog (a centre Modal from md, a bottom Sheet below —
+  backlog M6), so focus trap, scroll lock, Escape
   and the scrim come free. The Modal panel is a padded scrolling card;
   Feature 8 wants a 568×640 frame with a sticky header, sticky footer
   and a scrolling body BETWEEN them. Inline style beats the panel's
@@ -300,15 +301,20 @@ export default function FiltersModal({
     : t('showPlaces', { count: resultCount });
 
   return (
-    <Modal
+    <ResponsiveDialog
       open={open}
       onClose={onClose}
       size="lg"
       aria-labelledby={titleId}
-      className={`p-0 overflow-hidden ${className}`}
-      style={PANEL_STYLE}
+      // Backlog M6: a centre modal from md, a bottom sheet below it. The sheet
+      // is fixed-height (the frame below is absolutely positioned) and NOT
+      // draggable — Sheet's drag binds the whole panel and would swallow the
+      // vertical swipes that scroll this list.
+      draggable={false}
+      modalProps={{ className: `p-0 overflow-hidden ${className}`, style: PANEL_STYLE }}
+      sheetProps={{ className: `h-[90dvh] p-0 overflow-hidden ${className}` }}
     >
-      <div className="absolute inset-0 flex flex-col overflow-hidden bg-stone rounded-modal">
+      <div className="absolute inset-0 flex flex-col overflow-hidden bg-stone rounded-t-modal md:rounded-modal">
         <header className="relative shrink-0 flex items-center justify-center px-16 py-4 border-b border-night/10 bg-stone">
           <div className="absolute left-4 top-1/2 -translate-y-1/2">
             <IconButton
@@ -499,6 +505,6 @@ export default function FiltersModal({
           </Button>
         </footer>
       </div>
-    </Modal>
+    </ResponsiveDialog>
   );
 }

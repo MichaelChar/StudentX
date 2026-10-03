@@ -59,7 +59,7 @@ export default async function FlashcardsSubjectPage({ params }) {
         <div style={{ width: '100%', maxWidth: 460 }}>
           <h1
             style={{
-              fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+              fontFamily: 'var(--font-display)',
               fontWeight: 600,
               fontSize: 34,
               letterSpacing: '-0.02em',

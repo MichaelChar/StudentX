@@ -460,7 +460,7 @@ export default function GlobeLoader({ onComplete }) {
                     <text
                       x="150"
                       y="74"
-                      fontFamily="-apple-system, BlinkMacSystemFont, Inter, sans-serif"
+                      style={{ fontFamily: 'var(--font-sans)' }}
                       fontSize="9"
                       fontWeight="600"
                       fill="#0a2540"

@@ -182,8 +182,9 @@ function clientNamespacesFrom(entries) {
 
 const ROUTE_FILE = /\/(page|layout|template|default|error|loading|not-found)\.jsx?$/;
 
-function entryFiles({ dir, exclude = [], rootLayoutOnly = false }) {
+function entryFiles({ dir, exclude = [], rootLayoutOnly = false, files }) {
   if (rootLayoutOnly) return [join(localeDir, 'layout.js')];
+  if (files) return files.map((f) => join(localeDir, dir, f));
   const base = join(localeDir, dir);
   return walk(base)
     .filter((f) => ROUTE_FILE.test(f))
@@ -196,7 +197,7 @@ const covers = (declared, used) => used === declared || used.startsWith(`${decla
 
 describe('per-route namespace completeness', () => {
   for (const set of ROUTE_NAMESPACE_SETS) {
-    const label = set.dir || 'root layout (shared chrome)';
+    const label = set.label || set.dir || 'root layout (shared chrome)';
     it(`${label} declares every namespace its client components use`, () => {
       const used = clientNamespacesFrom(entryFiles(set));
       const missing = [...used.entries()]
@@ -218,7 +219,7 @@ describe('per-route namespace completeness', () => {
   // STUDENT_NAMESPACES resolved to 2 of student's 15 subtrees while this
   // suite stayed green. Assert against the OUTPUT.
   for (const set of ROUTE_NAMESPACE_SETS) {
-    const label = set.dir || 'root layout (shared chrome)';
+    const label = set.label || set.dir || 'root layout (shared chrome)';
     it(`${label} resolves every used namespace in the picked catalog`, () => {
       const picked = pickMessages(messages, set.namespaces);
       const unresolved = [...clientNamespacesFrom(entryFiles(set)).entries()]

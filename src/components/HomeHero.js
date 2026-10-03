@@ -1,109 +1,93 @@
 'use client';
 
-import { useRef } from 'react';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useReducedMotion } from 'motion/react';
+import { motion, useScroll, useTransform } from 'motion/react';
 import Icon from './ui/Icon';
 
-const IRIS = '#6058F7';
+// Homepage hero — "illustration behind" (founder's pick, 2026-10-03, option 1+
+// of the homepage mockups). At rest it is a short static hero: the StudentX
+// wordmark over the container illustration, ~60% of the screen on desktop and
+// 46% on a phone, so the search bar and listings start on the first screen.
+// It replaced a 200vh scroll-pinned track that held the illustration for two
+// screen heights before anything else appeared.
+//
+// The illustration is a FIXED layer rather than part of the section: as the
+// page scrolls it drifts up at 0.3x the scroll speed and fades to a 14% floor
+// (a deliberate watermark), and the content below (z-[1] in page.js) slides up
+// over it. The wordmark and cue scroll away with the page normally.
+//
+// Reduced motion is split in CSS (`motion-reduce:`), NOT with useReducedMotion:
+// that hook is false on the server and true on such a visitor's first client
+// render, so branching the JSX on it is a hydration mismatch and React throws
+// the server HTML away. One tree renders everywhere; for those visitors the
+// fixed layer is hidden and an in-section copy of the illustration shows.
+//
+// The image is object-contain on white: the artwork's own canvas is white, so
+// the letterboxing is invisible and the whole drawing shows at every size.
+// The wordmark keeps its 62vw / max-w-4xl sizing, which matches the branded
+// og-default.png link preview, and is the page's h1 (alt "StudentX").
+//
+// The fixed layer sits where the hero section sits at rest: below the 56px
+// mobile header (which scrolls away; `--header-h` is 0 below md) and below the
+// 72px sticky desktop header (`--header-h`).
+const HERO_H = 'h-[46vh] md:h-[min(60vh,520px)]';
 
-// Scroll-driven homepage hero: a prepared landscape illustration (white canvas)
-// is shown in full on a white stage with the StudentX wordmark + a scroll cue
-// overlaid. As the visitor scrolls, the logo group drifts up and fades and the
-// image gently scales — then the sticky stage releases and the hub buttons
-// (rendered by page.js below this component) scroll into view.
-//
-// The image is shown with object-contain on a white background: because the
-// artwork's own canvas is white, the contained letterboxing is invisible — the
-// whole image is always visible with no crop, on every screen size.
-//
-// The outer track is 200vh; the inner stage is sticky and one viewport minus
-// the global header (`--header-h`) tall, pinned just below the header, so the
-// image stays pinned for the first ~100vh of scroll. scrollYProgress runs 0→1 over
-// the full track and the sticky stage releases at progress 0.5, so the logo
-// fade completes by then for a clean hand-off into the buttons section.
+const fade = (y) => {
+  const vh = typeof window === 'undefined' ? 800 : window.innerHeight;
+  return Math.max(0.14, 1 - (y / (vh * 0.8)) * 0.86);
+};
+
+function Illustration({ priority = false }) {
+  return (
+    <Image
+      src="/home-hero.webp"
+      alt=""
+      fill
+      priority={priority}
+      sizes="100vw"
+      className="object-contain"
+    />
+  );
+}
+
 export default function HomeHero() {
-  const targetRef = useRef(null);
-  const prefersReduced = useReducedMotion();
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, (v) => v * -0.3);
+  const opacity = useTransform(scrollY, fade);
 
-  const { scrollYProgress } = useScroll({
-    target: targetRef,
-    offset: ['start start', 'end start'],
-  });
-
-  const logoY = useTransform(scrollYProgress, [0, 0.5], [0, -200]);
-  const logoOpacity = useTransform(scrollYProgress, [0, 0.3, 0.5], [1, 1, 0]);
-  const photoScale = useTransform(scrollYProgress, [0, 0.5], [1, 1.06]);
-
-  // Reduced motion: a single static viewport (no scroll track) so the buttons
-  // below stay reachable by normal scrolling. Mirrors the prefers-reduced-motion
-  // handling already in globals.css (Bauhaus loader).
-  if (prefersReduced) {
-    return (
-      <section className="relative h-[calc(100vh-var(--header-h))] overflow-hidden bg-stone">
-        <Image
-          src="/home-hero.webp"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-contain"
-        />
+  return (
+    <>
+      <motion.div
+        aria-hidden="true"
+        style={{ y, opacity }}
+        className={`pointer-events-none fixed inset-x-0 top-14 z-0 ${HERO_H} will-change-transform md:top-[var(--header-h)] motion-reduce:hidden`}
+      >
+        {/* The likely LCP element on every viewport, so it alone is preloaded. */}
+        <Illustration priority />
+      </motion.div>
+      <section className={`relative z-[1] ${HERO_H}`}>
+        <div className="absolute inset-0 hidden motion-reduce:block">
+          <Illustration />
+        </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6">
-          <Image
-            src="/logo-tesla-2048w.png"
-            alt="StudentX"
-            width={2048}
-            height={183}
-            priority
-            className="w-[62vw] max-w-4xl h-auto px-4"
-          />
-          <span style={{ color: IRIS }}>
+          <h1 className="m-0 leading-none">
+            <Image
+              src="/logo-tesla-2048w.png"
+              alt="StudentX"
+              width={2048}
+              height={183}
+              loading="eager"
+              className="w-[62vw] max-w-4xl h-auto px-4"
+            />
+          </h1>
+          {/* Bobs three times (~4.8s) and stops: under WCAG 2.2.2's five-second
+              limit for motion that starts on its own. CSS, so it runs on the
+              compositor rather than a JS loop. */}
+          <span className="text-blue animate-[sx-cue-bob_1.6s_ease-in-out_3] motion-reduce:animate-none">
             <Icon name="chevronDown" className="w-[34px] h-[34px]" strokeWidth={2.25} />
           </span>
         </div>
       </section>
-    );
-  }
-
-  return (
-    <section ref={targetRef} className="relative h-[200vh]">
-      {/* Pins below the global header (`--header-h`: 72px from md, 0 below
-          where the header scrolls away) and is that much shorter, so the
-          header never covers the top of the frame. */}
-      <div className="sticky top-[var(--header-h)] h-[calc(100vh-var(--header-h))] overflow-hidden bg-stone">
-        <motion.div style={{ scale: photoScale }} className="absolute inset-0">
-          <Image
-            src="/home-hero.webp"
-            alt=""
-            fill
-            priority
-            sizes="100vw"
-            className="object-contain"
-          />
-        </motion.div>
-
-        <motion.div
-          style={{ y: logoY, opacity: logoOpacity }}
-          className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6"
-        >
-          <Image
-            src="/logo-tesla-2048w.png"
-            alt="StudentX"
-            width={2048}
-            height={183}
-            priority
-            className="w-[62vw] max-w-4xl h-auto px-4"
-          />
-          <motion.span
-            style={{ color: IRIS }}
-            animate={{ y: [0, 10, 0] }}
-            transition={{ duration: 1.6, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <Icon name="chevronDown" className="w-[34px] h-[34px]" strokeWidth={2.25} />
-          </motion.span>
-        </motion.div>
-      </div>
-    </section>
+    </>
   );
 }

@@ -97,7 +97,7 @@ export default function DeckCard({ subject, deckId, href, title, metaLabel, down
   };
 
   const labelStyle = {
-    fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+    fontFamily: 'var(--font-display)',
     fontWeight: 600,
     fontSize: 22,
     letterSpacing: '-0.4px',

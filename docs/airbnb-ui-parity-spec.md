@@ -782,6 +782,14 @@ Second state of the Feature 1 component, not a separate component.
 
 **Supersedes:** backlog item **S3**.
 
+> **Homepage built 2026-10-03 (founder's call).** The expanded bar now sits on
+> `/` under a short hero, followed by the live listings and the other products
+> as tiles ("More from StudentX"). This is layout B (housing-first) with hero
+> 1+ (illustration as a fixed layer that drifts and fades) from the homepage
+> mockups, chosen over a services-hub layout. It deliberately replaces the
+> 2026-06 hub of six equal buttons under a two-screen pinned hero; no hero text,
+> keeping the June simplification. Don't restore the hub without asking.
+
 ### ❌ Feature 3 — Header product tabs — **SKIP**
 
 No `All / Homes / Experiences / Services` tab strip. Header stays logo +
@@ -1602,6 +1610,16 @@ formatter).
 >   which need 3:1 (`/60` or above).
 > - **Accent fills carry night text.** White on yellow (VERIFIED, 1.51:1) and on
 >   magenta (pending, 2.83:1) failed; night gives 10.3:1 and 5.48:1.
+
+> **AMENDED 2026-10-02 (founder) — F1 font swap: Plus Jakarta Sans.** Chosen
+> from side-by-side renders of the live pages (Inter, Figtree, Plus Jakarta
+> Sans, Geist, system font). Replaces Inter AND Inter Tight everywhere;
+> headings are untracked (`letter-spacing: 0` — Jakarta at Inter's -0.02em
+> closes its word spaces), and the Inter-only `ss01`/`cv11` features are gone.
+> The font is reached only through `--font-brand` → `--font-sans` /
+> `--font-display`. Unaffected: the Cal.com booking popup (cross-origin iframe,
+> keeps Cal's font), email templates (mail clients don't load web fonts), and
+> the bare root `not-found.js` fallback (system font by design).
 
 ### ❌ Feature 34 — Review system — **SKIP**
 

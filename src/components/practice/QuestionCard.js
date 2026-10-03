@@ -66,7 +66,7 @@ export default function QuestionCard({ question, chosen, locked, onSelect, onZoo
 
       <h2
         style={{
-          fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+          fontFamily: 'var(--font-display)',
           fontWeight: 600,
           fontSize: 22,
           letterSpacing: '-0.01em',
@@ -197,7 +197,7 @@ export default function QuestionCard({ question, chosen, locked, onSelect, onZoo
                   justifyContent: 'center',
                   background: badgeBg,
                   color: badgeColor,
-                  fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                  fontFamily: 'var(--font-display)',
                   fontSize: 13.5,
                   fontWeight: 700,
                 }}

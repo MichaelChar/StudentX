@@ -236,7 +236,7 @@ function ResumeBanner({ current, total, onContinue, onStartOver, t }) {
     >
       <h2
         style={{
-          fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+          fontFamily: 'var(--font-display)',
           fontWeight: 600,
           fontSize: 20,
           letterSpacing: '-0.01em',
@@ -563,7 +563,7 @@ function TestPlayerInner({ test, subject, onReportIssue }) {
           <div style={{ marginBottom: 10 }}>
             <span
               style={{
-                fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+                fontFamily: 'var(--font-display)',
                 fontWeight: 600,
                 fontSize: 14,
                 letterSpacing: '-0.01em',

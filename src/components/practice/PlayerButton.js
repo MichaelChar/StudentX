@@ -22,7 +22,7 @@ export function PrimaryButton({ children, onClick, type = 'button' }) {
         padding: '14px 24px',
         background: ACCENT,
         color: '#ffffff',
-        fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+        fontFamily: 'var(--font-display)',
         fontWeight: 600,
         fontSize: 15.5,
         letterSpacing: '-0.01em',

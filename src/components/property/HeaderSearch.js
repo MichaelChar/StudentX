@@ -100,6 +100,9 @@ export default function HeaderSearch({
   dates,
   onDatesChange,
   renderDatePanel,
+  // Homepage only: the two segments share the bar's full width instead of
+  // shrinking to their text. Off by default, so the results pill is unchanged.
+  wide = false,
   className = '',
 }) {
   const t = useTranslations('propylaea.search');
@@ -152,6 +155,7 @@ export default function HeaderSearch({
     >
       <Popover
         placement="bottom-start"
+        rootClassName={wide ? 'relative inline-flex flex-1 min-w-0' : undefined}
         className="w-80 max-h-96 overflow-y-auto p-2"
         trigger={
           <SegmentButton
@@ -209,7 +213,7 @@ export default function HeaderSearch({
       */}
       <Popover
         placement="bottom-end"
-        rootClassName="inline-flex"
+        rootClassName={wide ? 'inline-flex flex-1 min-w-0' : 'inline-flex'}
         className="w-[min(20rem,calc(100vw-2.5rem))] p-4 md:left-1/2 md:-ml-[20rem] md:w-[40rem]"
         trigger={
           <SegmentButton

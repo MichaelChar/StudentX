@@ -1635,13 +1635,19 @@
   },
   "home": {
     "blog": "Blog",
-    "directory": "Accommodation",
     "services": "Student Resources",
     "holidayGigs": "Holiday Gigs",
     "admissions": "Medical School Admissions",
     "boarding": "Swiss Boarding Schools",
-    "comingSoon": "Soon",
-    "copyright": "© {year} StudentX"
+    "copyright": "© {year} StudentX",
+    "homesIn": "Homes in Thessaloniki",
+    "showAll": "Show all",
+    "moreFrom": "More from StudentX",
+    "admissionsDesc": "One-to-one admissions coaching, with a money-back guarantee.",
+    "boardingDesc": "Affordable Swiss boarding school options.",
+    "servicesDesc": "Practice tests, flashcard decks and study notes.",
+    "holidayGigsDesc": "Find a summer job that fits your break.",
+    "blogDesc": "Guides and stories from students."
   },
   "admissions": {
     "meta": {
@@ -1722,11 +1728,12 @@
   "boarding": {
     "meta": {
       "title": "Swiss boarding school placement",
-      "description": "Ask Michael about affordable Swiss boarding school options. IB graduate, 43/45, now a second-year medical student in Europe, working directly with the school."
+      "description": "Ask Michael about affordable Swiss boarding school options. IB graduate, 43/45, now a second-year medical student in Europe, working directly with the school.",
+      "ogImageAlt": "Michael, offering a free 15-minute chat about value Swiss boarding schools, on StudentX"
     },
     "headerCta": "Hop on a free 15min call",
     "hero": {
-      "headline": "ask me anything about value Swiss boarding school options",
+      "headline": "ask me anything about the best value Swiss boarding school",
       "body": "I graduated from Swiss boarding school last year with 43/45 in my IB leaving exams, and I’m working with my previous school to market and recruit new students. Right now, I’m a second year medical student studying in Greece",
       "cta": "Book a free 15-min chat",
       "photoAlt": "Michael"

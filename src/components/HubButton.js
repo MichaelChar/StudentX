@@ -80,7 +80,7 @@ export default function HubButton({ label, subtext, href, external = false, comi
   };
 
   const labelStyle = {
-    fontFamily: 'var(--font-inter-tight, var(--font-inter), system-ui, sans-serif)',
+    fontFamily: 'var(--font-display)',
     fontWeight: 600,
     fontSize: 22,
     letterSpacing: '-0.4px',
