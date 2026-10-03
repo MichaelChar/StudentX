@@ -8,10 +8,11 @@ import {
   useRef,
   useCallback,
   useMemo,
+  useId,
 } from 'react';
 import { useTranslations } from 'next-intl';
 import { useAccessToken } from '@/lib/useAccessToken';
-import Card from '@/components/ui/Card';
+import ResponsiveDialog from '@/components/ui/ResponsiveDialog';
 import Button from '@/components/ui/Button';
 import Icon from '@/components/ui/Icon';
 import { safeNextPath } from '@/lib/safeNext';
@@ -151,24 +152,28 @@ function GigFavoriteAuthGate({ open, onClose }) {
   const t = useTranslations('student.gate');
   const tGig = useTranslations('gigs.favorites');
 
-  if (!open) return null;
+  const titleId = useId();
 
+  // Read only while open: the dialog stays mounted so it can animate out, and
+  // the return path must be the page at the moment of the tap.
   const raw =
-    typeof window !== 'undefined'
+    open && typeof window !== 'undefined'
       ? window.location.pathname + window.location.search
       : '';
   const safeNext = safeNextPath(raw);
   const nextQuery = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
 
   return (
-    <div className="fixed inset-0 z-[60] flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-night/60" onClick={onClose} />
-      <Card tone="white" className="relative z-10 w-full max-w-md p-8 text-center">
+    // A real dialog (audit A11Y-3): role, aria-modal, focus trap and restore,
+    // Escape, backdrop close — and on a phone a bottom sheet (backlog M6) that
+    // the back gesture closes. It was a bare fixed <div> with none of these.
+    <ResponsiveDialog open={open} onClose={onClose} size="sm" aria-labelledby={titleId}>
+      <div className="relative text-center">
         <button
           type="button"
           onClick={onClose}
           aria-label={tGig('close')}
-          className="absolute top-4 right-4 p-1 text-night/50 hover:text-night active:text-night/80 transition-colors"
+          className="absolute -top-1 -right-1 p-1 text-night/50 hover:text-night active:text-night/80 transition-colors"
         >
           <Icon name="x" className="w-5 h-5" />
         </button>
@@ -177,7 +182,7 @@ function GigFavoriteAuthGate({ open, onClose }) {
           <Icon name="heart" className="w-6 h-6 text-magenta" fill="currentColor" />
         </div>
 
-        <h2 className="font-display text-2xl text-night leading-tight mb-3">
+        <h2 id={titleId} className="font-display text-2xl text-night leading-tight mb-3">
           {tGig('gateTitle')}
         </h2>
         <p className="text-night/70 leading-relaxed mb-8">{tGig('gateBody')}</p>
@@ -190,7 +195,7 @@ function GigFavoriteAuthGate({ open, onClose }) {
             {t('signIn')}
           </Button>
         </div>
-      </Card>
-    </div>
+      </div>
+    </ResponsiveDialog>
   );
 }
