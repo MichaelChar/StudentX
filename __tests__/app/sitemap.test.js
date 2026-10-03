@@ -1,4 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { CITY_PICKER_ENABLED } from '@/lib/cityPicker';
 
 const getSupabase = vi.fn();
 vi.mock('@/lib/supabase', () => ({
@@ -53,6 +54,10 @@ describe('sitemap()', () => {
     const entries = await sitemap();
 
     expect(listingUrls(entries)).toEqual([]);
-    expect(entries.map((e) => e.url)).toContain('https://studentx.uk/property');
+    // /property itself is listed only while the city picker is live
+    // (src/lib/cityPicker.js); the city landing is always a static route.
+    expect(entries.map((e) => e.url)).toContain('https://studentx.uk/property/thessaloniki');
+    if (CITY_PICKER_ENABLED) expect(entries.map((e) => e.url)).toContain('https://studentx.uk/property');
+    else expect(entries.map((e) => e.url)).not.toContain('https://studentx.uk/property');
   });
 });
