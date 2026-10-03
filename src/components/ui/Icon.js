@@ -1,5 +1,6 @@
 import {
   ArrowRight,
+  ArrowUpRight,
   BookOpen,
   Calendar,
   Check,
@@ -19,6 +20,8 @@ import {
   MapPin,
   MessageSquare,
   Minus,
+  MountainSnow,
+  PenLine,
   Plus,
   Search,
   Settings,
@@ -26,6 +29,8 @@ import {
   Shield,
   ShieldCheck,
   Star,
+  Stethoscope,
+  Sun,
   UserRound,
   X,
 } from 'lucide-react';
@@ -98,6 +103,13 @@ const ICONS = {
   x: X,
   euro: Euro,
   shieldCheck: ShieldCheck,
+  // The homepage's "More from StudentX" tiles (2026-10-03): one glyph per
+  // product, plus the corner arrow that marks a tile as a link.
+  stethoscope: Stethoscope,
+  mountain: MountainSnow,
+  sun: Sun,
+  pen: PenLine,
+  arrowUpRight: ArrowUpRight,
   // Logged-out avatar in the account pill — Avatar's fallback when there is
   // neither a photo nor a name to take initials from.
   user: UserRound,
