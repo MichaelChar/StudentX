@@ -232,6 +232,9 @@ export default function DateRangePicker({
   onChange,
   minDate: minDateProp,
   months,
+  // The `± N days` chips are a SEARCH idea (widen the window). A booking needs
+  // exact dates, so BookingWidget turns them off.
+  showFlex = true,
   className = '',
 }) {
   const t = useTranslations('propylaea.dateRange');
@@ -437,21 +440,23 @@ export default function DateRangePicker({
         ))}
       </motion.div>
 
-      <div
-        role="group"
-        aria-label={t('flexLabel')}
-        className="mt-5 flex flex-wrap gap-2"
-      >
-        {FLEX_DAY_OPTIONS.map((n) => (
-          <Chip
-            key={n}
-            selected={current.flexDays === n}
-            onClick={() => emit({ ...current, flexDays: n })}
-          >
-            {n === 0 ? t('flexExact') : t('flexDays', { n })}
-          </Chip>
-        ))}
-      </div>
+      {showFlex && (
+        <div
+          role="group"
+          aria-label={t('flexLabel')}
+          className="mt-5 flex flex-wrap gap-2"
+        >
+          {FLEX_DAY_OPTIONS.map((n) => (
+            <Chip
+              key={n}
+              selected={current.flexDays === n}
+              onClick={() => emit({ ...current, flexDays: n })}
+            >
+              {n === 0 ? t('flexExact') : t('flexDays', { n })}
+            </Chip>
+          ))}
+        </div>
+      )}
 
       <div className="mt-4 flex items-center justify-between gap-3 min-h-8">
         <p className="text-sm font-sans text-night/70">
