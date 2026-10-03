@@ -242,7 +242,12 @@ function ResultsContent({
   /*
     Total across ALL pages, not the length of the current one.
 
-    The heading reads "N listings in Thessaloniki". Before pagination that was
+    The heading is count-free since parity Feature 10 was built (2026-10-03):
+    "Stays in Thessaloniki", because "3 listings" advertises thin inventory.
+    The count still decides the zero state ("No matches for these filters")
+    and pagination, and comes back into the title when inventory flatters it.
+
+    It used to read "N listings in Thessaloniki". Before pagination that was
     `listings.length`, which was the whole result set; with 18/page it silently
     became "the size of this page" — a 40-result search would have announced
     "18 listings" on page 1 and "4 listings" on page 3. Caught in the browser

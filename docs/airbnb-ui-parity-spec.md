@@ -1009,6 +1009,11 @@ vs. Nostus's ~294 in-city). No logic needed for the count-free version.
 **⏰ Revisit 2026-09-20** — add the count back once inventory flatters it.
 Scheduled reminder set (`studentx-revisit-results-count`).
 
+> **Built 2026-10-03 (founder confirmed).** The live heading had kept the count
+> ("3 listings in Thessaloniki") — the decision was recorded but never built.
+> It now reads "Stays in Thessaloniki"; "No matches for these filters" stays
+> for zero results. Add the count back when inventory flatters it.
+
 ### ✅ Feature 11 — Split layout + Positron tiles — **BUILD**
 
 Desktop results become a **2-column card grid (~62%) + sticky full-height
