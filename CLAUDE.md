@@ -644,11 +644,23 @@ plugin under `claude-code-action@v1`):
   the plugin command is invoked. The action installs the inline-comment MCP
   server only when its tool is listed, and every finding is posted through it
   (#579, #582).
-- **Green means a review reached the PR.** The `Require a posted review` step
-  fails a run that exits success without a Claude comment; read the
-  `Report review run` step for the model's final message and permission
-  denials. A later push to an already-reviewed PR is a notice, not a failure —
-  the plugin reviews a PR once.
+- **Green means a review reached the PR, or the plugin deliberately declined.**
+  The `Require a posted review` step fails a run that exits success without a
+  Claude comment, with two exceptions, both notices. The first is a later push
+  to an already-reviewed PR, since the plugin reviews a PR once. The second is
+  a deliberate step-1 stop: a trivial PR, a closed one, a draft, or one Claude
+  already commented on. The plugin posts nothing and emits no signal when it
+  stops there, so #601's one-string PR went red. `--append-system-prompt` now
+  asks the model to end its final message with `REVIEW-SKIPPED: <reason>`. The
+  guard accepts that line only when the trace backs it up: no background work
+  (read from the CLI's `is_backgrounded` / `async_launched` fields, not the
+  model's words), at most one subagent, and no posting call. Anything else
+  stays red as `Hollow review`. Read the `Report review run` step for the
+  final message, tool calls and permission denials. **Keep the check
+  structural.** Matching the model's prose ("I stopped at step 1…") is too
+  fragile, and `num_turns` can't tell the cases apart: #581's hollow run took
+  4 turns, #601's skip took 3. The quoting rules for the appended prompt are
+  in the workflow comment.
 - **A PR that edits this workflow is never reviewed by its own version.** The
   action refuses to run a workflow that differs from `main`'s copy (a warning,
   green job). Verify workflow changes on the first PR after merge.
