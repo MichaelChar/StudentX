@@ -920,6 +920,7 @@
         "tagline": "Express your interest, and contact the landlord",
         "moveIn": "Move-in",
         "moveOut": "Move-out",
+        "addDate": "Add date",
         "message": "Message",
         "messagePlaceholder": "Introduce yourself and share anything the landlord should know…",
         "costTitle": "Cost summary",

@@ -4,12 +4,14 @@ import { useEffect, useMemo, useState } from 'react';
 import { useTranslations } from 'next-intl';
 import { useRouter } from '@/i18n/navigation';
 import { useAccessToken } from '@/lib/useAccessToken';
-import { parseStayRange, costSummary } from '@/lib/bookingDates';
+import { parseStayRange, costSummary, parseISODate } from '@/lib/bookingDates';
 import { formatMoney } from '@/lib/formatMoney';
 import { isProfileComplete } from '@/lib/studentProfileFields';
 
 import Button from '@/components/ui/Button';
 import Card from '@/components/ui/Card';
+import Popover from '@/components/ui/Popover';
+import DateRangePicker from '@/components/property/DateRangePicker';
 import ProfileGate from '@/components/listing/ProfileGate';
 import { CANCELLATION_TIERS } from '@/lib/cancellationPolicy';
 
@@ -40,6 +42,15 @@ const ERROR_TO_KEY = {
 /** Shared so Feature 37's "Message host" can target this field by id. */
 export const MESSAGE_FIELD_ID = 'booking-message';
 
+// "5 Oct 2026" — the year matters: a student stay often crosses an academic
+// year. UTC, because a YYYY-MM-DD string is a calendar day, not an instant.
+function formatDay(ymd) {
+  const d = ymd ? parseISODate(ymd) : null;
+  return d
+    ? d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric', timeZone: 'UTC' })
+    : '';
+}
+
 export default function BookingWidget({ listing, nextPath,
   initialMoveIn = '',
   initialMoveOut = '',
@@ -60,6 +71,7 @@ export default function BookingWidget({ listing, nextPath,
   */
   const [moveIn, setMoveIn] = useState(initialMoveIn);
   const [moveOut, setMoveOut] = useState(initialMoveOut);
+  const [datesOpen, setDatesOpen] = useState(false);
   const [message, setMessage] = useState('');
   const [sending, setSending] = useState(false);
   const [error, setError] = useState('');
@@ -265,28 +277,50 @@ export default function BookingWidget({ listing, nextPath,
             ) : (
               <div className="mt-5 space-y-4">
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-2 gap-3">
-                    <label className="block">
-                      <span className="text-sm font-medium text-night/70">{t('moveIn')}</span>
-                      <input
-                        type="date"
-                        required
-                        value={moveIn}
-                        onChange={(e) => setMoveIn(e.target.value)}
-                        className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/20 focus-visible:border-blue"
-                      />
-                    </label>
-                    <label className="block">
-                      <span className="text-sm font-medium text-night/70">{t('moveOut')}</span>
-                      <input
-                        type="date"
-                        required
-                        value={moveOut}
-                        onChange={(e) => setMoveOut(e.target.value)}
-                        className="mt-1.5 w-full rounded-control border border-night/15 bg-parchment px-3 py-2.5 text-sm text-night focus-visible:ring-2 focus-visible:ring-blue/20 focus-visible:border-blue"
-                      />
-                    </label>
-                  </div>
+                  {/*
+                    Polish plan UI-9: move-in / move-out open the site's own
+                    date picker — the panel the search bar uses — instead of
+                    the browser's native dd/mm/yyyy boxes, minus the `± N days`
+                    chips (a booking needs exact dates). It closes once both
+                    dates are picked, and the cost summary updates at once.
+                    Unavailable dates are still rejected by the request API.
+                  */}
+                  <Popover
+                    placement="bottom-end"
+                    open={datesOpen}
+                    onOpenChange={setDatesOpen}
+                    rootClassName="relative flex"
+                    className="w-[min(20rem,calc(100vw-2.5rem))] p-4 md:w-[40rem]"
+                    trigger={
+                      <button
+                        type="button"
+                        className="grid w-full grid-cols-2 overflow-hidden rounded-control border border-night/15 bg-parchment text-left transition-colors hover:border-night/30"
+                      >
+                        <span className="min-w-0 px-3 py-2.5">
+                          <span className="block text-sm font-medium text-night/70">{t('moveIn')}</span>
+                          <span className={`mt-0.5 block truncate text-sm ${moveIn ? 'text-night' : 'text-night/70'}`}>
+                            {formatDay(moveIn) || t('addDate')}
+                          </span>
+                        </span>
+                        <span className="min-w-0 border-l border-night/15 px-3 py-2.5">
+                          <span className="block text-sm font-medium text-night/70">{t('moveOut')}</span>
+                          <span className={`mt-0.5 block truncate text-sm ${moveOut ? 'text-night' : 'text-night/70'}`}>
+                            {formatDay(moveOut) || t('addDate')}
+                          </span>
+                        </span>
+                      </button>
+                    }
+                  >
+                    <DateRangePicker
+                      showFlex={false}
+                      value={{ moveIn, moveOut, flexDays: 0 }}
+                      onChange={(next) => {
+                        setMoveIn(next.moveIn || '');
+                        setMoveOut(next.moveOut || '');
+                        if (next.moveIn && next.moveOut) setDatesOpen(false);
+                      }}
+                    />
+                  </Popover>
 
                   <label className="block">
                     <span className="text-sm font-medium text-night/70">{t('message')}</span>
