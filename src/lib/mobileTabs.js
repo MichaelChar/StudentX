@@ -67,7 +67,7 @@ export function mobileTabsFor({ role, city = 'thessaloniki' } = {}) {
   */
   return [
     { key: 'explore', href: `/property/${city}/results`, icon: 'search', labelKey: 'explore' },
-    { key: 'login', href: '/student/login', icon: 'logout', labelKey: 'logIn' },
+    { key: 'login', href: '/login', icon: 'logout', labelKey: 'logIn' },
   ];
 }
 

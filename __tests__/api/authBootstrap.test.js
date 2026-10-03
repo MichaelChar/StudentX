@@ -10,14 +10,6 @@ vi.mock('@/lib/supabaseServer', () => ({
   getSupabaseWithToken: (...args) => getSupabaseWithToken(...args),
 }));
 
-// The student branch defers provisioning through the Worker ExecutionContext.
-// Force getExecutionCtx() → null so provisioning is awaited inline (the dev /
-// no-Worker path) and its outcome is deterministic in the test. This also keeps
-// @opennextjs/cloudflare out of the test import graph.
-vi.mock('@/lib/cloudflareEnv', () => ({
-  getExecutionCtx: () => null,
-}));
-
 const { POST } = await import('@/app/api/auth/bootstrap/route');
 
 beforeEach(() => {
@@ -25,7 +17,11 @@ beforeEach(() => {
   getSupabaseWithToken.mockReset();
 });
 
-const USER = () => ({ id: 'auth-1', email: 'x@example.com', created_at: new Date().toISOString() });
+const USER = (metadata = {}) => ({
+  id: 'auth-1',
+  email: 'x@example.com',
+  user_metadata: metadata,
+});
 
 function req(body, { raw } = {}) {
   return new Request('http://localhost/api/auth/bootstrap', {
@@ -35,18 +31,29 @@ function req(body, { raw } = {}) {
   });
 }
 
-// supabase.rpc('create_student_profile', ...) → result
-function rpcSupabase(result) {
-  return { rpc: vi.fn(async () => result) };
-}
-
-// supabase.from(table).select().eq().maybeSingle() → { data, error: null }
-function probeSupabase({ student = null, landlord = null } = {}) {
-  const chain = (data) => ({
-    select: () => ({ eq: () => ({ maybeSingle: async () => ({ data, error: null }) }) }),
+// Fake token-scoped client. Covers the three reads the route makes:
+//   from(t).select().eq('auth_user_id').maybeSingle()           — row probes
+//   from('landlords').select().is().ilike().maybeSingle()       — orphan probe
+// plus rpc('create_student_profile').
+function fakeSupabase({
+  student = null,
+  landlord = null,
+  orphanLandlord = null,
+  probeError = null,
+  rpcResult = { data: {}, error: null },
+} = {}) {
+  const byAuthUser = (data) => ({
+    maybeSingle: async () => ({ data: probeError ? null : data, error: probeError }),
+  });
+  const table = (name) => ({
+    select: () => ({
+      eq: () => byAuthUser(name === 'students' ? student : landlord),
+      is: () => ({ ilike: () => ({ maybeSingle: async () => ({ data: orphanLandlord, error: null }) }) }),
+    }),
   });
   return {
-    from: vi.fn((table) => (table === 'students' ? chain(student) : chain(landlord))),
+    from: vi.fn(table),
+    rpc: vi.fn(async () => rpcResult),
   };
 }
 
@@ -56,13 +63,8 @@ function cookieValue(res) {
 
 describe('POST /api/auth/bootstrap — validation', () => {
   it('400 when access_token is missing', async () => {
-    const res = await POST(req({ role: 'student' }));
+    const res = await POST(req({}));
     expect(res.status).toBe(400);
-  });
-
-  it('400 when role is missing or not student/landlord', async () => {
-    expect((await POST(req({ access_token: 'jwt' }))).status).toBe(400);
-    expect((await POST(req({ access_token: 'jwt', role: 'admin' }))).status).toBe(400);
   });
 
   it('400 on invalid JSON body', async () => {
@@ -72,81 +74,132 @@ describe('POST /api/auth/bootstrap — validation', () => {
 
   it('401 when the token does not validate', async () => {
     getUserFromToken.mockResolvedValue(null);
-    const res = await POST(req({ access_token: 'bad', role: 'student' }));
+    const res = await POST(req({ access_token: 'bad' }));
     expect(res.status).toBe(401);
     expect(cookieValue(res)).toBeUndefined();
   });
+
+  it('no longer requires a role — the server detects it', async () => {
+    getUserFromToken.mockResolvedValue(USER());
+    getSupabaseWithToken.mockReturnValue(fakeSupabase({ student: { display_name: 'S' } }));
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect(res.status).toBe(200);
+  });
 });
 
-describe('POST /api/auth/bootstrap — student (cookie-first)', () => {
-  it('200 + cookie on the happy path; provisioning runs, name is not echoed', async () => {
+describe('POST /api/auth/bootstrap — account with a role row', () => {
+  it('landlords row → landlord + cookie', async () => {
     getUserFromToken.mockResolvedValue(USER());
-    const supa = rpcSupabase({ data: { student_id: 'S1', display_name: 'Foo' }, error: null });
+    getSupabaseWithToken.mockReturnValue(fakeSupabase({ landlord: { name: 'LL Inc' } }));
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect(res.status).toBe(200);
+    expect(await res.json()).toEqual({ ok: true, role: 'landlord', name: 'LL Inc' });
+    expect(cookieValue(res)).toBe('jwt');
+  });
+
+  it('students row → student + cookie', async () => {
+    getUserFromToken.mockResolvedValue(USER({ role: 'student' }));
+    const supa = fakeSupabase({ student: { display_name: 'Stu' } });
     getSupabaseWithToken.mockReturnValue(supa);
-    const res = await POST(req({ access_token: 'jwt', role: 'student' }));
-    expect(res.status).toBe(200);
-    // Cookie-first: the body no longer carries the display name (the client
-    // never read it) — it only needs the cookie set before it navigates.
+    const res = await POST(req({ access_token: 'jwt' }));
     expect(await res.json()).toEqual({ ok: true, role: 'student' });
     expect(cookieValue(res)).toBe('jwt');
-    expect(supa.rpc).toHaveBeenCalledWith('create_student_profile', expect.any(Object));
+    // Row already exists — nothing to provision.
+    expect(supa.rpc).not.toHaveBeenCalled();
   });
 
-  it('landlord-in-student-form: still 200 + cookie (23505 conflict handled by the destination guard, not a 409 here)', async () => {
+  it('ignores a role sent by the client (stale tab from the two-page era)', async () => {
     getUserFromToken.mockResolvedValue(USER());
-    getSupabaseWithToken.mockReturnValue(
-      rpcSupabase({
-        data: null,
-        error: { code: '23505', message: 'Email x already registered as a landlord' },
-      }),
-    );
-    const res = await POST(req({ access_token: 'jwt', role: 'student' }));
-    expect(res.status).toBe(200);
+    getSupabaseWithToken.mockReturnValue(fakeSupabase({ student: { display_name: 'Stu' } }));
+    const res = await POST(req({ access_token: 'jwt', role: 'landlord' }));
     expect(await res.json()).toEqual({ ok: true, role: 'student' });
-    // Cookie is set; requireStudent on /student/account returns wrong-role and
-    // redirects back to login with the conflict banner + email prefill.
-    expect(cookieValue(res)).toBe('jwt');
   });
 
-  it('a non-conflict RPC error no longer blocks login (deferred + logged, still 200 + cookie)', async () => {
+  it('the row beats user_metadata: a landlord whose metadata says student is a landlord', async () => {
+    // Real prod shape — started on the student form, ended up a landlord.
+    getUserFromToken.mockResolvedValue(USER({ role: 'student' }));
+    const supa = fakeSupabase({ landlord: { name: 'LL' } });
+    getSupabaseWithToken.mockReturnValue(supa);
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect((await res.json()).role).toBe('landlord');
+    expect(supa.rpc).not.toHaveBeenCalled();
+  });
+
+  it('503 + NO cookie when the role probe errors — never read as "no row"', async () => {
     const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
-    getUserFromToken.mockResolvedValue(USER());
-    getSupabaseWithToken.mockReturnValue(
-      rpcSupabase({ data: null, error: { code: '42501', message: 'permission denied' } }),
-    );
-    const res = await POST(req({ access_token: 'jwt', role: 'student' }));
-    expect(res.status).toBe(200);
-    expect(cookieValue(res)).toBe('jwt');
-    expect(errSpy).toHaveBeenCalled(); // logged in the deferred provision
+    getUserFromToken.mockResolvedValue(USER({ role: 'student' }));
+    const supa = fakeSupabase({ probeError: { code: '500', message: 'boom' } });
+    getSupabaseWithToken.mockReturnValue(supa);
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect(res.status).toBe(503);
+    expect(cookieValue(res)).toBeUndefined();
+    expect(supa.rpc).not.toHaveBeenCalled();
     errSpy.mockRestore();
   });
 });
 
-describe('POST /api/auth/bootstrap — landlord', () => {
-  it('200 + cookie when a landlords row exists', async () => {
-    getUserFromToken.mockResolvedValue(USER());
-    getSupabaseWithToken.mockReturnValue(probeSupabase({ landlord: { name: 'LL Inc' } }));
-    const res = await POST(req({ access_token: 'jwt', role: 'landlord' }));
-    expect(res.status).toBe(200);
-    expect(await res.json()).toMatchObject({ ok: true, role: 'landlord', name: 'LL Inc' });
+describe('POST /api/auth/bootstrap — account with no role row yet', () => {
+  it('unclaimed landlord row for this email → landlord-incomplete, no student provisioning', async () => {
+    getUserFromToken.mockResolvedValue(USER({ role: 'student' }));
+    const supa = fakeSupabase({ orphanLandlord: { landlord_id: '0042' } });
+    getSupabaseWithToken.mockReturnValue(supa);
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect(await res.json()).toEqual({ ok: true, role: 'landlord-incomplete' });
     expect(cookieValue(res)).toBe('jwt');
+    expect(supa.rpc).not.toHaveBeenCalled();
   });
 
-  it('409 student-conflict + NO cookie when only a students row exists', async () => {
-    getUserFromToken.mockResolvedValue(USER());
-    getSupabaseWithToken.mockReturnValue(probeSupabase({ student: { display_name: 'Stu' } }));
-    const res = await POST(req({ access_token: 'jwt', role: 'landlord' }));
-    expect(res.status).toBe(409);
-    expect(await res.json()).toEqual({ error: 'role_conflict', conflict_role: 'student' });
-    expect(cookieValue(res)).toBeUndefined();
+  it('student signup missing its row → provisions it, student', async () => {
+    getUserFromToken.mockResolvedValue(USER({ role: 'student' }));
+    const supa = fakeSupabase();
+    getSupabaseWithToken.mockReturnValue(supa);
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect(await res.json()).toEqual({ ok: true, role: 'student' });
+    expect(supa.rpc).toHaveBeenCalledWith('create_student_profile', expect.any(Object));
   });
 
-  it('200 + cookie + role:null for an orphan (neither row)', async () => {
+  it('student provisioning hits prevent_dual_role (23505) → landlord-incomplete', async () => {
+    getUserFromToken.mockResolvedValue(USER({ role: 'student' }));
+    getSupabaseWithToken.mockReturnValue(
+      fakeSupabase({
+        rpcResult: { data: null, error: { code: '23505', message: 'already registered as a landlord' } },
+      }),
+    );
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect((await res.json()).role).toBe('landlord-incomplete');
+  });
+
+  it('student provisioning fails otherwise → still student (logged; the guard re-probes)', async () => {
+    const errSpy = vi.spyOn(console, 'error').mockImplementation(() => {});
+    getUserFromToken.mockResolvedValue(USER({ role: 'student' }));
+    getSupabaseWithToken.mockReturnValue(
+      fakeSupabase({ rpcResult: { data: null, error: { code: '42501', message: 'denied' } } }),
+    );
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect((await res.json()).role).toBe('student');
+    expect(errSpy).toHaveBeenCalled();
+    errSpy.mockRestore();
+  });
+
+  // The trap the unification had to avoid: the old student bootstrap created a
+  // students row for ANY row-less account, which on a shared page would turn
+  // every half-created landlord into a student for good (migration 036).
+  it('no row and no student marker → landlord-incomplete, and NEVER provisions a student', async () => {
     getUserFromToken.mockResolvedValue(USER());
-    getSupabaseWithToken.mockReturnValue(probeSupabase({}));
-    const res = await POST(req({ access_token: 'jwt', role: 'landlord' }));
-    expect(res.status).toBe(200);
-    expect(await res.json()).toMatchObject({ ok: true, role: null });
+    const supa = fakeSupabase();
+    getSupabaseWithToken.mockReturnValue(supa);
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect(await res.json()).toEqual({ ok: true, role: 'landlord-incomplete' });
     expect(cookieValue(res)).toBe('jwt');
+    expect(supa.rpc).not.toHaveBeenCalled();
+  });
+
+  it('new landlord signup (metadata role: landlord) → landlord-incomplete', async () => {
+    getUserFromToken.mockResolvedValue(USER({ role: 'landlord', display_name: 'Anna' }));
+    const supa = fakeSupabase();
+    getSupabaseWithToken.mockReturnValue(supa);
+    const res = await POST(req({ access_token: 'jwt' }));
+    expect((await res.json()).role).toBe('landlord-incomplete');
+    expect(supa.rpc).not.toHaveBeenCalled();
   });
 });

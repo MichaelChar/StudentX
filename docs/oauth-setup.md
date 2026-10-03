@@ -46,7 +46,7 @@ All work happens in the Supabase Dashboard for project `ecluqurlfbvkxrnoyhaq` ([
 
 ## How the flow works
 
-1. User clicks **Continue with Google / Apple** on `/[locale]/student/login` or `/signup`.
+1. User clicks **Continue with Google / Apple** on `/login` or `/signup` (OAuth creates student accounts only, so `/signup` hides it once "landlord" is chosen).
 2. The browser is redirected to the provider, then back to `https://ecluqurlfbvkxrnoyhaq.supabase.co/auth/v1/callback`, which in turn redirects to `https://studentx.uk/[locale]/student/auth/callback#access_token=...`.
 3. The callback page parses the session, posts the access token to `/api/auth/session` (cookie sync), calls the idempotent `/api/student/profile` POST, then forwards to `?next=` (if set by `AuthGate`) or `/student/account`.
 4. Profile provisioning has two layers:

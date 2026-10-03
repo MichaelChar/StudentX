@@ -101,7 +101,7 @@ function StudentOAuthCallbackInner() {
       <div className="space-y-5">
         {error ? (
           <Button
-            href="/student/login"
+            href="/login"
             variant="primary"
             className="w-full justify-center"
           >
