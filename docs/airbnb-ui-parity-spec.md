@@ -782,6 +782,14 @@ Second state of the Feature 1 component, not a separate component.
 
 **Supersedes:** backlog item **S3**.
 
+> **Homepage built 2026-10-03 (founder's call).** The expanded bar now sits on
+> `/` under a short hero, followed by the live listings and the other products
+> as tiles ("More from StudentX"). This is layout B (housing-first) with hero
+> 1+ (illustration as a fixed layer that drifts and fades) from the homepage
+> mockups, chosen over a services-hub layout. It deliberately replaces the
+> 2026-06 hub of six equal buttons under a two-screen pinned hero; no hero text,
+> keeping the June simplification. Don't restore the hub without asking.
+
 ### ❌ Feature 3 — Header product tabs — **SKIP**
 
 No `All / Homes / Experiences / Services` tab strip. Header stays logo +

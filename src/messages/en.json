@@ -1730,13 +1730,19 @@
   },
   "home": {
     "blog": "Blog",
-    "directory": "Accommodation",
     "services": "Student Resources",
     "holidayGigs": "Holiday Gigs",
     "admissions": "Medical School Admissions",
     "boarding": "Swiss Boarding Schools",
-    "comingSoon": "Soon",
-    "copyright": "© {year} StudentX"
+    "copyright": "© {year} StudentX",
+    "homesIn": "Homes in Thessaloniki",
+    "showAll": "Show all",
+    "moreFrom": "More from StudentX",
+    "admissionsDesc": "One-to-one admissions coaching, with a money-back guarantee.",
+    "boardingDesc": "Affordable Swiss boarding school options.",
+    "servicesDesc": "Practice tests, flashcard decks and study notes.",
+    "holidayGigsDesc": "Find a summer job that fits your break.",
+    "blogDesc": "Guides and stories from students."
   },
   "admissions": {
     "meta": {
