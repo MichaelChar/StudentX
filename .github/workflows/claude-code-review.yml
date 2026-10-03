@@ -12,9 +12,9 @@ on:
 
 jobs:
   claude-review:
-    # The plugin stops at its step 1 on a draft without posting anything, which
-    # the guard below would (correctly) call a hollow run. Skip drafts outright;
-    # `ready_for_review` starts the review when the PR is un-drafted.
+    # The plugin stops at its step 1 on a draft without posting anything, so a
+    # run there buys nothing. Skip drafts outright; `ready_for_review` starts
+    # the review when the PR is un-drafted.
     if: github.event.pull_request.draft == false
 
     runs-on: ubuntu-latest
@@ -80,8 +80,31 @@ jobs:
           #    the read-only tools its subagents use on the checkout. Bare `Skill`
           #    is broader than the one command, but only this job's plugins are
           #    installed here.
+          #
+          # 3. Skip marker. The plugin's step 1 stops without posting anything
+          #    when a PR is closed, a draft, already commented on by Claude, or
+          #    "does not need code review" (a trivial change: #601, run
+          #    37110437121). It emits no signal of its own, so a deliberate stop
+          #    looked exactly like a hollow run to the guard below.
+          #    `--append-system-prompt` asks for one line naming the step-1
+          #    condition, which the guard checks against the execution trace.
+          #    Keep this value free of double quotes, `$` and backslashes. The
+          #    action parses claude_args with shell-quote, which ends the value at
+          #    a quote, expands `$NAME` to nothing and consumes backslashes. Also
+          #    never start a line of it with `#`, because the action strips those
+          #    lines as comments. If
+          #    the flag ever stops reaching the model, no marker appears, and a
+          #    step-1 stop goes red as it did before.
           claude_args: |
             --allowedTools "Skill,Read,Grep,Glob,Bash(gh issue view:*),Bash(gh search:*),Bash(gh issue list:*),Bash(gh pr comment:*),Bash(gh pr diff:*),Bash(gh pr view:*),Bash(gh pr list:*),mcp__github_inline_comment__create_inline_comment"
+            --append-system-prompt "When you stop at step 1 of the code-review command because one of its step-1
+            conditions holds, end your final message with a line that contains only REVIEW-SKIPPED: and the
+            condition, as one of closed, draft, no-review-needed or already-commented. For example:
+            REVIEW-SKIPPED: no-review-needed
+            A CI step reads that line to tell a deliberate step-1 stop from a run that ended early. Write it only
+            once the step-1 check has finished and you have decided not to proceed. Never write it if you posted
+            a review, if a subagent or other task is still running, or if you stopped for any other reason, and
+            never put it in a GitHub comment. It does not change how you carry out the command."
           # See https://github.com/anthropics/claude-code-action/blob/main/docs/usage.md
           # or https://code.claude.com/docs/en/cli-reference for available options
 
@@ -146,12 +169,20 @@ jobs:
       # here with the final message (printed above) as the reason. That is the
       # state this job sat in, green, from 2026-09-13 to 2026-09-26.
       #
-      # Two non-failures:
+      # Three non-failures:
       # - The action refuses to run on a PR that edits this file (it must match
       #   main's copy) and exits success without invoking Claude. Nothing can be
       #   reviewed there, by design; warn rather than fail every such PR.
       # - The plugin reviews a PR once: step 1 stops if Claude already commented.
       #   A later push with an earlier review on the PR is a notice, not a failure.
+      # - A deliberate step-1 stop (see (3) on the action step): the final message
+      #   carries a REVIEW-SKIPPED line, and the trace shows a run that stopped at
+      #   step 1. That means nothing was backgrounded, which was #581's failure
+      #   mode and is read from the CLI's own task fields rather than the model's
+      #   words. It also means at most one subagent was launched (step 1 launches
+      #   one, #581 launched two), and nothing tried to post. A marker that fails
+      #   any of these is still a hollow run. num_turns is no help here: #581's
+      #   hollow run took 4 turns and #601's deliberate skip took 3.
       - name: Require a posted review
         if: always() && steps.claude-review.outcome == 'success'
         env:
@@ -198,5 +229,54 @@ jobs:
             exit 0
           fi
 
-          echo "::error title=Hollow review::Claude ran and exited success but posted no review comment on this PR. See the 'Report review run' step for its final message, tool calls and permission denials."
+          # Prints "<reason> <backgrounded> <agents> <posts>", reason "-" when the
+          # final message has no marker. Background work shows up as a task the
+          # CLI registered in the background (or moved there later), an Agent
+          # call that returned "async_launched", or a run_in_background input.
+          # Ambient tasks are the CLI's own housekeeping, which the SDK says to
+          # leave out of "is background work running", so they don't count.
+          skip=$(jq -r '
+            [if type == "array" then .[] else . end] as $m
+            | ([$m[] | select(.type == "result")] | last // {}) as $r
+            | [$m[] | select(.subtype? == "task_started"
+                  and ((.ambient? // false) or (.skip_transcript? // false)))
+                | .task_id] as $ambient
+            | ([($r.result // "") | tostring | splits("\n")
+                | capture("^\\s*[*_`]*REVIEW-SKIPPED: (?<r>closed|draft|no-review-needed|already-commented)[*_`.]*\\s*$")
+                | .r] | first // "-") as $reason
+            | [$m[] | select(
+                ((((.is_backgrounded? // false) == true)
+                    or ((.patch.is_backgrounded? // false) == true))
+                  and (.task_id? as $t | any($ambient[]; . == $t) | not))
+                or ((.tool_use_result | if type == "object" then .status else null end) == "async_launched")
+                or (.type == "assistant" and any(.message.content[]?;
+                      .type == "tool_use" and ((.input.run_in_background? // false) == true))))
+              ] | length as $backgrounded
+            | [$m[] | select(.type == "assistant" and (.parent_tool_use_id // null) == null)
+                | .message.content[]?
+                | select(.type == "tool_use" and (.name == "Agent" or .name == "Task"))
+              ] | length as $agents
+            | [$m[] | select(.type == "assistant") | .message.content[]?
+                | select(.type == "tool_use")
+                | select(.name == "mcp__github_inline_comment__create_inline_comment"
+                    or (.name == "Bash" and ((.input.command? // "") | tostring | test("gh pr comment"))))
+              ] | length as $posts
+            | "\($reason) \($backgrounded) \($agents) \($posts)"
+          ' "$FILE") || skip=""
+          read -r reason backgrounded agents posts <<< "${skip:-- 0 0 0}"
+
+          if [ "$reason" != "-" ]; then
+            why=""
+            [ "$posts" -eq 0 ] || why="it made $posts posting call(s), yet no comment reached the PR"
+            [ "$agents" -le 1 ] || why="it launched $agents subagents, so it went past step 1"
+            [ "$backgrounded" -eq 0 ] || why="its trace shows background work ($backgrounded signal(s)), which is #581's hollow-run shape"
+            if [ -z "$why" ]; then
+              echo "::notice title=Review skipped (${reason})::Claude stopped at the code-review plugin's step 1 (${reason}) and posted nothing, by design. Its reasoning is the final message in the 'Report review run' step."
+              exit 0
+            fi
+            echo "::error title=Hollow review::Claude's final message claims a step-1 skip (${reason}), but $why. See the 'Report review run' step for its final message and tool calls."
+            exit 1
+          fi
+
+          echo "::error title=Hollow review::Claude ran and exited success but posted no review comment on this PR, and its final message has no REVIEW-SKIPPED line. See the 'Report review run' step for its final message, tool calls and permission denials."
           exit 1
