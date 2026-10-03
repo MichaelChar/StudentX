@@ -46,6 +46,12 @@ export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
 }
 
+// Browser UI colour (address bar on Android, the installed app's title bar):
+// white, matching the header. The manifest (src/app/manifest.js) uses the same.
+export const viewport = {
+  themeColor: '#ffffff',
+};
+
 export function generateMetadata() {
   return {
     metadataBase: new URL(SITE_URL),
