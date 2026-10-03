@@ -19,6 +19,16 @@
  * the window is kept for continuity with the numbers landlords already knew.)
  * The label says "last 30 days" rather than inheriting the old tile's
  * "Views this month", which was simply wrong about its own query.
+ *
+ * STEP-CHANGE, 2026-09-19: anonymous listing views started counting on this
+ * date (they previously didn't — the PDP only mounted `ViewTracker` for
+ * signed-in students, even though the write path was always anon-callable).
+ * On an SEO-acquisition directory, anonymous traffic is most of it, so every
+ * listing's 30-day view count jumps upward as the window rolls past this
+ * date, with no change in real interest. Any landlord-facing before/after
+ * comparison that straddles 2026-09-19 is not meaningful. Do not "fix" a
+ * reported spike around this date by looking for a regression — this is the
+ * expected, one-time effect of a metrics correctness fix, not a bug.
  */
 
 /** Rolling window for the view count, in days. */

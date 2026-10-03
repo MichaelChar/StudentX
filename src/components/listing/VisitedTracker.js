@@ -11,15 +11,15 @@ import { markListingVisited } from '@/lib/visitedListings';
   Deliberately separate from ViewTracker, which sits a line above this one on
   the detail page and looks similar:
 
-  - ViewTracker POSTs to the server and only mounts when `isAuthed`. It feeds
-    landlord-facing view metrics.
-  - This writes to localStorage only and mounts unconditionally, because a
-    signed-out student browsing the directory is precisely who benefits from
-    seeing which pins they have already checked.
+  - ViewTracker POSTs to the server, unconditionally, and feeds landlord-facing
+    view metrics.
+  - This writes to localStorage only, and mounts unconditionally for the same
+    reason ViewTracker does — a signed-out student is most of the traffic and
+    still benefits from seeing which pins they have already checked.
 
-  Folding the two together would mean either auth-gating a local UI hint or
-  sending an analytics write for anonymous traffic. Both are worse than one
-  extra six-line component.
+  Folding the two together would still be worse: one is a local UI hint, the
+  other a server-side analytics write, and conflating them couples unrelated
+  failure modes for no benefit.
 */
 export default function VisitedTracker({ listingId }) {
   useEffect(() => {
