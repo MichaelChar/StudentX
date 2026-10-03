@@ -2,6 +2,7 @@ import createMiddleware from 'next-intl/middleware';
 import { NextResponse } from 'next/server';
 import { routing } from './i18n/routing';
 import { SB_ACCESS_TOKEN_COOKIE } from './lib/authCookies';
+import { PARKED_HUB_TARGET } from './lib/cityPicker';
 
 // Next.js 16 renamed `middleware` to `proxy`, with one important caveat:
 // `proxy` runs in the nodejs runtime and edge is no longer available for
@@ -55,6 +56,14 @@ const intlMiddleware = createMiddleware(routing);
 
 export function middleware(request) {
   const pathname = request.nextUrl?.pathname || '';
+
+  // /property city picker parked while only one city is live — see
+  // src/lib/cityPicker.js. 307, not 301: the hub comes back with a second city.
+  if (PARKED_HUB_TARGET && (pathname === '/property' || pathname === '/property/')) {
+    const target = new URL(`/property/${PARKED_HUB_TARGET}`, request.url);
+    target.search = request.nextUrl.search;
+    return NextResponse.redirect(target, 307);
+  }
 
   const oldMatch = OLD_PROPERTY_PATH.exec(pathname);
   if (oldMatch) {

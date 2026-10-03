@@ -256,6 +256,19 @@ Conventions still in force:
    on `/gigs` (desktop) and `/about` (mobile) under `npm run preview`. Healthy
    is single digits.
 
+## /property city picker (parked)
+
+**`/property` redirects (307) to the only live city while there is just one.**
+The hub page itself — the animated globe (`HubBackground`), the city diagram
+(`HubDiagram`) — is NOT deleted; it is parked. Founder's call 2026-10-03
+(polish plan PERF-3): with one live city there is nothing to pick, and the
+page cost a 7.8s largest paint. The switch is `CITY_PICKER_ENABLED` in
+**`src/lib/cityPicker.js`**, computed from the live cities in `cityRoutes.js`,
+so setting a second city's `status` to `'live'` restores the hub with no other
+change. `src/middleware.js` (the redirect) and `src/app/sitemap.js` (which
+drops `/property` meanwhile) both read it. Don't "clean up" the hub
+components as dead code.
+
 ## Maps
 
 Four surfaces mount Leaflet: the results map (`ListingsMap.js`), the PDP's
