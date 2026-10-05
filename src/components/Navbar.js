@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 import { useRouter, usePathname, Link } from '@/i18n/navigation';
@@ -34,10 +34,24 @@ export default function Navbar() {
   const cityMatch = pathname?.match(/^\/property\/([^/]+)/);
   const currentCity = cityMatch?.[1] ?? DEFAULT_CITY;
 
+  /*
+    Bumped by every auth refresh. Auth-change handlers run deferred (see
+    onAuthChange below), so two refreshes can overlap: one started before a
+    sign-out can still be awaiting /api/auth/me when the SIGNED_OUT refresh
+    has already cleared the bar — and the old access token stays valid after
+    sign-out, so that late response is a 200 that would paint the account
+    back. Each refresh, and each unread fetch, checks it is still the newest
+    before setting state. Only written in async handlers, never in render.
+  */
+  const authGen = useRef(0);
+
   const fetchUnread = useCallback(async () => {
+    const gen = authGen.current;
+    const current = () => gen === authGen.current;
     try {
       const supabase = getSupabaseBrowser();
       const { data: { session } } = await withTimeout(supabase.auth.getSession());
+      if (!current()) return;
       if (!session?.access_token) {
         setUnread({ count: 0, role: null });
         return;
@@ -47,8 +61,9 @@ export default function Navbar() {
           headers: { Authorization: `Bearer ${session.access_token}` },
         }),
       );
-      if (!res.ok) return;
+      if (!res.ok || !current()) return;
       const json = await res.json();
+      if (!current()) return;
       setUnread({ count: json.count || 0, role: json.role || null });
     } catch {
       // Silent — badge stays as-is.
@@ -60,13 +75,15 @@ export default function Navbar() {
     const supabase = getSupabaseBrowser();
 
     async function refresh() {
+      const gen = ++authGen.current;
+      // Still mounted, and no newer refresh has started since this one.
+      const current = () => !cancelled && gen === authGen.current;
       try {
         const { data: { session } } = await withTimeout(supabase.auth.getSession());
+        if (!current()) return;
         if (!session?.access_token) {
-          if (!cancelled) {
-            setAuthState({ ready: true, role: null, name: null });
-            setUnread({ count: 0, role: null });
-          }
+          setAuthState({ ready: true, role: null, name: null });
+          setUnread({ count: 0, role: null });
           return;
         }
         const res = await withTimeout(
@@ -74,17 +91,17 @@ export default function Navbar() {
             headers: { Authorization: `Bearer ${session.access_token}` },
           }),
         );
+        if (!current()) return;
         if (!res.ok) {
-          if (!cancelled) setAuthState({ ready: true, role: null, name: null });
+          setAuthState({ ready: true, role: null, name: null });
           return;
         }
         const { user } = await res.json();
-        if (!cancelled) {
-          setAuthState({ ready: true, role: user?.role || null, name: user?.name || null });
-        }
-        if (!cancelled) fetchUnread();
+        if (!current()) return;
+        setAuthState({ ready: true, role: user?.role || null, name: user?.name || null });
+        fetchUnread();
       } catch {
-        if (!cancelled) setAuthState({ ready: true, role: null, name: null });
+        if (current()) setAuthState({ ready: true, role: null, name: null });
       }
     }
 
