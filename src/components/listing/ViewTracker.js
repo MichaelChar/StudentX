@@ -3,10 +3,11 @@
 import { useEffect } from 'react';
 
 /*
-  Fire-and-forget view tracker for the listing detail page. Server-rendering
-  the page handed us the listing data, so we're only here to record that a
-  human (or crawler) opened it. Errors are swallowed — analytics shouldn't
-  block the experience.
+  Fire-and-forget view tracker for the listing detail page. Mounts
+  unconditionally, signed in or not — the API route it calls was always
+  written to accept anonymous views, and on an SEO-acquisition directory most
+  traffic is anonymous. Errors are swallowed — analytics shouldn't block the
+  experience.
 */
 export default function ViewTracker({ listingId }) {
   useEffect(() => {
