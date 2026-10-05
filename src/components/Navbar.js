@@ -8,6 +8,7 @@ import { HeaderSlotTarget } from './HeaderSlot';
 import { getSupabaseBrowser } from '@/lib/supabaseBrowser';
 import { withTimeout } from '@/lib/withTimeout';
 import { signOutSafely } from '@/lib/authHelpers';
+import { onAuthChange } from '@/lib/onAuthChange';
 import AccountMenu from './AccountMenu';
 import MobileTabBar from './MobileTabBar';
 import { activeTabKey, isChromelessMobileRoute, mobileTabsFor } from '@/lib/mobileTabs';
@@ -88,7 +89,11 @@ export default function Navbar() {
     }
 
     refresh();
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(() => refresh());
+    // Deferred through onAuthChange rather than subscribed inline: refresh()
+    // awaits getSession(), and gotrue notifies listeners while holding its auth
+    // lock, so returning refresh() to it deadlocked every sign-out for
+    // refresh()'s 15 s timeout. See src/lib/onAuthChange.js.
+    const { data: { subscription } } = onAuthChange(supabase, () => refresh());
 
     return () => {
       cancelled = true;
