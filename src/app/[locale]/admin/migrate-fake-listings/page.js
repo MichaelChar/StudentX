@@ -18,7 +18,7 @@ export default async function MigrateFakeListingsPage({ params }) {
 
   const admin = await requireAdmin();
   if (!admin) {
-    redirect(`/property/thessaloniki/landlord/login?next=${encodeURIComponent('/admin/migrate-fake-listings')}`);
+    redirect(`/login?next=${encodeURIComponent('/admin/migrate-fake-listings')}`);
   }
   if (admin.kind === 'not-admin') {
     return <NotAuthorized email={admin.email} />;

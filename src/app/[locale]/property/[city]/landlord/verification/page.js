@@ -26,7 +26,7 @@ export default function LandlordVerificationPage() {
       const supabase = getSupabaseBrowser();
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
-        // LandlordShell handles the redirect to /landlord/login
+        // LandlordShell handles the redirect to /login
         return;
       }
 

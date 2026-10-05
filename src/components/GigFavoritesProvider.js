@@ -162,6 +162,8 @@ function GigFavoriteAuthGate({ open, onClose }) {
       : '';
   const safeNext = safeNextPath(raw);
   const nextQuery = safeNext ? `?next=${encodeURIComponent(safeNext)}` : '';
+  // Student-only gate, so the signup's account-type choice arrives preselected.
+  const signupHref = `/signup?type=student${safeNext ? `&next=${encodeURIComponent(safeNext)}` : ''}`;
 
   return (
     // A real dialog (audit A11Y-3): role, aria-modal, focus trap and restore,
@@ -188,10 +190,10 @@ function GigFavoriteAuthGate({ open, onClose }) {
         <p className="text-night/70 leading-relaxed mb-8">{tGig('gateBody')}</p>
 
         <div className="space-y-3">
-          <Button href={`/student/signup${nextQuery}`} className="w-full">
+          <Button href={signupHref} className="w-full">
             {t('signUp')}
           </Button>
-          <Button href={`/student/login${nextQuery}`} variant="secondary" className="w-full">
+          <Button href={`/login${nextQuery}`} variant="secondary" className="w-full">
             {t('signIn')}
           </Button>
         </div>

@@ -16,7 +16,7 @@ export default async function PendingDashboardPage({ params }) {
 
   const admin = await requireAdmin();
   if (!admin) {
-    redirect(`/property/thessaloniki/landlord/login?next=${encodeURIComponent('/admin/dashboard')}`);
+    redirect(`/login?next=${encodeURIComponent('/admin/dashboard')}`);
   }
   if (admin.kind === 'not-admin') {
     return <NotAuthorized email={admin.email} />;

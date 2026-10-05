@@ -87,7 +87,7 @@ export default function ResetPasswordPage() {
       <AuthShell eyebrow="Password reset" title={t('successTitle')} subtitle={t('successMessage')}>
         <p className="text-sm">
           <Link
-            href="/property/thessaloniki/landlord/login"
+            href="/login"
             className="text-blue font-medium hover:text-night"
           >
             {t('goToLogin')} →

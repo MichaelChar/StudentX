@@ -79,7 +79,7 @@ export default function StudentVerifyEmailPage() {
 
         <p className="text-sm text-night/70">
           <Link
-            href="/student/login"
+            href="/login"
             className="text-blue font-medium hover:text-night"
           >
             {t('backToLogin')} →

@@ -108,7 +108,7 @@ export default async function LandlordDashboardPage({ params }) {
       if (auth.email) loginParams.set('email', auth.email);
     }
     const qs = loginParams.toString();
-    redirect(`/property/thessaloniki/landlord/login${qs ? `?${qs}` : ''}`);
+    redirect(`/login${qs ? `?${qs}` : ''}`);
   }
 
   const t = await getTranslations({ locale, namespace: 'propylaea.landlord.dashboard' });

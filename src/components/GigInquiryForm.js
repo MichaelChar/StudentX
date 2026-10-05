@@ -29,7 +29,7 @@ export default function GigInquiryForm({ gigId }) {
       <div className="rounded-card border border-night/10 bg-parchment p-5">
         <p className="text-sm text-night/70">{t('signInPrompt')}</p>
         <Link
-          href={`/student/login?next=/gigs/${gigId}`}
+          href={`/login?next=/gigs/${gigId}`}
           className="mt-3 inline-block rounded-control bg-blue px-4 py-2 text-sm font-medium text-white hover:bg-blue/90"
         >
           {t('signIn')}

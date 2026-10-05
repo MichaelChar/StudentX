@@ -111,7 +111,7 @@ export default function LandlordShell({
 
       if (gated) {
         if (!session) {
-          router.replace(`/property/${CITY}/landlord/login`);
+          router.replace('/login');
           return;
         }
         if (!session.user.email_confirmed_at) {
@@ -172,7 +172,7 @@ export default function LandlordShell({
   async function handleSignOut() {
     const supabase = getSupabaseBrowser();
     await signOutSafely(supabase);
-    router.push(`/property/${CITY}/landlord/login`);
+    router.push('/login');
   }
 
   // Loading state while the gated auth check resolves (never shown when ungated)
