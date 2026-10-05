@@ -519,6 +519,13 @@ surface in `wrangler tail`.
   `prevent_dual_role` (036) would make the wrong role permanent. Signup's
   account-type choice is required with no default for the same reason.
   One email is still one role; only the door was merged.
+- **Auth listeners must not await `supabase.auth` inline.** gotrue notifies
+  `onAuthStateChange` listeners while holding its auth lock and awaits them,
+  so a callback that awaits `getSession()` deadlocks the sign-out / refresh
+  that fired it until the callback times out (Navbar's did, 15 s per
+  sign-out). Use `onAuthChange()` from `src/lib/onAuthChange.js`, which
+  defers the handler; a direct listener must stay synchronous and
+  block-bodied — `__tests__/lib/onAuthChange.test.js` scans `src/` for it.
 
 ## Environment variables — READ THIS BEFORE ADDING ONE
 
