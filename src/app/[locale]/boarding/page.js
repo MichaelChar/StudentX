@@ -4,7 +4,6 @@ import { CalLoader, CalButton } from '@/components/boarding/CalBooking';
 import FeeComparison from '@/components/boarding/FeeComparison';
 import PathPlanner from '@/components/boarding/PathPlanner';
 import Portrait from '@/components/boarding/Portrait';
-import RouteLine from '@/components/boarding/RouteLine';
 import ScoreCountUp from '@/components/boarding/ScoreCountUp';
 import StepCards from '@/components/boarding/StepCards';
 import {
@@ -47,8 +46,8 @@ import { currentSchoolYear } from '@/lib/boardingPath';
   PathPlanner (age drives the timeline and the fee bars), FeeComparison (a
   static table) and StepCards (the three steps reveal on scroll) sit below.
   Their strings were approved by Michael on 2026-10-11, after the copy lock.
-  The first credibility chip counts its score up, and the guide section
-  draws the route. Both ship their finished state in the server HTML.
+  The first credibility chip counts its score up; the server HTML already
+  carries the finished "43/45".
 */
 
 export default async function BoardingPage({ params }) {
@@ -233,7 +232,6 @@ export default async function BoardingPage({ params }) {
             <p className={LABEL}>{t('guide.label')}</p>
             <h2 className={H2}>{t('guide.heading')}</h2>
             <p className={`max-w-[38rem] text-[1.08rem] ${MUTED}`}>{t('guide.body')}</p>
-            <RouteLine from={t('guide.routeFrom')} to={t('guide.routeTo')} />
           </div>
           <div className="order-first flex justify-center min-[980px]:order-none">
             <Portrait alt={t('hero.photoAlt')} />
