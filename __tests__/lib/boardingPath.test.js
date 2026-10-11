@@ -6,6 +6,7 @@ import {
   fill,
   formatChf,
   formatSchoolYear,
+  splitScore,
 } from '@/lib/boardingPath';
 
 describe('currentSchoolYear', () => {
@@ -74,5 +75,29 @@ describe('formatChf', () => {
 describe('fill', () => {
   it('replaces known placeholders and leaves the rest', () => {
     expect(fill('a {x} b {y}', { x: 1 })).toBe('a 1 b {y}');
+  });
+});
+
+describe('splitScore', () => {
+  it('splits a score that starts the string', () => {
+    expect(splitScore('43/45 bilingual IB Diploma with 4 HLs')).toEqual({
+      before: '',
+      to: 43,
+      of: '45',
+      after: ' bilingual IB Diploma with 4 HLs',
+    });
+  });
+
+  it('splits a score with text on both sides', () => {
+    expect(splitScore('scored 38/45 here')).toEqual({
+      before: 'scored ',
+      to: 38,
+      of: '45',
+      after: ' here',
+    });
+  });
+
+  it('returns null when there is no score', () => {
+    expect(splitScore('no score')).toBeNull();
   });
 });
