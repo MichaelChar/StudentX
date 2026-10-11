@@ -1,6 +1,7 @@
 'use client';
 
-import { useState, useSyncExternalStore } from 'react';
+import { useEffect, useRef, useState, useSyncExternalStore } from 'react';
+import { animate, inView } from 'motion';
 import { MotionConfig, motion } from 'motion/react';
 import SegmentedControl from '@/components/ui/SegmentedControl';
 import { CalButton } from '@/components/boarding/CalBooking';
@@ -163,18 +164,68 @@ function Timeline({ age, schoolYear, strings, animateIn }) {
   );
 }
 
+// Seconds for the longest (ultra-luxurious) bar to grow; the others take
+// proportionally less.
+const GROW_SECONDS = 1.5;
+
+/*
+  Bars compare the three fees to each other — the ultra-luxurious fee is the
+  full width — so they look the same at every age; only the totals change.
+
+  They grow from nothing the first time they scroll into view, all at the SAME
+  speed, so Michael's school finishes first, then mid-range, then the
+  ultra-luxurious one keeps going. Same progressive enhancement as StepCards:
+  the server HTML has the final widths, and the effect only empties them if
+  they start below the fold and motion is allowed.
+*/
 function CostBars({ age, years, strings }) {
+  const barsRef = useRef(null);
   const saving = fill(strings.saving, {
     amount: formatChf((FEE_TIERS_CHF.top - FEE_TIERS_CHF.value) * years),
   });
 
+  useEffect(() => {
+    const box = barsRef.current;
+    if (!box) return undefined;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return undefined;
+    // Already on screen (e.g. reload mid-page): leave them drawn.
+    if (box.getBoundingClientRect().top < window.innerHeight) return undefined;
+    const bars = [...box.querySelectorAll('[data-scale]')];
+    bars.forEach((bar) => {
+      bar.style.transform = 'scaleX(0)';
+    });
+    let started = false;
+    const stop = inView(
+      box,
+      () => {
+        if (started) return;
+        started = true;
+        bars.forEach((bar) => {
+          const scale = Number(bar.dataset.scale);
+          animate(
+            bar,
+            { transform: ['scaleX(0)', `scaleX(${scale})`] },
+            { duration: GROW_SECONDS * scale, ease: 'linear' },
+          );
+        });
+      },
+      { amount: 0.6 },
+    );
+    return () => {
+      stop();
+      bars.forEach((bar) => {
+        bar.style.transform = `scaleX(${bar.dataset.scale})`;
+      });
+    };
+  }, []);
+
   return (
     <div aria-live="polite" aria-atomic="true" className="flex flex-col gap-4">
       <p className="font-bold">{strings.years[age]}</p>
-      <div className="flex flex-col gap-4">
+      <div ref={barsRef} className="flex flex-col gap-4">
         {TIERS.map((tier) => {
           const total = FEE_TIERS_CHF[tier] * years;
-          const scale = total / (FEE_TIERS_CHF.top * 4);
+          const scale = FEE_TIERS_CHF[tier] / FEE_TIERS_CHF.top;
           return (
             <div key={tier}>
               <p className="text-[13px] font-bold">{strings.tiers[tier]}</p>
@@ -184,7 +235,8 @@ function CostBars({ age, years, strings }) {
                   className="h-2.5 min-w-0 flex-1 overflow-hidden rounded-pill bg-night/10"
                 >
                   <div
-                    className={`h-full w-full origin-left rounded-pill transition-transform duration-300 ease-parity motion-reduce:transition-none ${
+                    data-scale={scale}
+                    className={`h-full w-full origin-left rounded-pill ${
                       tier === 'value' ? 'bg-yellow' : 'bg-night/30'
                     }`}
                     style={{ transform: `scaleX(${scale})` }}

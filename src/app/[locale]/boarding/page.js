@@ -13,12 +13,11 @@ import {
   WHATSAPP_URL,
 } from '@/components/boarding/config';
 import {
-  BTN_ON_BLUE,
   BTN_PRIMARY,
   DISPLAY,
   H2,
   LABEL,
-  LINK_ON_BLUE,
+  LINK,
   MUTED,
   PANEL,
   SPLIT,
@@ -243,29 +242,32 @@ export default async function BoardingPage({ params }) {
       {/* Closing panel */}
       <section className="pt-2.5 pb-[72px]">
         <div className={WRAP}>
-          <div className="grid items-end gap-6 rounded-[32px] bg-blue px-[22px] py-8 text-white min-[980px]:grid-cols-[1.4fr_0.8fr] min-[980px]:px-12 min-[980px]:py-14">
+          {/* Lilac panel with the page's standard CTA (founder's call,
+              2026-10-11). The label is a gold pill rather than gold text:
+              yellow text on parchment measures 1.39:1, night on yellow 10.3:1. */}
+          <div className="grid items-end gap-6 rounded-[32px] bg-parchment px-[22px] py-8 min-[980px]:grid-cols-[1.4fr_0.8fr] min-[980px]:px-12 min-[980px]:py-14">
             <div>
-              <p className="mb-3.5 inline-flex items-center gap-2 text-xs font-bold tracking-[0.02em] text-white before:h-[7px] before:w-[7px] before:rounded-full before:bg-blue before:shadow-[0_0_0_4px_var(--color-iris-soft)] before:content-['']">
+              <p className="mb-3.5 inline-flex items-center gap-2 rounded-pill bg-yellow px-3 py-1 text-xs font-bold tracking-[0.02em] text-night before:h-[7px] before:w-[7px] before:rounded-full before:bg-blue before:content-['']">
                 {t('close.label')}
               </p>
-              <h2 className={`${H2} text-white`}>{t('close.heading')}</h2>
-              <p className="max-w-[36rem] text-white">{t('close.body')}</p>
+              <h2 className={H2}>{t('close.heading')}</h2>
+              <p className={`max-w-[36rem] ${MUTED}`}>{t('close.body')}</p>
             </div>
             <div>
-              <CalButton className={BTN_ON_BLUE}>{t('close.cta')}</CalButton>
-              <p className="mt-3 text-[13.5px] text-white">
+              <CalButton className={BTN_PRIMARY}>{t('close.cta')}</CalButton>
+              <p className={`mt-3 text-[13.5px] ${MUTED}`}>
                 {t('close.emailLead')}{' '}
-                <a href={`mailto:${CONTACT_EMAIL}`} className={LINK_ON_BLUE}>
+                <a href={`mailto:${CONTACT_EMAIL}`} className={LINK}>
                   {CONTACT_EMAIL}
                 </a>
               </p>
-              <p className="mt-1.5 text-[13.5px] text-white">
+              <p className={`mt-1.5 text-[13.5px] ${MUTED}`}>
                 {t('close.phoneLead')}{' '}
                 <a
                   href={WHATSAPP_URL}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={LINK_ON_BLUE}
+                  className={LINK}
                 >
                   {PHONE_DISPLAY}
                 </a>
@@ -283,8 +285,9 @@ export default async function BoardingPage({ params }) {
       {/* Mobile sticky CTA. Sits above the site's bottom tab bar (< md),
           which is fixed at the foot of every page. */}
       <div className="fixed inset-x-3 bottom-[calc(4rem+env(safe-area-inset-bottom)+12px)] z-30 md:bottom-3 min-[980px]:hidden">
-        {/* Night ring: this bar floats over the blue step cards and closing
-            panel too, where an iris ring would vanish (night on blue 3.3:1). */}
+        {/* Night ring: this bar floats over every surface on the page —
+            white, lilac panels, yellow highlights — and night reads on all
+            of them. */}
         <CalButton className={`${BTN_PRIMARY} w-full outline-night focus-visible:outline-night`}>
           {t('headerCta')}
         </CalButton>

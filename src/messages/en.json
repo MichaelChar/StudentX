@@ -1799,7 +1799,7 @@
         "autumn": "Autumn"
       },
       "years": "{n, plural, one {1 year at school} other {# years at school}}",
-      "saving": "{amount} less than an ultra-luxurious school",
+      "saving": "{amount} difference",
       "tiers": {
         "value": "My (best value) Swiss boarding school",
         "mid": "Mid-range Swiss boarding school",

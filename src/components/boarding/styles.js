@@ -19,9 +19,8 @@ export const BTN =
 // Ring colour comes from the site-wide iris default in globals.css; the
 // variants below override it only where the ring would sit on blue.
 export const BTN_PRIMARY = `${BTN} bg-blue text-white border-blue hover:bg-blue/90 active:bg-blue/80`;
-// On the blue closing panel the ring sits on blue, so it is white — the
-// site's pattern for dark surfaces (AdmissionsHero, ListingLightbox).
-export const BTN_ON_BLUE = `${BTN} bg-white text-night border-white hover:bg-parchment outline-white focus-visible:outline-white`;
-export const LINK_ON_BLUE = 'text-white underline outline-white focus-visible:outline-white';
+// Inline text links (closing panel contact lines). Focus ring is the
+// site-wide iris default.
+export const LINK = 'text-night underline hover:text-blue';
 export const SPLIT = 'grid items-center gap-12';
 export const PANEL = 'rounded-[28px] bg-parchment p-9';
