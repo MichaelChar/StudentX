@@ -1780,6 +1780,59 @@
       "emailLead": "Or email me at",
       "phoneLead": "Or WhatsApp/ Viber me at"
     },
+    "planner": {
+      "label": "your child's path",
+      "heading": "Pick their age and model the years ahead.",
+      "ageLabel": "How old is your child?",
+      "join": "Your child joins {programme}",
+      "nodes": {
+        "dp1": "Your child moves up to DP 1",
+        "apply": "Your child starts applying to universities",
+        "applyNote": "I can assist with this",
+        "exams": "Your child sits their IB exams",
+        "uni": "Your child starts university",
+        "uniNote": "Historically, 27% of my school's students score 38/45 or higher, and over half receive an offer from at least one QS top-50 university."
+      },
+      "months": {
+        "sept": "Sept",
+        "may": "May",
+        "autumn": "Autumn"
+      },
+      "years": "{n, plural, one {1 year at school} other {# years at school}}",
+      "saving": "{amount} less than an ultra-luxurious school",
+      "tiers": {
+        "value": "My (best value) Swiss boarding school",
+        "mid": "Mid-range Swiss boarding school",
+        "top": "Ultra-luxurious Swiss boarding school"
+      },
+      "ctaNote": "Let's discuss if your child is a fit"
+    },
+    "compare": {
+      "heading": "Same academics, different campus",
+      "cols": {
+        "value": "Best value",
+        "mid": "Mid-range",
+        "top": "Ultra-luxurious"
+      },
+      "rows": {
+        "ib": "IB Diploma, identical externally marked exams",
+        "counsellor": "Dedicated university counsellor",
+        "weekends": "Weekend trips and activities",
+        "campus": "Campus",
+        "clubs": "Extracurricular options",
+        "fee": "Fee per year"
+      },
+      "cells": {
+        "campusValue": "Intimate",
+        "campusMid": "Larger",
+        "campusTop": "Luxurious",
+        "clubsValue": "Focused",
+        "clubsMid": "Larger",
+        "clubsTop": "Very large"
+      },
+      "yes": "Included",
+      "source": "Approximate annual boarding fees (tuition and board), 2026–27, rounded. Mid-range and ultra-luxurious are typical published fees of Swiss IB boarding schools."
+    },
     "copyright": "© {year} StudentX"
   },
   "gigs": {

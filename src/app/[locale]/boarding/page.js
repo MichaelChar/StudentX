@@ -1,12 +1,30 @@
 import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { HeaderSlot } from '@/components/HeaderSlot';
 import { CalLoader, CalButton } from '@/components/boarding/CalBooking';
+import FeeComparison from '@/components/boarding/FeeComparison';
+import PathPlanner from '@/components/boarding/PathPlanner';
 import Portrait from '@/components/boarding/Portrait';
+import StepCards from '@/components/boarding/StepCards';
 import {
   CONTACT_EMAIL,
+  ENTRY_POINTS,
+  FEE_TIERS_CHF,
   PHONE_DISPLAY,
   WHATSAPP_URL,
 } from '@/components/boarding/config';
+import {
+  BTN_ON_BLUE,
+  BTN_PRIMARY,
+  DISPLAY,
+  H2,
+  LABEL,
+  LINK_ON_BLUE,
+  MUTED,
+  PANEL,
+  SPLIT,
+  WRAP,
+} from '@/components/boarding/styles';
+import { currentSchoolYear } from '@/lib/boardingPath';
 
 /*
   /boarding — Swiss boarding school placement landing page.
@@ -24,35 +42,20 @@ import {
   call, 2026-10-02): headings in the site's display style, flat 8px
   buttons matching ui/Button's primary look, the site's own header, footer
   line and mobile tab bar.
-*/
 
-// Muted body copy: the site's AA token for secondary text (#577), not a hex.
-const MUTED = 'text-night/70';
-const WRAP = 'mx-auto w-full max-w-[1120px] px-5';
-const DISPLAY = 'font-display leading-[1.08]';
-const H2 = `${DISPLAY} mb-4 text-[clamp(2rem,3.6vw,3.15rem)]`;
-const LABEL = 'mb-2.5 text-[13px] font-bold tracking-[0.02em] text-blue';
-// Mirrors ui/Button (primary, md). Not that component itself: it renders
-// next-intl's <Link>, and these are external links with a click intercept.
-const BTN =
-  'inline-flex items-center justify-center gap-2 rounded-control px-5 py-3 ' +
-  'text-sm font-sans font-semibold leading-normal no-underline cursor-pointer border ' +
-  'transition-[background-color,border-color,color] ' +
-  'focus-visible:outline-2 focus-visible:outline-offset-2';
-// Ring colour comes from the site-wide iris default in globals.css; the
-// variants below override it only where the ring would sit on blue.
-const BTN_PRIMARY = `${BTN} bg-blue text-white border-blue hover:bg-blue/90 active:bg-blue/80`;
-// On the blue closing panel the ring sits on blue, so it is white — the
-// site's pattern for dark surfaces (AdmissionsHero, ListingLightbox).
-const BTN_ON_BLUE = `${BTN} bg-white text-night border-white hover:bg-parchment outline-white focus-visible:outline-white`;
-const LINK_ON_BLUE = 'text-white underline outline-white focus-visible:outline-white';
-const SPLIT = 'grid items-center gap-12';
-const PANEL = 'rounded-[28px] bg-parchment p-9';
+  PathPlanner (age drives the timeline and the fee bars), FeeComparison (a
+  static table) and StepCards (the three steps reveal on scroll) sit below.
+  Their strings were approved by Michael on 2026-10-11, after the copy lock.
+*/
 
 export default async function BoardingPage({ params }) {
   const { locale } = await params;
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: 'boarding' });
+  const tp = await getTranslations({ locale, namespace: 'boarding.planner' });
+  const tc = await getTranslations({ locale, namespace: 'boarding.compare' });
+
+  const buildSchoolYear = currentSchoolYear(new Date());
 
   const chips = [1, 2, 3].map((n) => ({
     n,
@@ -65,6 +68,62 @@ export default async function BoardingPage({ params }) {
     title: t(`steps.s${n}Title`),
     body: t(`steps.s${n}Body`),
   }));
+
+  const plannerStrings = {
+    ageLabel: tp('ageLabel'),
+    join: Object.fromEntries(ENTRY_POINTS.map((e) => [e.age, tp('join', { programme: e.programme })])),
+    years: Object.fromEntries(ENTRY_POINTS.map((e) => [e.age, tp('years', { n: e.years })])),
+    nodes: {
+      dp1: tp('nodes.dp1'),
+      apply: tp('nodes.apply'),
+      exams: tp('nodes.exams'),
+      uni: tp('nodes.uni'),
+    },
+    notes: {
+      apply: tp('nodes.applyNote'),
+      uni: tp('nodes.uniNote'),
+    },
+    months: {
+      sept: tp('months.sept'),
+      may: tp('months.may'),
+      autumn: tp('months.autumn'),
+    },
+    tiers: {
+      value: tp('tiers.value'),
+      mid: tp('tiers.mid'),
+      top: tp('tiers.top'),
+    },
+    saving: tp.raw('saving'),
+    cta: t('hero.cta'),
+    ctaNote: tp('ctaNote'),
+  };
+
+  const compareStrings = {
+    heading: tc('heading'),
+    cols: {
+      value: tc('cols.value'),
+      mid: tc('cols.mid'),
+      top: tc('cols.top'),
+    },
+    rows: {
+      ib: tc('rows.ib'),
+      counsellor: tc('rows.counsellor'),
+      weekends: tc('rows.weekends'),
+      campus: tc('rows.campus'),
+      clubs: tc('rows.clubs'),
+      fee: tc('rows.fee'),
+    },
+    cells: {
+      campusValue: tc('cells.campusValue'),
+      campusMid: tc('cells.campusMid'),
+      campusTop: tc('cells.campusTop'),
+      clubsValue: tc('cells.clubsValue'),
+      clubsMid: tc('cells.clubsMid'),
+      clubsTop: tc('cells.clubsTop'),
+    },
+    yes: tc('yes'),
+    source: tc('source'),
+  };
 
   return (
     <div className="text-[17px] leading-[1.65] text-night">
@@ -144,6 +203,18 @@ export default async function BoardingPage({ params }) {
             <h2 className={H2}>{t('truth.heading')}</h2>
           </div>
         </div>
+        <div className={`${WRAP} mt-10`}>
+          <FeeComparison strings={compareStrings} fees={FEE_TIERS_CHF} />
+        </div>
+      </section>
+
+      {/* Path planner — one age control drives the timeline and the fees. */}
+      <section className="pb-[72px]">
+        <div className={WRAP}>
+          <p className={LABEL}>{t('planner.label')}</p>
+          <h2 className={H2}>{t('planner.heading')}</h2>
+          <PathPlanner buildSchoolYear={buildSchoolYear} strings={plannerStrings} />
+        </div>
       </section>
 
       {/* Meet your guide */}
@@ -165,17 +236,7 @@ export default async function BoardingPage({ params }) {
         <div className={WRAP}>
           <p className={LABEL}>{t('steps.label')}</p>
           <h2 className={H2}>{t('steps.heading')}</h2>
-          <ol className="mt-7 grid gap-[18px] min-[980px]:grid-cols-3">
-            {steps.map((step) => (
-              <li key={step.n} className="rounded-3xl bg-blue px-[22px] pt-6 pb-[22px] text-white">
-                <span className="mb-[18px] block font-display text-[2.4rem] leading-none">
-                  {step.n}
-                </span>
-                <h3 className="mb-2 font-display text-xl">{step.title}</h3>
-                <p className="text-[15px] text-white">{step.body}</p>
-              </li>
-            ))}
-          </ol>
+          <StepCards steps={steps} />
         </div>
       </section>
 
