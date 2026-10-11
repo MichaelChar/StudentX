@@ -24,6 +24,9 @@ const AGE_OPTIONS = ENTRY_POINTS.map((entry) => ({
   label: String(entry.age),
 }));
 
+// The school year never changes while the page is open; nothing to subscribe to.
+const subscribeNoop = () => () => {};
+
 function nodeDelay(index) {
   return { duration: 0.4, delay: index * 0.06, ease: EASE };
 }
@@ -40,14 +43,16 @@ function Rail({ nodeCount }) {
       <motion.span
         aria-hidden="true"
         initial={{ scaleY: 0 }}
-        animate={{ scaleY: 1 }}
+        whileInView={{ scaleY: 1 }}
+        viewport={{ once: true }}
         transition={RAIL}
         className="pointer-events-none absolute top-[5px] bottom-[5px] left-[5px] z-0 w-0.5 origin-top bg-blue/20 min-[980px]:hidden"
       />
       <motion.span
         aria-hidden="true"
         initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
         transition={RAIL}
         style={{ right: `calc(${100 / nodeCount}% - 5px)` }}
         className="pointer-events-none absolute top-[5px] left-[5px] z-0 hidden h-0.5 origin-left bg-blue/20 min-[980px]:block"
@@ -66,14 +71,16 @@ function DashedSegment() {
       <motion.span
         aria-hidden="true"
         initial={{ scaleY: 0 }}
-        animate={{ scaleY: 1 }}
+        whileInView={{ scaleY: 1 }}
+        viewport={{ once: true }}
         transition={RAIL}
         className="pointer-events-none absolute top-3 bottom-0 left-[5px] z-[1] w-0.5 origin-top border-l-2 border-dashed border-blue bg-parchment min-[980px]:hidden"
       />
       <motion.span
         aria-hidden="true"
         initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
+        whileInView={{ scaleX: 1 }}
+        viewport={{ once: true }}
         transition={RAIL}
         className="pointer-events-none absolute top-[5px] right-0 left-3 z-[1] hidden h-0.5 origin-left border-t-2 border-dashed border-blue bg-parchment min-[980px]:block"
       />
@@ -97,7 +104,11 @@ function RailEndMask() {
   );
 }
 
-function Timeline({ age, schoolYear, strings }) {
+/*
+  Nodes are visible in the server HTML. They only fade in when the parent
+  changes the age, so the dates never depend on JavaScript to be readable.
+*/
+function Timeline({ age, schoolYear, strings, animateIn }) {
   const entry = ENTRY_POINTS.find((item) => item.age === age);
   const { nodes } = buildPath(entry, schoolYear);
 
@@ -117,7 +128,7 @@ function Timeline({ age, schoolYear, strings }) {
             {isLast ? <RailEndMask /> : null}
             <motion.span
               aria-hidden="true"
-              initial={{ opacity: 0 }}
+              initial={animateIn ? { opacity: 0 } : false}
               animate={{ opacity: 1 }}
               transition={nodeDelay(index)}
               className={`absolute top-0 left-0 z-10 h-3 w-3 rounded-full ${
@@ -125,7 +136,7 @@ function Timeline({ age, schoolYear, strings }) {
               }`}
             />
             <motion.div
-              initial={{ opacity: 0, y: 8 }}
+              initial={animateIn ? { opacity: 0, y: 8 } : false}
               animate={{ opacity: 1, y: 0 }}
               transition={nodeDelay(index)}
             >
@@ -192,9 +203,9 @@ function CostBars({ age, years, strings }) {
 
 function Planner({ buildSchoolYear, strings }) {
   const [age, setAge] = useState(DEFAULT_AGE);
-  const noop = () => () => {};
+  const [changed, setChanged] = useState(false);
   const schoolYear = useSyncExternalStore(
-    noop,
+    subscribeNoop,
     () => currentSchoolYear(new Date()),
     () => buildSchoolYear,
   );
@@ -210,11 +221,14 @@ function Planner({ buildSchoolYear, strings }) {
         <SegmentedControl
           label={strings.ageLabel}
           value={age}
-          onChange={setAge}
+          onChange={(next) => {
+            setAge(next);
+            setChanged(true);
+          }}
           options={AGE_OPTIONS}
         />
       </div>
-      <Timeline age={age} schoolYear={schoolYear} strings={strings} />
+      <Timeline age={age} schoolYear={schoolYear} strings={strings} animateIn={changed} />
       <CostBars age={age} years={entry.years} strings={strings} />
       <div>
         <CalButton className={BTN_PRIMARY}>
