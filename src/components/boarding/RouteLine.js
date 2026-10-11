@@ -39,7 +39,7 @@ export default function RouteLine({ from, to }) {
       () => {
         if (started) return;
         started = true;
-        // FLAG(review): animate(mask, { strokeDashoffset }) writes the SVG
+        // animate(mask, { strokeDashoffset }) writes the SVG
         // attribute and leaves this inline style where it is, so the stroke
         // never moves (measured on motion 12.40). animate(fn, options) does
         // not call fn either. The sequence segment is the callback that
@@ -49,7 +49,7 @@ export default function RouteLine({ from, to }) {
             mask.style.strokeDashoffset = String(len * (1 - p));
           }, { duration: 1.4, ease: EASE }],
         ]);
-        // FLAG(review): the same attribute-vs-style split hides the end dot.
+        // the same attribute-vs-style split hides the end dot.
         // animate(end, { opacity }) sets the presentation attribute, and the
         // inline opacity above stays 0, so the dot never appears. Transform
         // does land on the CSS style; opacity has to be written here too.
@@ -72,7 +72,7 @@ export default function RouteLine({ from, to }) {
       mask.style.strokeDasharray = '';
       mask.style.strokeDashoffset = '';
       end.style.opacity = '';
-      // FLAG(review): the spec's cleanup resets opacity only. The pop also
+      // the spec's cleanup resets opacity only. The pop also
       // writes transform, so a remount would otherwise keep a mid-scale dot.
       end.style.transform = '';
     };

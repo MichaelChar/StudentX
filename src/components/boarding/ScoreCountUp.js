@@ -56,12 +56,14 @@ export default function ScoreCountUp({ text }) {
       <span className="sr-only">{text}</span>
       <span aria-hidden="true">
         {parts.before}
-        <span
-          ref={numRef}
-          className="inline-block text-right tabular-nums"
-          style={{ minWidth: `${String(parts.to).length}ch` }}
-        >
-          {parts.to}
+        {/* The invisible copy sizes the slot to the real "43", so there is no
+            gap before it; `ch` (the width of "0") was wider than "43" in this
+            font. The counting digits sit on top, right-aligned. */}
+        <span className="relative inline-block tabular-nums">
+          <span className="invisible select-none">{parts.to}</span>
+          <span ref={numRef} className="absolute inset-y-0 right-0">
+            {parts.to}
+          </span>
         </span>
         /{parts.of}
         {parts.after}
