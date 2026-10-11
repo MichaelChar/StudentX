@@ -37,6 +37,8 @@ function nodeDelay(index) {
   A single span cannot switch the animated axis at 980px without reading the
   viewport during render, which hydrates wrong. The unused span is display:none.
 */
+// Yellow (the photo's yellow) at 3px: a 2px yellow rail on parchment measured
+// 1.39:1 and all but disappeared.
 function Rail({ nodeCount }) {
   return (
     <>
@@ -46,7 +48,7 @@ function Rail({ nodeCount }) {
         whileInView={{ scaleY: 1 }}
         viewport={{ once: true }}
         transition={RAIL}
-        className="pointer-events-none absolute top-[5px] bottom-[5px] left-[5px] z-0 w-0.5 origin-top bg-blue/20 min-[980px]:hidden"
+        className="pointer-events-none absolute top-[5px] bottom-[5px] left-[4.5px] z-0 w-[3px] origin-top bg-yellow min-[980px]:hidden"
       />
       <motion.span
         aria-hidden="true"
@@ -55,7 +57,7 @@ function Rail({ nodeCount }) {
         viewport={{ once: true }}
         transition={RAIL}
         style={{ right: `calc(${100 / nodeCount}% - 5px)` }}
-        className="pointer-events-none absolute top-[5px] left-[5px] z-0 hidden h-0.5 origin-left bg-blue/20 min-[980px]:block"
+        className="pointer-events-none absolute top-[4.5px] left-[5px] z-0 hidden h-[3px] origin-left bg-yellow min-[980px]:block"
       />
     </>
   );
@@ -74,7 +76,7 @@ function DashedSegment() {
         whileInView={{ scaleY: 1 }}
         viewport={{ once: true }}
         transition={RAIL}
-        className="pointer-events-none absolute top-3 bottom-0 left-[5px] z-[1] w-0.5 origin-top border-l-2 border-dashed border-blue bg-parchment min-[980px]:hidden"
+        className="pointer-events-none absolute top-3 bottom-0 left-[4.5px] z-[1] w-[3px] origin-top border-l-[3px] border-dashed border-yellow bg-parchment min-[980px]:hidden"
       />
       <motion.span
         aria-hidden="true"
@@ -82,7 +84,7 @@ function DashedSegment() {
         whileInView={{ scaleX: 1 }}
         viewport={{ once: true }}
         transition={RAIL}
-        className="pointer-events-none absolute top-[5px] right-0 left-3 z-[1] hidden h-0.5 origin-left border-t-2 border-dashed border-blue bg-parchment min-[980px]:block"
+        className="pointer-events-none absolute top-[4.5px] right-0 left-3 z-[1] hidden h-[3px] origin-left border-t-[3px] border-dashed border-yellow bg-parchment min-[980px]:block"
       />
     </>
   );
@@ -94,11 +96,11 @@ function RailEndMask() {
     <>
       <span
         aria-hidden="true"
-        className="absolute top-3 bottom-0 left-[5px] z-[1] w-0.5 bg-parchment min-[980px]:hidden"
+        className="absolute top-3 bottom-0 left-[4.5px] z-[1] w-[3px] bg-parchment min-[980px]:hidden"
       />
       <span
         aria-hidden="true"
-        className="absolute top-[5px] right-0 left-3 z-[1] hidden h-0.5 bg-parchment min-[980px]:block"
+        className="absolute top-[4.5px] right-0 left-3 z-[1] hidden h-[3px] bg-parchment min-[980px]:block"
       />
     </>
   );
@@ -183,7 +185,7 @@ function CostBars({ age, years, strings }) {
                 >
                   <div
                     className={`h-full w-full origin-left rounded-pill transition-transform duration-300 ease-parity motion-reduce:transition-none ${
-                      tier === 'value' ? 'bg-blue' : 'bg-night/30'
+                      tier === 'value' ? 'bg-yellow' : 'bg-night/30'
                     }`}
                     style={{ transform: `scaleX(${scale})` }}
                   />
@@ -196,7 +198,9 @@ function CostBars({ age, years, strings }) {
           );
         })}
       </div>
-      <p className="font-semibold">{saving}</p>
+      <p className="font-semibold">
+        <span className="rounded-[4px] bg-yellow px-1.5 py-0.5 box-decoration-clone">{saving}</span>
+      </p>
     </div>
   );
 }

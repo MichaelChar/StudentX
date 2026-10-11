@@ -4,6 +4,13 @@ const HEADING_ID = 'boarding-fee-comparison';
 const TIERS = ['value', 'mid', 'top'];
 
 /*
+  Michael's school is highlighted in yellow: the yellow behind his photo
+  (#feca56, i.e. the `yellow` token). Yellow is a fill only — as text it
+  fails AA — so everything on it stays night (13.4:1 on the /35 tint) and the
+  jade ticks keep 4.26:1.
+*/
+
+/*
   Below 980px a four-column row does not fit 375px at the 13px floor: the
   row labels are full sentences and the fee is an unbreakable "CHF 155 000".
   Each row label sits on its own line; the three cells sit under it. Display
@@ -70,7 +77,7 @@ export default function FeeComparison({ strings, fees }) {
                 key={tier}
                 role="columnheader"
                 scope="col"
-                className={`${CELL} font-semibold leading-snug ${tier === 'value' ? 'text-blue' : ''}`}
+                className={`${CELL} font-semibold leading-snug ${tier === 'value' ? 'rounded-t-[10px] bg-yellow' : ''}`}
               >
                 {strings.cols[tier]}
               </th>
@@ -87,7 +94,7 @@ export default function FeeComparison({ strings, fees }) {
                 <td
                   key={tier}
                   role="cell"
-                  className={`${CELL} ${tier === 'value' ? 'bg-parchment' : ''}`}
+                  className={`${CELL} ${tier === 'value' ? 'bg-yellow/35' : ''}`}
                 >
                   {cellText(row, tier, strings, fees)}
                 </td>

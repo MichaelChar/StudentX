@@ -27,7 +27,7 @@ export default function StepCards({ steps }) {
     <ol ref={listRef} className="mt-7 grid gap-[18px] min-[980px]:grid-cols-3">
       {steps.map((step) => (
         <li key={step.n} className="rounded-3xl bg-blue px-[22px] pt-6 pb-[22px] text-white">
-          <span className="mb-[18px] block font-display text-[2.4rem] leading-none">
+          <span className="mb-[18px] flex h-12 w-12 items-center justify-center rounded-full bg-yellow font-display text-2xl leading-none text-night">
             {step.n}
           </span>
           <h3 className="mb-2 font-display text-xl">{step.title}</h3>
