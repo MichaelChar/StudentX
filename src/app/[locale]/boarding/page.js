@@ -11,6 +11,7 @@ import {
   ENTRY_POINTS,
   FEE_TIERS_CHF,
   PHONE_DISPLAY,
+  SUMMARY_PDF_URL,
   WHATSAPP_URL,
 } from '@/components/boarding/config';
 import {
@@ -48,6 +49,10 @@ import { currentSchoolYear } from '@/lib/boardingPath';
   Their strings were approved by Michael on 2026-10-11, after the copy lock.
   The first credibility chip counts its score up; the server HTML already
   carries the finished "43/45".
+
+  The one-page summary PDF is offered under the three in-page CTAs (hero,
+  planner, close) — not the header button or the mobile sticky bar, which
+  have no room for a second line (founder's call, 2026-10-11).
 */
 
 export default async function BoardingPage({ params }) {
@@ -58,6 +63,16 @@ export default async function BoardingPage({ params }) {
   const tc = await getTranslations({ locale, namespace: 'boarding.compare' });
 
   const buildSchoolYear = currentSchoolYear(new Date());
+
+  // Opens in a new tab rather than `download`: iOS Safari's download prompt
+  // files the PDF away in Files, while its viewer has Share and Save built in.
+  const summaryPdf = t.rich('summaryPdf', {
+    link: (chunks) => (
+      <a href={SUMMARY_PDF_URL} target="_blank" rel="noopener noreferrer" className={LINK}>
+        {chunks}
+      </a>
+    ),
+  });
 
   const chips = [1, 2, 3].map((n) => ({
     n,
@@ -102,6 +117,7 @@ export default async function BoardingPage({ params }) {
     saving: tp.raw('saving'),
     cta: t('hero.cta'),
     ctaNote: tp('ctaNote'),
+    summaryPdf,
   };
 
   const compareStrings = {
@@ -166,6 +182,7 @@ export default async function BoardingPage({ params }) {
                 </svg>
               </CalButton>
             </div>
+            <p className={`mt-3 text-[13.5px] ${MUTED}`}>{summaryPdf}</p>
           </div>
           <div className="order-first flex justify-center min-[980px]:order-none">
             <Portrait alt={t('hero.photoAlt')} priority />
@@ -281,6 +298,7 @@ export default async function BoardingPage({ params }) {
                   {PHONE_DISPLAY}
                 </a>
               </p>
+              <p className={`mt-1.5 text-[13.5px] ${MUTED}`}>{summaryPdf}</p>
             </div>
           </div>
         </div>

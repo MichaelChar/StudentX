@@ -413,6 +413,7 @@ function Planner({ buildSchoolYear, strings }) {
           </svg>
         </CalButton>
         <p className="mt-2 text-[13px] text-night/70">{strings.ctaNote}</p>
+        <p className="mt-1 text-[13px] text-night/70">{strings.summaryPdf}</p>
       </div>
     </div>
   );
