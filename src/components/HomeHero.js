@@ -2,6 +2,7 @@
 
 import Image from 'next/image';
 import { motion, useScroll, useTransform } from 'motion/react';
+import { heroFade } from '@/lib/heroFade';
 import Icon from './ui/Icon';
 
 // Homepage hero — "illustration behind" (founder's pick, 2026-10-03, option 1+
@@ -33,8 +34,7 @@ import Icon from './ui/Icon';
 const HERO_H = 'h-[46vh] md:h-[min(60vh,520px)]';
 
 const fade = (y) => {
-  const vh = typeof window === 'undefined' ? 800 : window.innerHeight;
-  return Math.max(0.14, 1 - (y / (vh * 0.8)) * 0.86);
+  return heroFade(y, typeof window === 'undefined' ? undefined : window.innerHeight);
 };
 
 function Illustration({ priority = false }) {
