@@ -1760,7 +1760,7 @@
     "guide": {
       "label": "meet your guide",
       "heading": "My name is Michael",
-      "body": "I studied in Switzerland for an exceptional two years, and thoroughly enjoyed it. I graduated with a 43/45 bilingual IB Diploma (with 4 HLs), and I'm now a 2nd year EU medical student. I study in English at my first choice university, and have never been more content. Now, I work directly with my old school to recruit new students"
+      "body": "I studied in Switzerland for an exceptional two years, and thoroughly enjoyed it. I graduated with a 43/45 bilingual IB Diploma (with 4 HLs), and I'm now a 2nd year EU medical student at AUSOM, Thessaloniki, Greece. I study in English at my first choice university, and have never been more content. Now, I work directly with my old school to recruit new students"
     },
     "steps": {
       "label": "how it works",
@@ -1779,6 +1779,58 @@
       "cta": "Hop on a free call",
       "emailLead": "Or email me at",
       "phoneLead": "Or WhatsApp/ Viber me at"
+    },
+    "planner": {
+      "label": "your child's path",
+      "heading": "Pick their age and model the years ahead.",
+      "ageLabel": "How old is your child?",
+      "join": "Joins {programme}",
+      "moveUp": "Moves up to {programme}",
+      "nodes": {
+        "apply": "University Applications",
+        "exams": "IB Exams",
+        "uni": "University starts!",
+        "uniNote": "Historically, 27% of my school's students score 38/45 or higher, and over half receive an offer from at least one QS top-50 university."
+      },
+      "months": {
+        "sept": "Sept",
+        "may": "May",
+        "autumn": "Autumn"
+      },
+      "years": "{n, plural, one {1 year at school} other {# years at school}}",
+      "saving": "{amount} difference",
+      "tiers": {
+        "value": "My (best value) Swiss boarding school",
+        "mid": "Mid-range Swiss boarding school",
+        "top": "Ultra-luxurious Swiss boarding school"
+      },
+      "ctaNote": "Let's discuss if your child is a fit"
+    },
+    "compare": {
+      "heading": "Same academics, different campus",
+      "cols": {
+        "value": "Best value",
+        "mid": "Mid-range",
+        "top": "Ultra-luxurious"
+      },
+      "rows": {
+        "ib": "IB Diploma, identical externally marked exams",
+        "counsellor": "Dedicated university counsellor",
+        "weekends": "Weekend trips and activities",
+        "campus": "Campus",
+        "clubs": "Extracurricular options",
+        "fee": "Fee per year"
+      },
+      "cells": {
+        "campusValue": "Intimate",
+        "campusMid": "Larger",
+        "campusTop": "Luxurious",
+        "clubsValue": "Focused",
+        "clubsMid": "Larger",
+        "clubsTop": "Very large"
+      },
+      "yes": "Included",
+      "source": "Approximate annual boarding fees (tuition and board), 2026–27, rounded. Mid-range and ultra-luxurious are typical published fees of Swiss IB boarding schools."
     },
     "copyright": "© {year} StudentX"
   },
