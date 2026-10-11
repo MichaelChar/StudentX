@@ -4,6 +4,8 @@ import { CalLoader, CalButton } from '@/components/boarding/CalBooking';
 import FeeComparison from '@/components/boarding/FeeComparison';
 import PathPlanner from '@/components/boarding/PathPlanner';
 import Portrait from '@/components/boarding/Portrait';
+import RouteLine from '@/components/boarding/RouteLine';
+import ScoreCountUp from '@/components/boarding/ScoreCountUp';
 import StepCards from '@/components/boarding/StepCards';
 import {
   CONTACT_EMAIL,
@@ -45,6 +47,8 @@ import { currentSchoolYear } from '@/lib/boardingPath';
   PathPlanner (age drives the timeline and the fee bars), FeeComparison (a
   static table) and StepCards (the three steps reveal on scroll) sit below.
   Their strings were approved by Michael on 2026-10-11, after the copy lock.
+  The first credibility chip counts its score up, and the guide section
+  draws the route. Both ship their finished state in the server HTML.
 */
 
 export default async function BoardingPage({ params }) {
@@ -175,7 +179,9 @@ export default async function BoardingPage({ params }) {
         <div className="grid gap-3 pt-7 pb-2.5 min-[980px]:grid-cols-3">
           {chips.map((chip) => (
             <div key={chip.n} className="rounded-2xl bg-parchment px-4 pt-4 pb-3.5">
-              <strong className="block text-[15px] font-bold tracking-[-0.02em]">{chip.title}</strong>
+              <strong className="block text-[15px] font-bold tracking-[-0.02em]">
+                {chip.n === 1 ? <ScoreCountUp text={chip.title} /> : chip.title}
+              </strong>
               <span className={`mt-1 block text-[13px] ${MUTED}`}>{chip.body}</span>
             </div>
           ))}
@@ -227,6 +233,7 @@ export default async function BoardingPage({ params }) {
             <p className={LABEL}>{t('guide.label')}</p>
             <h2 className={H2}>{t('guide.heading')}</h2>
             <p className={`max-w-[38rem] text-[1.08rem] ${MUTED}`}>{t('guide.body')}</p>
+            <RouteLine from={t('guide.routeFrom')} to={t('guide.routeTo')} />
           </div>
           <div className="order-first flex justify-center min-[980px]:order-none">
             <Portrait alt={t('hero.photoAlt')} />

@@ -1760,7 +1760,9 @@
     "guide": {
       "label": "meet your guide",
       "heading": "My name is Michael",
-      "body": "I studied in Switzerland for an exceptional two years, and thoroughly enjoyed it. I graduated with a 43/45 bilingual IB Diploma (with 4 HLs), and I'm now a 2nd year EU medical student at AUSOM, Thessaloniki, Greece. I study in English at my first choice university, and have never been more content. Now, I work directly with my old school to recruit new students"
+      "body": "I studied in Switzerland for an exceptional two years, and thoroughly enjoyed it. I graduated with a 43/45 bilingual IB Diploma (with 4 HLs), and I'm now a 2nd year EU medical student at AUSOM, Thessaloniki, Greece. I study in English at my first choice university, and have never been more content. Now, I work directly with my old school to recruit new students",
+      "routeFrom": "Switzerland",
+      "routeTo": "Thessaloniki"
     },
     "steps": {
       "label": "how it works",

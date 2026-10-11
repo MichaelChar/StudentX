@@ -47,3 +47,17 @@ export function formatChf(n) {
 export function fill(template, vars) {
   return template.replace(/\{(\w+)\}/g, (m, k) => (k in vars ? String(vars[k]) : m));
 }
+
+// Splits "43/45 bilingual IB Diploma…" around its first "N/M" score so the N
+// can count up. Returns null when there is no score, and the caller renders
+// the text unchanged.
+export function splitScore(text) {
+  const m = /(\d+)\/(\d+)/.exec(text);
+  if (!m) return null;
+  return {
+    before: text.slice(0, m.index),
+    to: Number(m[1]),
+    of: m[2],
+    after: text.slice(m.index + m[0].length),
+  };
+}
