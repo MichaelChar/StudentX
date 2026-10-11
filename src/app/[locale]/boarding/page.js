@@ -68,18 +68,22 @@ export default async function BoardingPage({ params }) {
     body: t(`steps.s${n}Body`),
   }));
 
+  // "MYP 4" must never break between "MYP" and "4" in a narrow timeline step.
+  const keepTogether = (programme) => programme.replace(/ /g, '\u00a0');
+
   const plannerStrings = {
     ageLabel: tp('ageLabel'),
-    join: Object.fromEntries(ENTRY_POINTS.map((e) => [e.age, tp('join', { programme: e.programme })])),
+    join: Object.fromEntries(ENTRY_POINTS.map((e) => [e.age, tp('join', { programme: keepTogether(e.programme) })])),
     years: Object.fromEntries(ENTRY_POINTS.map((e) => [e.age, tp('years', { n: e.years })])),
+    moveUp: Object.fromEntries(
+      ENTRY_POINTS.map((e) => [e.programme, tp('moveUp', { programme: keepTogether(e.programme) })]),
+    ),
     nodes: {
-      dp1: tp('nodes.dp1'),
       apply: tp('nodes.apply'),
       exams: tp('nodes.exams'),
       uni: tp('nodes.uni'),
     },
     notes: {
-      apply: tp('nodes.applyNote'),
       uni: tp('nodes.uniNote'),
     },
     months: {

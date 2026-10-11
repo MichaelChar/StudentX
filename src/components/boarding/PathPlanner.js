@@ -20,6 +20,9 @@ const RAIL = { duration: 0.6, ease: EASE };
 const MONTH_NUM = { sept: '09', may: '05', autumn: '10' };
 const TIERS = ['value', 'mid', 'top'];
 
+// Every programme year in order, MYP 4 → DP 2.
+const LADDER = ENTRY_POINTS.map((entry) => entry.programme);
+
 const AGE_OPTIONS = ENTRY_POINTS.map((entry) => ({
   value: entry.age,
   label: String(entry.age),
@@ -47,16 +50,22 @@ function NodeDot({ node, index, animateIn, className = '' }) {
 }
 
 /*
-  Date + label for one step. The applications step keeps its short note
-  ("I can assist with this"); the long university statistic is rendered once,
-  under the whole timeline (see Timeline), so it never widens or lengthens a
-  single step.
+  Date + label for one step. Labels are deliberately short (founder's
+  wording, 2026-10-11): age 14 has seven steps across the desktop width. The
+  long university statistic is rendered once, under the whole timeline (see
+  Timeline), so it never widens or lengthens a single step.
 */
+function stepLabel(node, age, strings) {
+  if (node.kind === 'join') return strings.join[age];
+  if (node.kind === 'up') return strings.moveUp[node.programme];
+  return strings.nodes[node.kind];
+}
+
 function NodeText({ node, age, strings }) {
-  const label = node.key === 'join' ? strings.join[age] : strings.nodes[node.key];
+  const label = stepLabel(node, age, strings);
   return (
     <>
-      <p className="font-display text-[17px] leading-tight">
+      <p className="font-display text-[17px] leading-tight whitespace-nowrap">
         {node.schoolYear ? (
           formatSchoolYear(node.schoolYear)
         ) : (
@@ -66,9 +75,6 @@ function NodeText({ node, age, strings }) {
         )}
       </p>
       <p className="mt-1 text-[15px] text-night/70">{label}</p>
-      {node.key === 'apply' ? (
-        <p className="mt-1 text-[13px] leading-snug text-night/70">{strings.notes.apply}</p>
-      ) : null}
     </>
   );
 }
@@ -125,11 +131,17 @@ function TimelineVertical({ age, nodes, strings, animateIn }) {
 /*
   Desktop: edge to edge (founder's call, 2026-10-11). The first dot sits on
   the left edge, the last on the right edge, the rest evenly between. Text is
-  laid out on a grid of half-columns, one boundary per dot: the first step's
-  text is left-aligned in the first half-column, the last step's is
-  right-aligned in the last one, and each middle step is centred across the
-  two half-columns either side of its dot. So no two steps can overlap,
-  however many there are.
+  laid out on a grid of half-columns, one boundary per dot. Each middle step
+  is centred across the two half-columns either side of its dot; the first
+  step gets the first half-column, left-aligned, and the last step the last
+  one, right-aligned. So no two steps share space, however many there are.
+
+  At seven steps a half-column is only ~61-73px, so the first and last labels
+  wrap ("University / starts!"). Their dates never wrap: those two steps are
+  flex columns aligned to their outer edge, so a date wider than its
+  half-column spills INWARD (flex-end overflows toward the start), never past
+  the card edge. Measured at 980-1600px for every age: no step's text touches
+  its neighbour's.
 
   Dots and rail live in a box inset by the dot radius (6px), so a dot at p%
   of that box is centred exactly over the p% grid boundary below it.
@@ -183,12 +195,18 @@ function TimelineHorizontal({ age, nodes, strings, active, animateIn }) {
         </div>
       </div>
       <ol
-        className="mt-5 grid list-none gap-x-4 p-0"
+        className="mt-5 grid list-none gap-x-3 p-0"
         style={{ gridTemplateColumns: `repeat(${halves}, minmax(0, 1fr))` }}
       >
         {nodes.map((node, i) => {
-          const column = i === 0 ? '1 / 2' : i === last ? `${halves} / ${halves + 1}` : `${2 * i} / ${2 * i + 2}`;
-          const align = i === 0 ? 'text-left' : i === last ? 'text-right' : 'text-center';
+          const column =
+            i === 0 ? '1 / 2' : i === last ? `${halves} / ${halves + 1}` : `${2 * i} / ${2 * i + 2}`;
+          const align =
+            i === 0
+              ? 'flex flex-col items-start text-left'
+              : i === last
+                ? 'flex flex-col items-end text-right'
+                : 'text-center';
           return (
             <li key={node.key} style={{ gridColumn: column }} className={align}>
               <motion.div
@@ -218,7 +236,7 @@ function TimelineHorizontal({ age, nodes, strings, active, animateIn }) {
 */
 function Timeline({ age, schoolYear, strings, animateIn }) {
   const pathFor = (entryAge) =>
-    buildPath(ENTRY_POINTS.find((item) => item.age === entryAge), schoolYear).nodes;
+    buildPath(ENTRY_POINTS.find((item) => item.age === entryAge), schoolYear, LADDER).nodes;
 
   return (
     <div>

@@ -1784,13 +1784,12 @@
       "label": "your child's path",
       "heading": "Pick their age and model the years ahead.",
       "ageLabel": "How old is your child?",
-      "join": "Your child joins {programme}",
+      "join": "Joins {programme}",
+      "moveUp": "Moves up to {programme}",
       "nodes": {
-        "dp1": "Your child moves up to DP 1",
-        "apply": "Your child starts applying to universities",
-        "applyNote": "I can assist with this",
-        "exams": "Your child sits their IB exams",
-        "uni": "Your child starts university",
+        "apply": "University Applications",
+        "exams": "IB Exams",
+        "uni": "University starts!",
         "uniNote": "Historically, 27% of my school's students score 38/45 or higher, and over half receive an offer from at least one QS top-50 university."
       },
       "months": {

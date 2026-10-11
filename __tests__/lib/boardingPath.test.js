@@ -38,49 +38,19 @@ describe('formatSchoolYear', () => {
 
 describe('buildPath', () => {
   // October 2026: school year S = 2026. Keys, years and months from the brief.
+  const ladder = ENTRY_POINTS.map((entry) => entry.programme);
+  const join = { key: 'join', kind: 'join', schoolYear: 2026 };
+  const up = (programme, schoolYear) => ({ key: `up-${programme}`, kind: 'up', programme, schoolYear });
+  const tail = (final) => [
+    { key: 'apply', kind: 'apply', month: 'autumn', year: final - 1, optional: true },
+    { key: 'exams', kind: 'exams', month: 'may', year: final },
+    { key: 'uni', kind: 'uni', month: 'sept', year: final },
+  ];
   const expected = {
-    14: {
-      years: 4,
-      examYear: 2030,
-      nodes: [
-        { key: 'join', schoolYear: 2026 },
-        { key: 'dp1', schoolYear: 2028 },
-        { key: 'apply', month: 'autumn', year: 2029, optional: true },
-        { key: 'exams', month: 'may', year: 2030 },
-        { key: 'uni', month: 'sept', year: 2030 },
-      ],
-    },
-    15: {
-      years: 3,
-      examYear: 2029,
-      nodes: [
-        { key: 'join', schoolYear: 2026 },
-        { key: 'dp1', schoolYear: 2027 },
-        { key: 'apply', month: 'autumn', year: 2028, optional: true },
-        { key: 'exams', month: 'may', year: 2029 },
-        { key: 'uni', month: 'sept', year: 2029 },
-      ],
-    },
-    16: {
-      years: 2,
-      examYear: 2028,
-      nodes: [
-        { key: 'join', schoolYear: 2026 },
-        { key: 'apply', month: 'autumn', year: 2027, optional: true },
-        { key: 'exams', month: 'may', year: 2028 },
-        { key: 'uni', month: 'sept', year: 2028 },
-      ],
-    },
-    17: {
-      years: 1,
-      examYear: 2027,
-      nodes: [
-        { key: 'join', schoolYear: 2026 },
-        { key: 'apply', month: 'autumn', year: 2026, optional: true },
-        { key: 'exams', month: 'may', year: 2027 },
-        { key: 'uni', month: 'sept', year: 2027 },
-      ],
-    },
+    14: { years: 4, examYear: 2030, nodes: [join, up('MYP 5', 2027), up('DP 1', 2028), up('DP 2', 2029), ...tail(2030)] },
+    15: { years: 3, examYear: 2029, nodes: [join, up('DP 1', 2027), up('DP 2', 2028), ...tail(2029)] },
+    16: { years: 2, examYear: 2028, nodes: [join, up('DP 2', 2027), ...tail(2028)] },
+    17: { years: 1, examYear: 2027, nodes: [join, ...tail(2027)] },
   };
 
   it('covers every entry point', () => {
@@ -89,7 +59,7 @@ describe('buildPath', () => {
 
   for (const entry of ENTRY_POINTS) {
     it(`age ${entry.age} matches the ${expected[entry.age].years}-year timeline`, () => {
-      expect(buildPath(entry, 2026)).toEqual(expected[entry.age]);
+      expect(buildPath(entry, 2026, ladder)).toEqual(expected[entry.age]);
     });
   }
 });

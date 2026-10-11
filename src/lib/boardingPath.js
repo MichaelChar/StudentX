@@ -14,16 +14,25 @@ export function formatSchoolYear(startYear) {
   return `${startYear}\u2013${String(startYear + 1).slice(-2)}`;
 }
 
-// Timeline for one entry point. finalYear = IB exams (May) + university (Sept).
-export function buildPath(entry, schoolYear) {
+/*
+  Timeline for one entry point. `ladder` is every programme year in order
+  (MYP 4 → DP 2): the child joins at entry.programme and moves up one rung
+  each September, so every school year is a step. finalYear = IB exams (May)
+  + university (Sept). `key` is unique per step; `kind` picks its label.
+*/
+export function buildPath(entry, schoolYear, ladder) {
   const finalYear = schoolYear + entry.years;
-  const nodes = [{ key: 'join', schoolYear }];
-  if (entry.years > 2) nodes.push({ key: 'dp1', schoolYear: finalYear - 2 });
+  const start = ladder.indexOf(entry.programme);
+  const nodes = [{ key: 'join', kind: 'join', schoolYear }];
+  for (let i = 1; i < entry.years; i += 1) {
+    const programme = ladder[start + i];
+    nodes.push({ key: `up-${programme}`, kind: 'up', programme, schoolYear: schoolYear + i });
+  }
   // University applications happen DURING the final school year, before the
   // exams. Not after university starts, which is where the brief put them.
-  nodes.push({ key: 'apply', month: 'autumn', year: finalYear - 1, optional: true });
-  nodes.push({ key: 'exams', month: 'may', year: finalYear });
-  nodes.push({ key: 'uni', month: 'sept', year: finalYear });
+  nodes.push({ key: 'apply', kind: 'apply', month: 'autumn', year: finalYear - 1, optional: true });
+  nodes.push({ key: 'exams', kind: 'exams', month: 'may', year: finalYear });
+  nodes.push({ key: 'uni', kind: 'uni', month: 'sept', year: finalYear });
   return { nodes, years: entry.years, examYear: finalYear };
 }
 
