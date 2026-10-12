@@ -16,6 +16,14 @@ export const PHONE_DISPLAY = '+30 697 5766737';
 export const WHATSAPP_URL = 'https://wa.me/306975766737';
 
 /*
+  The one-page summary: a hand-made PDF (Pages export), NOT generated from
+  en.json, so it does not follow the page's copy or figures — re-export it by
+  hand when they change. The URL also travels on its own (WhatsApp, email),
+  so replace the file in place rather than renaming it.
+*/
+export const SUMMARY_PDF_URL = '/boarding/swiss-boarding-top-value.pdf';
+
+/*
   Path planner + fee comparison data, confirmed by Michael (2026-10-11).
   Admission is year-round, so a child joins the CURRENT school year at the
   programme that matches their age now. `years` = school years until the
