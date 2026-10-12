@@ -75,7 +75,7 @@ const SECURITY_HEADERS = [
   BOARDING_SECURITY_HEADERS) without forking the whole list — a forked copy
   would silently miss the next site-wide edit.
 */
-function buildCsp({ scriptSrc = [], frameSrc = [] } = {}) {
+function buildCsp({ scriptSrc = [], frameSrc = [], frameAncestors = ["'none'"] } = {}) {
   return [
     "default-src 'self'",
     [`script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`, ...scriptSrc].join(' '),
@@ -86,7 +86,7 @@ function buildCsp({ scriptSrc = [], frameSrc = [] } = {}) {
     // No frame-src anywhere else: it falls back to default-src 'self'.
     ...(frameSrc.length ? [['frame-src', "'self'", ...frameSrc].join(' ')] : []),
     "object-src 'none'",
-    "frame-ancestors 'none'",
+    `frame-ancestors ${frameAncestors.join(' ')}`,
     "base-uri 'self'",
     "form-action 'self'",
     // HTTPS-only: omit in dev so http://localhost subresources/navigations
@@ -110,6 +110,28 @@ const BOARDING_SECURITY_HEADERS = [
       frameSrc: ['https://cal.com', 'https://app.cal.com'],
     }),
   },
+];
+
+/*
+  /boarding/quiz/embed is the lead form on its own, and the ONE page other
+  sites may frame: partners paste a line that loads public/boarding/embed.js,
+  which puts this page in an iframe (see /boarding/partners). So it drops
+  X-Frame-Options and allows any frame ancestor; everything else in the
+  site-wide list is kept. The site-wide rule in headers() skips this path
+  rather than being overridden, because X-Frame-Options cannot be unset by a
+  later rule, only replaced.
+
+  Clickjacking exposure is limited to this form, whose only action is a
+  parent sending their own answers. It loads nothing third-party: inside an
+  iframe the booking button opens cal.com in a new tab, not the popup.
+  (/boarding/quiz, the shareable-link page, is NOT frameable; it gets
+  /boarding's Cal allowances instead.)
+*/
+const EMBEDDABLE_SECURITY_HEADERS = [
+  ...SECURITY_HEADERS.filter(
+    (h) => h.key !== 'X-Frame-Options' && h.key !== 'Content-Security-Policy',
+  ),
+  { key: 'Content-Security-Policy', value: buildCsp({ frameAncestors: ['*'] }) },
 ];
 
 // Marketing HTML routes should be CDN-cacheable. OpenNext (and the
@@ -194,12 +216,24 @@ const nextConfig = {
   },
   async headers() {
     return [
+      // Every path except /boarding/quiz/embed, which gets the embeddable
+      // set below — see EMBEDDABLE_SECURITY_HEADERS for why it is skipped
+      // here rather than overridden.
       {
-        source: '/:path*',
+        source: '/((?!boarding/quiz/embed$).*)',
         headers: SECURITY_HEADERS,
       },
       {
+        source: '/boarding/quiz/embed',
+        headers: EMBEDDABLE_SECURITY_HEADERS,
+      },
+      {
         source: '/boarding',
+        headers: BOARDING_SECURITY_HEADERS,
+      },
+      // The shareable quiz link opens the same Cal.com popup as /boarding.
+      {
+        source: '/boarding/quiz',
         headers: BOARDING_SECURITY_HEADERS,
       },
       // Auth-bound surfaces stay private at the static-rule level.

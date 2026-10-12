@@ -135,5 +135,24 @@ const LISTING_PDP_RE = /^\/property\/[^/]+\/listing\/[^/]+\/?$/;
  * @returns {boolean}
  */
 export function isChromelessMobileRoute(pathname) {
-  return typeof pathname === 'string' && LISTING_PDP_RE.test(pathname);
+  return typeof pathname === 'string' && (LISTING_PDP_RE.test(pathname) || isBareRoute(pathname));
+}
+
+/*
+  Routes with NO site chrome at any width — no header, no tab bar. Only the
+  lead form on its own: /boarding/quiz (the shareable link) and
+  /boarding/quiz/embed (inside partners' iframes) — see /boarding/partners.
+  A StudentX header inside someone else's page would be wrong, and the form
+  carries its own logo.
+*/
+const BARE_RE = /^\/boarding\/quiz(\/embed)?\/?$/;
+
+/**
+ * Does this route drop ALL site chrome, at every width?
+ *
+ * @param {string|null|undefined} pathname
+ * @returns {boolean}
+ */
+export function isBareRoute(pathname) {
+  return typeof pathname === 'string' && BARE_RE.test(pathname);
 }

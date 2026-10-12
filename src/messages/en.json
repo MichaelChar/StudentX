@@ -1895,6 +1895,43 @@
         "added": "Added. I’ll cover {school} in your presentation too"
       }
     },
+    "quiz": {
+      "title": "Swiss boarding school quiz",
+      "description": "Three quick questions, then your child’s path through the IB and a map of Swiss boarding fees."
+    },
+    "partners": {
+      "meta": {
+        "title": "Add the Swiss boarding quiz to your website",
+        "description": "One line of code or one link puts the StudentX Swiss boarding quiz on your website."
+      },
+      "label": "for schools, agencies and advisors",
+      "title": "Put the Swiss boarding quiz on your website",
+      "body": "Parents answer three quick questions and see their child’s path through the IB, next to a map of Swiss boarding fees. Adding it to your site takes one line of code, or one link.",
+      "demo": {
+        "nameLabel": "Your website’s name",
+        "namePlaceholder": "yoursite",
+        "nameHelp": "Every parent who comes from your site is tagged with this name.",
+        "copy": "Copy",
+        "copied": "Copied",
+        "option1": {
+          "label": "option 1",
+          "title": "Paste one line",
+          "body": "Put this line in your page where the quiz should appear. It fits your layout and grows with each step.",
+          "codeLabel": "Embed code",
+          "blocked": "If your site blocks scripts from other websites, use option 2.",
+          "previewLabel": "What your visitors see. This is the line above, running live.",
+          "previewUrl": "your-website.com"
+        },
+        "option2": {
+          "label": "option 2",
+          "title": "Share one link",
+          "body": "Send parents to the quiz on its own StudentX page, from a button, an email or a social post.",
+          "linkLabel": "Quiz link",
+          "open": "Open the quiz"
+        }
+      },
+      "contact": "Questions? Email me at"
+    },
     "pathway": {
       "label": "education is the biggest investment",
       "heading": "The Pathway to European Education Starts in Switzerland.",

@@ -267,7 +267,12 @@ function Timeline({ path, startValue, strings }) {
   );
 }
 
-export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
+/*
+  `onScreenChange(screen)`: optional, called after each step change (not on
+  first render). /boarding/quiz uses it inside a partner's iframe to ask the
+  host page to scroll the form back into view.
+*/
+export default function LeadForm({ strings, summaryPdf, buildMonth, source, onScreenChange }) {
   const nowKey = useSyncExternalStore(
     subscribeNoop,
     () => monthKey(new Date()),
@@ -492,6 +497,7 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
       return undefined;
     }
     headingRef.current?.focus({ preventScroll: true });
+    onScreenChange?.(screen);
     const card = cardRef.current;
     if (card && card.getBoundingClientRect().top < 0) {
       card.scrollIntoView({
@@ -500,7 +506,7 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
       });
     }
     return undefined;
-  }, [screen, loading, reduced]);
+  }, [screen, loading, reduced, onScreenChange]);
 
   useEffect(() => {
     if (screen !== 'result') {

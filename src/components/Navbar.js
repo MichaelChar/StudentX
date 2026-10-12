@@ -11,7 +11,7 @@ import { signOutSafely } from '@/lib/authHelpers';
 import { onAuthChange } from '@/lib/onAuthChange';
 import AccountMenu from './AccountMenu';
 import MobileTabBar from './MobileTabBar';
-import { activeTabKey, isChromelessMobileRoute, mobileTabsFor } from '@/lib/mobileTabs';
+import { activeTabKey, isBareRoute, isChromelessMobileRoute, mobileTabsFor } from '@/lib/mobileTabs';
 import TabTitleFlash from './TabTitleFlash';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
 
@@ -186,6 +186,7 @@ export default function Navbar() {
   // (React Rules of Hooks). Landlord shell pages have their own top chrome —
   // but they still need the mobile bar.
   if (pathname && LANDLORD_SHELL_RE.test(pathname)) return tabBar;
+  if (isBareRoute(pathname)) return null;
 
   /*
     The global header — brand, search slot, account. Parity Feature 3 fixes its
