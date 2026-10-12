@@ -1904,13 +1904,7 @@
         "title": "Add the Swiss boarding quiz to your website",
         "description": "One line of code or one link puts the StudentX Swiss boarding quiz on your website."
       },
-      "label": "for schools, agencies and advisors",
-      "title": "Put the Swiss boarding quiz on your website",
-      "body": "Parents answer three quick questions and see their child’s path through the IB, next to a map of Swiss boarding fees. Adding it to your site takes one line of code, or one link.",
       "demo": {
-        "nameLabel": "Your website’s name",
-        "namePlaceholder": "yoursite",
-        "nameHelp": "Every parent who comes from your site is tagged with this name.",
         "copy": "Copy",
         "copied": "Copied",
         "option1": {
@@ -1918,8 +1912,6 @@
           "title": "Paste one line",
           "body": "Put this line in your page where the quiz should appear. It fits your layout and grows with each step.",
           "codeLabel": "Embed code",
-          "blocked": "If your site blocks scripts from other websites, use option 2.",
-          "previewLabel": "What your visitors see. This is the line above, running live.",
           "previewUrl": "your-website.com"
         },
         "option2": {

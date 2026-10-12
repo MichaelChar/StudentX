@@ -8,8 +8,8 @@ import LeadForm from '@/components/boarding/LeadForm';
   The lead form on its own page, in one of two modes (decided by the route,
   so it is known on the server and the static HTML is already right):
 
-  - 'link'  — /boarding/quiz, the page a partner links to. Parchment page,
-    centred card, the Cal.com popup for booking.
+  - 'link'  — /boarding/quiz, the page a partner links to. The form fills
+    the screen (no card), with the Cal.com popup for booking.
   - 'embed' — /boarding/quiz/embed, inside a partner's iframe (put there by
     public/boarding/embed.js). No popup — it could not escape the iframe, so
     the booking button stays a plain link to cal.com in a new tab. Reports
@@ -52,12 +52,14 @@ export default function QuizFrame({ mode, ...formProps }) {
   }, [embedded, frame]);
 
   return (
-    <div
-      ref={wrapRef}
-      className={embedded ? 'px-2 pt-2 pb-5' : 'min-h-svh bg-parchment px-4 py-8 sm:py-14'}
-    >
+    <div ref={wrapRef} className={embedded ? 'px-2 pt-2 pb-5' : undefined}>
       {embedded ? null : <CalLoader />}
-      <LeadForm {...formProps} source={source} onScreenChange={onScreenChange} />
+      <LeadForm
+        {...formProps}
+        source={source}
+        onScreenChange={onScreenChange}
+        fullScreen={!embedded}
+      />
     </div>
   );
 }

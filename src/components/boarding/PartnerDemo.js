@@ -4,30 +4,24 @@ import { useEffect, useRef, useState } from 'react';
 import { BTN_PRIMARY, H2, LABEL, MUTED } from '@/components/boarding/styles';
 
 /*
-  The interactive half of /boarding/partners: a business types its site's
-  name and both options update — the one-line embed code and the link — each
-  with a copy button. Next to the code, the quiz runs LIVE: the preview
-  appends the very same <script> a partner would paste, so the page proves
-  the line works rather than showing a picture of it.
+  The interactive half of /boarding/partners: the one-line embed code and
+  the link, each with a copy button. Next to the code, the quiz runs LIVE:
+  the preview appends the very same <script> a partner would paste, so the
+  page proves the line works rather than showing a picture of it.
 
-  The preview always uses ref "partners-demo", so demo runs are told apart
-  from real partner traffic in boarding_leads; the code shown uses the
-  business's own name. The shown code and link always point at
+  Both show the placeholder ref "yoursite" (founder's call, 2026-10-12: no
+  name field). The preview and the "Open the quiz" button use
+  "partners-demo", so demo runs are told apart from real partner traffic in
+  boarding_leads. The shown code and link always point at
   https://studentx.uk; the preview loads from wherever this page is served,
   so it also works on localhost.
 */
 
 const SITE = 'https://studentx.uk';
+const SAMPLE_REF = 'yoursite';
 const DEMO_REF = 'partners-demo';
-
-// Same rule as public/boarding/embed.js, so what we show is what it sends.
-function slugify(name) {
-  return name
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/^-+|-+$/g, '')
-    .slice(0, 40);
-}
+const CODE = `<script src="${SITE}/boarding/embed.js" data-ref="${SAMPLE_REF}"></script>`;
+const LINK_URL = `${SITE}/boarding/quiz?ref=${SAMPLE_REF}`;
 
 function CopyButton({ text, strings }) {
   const [copied, setCopied] = useState(false);
@@ -88,8 +82,7 @@ function LivePreview({ strings }) {
   }, []);
 
   return (
-    <figure className="m-0 min-w-0">
-      <figcaption className={`mb-2.5 text-[13px] font-semibold ${MUTED}`}>{strings.previewLabel}</figcaption>
+    <div className="min-w-0">
       <div className="overflow-hidden rounded-[20px] border border-night/10 bg-white shadow-[0_12px_32px_rgba(10,37,64,0.08)]">
         <div className="flex items-center gap-2.5 border-b border-night/10 bg-parchment px-4 py-2.5" aria-hidden="true">
           <span className="flex gap-1.5">
@@ -111,40 +104,19 @@ function LivePreview({ strings }) {
           <div ref={hostRef} />
         </div>
       </div>
-    </figure>
+    </div>
   );
 }
 
 export default function PartnerDemo({ strings }) {
-  const [name, setName] = useState('');
-  const ref = slugify(name) || strings.namePlaceholder;
-  const code = `<script src="${SITE}/boarding/embed.js" data-ref="${ref}"></script>`;
-  const link = `${SITE}/boarding/quiz?ref=${ref}`;
-
   return (
     <>
-      <div className="mt-8 max-w-[26rem]">
-        <label htmlFor="partner-name" className="block text-[14px] font-semibold">
-          {strings.nameLabel}
-        </label>
-        <input
-          id="partner-name"
-          value={name}
-          onChange={(event) => setName(event.target.value)}
-          placeholder={strings.namePlaceholder}
-          autoComplete="organization"
-          className="mt-1.5 w-full rounded-control border-[1.5px] border-night/12 bg-white px-3 py-[11px] text-[15px] text-night placeholder:text-night/45 focus:border-blue focus:outline-none focus:ring-[3px] focus:ring-blue/15"
-        />
-        <p className={`mt-1.5 text-[13px] ${MUTED}`}>{strings.nameHelp}</p>
-      </div>
-
-      <section className="mt-14 grid items-start gap-8 min-[980px]:grid-cols-[0.9fr_1.1fr] min-[980px]:gap-12">
+      <section className="grid items-start gap-8 min-[980px]:grid-cols-[0.9fr_1.1fr] min-[980px]:gap-12">
         <div className="min-w-0 min-[980px]:sticky min-[980px]:top-[calc(var(--header-h,72px)+24px)]">
           <p className={LABEL}>{strings.option1.label}</p>
           <h2 className={H2}>{strings.option1.title}</h2>
           <p className={`mb-5 max-w-[34rem] ${MUTED}`}>{strings.option1.body}</p>
-          <CodeLine text={code} strings={strings} label={strings.option1.codeLabel} />
-          <p className={`mt-3 text-[13.5px] ${MUTED}`}>{strings.option1.blocked}</p>
+          <CodeLine text={CODE} strings={strings} label={strings.option1.codeLabel} />
         </div>
         <LivePreview strings={strings.option1} />
       </section>
@@ -154,7 +126,7 @@ export default function PartnerDemo({ strings }) {
         <h2 className={H2}>{strings.option2.title}</h2>
         <p className={`mb-5 max-w-[34rem] ${MUTED}`}>{strings.option2.body}</p>
         <div className="max-w-[40rem]">
-          <CodeLine text={link} strings={strings} label={strings.option2.linkLabel} />
+          <CodeLine text={LINK_URL} strings={strings} label={strings.option2.linkLabel} />
         </div>
         <a
           href={`/boarding/quiz?ref=${DEMO_REF}`}

@@ -1,7 +1,7 @@
 import { getTranslations, setRequestLocale } from 'next-intl/server';
 import PartnerDemo from '@/components/boarding/PartnerDemo';
 import { CONTACT_EMAIL } from '@/components/boarding/config';
-import { DISPLAY, LABEL, LINK, MUTED, WRAP } from '@/components/boarding/styles';
+import { LINK, MUTED, WRAP } from '@/components/boarding/styles';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
@@ -45,11 +45,9 @@ export default async function BoardingPartnersPage({ params }) {
   return (
     <div className="text-[17px] leading-[1.65] text-night">
       <div className={`${WRAP} pt-9 pb-16 min-[980px]:pt-[72px] min-[980px]:pb-24`}>
-        <p className={LABEL}>{t('label')}</p>
-        <h1 className={`${DISPLAY} mb-[18px] max-w-[46rem] text-[clamp(2.3rem,4.6vw,3.8rem)] text-balance`}>
-          {t('title')}
-        </h1>
-        <p className={`max-w-[38rem] text-[1.08rem] ${MUTED}`}>{t('body')}</p>
+        {/* No visible intro (founder's call, 2026-10-12): the page opens on
+            option 1. The heading stays for screen readers and the outline. */}
+        <h1 className="sr-only">{t('meta.title')}</h1>
 
         <PartnerDemo strings={t.raw('demo')} />
 
