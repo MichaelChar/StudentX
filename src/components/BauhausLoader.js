@@ -17,6 +17,11 @@ import { useEffect, useState } from 'react';
   Reduced-motion: keyframes are disabled in globals.css via the
   prefers-reduced-motion media query; the status cycle keeps ticking so
   the user still sees progress copy.
+
+  `size` scales the whole figure (default 200px). The geometry stays in
+  its 200×200 box and is scaled as one piece, so the orbit and the pulse
+  keep their proportions. `mode="inline"` drops the block padding, for a
+  loader that sits inside a card (the /boarding lead form).
 */
 
 function useStatusCycle(statuses, intervalMs, speed) {
@@ -49,15 +54,20 @@ export default function BauhausLoader({
   mode = 'block',
   dim = false,
   ariaLabel,
+  size = 200,
 }) {
   const status = useStatusCycle(statuses, intervalMs, speed);
   const dur = 2.4 / speed;
   const cycling = statuses && statuses.length > 1;
 
+  const scale = size / 200;
+
   const wrapperClass =
     mode === 'overlay'
       ? 'fixed inset-0 z-[100] flex items-center justify-center bg-stone/95 backdrop-blur-sm'
-      : 'flex flex-col items-center justify-center py-12';
+      : mode === 'inline'
+        ? 'flex flex-col items-center justify-center'
+        : 'flex flex-col items-center justify-center py-12';
 
   return (
     <div
@@ -72,43 +82,53 @@ export default function BauhausLoader({
         </span>
 
         <div
-          className="relative mt-9"
-          style={{ width: 200, height: 200 }}
+          className="mt-9"
+          style={{ width: size, height: size }}
           aria-hidden="true"
         >
-          {/* Navy square — rotates slowly */}
           <div
-            className="bauhaus-rotate absolute bg-night"
+            className="relative"
             style={{
-              inset: 30,
-              animation: `bauhausRotate ${dur * 2}s linear infinite`,
+              width: 200,
+              height: 200,
+              transform: scale === 1 ? undefined : `scale(${scale})`,
+              transformOrigin: 'top left',
             }}
-          />
-          {/* Gold circle — orbits the square */}
-          <div
-            className="bauhaus-orbit absolute rounded-full bg-yellow"
-            style={{
-              top: 0,
-              left: '50%',
-              marginLeft: -16,
-              width: 32,
-              height: 32,
-              transformOrigin: '16px 116px',
-              animation: `bauhausOrbit ${dur}s cubic-bezier(0.4,0,0.2,1) infinite`,
-            }}
-          />
-          {/* White diamond — pulses dead centre */}
-          <div
-            className="bauhaus-pulse absolute bg-white"
-            style={{
-              top: '50%',
-              left: '50%',
-              width: 12,
-              height: 12,
-              transform: 'translate(-50%, -50%) rotate(45deg)',
-              animation: `bauhausPulse ${dur}s ease-in-out infinite`,
-            }}
-          />
+          >
+            {/* Navy square — rotates slowly */}
+            <div
+              className="bauhaus-rotate absolute bg-night"
+              style={{
+                inset: 30,
+                animation: `bauhausRotate ${dur * 2}s linear infinite`,
+              }}
+            />
+            {/* Gold circle — orbits the square */}
+            <div
+              className="bauhaus-orbit absolute rounded-full bg-yellow"
+              style={{
+                top: 0,
+                left: '50%',
+                marginLeft: -16,
+                width: 32,
+                height: 32,
+                transformOrigin: '16px 116px',
+                animation: `bauhausOrbit ${dur}s cubic-bezier(0.4,0,0.2,1) infinite`,
+              }}
+            />
+            {/* White diamond — pulses dead centre */}
+            <div
+              className="bauhaus-pulse absolute bg-white"
+              style={{
+                top: '50%',
+                left: '50%',
+                width: 12,
+                height: 12,
+                transform: 'translate(-50%, -50%) rotate(45deg)',
+                animation: `bauhausPulse ${dur}s ease-in-out infinite`,
+              }}
+            />
+          </div>
         </div>
 
         <div

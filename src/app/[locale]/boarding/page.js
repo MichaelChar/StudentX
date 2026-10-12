@@ -2,10 +2,12 @@ import { setRequestLocale, getTranslations } from 'next-intl/server';
 import { HeaderSlot } from '@/components/HeaderSlot';
 import { CalLoader, CalButton } from '@/components/boarding/CalBooking';
 import FeeComparison from '@/components/boarding/FeeComparison';
+import LeadForm from '@/components/boarding/LeadForm';
 import PathPlanner from '@/components/boarding/PathPlanner';
 import Portrait from '@/components/boarding/Portrait';
 import ScoreCountUp from '@/components/boarding/ScoreCountUp';
 import StepCards from '@/components/boarding/StepCards';
+import StickyCta from '@/components/boarding/StickyCta';
 import {
   CONTACT_EMAIL,
   ENTRY_POINTS,
@@ -26,6 +28,7 @@ import {
   WRAP,
 } from '@/components/boarding/styles';
 import { currentSchoolYear } from '@/lib/boardingPath';
+import { monthKey } from '@/lib/boardingLead';
 
 /*
   /boarding — Swiss boarding school placement landing page.
@@ -56,6 +59,14 @@ import { currentSchoolYear } from '@/lib/boardingPath';
   starts "And", not "Or", even under the closing panel's "Or email…" lines:
   reading the PDF accompanies the call, it is not an alternative to it
   (founder's call, 2026-10-12).
+
+  The lead form (LeadForm) sits between the credibility chips and "education
+  is the biggest investment", the founder's chosen spot (2026-10-12). Its
+  label and heading show on desktop only; on phones the form starts straight
+  away. While it is on screen the mobile sticky booking bar hides, so the
+  bar never covers the form's buttons. Its copy is under `boarding.form`,
+  approved in the same session; the competitor fees on its map live in
+  config.js (MAP_SCHOOLS), with their sources.
 */
 
 export default async function BoardingPage({ params }) {
@@ -150,6 +161,24 @@ export default async function BoardingPage({ params }) {
     source: tc('source'),
   };
 
+  // The form's copy goes down raw: the client fills {placeholders} itself.
+  // The two plurals are formatted here, per possible year count, because a
+  // client component cannot run ICU on a raw string.
+  const formRaw = t.raw('form');
+  const yearCounts = [...new Set(ENTRY_POINTS.map((e) => e.years))];
+  const formStrings = {
+    ...formRaw,
+    result: {
+      ...formRaw.result,
+      years: Object.fromEntries(yearCounts.map((n) => [n, tp('years', { n })])),
+    },
+    map: {
+      ...formRaw.map,
+      years: Object.fromEntries(yearCounts.map((n) => [n, t('form.map.years', { n })])),
+    },
+    cta: t('hero.cta'),
+  };
+
   return (
     <div className="text-[17px] leading-[1.65] text-night">
       <CalLoader />
@@ -206,6 +235,22 @@ export default async function BoardingPage({ params }) {
           ))}
         </div>
       </div>
+
+      {/* Lead form — the heading is desktop only (founder's call, 2026-10-12). */}
+      <section id="boarding-form" className="pt-10 min-[980px]:pt-[72px]">
+        <div className={WRAP}>
+          <div className="mx-auto mb-8 hidden max-w-[36rem] text-center min-[980px]:block">
+            <p className={LABEL}>{t('form.heading.label')}</p>
+            <h2 className={H2}>{t('form.heading.title')}</h2>
+          </div>
+          <LeadForm
+            strings={formStrings}
+            summaryPdf={summaryPdf}
+            buildMonth={monthKey(new Date())}
+            source="boarding"
+          />
+        </div>
+      </section>
 
       {/* Pathway */}
       <section className="py-[72px]">
@@ -314,14 +359,17 @@ export default async function BoardingPage({ params }) {
 
       {/* Mobile sticky CTA. Sits above the site's bottom tab bar (< md),
           which is fixed at the foot of every page. */}
-      <div className="fixed inset-x-3 bottom-[calc(4rem+env(safe-area-inset-bottom)+12px)] z-30 md:bottom-3 min-[980px]:hidden">
+      <StickyCta
+        watchId="boarding-form"
+        className="fixed inset-x-3 bottom-[calc(4rem+env(safe-area-inset-bottom)+12px)] z-30 md:bottom-3 min-[980px]:hidden"
+      >
         {/* Night ring: this bar floats over every surface on the page —
             white, lilac panels, yellow highlights — and night reads on all
             of them. */}
         <CalButton className={`${BTN_PRIMARY} w-full outline-night focus-visible:outline-night`}>
           {t('headerCta')}
         </CalButton>
-      </div>
+      </StickyCta>
       <div aria-hidden="true" className="h-[76px] min-[980px]:hidden" />
     </div>
   );
