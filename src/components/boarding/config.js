@@ -44,12 +44,19 @@ export const FEE_TIERS_CHF = { value: 50000, mid: 95000, top: 155000 };
   Lead form fee map (/boarding, 2026-10-12). Michael's school is in Altdorf.
 
   `fee`: annual boarding + tuition in CHF for the senior (IB) years, 2026–27,
-  before each school's extras — extras differ a lot (Beau Soleil adds about
-  CHF 25 560 of compulsory charges), so the map says "before extras".
+  before each school's extras — extras differ a lot (Beau Soleil lists
+  CHF 26 460 a year of other fees), so the map says "before extras".
   `source`: 'school' when the school itself publishes the figure,
   'listed' when it comes from a directory or a copy of the school's sheet and
   is still to be confirmed. The form shows that distinction to parents.
   Re-check every figure when the schools publish next year's fees.
+
+  Checked 2026-10-12 on the schools' own sites: Aiglon (aiglon.ch's
+  financial-information link opens the 2026–27 sheet), Beau Soleil
+  (2026–27, grades 11–12), LAS (current fee; the page names no year), TASIS
+  and Zuoz (2026–27). Still 'listed': Le Rosey publishes only 2027–28
+  (CHF 164 400) on its own site, and Montana's site would not load (broken
+  TLS certificate).
 
   (x, y) is the town and (bx, by) the price bubble, in the 460×300 viewBox of
   SWISS_OUTLINE_PATH. Project a new town with scripts/project-boarding-pins.mjs
@@ -62,15 +69,15 @@ export const MAP_SCHOOLS = [
     sourceUrl: 'https://www.rosey.ch/files/conditions-financieres.pdf', x: 71.7, y: 193.4, bx: 52, by: 166,
   },
   {
-    key: 'las', name: 'Leysin American School', short: 'Leysin American School', town: 'Leysin', fee: 128000, source: 'listed',
-    sourceUrl: 'https://www.doris.school/schools/switzerland/leysin-american-school-in-switzerland', x: 128.6, y: 207.5, bx: 118, by: 176,
+    key: 'las', name: 'Leysin American School', short: 'Leysin American School', town: 'Leysin', fee: 128000, source: 'school',
+    sourceUrl: 'https://www.las.ch/admissions/tuition-fees', x: 128.6, y: 207.5, bx: 118, by: 176,
   },
   {
-    key: 'aiglon', name: 'Aiglon College', short: 'Aiglon', town: 'Villars', fee: 168000, source: 'listed',
-    sourceUrl: 'https://fliphtml5.com/meksu/wfhl/Financial_Information', x: 132.5, y: 211.8, bx: 98, by: 257,
+    key: 'aiglon', name: 'Aiglon College', short: 'Aiglon', town: 'Villars', fee: 168000, source: 'school',
+    sourceUrl: 'https://www.aiglon.ch/financial-information', x: 132.5, y: 211.8, bx: 98, by: 257,
   },
   {
-    key: 'beausoleil', name: 'Beau Soleil', short: 'Beau Soleil', town: 'Villars', fee: 148440, source: 'listed',
+    key: 'beausoleil', name: 'Beau Soleil', short: 'Beau Soleil', town: 'Villars', fee: 148440, source: 'school',
     sourceUrl: 'https://www.beausoleil.ch/tuition-and-fees', x: 131.8, y: 213, bx: 162, by: 266,
   },
   {
