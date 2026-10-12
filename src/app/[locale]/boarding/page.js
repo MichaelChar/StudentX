@@ -52,7 +52,10 @@ import { currentSchoolYear } from '@/lib/boardingPath';
 
   The one-page summary PDF is offered under the three in-page CTAs (hero,
   planner, close) — not the header button or the mobile sticky bar, which
-  have no room for a second line (founder's call, 2026-10-11).
+  have no room for a second line (founder's call, 2026-10-11). Its line
+  starts "And", not "Or", even under the closing panel's "Or email…" lines:
+  reading the PDF accompanies the call, it is not an alternative to it
+  (founder's call, 2026-10-12).
 */
 
 export default async function BoardingPage({ params }) {
