@@ -5,14 +5,16 @@ import { SWISS_OUTLINE_PATH, SWISS_VIEWBOX } from '@/components/boarding/swissOu
 import { fill, formatChf } from '@/lib/boardingPath';
 
 const MINE = MAP_SCHOOLS.find((school) => school.mine) ?? MAP_SCHOOLS[0];
+// Cheapest first: the order itself makes the point.
+const BY_FEE = [...MAP_SCHOOLS].sort((a, b) => a.fee - b.fee);
 
 function bubbleSize(school) {
   return school.mine ? { w: 104, h: 26 } : { w: 46, h: 22 };
 }
 
 function bubbleText(school, strings) {
-  if (school.mine) return fill(strings.map.mineBubble, { fee: '50k' });
-  return `${Math.round(school.fee / 1000)}k`;
+  const fee = `${Math.round(school.fee / 1000)}k`;
+  return school.mine ? fill(strings.map.mineBubble, { fee }) : fee;
 }
 
 function bubbleLabel(school, strings) {
@@ -44,16 +46,22 @@ function OverMore({ template, vars }) {
   );
 }
 
-function activateKey(event, key, onSelect) {
-  if (event.key !== 'Enter' && event.key !== ' ') return;
-  event.preventDefault();
-  onSelect(key);
+function chipText(school, strings) {
+  const fee = `${Math.round(school.fee / 1000)}k`;
+  return school.mine ? fill(strings.map.mineBubble, { fee }) : `${school.short} ${fee}`;
 }
 
 /*
   Presentational fee map. Selection, interest and the ask-action live in
   LeadForm; this component only draws the Switzerland outline, price
-  bubbles, and the detail card for `selected`.
+  bubbles, a row of school chips, and the detail card for `selected`.
+
+  The chips are the real control. On a phone the map is about 300px wide,
+  which puts the bubbles' text near 7px and their height near 14px — too
+  small to read or tap reliably. So the bubbles stay clickable for a
+  pointer, but the map is an image to assistive tech and out of the tab
+  order; keyboard and screen-reader users get the eight chips instead of
+  sixteen stops.
 */
 export default function FeeMap({
   strings,
@@ -79,7 +87,7 @@ export default function FeeMap({
         <div className="rounded-xl bg-parchment px-3.5 py-3 text-sm">{strings.map.dayNote}</div>
       ) : null}
       <div className="rounded-[14px] bg-parchment">
-        <svg viewBox={SWISS_VIEWBOX} role="group" aria-label={strings.map.aria} className="block h-auto w-full">
+        <svg viewBox={SWISS_VIEWBOX} role="img" aria-label={strings.map.aria} className="block h-auto w-full">
           <path
             d={SWISS_OUTLINE_PATH}
             className="fill-stone stroke-blue/40"
@@ -120,13 +128,8 @@ export default function FeeMap({
             return (
               <g
                 key={school.key}
-                role="button"
-                tabIndex={0}
-                aria-pressed={isSelected}
-                aria-label={bubbleLabel(school, strings)}
-                className="group cursor-pointer outline-none"
+                className="group cursor-pointer"
                 onClick={() => onSelect(school.key)}
-                onKeyDown={(event) => activateKey(event, school.key, onSelect)}
               >
                 <rect
                   x={school.bx - w / 2}
@@ -138,10 +141,7 @@ export default function FeeMap({
                     (school.mine
                       ? 'fill-blue group-hover:fill-blue/90 '
                       : 'fill-night ') +
-                    (isSelected
-                      ? 'stroke-yellow stroke-[3] '
-                      : 'stroke-stone stroke-[1.5] ') +
-                    'group-focus-visible:stroke-night group-focus-visible:stroke-[3]'
+                    (isSelected ? 'stroke-yellow stroke-[3]' : 'stroke-stone stroke-[1.5]')
                   }
                 />
                 <text
@@ -158,6 +158,27 @@ export default function FeeMap({
             );
           })}
         </svg>
+      </div>
+      <div className="flex flex-wrap gap-1.5" role="group" aria-label={strings.map.title}>
+        {BY_FEE.map((school) => (
+          <button
+            key={school.key}
+            type="button"
+            aria-pressed={selected === school.key}
+            aria-label={bubbleLabel(school, strings)}
+            onClick={() => onSelect(school.key)}
+            className={
+              'rounded-pill border-[1.5px] px-3 py-1.5 text-[12.5px] font-semibold tabular-nums ' +
+              'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ' +
+              'aria-pressed:border-night aria-pressed:bg-night aria-pressed:text-white ' +
+              (school.mine
+                ? 'border-blue text-blue hover:bg-parchment'
+                : 'border-night/12 text-night hover:border-blue/45')
+            }
+          >
+            {chipText(school, strings)}
+          </button>
+        ))}
       </div>
       <div className="grid gap-1 rounded-xl border border-night/12 px-3.5 py-3 text-sm" aria-live="polite">
         <div className="flex flex-wrap items-baseline justify-between gap-1 gap-x-2.5">

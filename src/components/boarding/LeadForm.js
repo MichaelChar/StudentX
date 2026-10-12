@@ -69,6 +69,20 @@ const METHOD =
   'hover:border-blue/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue ' +
   'aria-pressed:border-night aria-pressed:bg-night aria-pressed:text-white';
 
+/*
+  One id per form visit. crypto.randomUUID needs a recent browser and a
+  secure context; getRandomValues does not, so it is the fallback (Safari
+  before 15.4). Same v4 layout either way, which the endpoint checks.
+*/
+function newId() {
+  if (typeof crypto.randomUUID === 'function') return crypto.randomUUID();
+  const b = crypto.getRandomValues(new Uint8Array(16));
+  b[6] = (b[6] & 0x0f) | 0x40;
+  b[8] = (b[8] & 0x3f) | 0x80;
+  const h = [...b].map((x) => x.toString(16).padStart(2, '0')).join('');
+  return `${h.slice(0, 8)}-${h.slice(8, 12)}-${h.slice(12, 16)}-${h.slice(16, 20)}-${h.slice(20)}`;
+}
+
 async function postJson(payload) {
   try {
     const res = await fetch('/api/boarding/lead', {
@@ -223,7 +237,7 @@ function Timeline({ path, startValue, strings }) {
           initial={{ opacity: 0, x: 14 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 0.36, delay: index * 0.06, ease: EASE }}
-          className="relative grid grid-cols-[12px_92px_minmax(0,1fr)] items-center gap-3 py-[7px] max-[480px]:grid-cols-[12px_78px_minmax(0,1fr)] max-[480px]:gap-2.5"
+          className="relative grid grid-cols-[12px_92px_minmax(0,1fr)] items-center gap-3 py-[7px] max-[480px]:grid-cols-[12px_88px_minmax(0,1fr)] max-[480px]:gap-2.5"
         >
           <span
             aria-hidden="true"
@@ -300,7 +314,7 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
   const skipNextUpdate = useRef(false);
 
   function ensureId() {
-    if (!idRef.current) idRef.current = crypto.randomUUID();
+    if (!idRef.current) idRef.current = newId();
     return idRef.current;
   }
 
@@ -385,9 +399,11 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
     }, LOADER_MS);
   }
 
+  // Records the answers now, so a parent who stops before Send still counts.
   function handlePersonalised() {
     setPath('personalised');
     go('about');
+    void postJson(payload('view', { path: 'personalised' }));
   }
 
   async function handleSend() {
@@ -441,6 +457,9 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
     }
     setPath('personalised');
     go('about');
+    // Leaving the result screen stops the debounced update, so record the
+    // interest now in case they stop before Send.
+    void postJson(payload('view', { path: 'personalised', interest: next }));
   }
 
   function pickMethod(next) {
@@ -605,10 +624,9 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
             style={{ width: `${progress}%` }}
           />
         </div>
-        <div
-          className="relative min-h-[470px] px-5 pt-[22px] pb-5 max-[480px]:min-h-[440px] max-[480px]:px-4 max-[480px]:pt-[18px] max-[480px]:pb-4"
-          aria-live="polite"
-        >
+        {/* Not a live region: each screen's heading takes focus instead, so a
+            screen reader announces the new step once rather than all of it. */}
+        <div className="relative min-h-[470px] px-5 pt-[22px] pb-5 max-[480px]:min-h-[440px] max-[480px]:px-4 max-[480px]:pt-[18px] max-[480px]:pb-4">
           {loading ? (
             <div className="grid min-h-[430px] place-content-center justify-items-center">
               <BauhausLoader
@@ -909,14 +927,17 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
                       <p className="m-0 text-[12.5px] text-night/70">{field.help}</p>
                     ) : null}
                   </div>
+                  {/* Honeypot, sent as `company`. The field itself has a
+                      name no browser autofills (a real "company" field can be
+                      filled by Chrome for a real parent, who would then be
+                      dropped as a bot), and no visible label. */}
                   <div
                     className="absolute -left-[9999px] h-px w-px overflow-hidden"
                     aria-hidden="true"
                   >
-                    <label htmlFor="company">Company</label>
                     <input
-                      id="company"
-                      name="company"
+                      id={`${uid}-hp`}
+                      name="sx-lead-hp"
                       tabIndex={-1}
                       autoComplete="off"
                       value={company}
