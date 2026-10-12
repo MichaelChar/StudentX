@@ -176,6 +176,15 @@ export default async function BoardingPage({ params }) {
       ...formRaw.map,
       years: Object.fromEntries(yearCounts.map((n) => [n, t('form.map.years', { n })])),
     },
+    // Timeline labels are the planner's, so the two never drift apart.
+    timeline: {
+      join: tp.raw('join'),
+      moveUp: tp.raw('moveUp'),
+      apply: tp('nodes.apply'),
+      exams: tp('nodes.exams'),
+      uni: tp('nodes.uni'),
+      months: { may: tp('months.may'), sept: tp('months.sept'), autumn: tp('months.autumn') },
+    },
     cta: t('hero.cta'),
   };
 
