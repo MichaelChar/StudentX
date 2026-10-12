@@ -9,10 +9,12 @@ import { BTN_PRIMARY, H2, LABEL, MUTED } from '@/components/boarding/styles';
   the preview appends the very same <script> a partner would paste, so the
   page proves the line works rather than showing a picture of it.
 
-  Both show the placeholder ref "yoursite" (founder's call, 2026-10-12: no
-  name field). The preview and the "Open the quiz" button use
-  "partners-demo", so demo runs are told apart from real partner traffic in
-  boarding_leads. The shown code and link always point at
+  The code shows the placeholder ref "yoursite" (founder's call,
+  2026-10-12: no name field). The link is the plain public quiz page, no
+  ref — founder's call the same day: just the quiz, on a public page. A
+  partner's ref is optional (/boarding/quiz?ref=… still tags their leads).
+  The live preview uses "partners-demo", so demo runs are told apart from
+  real embeds in boarding_leads. The shown code and link always point at
   https://studentx.uk; the preview loads from wherever this page is served,
   so it also works on localhost.
 */
@@ -21,7 +23,8 @@ const SITE = 'https://studentx.uk';
 const SAMPLE_REF = 'yoursite';
 const DEMO_REF = 'partners-demo';
 const CODE = `<script src="${SITE}/boarding/embed.js" data-ref="${SAMPLE_REF}"></script>`;
-const LINK_URL = `${SITE}/boarding/quiz?ref=${SAMPLE_REF}`;
+const QUIZ_PATH = '/boarding/quiz';
+const LINK_URL = `${SITE}${QUIZ_PATH}`;
 
 function CopyButton({ text, strings }) {
   const [copied, setCopied] = useState(false);
@@ -129,7 +132,7 @@ export default function PartnerDemo({ strings }) {
           <CodeLine text={LINK_URL} strings={strings} label={strings.option2.linkLabel} />
         </div>
         <a
-          href={`/boarding/quiz?ref=${DEMO_REF}`}
+          href={QUIZ_PATH}
           target="_blank"
           rel="noopener noreferrer"
           className={`${BTN_PRIMARY} mt-5`}
