@@ -1748,6 +1748,153 @@
       "c3Title": "School Ambassador",
       "c3Body": "I’m working with my previous school to market and recruit new students"
     },
+    "form": {
+      "heading": {
+        "label": "three quick questions",
+        "title": "See your child’s path, and get a free personalised presentation"
+      },
+      "who": "Michael",
+      "back": "Back",
+      "step": "{n} of 3",
+      "start": {
+        "title": "When would your child start?",
+        "asap": "As soon as possible",
+        "asapNote": "Admission runs all year",
+        "jan": "January {year}",
+        "sept": "September {year}",
+        "unsure": "Not sure yet"
+      },
+      "age": {
+        "title": "How old is your child today?",
+        "sub": "Age decides which IB year they join.",
+        "under": "13 or under",
+        "over": "18 or over"
+      },
+      "mode": {
+        "title": "Day or boarding?",
+        "sub": "Both are usually possible.",
+        "boarding": "Boarding",
+        "boardingNote": "Lives on campus during term",
+        "day": "Day",
+        "dayNote": "Lives with you and commutes",
+        "undecided": "Still considering"
+      },
+      "chips": {
+        "asap": "ASAP",
+        "unsure": "Start: not sure",
+        "jan": "Jan {year}",
+        "sept": "Sept {year}",
+        "age": "Age {age}",
+        "boarding": "Boarding",
+        "day": "Day",
+        "undecided": "Day or boarding: undecided",
+        "edit": "Edit"
+      },
+      "choice": {
+        "title": "Want a free personalised presentation for your child’s situation?",
+        "body": "Tell me a little about them and I’ll put together a short presentation for your family. I’ll contact you when it’s ready, to book a meeting and present it. Otherwise, you can skip it and just see a general path for now.",
+        "yes": "Yes, make one for us",
+        "yesTime": "2 min",
+        "yesNote": "A few lines about your specific case",
+        "no": "Just show me the path",
+        "noNote": "Timeline, a map of school fees and the one-page summary. No details needed."
+      },
+      "about": {
+        "title": "Tell me about your child",
+        "sub": "Optional, but it makes the presentation much better.",
+        "label": "Your child’s background",
+        "optional": "(optional)",
+        "placeholder": "Current school and curriculum (Greek Lyceum, IGCSE, MYP…)\nUniversities or degrees they’re thinking about\nAnything that’s non-negotiable for you",
+        "asked": "You asked about {schools}",
+        "next": "Continue"
+      },
+      "contact": {
+        "title": "How should I reach you?",
+        "turnaround": "I’ll reply as soon as I can, and try very hard to prepare a presentation ready today or tomorrow",
+        "name": "First name",
+        "nameError": "Enter your first name.",
+        "method": "Reach me on",
+        "methods": {
+          "whatsapp": "WhatsApp",
+          "viber": "Viber",
+          "imessage": "iMessage",
+          "phone": "Phone call",
+          "email": "Email",
+          "wechat": "WeChat"
+        },
+        "fields": {
+          "phone": {
+            "label": "Phone number",
+            "placeholder": "+30 69X XXX XXXX",
+            "help": "Include the country code.",
+            "error": "Enter a phone number with its country code, like +30 697 000 0000."
+          },
+          "email": {
+            "label": "Email address",
+            "placeholder": "you@example.com",
+            "help": "",
+            "error": "Enter an email address, like name@example.com."
+          },
+          "wechat": {
+            "label": "WeChat ID",
+            "placeholder": "Your WeChat ID",
+            "help": "Find it under Me in WeChat.",
+            "error": "A WeChat ID is 6 to 20 letters, numbers, - or _, starting with a letter."
+          }
+        },
+        "send": "Send to Michael",
+        "privacy": "I’ll only use this to prepare your presentation and contact you about it. Email michael@studentx.uk to have it deleted.",
+        "error": "That didn’t send. Check your connection and try again."
+      },
+      "loader": {
+        "eyebrow": "One moment",
+        "building": [
+          "Building your path",
+          "Lining up the IB timeline",
+          "Adding up the fees"
+        ],
+        "sending": [
+          "Sending to Michael",
+          "Building your path",
+          "Adding up the fees"
+        ]
+      },
+      "result": {
+        "label": "your child’s path",
+        "title": "Joins {programme}, IB exams in May {year}",
+        "summary": "{years} · {mode} · University from September {year}",
+        "shifted": "MYP 4 starts at 14, so the earliest entry is September {year}.",
+        "blockedTitle": "Let’s talk about timing",
+        "blockedLater": "By {start} your child would be past the last entry point (DP 2, at 17). Starting this school year still works.",
+        "blockedOlder": "The last IB entry point is DP 2, at 17. There may still be options, and I’m happy to talk them through.",
+        "thanks": "Thanks, {name}.",
+        "whenReady": {
+          "phone": "I’ll call you when your presentation is ready, to book a meeting and present it.",
+          "email": "I’ll email you when your presentation is ready, to book a meeting and present it.",
+          "message": "I’ll message you on {method} when your presentation is ready, to book a meeting and present it."
+        },
+        "upsell": "Want a presentation made for your child?",
+        "upsellCta": "Tell me about them"
+      },
+      "map": {
+        "title": "Swiss IB boarding schools",
+        "sub": "Boarding and tuition per year, 2026–27, before extras. Tap a school.",
+        "dayNote": "These are boarding fees. Day fees are lower.",
+        "aria": "Map of Switzerland with each school’s annual fee",
+        "mineBubble": "My school {fee}",
+        "mineName": "My (best value) Swiss boarding school",
+        "mineTown": "Best value",
+        "perYear": "{amount} a year",
+        "years": "{n, plural, one {1 year} other {# years}}",
+        "over": "Over {years}: {amount}",
+        "overMore": "Over {years}: {amount}, <more>{diff} more</more> than my school",
+        "sourceSchool": "Published by the school",
+        "sourceListed": "Directory listing, not yet confirmed with the school",
+        "ask": "Ask me about {school}",
+        "noted": "Noted",
+        "added": "Added. I’ll cover {school} in your presentation too"
+      }
+    },
     "pathway": {
       "label": "education is the biggest investment",
       "heading": "The Pathway to European Education Starts in Switzerland.",
