@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import {
   activeTabKey,
+  isBareRoute,
   isChromelessMobileRoute,
   isTabActive,
   mobileTabsFor,
@@ -187,5 +188,28 @@ describe('isChromelessMobileRoute — where the mobile chrome comes off', () => 
     expect(isChromelessMobileRoute(null)).toBe(false);
     expect(isChromelessMobileRoute(undefined)).toBe(false);
     expect(isChromelessMobileRoute('')).toBe(false);
+  });
+});
+
+/*
+  /boarding/quiz and /boarding/quiz/embed carry no site chrome at any width:
+  one is a shareable link, the other sits inside partners' iframes. Pinned so
+  /boarding itself, and /boarding/partners, never lose their navigation.
+*/
+describe('isBareRoute — the lead form on its own page', () => {
+  it('matches the shareable quiz page and the embed', () => {
+    expect(isBareRoute('/boarding/quiz')).toBe(true);
+    expect(isBareRoute('/boarding/quiz/embed')).toBe(true);
+    expect(isBareRoute('/boarding/quiz/embed/')).toBe(true);
+  });
+
+  it('does not match /boarding or the partners page', () => {
+    expect(isBareRoute('/boarding')).toBe(false);
+    expect(isBareRoute('/boarding/partners')).toBe(false);
+    expect(isBareRoute('/boarding/quiz/other')).toBe(false);
+  });
+
+  it('also drops the mobile chrome, so no tab-bar spacer is reserved', () => {
+    expect(isChromelessMobileRoute('/boarding/quiz/embed')).toBe(true);
   });
 });

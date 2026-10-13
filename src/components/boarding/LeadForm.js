@@ -267,7 +267,25 @@ function Timeline({ path, startValue, strings }) {
   );
 }
 
-export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
+/*
+  `onScreenChange(screen)`: optional, called after each step change (not on
+  first render). /boarding/quiz uses it inside a partner's iframe to ask the
+  host page to scroll the form back into view.
+
+  `fullScreen`: the form fills the window instead of sitting in a card — the
+  shareable /boarding/quiz page (founder's call, 2026-10-12). Same content,
+  centred in a reading column; header at the top, logo at the foot.
+*/
+const CARD_SHELL =
+  'mx-auto max-w-[520px] overflow-hidden rounded-card border border-night/6 bg-stone text-[15px] ' +
+  'leading-[1.55] text-night shadow-[0_1px_2px_rgba(10,37,64,0.06),0_12px_32px_rgba(10,37,64,0.08)]';
+const FULL_SHELL = 'flex min-h-svh flex-col bg-stone text-[15px] leading-[1.55] text-night';
+// next.config has images.unoptimized, so next/image serves files as they are.
+// The avatar and logo are small copies sized for how they are shown here (3×):
+// the originals are 69 KB and 217 KB, loaded on /boarding and inside every
+// partner's iframe.
+
+export default function LeadForm({ strings, summaryPdf, buildMonth, source, onScreenChange, fullScreen = false }) {
   const nowKey = useSyncExternalStore(
     subscribeNoop,
     () => monthKey(new Date()),
@@ -492,6 +510,7 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
       return undefined;
     }
     headingRef.current?.focus({ preventScroll: true });
+    onScreenChange?.(screen);
     const card = cardRef.current;
     if (card && card.getBoundingClientRect().top < 0) {
       card.scrollIntoView({
@@ -500,7 +519,7 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
       });
     }
     return undefined;
-  }, [screen, loading, reduced]);
+  }, [screen, loading, reduced, onScreenChange]);
 
   useEffect(() => {
     if (screen !== 'result') {
@@ -581,504 +600,508 @@ export default function LeadForm({ strings, summaryPdf, buildMonth, source }) {
     <MotionConfig reducedMotion="user">
       <div
         ref={cardRef}
-        className="mx-auto max-w-[520px] overflow-hidden rounded-card border border-night/6 bg-stone text-[15px] leading-[1.55] text-night shadow-[0_1px_2px_rgba(10,37,64,0.06),0_12px_32px_rgba(10,37,64,0.08)]"
+        className={fullScreen ? FULL_SHELL : CARD_SHELL}
       >
-        <div className="flex items-center gap-3 px-5 pt-4 pb-3 max-[480px]:px-4 max-[480px]:pt-3.5 max-[480px]:pb-2.5">
-          <div className="grid h-11 w-11 flex-none place-items-end justify-center overflow-hidden rounded-full bg-yellow">
-            <Image
-              src="/boarding/michael.webp"
-              width={821}
-              height={931}
-              alt=""
-              sizes="44px"
-              className="block h-auto w-11 translate-y-[2px]"
-            />
-          </div>
-          <div className="min-w-0 flex-1">
-            <strong className="block text-sm font-bold">{strings.who}</strong>
-          </div>
-          {showBack ? (
-            <button
-              type="button"
-              onClick={handleBack}
-              className="inline-flex items-center gap-1 rounded-control px-2 py-1.5 text-[13px] font-semibold text-night/70 hover:bg-parchment hover:text-night"
-            >
-              <svg
-                width="14"
-                height="14"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2.2"
-                aria-hidden="true"
-              >
-                <path d="M15 6l-6 6 6 6" />
-              </svg>
-              {strings.back}
-            </button>
-          ) : null}
-        </div>
-        <div className="mx-5 h-[3px] overflow-hidden rounded-[3px] bg-iris-soft max-[480px]:mx-4" aria-hidden="true">
-          <div
-            className="h-full rounded-[3px] bg-blue transition-[width] duration-[400ms] ease-parity motion-reduce:transition-none"
-            style={{ width: `${progress}%` }}
-          />
-        </div>
-        {/* Not a live region: each screen's heading takes focus instead, so a
-            screen reader announces the new step once rather than all of it. */}
-        <div className="relative min-h-[470px] px-5 pt-[22px] pb-5 max-[480px]:min-h-[440px] max-[480px]:px-4 max-[480px]:pt-[18px] max-[480px]:pb-4">
-          {loading ? (
-            <div className="grid min-h-[430px] place-content-center justify-items-center">
-              <BauhausLoader
-                mode="inline"
-                size={140}
-                eyebrow={strings.loader.eyebrow}
-                statuses={
-                  loaderKind === 'sending' ? strings.loader.sending : strings.loader.building
-                }
-                intervalMs={700}
+        {/* Full screen: one centred column that runs the window's height.
+            In the card, `contents` makes this wrapper disappear from layout. */}
+        <div className={fullScreen ? 'mx-auto flex w-full max-w-[600px] flex-1 flex-col pt-2 sm:pt-8' : 'contents'}>
+          <div className="flex items-center gap-3 px-5 pt-4 pb-3 max-[480px]:px-4 max-[480px]:pt-3.5 max-[480px]:pb-2.5">
+            <div className="grid h-11 w-11 flex-none place-items-end justify-center overflow-hidden rounded-full bg-yellow">
+              <Image
+                src="/boarding/michael-avatar.webp"
+                width={132}
+                height={150}
+                alt=""
+                sizes="44px"
+                className="block h-auto w-11 translate-y-[2px]"
               />
             </div>
-          ) : (
-            <motion.div
-              key={screen}
-              initial={enterReady ? { opacity: 0, x: dir === 'back' ? -14 : 14 } : false}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.26, ease: EASE }}
-              className="grid content-start gap-4"
-            >
-              {screen === 'start' ? (
-                <>
-                  <p className="m-0 text-[12.5px] font-semibold text-night/70">
-                    {fill(strings.step, { n: 1 })}
-                  </p>
-                  <h3
-                    ref={headingRef}
-                    tabIndex={-1}
-                    className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
-                  >
-                    {strings.start.title}
-                  </h3>
-                  <div className="grid gap-2.5">
-                    {starts.map((opt) => (
-                      <OptionButton
-                        key={opt.value}
-                        selected={startValue === opt.value}
-                        onClick={() => pickStart(opt.value)}
-                        label={
-                          opt.key === 'asap'
-                            ? strings.start.asap
-                            : opt.key === 'unsure'
-                              ? strings.start.unsure
-                              : fill(strings.start[opt.key], { year: opt.year })
-                        }
-                        note={opt.key === 'asap' ? strings.start.asapNote : undefined}
-                      />
-                    ))}
-                  </div>
-                </>
-              ) : null}
-
-              {screen === 'age' ? (
-                <>
-                  <p className="m-0 text-[12.5px] font-semibold text-night/70">
-                    {fill(strings.step, { n: 2 })}
-                  </p>
-                  <h3
-                    ref={headingRef}
-                    tabIndex={-1}
-                    className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
-                  >
-                    {strings.age.title}
-                  </h3>
-                  <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">{strings.age.sub}</p>
-                  <div className="grid grid-cols-3 gap-2.5">
-                    {AGE_VALUES.map((age) => (
-                      <OptionButton
-                        key={age}
-                        compact
-                        selected={ageNow === age}
-                        onClick={() => pickAge(age)}
-                        label={ageLabel(age, strings)}
-                      />
-                    ))}
-                  </div>
-                </>
-              ) : null}
-
-              {screen === 'mode' ? (
-                <>
-                  <p className="m-0 text-[12.5px] font-semibold text-night/70">
-                    {fill(strings.step, { n: 3 })}
-                  </p>
-                  <h3
-                    ref={headingRef}
-                    tabIndex={-1}
-                    className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
-                  >
-                    {strings.mode.title}
-                  </h3>
-                  <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">{strings.mode.sub}</p>
-                  <div className="grid gap-2.5">
-                    {MODES.map((key) => (
-                      <OptionButton
-                        key={key}
-                        selected={mode === key}
-                        onClick={() => pickMode(key)}
-                        label={strings.mode[key]}
-                        note={
-                          key === 'boarding'
-                            ? strings.mode.boardingNote
-                            : key === 'day'
-                              ? strings.mode.dayNote
-                              : undefined
-                        }
-                      />
-                    ))}
-                  </div>
-                </>
-              ) : null}
-
-              {screen === 'choice' ? (
-                <>
-                  <div className="flex flex-wrap items-center gap-1.5">
-                    <span className="rounded-pill bg-iris-soft px-2.5 py-1 text-[12.5px] font-semibold text-night">
-                      {startChipText(startValue, nowKey, strings)}
-                    </span>
-                    <span className="rounded-pill bg-iris-soft px-2.5 py-1 text-[12.5px] font-semibold text-night">
-                      {fill(strings.chips.age, { age: ageLabel(ageNow, strings) })}
-                    </span>
-                    <span className="rounded-pill bg-iris-soft px-2.5 py-1 text-[12.5px] font-semibold text-night">
-                      {strings.chips[mode]}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => go('start', 'back')}
-                      className="px-1 py-1 text-[12.5px] font-semibold text-blue underline underline-offset-2"
-                    >
-                      {strings.chips.edit}
-                    </button>
-                  </div>
-                  <h3
-                    ref={headingRef}
-                    tabIndex={-1}
-                    className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
-                  >
-                    {strings.choice.title}
-                  </h3>
-                  <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">{strings.choice.body}</p>
-                  <div className="grid gap-2.5">
-                    <button
-                      type="button"
-                      onClick={handlePersonalised}
-                      className="grid gap-1 rounded-[14px] border-[1.5px] border-blue bg-parchment p-4 text-left text-night transition-[border-color,background-color] duration-150 ease-parity hover:border-blue/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
-                    >
-                      <b className="flex items-center justify-between gap-2.5 text-base font-semibold">
-                        {strings.choice.yes}
-                        <em className="rounded-pill bg-yellow px-2.5 py-0.5 text-[11.5px] font-bold not-italic whitespace-nowrap text-night">
-                          {strings.choice.yesTime}
-                        </em>
-                      </b>
-                      <span className="text-[13.5px] text-night/70">{strings.choice.yesNote}</span>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleResources}
-                      className="grid gap-1 rounded-[14px] border-[1.5px] border-night/12 bg-stone p-4 text-left text-night transition-[border-color,background-color] duration-150 ease-parity hover:border-blue/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
-                    >
-                      <b className="text-base font-semibold">{strings.choice.no}</b>
-                      <span className="text-[13.5px] text-night/70">{strings.choice.noNote}</span>
-                    </button>
-                  </div>
-                </>
-              ) : null}
-
-              {screen === 'about' ? (
-                <>
-                  <h3
-                    ref={headingRef}
-                    tabIndex={-1}
-                    className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
-                  >
-                    {strings.about.title}
-                  </h3>
-                  <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">{strings.about.sub}</p>
-                  {askedNames ? (
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="rounded-pill bg-iris-soft px-2.5 py-1 text-[12.5px] font-semibold text-night">
-                        {fill(strings.about.asked, { schools: askedNames })}
-                      </span>
-                    </div>
-                  ) : null}
-                  <div className="grid gap-1.5">
-                    <label htmlFor={`${uid}-about`} className="text-[13.5px] font-semibold">
-                      {strings.about.label}{' '}
-                      <span className="font-medium text-night/70">{strings.about.optional}</span>
-                    </label>
-                    <textarea
-                      id={`${uid}-about`}
-                      value={about}
-                      maxLength={LEAD_LIMITS.about}
-                      placeholder={strings.about.placeholder}
-                      onChange={(event) => setAbout(event.target.value)}
-                      className={`${INPUT} min-h-[150px] resize-y leading-normal`}
-                    />
-                  </div>
-                  <div className="mt-1">
-                    <button
-                      type="button"
-                      onClick={() => go('contact')}
-                      className={`${BTN_PRIMARY} w-full`}
-                    >
-                      {strings.about.next}
-                      <Arrow />
-                    </button>
-                  </div>
-                </>
-              ) : null}
-
-              {screen === 'contact' ? (
-                <form
-                  onSubmit={(event) => {
-                    event.preventDefault();
-                    void handleSend();
-                  }}
-                  className="grid content-start gap-4"
+            <div className="min-w-0 flex-1">
+              <strong className="block text-sm font-bold">{strings.who}</strong>
+            </div>
+            {showBack ? (
+              <button
+                type="button"
+                onClick={handleBack}
+                className="inline-flex items-center gap-1 rounded-control px-2 py-1.5 text-[13px] font-semibold text-night/70 hover:bg-parchment hover:text-night"
+              >
+                <svg
+                  width="14"
+                  height="14"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2.2"
+                  aria-hidden="true"
                 >
-                  <h3
-                    ref={headingRef}
-                    tabIndex={-1}
-                    className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
-                  >
-                    {strings.contact.title}
-                  </h3>
-                  <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">
-                    {strings.contact.turnaround}
-                  </p>
-                  <div className="grid gap-1.5">
-                    <label htmlFor={`${uid}-name`} className="text-[13.5px] font-semibold">
-                      {strings.contact.name}
-                    </label>
-                    <input
-                      ref={nameRef}
-                      id={`${uid}-name`}
-                      value={firstName}
-                      maxLength={LEAD_LIMITS.firstName}
-                      autoComplete="given-name"
-                      aria-invalid={nameError ? true : undefined}
-                      aria-describedby={nameError ? nameErrId : undefined}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        setFirstName(value);
-                        if (nameError && value.trim()) setNameError('');
-                      }}
-                      className={INPUT}
-                    />
-                    {nameError ? (
-                      <p id={nameErrId} className="m-0 text-[13px] text-magenta-ink">
-                        {nameError}
-                      </p>
-                    ) : null}
-                  </div>
-                  <div className="grid gap-1.5">
-                    <span id={`${uid}-method`} className="text-[13.5px] font-semibold">
-                      {strings.contact.method}
-                    </span>
-                    <div className="flex flex-wrap gap-1.5" role="group" aria-labelledby={`${uid}-method`}>
-                      {CONTACT_METHODS.map((item) => (
-                        <button
-                          key={item.key}
-                          type="button"
-                          aria-pressed={method === item.key}
-                          onClick={() => pickMethod(item.key)}
-                          className={METHOD}
-                        >
-                          {strings.contact.methods[item.key]}
-                        </button>
+                  <path d="M15 6l-6 6 6 6" />
+                </svg>
+                {strings.back}
+              </button>
+            ) : null}
+          </div>
+          <div className="mx-5 h-[3px] overflow-hidden rounded-[3px] bg-iris-soft max-[480px]:mx-4" aria-hidden="true">
+            <div
+              className="h-full rounded-[3px] bg-blue transition-[width] duration-[400ms] ease-parity motion-reduce:transition-none"
+              style={{ width: `${progress}%` }}
+            />
+          </div>
+          {/* Not a live region: each screen's heading takes focus instead, so a
+              screen reader announces the new step once rather than all of it. */}
+          <div className={`relative min-h-[470px] px-5 pt-[22px] pb-5 max-[480px]:min-h-[440px] max-[480px]:px-4 max-[480px]:pt-[18px] max-[480px]:pb-4${fullScreen ? ' flex-1' : ''}`}>
+            {loading ? (
+              <div className="grid min-h-[430px] place-content-center justify-items-center">
+                <BauhausLoader
+                  mode="inline"
+                  size={140}
+                  eyebrow={strings.loader.eyebrow}
+                  statuses={
+                    loaderKind === 'sending' ? strings.loader.sending : strings.loader.building
+                  }
+                  intervalMs={700}
+                />
+              </div>
+            ) : (
+              <motion.div
+                key={screen}
+                initial={enterReady ? { opacity: 0, x: dir === 'back' ? -14 : 14 } : false}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.26, ease: EASE }}
+                className="grid content-start gap-4"
+              >
+                {screen === 'start' ? (
+                  <>
+                    <p className="m-0 text-[12.5px] font-semibold text-night/70">
+                      {fill(strings.step, { n: 1 })}
+                    </p>
+                    <h3
+                      ref={headingRef}
+                      tabIndex={-1}
+                      className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
+                    >
+                      {strings.start.title}
+                    </h3>
+                    <div className="grid gap-2.5">
+                      {starts.map((opt) => (
+                        <OptionButton
+                          key={opt.value}
+                          selected={startValue === opt.value}
+                          onClick={() => pickStart(opt.value)}
+                          label={
+                            opt.key === 'asap'
+                              ? strings.start.asap
+                              : opt.key === 'unsure'
+                                ? strings.start.unsure
+                                : fill(strings.start[opt.key], { year: opt.year })
+                          }
+                          note={opt.key === 'asap' ? strings.start.asapNote : undefined}
+                        />
                       ))}
                     </div>
-                  </div>
-                  <div className="grid gap-1.5">
-                    <label htmlFor={`${uid}-contact`} className="text-[13.5px] font-semibold">
-                      {field.label}
-                    </label>
-                    <input
-                      ref={contactRef}
-                      id={`${uid}-contact`}
-                      type={inputMeta.type}
-                      autoComplete={inputMeta.autoComplete}
-                      placeholder={field.placeholder}
-                      value={contactValue}
-                      maxLength={LEAD_LIMITS.contact}
-                      aria-invalid={contactError ? true : undefined}
-                      aria-describedby={contactError ? contactErrId : undefined}
-                      onChange={(event) => {
-                        const value = event.target.value;
-                        setContactValue(value);
-                        if (contactError && isValidContact(method, value)) setContactError('');
-                      }}
-                      className={INPUT}
-                    />
-                    {contactError ? (
-                      <p id={contactErrId} className="m-0 text-[13px] text-magenta-ink">
-                        {contactError}
-                      </p>
-                    ) : field.help ? (
-                      <p className="m-0 text-[12.5px] text-night/70">{field.help}</p>
-                    ) : null}
-                  </div>
-                  {/* Honeypot, sent as `company`. The field itself has a
-                      name no browser autofills (a real "company" field can be
-                      filled by Chrome for a real parent, who would then be
-                      dropped as a bot), and no visible label. */}
-                  <div
-                    className="absolute -left-[9999px] h-px w-px overflow-hidden"
-                    aria-hidden="true"
-                  >
-                    <input
-                      id={`${uid}-hp`}
-                      name="sx-lead-hp"
-                      tabIndex={-1}
-                      autoComplete="off"
-                      value={company}
-                      onChange={(event) => setCompany(event.target.value)}
-                    />
-                  </div>
-                  {sendError ? (
-                    <p role="alert" className="m-0 text-[13px] text-magenta-ink">
-                      {sendError}
-                    </p>
-                  ) : null}
-                  <div className="mt-1">
-                    <button type="submit" className={`${BTN_PRIMARY} w-full`}>
-                      {strings.contact.send}
-                      <Arrow />
-                    </button>
-                  </div>
-                  <p className="m-0 text-xs text-night/70">{strings.contact.privacy}</p>
-                </form>
-              ) : null}
+                  </>
+                ) : null}
 
-              {screen === 'result' && pathResult ? (
-                <>
-                  {submitted ? (
-                    <div
-                      role="status"
-                      className="grid grid-cols-[24px_minmax(0,1fr)] items-start gap-2.5 rounded-xl bg-jade/10 px-3.5 py-3 text-sm text-night"
+                {screen === 'age' ? (
+                  <>
+                    <p className="m-0 text-[12.5px] font-semibold text-night/70">
+                      {fill(strings.step, { n: 2 })}
+                    </p>
+                    <h3
+                      ref={headingRef}
+                      tabIndex={-1}
+                      className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
                     >
-                      <svg
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2.2"
-                        aria-hidden="true"
-                        className="h-[22px] w-[22px] text-jade"
-                      >
-                        <circle cx="12" cy="12" r="10" />
-                        <path d="M7.5 12.5l3 3 6-6.5" />
-                      </svg>
-                      <div>
-                        <b className="font-bold">
-                          {fill(strings.result.thanks, { name: firstName.trim() })}
-                        </b>{' '}
-                        {whenReadyCopy()}
-                      </div>
+                      {strings.age.title}
+                    </h3>
+                    <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">{strings.age.sub}</p>
+                    <div className="grid grid-cols-3 gap-2.5">
+                      {AGE_VALUES.map((age) => (
+                        <OptionButton
+                          key={age}
+                          compact
+                          selected={ageNow === age}
+                          onClick={() => pickAge(age)}
+                          label={ageLabel(age, strings)}
+                        />
+                      ))}
                     </div>
-                  ) : null}
-                  <p className="-mb-2 m-0 text-[13px] font-bold tracking-[0.02em] text-blue">
-                    {strings.result.label}
-                  </p>
-                  {pathResult.blocked ? (
-                    <>
-                      <h3
-                        ref={headingRef}
-                        tabIndex={-1}
-                        className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
+                  </>
+                ) : null}
+
+                {screen === 'mode' ? (
+                  <>
+                    <p className="m-0 text-[12.5px] font-semibold text-night/70">
+                      {fill(strings.step, { n: 3 })}
+                    </p>
+                    <h3
+                      ref={headingRef}
+                      tabIndex={-1}
+                      className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
+                    >
+                      {strings.mode.title}
+                    </h3>
+                    <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">{strings.mode.sub}</p>
+                    <div className="grid gap-2.5">
+                      {MODES.map((key) => (
+                        <OptionButton
+                          key={key}
+                          selected={mode === key}
+                          onClick={() => pickMode(key)}
+                          label={strings.mode[key]}
+                          note={
+                            key === 'boarding'
+                              ? strings.mode.boardingNote
+                              : key === 'day'
+                                ? strings.mode.dayNote
+                                : undefined
+                          }
+                        />
+                      ))}
+                    </div>
+                  </>
+                ) : null}
+
+                {screen === 'choice' ? (
+                  <>
+                    <div className="flex flex-wrap items-center gap-1.5">
+                      <span className="rounded-pill bg-iris-soft px-2.5 py-1 text-[12.5px] font-semibold text-night">
+                        {startChipText(startValue, nowKey, strings)}
+                      </span>
+                      <span className="rounded-pill bg-iris-soft px-2.5 py-1 text-[12.5px] font-semibold text-night">
+                        {fill(strings.chips.age, { age: ageLabel(ageNow, strings) })}
+                      </span>
+                      <span className="rounded-pill bg-iris-soft px-2.5 py-1 text-[12.5px] font-semibold text-night">
+                        {strings.chips[mode]}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => go('start', 'back')}
+                        className="px-1 py-1 text-[12.5px] font-semibold text-blue underline underline-offset-2"
                       >
-                        {strings.result.blockedTitle}
-                      </h3>
-                      <div className="rounded-xl bg-parchment px-3.5 py-3 text-sm">
-                        {ageNow <= 17
-                          ? fill(strings.result.blockedLater, {
-                              start: startChipText(startValue, nowKey, strings),
-                            })
-                          : strings.result.blockedOlder}
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <h3
-                        ref={headingRef}
-                        tabIndex={-1}
-                        className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
-                      >
-                        {fill(strings.result.title, {
-                          programme: pathResult.entry.programme,
-                          year: pathResult.examYear,
-                        })}
-                      </h3>
-                      <p className="-mt-1 m-0 text-sm text-night/70">
-                        {fill(strings.result.summary, {
-                          years: strings.result.years[pathResult.entry.years],
-                          mode: strings.chips[mode],
-                          year: pathResult.examYear,
-                        })}
-                      </p>
-                      {pathResult.shifted ? (
-                        <div className="rounded-xl bg-parchment px-3.5 py-3 text-sm">
-                          {fill(strings.result.shifted, { year: pathResult.schoolYear })}
-                        </div>
-                      ) : null}
-                      <Timeline
-                        path={pathResult}
-                        startValue={startValue}
-                        strings={strings}
-                      />
-                    </>
-                  )}
-                  <FeeMap
-                    strings={strings}
-                    years={pathResult.blocked ? 0 : pathResult.entry.years}
-                    mode={mode}
-                    selected={selected}
-                    onSelect={handleSelect}
-                    interest={interest}
-                    submitted={submitted}
-                    onAsk={handleAsk}
-                  />
-                  <div className="grid gap-2">
-                    <CalButton className={`${BTN_PRIMARY} w-full`}>
-                      {strings.cta}
-                      <Arrow />
-                    </CalButton>
-                    <p className="m-0 text-center text-[13.5px] text-night/70">{summaryPdf}</p>
-                  </div>
-                  {!submitted ? (
-                    <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-night/6 pt-3.5 text-sm">
-                      <span>{strings.result.upsell}</span>
+                        {strings.chips.edit}
+                      </button>
+                    </div>
+                    <h3
+                      ref={headingRef}
+                      tabIndex={-1}
+                      className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
+                    >
+                      {strings.choice.title}
+                    </h3>
+                    <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">{strings.choice.body}</p>
+                    <div className="grid gap-2.5">
                       <button
                         type="button"
                         onClick={handlePersonalised}
-                        className="bg-transparent p-0 py-1 font-semibold text-blue"
+                        className="grid gap-1 rounded-[14px] border-[1.5px] border-blue bg-parchment p-4 text-left text-night transition-[border-color,background-color] duration-150 ease-parity hover:border-blue/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
                       >
-                        {strings.result.upsellCta} →
+                        <b className="flex items-center justify-between gap-2.5 text-base font-semibold">
+                          {strings.choice.yes}
+                          <em className="rounded-pill bg-yellow px-2.5 py-0.5 text-[11.5px] font-bold not-italic whitespace-nowrap text-night">
+                            {strings.choice.yesTime}
+                          </em>
+                        </b>
+                        <span className="text-[13.5px] text-night/70">{strings.choice.yesNote}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleResources}
+                        className="grid gap-1 rounded-[14px] border-[1.5px] border-night/12 bg-stone p-4 text-left text-night transition-[border-color,background-color] duration-150 ease-parity hover:border-blue/45 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue"
+                      >
+                        <b className="text-base font-semibold">{strings.choice.no}</b>
+                        <span className="text-[13.5px] text-night/70">{strings.choice.noNote}</span>
                       </button>
                     </div>
-                  ) : null}
-                </>
-              ) : null}
-            </motion.div>
-          )}
-        </div>
-        <div className="flex items-center justify-center border-t border-night/6 px-5 pt-3.5 pb-4">
-          <Image
-            src="/logo-studentx-geometric.png"
-            width={11200}
-            height={1600}
-            alt="StudentX"
-            sizes="120px"
-            className="block h-[17px] w-auto"
-          />
+                  </>
+                ) : null}
+
+                {screen === 'about' ? (
+                  <>
+                    <h3
+                      ref={headingRef}
+                      tabIndex={-1}
+                      className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
+                    >
+                      {strings.about.title}
+                    </h3>
+                    <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">{strings.about.sub}</p>
+                    {askedNames ? (
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="rounded-pill bg-iris-soft px-2.5 py-1 text-[12.5px] font-semibold text-night">
+                          {fill(strings.about.asked, { schools: askedNames })}
+                        </span>
+                      </div>
+                    ) : null}
+                    <div className="grid gap-1.5">
+                      <label htmlFor={`${uid}-about`} className="text-[13.5px] font-semibold">
+                        {strings.about.label}{' '}
+                        <span className="font-medium text-night/70">{strings.about.optional}</span>
+                      </label>
+                      <textarea
+                        id={`${uid}-about`}
+                        value={about}
+                        maxLength={LEAD_LIMITS.about}
+                        placeholder={strings.about.placeholder}
+                        onChange={(event) => setAbout(event.target.value)}
+                        className={`${INPUT} min-h-[150px] resize-y leading-normal`}
+                      />
+                    </div>
+                    <div className="mt-1">
+                      <button
+                        type="button"
+                        onClick={() => go('contact')}
+                        className={`${BTN_PRIMARY} w-full`}
+                      >
+                        {strings.about.next}
+                        <Arrow />
+                      </button>
+                    </div>
+                  </>
+                ) : null}
+
+                {screen === 'contact' ? (
+                  <form
+                    onSubmit={(event) => {
+                      event.preventDefault();
+                      void handleSend();
+                    }}
+                    className="grid content-start gap-4"
+                  >
+                    <h3
+                      ref={headingRef}
+                      tabIndex={-1}
+                      className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
+                    >
+                      {strings.contact.title}
+                    </h3>
+                    <p className="-mt-1.5 m-0 text-[14.5px] text-night/70">
+                      {strings.contact.turnaround}
+                    </p>
+                    <div className="grid gap-1.5">
+                      <label htmlFor={`${uid}-name`} className="text-[13.5px] font-semibold">
+                        {strings.contact.name}
+                      </label>
+                      <input
+                        ref={nameRef}
+                        id={`${uid}-name`}
+                        value={firstName}
+                        maxLength={LEAD_LIMITS.firstName}
+                        autoComplete="given-name"
+                        aria-invalid={nameError ? true : undefined}
+                        aria-describedby={nameError ? nameErrId : undefined}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          setFirstName(value);
+                          if (nameError && value.trim()) setNameError('');
+                        }}
+                        className={INPUT}
+                      />
+                      {nameError ? (
+                        <p id={nameErrId} className="m-0 text-[13px] text-magenta-ink">
+                          {nameError}
+                        </p>
+                      ) : null}
+                    </div>
+                    <div className="grid gap-1.5">
+                      <span id={`${uid}-method`} className="text-[13.5px] font-semibold">
+                        {strings.contact.method}
+                      </span>
+                      <div className="flex flex-wrap gap-1.5" role="group" aria-labelledby={`${uid}-method`}>
+                        {CONTACT_METHODS.map((item) => (
+                          <button
+                            key={item.key}
+                            type="button"
+                            aria-pressed={method === item.key}
+                            onClick={() => pickMethod(item.key)}
+                            className={METHOD}
+                          >
+                            {strings.contact.methods[item.key]}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="grid gap-1.5">
+                      <label htmlFor={`${uid}-contact`} className="text-[13.5px] font-semibold">
+                        {field.label}
+                      </label>
+                      <input
+                        ref={contactRef}
+                        id={`${uid}-contact`}
+                        type={inputMeta.type}
+                        autoComplete={inputMeta.autoComplete}
+                        placeholder={field.placeholder}
+                        value={contactValue}
+                        maxLength={LEAD_LIMITS.contact}
+                        aria-invalid={contactError ? true : undefined}
+                        aria-describedby={contactError ? contactErrId : undefined}
+                        onChange={(event) => {
+                          const value = event.target.value;
+                          setContactValue(value);
+                          if (contactError && isValidContact(method, value)) setContactError('');
+                        }}
+                        className={INPUT}
+                      />
+                      {contactError ? (
+                        <p id={contactErrId} className="m-0 text-[13px] text-magenta-ink">
+                          {contactError}
+                        </p>
+                      ) : field.help ? (
+                        <p className="m-0 text-[12.5px] text-night/70">{field.help}</p>
+                      ) : null}
+                    </div>
+                    {/* Honeypot, sent as `company`. The field itself has a
+                        name no browser autofills (a real "company" field can be
+                        filled by Chrome for a real parent, who would then be
+                        dropped as a bot), and no visible label. */}
+                    <div
+                      className="absolute -left-[9999px] h-px w-px overflow-hidden"
+                      aria-hidden="true"
+                    >
+                      <input
+                        id={`${uid}-hp`}
+                        name="sx-lead-hp"
+                        tabIndex={-1}
+                        autoComplete="off"
+                        value={company}
+                        onChange={(event) => setCompany(event.target.value)}
+                      />
+                    </div>
+                    {sendError ? (
+                      <p role="alert" className="m-0 text-[13px] text-magenta-ink">
+                        {sendError}
+                      </p>
+                    ) : null}
+                    <div className="mt-1">
+                      <button type="submit" className={`${BTN_PRIMARY} w-full`}>
+                        {strings.contact.send}
+                        <Arrow />
+                      </button>
+                    </div>
+                    <p className="m-0 text-xs text-night/70">{strings.contact.privacy}</p>
+                  </form>
+                ) : null}
+
+                {screen === 'result' && pathResult ? (
+                  <>
+                    {submitted ? (
+                      <div
+                        role="status"
+                        className="grid grid-cols-[24px_minmax(0,1fr)] items-start gap-2.5 rounded-xl bg-jade/10 px-3.5 py-3 text-sm text-night"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.2"
+                          aria-hidden="true"
+                          className="h-[22px] w-[22px] text-jade"
+                        >
+                          <circle cx="12" cy="12" r="10" />
+                          <path d="M7.5 12.5l3 3 6-6.5" />
+                        </svg>
+                        <div>
+                          <b className="font-bold">
+                            {fill(strings.result.thanks, { name: firstName.trim() })}
+                          </b>{' '}
+                          {whenReadyCopy()}
+                        </div>
+                      </div>
+                    ) : null}
+                    <p className="-mb-2 m-0 text-[13px] font-bold tracking-[0.02em] text-blue">
+                      {strings.result.label}
+                    </p>
+                    {pathResult.blocked ? (
+                      <>
+                        <h3
+                          ref={headingRef}
+                          tabIndex={-1}
+                          className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
+                        >
+                          {strings.result.blockedTitle}
+                        </h3>
+                        <div className="rounded-xl bg-parchment px-3.5 py-3 text-sm">
+                          {ageNow <= 17
+                            ? fill(strings.result.blockedLater, {
+                                start: startChipText(startValue, nowKey, strings),
+                              })
+                            : strings.result.blockedOlder}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <h3
+                          ref={headingRef}
+                          tabIndex={-1}
+                          className="m-0 font-display text-[1.6rem] leading-[1.15] font-normal text-balance focus:outline-none max-[480px]:text-[1.4rem]"
+                        >
+                          {fill(strings.result.title, {
+                            programme: pathResult.entry.programme,
+                            year: pathResult.examYear,
+                          })}
+                        </h3>
+                        <p className="-mt-1 m-0 text-sm text-night/70">
+                          {fill(strings.result.summary, {
+                            years: strings.result.years[pathResult.entry.years],
+                            mode: strings.chips[mode],
+                            year: pathResult.examYear,
+                          })}
+                        </p>
+                        {pathResult.shifted ? (
+                          <div className="rounded-xl bg-parchment px-3.5 py-3 text-sm">
+                            {fill(strings.result.shifted, { year: pathResult.schoolYear })}
+                          </div>
+                        ) : null}
+                        <Timeline
+                          path={pathResult}
+                          startValue={startValue}
+                          strings={strings}
+                        />
+                      </>
+                    )}
+                    <FeeMap
+                      strings={strings}
+                      years={pathResult.blocked ? 0 : pathResult.entry.years}
+                      mode={mode}
+                      selected={selected}
+                      onSelect={handleSelect}
+                      interest={interest}
+                      submitted={submitted}
+                      onAsk={handleAsk}
+                    />
+                    <div className="grid gap-2">
+                      <CalButton className={`${BTN_PRIMARY} w-full`}>
+                        {strings.cta}
+                        <Arrow />
+                      </CalButton>
+                      <p className="m-0 text-center text-[13.5px] text-night/70">{summaryPdf}</p>
+                    </div>
+                    {!submitted ? (
+                      <div className="flex flex-wrap items-center justify-between gap-2.5 border-t border-night/6 pt-3.5 text-sm">
+                        <span>{strings.result.upsell}</span>
+                        <button
+                          type="button"
+                          onClick={handlePersonalised}
+                          className="bg-transparent p-0 py-1 font-semibold text-blue"
+                        >
+                          {strings.result.upsellCta} →
+                        </button>
+                      </div>
+                    ) : null}
+                  </>
+                ) : null}
+              </motion.div>
+            )}
+          </div>
+          <div className="flex items-center justify-center border-t border-night/6 px-5 pt-3.5 pb-4">
+            <Image
+              src="/boarding/logo-studentx-sm.png"
+              width={420}
+              height={60}
+              alt="StudentX"
+              sizes="120px"
+              className="block h-[17px] w-auto"
+            />
+          </div>
         </div>
       </div>
     </MotionConfig>

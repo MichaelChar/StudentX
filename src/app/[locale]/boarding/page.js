@@ -3,6 +3,7 @@ import { HeaderSlot } from '@/components/HeaderSlot';
 import { CalLoader, CalButton } from '@/components/boarding/CalBooking';
 import FeeComparison from '@/components/boarding/FeeComparison';
 import LeadForm from '@/components/boarding/LeadForm';
+import { getLeadFormProps } from '@/components/boarding/leadFormProps';
 import PathPlanner from '@/components/boarding/PathPlanner';
 import Portrait from '@/components/boarding/Portrait';
 import ScoreCountUp from '@/components/boarding/ScoreCountUp';
@@ -28,7 +29,6 @@ import {
   WRAP,
 } from '@/components/boarding/styles';
 import { currentSchoolYear } from '@/lib/boardingPath';
-import { monthKey } from '@/lib/boardingLead';
 
 /*
   /boarding — Swiss boarding school placement landing page.
@@ -161,32 +161,7 @@ export default async function BoardingPage({ params }) {
     source: tc('source'),
   };
 
-  // The form's copy goes down raw: the client fills {placeholders} itself.
-  // The two plurals are formatted here, per possible year count, because a
-  // client component cannot run ICU on a raw string.
-  const formRaw = t.raw('form');
-  const yearCounts = [...new Set(ENTRY_POINTS.map((e) => e.years))];
-  const formStrings = {
-    ...formRaw,
-    result: {
-      ...formRaw.result,
-      years: Object.fromEntries(yearCounts.map((n) => [n, tp('years', { n })])),
-    },
-    map: {
-      ...formRaw.map,
-      years: Object.fromEntries(yearCounts.map((n) => [n, t('form.map.years', { n })])),
-    },
-    // Timeline labels are the planner's, so the two never drift apart.
-    timeline: {
-      join: tp.raw('join'),
-      moveUp: tp.raw('moveUp'),
-      apply: tp('nodes.apply'),
-      exams: tp('nodes.exams'),
-      uni: tp('nodes.uni'),
-      months: { may: tp('months.may'), sept: tp('months.sept'), autumn: tp('months.autumn') },
-    },
-    cta: t('hero.cta'),
-  };
+  const leadForm = await getLeadFormProps(locale);
 
   return (
     <div className="text-[17px] leading-[1.65] text-night">
@@ -252,12 +227,7 @@ export default async function BoardingPage({ params }) {
             <p className={LABEL}>{t('form.heading.label')}</p>
             <h2 className={H2}>{t('form.heading.title')}</h2>
           </div>
-          <LeadForm
-            strings={formStrings}
-            summaryPdf={summaryPdf}
-            buildMonth={monthKey(new Date())}
-            source="boarding"
-          />
+          <LeadForm {...leadForm} source="boarding" />
         </div>
       </section>
 
