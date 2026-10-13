@@ -31,6 +31,14 @@ for a different problem we do not currently have.
 >
 > Sections below are left as written, with the disproven ones marked.
 
+> ### Addendum, 2026-10-13 — `stale-while-revalidate` removed
+>
+> The public header is now `public, s-maxage=300`. The SWR directive had no
+> reader at the CDN (this document's finding). Browsers did read it, and they
+> used it to serve the previous build's RSC payloads after a deploy. See
+> "Deploy skew" at the end. Header values quoted in the measurements below
+> are as they were then.
+
 ## Two caches, routinely confused
 
 They sit at different layers and fix different things. Conflating them is
@@ -315,3 +323,117 @@ all. It is four parallel Supabase queries behind a dynamic render. The obvious
 next step would be caching common filter combinations, but the unfiltered entry
 is already the fast path and the long tail is genuinely per-user. Probably
 leave it.
+
+## Deploy skew (2026-10-13)
+
+**Symptom.** Minutes after #614 deployed, the first load of `/boarding` logged
+`Refused to apply style from '/_next/static/chunks/264gaaaleuaem.css' … MIME
+type ('text/html')`. That chunk 404s, and no page or `?_rsc=` payload on prod
+referenced it.
+
+**The hypothesis was a stale edge copy. That is refuted.** HTML and RSC
+responses carry no `cf-cache-status` and no `age`. That is the custom-domain
+finding above, re-checked on the day. The stale copy was in the **browser's**
+HTTP cache.
+
+**What happened, each step verified:**
+
+1. **Every deploy deletes the previous build's chunks.** Workers assets keep no
+   old versions. Turbopack chunk names are deterministic, so building each
+   merge locally maps them: `264gaaaleuaem.css` is #613's CSS,
+   `0nhnrikx6aia-.css` is #614's, and `2j0llkgtygka4.css` is #615's. #614 was
+   live for about 2.5 minutes (12:17 to 12:19:41 UTC) before #615 replaced it,
+   and by then #614's CSS 404'd as well. A missing chunk falls through to the
+   Worker, which returns the Next 404 page as `text/html`. Hence the MIME
+   error.
+2. **The `?_rsc=` payloads carried `public, s-maxage=300,
+   stale-while-revalidate=86400`**, the same rule as the HTML. A browser
+   ignores `s-maxage`, and with no `max-age` or `Last-Modified` the freshness
+   lifetime is 0. SWR then lets it serve the stale copy for up to a day.
+3. **Chromium honours SWR on `fetch()`, which is how the router requests RSC.**
+   It does not honour it on navigations. A local harness sent these exact
+   headers with a body that changed on every request. A repeat `fetch()` got
+   the OLD body from cache (`transferSize 0`), with only a background
+   `If-None-Match` reaching the server. A repeat navigation was revalidated
+   synchronously. So the HTML document is always current. Only the router's
+   prefetches and navigations can be stale.
+4. **Next decodes a payload before it checks the build ID.** In
+   `fetch-server-response.js` and `segment-cache/cache.js`, React Flight
+   dispatches the payload's `:HL[...css, "style"]` hint during decoding. Only
+   afterwards does the client compare the payload's build ID with its own,
+   then discard the prefetch or fall back to a full page load. The page stays
+   correct. The old CSS gets requested anyway.
+
+**Reproduced end to end** under `opennextjs-cloudflare preview`. The steps:
+serve #613's build, browse `/`, swap in #614's build on the same origin, and
+prefetch from a fresh page. The prefetches for `/` and `/results` came back
+from the browser cache (`transferSize 0`, #613's payloads). A
+`<link rel="preload" href="…/264gaaaleuaem.css">` was injected into the #614
+page, while the page itself used #614's stylesheet.
+
+**User-visible cost before the fix:** console noise, plus one wasted request
+per stale entry. A navigation onto a stale entry becomes a full page load
+instead of a soft one. Results pages, being dynamic, could also show data up
+to a day old for one navigation. No unstyled pages: the document itself is
+never stale.
+
+### Fix
+
+- **`public, s-maxage=300` with no SWR** (`next.config.mjs`, and
+  `src/middleware.js` for anon listing pages). Nothing is lost:
+  - The CDN never read the directive.
+  - Browsers sent the same revalidation request either way (SWR only moves
+    it to the background).
+  - Prod does not answer `If-None-Match` with 304 on these routes, so SWR
+    saved no bytes either.
+- **`/_next/static/*` → `public, max-age=31536000, immutable`** (`public/_headers`;
+  OpenNext's documented setting). Workers assets otherwise serve
+  `max-age=0, must-revalidate`, so a browser revalidated every chunk on every
+  page load. In local preview a second page load made 15 conditional requests
+  to `/_next/static`. With immutable, 18 of 22 chunks came straight from
+  cache. Every
+  deploy deletes the old chunks, so a revalidation of a chunk the visitor
+  already held would 404. Immutable lets them use their copy.
+  - Safe because the names are content addresses. Between the #614 and #615
+    builds, all 90 shared filenames were byte-identical.
+  - A missing chunk's 404 comes from the Worker, which keeps `no-store`, so a
+    404 is never cached.
+
+Verified with the same reproduction. After a deploy of a CSS-only change, the
+same `_rsc` URLs that had been served stale all went to the network, and no
+preload of the previous build's CSS appeared.
+
+**One-time transition.** Entries a browser cached before this deploy still
+carry the old SWR directive. The first load after the fix deploys can show the
+error once per entry. Their background revalidation replaces them.
+
+### What this does not cover, and why not more
+
+A tab left open across a deploy can still request a chunk it never loaded, for
+example a lazily imported component, and that chunk is gone. Next's build-ID
+check handles route navigations with a full page load. It does not handle
+lazy chunks or Server Actions (`admin/practice-reports` is the only one).
+Closing that gap means keeping old assets reachable:
+
+- **OpenNext's skew protection** (`cloudflare.skewProtection`) routes
+  old-deployment requests to each old version's preview URL on workers.dev.
+  It does not fit here:
+  - Preview URLs live on workers.dev, which #515 turned off for good reasons.
+  - It needs `run_worker_first`, which bills every asset request as a Worker
+    request.
+  - It needs a Workers Scripts API token in the build environment.
+  - It is marked experimental.
+- **Carrying the previous build's `_next/static` into each new deploy.** A
+  build step would fetch them and copy them in. It works, but it adds a
+  network dependency to every build and a manifest to maintain.
+
+At the current scale (a single-digit number of concurrent visitors, several
+deploys a day), neither is worth it. Revisit if `ChunkLoadError`s show up in
+Workers Logs.
+
+**If the CDN ever does cache HTML** (the attachment model changes), do NOT
+re-add SWR to these routes. A stale edge copy of the HTML document would be the
+original hypothesis made real: the first visitor after a deploy gets the old
+document, and its CSS 404s. Pair any edge caching of HTML with a purge on
+deploy.
+

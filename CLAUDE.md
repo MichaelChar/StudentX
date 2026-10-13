@@ -212,8 +212,8 @@ Conventions still in force:
 ## OpenNext-on-Workers quirks
 
 1. **Auth-touching pages don't get CDN caching, regardless of `next.config.mjs`.**
-   `next.config.mjs` declares `public, s-maxage=300, stale-while-revalidate=86400`
-   for marketing routes and `private, no-cache, no-store, must-revalidate` for
+   `next.config.mjs` declares `public, s-maxage=300` for marketing routes and
+   `private, no-cache, no-store, must-revalidate` for
    `/landlord/*`, `/listing/*`, `/student/*`.
    Verified via `curl` on prod: public pages get the public header correctly;
    auth-touching pages get `private, no-cache` regardless of any `s-maxage`
@@ -255,6 +255,19 @@ Conventions still in force:
    or upgrade Next/OpenNext, re-measure: count requests in the 6 s after `load`
    on `/gigs` (desktop) and `/about` (mobile) under `npm run preview`. Healthy
    is single digits.
+
+5. **Every deploy deletes the previous build's `/_next/static` chunks, so
+   HTML and `?_rsc=` responses must not carry `stale-while-revalidate`.**
+   Workers assets keep no old versions; the moment a deploy lands, the last
+   build's chunks 404 (as HTML). Browsers honour SWR on the router's `fetch()`,
+   so with it set, the first prefetch after a deploy is answered from the
+   browser's own cache with the OLD payload. Its CSS hint then 404s ("Refused
+   to apply style … MIME type text/html", 2026-10-13). The CDN never read the
+   header (custom-domain Worker, see `docs/edge-caching-assessment.md`), so
+   SWR had no upside. `/_next/static/*` is `immutable` via `public/_headers`
+   so visitors keep chunks they already hold. OpenNext's own skew protection
+   needs workers.dev preview URLs, which are off since #515. Details in the
+   assessment's "Deploy skew" section.
 
 ## /property city picker (parked)
 

@@ -27,7 +27,7 @@ import { MAX_DISTANCE_METERS } from '@/lib/universityDistances';
 // `public, s-maxage=`; authed with a synthetic stub cookie must NOT.
 
 const PRIVATE_CC = 'private, no-cache, no-store, must-revalidate';
-const PUBLIC_CC = 'public, s-maxage=300, stale-while-revalidate=86400';
+const PUBLIC_CC = 'public, s-maxage=300';
 
 // The canary's listing id is threaded into the marker, so the fixtures carry
 // one too. CANARY_ID matches DEFAULT_LISTING_ID in the route.
