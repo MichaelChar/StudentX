@@ -9,20 +9,19 @@ import { BTN_PRIMARY, H2, LABEL, MUTED } from '@/components/boarding/styles';
   the preview appends the very same <script> a partner would paste, so the
   page proves the line works rather than showing a picture of it.
 
-  The code shows the placeholder ref "yoursite" (founder's call,
-  2026-10-12: no name field). The link is the plain public quiz page, no
-  ref — founder's call the same day: just the quiz, on a public page. A
-  partner's ref is optional (/boarding/quiz?ref=… still tags their leads).
-  The live preview uses "partners-demo", so demo runs are told apart from
-  real embeds in boarding_leads. The shown code and link always point at
+  Both are shown without a partner ref — founder's call, 2026-10-12/13: the
+  simplest line and the plain public quiz page, refs can come back later.
+  Both still accept one (data-ref="…" on the script, ?ref=… on the link)
+  and tag that partner's leads with it. The live preview adds data-ref
+  "partners-demo", so demo runs are told apart from real embeds in
+  boarding_leads; it behaves exactly like the line shown. The shown code and link always point at
   https://studentx.uk; the preview loads from wherever this page is served,
   so it also works on localhost.
 */
 
 const SITE = 'https://studentx.uk';
-const SAMPLE_REF = 'yoursite';
 const DEMO_REF = 'partners-demo';
-const CODE = `<script src="${SITE}/boarding/embed.js" data-ref="${SAMPLE_REF}"></script>`;
+const CODE = `<script src="${SITE}/boarding/embed.js"></script>`;
 const QUIZ_PATH = '/boarding/quiz';
 const LINK_URL = `${SITE}${QUIZ_PATH}`;
 

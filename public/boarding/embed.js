@@ -1,13 +1,13 @@
 /*
   StudentX — Swiss boarding quiz embed.
 
-    <script src="https://studentx.uk/boarding/embed.js" data-ref="yoursite"></script>
+    <script src="https://studentx.uk/boarding/embed.js"></script>
 
   Puts the quiz in an iframe right where this script tag sits. The iframe
   grows to fit each step, so it never scrolls inside itself, and after each
   step it scrolls back into view if the visitor had scrolled past its top.
-  `data-ref` (letters, digits, dashes) tags the leads that come from your
-  site. Details: https://studentx.uk/boarding/partners
+  Optional `data-ref="yoursite"` (letters, digits, dashes) tags the leads
+  that come from your site. Details: https://studentx.uk/boarding/partners
 
   Kept to plain ES5 and no dependencies: it runs on other people's pages, in
   whatever browser their visitors use. The URL is permanent — partners paste
