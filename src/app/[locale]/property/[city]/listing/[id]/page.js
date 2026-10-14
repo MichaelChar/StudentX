@@ -86,9 +86,9 @@ export default async function ListingPage({ params, searchParams }) {
 
   /*
     Both reads fire together. They used to be serial awaits, which on an
-    uncached PDP render (the whole [locale] tree is force-dynamic) meant
-    stacking a full Supabase round-trip per step before the first byte — the
-    measured cost was a 1.0-1.8s TTFB.
+    uncached PDP render (the page reads searchParams, so it renders per
+    request) meant stacking a full Supabase round-trip per step before the
+    first byte — the measured cost was a 1.0-1.8s TTFB.
 
     Neither depends on the other:
       - getListingForRender(id) needs only the route param.
