@@ -32,12 +32,14 @@ import ResultsClient from './ResultsClient';
   where it matters most.
 
   WHY THIS DOES NOT BRING BACK THE 1101s. Issue #443 flags Cloudflare's
-  "cross-request I/O" error as the risk. That came from PRERENDERING, which
-  #316 removed by making the whole `[locale]` tree force-dynamic — and
-  re-enabling it still needs OpenNext's R2 incremental cache wired first. This
-  is not prerendering: it is a dynamic server component fetching per request,
-  exactly what `listing/[id]/page.js` already does on every listing view. Same
-  pattern, same runtime, already in production.
+  "cross-request I/O" error as the risk. That came from PRERENDERED routes
+  falling back to Next's in-memory response cache, which shares a render
+  stream across requests. #316 first blanket-disabled prerendering. #317 made
+  it safe again with the static-assets incremental cache and cache
+  interception (see `open-next.config.ts`). This page is not prerendered: it
+  reads searchParams, so it is a dynamic server component fetching per
+  request. `listing/[id]/page.js` does exactly that on every listing view.
+  Same pattern, same runtime, already in production.
 
   THE QUERY MUST MATCH WHAT THE CLIENT WOULD BUILD. Both sides go through
   `lib/resultsQuery.js` and the string is handed to the client as
