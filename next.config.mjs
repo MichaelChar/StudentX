@@ -142,14 +142,25 @@ const EMBEDDABLE_SECURITY_HEADERS = [
 // /listing/*, /student/*), and _next/static/.
 //   public               — any cache (browser + CDN) may store the response
 //   s-maxage=300         — CDN holds for 5 min
-//   stale-while-revalidate=86400 — serve stale up to 1 day while refetching
 // Locale is in the URL path (/en/... vs /...), so there's no cross-locale
 // cache pollution. Add `Vary: Accept-Language` defensively in case any
 // future negotiation is added.
+//
+// NO stale-while-revalidate (removed 2026-10-13, deploy skew). This rule
+// also covers the `?_rsc=` payloads the client router fetches, and browsers
+// honour SWR on fetch(): after a deploy, Chrome answered prefetches from its
+// own HTTP cache with the PREVIOUS build's payload, whose CSS hint pointed at
+// a chunk the deploy had just deleted (404 → "Refused to apply style").
+// The CDN never used it — a custom-domain Worker's HTML is not edge-cached
+// (docs/edge-caching-assessment.md) — so browsers were its only reader, and
+// there it only served stale data. With no max-age and no Last-Modified,
+// browsers now revalidate every time. See docs/edge-caching-assessment.md,
+// "Deploy skew". The synthetic canary matches `public, s-maxage=` — keep
+// s-maxage directly after public.
 const PUBLIC_CACHE_HEADERS = [
   {
     key: 'Cache-Control',
-    value: 'public, s-maxage=300, stale-while-revalidate=86400',
+    value: 'public, s-maxage=300',
   },
   { key: 'Vary', value: 'Accept-Language' },
 ];

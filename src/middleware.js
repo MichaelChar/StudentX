@@ -38,7 +38,10 @@ import { PARKED_HUB_TARGET } from './lib/cityPicker';
 // key by default and may not honour Vary: Cookie. If prod curl shows
 // the cached anon body served to authed users, add a Cache Rule
 // "Bypass cache when Cookie contains sb-access-token" in the dashboard.
-const PUBLIC_CACHE = 'public, s-maxage=300, stale-while-revalidate=86400';
+// No stale-while-revalidate: browsers apply it to the router's `?_rsc=`
+// fetches and serve the previous build's payload after a deploy. See
+// PUBLIC_CACHE_HEADERS in next.config.mjs.
+const PUBLIC_CACHE = 'public, s-maxage=300';
 const PRIVATE_CACHE = 'private, no-cache, no-store, must-revalidate';
 // /en/ and /el/ prefixes dropped from the regex in Step B (issue #158) —
 // those URLs now 301 to the unprefixed form via next.config.mjs and won't

@@ -8,3 +8,14 @@
 /flashcards/*
   Content-Type: application/octet-stream
   Content-Disposition: attachment
+
+# Build output is content-addressed (chunk and media names are content
+# hashes; the manifests sit under a per-build /_next/static/<BUILD_ID>/
+# directory), so a name never changes meaning. Without this rule, Workers
+# assets serve `max-age=0, must-revalidate`, so the browser revalidates every
+# chunk on every page load. Worse, every deploy deletes the previous build's
+# chunks, so a chunk the visitor already holds still 404s on that
+# revalidation. Immutable lets them keep using it. Next's own default and
+# OpenNext's documented recommendation (opennext.js.org/cloudflare/caching).
+/_next/static/*
+  Cache-Control: public, max-age=31536000, immutable
