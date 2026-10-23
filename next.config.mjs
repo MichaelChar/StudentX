@@ -381,13 +381,10 @@ const nextConfig = {
       // Exact path only — /student/login, /student/ausom/**, /student/flashcards/**
       // etc. are unrelated auth/content surfaces and must keep resolving unchanged.
       { source: '/student', destination: '/resources', permanent: true },
-      // About pages switched off (founder's call, 2026-10-13) while /about is
-      // rebuilt as the manifesto. TEMPORARY on purpose — a 307, not a 301, so
-      // browsers and search engines don't cache it: /about comes back. Delete
-      // the /about rule when the manifesto ships. /property/about is listed
-      // so it is one hop here rather than middleware's 301 to the city page
-      // and then this. Both page files are kept; nothing renders them now.
-      { source: '/about', destination: '/', permanent: false },
+      // City About pages stay switched off (founder's call, 2026-10-13). 307,
+      // not 301, so they can come back. /about itself is the manifesto now.
+      // /property/about is listed so it is one hop here rather than
+      // middleware's 301 to the city page and then this.
       { source: '/property/about', destination: '/', permanent: false },
       { source: '/property/:city/about', destination: '/', permanent: false },
       // /en/* and /el/* catch-alls. These come LAST so the explicit

@@ -1,17 +1,14 @@
-import { redirect } from 'next/navigation';
-import { setRequestLocale } from 'next-intl/server';
+import { setRequestLocale, getTranslations } from 'next-intl/server';
 import Link from 'next/link';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
 
-const ACCENT = '#6058F7';
-const INK = '#0a2540';
-
-export function generateMetadata() {
+export async function generateMetadata({ params }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: 'manifesto' });
   return {
-    title: 'About Us — StudentX',
-    description:
-      'StudentX is a curated student housing directory for Aristotle University, Thessaloniki. Built by students, for students.',
+    title: t('metaTitle'),
+    description: t('metaDescription'),
     alternates: {
       canonical: `${SITE_URL}/about`,
     },
@@ -21,140 +18,68 @@ export function generateMetadata() {
 export default async function AboutPage({ params }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  redirect(`/${locale}`);
-}
+  const t = await getTranslations({ locale, namespace: 'manifesto' });
 
-function Section({ eyebrow, heading, children, style }) {
   return (
-    <section style={{ maxWidth: 680, margin: '0 auto', padding: '56px 24px', ...style }}>
-      {eyebrow && (
-        <p
-          style={{
-            margin: '0 0 12px',
-            fontSize: 11,
-            fontWeight: 700,
-            letterSpacing: '0.12em',
-            textTransform: 'uppercase',
-            color: ACCENT,
-          }}
-        >
-          {eyebrow}
-        </p>
-      )}
-      {heading && (
-        <h2
-          style={{
-            margin: '0 0 20px',
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: 'clamp(24px, 4vw, 36px)',
-            letterSpacing: '-0.5px',
-            lineHeight: 1.1,
-            color: INK,
-          }}
-        >
-          {heading}
-        </h2>
-      )}
-      {children}
-    </section>
-  );
-}
-
-function Divider() {
-  return (
-    <div style={{ maxWidth: 680, margin: '0 auto', padding: '0 24px' }}>
-      <hr style={{ border: 'none', borderTop: '1px solid rgba(10,37,64,0.08)' }} />
-    </div>
-  );
-}
-
-function Body({ children, style }) {
-  return (
-    <p
-      style={{
-        margin: '0 0 16px',
-        fontSize: 16,
-        lineHeight: 1.75,
-        color: 'rgba(10,37,64,0.65)',
-        ...style,
-      }}
-    >
-      {children}
-    </p>
-  );
-}
-
-function AboutContent() {
-  return (
-    <div>
-      {/* Back link */}
-      <div style={{ maxWidth: 680, margin: '0 auto', padding: '32px 24px 0' }}>
-        <Link
-          href="/"
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: 6,
-            fontSize: 13,
-            fontWeight: 600,
-            color: 'rgba(10,37,64,0.7)',
-            textDecoration: 'none',
-            letterSpacing: '-0.1px',
-          }}
-        >
-          <span style={{ fontSize: 16, lineHeight: 1 }}>←</span> StudentX
-        </Link>
-      </div>
-
-      {/* Hero */}
-      <section style={{ maxWidth: 680, margin: '0 auto', padding: '48px 24px 56px' }}>
-        <h1
-          style={{
-            margin: '0 0 32px',
-            fontFamily: 'var(--font-display)',
-            fontWeight: 700,
-            fontSize: 'clamp(32px, 6vw, 52px)',
-            letterSpacing: '-1px',
-            lineHeight: 1.05,
-            color: INK,
-          }}
-        >
-          About StudentX
+    <main className="bg-stone">
+      <article className="mx-auto max-w-[720px] px-4 py-16 sm:px-6 sm:py-24">
+        <p className="label-caps text-blue">{t('eyebrow')}</p>
+        <h1 className="mt-4 font-display text-[clamp(2rem,5vw,3.25rem)] font-bold leading-[1.08] tracking-tight text-night">
+          {t('titleLead')} <span className="text-blue">{t('titleAccent')}</span>
         </h1>
-        <Body>
-          My name is Michael. I am a first year medical student in AUSoM, Thessaloniki and future
-          Swiss doctor. I aim to provide value to society, and StudentX was born for this.
-        </Body>
-        <Body>
-          As part of this goal, I am working on other projects. One is digital content, where I
-          explore incompressible strategies for students. I aim to help high school students to
-          medical school applicants to university optimisers.
-        </Body>
-        <Body style={{ marginBottom: 0 }}>
-          <a
-            href="https://www.youtube.com/@TheMichaelGrundlingh"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: ACCENT, textDecoration: 'none', fontWeight: 500 }}
-          >
-            Check us out
-          </a>
-        </Body>
-      </section>
+        <p className="mt-5 text-lg text-night/70">{t('sub')}</p>
+        <div
+          aria-hidden="true"
+          className="mt-8 h-1 w-14 rounded-full"
+          style={{ background: 'var(--gradient-brand)' }}
+        />
 
-      {/* Footer */}
-      <div
-        style={{
-          textAlign: 'center',
-          padding: '32px 24px 48px',
-          fontSize: 12,
-          color: 'rgba(10,37,64,0.7)',
-          letterSpacing: '0.3px',
-        }}
-      >
-        © {new Date().getFullYear()} StudentX
-      </div>
-    </div>
+        <p className="mt-10 text-2xl leading-snug text-night">{t('lede')}</p>
+        <p className="mt-6 text-lg leading-relaxed text-night/70">{t('body')}</p>
+
+        <blockquote className="relative my-12 border-y border-night/10 py-10">
+          <span
+            aria-hidden="true"
+            className="absolute -top-1 left-0 font-display text-7xl leading-none text-magenta"
+          >
+            “
+          </span>
+          <p className="pt-8 font-display text-2xl font-bold leading-snug text-blue sm:text-3xl">
+            {t('quote')}
+          </p>
+        </blockquote>
+
+        <p className="text-lg leading-relaxed text-night/70">{t('closing')}</p>
+
+        <div className="mt-10 flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <p className="font-display text-xl font-bold text-night">{t('signatureName')}</p>
+            <p className="text-sm text-night/70">{t('signatureRole')}</p>
+          </div>
+          <p className="rounded-full bg-parchment px-4 py-2 text-sm text-night/70">
+            {t('partner')}
+          </p>
+        </div>
+
+        <div className="mt-10 flex flex-wrap gap-3">
+          <Link
+            href="/property/thessaloniki"
+            className="rounded-full bg-blue px-6 py-3 font-semibold text-white"
+          >
+            {t('browse')}
+          </Link>
+          <Link
+            href="/"
+            className="rounded-full border border-night/20 px-6 py-3 font-semibold text-night"
+          >
+            {t('explore')}
+          </Link>
+        </div>
+
+        <p className="mt-16 text-center text-xs text-night/70">
+          {t('copyright', { year: new Date().getFullYear() })}
+        </p>
+      </article>
+    </main>
   );
 }
