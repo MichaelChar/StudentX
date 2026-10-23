@@ -177,6 +177,24 @@
     "rejectedHint": "Previous video verification was not approved: {notes}",
     "alreadyVerified": "This listing is already property-verified."
   },
+  "manifesto": {
+    "metaTitle": "Manifesto",
+    "metaDescription": "Greece is attracting more international students every year, yet reliable information for them is scarce. This was the driving principle behind StudentX.",
+    "eyebrow": "Manifesto",
+    "titleLead": "Greece is attracting more international students every year, yet",
+    "titleAccent": "reliable information for them is scarce.",
+    "sub": "This was the driving principle behind StudentX.",
+    "lede": "StudentX is an “everything app” and the official housing partner of Aristotle University School of Medicine (Thessaloniki, Greece).",
+    "body": "It provides direct access to the student community of South-East Europe. The platform mobilises the youth population through digital infrastructure supporting student experiences across housing, networking, and community engagement.",
+    "quote": "We are now the largest student-focused platform in the country.",
+    "closing": "With significant and rapidly growing social reach, we are currently operating in Greece, with inter-European expansion underway.",
+    "signatureName": "Michael",
+    "signatureRole": "Founder, StudentX",
+    "partner": "Official housing partner · Aristotle University School of Medicine",
+    "browse": "Browse homes",
+    "explore": "Explore StudentX",
+    "copyright": "© {year} StudentX"
+  },
   "about": {
     "metaTitle": "About StudentX",
     "metaDescription": "StudentX helps students find housing near their university in Thessaloniki, Greece. Free for students, free for landlords.",

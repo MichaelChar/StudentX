@@ -34,6 +34,7 @@ function studyGroup(t) {
     { href: '/resources', label: t('resources') },
     { href: '/student/ausom', label: t('practiceTests') },
     { href: '/gigs', label: t('services') },
+    { href: '/about', label: t('about') },
   ];
 }
 
