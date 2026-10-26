@@ -19,3 +19,9 @@
 # OpenNext's documented recommendation (opennext.js.org/cloudflare/caching).
 /_next/static/*
   Cache-Control: public, max-age=31536000, immutable
+
+# Build stamp (scripts/write-build-version.mjs). Read by the post-deploy-verify
+# workflow to learn which commit is live; a cached copy would answer for an
+# older build.
+/version.json
+  Cache-Control: no-store

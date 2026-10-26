@@ -58,3 +58,6 @@ next-env.d.ts
 
 # Supabase CLI local scratch (machine-specific)
 supabase/.temp/
+
+# build stamp written by scripts/write-build-version.mjs on cf:build
+/public/version.json
