@@ -666,6 +666,7 @@ seed-load step on every PR. Migration 038 caught this the hard way.
 | `migration-check.yml`   | PR touching `supabase/**`  | `supabase start` (clean-stack apply) + fail-closed `applied-to-prod` gate |
 | `claude.yml`            | Issue/PR mentions          | Claude Code GitHub Action |
 | `claude-code-review.yml`| PR opened/updated          | Automated PR review (write scope per PR #55) |
+| `post-deploy-verify.yml`| push to main (+ manual)    | Waits for prod to serve the pushed commit, smoke-tests it, watches for a rollback |
 
 Only the build job and Cloudflare Workers Build are **required** to merge;
 the migration gate and review workflows are advisory (see Database section
@@ -715,12 +716,21 @@ runs `npm run cf:build` and deploys to the `studentx` Worker.
 push to `main` starts its own build, and whichever deploy finishes last wins —
 not the newest commit. On 2026-10-02 #590, #587, #588 and #589 were merged
 within a minute; prod stayed on #587's merge, so #588 and #589 were merged but
-not live 30 minutes later, while every check on `main` read green. After
-merging a batch, **verify prod serves the newest change** (a marker unique to
-the last PR) instead of trusting the checks; if it doesn't, retry the latest
-`main` build in the Cloudflare dashboard, or merge one more PR to trigger a
-fresh build of the head commit. Merging one PR at a time and waiting for its
-deploy avoids it.
+not live 30 minutes later, while every check on `main` read green. If it
+happens, retry the latest `main` build in the Cloudflare dashboard, or merge
+one more PR to trigger a fresh build of the head commit. Merging one PR at a
+time and waiting for its deploy avoids it.
+
+**`post-deploy-verify` now catches this.** `cf:build` stamps the commit into
+`public/version.json` (`scripts/write-build-version.mjs`, from Workers Builds'
+`WORKERS_CI_COMMIT_SHA`), and the workflow polls `studentx.uk/version.json`
+until it names the pushed commit (20 min cap), runs structural smoke checks
+(app shell, every referenced `/_next/static` chunk, listings API, a PDP, a
+real 404), then watches 5 more minutes for an older build landing after it.
+A red run on a `main` commit means **merged but not correctly live** — read
+its job summary. It is not a merge gate (it runs after merge). Superseded
+runs are cancelled, so only the newest push is verified. Run the smoke checks
+alone locally with `node scripts/verify-deploy.mjs`.
 
 ## Sub-agent worktrees
 

@@ -1,0 +1,44 @@
+name: Post-deploy verify
+
+# Cloudflare Workers Builds deploys every push to main from the Cloudflare
+# dashboard, outside GitHub, so nothing here knew whether a merge actually
+# reached production. This waits for studentx.uk to serve the pushed commit
+# (public/version.json), smoke-tests the live site, then watches for an older
+# build landing after it. A red run on a main commit means "merged but not
+# (correctly) live". The phases and why each exists: scripts/verify-deploy.mjs.
+#
+# Informational, not a merge gate — it runs after the merge by construction.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      sha:
+        description: 'Commit prod should be serving (blank = smoke checks only)'
+        required: false
+
+# Only the newest push is worth verifying: it is the build that should end up
+# live. A superseded run is cancelled rather than left to time out.
+concurrency:
+  group: post-deploy-verify
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Wait for the deploy, then smoke-test production
+        run: node scripts/verify-deploy.mjs
+        env:
+          EXPECTED_SHA: ${{ github.event_name == 'push' && github.sha || inputs.sha }}
