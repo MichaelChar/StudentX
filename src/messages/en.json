@@ -36,7 +36,6 @@
     "becomeAHost": "Become a host",
     "resources": "Resources",
     "practiceTests": "Practice tests",
-    "services": "Services",
     "openMenuUnread": "Open menu, {count} unread",
     "mobileTabs": {
       "label": "Main",
@@ -48,7 +47,12 @@
       "today": "Today",
       "listings": "Listings",
       "waiting": "Waiting for your reply"
-    }
+    },
+    "housing": "Student Housing",
+    "boarding": "Swiss Boarding Schools",
+    "admissions": "Medical School Admissions",
+    "holidayGigs": "Holiday Gigs",
+    "blog": "Blog"
   },
   "footer": {
     "tagline": "The official housing partner for first-year medical students at Aristotle University of Thessaloniki.",
@@ -639,29 +643,6 @@
     }
   },
   "propylaea": {
-    "landing": {
-      "headline": "Curated student housing in Thessaloniki.",
-      "ctaPrimary": "Take the quiz",
-      "ctaSecondary": "Browse all listings",
-      "programmeEyebrow": "The programme",
-      "programmeTitle": "Vetting, not",
-      "programmeTitleItalic": "luck.",
-      "programmeLede": "Every landlord in the Aristotle × StudentX programme is vetted. Walking time to the School of Medicine is calculated automatically.",
-      "statListings": "Listings",
-      "statReply": "Avg. reply",
-      "statBrokerage": "Brokerage",
-      "statBrokerageValue": "{amount}",
-      "statReplyValue": "48h",
-      "howEyebrow": "How it works",
-      "howTitle": "Three steps. No",
-      "howTitleItalic": "surprises.",
-      "step1English": "Tell us what you need",
-      "step1Body": "Faculty, budget, neighborhood.",
-      "step2English": "See matched listings",
-      "step2Body": "With faculty distances and verification.",
-      "step3English": "Reach out directly",
-      "step3Body": "No brokers. No hidden fees."
-    },
     "carousel": {
       "eyebrow": "Selected listings",
       "title": "Featured",
@@ -1666,7 +1647,22 @@
     "boardingDesc": "Affordable Swiss boarding school options.",
     "servicesDesc": "Practice tests, flashcard decks and study notes.",
     "holidayGigsDesc": "Find a summer job that fits your break.",
-    "blogDesc": "Guides and stories from students."
+    "blogDesc": "Guides and stories from students.",
+    "heading": "StudentX: Swiss boarding schools and student housing",
+    "housingHeading": "Student housing in Thessaloniki",
+    "productsNav": "Main products",
+    "navBoarding": "Boarding",
+    "navHousing": "Housing",
+    "housing": "Student Housing",
+    "boardingTagline": "Ask me anything about the best value Swiss boarding school.",
+    "boardingCta": "Book a free 15-min chat",
+    "boardingMore": "Learn more",
+    "boardingPhotoAlt": "Michael",
+    "housingTagline": "Verified homes near your university in Thessaloniki.",
+    "housingCta": "Browse homes",
+    "housingQuiz": "Take the quiz",
+    "housingImageAlt": "Line drawing of a yellow container home",
+    "admissionsShort": "Medical Admissions"
   },
   "admissions": {
     "meta": {

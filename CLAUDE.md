@@ -15,6 +15,12 @@ directory (`/property`): students browse listings filtered by faculty +
 commute time; landlords manage listings and reply to inquiries. Not an
 open marketplace — every listing is curated and verified.
 
+**`/` is a two-product front door**, Swiss Boarding Schools and Student Housing
+as equal panels (founder's call, 2026-10-30): the site goes to partners for
+different businesses. The housing-first homepage moved unchanged to
+`/property/thessaloniki`. Every other product is a footer or header-menu link,
+so a new product needs a row in `AccountMenu` or it is unreachable.
+
 Around that core sit the monetizing / retention surfaces:
 
 - **`/gigs`** — student-services marketplace (browse, results, detail;

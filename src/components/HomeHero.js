@@ -5,8 +5,9 @@ import { motion, useScroll, useTransform } from 'motion/react';
 import { heroFade } from '@/lib/heroFade';
 import Icon from './ui/Icon';
 
-// Homepage hero — "illustration behind" (founder's pick, 2026-10-03, option 1+
-// of the homepage mockups). At rest it is a short static hero: the StudentX
+// Housing home hero (the site homepage until 2026-10-30) — "illustration
+// behind" (founder's pick, 2026-10-03, option 1+ of the homepage mockups). At
+// rest it is a short static hero: the StudentX
 // wordmark over the container illustration, ~60% of the screen on desktop and
 // 46% on a phone, so the search bar and listings start on the first screen.
 // It replaced a 200vh scroll-pinned track that held the illustration for two
@@ -14,7 +15,7 @@ import Icon from './ui/Icon';
 //
 // The illustration is a FIXED layer rather than part of the section: as the
 // page scrolls it drifts up at 0.3x the scroll speed and fades to a 14% floor
-// (a deliberate watermark), and the content below (z-[1] in page.js) slides up
+// (a deliberate watermark), and the content below (z-[1] in HousingHome) slides up
 // over it. The wordmark and cue scroll away with the page normally.
 //
 // Reduced motion is split in CSS (`motion-reduce:`), NOT with useReducedMotion:
@@ -26,7 +27,8 @@ import Icon from './ui/Icon';
 // The image is object-contain on white: the artwork's own canvas is white, so
 // the letterboxing is invisible and the whole drawing shows at every size.
 // The wordmark keeps its 62vw / max-w-4xl sizing, which matches the branded
-// og-default.png link preview, and is the page's h1 (alt "StudentX").
+// og-default.png link preview. The page's h1 is the visually hidden `heading`
+// beside it, so this page keeps a descriptive h1 with no visible hero text.
 //
 // The fixed layer sits where the hero section sits at rest: below the 56px
 // mobile header (which scrolls away; `--header-h` is 0 below md) and below the
@@ -50,7 +52,7 @@ function Illustration({ priority = false }) {
   );
 }
 
-export default function HomeHero() {
+export default function HomeHero({ heading }) {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, (v) => v * -0.3);
   const opacity = useTransform(scrollY, fade);
@@ -71,9 +73,10 @@ export default function HomeHero() {
         </div>
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-6 px-6">
           <h1 className="m-0 leading-none">
+            <span className="sr-only">{heading}</span>
             <Image
               src="/logo-tesla-2048w.png"
-              alt="StudentX"
+              alt=""
               width={2048}
               height={183}
               loading="eager"
