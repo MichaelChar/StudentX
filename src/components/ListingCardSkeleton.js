@@ -2,7 +2,7 @@ import Skeleton from '@/components/ui/Skeleton';
 
 /*
   Loading placeholder for `ListingCard`, shared by the results grid and
-  `DirectoryCarousel`.
+  `HomeListings`.
 
   It existed twice before this — byte-identical `SkeletonCard` functions
   defined locally in both files — and both copies had drifted away from the

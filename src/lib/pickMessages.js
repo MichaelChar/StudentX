@@ -116,7 +116,6 @@ export const PROPERTY_PUBLIC_NAMESPACES = withRoot(
   'propylaea.filtersModal',
   'propylaea.gallery',
   'propylaea.hub',
-  'propylaea.landing',
   'propylaea.listing.booking',
   'propylaea.listing.calendar',
   'propylaea.quiz',
@@ -144,19 +143,6 @@ export const STUDENT_NAMESPACES = withRoot(
   'student',
 );
 
-// The homepage (src/app/[locale]/page.js), which provides its own set: since
-// the 2026-10-03 rebuild it renders the expanded search bar, its date picker
-// and live ListingCards. Scoped to the page file alone — `dir: ''` would sweep
-// in every route tree.
-export const HOME_NAMESPACES = withRoot(
-  'listingCard',
-  'propertyVerification',
-  'propylaea.carousel',
-  'propylaea.dateRange',
-  'propylaea.results',
-  'propylaea.search',
-);
-
 export const ADMIN_NAMESPACES = withRoot('admin');
 
 export const GIGS_NAMESPACES = withRoot('gigs', 'propylaea.gallery');
@@ -171,7 +157,6 @@ export const AUTH_NAMESPACES = withRoot('auth', 'student.oauth');
 // its own set below this one.
 export const ROUTE_NAMESPACE_SETS = [
   { dir: '', namespaces: ROOT_NAMESPACES, rootLayoutOnly: true },
-  { dir: '', namespaces: HOME_NAMESPACES, files: ['page.js'], label: 'homepage' },
   { dir: 'property', namespaces: PROPERTY_PUBLIC_NAMESPACES, exclude: ['property/[city]/landlord'] },
   { dir: 'property/[city]/landlord', namespaces: PROPERTY_LANDLORD_NAMESPACES },
   { dir: 'student', namespaces: STUDENT_NAMESPACES },

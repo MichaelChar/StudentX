@@ -14,12 +14,13 @@ import Divider from '@/components/ui/Divider';
   panel beneath it. Built on the `Popover` primitive (#411), so outside-click,
   Escape and focus handling are not re-implemented here.
 
-  THIS PANEL IS THE ONLY NAVIGATION TO ANYTHING THAT IS NOT HOUSING. Feature 3
-  (header product tabs) was skipped, so `/resources`, `/student/ausom` and
-  `/gigs` are unreachable from the header by any other route. That is why the
-  study/services group appears in all three states, landlord included — it
-  reads slightly odd for a landlord, and reachability still won (founder's
-  call, 2026-08-21).
+  THIS PANEL IS THE ONLY SITE-WIDE NAVIGATION BETWEEN PRODUCTS. Feature 3
+  (header product tabs) was skipped, so every product is unreachable from the
+  header by any other route. That is why the products group appears in all
+  three states, landlord included — it reads slightly odd for a landlord, and
+  reachability still won (founder's call, 2026-08-21). Housing, Boarding,
+  Admissions and Blog joined it on 2026-10-30, when the homepage stopped
+  linking to every product.
 
   Ordering is frequency-descending with rare and destructive actions last,
   approved 2026-08-21. Group order is fixed; only membership varies by role.
@@ -29,11 +30,15 @@ import Divider from '@/components/ui/Divider';
 */
 
 // Shared by all three states — the surfaces Feature 3's removal stranded.
-function studyGroup(t) {
+function productsGroup(t, city) {
   return [
+    { href: `/property/${city}`, label: t('housing') },
+    { href: '/boarding', label: t('boarding') },
+    { href: '/admissions', label: t('admissions') },
     { href: '/resources', label: t('resources') },
     { href: '/student/ausom', label: t('practiceTests') },
-    { href: '/gigs', label: t('services') },
+    { href: '/gigs', label: t('holidayGigs') },
+    { href: 'https://blog.studentx.uk', label: t('blog'), external: true },
     { href: '/about', label: t('about') },
   ];
 }
@@ -51,7 +56,7 @@ function groupsFor({ role, t, city, accountHref, messagesHref }) {
         { href: `/property/${city}/landlord/reservations`, label: t('reservations') },
         { href: `/property/${city}/landlord/listings`, label: t('listings') },
       ],
-      studyGroup(t),
+      productsGroup(t, city),
       [
         { href: accountHref, label: t('account') },
         { action: 'signOut', label: t('signOut') },
@@ -66,7 +71,7 @@ function groupsFor({ role, t, city, accountHref, messagesHref }) {
         { href: '/student/account/bookings', label: t('bookings') },
         { href: '/student/account/accommodation', label: t('wishlists') },
       ],
-      studyGroup(t),
+      productsGroup(t, city),
       [
         // NOT `/student/account` — that is a redirect() onto the saved view,
         // which is the Wishlists row above. Profile is the real account screen.
@@ -81,7 +86,7 @@ function groupsFor({ role, t, city, accountHref, messagesHref }) {
       { href: '/signup', label: t('signUp') },
       { href: '/login', label: t('logIn') },
     ],
-    studyGroup(t),
+    productsGroup(t, city),
     [{ href: '/signup?type=landlord', label: t('becomeAHost') }],
   ];
 }
@@ -165,6 +170,18 @@ export default function AccountMenu({
                 >
                   {item.label}
                 </button>
+              ) : item.external ? (
+                <a
+                  key={item.href}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  role="menuitem"
+                  onClick={() => setOpen(false)}
+                  className={ROW}
+                >
+                  <span>{item.label}</span>
+                </a>
               ) : (
                 <Link
                   key={item.href}

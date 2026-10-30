@@ -789,6 +789,13 @@ Second state of the Feature 1 component, not a separate component.
 > mockups, chosen over a services-hub layout. It deliberately replaces the
 > 2026-06 hub of six equal buttons under a two-screen pinned hero; no hero text,
 > keeping the June simplification. Don't restore the hub without asking.
+>
+> **Moved 2026-10-30 (founder's call).** That page now lives unchanged at
+> `/property/thessaloniki`, replacing the old city landing. `/` became a
+> two-product front door: Swiss Boarding Schools and Student Housing as equal
+> panels, with Admissions, Resources, Gigs and Blog as footer and menu links.
+> The site goes to partners for different businesses, and the housing-first
+> homepage read as a housing company.
 
 ### ❌ Feature 3 — Header product tabs — **SKIP**
 

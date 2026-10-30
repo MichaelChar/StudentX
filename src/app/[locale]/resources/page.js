@@ -3,8 +3,17 @@ import { setRequestLocale } from 'next-intl/server';
 import { Link } from '@/i18n/navigation';
 import ResourcesExplorer from '@/components/ResourcesExplorer';
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
+
+// The template in [locale]/layout.js adds the "— StudentX" suffix. Without its
+// own canonical this page inherits the root's, which tells Google it is a
+// duplicate of the homepage.
 export function generateMetadata() {
-  return { title: 'Student Resources — StudentX' };
+  return {
+    title: 'Student Resources',
+    description: 'Practice tests, flashcard decks and study notes.',
+    alternates: { canonical: `${SITE_URL}/resources` },
+  };
 }
 
 export default async function ResourcesPage({ params }) {

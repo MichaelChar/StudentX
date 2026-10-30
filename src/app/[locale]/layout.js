@@ -52,36 +52,42 @@ export const viewport = {
   themeColor: '#ffffff',
 };
 
+// Site-level defaults, which are the homepage's own title and link preview.
+// Housing's live in [locale]/property/layout.js. og-home.png is a new filename
+// on purpose: WhatsApp and iMessage cache previews by image URL.
+const SITE_TITLE = 'StudentX — Swiss Boarding Schools and Student Housing';
+const SITE_DESCRIPTION = 'Affordable Swiss boarding school options and verified student homes in Thessaloniki.';
+
 export function generateMetadata() {
   return {
     metadataBase: new URL(SITE_URL),
     title: {
-      default: 'StudentX — Student Housing in Thessaloniki',
+      default: SITE_TITLE,
       template: '%s — StudentX',
     },
-    description: 'Find student housing near your university in Thessaloniki.',
+    description: SITE_DESCRIPTION,
     alternates: {
       canonical: SITE_URL,
     },
     openGraph: {
       siteName: 'StudentX',
       locale: 'en_GB',
-      title: 'StudentX',
-      description: 'Browse student services by city.',
+      title: SITE_TITLE,
+      description: SITE_DESCRIPTION,
       images: [
         {
-          url: `${SITE_URL}/og-default.png`,
+          url: `${SITE_URL}/og-home.png`,
           width: 1200,
           height: 630,
-          alt: 'StudentX — curated student housing',
+          alt: SITE_TITLE,
         },
       ],
     },
     twitter: {
       card: 'summary_large_image',
-      title: 'StudentX',
-      description: 'Browse student services by city.',
-      images: [`${SITE_URL}/og-default.png`],
+      title: SITE_TITLE,
+      description: SITE_DESCRIPTION,
+      images: [`${SITE_URL}/og-home.png`],
     },
     robots: { index: true, follow: true },
   };

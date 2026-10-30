@@ -1,12 +1,12 @@
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { isLiveCity, isSupportedCity, getCity } from '@/lib/cityRoutes';
-import ThessalonikiLanding from '@/components/property/ThessalonikiLanding';
+import HousingHome from '@/components/home/HousingHome';
 import ComingSoonCity from '@/components/property/ComingSoonCity';
 
 // City landing — branches on city status. Live cities (currently only
-// Thessaloniki) render the full Propylaea landing; coming-soon cities
-// render a placeholder hero + mailto CTA. Unsupported slugs 404 (the
+// Thessaloniki) render the housing home; coming-soon cities render a
+// placeholder hero + mailto CTA. Unsupported slugs 404 (the
 // city layout's notFound() check is the canonical guard, but this is
 // belt-and-braces for the page-level resolver).
 export default async function CityLandingPage({ params }) {
@@ -18,7 +18,7 @@ export default async function CityLandingPage({ params }) {
   }
 
   if (isLiveCity(city)) {
-    return <ThessalonikiLanding />;
+    return <HousingHome locale={locale} />;
   }
 
   const cityRow = getCity(city);
