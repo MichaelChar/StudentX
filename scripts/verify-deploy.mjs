@@ -13,8 +13,8 @@
     2. SMOKE the live site: home renders the app shell, every JS/CSS chunk
        it references is actually served (a deploy that drops chunks breaks
        hydration with a 200 HTML page), the listings API answers, a listing
-       detail page renders that listing, /boarding renders, and an unknown
-       URL is a real 404.
+       detail page renders that listing, /boarding renders (or, while parked,
+       redirects to the housing landing), and an unknown URL is a real 404.
     3. SETTLE: keep watching /version.json for a few minutes. Each push
        starts its own build and the LAST deploy to finish wins, so a build of
        an older commit can land after ours and silently roll prod back
@@ -34,6 +34,9 @@
 
 import { appendFileSync } from 'node:fs';
 import { pathToFileURL } from 'node:url';
+// Explicit .js: plain Node, unlike the bundler, doesn't resolve extensionless
+// specifiers. The module is import-free apart from cityRoutes.js for that reason.
+import { BOARDING_ENABLED, PARKED_HOME_TARGET } from '../src/lib/boardingParked.js';
 
 export const DEFAULT_BASE_URL = 'https://studentx.uk';
 const USER_AGENT = 'StudentX-post-deploy-verify';
@@ -70,12 +73,15 @@ export function extractStaticAssets(html) {
   return [...found];
 }
 
-export async function request(url, { fetchImpl = fetch, sleep = delay, tries = 3 } = {}) {
+export async function request(url, { fetchImpl = fetch, sleep = delay, tries = 3, redirect } = {}) {
   for (let attempt = 1; ; attempt++) {
     try {
       const res = await fetchImpl(url, {
         headers: { 'user-agent': USER_AGENT, 'cache-control': 'no-cache' },
         signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
+        // Only passed when asked for: the default (follow) is what every
+        // other check wants, and test stubs shouldn't have to know about it.
+        ...(redirect ? { redirect } : {}),
       });
       if (!RETRY_STATUSES.has(res.status) || attempt >= tries) return res;
     } catch (err) {
@@ -142,9 +148,12 @@ export async function watchStable({
   return { ok: true };
 }
 
-export async function runSmokeChecks(baseUrl, { fetchImpl = fetch, sleep = delay } = {}) {
+export async function runSmokeChecks(
+  baseUrl,
+  { fetchImpl = fetch, sleep = delay, boardingEnabled = BOARDING_ENABLED, parkedTarget = PARKED_HOME_TARGET } = {},
+) {
   const results = [];
-  const get = (path) => request(new URL(path, baseUrl).href, { fetchImpl, sleep });
+  const get = (path, opts = {}) => request(new URL(path, baseUrl).href, { fetchImpl, sleep, ...opts });
   const check = async (name, fn) => {
     try {
       results.push({ name, ok: true, detail: await fn() });
@@ -210,6 +219,18 @@ export async function runSmokeChecks(baseUrl, { fetchImpl = fetch, sleep = delay
   });
 
   await check('boarding', async () => {
+    if (!boardingEnabled) {
+      // Parked (src/lib/boardingParked.js). Don't follow the redirect: fetch
+      // would land on the housing page and report 200, which would pass this
+      // check whether or not the park is actually live.
+      const res = await get('/boarding', { redirect: 'manual' });
+      await res.arrayBuffer();
+      expectStatus(res, 307);
+      const location = res.headers?.get?.('location') ?? '';
+      const landed = location ? new URL(location, baseUrl).pathname : '(no Location header)';
+      if (landed !== parkedTarget) throw new Error(`expected a redirect to ${parkedTarget}, got ${landed}`);
+      return `parked: 307 to ${parkedTarget}`;
+    }
     const res = await get('/boarding');
     expectStatus(res, 200);
     expectAppShell(await res.text());
