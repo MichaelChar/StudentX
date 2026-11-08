@@ -15,6 +15,12 @@ const upsert = vi.fn(async (row) => {
 const from = vi.fn(() => ({ select: () => ({ eq: () => ({ maybeSingle }) }), upsert }));
 vi.mock('@/lib/supabaseServer', () => ({ getSupabaseAsService: () => ({ from }) }));
 
+// These tests exercise the live endpoint. With the product parked the route
+// answers 410 before doing anything (see boardingLeadParked.test.js), so the
+// flag is forced on here to keep the form's real behaviour pinned for the day
+// it comes back.
+vi.mock('@/lib/boardingParked', () => ({ BOARDING_ENABLED: true }));
+
 const send = vi.fn(async () => ({ id: 'email-1' }));
 vi.mock('@/lib/resend', () => ({ getResend: () => ({ emails: { send } }) }));
 

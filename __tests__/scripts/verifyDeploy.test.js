@@ -13,10 +13,11 @@ const OLD = 'c1bb534f0000000000000000000000000000beef';
 const BASE = 'https://studentx.uk';
 const noSleep = async () => {};
 
-function res(status, body = '') {
+function res(status, body = '', headers = {}) {
   const text = typeof body === 'string' ? body : JSON.stringify(body);
   return {
     status,
+    headers: { get: (name) => headers[name.toLowerCase()] ?? null },
     text: async () => text,
     json: async () => JSON.parse(text),
     arrayBuffer: async () => new ArrayBuffer(0),
@@ -168,7 +169,11 @@ describe('runSmokeChecks', () => {
   const byName = (results) => Object.fromEntries(results.map((r) => [r.name, r]));
 
   it('passes a healthy site', async () => {
-    const results = await runSmokeChecks(BASE, { fetchImpl: site(), sleep: noSleep });
+    const results = await runSmokeChecks(BASE, {
+      fetchImpl: site(),
+      sleep: noSleep,
+      boardingEnabled: true,
+    });
     expect(results.filter((r) => !r.ok)).toEqual([]);
     expect(results.map((r) => r.name)).toEqual([
       'home', 'static-assets', 'listings-api', 'listing-page', 'boarding', 'not-found',
@@ -199,5 +204,61 @@ describe('runSmokeChecks', () => {
       new URL(url).pathname.startsWith('/post-deploy-check-') ? res(200, SHELL) : site()(url);
     const r = byName(await runSmokeChecks(BASE, { fetchImpl, sleep: noSleep }));
     expect(r['not-found'].ok).toBe(false);
+  });
+
+  // /boarding is parked (src/lib/boardingParked.js): the route 307s to the
+  // housing landing. The check must NOT follow that redirect — fetch would end
+  // on the housing page and report 200, which passes whether or not the park
+  // is live — so it asks for the redirect itself.
+  describe('boarding check while parked', () => {
+    const PARKED = { boardingEnabled: false, parkedTarget: '/property/thessaloniki' };
+    const parkedSite = (boarding) => site({ '/boarding': boarding });
+    const boardingCheck = async (boarding, opts = PARKED) =>
+      byName(await runSmokeChecks(BASE, { fetchImpl: parkedSite(boarding), sleep: noSleep, ...opts })).boarding;
+
+    it('passes on a 307 to the housing landing', async () => {
+      const r = await boardingCheck(res(307, '', { location: '/property/thessaloniki' }));
+      expect(r).toMatchObject({ ok: true, detail: expect.stringContaining('parked') });
+    });
+
+    it('accepts an absolute Location on the same host', async () => {
+      const r = await boardingCheck(res(307, '', { location: `${BASE}/property/thessaloniki` }));
+      expect(r.ok).toBe(true);
+    });
+
+    it('fails when /boarding still renders', async () => {
+      const r = await boardingCheck(res(200, SHELL));
+      expect(r.ok).toBe(false);
+      expect(r.detail).toContain('expected 307, got 200');
+    });
+
+    it('fails when the redirect goes somewhere else', async () => {
+      const r = await boardingCheck(res(307, '', { location: '/' }));
+      expect(r.ok).toBe(false);
+      expect(r.detail).toContain('/property/thessaloniki');
+    });
+
+    it('fails on a 307 with no Location', async () => {
+      const r = await boardingCheck(res(307));
+      expect(r.ok).toBe(false);
+    });
+
+    it('asks for the redirect rather than following it', async () => {
+      const seen = [];
+      const fetchImpl = async (url, init) => {
+        seen.push({ path: new URL(url).pathname, redirect: init?.redirect });
+        return site()(url);
+      };
+      await runSmokeChecks(BASE, { fetchImpl, sleep: noSleep, ...PARKED });
+      expect(seen.find((c) => c.path === '/boarding').redirect).toBe('manual');
+      // Every other request keeps the default.
+      expect(seen.filter((c) => c.path !== '/boarding').every((c) => c.redirect === undefined)).toBe(true);
+    });
+  });
+
+  it('still requires /boarding to render while the product is live', async () => {
+    const fetchImpl = site({ '/boarding': res(404, 'nope') });
+    const r = byName(await runSmokeChecks(BASE, { fetchImpl, sleep: noSleep, boardingEnabled: true }));
+    expect(r.boarding.ok).toBe(false);
   });
 });

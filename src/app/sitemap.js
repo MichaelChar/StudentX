@@ -1,5 +1,6 @@
 import { getSupabase } from "@/lib/supabase";
 import { CITY_PICKER_ENABLED } from '@/lib/cityPicker';
+import { BOARDING_ENABLED } from '@/lib/boardingParked';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
@@ -9,14 +10,16 @@ export default async function sitemap() {
   // Pre-Step-B emitted /en/ duplicates of each; they 301 to unprefixed
   // now, so emitting them would just hand Googlebot a redirect map.
   const staticRoutes = [
-    { url: SITE_URL, lastModified: new Date(), changeFrequency: "weekly", priority: 1.0 },
+    // `/` and /boarding are left out while boarding is parked (both 307 to the
+    // housing landing) — src/lib/boardingParked.js.
+    ...(BOARDING_ENABLED ? [{ url: SITE_URL, lastModified: new Date(), changeFrequency: "weekly", priority: 1.0 }] : []),
     // Left out while the city picker is parked (it 307s to the only live city) — src/lib/cityPicker.js.
     ...(CITY_PICKER_ENABLED ? [{ url: `${SITE_URL}/property`, lastModified: new Date(), changeFrequency: "daily", priority: 1.0 }] : []),
     { url: `${SITE_URL}/property/thessaloniki`, lastModified: new Date(), changeFrequency: "daily", priority: 0.95 },
     { url: `${SITE_URL}/property/thessaloniki/results`, lastModified: new Date(), changeFrequency: "daily", priority: 0.8 },
     { url: `${SITE_URL}/resources`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
     { url: `${SITE_URL}/admissions`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.9 },
-    { url: `${SITE_URL}/boarding`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
+    ...(BOARDING_ENABLED ? [{ url: `${SITE_URL}/boarding`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 }] : []),
   ];
 
   // Dynamic listing pages.

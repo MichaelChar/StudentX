@@ -3,6 +3,7 @@ import HomeHero from '@/components/HomeHero';
 import HomeSearch from '@/components/home/HomeSearch';
 import HomeListings from '@/components/home/HomeListings';
 import ProductTile from '@/components/home/ProductTile';
+import { BOARDING_ENABLED } from '@/lib/boardingParked';
 
 /*
   The housing landing at /property/thessaloniki: hero, the expanded search bar,
@@ -24,11 +25,16 @@ export default async function HousingHome({ locale }) {
 
   const products = [
     { id: 'admissions', href: '/admissions', icon: 'stethoscope', tone: 'iris' },
-    { id: 'boarding', href: '/boarding', icon: 'mountain', tone: 'yellow' },
+    // Parked: src/lib/boardingParked.js
+    ...(BOARDING_ENABLED ? [{ id: 'boarding', href: '/boarding', icon: 'mountain', tone: 'yellow' }] : []),
     { id: 'services', href: '/resources', icon: 'book', tone: 'jade' },
     { id: 'holidayGigs', href: '/gigs', icon: 'sun', tone: 'peach' },
     { id: 'blog', href: 'https://blog.studentx.uk', icon: 'pen', tone: 'parchment', external: true },
   ];
+
+  // Full class names, not `md:grid-cols-${n}`: Tailwind only emits classes it
+  // can read verbatim in the source.
+  const gridCols = products.length === 5 ? 'md:grid-cols-5' : 'md:grid-cols-4';
 
   return (
     <>
@@ -46,7 +52,7 @@ export default async function HousingHome({ locale }) {
             <h2 id="home-more" className="mb-5 font-display text-2xl md:text-[28px] text-night">
               {t('moreFrom')}
             </h2>
-            <div className="grid grid-cols-2 gap-3 md:grid-cols-5 md:gap-4">
+            <div className={`grid grid-cols-2 gap-3 ${gridCols} md:gap-4`}>
               {products.map((p) => (
                 <ProductTile
                   key={p.id}

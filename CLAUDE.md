@@ -20,6 +20,8 @@ as equal panels (founder's call, 2026-10-30): the site goes to partners for
 different businesses. The housing-first homepage moved unchanged to
 `/property/thessaloniki`. Every other product is a footer or header-menu link,
 so a new product needs a row in `AccountMenu` or it is unreachable.
+**Currently parked (2026-11-08): `/` and `/boarding` 307 to the housing landing**
+— see "/boarding (parked)".
 
 Around that core sit the monetizing / retention surfaces:
 
@@ -287,6 +289,31 @@ so setting a second city's `status` to `'live'` restores the hub with no other
 change. `src/middleware.js` (the redirect) and `src/app/sitemap.js` (which
 drops `/property` meanwhile) both read it. Don't "clean up" the hub
 components as dead code.
+
+## /boarding (parked)
+
+**The Swiss boarding product is off the public site, not deleted.** Founder's
+call 2026-11-08. `BOARDING_ENABLED` in **`src/lib/boardingParked.js`** is the
+switch; while it is `false`:
+
+- `src/middleware.js` 307s `/boarding`, `/boarding/*` **and `/`** straight to
+  `/property/thessaloniki` (`/` because the two-product homepage is half
+  boarding; its page, `HomeHero`, and the `boarding/` components all stay).
+- `sitemap.js` drops `/` and `/boarding`; `HousingHome` and `AccountMenu` drop
+  their Boarding entries; `/api/boarding/lead` answers 410 (the middleware
+  matcher skips `/api`, so the route is its own gate).
+- `scripts/verify-deploy.mjs` asserts the redirect instead of a 200. It must
+  not follow it: `fetch` would land on the housing page and pass either way.
+
+**`public/boarding/embed.js` is a no-op stub while parked**, because static
+files are served before the Worker and cannot read the flag. Partners paste its
+URL, so it stays a valid script rather than 404. `boardingParked.test.js` fails
+if the flag and the file disagree. Restoring it, step by step, is in the header
+comment of `boardingParked.js`. The `boarding_leads` table and every lead in it
+are untouched.
+
+The rest of `public/boarding/` (PDF, `og.jpg`, photos) is still reachable by
+direct URL. Don't "clean up" the parked pages, components or copy as dead code.
 
 ## Maps
 

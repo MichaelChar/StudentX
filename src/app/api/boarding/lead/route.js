@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { getSupabaseAsService } from '@/lib/supabaseServer';
 import { entryFor, monthKey, parseLead } from '@/lib/boardingLead';
 import { buildInterestEmail, buildSubmitEmail, sendLeadEmail } from '@/lib/boardingLeadEmail';
+import { BOARDING_ENABLED } from '@/lib/boardingParked';
 
 /*
   POST /api/boarding/lead — the /boarding lead form (LeadForm.js).
@@ -44,6 +45,16 @@ function union(a = [], b = []) {
 const ok = () => NextResponse.json({ ok: true }, { status: 200 });
 
 export async function POST(request) {
+  // Parked (src/lib/boardingParked.js). The middleware matcher skips /api, so
+  // the gate has to live here. Answers before reading the body, touching the
+  // database or sending mail; existing boarding_leads rows are untouched.
+  if (!BOARDING_ENABLED) {
+    return NextResponse.json(
+      { error_code: 'GONE', error: 'The Swiss boarding enquiry form is closed.' },
+      { status: 410 },
+    );
+  }
+
   let body;
   try {
     body = await request.json();

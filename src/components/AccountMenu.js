@@ -6,6 +6,7 @@ import Popover from '@/components/ui/Popover';
 import Avatar from '@/components/ui/Avatar';
 import Icon from '@/components/ui/Icon';
 import Divider from '@/components/ui/Divider';
+import { BOARDING_ENABLED } from '@/lib/boardingParked';
 
 /*
   AccountMenu — the header's account control (parity Feature 6).
@@ -33,7 +34,8 @@ import Divider from '@/components/ui/Divider';
 function productsGroup(t, city) {
   return [
     { href: `/property/${city}`, label: t('housing') },
-    { href: '/boarding', label: t('boarding') },
+    // Parked: src/lib/boardingParked.js
+    ...(BOARDING_ENABLED ? [{ href: '/boarding', label: t('boarding') }] : []),
     { href: '/admissions', label: t('admissions') },
     { href: '/resources', label: t('resources') },
     { href: '/student/ausom', label: t('practiceTests') },
