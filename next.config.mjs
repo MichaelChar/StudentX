@@ -238,6 +238,14 @@ const nextConfig = {
         source: '/boarding/quiz/embed',
         headers: EMBEDDABLE_SECURITY_HEADERS,
       },
+      // API responses are data, never a search result. robots.txt lets
+      // Googlebot fetch the public read endpoints that pages render from (see
+      // src/app/robots.js), and this keeps those URLs out of the index. The
+      // header doesn't stop Google from using the data to render a page.
+      {
+        source: '/api/:path*',
+        headers: [{ key: 'X-Robots-Tag', value: 'noindex' }],
+      },
       {
         source: '/boarding',
         headers: BOARDING_SECURITY_HEADERS,
