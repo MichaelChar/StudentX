@@ -2183,5 +2183,139 @@
       "loginLink": "Sign in",
       "genericError": "Something went wrong. Please try again."
     }
+  },
+  "showcase": {
+    "meta": {
+      "siteTitle": "StudentX",
+      "siteDescription": "Students are the future of Europe and global abundance. StudentX builds digital infrastructure for student housing, networking and community.",
+      "aboutUs": "About us",
+      "press": "Press",
+      "ventures": "Ventures",
+      "mg2": "MG²",
+      "mg2Description": "MG², the StudentX property venture: renovated student homes in central Thessaloniki.",
+      "map": "Map",
+      "featuredProperties": "Featured properties",
+      "property": "Property {num}",
+      "notFound": "Page not found"
+    },
+    "nav": {
+      "main": "Main",
+      "home": "StudentX home",
+      "menu": "Menu",
+      "ourCompany": "Our company",
+      "aboutUs": "About us",
+      "press": "Press",
+      "ventures": "Ventures",
+      "overview": "Overview",
+      "mg2": "MG²",
+      "featuredProperties": "Featured properties",
+      "map": "Map",
+      "copyright": "© {year} StudentX"
+    },
+    "home": {
+      "heroLabel": "StudentX",
+      "skyAlt": "The London skyline along the Thames",
+      "cue": "Scroll",
+      "renoLabel": "A renovation, before and after",
+      "renoBeforeAlt": "The kitchen before renovation, stripped to bare brick",
+      "renoAfterAlt": "The same kitchen after renovation",
+      "aboutHeading": "About us",
+      "venturesHeading": "Ventures",
+      "featuredHeading": "Featured properties",
+      "learnMore": "Learn more >",
+      "exploreFeatured": "Explore featured properties >"
+    },
+    "manifesto": {
+      "lead": "Students are the future of Europe and global abundance.",
+      "body": "We mobilise the youth population through digital infrastructure supporting student experiences across housing, networking, and community engagement."
+    },
+    "about": {
+      "title": "About us",
+      "ourVentures": "Our ventures"
+    },
+    "ventures": {
+      "title": "Ventures",
+      "mg2Kind": "Property",
+      "mg2Line": "Renovated student homes in central Thessaloniki.",
+      "tileSource": "{venture} | {kind}",
+      "visit": "Visit {venture} >"
+    },
+    "mg2": {
+      "lead": "The property venture.",
+      "body": "Renovated student homes in central Thessaloniki.",
+      "statFamily": "MG² is a privately owned family business",
+      "statFamilyNum": "30+",
+      "statFamilyUnit": "Years in<br></br>Business",
+      "statPipeline": "Homes in our portfolio pipeline",
+      "statPipelineNum": "100",
+      "featuredHeading": "Featured properties",
+      "mapLink": "Map >",
+      "featuredLink": "Featured properties >"
+    },
+    "map": {
+      "title": "Map",
+      "neighbourhood": "Neighbourhood",
+      "allNeighbourhoods": "All neighbourhoods",
+      "view": "View",
+      "mapMode": "Map",
+      "listMode": "List",
+      "mapLabel": "Map of central Thessaloniki with the properties pinned",
+      "university": "AUTh",
+      "row": "{neighbourhood} · {size} m²"
+    },
+    "featured": {
+      "title": "Featured properties",
+      "size": "Size: {size} m²",
+      "layout": "Layout: {layout}",
+      "location": "Location: {neighbourhood}, Thessaloniki"
+    },
+    "property": {
+      "stripLabel": "Property {num}",
+      "photoAlt": "Property {num}, photo. Open full size",
+      "prevPhoto": "Previous photo",
+      "nextPhoto": "Next photo",
+      "count": "{n} / {total}",
+      "thumb": "Photo {n} of {total}",
+      "viewer": "Photo, full size",
+      "close": "CLOSE",
+      "otherProperties": "Other properties",
+      "prevProperty": "Previous property",
+      "nextProperty": "Next property",
+      "specLocation": "Location",
+      "specSize": "Size",
+      "specFloor": "Floor",
+      "specLayout": "Layout",
+      "specUniversity": "To Aristotle University",
+      "specVenture": "Venture",
+      "location": "{neighbourhood}, Thessaloniki",
+      "size": "{size} m²",
+      "distance": "{metres} m",
+      "stories": {
+        "101": "Our first (and my favourite) student accommodation. Overlooking a delightful town square, and close to the city centre with a sea view.",
+        "102": "A complete and comprehensive renovation, in the neo brutalist style. Located in Thessaloniki's most student friendly neighbourhood, and enclosed within the city's ancient walls. Within 600m of 3 UNESCO-listed monuments, as well as the birthplace of modern Turkey's founder (Atatürk).",
+        "103": "Spacious yet compact, in one of Thessaloniki's most exclusive residential neighbourhoods. A true hidden gem!"
+      },
+      "loaderSkip": "Tap to skip"
+    },
+    "press": {
+      "title": "Press",
+      "line": "For press enquiries, email",
+      "email": "michael@studentx.uk",
+      "kit": "Press kit",
+      "logoCaption": "{brand} | {colour}",
+      "logoLabel": "{brand} logo, {colour}",
+      "black": "Black",
+      "white": "White",
+      "iris": "Iris",
+      "founderName": "Michael Grundlingh",
+      "founderShortBio": "Medical student studying at LSE. Future Swiss doctor",
+      "aboutStudentxHeading": "About StudentX",
+      "aboutStudentx": "Students are the future of Europe and global abundance. StudentX mobilises the youth population through digital infrastructure supporting student experiences across housing, networking, and community engagement."
+    },
+    "notFound": {
+      "title": "Page not found",
+      "body": "The page you're looking for doesn't exist.",
+      "home": "Back to the homepage"
+    }
   }
 }

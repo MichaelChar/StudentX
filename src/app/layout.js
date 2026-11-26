@@ -7,7 +7,7 @@
 // `localePrefix: 'as-needed'`, the root layout is just a pass-through.
 //
 // Required to exist by Next.js even though every page renders through
-// [locale]/layout.js — unknown URLs included, via [locale]/[...rest]. The
+// [locale]/layout.js — unknown URLs included, via [locale]/(platform)/[...rest]. The
 // one thing rendered directly inside this pass-through is src/app/not-found.js,
 // which is why that file supplies its own <html>/<body>.
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";

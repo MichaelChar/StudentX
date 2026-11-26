@@ -152,15 +152,29 @@ export const GIGS_NAMESPACES = withRoot('gigs', 'propylaea.gallery');
 // catalog has to ship with them.
 export const AUTH_NAMESPACES = withRoot('auth', 'student.oauth');
 
+// The showcase (src/app/[locale]/(showcase)): its own chrome and pages, none
+// of the platform's. Not withRoot(): no platform chrome component renders
+// inside it, and the error boundary sits above it, under the root provider.
+export const SHOWCASE_NAMESPACES = ['showcase'];
+
 // Every per-route set, for the completeness test. Keys are the route
 // directory under src/app/[locale]; `exclude` marks a subtree that provides
-// its own set below this one.
+// its own set below this one. The platform's routes live in the (platform)
+// route group since the showcase arrived (a group changes no URL), and its
+// chrome moved with them into (platform)/layout.js, which is checked against
+// the root set because it renders under the root provider.
 export const ROUTE_NAMESPACE_SETS = [
   { dir: '', namespaces: ROOT_NAMESPACES, rootLayoutOnly: true },
-  { dir: 'property', namespaces: PROPERTY_PUBLIC_NAMESPACES, exclude: ['property/[city]/landlord'] },
-  { dir: 'property/[city]/landlord', namespaces: PROPERTY_LANDLORD_NAMESPACES },
-  { dir: 'student', namespaces: STUDENT_NAMESPACES },
-  { dir: 'admin', namespaces: ADMIN_NAMESPACES },
-  { dir: 'gigs', namespaces: GIGS_NAMESPACES },
-  { dir: '(auth)', namespaces: AUTH_NAMESPACES },
+  { dir: '(platform)', label: 'platform chrome', namespaces: ROOT_NAMESPACES, files: ['layout.js'] },
+  {
+    dir: '(platform)/property',
+    namespaces: PROPERTY_PUBLIC_NAMESPACES,
+    exclude: ['(platform)/property/[city]/landlord'],
+  },
+  { dir: '(platform)/property/[city]/landlord', namespaces: PROPERTY_LANDLORD_NAMESPACES },
+  { dir: '(platform)/student', namespaces: STUDENT_NAMESPACES },
+  { dir: '(platform)/admin', namespaces: ADMIN_NAMESPACES },
+  { dir: '(platform)/gigs', namespaces: GIGS_NAMESPACES },
+  { dir: '(platform)/(auth)', namespaces: AUTH_NAMESPACES },
+  { dir: '(showcase)', namespaces: SHOWCASE_NAMESPACES },
 ];

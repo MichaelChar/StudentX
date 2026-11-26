@@ -36,8 +36,10 @@ import { DEFAULT_CITY } from './cityRoutes.js';
     1. set BOARDING_ENABLED to true below
     2. restore public/boarding/embed.js from git history (the commit before the
        one that stubbed it: `git log --follow public/boarding/embed.js`)
-    3. put the `/` page back in play — flipping the flag does it, since
-       PARKED_HOME_TARGET becomes null and the middleware stops redirecting
+    3. decide what `/` is. The two-product homepage is no longer routed: it
+       is src/components/home/TwoProductHome.js, and `/` belongs to the
+       showcase (src/lib/showcase.js). Flipping this flag only stops the
+       middleware redirecting `/`; it does not bring that page back
     4. re-run the `/boarding` smoke check by hand (`node scripts/verify-deploy.mjs`)
 
   Explicit `.js` extension on the import above is deliberate: scripts/

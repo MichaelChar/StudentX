@@ -78,6 +78,8 @@ Around that core sit the monetizing / retention surfaces:
 ├── src/
 │   ├── app/
 │   │   ├── [locale]/            ← the whole page tree (locale segment is implicit)
+│   │   │   ├── (platform)/      ← every pre-showcase route + its Navbar chrome
+│   │   │   ├── (showcase)/      ← the corporate showcase (dark until SHOWCASE_LIVE)
 │   │   │   ├── property/        ← hub + [city]/{about,landlord,landlords,listing,quiz,results}
 │   │   │   ├── gigs/            ← services marketplace (hub, results, [id])
 │   │   │   ├── resources/       ← resources hub
@@ -160,13 +162,13 @@ Stay on the deprecated-but-fully-supported `middleware.js` filename
 and named export `middleware` to keep edge.
 
 `/property/thessaloniki/listing/<id>` resolves to
-`src/app/[locale]/property/[city]/listing/[id]/page.js` (the locale
+`src/app/[locale]/(platform)/property/[city]/listing/[id]/page.js` (the locale
 segment is implicit). Visiting an unsupported city slug 404s via
-`notFound()` in `[locale]/property/[city]/layout.js`; the allowlist is
+`notFound()` in `[locale]/(platform)/property/[city]/layout.js`; the allowlist is
 `SUPPORTED_CITIES` in `src/lib/cityRoutes.js` (PR #113).
 
-**Unknown URLs go through `[locale]/[...rest]/page.js`**, which only calls
-`notFound()`, so they get the branded `[locale]/not-found.js` inside the site
+**Unknown URLs go through `[locale]/(platform)/[...rest]/page.js`**, which only calls
+`notFound()`, so they get the branded `[locale]/(platform)/not-found.js` inside the site
 chrome with a 404. Without it they skipped the `[locale]` tree entirely and got
 Next's bare page with no `<html lang>`. `src/app/not-found.js` is only the
 fallback for what that can't catch (`/api/*`, dotted paths, a `notFound()` in
@@ -214,7 +216,7 @@ Conventions still in force:
 
 - **When a server component receives `params`, call
   `setRequestLocale(locale)` near the top** — see
-  `src/app/[locale]/property/[city]/listing/[id]/page.js`. Belt-and-braces
+  `src/app/[locale]/(platform)/property/[city]/listing/[id]/page.js`. Belt-and-braces
   with one locale; stay in the habit.
 
 ## OpenNext-on-Workers quirks
@@ -354,6 +356,49 @@ listings API) and the cron jobs that only touch the database. Every page,
 component, route and DB row stays. Bringing the platform back, whole or one
 product at a time, is in the header comment of `showcase.js`. Don't "clean
 up" the parked tree as dead code.
+
+## The showcase (`src/app/[locale]/(showcase)`)
+
+The corporate site that replaces the platform when `SHOWCASE_LIVE` flips:
+`/`, `/about-us`, `/press`, `/ventures`, `/mg2`, `/map`,
+`/featured-properties` and `/featured-properties/<num>`. Ported from the
+approved demo (v20, `~/StudentX-showcase-demo/`, outside the repo on purpose);
+every founder decision behind it is in the project memory note
+`project_mg2_kushner_showcase.md`. Don't re-propose what it says was rejected.
+
+- **Two route groups split `[locale]`.** `(platform)` holds every pre-showcase
+  route and its chrome (Navbar, session sync, favourites — moved unchanged out
+  of `[locale]/layout.js`); `(showcase)` has its own black header, phone menu
+  and footer. A group changes no URL. `[locale]/layout.js` keeps only
+  `<html>`, fonts, the root message provider and the error boundary. The old
+  two-product homepage is `src/components/home/TwoProductHome.js`, unrouted:
+  `/` belongs to the showcase (and 307s while boarding is parked anyway).
+- **Dark until the flip.** `(showcase)/layout.js` calls `notFound()` while the
+  flag is off, so every showcase URL 404s and merging changes nothing. To look
+  at it locally, set `SHOWCASE_LIVE = true` and don't commit it:
+  `showcase.test.js` fails a commit that ships it on.
+- **Its look is scoped, deliberately.** Black and white, Archivo (at
+  `font-stretch: 125%`, the `wdth` axis) and Inter, from `next/font` in the
+  group layout as `--sx-font-*`. The styles are the demo's, rule for rule, in
+  `(showcase)/showcase.css`, every selector under `.showcase` — not Tailwind,
+  and the iris tokens in `globals.css` are untouched, so the parked platform
+  comes back as it was. Founder's call, 2026-11-26.
+- **The homepage hero** (`ShowcaseHero.js`) draws the wordmark on a `<canvas>`
+  with Path2D and zooms into the E's middle bar under GSAP ScrollTrigger
+  (`gsap` from npm, imported dynamically; `scrub: 1`, `ignoreMobileResize`).
+  Its maths is the demo's, line for line. The header hides through the hero
+  and the kitchen sweep via `:has(.hero)` in CSS, so first paint is right.
+- **Data and copy.** `scripts/showcase/prepare-images.py` reads the demo folder
+  and writes `public/showcase/` (sized webp; `images.unoptimized` means these
+  ARE the served sizes) plus `src/lib/showcase/properties.generated.json`.
+  Rerun it after the property board or the kitchen pair changes. Every string
+  is in `en.json` under `showcase`; property facts (size, floor, layout,
+  neighbourhood) are data, like listing rows.
+- **Every page renders `showcasePageProps(id)`** on its root. The canary and
+  `verify-deploy.mjs` assert it on `/` and `/featured-properties/101`;
+  `showcaseSite.test.js` fails a page without it.
+- **The flip PR** also moves `(platform)/[...rest]` into `(showcase)` so
+  unknown URLs get the showcase's 404 chrome.
 
 ## Maps
 

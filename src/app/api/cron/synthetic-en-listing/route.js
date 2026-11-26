@@ -58,7 +58,7 @@ const THESSALONIKI_CANARY_ORIGIN = { lat: 40.6301, lng: 22.9439 };
 // So: an attribute on <html> (set by the layout, not translatable) and a
 // data attribute the PDP root carries only when it has actually rendered the
 // listing we asked for. See the comment at that attribute in
-// [locale]/property/[city]/listing/[id]/page.js.
+// [locale]/(platform)/property/[city]/listing/[id]/page.js.
 function requiredListingMarkers(listingId) {
   return ['<html lang="en"', `data-listing-id="${listingId}"`];
 }

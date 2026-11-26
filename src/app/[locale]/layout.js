@@ -4,12 +4,6 @@ import { getMessages, setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
 import { routing } from '@/i18n/routing';
 import { pickMessages, ROOT_NAMESPACES } from '@/lib/pickMessages';
-import Navbar from '@/components/Navbar';
-import MobileBarSpacer from '@/components/MobileBarSpacer';
-import SessionSync from '@/components/SessionSync';
-import FavoritesProvider from '@/components/FavoritesProvider';
-import GigFavoritesProvider from '@/components/GigFavoritesProvider';
-import { HeaderSlotProvider } from '@/components/HeaderSlot';
 import '../globals.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || 'https://studentx.uk';
@@ -53,7 +47,7 @@ export const viewport = {
 };
 
 // Site-level defaults, which are the homepage's own title and link preview.
-// Housing's live in [locale]/property/layout.js. og-home.png is a new filename
+// Housing's live in [locale]/(platform)/property/layout.js. og-home.png is a new filename
 // on purpose: WhatsApp and iMessage cache previews by image URL.
 const SITE_TITLE = 'StudentX — Swiss Boarding Schools and Student Housing';
 const SITE_DESCRIPTION = 'Affordable Swiss boarding school options and verified student homes in Thessaloniki.';
@@ -120,23 +114,10 @@ export default async function LocaleLayout({ children, params }) {
     >
       <body className="min-h-full flex flex-col font-sans bg-stone text-night">
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <SessionSync />
-          <FavoritesProvider>
-            <GigFavoritesProvider>
-              {/* Shared by the header and the page so a page can portal into
-                  the header — see HeaderSlot. */}
-              <HeaderSlotProvider>
-                <Navbar />
-                <main className="flex-1">
-                  {children}
-                  {/* Bottom clearance for the mobile tab bar. A component, not
-                      padding, because the bar is absent on the chromeless
-                      listing page and the room must go with it. */}
-                  <MobileBarSpacer />
-                </main>
-              </HeaderSlotProvider>
-            </GigFavoritesProvider>
-          </FavoritesProvider>
+          {/* The chrome lives one level down, per route group: (platform) has
+              the housing Navbar, session sync and favourites; (showcase) has
+              the black StudentX header and footer, and none of that JS. */}
+          {children}
         </NextIntlClientProvider>
       </body>
     </html>

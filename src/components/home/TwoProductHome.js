@@ -4,6 +4,13 @@ import { HeaderSlot } from '@/components/HeaderSlot';
 import { Link } from '@/i18n/navigation';
 
 /*
+  UNROUTED since the showcase arrived (2026-11-26). This was
+  src/app/[locale]/page.js; `/` now belongs to the showcase
+  (src/app/[locale]/(showcase)/page.js), and while boarding is parked `/` 307s
+  before any page renders anyway. Kept, not deleted, with boarding
+  (src/lib/boardingParked.js): to bring it back, route it again from a page
+  inside the (platform) group and give `/` back to it.
+
   Homepage — the two-product front door (founder's call, 2026-10-30, Draft 1 of
   the Apple-inspired mockups). Swiss Boarding Schools and Student Housing sit
   side by side as equal panels, each background the other's accent colour. The

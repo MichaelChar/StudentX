@@ -16,7 +16,7 @@ import { formatMoney, currencySymbol } from '@/lib/formatMoney';
   Preview-as-student overlay for the landlord listing form.
 
   Renders the listing exactly as a student sees it on the public detail
-  page (src/app/[locale]/property/[city]/listing/[id]/page.js), built
+  page (src/app/[locale]/(platform)/property/[city]/listing/[id]/page.js), built
   ENTIRELY from the current UNSAVED form state — no save, no network
   write. The landlord clicks "Preview as student" in ListingForm and
   this opens a full-screen modal mirroring the detail page's section
