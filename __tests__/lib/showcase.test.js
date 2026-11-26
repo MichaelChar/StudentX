@@ -58,11 +58,11 @@ const PARKED_SAMPLES = [
 ];
 
 describe('SHOWCASE_LIVE', () => {
-  // Merging the parking PR must change nothing: the flip is its own PR, after
-  // the showcase pages exist. Until then `/` is boarding's redirect to the
-  // housing landing, so parking housing onto `/` would loop.
-  it('ships off, and the email gate follows it', () => {
-    expect(SHOWCASE_LIVE).toBe(false);
+  // On since the go-live PR: the showcase is the public site and the platform
+  // is parked. Turning it off is a decision (see the header of showcase.js),
+  // not a cleanup, so it has to change this test too.
+  it('is live, and the email gate follows it', () => {
+    expect(SHOWCASE_LIVE).toBe(true);
     expect(PLATFORM_EMAILS_PARKED).toBe(SHOWCASE_LIVE);
   });
 

@@ -7,8 +7,9 @@ import { Link } from '@/i18n/navigation';
   none); the site has one locale, so it is named outright, per the explicit-
   locale convention in CLAUDE.md.
 
-  Unknown URLs outside every route still go through (platform)/[...rest] while
-  the platform is up; the flip PR moves that catch-all here.
+  Unknown URLs land here too, through (showcase)/[...rest]. A notFound() inside
+  a parked platform route still uses (platform)/not-found.js, but those routes
+  redirect before rendering while the showcase is live.
 */
 export default async function ShowcaseNotFound() {
   const t = await getTranslations({ locale: 'en', namespace: 'showcase.notFound' });

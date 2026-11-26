@@ -59,7 +59,8 @@ describe('showcase pages carry their marker', () => {
     for (const e of readdirSync(dir)) {
       const full = join(dir, e);
       if (statSync(full).isDirectory()) walk(full);
-      else if (e === 'page.js') pages.push(full);
+      // [...rest] renders nothing: it only hands unknown URLs to not-found.js.
+      else if (e === 'page.js' && !full.includes('[...rest]')) pages.push(full);
     }
   })(root);
 

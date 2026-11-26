@@ -17,6 +17,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 
 const rpc = vi.fn(async () => ({ data: true, error: null }));
 const createClient = vi.fn(() => ({ rpc }));
+// The sender's own behaviour, as it runs when the platform is not parked: the
+// showcase flag (src/lib/showcase.js) is pinned off here. The parked case is
+// covered by __tests__/lib/showcase.test.js.
+vi.mock('@/lib/showcase', async (importOriginal) => ({
+  ...(await importOriginal()),
+  SHOWCASE_LIVE: false,
+  PLATFORM_EMAILS_PARKED: false,
+  platformEmailParked: () => false,
+}));
+
 vi.mock('@supabase/supabase-js', () => ({ createClient }));
 
 // The anon client is legitimately used to READ the gig. Its `update` is a

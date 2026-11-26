@@ -7,6 +7,16 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 const send = vi.fn().mockResolvedValue({ id: 'email-1' });
 const rpc = vi.fn();
 
+// The platform's own behaviour, as it runs when it is not parked: the
+// showcase flag (src/lib/showcase.js) is pinned off here. The parked case is
+// covered by __tests__/lib/showcase.test.js.
+vi.mock('@/lib/showcase', async (importOriginal) => ({
+  ...(await importOriginal()),
+  SHOWCASE_LIVE: false,
+  PLATFORM_EMAILS_PARKED: false,
+  platformEmailParked: () => false,
+}));
+
 vi.mock('@supabase/supabase-js', () => ({
   createClient: () => ({ rpc }),
 }));

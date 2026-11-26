@@ -46,7 +46,9 @@ export async function generateMetadata({ params }) {
   const title = t('siteTitle');
   const description = t('siteDescription');
   return {
-    title: { default: title, template: `%s — ${title}` },
+    // `absolute`, not `default`: the root layout's own template would otherwise
+    // wrap this default too ("StudentX — StudentX" on the 404).
+    title: { absolute: title, template: `%s — ${title}` },
     description,
     openGraph: { siteName: title, locale: 'en_GB', title, description, images: [{ ...OG_IMAGE, alt: title }] },
     twitter: { card: 'summary_large_image', title, description, images: [OG_IMAGE.url] },

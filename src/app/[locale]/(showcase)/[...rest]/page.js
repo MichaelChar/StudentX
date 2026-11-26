@@ -7,7 +7,10 @@ import { notFound } from 'next/navigation';
 // through to the ROOT not-found, which renders inside the pass-through
 // src/app/layout.js, so the visitor got Next's bare default 404 with no
 // StudentX chrome. Matching here and calling notFound() hands the request to
-// [locale]/not-found.js inside the full [locale] layout, still as a 404.
+// (showcase)/not-found.js inside the showcase layout, still as a 404.
+//
+// It lives in (showcase) since the showcase went live: an unknown URL gets the
+// showcase's chrome. It moved here from (platform) in the go-live PR.
 //
 // It cannot shadow a real route. Next ranks static segments above dynamic
 // ones and a catch-all below both, so every existing page wins, and so does

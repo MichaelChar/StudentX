@@ -20,8 +20,10 @@ as equal panels (founder's call, 2026-10-30): the site goes to partners for
 different businesses. The housing-first homepage moved unchanged to
 `/property/thessaloniki`. Every other product is a footer or header-menu link,
 so a new product needs a row in `AccountMenu` or it is unreachable.
-**Currently parked (2026-11-08): `/` and `/boarding` 307 to the housing landing**
-— see "/boarding (parked)".
+**Superseded: studentx.uk is now the corporate showcase.** `SHOWCASE_LIVE` is
+on, `/` is the showcase homepage, and everything above plus the list below is
+parked behind 307s — see "The platform (parked)" and "The showcase". The
+descriptions stay because the code does.
 
 Around that core sit the monetizing / retention surfaces:
 
@@ -167,9 +169,9 @@ segment is implicit). Visiting an unsupported city slug 404s via
 `notFound()` in `[locale]/(platform)/property/[city]/layout.js`; the allowlist is
 `SUPPORTED_CITIES` in `src/lib/cityRoutes.js` (PR #113).
 
-**Unknown URLs go through `[locale]/(platform)/[...rest]/page.js`**, which only calls
-`notFound()`, so they get the branded `[locale]/(platform)/not-found.js` inside the site
-chrome with a 404. Without it they skipped the `[locale]` tree entirely and got
+**Unknown URLs go through `[locale]/(showcase)/[...rest]/page.js`**, which only calls
+`notFound()`, so they get the branded `[locale]/(showcase)/not-found.js` inside the
+showcase chrome with a 404 (it lived in `(platform)` until the showcase went live). Without it they skipped the `[locale]` tree entirely and got
 Next's bare page with no `<html lang>`. `src/app/not-found.js` is only the
 fallback for what that can't catch (`/api/*`, dotted paths, a `notFound()` in
 `[locale]/layout.js`), and it supplies its own `<html>` because the root layout
@@ -298,6 +300,9 @@ components as dead code.
 call 2026-11-08. `BOARDING_ENABLED` in **`src/lib/boardingParked.js`** is the
 switch; while it is `false`:
 
+- **Superseded while the showcase is live:** `/boarding` 307s to `/` and `/`
+  is the showcase (src/lib/showcase.js decides both). What follows is the
+  behaviour with the showcase off.
 - `src/middleware.js` 307s `/boarding`, `/boarding/*` **and `/`** straight to
   `/property/thessaloniki` (`/` because the two-product homepage is half
   boarding; its page, `HomeHero`, and the `boarding/` components all stay).
@@ -317,14 +322,15 @@ are untouched.
 The rest of `public/boarding/` (PDF, `og.jpg`, photos) is still reachable by
 direct URL. Don't "clean up" the parked pages, components or copy as dead code.
 
-## The platform (parked once the showcase is live)
+## The platform (parked)
 
-**studentx.uk is becoming a corporate showcase** (StudentX the parent, MG² the
+**studentx.uk is a corporate showcase** (StudentX the parent, MG² the
 property venture, properties named 101, 102, 103…). Founder's call 2026-11-22:
 anything not in the new menus is hidden. `SHOWCASE_LIVE` in
-**`src/lib/showcase.js`** is the switch, and it **ships `false`**: flipping it
-is its own PR, after the showcase pages exist (until then `/` is boarding's
-redirect to the housing landing, so parking housing onto `/` would loop).
+**`src/lib/showcase.js`** is the switch, and it is **on** (since the go-live PR,
+after #625 added it off and #626 built the showcase). Turning it off is a
+decision, not a cleanup: `/` would fall back to boarding's redirect, and
+`showcase.test.js` pins the current value.
 
 While it is `true`:
 
@@ -359,7 +365,7 @@ up" the parked tree as dead code.
 
 ## The showcase (`src/app/[locale]/(showcase)`)
 
-The corporate site that replaces the platform when `SHOWCASE_LIVE` flips:
+The public site, live since `SHOWCASE_LIVE` was flipped:
 `/`, `/about-us`, `/press`, `/ventures`, `/mg2`, `/map`,
 `/featured-properties` and `/featured-properties/<num>`. Ported from the
 approved demo (v20, `~/StudentX-showcase-demo/`, outside the repo on purpose);
@@ -373,10 +379,11 @@ every founder decision behind it is in the project memory note
   `<html>`, fonts, the root message provider and the error boundary. The old
   two-product homepage is `src/components/home/TwoProductHome.js`, unrouted:
   `/` belongs to the showcase (and 307s while boarding is parked anyway).
-- **Dark until the flip.** `(showcase)/layout.js` calls `notFound()` while the
-  flag is off, so every showcase URL 404s and merging changes nothing. To look
-  at it locally, set `SHOWCASE_LIVE = true` and don't commit it:
-  `showcase.test.js` fails a commit that ships it on.
+- **Gated on the same flag.** `(showcase)/layout.js` calls `notFound()` if
+  `SHOWCASE_LIVE` is ever off, so the showcase and the platform are never up
+  at once. Tests that exercise platform code pin the flag off with `vi.mock`
+  (see the digest and sitemap tests); keep doing that rather than deleting
+  them, since the platform has to work when it comes back.
 - **Its look is scoped, deliberately.** Black and white, Archivo (at
   `font-stretch: 125%`, the `wdth` axis) and Inter, from `next/font` in the
   group layout as `--sx-font-*`. The styles are the demo's, rule for rule, in
@@ -397,8 +404,8 @@ every founder decision behind it is in the project memory note
 - **Every page renders `showcasePageProps(id)`** on its root. The canary and
   `verify-deploy.mjs` assert it on `/` and `/featured-properties/101`;
   `showcaseSite.test.js` fails a page without it.
-- **The flip PR** also moves `(platform)/[...rest]` into `(showcase)` so
-  unknown URLs get the showcase's 404 chrome.
+- **Unknown URLs** go through `(showcase)/[...rest]`, so they get the
+  showcase's 404 chrome.
 
 ## Maps
 
@@ -746,7 +753,7 @@ value here surfaces nowhere a person would look. The display name is built by
 
 Display names never affect SPF/DKIM/DMARC — the mailbox is unchanged.
 While the platform is parked, of the paths below only the synthetic check
-alerts still send — see "The platform (parked once the showcase is live)".
+alerts still send — see "The platform (parked)".
 
 Outbound paths sending from `michael@studentx.uk`:
 
