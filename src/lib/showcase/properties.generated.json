@@ -1,0 +1,308 @@
+{
+  "_generated": "by scripts/showcase/prepare-images.py from the demo folder; do not edit by hand",
+  "properties": [
+    {
+      "num": "101",
+      "listingId": "0106001",
+      "show": true,
+      "neighbourhood": "Centre",
+      "size": 35,
+      "floor": "5th",
+      "layout": "1 bedroom",
+      "auth": 772,
+      "photos": [
+        {
+          "src": "/showcase/p/101/01.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/101/01-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/101/03.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/101/03-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/101/04.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/101/04-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/101/06.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/101/06-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/101/07.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/101/07-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/101/10.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/101/10-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/101/14.webp",
+          "w": 1600,
+          "h": 1200,
+          "thumb": "/showcase/p/101/14-t.webp",
+          "tw": 480,
+          "th": 360
+        },
+        {
+          "src": "/showcase/p/101/16.webp",
+          "w": 1600,
+          "h": 1200,
+          "thumb": "/showcase/p/101/16-t.webp",
+          "tw": 480,
+          "th": 360
+        },
+        {
+          "src": "/showcase/p/101/17.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/101/17-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/101/18.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/101/18-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/101/19.webp",
+          "w": 1600,
+          "h": 1200,
+          "thumb": "/showcase/p/101/19-t.webp",
+          "tw": 480,
+          "th": 360
+        },
+        {
+          "src": "/showcase/p/101/21.webp",
+          "w": 1600,
+          "h": 1200,
+          "thumb": "/showcase/p/101/21-t.webp",
+          "tw": 480,
+          "th": 360
+        },
+        {
+          "src": "/showcase/p/101/22.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/101/22-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/101/23.webp",
+          "w": 1600,
+          "h": 1200,
+          "thumb": "/showcase/p/101/23-t.webp",
+          "tw": 480,
+          "th": 360
+        }
+      ]
+    },
+    {
+      "num": "102",
+      "listingId": "0106002",
+      "show": true,
+      "neighbourhood": "Ano Poli",
+      "size": 45,
+      "floor": "Ground",
+      "layout": "2 bedroom",
+      "auth": 751,
+      "photos": [
+        {
+          "src": "/showcase/p/102/08.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/102/08-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/102/01.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/102/01-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/102/02.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/102/02-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/102/03.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/102/03-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/102/04.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/102/04-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/102/05.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/102/05-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/102/06.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/102/06-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/102/07.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/102/07-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/102/09.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/102/09-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/102/10.webp",
+          "w": 960,
+          "h": 1280,
+          "thumb": "/showcase/p/102/10-t.webp",
+          "tw": 360,
+          "th": 480
+        }
+      ]
+    },
+    {
+      "num": "103",
+      "listingId": "0106003",
+      "show": true,
+      "neighbourhood": "Centre",
+      "size": 29,
+      "floor": "Ground",
+      "layout": "1 bedroom",
+      "auth": 678,
+      "photos": [
+        {
+          "src": "/showcase/p/103/01.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/103/01-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/103/02.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/103/02-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/103/04.webp",
+          "w": 1600,
+          "h": 1200,
+          "thumb": "/showcase/p/103/04-t.webp",
+          "tw": 480,
+          "th": 360
+        },
+        {
+          "src": "/showcase/p/103/05.webp",
+          "w": 1200,
+          "h": 1600,
+          "thumb": "/showcase/p/103/05-t.webp",
+          "tw": 360,
+          "th": 480
+        },
+        {
+          "src": "/showcase/p/103/06.webp",
+          "w": 1600,
+          "h": 1200,
+          "thumb": "/showcase/p/103/06-t.webp",
+          "tw": 480,
+          "th": 360
+        },
+        {
+          "src": "/showcase/p/103/08.webp",
+          "w": 1600,
+          "h": 1200,
+          "thumb": "/showcase/p/103/08-t.webp",
+          "tw": 480,
+          "th": 360
+        }
+      ]
+    }
+  ],
+  "images": {
+    "skyline": {
+      "src": "/showcase/skyline.webp",
+      "w": 1920,
+      "h": 1160
+    },
+    "kitchenBefore": {
+      "src": "/showcase/kitchen-before.webp",
+      "w": 1357,
+      "h": 2000
+    },
+    "kitchenAfter": {
+      "src": "/showcase/kitchen-after.webp",
+      "w": 1357,
+      "h": 2000
+    },
+    "mg2": {
+      "src": "/showcase/mg2.webp",
+      "w": 1600,
+      "h": 1200
+    },
+    "founder": {
+      "src": "/showcase/michael.webp",
+      "w": 821,
+      "h": 931
+    }
+  }
+}

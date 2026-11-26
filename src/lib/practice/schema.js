@@ -159,7 +159,7 @@ export const PracticeTestSchema = z.object({
  * letter instead of a `correct` index, and a `long_answer` type instead of
  * `reveal`. Detected by the presence of a top-level `meta` object and
  * rendered by `BiochemTestPlayer` instead of `TestPlayer`/`FlashcardPlayer` —
- * see `src/app/[locale]/student/ausom/[semester]/[subject]/[testId]/page.js`.
+ * see `src/app/[locale]/(platform)/student/ausom/[semester]/[subject]/[testId]/page.js`.
  *
  * @typedef {Object} BiochemQuestion
  * @property {number} id

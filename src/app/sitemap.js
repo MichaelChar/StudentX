@@ -2,19 +2,31 @@ import { getSupabase } from "@/lib/supabase";
 import { CITY_PICKER_ENABLED } from '@/lib/cityPicker';
 import { BOARDING_ENABLED } from '@/lib/boardingParked';
 import { SHOWCASE_LIVE, isParkedPath } from '@/lib/showcase';
+import { PROPERTIES } from '@/lib/showcase/properties';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
 export default async function sitemap() {
-  return dropParked(await platformSitemap());
+  if (!SHOWCASE_LIVE) return platformSitemap();
+  // While the showcase is live (src/lib/showcase.js) every platform URL is a
+  // 307, so none belongs here: only the showcase's own pages.
+  const platform = (await platformSitemap()).filter((r) => !isParkedPath(new URL(r.url).pathname));
+  return [...showcaseSitemap(), ...platform];
 }
 
-// While the showcase is live (src/lib/showcase.js) every platform URL is a
-// 307, so none belongs in the sitemap. The showcase's own routes are added by
-// the PR that builds them.
-function dropParked(routes) {
-  if (!SHOWCASE_LIVE) return routes;
-  return routes.filter((r) => !isParkedPath(new URL(r.url).pathname));
+function showcaseSitemap() {
+  const now = new Date();
+  const pages = [
+    ['', 1.0],
+    ['/about-us', 0.8],
+    ['/press', 0.6],
+    ['/ventures', 0.8],
+    ['/mg2', 0.8],
+    ['/map', 0.7],
+    ['/featured-properties', 0.9],
+    ...PROPERTIES.map((p) => [`/featured-properties/${p.num}`, 0.8]),
+  ];
+  return pages.map(([path, priority]) => ({ url: `${SITE_URL}${path}`, lastModified: now, changeFrequency: 'monthly', priority }));
 }
 
 async function platformSitemap() {

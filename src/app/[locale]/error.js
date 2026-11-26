@@ -9,7 +9,7 @@ import { reportClientError } from '@/lib/reportClientError';
   The site's error boundary for everything under [locale]. Without it a render
   crash fell through to Next's bare default error screen — no header, no way
   back. This renders inside [locale]/layout (header, tab bar and all) in the
-  same shape as [locale]/not-found.js.
+  same shape as [locale]/(platform)/not-found.js.
 
   It replaces the route subtree, per-route RouteMessages providers included,
   so its strings live in the root message set (`errorPage` in ROOT_NAMESPACES).

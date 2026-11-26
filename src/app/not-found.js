@@ -1,7 +1,7 @@
-// Root not-found — the fallback BEHIND [locale]/[...rest]/page.js.
+// Root not-found — the fallback BEHIND [locale]/(platform)/[...rest]/page.js.
 //
 // Almost every unknown URL is caught by that catch-all and gets the branded
-// [locale]/not-found.js inside the full site chrome. This file renders only
+// [locale]/(platform)/not-found.js inside the full site chrome. This file renders only
 // for what never reaches it: requests the middleware does not rewrite into
 // the [locale] tree (its matcher skips /api/* and any path containing a dot,
 // e.g. /wp-login.php), and a notFound() thrown by [locale]/layout.js itself.
