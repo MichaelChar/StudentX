@@ -1,12 +1,20 @@
 import { NextResponse } from 'next/server';
 import { getSupabaseAsService } from '@/lib/supabaseServer';
 import { loadClaimContext, publishPendingLandlord } from '@/lib/pendingPublish';
+import { SHOWCASE_LIVE } from '@/lib/showcase';
 
 // POST /api/claim/:token/publish  { edits?: { landlord?, listings? } }
 // PUBLIC but token-gated: the unguessable claim token IS the authorisation, so
 // there is no admin/Supabase session here. Moves the landlord + their pending
 // listings into the public star schema. Idempotent (re-clicking is safe).
 export async function POST(request, { params }) {
+  // Parked platform (src/lib/showcase.js): /claim/* redirects to `/`, so a
+  // publish can only come from an old open tab or a script. Refuse before
+  // touching the database; the pending rows stay as they are.
+  if (SHOWCASE_LIVE) {
+    return NextResponse.json({ error: 'Listing claims are paused.' }, { status: 410 });
+  }
+
   const { token } = await params;
   const supabase = getSupabaseAsService();
 

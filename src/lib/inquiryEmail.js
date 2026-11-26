@@ -4,6 +4,7 @@ import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { fromAddressFor } from '@/lib/emailFrom';
 import { inquiryEmailHtml, inquiryEmailSubject } from '@/templates/email/inquiry';
+import { platformEmailParked } from '@/lib/showcase';
 
 function getServiceSupabase() {
   return createClient(
@@ -31,6 +32,7 @@ export async function sendLandlordInquiryEmail({
   message,
   facultyId = null,
 }) {
+  if (platformEmailParked('landlord-inquiry')) return;
   try {
     /*
       SERVICE ROLE, NOT ANON — this is load-bearing, not a preference.

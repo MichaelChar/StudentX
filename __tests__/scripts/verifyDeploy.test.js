@@ -262,3 +262,59 @@ describe('runSmokeChecks', () => {
     expect(r.boarding.ok).toBe(false);
   });
 });
+
+// Once the showcase is live (src/lib/showcase.js) the listing page is parked:
+// home must be the showcase, 101 must render, and parked paths must redirect
+// to `/` rather than render.
+describe('runSmokeChecks with the showcase live', () => {
+  const HOME = '<html lang="en"><body data-showcase-page="home"><script src="/_next/static/chunks/app.js"></script>';
+  const LIVE = { showcaseLive: true, boardingEnabled: false, parkedTarget: '/property/thessaloniki' };
+
+  function liveSite(overrides = {}) {
+    const routes = {
+      '/': res(200, HOME),
+      '/_next/static/chunks/app.js': res(200, 'js'),
+      '/api/listings?limit=1': res(200, { listings: [{ listing_id: '0106002' }] }),
+      '/featured-properties/101': res(200, '<main data-showcase-page="property-101">'),
+      '/property/thessaloniki/results': res(307, '', { location: '/' }),
+      '/boarding': res(307, '', { location: '/' }),
+      ...overrides,
+    };
+    return async (url) => {
+      const { pathname, search } = new URL(url);
+      return routes[pathname + search] ?? res(404, 'nope');
+    };
+  }
+  const run = async (fetchImpl) =>
+    Object.fromEntries((await runSmokeChecks(BASE, { fetchImpl, sleep: noSleep, ...LIVE })).map((r) => [r.name, r]));
+
+  it('passes a healthy showcase', async () => {
+    const results = await runSmokeChecks(BASE, { fetchImpl: liveSite(), sleep: noSleep, ...LIVE });
+    expect(results.filter((r) => !r.ok)).toEqual([]);
+    expect(results.map((r) => r.name)).toEqual([
+      'home', 'static-assets', 'listings-api', 'showcase-property', 'parked-platform',
+      'listing-page', 'boarding', 'not-found',
+    ]);
+  });
+
+  it('fails when / is not the showcase homepage', async () => {
+    const r = await run(liveSite({ '/': res(200, '<html lang="en">') }));
+    expect(r.home.ok).toBe(false);
+  });
+
+  it('fails when property 101 does not render', async () => {
+    const r = await run(liveSite({ '/featured-properties/101': res(404, 'nope') }));
+    expect(r['showcase-property'].ok).toBe(false);
+  });
+
+  it('fails when a parked page still renders', async () => {
+    const r = await run(liveSite({ '/property/thessaloniki/results': res(200, '<html lang="en">') }));
+    expect(r['parked-platform'].ok).toBe(false);
+  });
+
+  it('expects /boarding to land on the showcase, not the housing landing', async () => {
+    const r = await run(liveSite({ '/boarding': res(307, '', { location: '/property/thessaloniki' }) }));
+    expect(r.boarding.ok).toBe(false);
+    expect(r.boarding.detail).toContain('expected a redirect to /');
+  });
+});

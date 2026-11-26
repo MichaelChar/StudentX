@@ -3,6 +3,7 @@ import { getSupabase } from '@/lib/supabase';
 import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { opsFromAddress } from '@/lib/emailFrom';
+import { platformEmailParked } from '@/lib/showcase';
 
 // Mirrors inquiryEmail.js. The anon client CANNOT write gig_inquiries:
 // the table has RLS on with INSERT and SELECT policies only, so an update
@@ -43,6 +44,7 @@ export async function sendGigInquiryEmail({
   studentEmail,
   message,
 }) {
+  if (platformEmailParked('gig-inquiry')) return;
   try {
     const to = alertRecipient();
     if (!to) {

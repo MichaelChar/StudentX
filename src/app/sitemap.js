@@ -1,10 +1,23 @@
 import { getSupabase } from "@/lib/supabase";
 import { CITY_PICKER_ENABLED } from '@/lib/cityPicker';
 import { BOARDING_ENABLED } from '@/lib/boardingParked';
+import { SHOWCASE_LIVE, isParkedPath } from '@/lib/showcase';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://studentx.uk";
 
 export default async function sitemap() {
+  return dropParked(await platformSitemap());
+}
+
+// While the showcase is live (src/lib/showcase.js) every platform URL is a
+// 307, so none belongs in the sitemap. The showcase's own routes are added by
+// the PR that builds them.
+function dropParked(routes) {
+  if (!SHOWCASE_LIVE) return routes;
+  return routes.filter((r) => !isParkedPath(new URL(r.url).pathname));
+}
+
+async function platformSitemap() {
   // Single-locale English (issue #158 / Step B). /property is the
   // multi-city hub; /property/thessaloniki and below are city-scoped.
   // Pre-Step-B emitted /en/ duplicates of each; they 301 to unprefixed

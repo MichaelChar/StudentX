@@ -8,6 +8,7 @@ import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { fromAddressFor, opsFromAddress } from '@/lib/emailFrom';
 import { formatMoney } from '@/lib/formatMoney';
+import { platformEmailParked } from '@/lib/showcase';
 
 function safe(s) {
   return String(s ?? '')
@@ -92,6 +93,7 @@ export async function sendBookingRequestEmail({
   moveOut,
   monthlyRent,
 }) {
+  if (platformEmailParked('booking-request')) return;
   try {
     const { listing, landlord, location, rent } = await loadListingContext(listingId);
     if (!landlord?.email) {
@@ -140,6 +142,7 @@ export async function sendBookingReminderEmail({
   moveIn,
   moveOut,
 }) {
+  if (platformEmailParked('booking-reminder')) return;
   try {
     const { listing, landlord, location } = await loadListingContext(listingId);
     if (!landlord?.email) return;
@@ -177,6 +180,7 @@ export async function sendBookingAcceptedEmail({
   moveIn,
   moveOut,
 }) {
+  if (platformEmailParked('booking-accepted')) return;
   try {
     if (!studentEmail) return;
     if (await isEmailSuppressed(studentEmail)) return;
@@ -216,6 +220,7 @@ export async function sendBookingDeclinedEmail({
   moveIn,
   moveOut,
 }) {
+  if (platformEmailParked('booking-declined')) return;
   try {
     if (!studentEmail) return;
     if (await isEmailSuppressed(studentEmail)) return;
@@ -253,6 +258,7 @@ export async function sendMoveInPromptEmail({
   moveIn,
   moveOut,
 }) {
+  if (platformEmailParked('move-in-prompt')) return;
   try {
     if (!studentEmail) return;
     if (await isEmailSuppressed(studentEmail)) return;
