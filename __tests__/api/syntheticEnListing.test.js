@@ -1,5 +1,7 @@
 import { describe, it, expect, afterEach } from 'vitest';
 import {
+  evaluateShowcasePage,
+  evaluateParkedRedirect,
   evaluateBody,
   evaluateAnonCacheHeader,
   evaluateAuthedCacheHeader,
@@ -750,5 +752,38 @@ describe('checkCartoTileReachable', () => {
     });
     expect(r.ok).toBe(false);
     expect(r.reason).toMatch(/did not resolve/);
+  });
+});
+
+// While the platform is parked (src/lib/showcase.js) these replace the
+// listing-page checks. They assert an attribute, never copy.
+describe('evaluateShowcasePage', () => {
+  const marker = 'data-showcase-page="home"';
+  it('passes a 200 that renders the marker', () => {
+    expect(evaluateShowcasePage({ status: 200, body: `<main ${marker}>` }, marker)).toEqual({ ok: true });
+  });
+  it('fails a 200 without it', () => {
+    expect(evaluateShowcasePage({ status: 200, body: '<html lang="en">' }, marker).ok).toBe(false);
+  });
+  it('fails a redirect or a 404', () => {
+    expect(evaluateShowcasePage({ status: 307, body: '' }, marker).ok).toBe(false);
+    expect(evaluateShowcasePage({ status: 404, body: '' }, marker).ok).toBe(false);
+  });
+  it('skips Cloudflare edge errors', () => {
+    expect(evaluateShowcasePage({ status: 522, body: '' }, marker)).toMatchObject({ ok: true, skipped: true });
+  });
+});
+
+describe('evaluateParkedRedirect', () => {
+  const app = 'https://studentx.uk';
+  it('passes a 307 to /, relative or absolute', () => {
+    expect(evaluateParkedRedirect({ status: 307, location: '/' }, app)).toEqual({ ok: true });
+    expect(evaluateParkedRedirect({ status: 307, location: `${app}/` }, app)).toEqual({ ok: true });
+  });
+  it('fails a parked page that renders', () => {
+    expect(evaluateParkedRedirect({ status: 200, location: null }, app).ok).toBe(false);
+  });
+  it('fails a redirect somewhere else', () => {
+    expect(evaluateParkedRedirect({ status: 307, location: '/property/thessaloniki' }, app).ok).toBe(false);
   });
 });

@@ -1,5 +1,6 @@
 import { createClient } from '@supabase/supabase-js';
 import { getResend } from '@/lib/resend';
+import { platformEmailParked } from '@/lib/showcase';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { fromAddressFor } from '@/lib/emailFrom';
 import {
@@ -35,6 +36,9 @@ export async function runLandlordMessageDigest() {
   if (process.env.LANDLORD_DIGEST_ENABLED === 'false') {
     return { skipped: 'disabled' };
   }
+  // Parked platform (src/lib/showcase.js): every digest links into a parked
+  // page. Nothing is claimed, so pending rows wait rather than being lost.
+  if (platformEmailParked('landlord-message-digest')) return { skipped: 'platform-parked' };
 
   const supabase = getServiceSupabase();
   const appUrl = process.env.NEXT_PUBLIC_APP_URL || 'https://studentx.uk';

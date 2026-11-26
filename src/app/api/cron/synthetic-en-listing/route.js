@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getCloudflareContext } from '@opennextjs/cloudflare';
 import { getResend } from '@/lib/resend';
+import { SHOWCASE_LIVE, showcaseMarker } from '@/lib/showcase';
 import { opsFromAddress } from '@/lib/emailFrom';
 import { isCronAuthorized } from '../auth';
 import { DEFAULT_CITY } from '@/lib/cityRoutes';
@@ -515,8 +516,8 @@ async function checkListingApiDistanceVariety(appUrl, listingId) {
 // internet correctly see 404 (verified externally). 522 vs 404 doesn't
 // affect users; what matters here is the 200-soft-404 class doesn't
 // regress.
-async function checkSoft404(appUrl) {
-  const url = `${appUrl}/property/thessaloniki/listing/does-not-exist`;
+async function checkSoft404(appUrl, path = '/property/thessaloniki/listing/does-not-exist') {
+  const url = `${appUrl}${path}`;
   try {
     const res = await fetchUrl(url);
     if (res.status === 200) {
@@ -531,6 +532,71 @@ async function checkSoft404(appUrl) {
     return (
       skipIfInconclusiveError('soft-404', err) ||
       { name: 'soft-404', ok: false, reason: `fetch threw: ${err.message || err.name}` }
+    );
+  }
+}
+
+/*
+  SHOWCASE CHECKS — only while the platform is parked (src/lib/showcase.js).
+
+  With SHOWCASE_LIVE on, the listing page this file is named after is a 307,
+  so its render and edge-cache checks would alert every 15 minutes about a
+  redirect working as designed. They are reported as skipped instead, and
+  these take their place: the two kinds of public page render, and a parked
+  path still redirects (a regression there would re-expose the platform, or
+  loop).
+
+  Like en-listing-locale, the render checks assert an ATTRIBUTE the page
+  renders (showcaseMarker), never copy: next-intl inlines the whole en.json
+  catalog into every page, so a message string matches whether or not the
+  component rendered.
+*/
+export function evaluateShowcasePage({ status, body }, marker) {
+  if (INCONCLUSIVE_CF_5XX.has(status)) {
+    return { ok: true, skipped: true, reason: `skipped: Cloudflare ${status}` };
+  }
+  if (status !== 200) return { ok: false, reason: `expected 200, got ${status}` };
+  if (!String(body || '').includes(marker)) return { ok: false, reason: `missing marker ${marker}` };
+  return { ok: true };
+}
+
+export function evaluateParkedRedirect({ status, location }, appUrl) {
+  if (INCONCLUSIVE_CF_5XX.has(status)) {
+    return { ok: true, skipped: true, reason: `skipped: Cloudflare ${status}` };
+  }
+  if (status !== 307) return { ok: false, reason: `expected 307 from a parked path, got ${status}` };
+  let landed;
+  try {
+    landed = new URL(location || '', appUrl).pathname;
+  } catch {
+    landed = '(unparseable Location)';
+  }
+  if (landed !== '/') return { ok: false, reason: `parked path redirected to ${landed}, expected /` };
+  return { ok: true };
+}
+
+async function checkShowcasePage(appUrl, name, path, marker) {
+  try {
+    const res = await fetchUrl(`${appUrl}${path}`);
+    const body = await res.text();
+    return { name, ...evaluateShowcasePage({ status: res.status, body }, marker) };
+  } catch (err) {
+    return (
+      skipIfInconclusiveError(name, err) ||
+      { name, ok: false, reason: `fetch threw: ${err.message || err.name}` }
+    );
+  }
+}
+
+async function checkParkedRedirect(appUrl) {
+  const name = 'parked-redirect';
+  try {
+    const res = await fetchUrl(`${appUrl}/property/thessaloniki/results`);
+    return { name, ...evaluateParkedRedirect({ status: res.status, location: res.headers.get('location') }, appUrl) };
+  } catch (err) {
+    return (
+      skipIfInconclusiveError(name, err) ||
+      { name, ok: false, reason: `fetch threw: ${err.message || err.name}` }
     );
   }
 }
@@ -1034,14 +1100,20 @@ export async function runSyntheticEnListing() {
   // (post-PR #105: anon must now receive public, s-maxage=... so Cloudflare
   // can cache the AuthGate body across visitors.)
   let enListingExcerpt = '';
+  // While the platform is parked the listing PAGE is a redirect, so the
+  // page-level checks skip; the listings API keeps being checked below.
+  const skipListingPage = SHOWCASE_LIVE || listingId == null;
   const skipListingChecks = listingId == null;
   const listingSkip = { ok: true, skipped: true, reason: `skipped: ${noListingReason}` };
+  const pageSkip = SHOWCASE_LIVE
+    ? { ok: true, skipped: true, reason: 'skipped: platform parked (src/lib/showcase.js)' }
+    : listingSkip;
 
-  if (skipListingChecks) {
-    record('en-listing-locale', listingSkip);
-    record('en-listing-anon-cache', listingSkip);
-    record('en-listing-vary-cookie', listingSkip);
-    record('en-listing-authed-cache', listingSkip);
+  if (skipListingPage) {
+    record('en-listing-locale', pageSkip);
+    record('en-listing-anon-cache', pageSkip);
+    record('en-listing-vary-cookie', pageSkip);
+    record('en-listing-authed-cache', pageSkip);
   } else {
     try {
       const fetched = await fetchListingHtml(enListingUrl);
@@ -1100,17 +1172,24 @@ export async function runSyntheticEnListing() {
     skipListingChecks
       ? Promise.resolve({ name: 'listing-api-distances', ...listingSkip })
       : checkListingApiDistanceVariety(appUrl, listingId),
-    checkSoft404(appUrl),
+    checkSoft404(appUrl, SHOWCASE_LIVE ? '/featured-properties/does-not-exist' : undefined),
     checkOgDefault(appUrl),
     checkLandlordListingsApi(appUrl),
     checkNoMissingMessage(appUrl),
-    skipListingChecks
-      ? Promise.resolve({ name: 'cf-cache-status-hit', ...listingSkip })
+    skipListingPage
+      ? Promise.resolve({ name: 'cf-cache-status-hit', ...pageSkip })
       : checkCfCacheStatusHit(appUrl, listingId),
-    skipListingChecks
-      ? Promise.resolve({ name: 'cf-cache-authed-not-hit', ...listingSkip })
+    skipListingPage
+      ? Promise.resolve({ name: 'cf-cache-authed-not-hit', ...pageSkip })
       : checkCfCacheAuthedNotHit(appUrl, listingId),
     checkUniversityDistanceCoverage(),
+    ...(SHOWCASE_LIVE
+      ? [
+          checkShowcasePage(appUrl, 'showcase-home', '/', showcaseMarker('home')),
+          checkShowcasePage(appUrl, 'showcase-property', '/featured-properties/101', showcaseMarker('property-101')),
+          checkParkedRedirect(appUrl),
+        ]
+      : []),
   ]);
 
   /*
@@ -1135,7 +1214,14 @@ export async function runSyntheticEnListing() {
     not page copy.
   */
   additional.push(await checkCronScheduleDrift());
-  additional.push(await checkCartoTileKey(appUrl));
+  // The key check reads the results page's bundle; while parked no public
+  // page mounts a map. carto-tile-reachable still runs, so the maps are
+  // known-good for the return.
+  additional.push(
+    SHOWCASE_LIVE
+      ? { name: 'carto-tile-key', ok: true, skipped: true, reason: 'skipped: platform parked (src/lib/showcase.js)' }
+      : await checkCartoTileKey(appUrl),
+  );
   additional.push(await checkCartoTileReachable());
   for (const r of additional) {
     checks.push(r);

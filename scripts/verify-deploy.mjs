@@ -15,6 +15,9 @@
        hydration with a 200 HTML page), the listings API answers, a listing
        detail page renders that listing, /boarding renders (or, while parked,
        redirects to the housing landing), and an unknown URL is a real 404.
+       While the showcase is live (src/lib/showcase.js) the listing page is
+       parked: home must be the showcase, property 101 must render, and a
+       parked path must redirect to `/` instead.
     3. SETTLE: keep watching /version.json for a few minutes. Each push
        starts its own build and the LAST deploy to finish wins, so a build of
        an older commit can land after ours and silently roll prod back
@@ -37,6 +40,7 @@ import { pathToFileURL } from 'node:url';
 // Explicit .js: plain Node, unlike the bundler, doesn't resolve extensionless
 // specifiers. The module is import-free apart from cityRoutes.js for that reason.
 import { BOARDING_ENABLED, PARKED_HOME_TARGET } from '../src/lib/boardingParked.js';
+import { SHOWCASE_LIVE, parkedRedirectTarget, showcaseMarker } from '../src/lib/showcase.js';
 
 export const DEFAULT_BASE_URL = 'https://studentx.uk';
 const USER_AGENT = 'StudentX-post-deploy-verify';
@@ -150,7 +154,13 @@ export async function watchStable({
 
 export async function runSmokeChecks(
   baseUrl,
-  { fetchImpl = fetch, sleep = delay, boardingEnabled = BOARDING_ENABLED, parkedTarget = PARKED_HOME_TARGET } = {},
+  {
+    fetchImpl = fetch,
+    sleep = delay,
+    boardingEnabled = BOARDING_ENABLED,
+    parkedTarget = PARKED_HOME_TARGET,
+    showcaseLive = SHOWCASE_LIVE,
+  } = {},
 ) {
   const results = [];
   const get = (path, opts = {}) => request(new URL(path, baseUrl).href, { fetchImpl, sleep, ...opts });
@@ -174,6 +184,9 @@ export async function runSmokeChecks(
     expectStatus(res, 200);
     const html = await res.text();
     expectAppShell(html);
+    if (showcaseLive && !html.includes(showcaseMarker('home'))) {
+      throw new Error(`no ${showcaseMarker('home')} — the showcase is live but / is not its homepage`);
+    }
     assets = extractStaticAssets(html);
     return `200, ${assets.length} static assets referenced`;
   });
@@ -205,7 +218,31 @@ export async function runSmokeChecks(
     return listingId ? `200, first listing ${listingId}` : '200, directory is empty';
   });
 
+  // Don't follow a parked redirect: fetch would land on a 200 page and pass
+  // whether or not the park is actually live.
+  const expectRedirect = async (path, target) => {
+    const res = await get(path, { redirect: 'manual' });
+    await res.arrayBuffer();
+    expectStatus(res, 307);
+    const location = res.headers?.get?.('location') ?? '';
+    const landed = location ? new URL(location, baseUrl).pathname : '(no Location header)';
+    if (landed !== target) throw new Error(`expected a redirect to ${target}, got ${landed}`);
+    return `parked: 307 to ${target}`;
+  };
+
+  if (showcaseLive) {
+    await check('showcase-property', async () => {
+      const res = await get('/featured-properties/101');
+      expectStatus(res, 200);
+      const html = await res.text();
+      if (!html.includes(showcaseMarker('property-101'))) throw new Error('page did not render property 101');
+      return '200, rendered 101';
+    });
+    await check('parked-platform', () => expectRedirect('/property/thessaloniki/results', '/'));
+  }
+
   await check('listing-page', async () => {
+    if (showcaseLive) return 'skipped: the platform is parked (src/lib/showcase.js)';
     // An empty public directory is a valid state (every listing awaiting
     // verification) and must not fail a deploy.
     if (!listingId) return 'skipped: no public listing to render';
@@ -219,18 +256,13 @@ export async function runSmokeChecks(
   });
 
   await check('boarding', async () => {
-    if (!boardingEnabled) {
-      // Parked (src/lib/boardingParked.js). Don't follow the redirect: fetch
-      // would land on the housing page and report 200, which would pass this
-      // check whether or not the park is actually live.
-      const res = await get('/boarding', { redirect: 'manual' });
-      await res.arrayBuffer();
-      expectStatus(res, 307);
-      const location = res.headers?.get?.('location') ?? '';
-      const landed = location ? new URL(location, baseUrl).pathname : '(no Location header)';
-      if (landed !== parkedTarget) throw new Error(`expected a redirect to ${parkedTarget}, got ${landed}`);
-      return `parked: 307 to ${parkedTarget}`;
-    }
+    // Parked by boardingParked.js (to the housing landing) or, once the
+    // showcase is live, by showcase.js (to `/`). One function decides both.
+    const target = parkedRedirectTarget('/boarding', {
+      live: showcaseLive,
+      boardingHome: boardingEnabled ? null : parkedTarget,
+    });
+    if (target) return expectRedirect('/boarding', target);
     const res = await get('/boarding');
     expectStatus(res, 200);
     expectAppShell(await res.text());

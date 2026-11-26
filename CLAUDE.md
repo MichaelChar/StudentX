@@ -315,6 +315,46 @@ are untouched.
 The rest of `public/boarding/` (PDF, `og.jpg`, photos) is still reachable by
 direct URL. Don't "clean up" the parked pages, components or copy as dead code.
 
+## The platform (parked once the showcase is live)
+
+**studentx.uk is becoming a corporate showcase** (StudentX the parent, MG² the
+property venture, properties named 101, 102, 103…). Founder's call 2026-11-22:
+anything not in the new menus is hidden. `SHOWCASE_LIVE` in
+**`src/lib/showcase.js`** is the switch, and it **ships `false`**: flipping it
+is its own PR, after the showcase pages exist (until then `/` is boarding's
+redirect to the housing landing, so parking housing onto `/` would loop).
+
+While it is `true`:
+
+- `src/middleware.js` 307s `/property/**`, `/student/**`, `/login`, `/signup`,
+  `/resources`, `/gigs`, `/admin/**`, `/claim/*`, `/admissions` and `/boarding`
+  to `/`; `/about` goes to `/about-us`, and the three live flats' listing URLs
+  go to `/featured-properties/101`–`103`. Boarding's own `/` redirect stands
+  down. Both parking layers are decided by one function,
+  `parkedRedirectTarget()`, so `showcase.test.js` can walk every chain for
+  loops — the middleware itself can't be imported under Vitest.
+- **User-facing email stops.** Every sender in `src/lib/*Email.js` and both
+  message-digest jobs return early through `platformEmailParked()`, logging
+  `outcome=skipped reason=platform-parked`. Ops mail (canary alerts, listing
+  reports, move-in problems) still sends. `showcase.test.js` scans for any
+  ungated `send*` export, so a new sender fails CI until it is gated or listed
+  as ops. Digests claim nothing while parked, so pending rows wait.
+- There is no claim email (an admin generates the link and hands it over);
+  `/api/claim/[token]/publish` answers 410 instead.
+- The canary skips the listing-page and edge-cache checks and the CARTO key
+  check (all read parked pages), checks `/featured-properties/<missing>` for
+  soft 404s, and adds `showcase-home`, `showcase-property` and
+  `parked-redirect`. `verify-deploy.mjs` makes the same swap. Both assert the
+  `data-showcase-page` attribute (`showcaseMarker()`), never copy.
+- `sitemap.js` drops every parked URL.
+
+**Not parked, deliberately:** `/api/*` (the matcher skips it, nothing public
+links to it, routes keep their own auth; the canary still exercises the
+listings API) and the cron jobs that only touch the database. Every page,
+component, route and DB row stays. Bringing the platform back, whole or one
+product at a time, is in the header comment of `showcase.js`. Don't "clean
+up" the parked tree as dead code.
+
 ## Maps
 
 Four surfaces mount Leaflet: the results map (`ListingsMap.js`), the PDP's
@@ -660,6 +700,9 @@ value here surfaces nowhere a person would look. The display name is built by
   column on nothing.
 
 Display names never affect SPF/DKIM/DMARC — the mailbox is unchanged.
+While the platform is parked, of the paths below only the synthetic check
+alerts still send — see "The platform (parked once the showcase is live)".
+
 Outbound paths sending from `michael@studentx.uk`:
 
 - Synthetic check alerts (`/api/cron/synthetic-en-listing`)

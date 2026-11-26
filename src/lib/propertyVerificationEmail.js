@@ -9,6 +9,7 @@ import { getResend } from '@/lib/resend';
 import { isEmailSuppressed } from '@/lib/emailSuppressions';
 import { fromAddressFor } from '@/lib/emailFrom';
 import { formatPropertyVerificationDate } from '@/lib/propertyVerification';
+import { platformEmailParked } from '@/lib/showcase';
 
 function safe(s) {
   return String(s ?? '')
@@ -86,6 +87,7 @@ export async function sendPropertyVerificationApprovedEmail({
   method = 'video_call',
   verifiedAt,
 }) {
+  if (platformEmailParked('property-verification-approved')) return;
   try {
     const { listing, landlord, location } = await loadListingLandlord(listingId);
     if (!landlord?.email) {
@@ -135,6 +137,7 @@ export async function sendPropertyVerificationRejectedEmail({
   listingId,
   notes,
 }) {
+  if (platformEmailParked('property-verification-rejected')) return;
   try {
     const { listing, landlord, location } = await loadListingLandlord(listingId);
     if (!landlord?.email) {

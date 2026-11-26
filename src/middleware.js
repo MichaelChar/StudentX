@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import { routing } from './i18n/routing';
 import { SB_ACCESS_TOKEN_COOKIE } from './lib/authCookies';
 import { PARKED_HUB_TARGET } from './lib/cityPicker';
-import { PARKED_HOME_TARGET, isBoardingPath } from './lib/boardingParked';
+import { parkedRedirectTarget } from './lib/showcase';
 
 // Next.js 16 renamed `middleware` to `proxy`, with one important caveat:
 // `proxy` runs in the nodejs runtime and edge is no longer available for
@@ -61,21 +61,23 @@ const intlMiddleware = createMiddleware(routing);
 export function middleware(request) {
   const pathname = request.nextUrl?.pathname || '';
 
+  // Parked products, first: the showcase's parking (src/lib/showcase.js) and
+  // Swiss boarding's (src/lib/boardingParked.js). One function owns both so
+  // their order lives in one tested place. 307, not 301: they come back. Each
+  // goes STRAIGHT to its target (no `/property/results` → city page → `/`
+  // chain), and the query string is dropped on purpose: `?ref=`, `?next=` and
+  // filters mean nothing on the page they land on.
+  const parkedTarget = parkedRedirectTarget(pathname);
+  if (parkedTarget) {
+    return NextResponse.redirect(new URL(parkedTarget, request.url), 307);
+  }
+
   // /property city picker parked while only one city is live — see
   // src/lib/cityPicker.js. 307, not 301: the hub comes back with a second city.
   if (PARKED_HUB_TARGET && (pathname === '/property' || pathname === '/property/')) {
     const target = new URL(`/property/${PARKED_HUB_TARGET}`, request.url);
     target.search = request.nextUrl.search;
     return NextResponse.redirect(target, 307);
-  }
-
-  // Swiss boarding parked — see src/lib/boardingParked.js. 307, not 301: it
-  // comes back. `/` goes too, since the two-product front door is half
-  // boarding. Both go STRAIGHT to the housing landing (no `/boarding` → `/` →
-  // housing chain), and the query string is dropped on purpose: `?ref=` and
-  // `?frame=` mean nothing on the housing page.
-  if (PARKED_HOME_TARGET && (pathname === '/' || isBoardingPath(pathname))) {
-    return NextResponse.redirect(new URL(PARKED_HOME_TARGET, request.url), 307);
   }
 
   const oldMatch = OLD_PROPERTY_PATH.exec(pathname);
