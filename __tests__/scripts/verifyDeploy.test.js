@@ -1,4 +1,11 @@
-import { describe, it, expect } from 'vitest';
+import { describe, it, expect, vi } from 'vitest';
+
+// The platform-era smoke checks run with the showcase flag pinned off; the
+// live-showcase block at the bottom passes `showcaseLive: true` explicitly.
+vi.mock('../../src/lib/showcase.js', async (importOriginal) => ({
+  ...(await importOriginal()),
+  SHOWCASE_LIVE: false,
+}));
 import {
   shaMatches,
   extractStaticAssets,

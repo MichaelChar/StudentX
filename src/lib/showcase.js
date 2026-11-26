@@ -43,10 +43,10 @@ import { PARKED_HOME_TARGET, isBoardingPath } from './boardingParked.js';
   The three live flats' old listing URLs go to their new property pages rather
   than `/`, since those pages show the same flats (LISTING_TO_PROPERTY).
 
-  Merging this flag changes nothing: it ships `false`. It is flipped in its own
-  PR once the showcase pages exist, because until then `/` is boarding's
-  redirect to the housing landing, and sending the housing pages to `/` would
-  loop.
+  History: the flag shipped `false` (#625), the showcase was built behind it
+  (#626), and it was flipped on in its own PR. Never park the platform without
+  the showcase up: with SHOWCASE_LIVE off, `/` is boarding's redirect to the
+  housing landing, and sending the housing pages to `/` would loop.
 
   TO BRING THE PLATFORM BACK:
     - All of it: set SHOWCASE_LIVE to false. Every parked page, email and
@@ -62,7 +62,7 @@ import { PARKED_HOME_TARGET, isBoardingPath } from './boardingParked.js';
   verify-deploy.mjs imports this file under plain Node, which (unlike the
   bundler) does not resolve extensionless specifiers.
 */
-export const SHOWCASE_LIVE = false;
+export const SHOWCASE_LIVE = true; // live since the go-live PR; see the header
 
 /** True while the platform's user-facing emails must not send. */
 export const PLATFORM_EMAILS_PARKED = SHOWCASE_LIVE;
